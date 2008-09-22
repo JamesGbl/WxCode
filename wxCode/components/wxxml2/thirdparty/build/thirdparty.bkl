@@ -11,7 +11,7 @@
 
             1) such test has already been done by wxXml2's main makefiles
             2) we don't use the WX_* options here so that the test would fail
-               because it would try to access invalid paths such as 
+               because it would try to access invalid paths such as
                "$(WX_DIR)/lib/vc_$(WX_UNICODE)..."
     -->
     <include file="presets/utils.bkl"/>
@@ -28,7 +28,6 @@
     <subproject id="libiconv">
         <dependency-of>all</dependency-of>
         <dir>../libiconv/build</dir>
-        <target/>
     </subproject>
     <subproject id="libxml2">
         <dependency-of>all</dependency-of>

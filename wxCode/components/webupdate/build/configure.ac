@@ -9,7 +9,6 @@
 # ======================================================================================
 
 
-
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
 AC_INIT([WebUpdate], [1.2], [frm@sourceforge.net])
@@ -32,7 +31,7 @@ WXCODE_INIT
 ## component's bakefile, then you can leave this section as is
 #####################################################################
 
-WX_CODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
+WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 
 WXCODE_ARG_ENABLE([httpengine],
                   [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
@@ -58,16 +57,18 @@ fi
 ## required options (version, build settings, etc)
 #####################################################################
 
+AC_PROG_CXX
+
 # unfortunately wx2.6 has a  bug with net support under unix and thus is unsupported
 WXCODE_CHECKS([2.8.0], [xrc,xml,net,core,base])
 if test "$USE_HTTPENGINE" = "1"; then
 
     # check for wxHTTPEngine presence, eventually disabling it if the
     # test program cannot be linked...
-    AM_WXCODE_CHECKFOR_COMPONENT([wxHTTPEngine], [wx/httpbuilder.h],
-                                 [httpengine], [wxHTTPBuilder test;],
-                                 [USE_HTTPENGINE=1],     # action if found
-                                 [USE_HTTPENGINE=0])     # action if not found
+    WXCODE_CHECKFOR_COMPONENT([wxHTTPEngine], [wx/httpbuilder.h],
+                               [httpengine], [wxHTTPBuilder test;],
+                               [USE_HTTPENGINE=1],     # action if found
+                               [USE_HTTPENGINE=0])     # action if not found
 fi
 
 

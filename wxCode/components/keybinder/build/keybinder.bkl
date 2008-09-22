@@ -8,7 +8,7 @@
 
 	<set var="USE_UNSTABLE_VERSION">1</set>
 	<set var="WX_VERSION_DEFAULT">29</set>
-	
+
     <include file="presets/wxcode.bkl"/>
 
 
@@ -17,8 +17,8 @@
 
     <set-comp-name>keybinder</set-comp-name>
 
-    <lib id="keybinder_lib" template="wxcode-lib" cond="WX_SHARED=='0'"/>
-    <dll id="keybinder_dll" template="wxcode-dll" cond="WX_SHARED=='1'">
+    <lib id="keybinder_lib" template="wxcode-lib" cond="SHARED=='0'"/>
+    <dll id="keybinder_dll" template="wxcode-dll" cond="SHARED=='1'">
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
     </dll>
@@ -30,7 +30,7 @@
     <set var="COMPONENT_LIB">
         <if cond="FORMAT_SUPPORTS_CONDITIONS=='1' and WX_SHARED=='0'">keybinder_lib</if>
         <if cond="FORMAT_SUPPORTS_CONDITIONS=='1' and WX_SHARED=='1'">keybinder_dll</if>
-		<if cond="FORMAT_SUPPORTS_CONDITIONS=='0'">keybinder_lib</if>
+        <if cond="FORMAT_SUPPORTS_CONDITIONS=='0'">keybinder_lib</if>
     </set>
 
 
@@ -49,9 +49,9 @@
 
     <!-- Auxiliary targets -->
     <!-- ================= -->
-    
+
     <make-tarball/>
     <make-zip/>
-    
+
 </makefile>
 

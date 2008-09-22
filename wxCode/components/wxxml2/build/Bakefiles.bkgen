@@ -22,7 +22,7 @@
          msvc6prj is disabled because it does not support <subproject> tags -->
     <del-formats
         files="../thirdparty/build/*.bkl,../thirdparty/libxml2/build/*.bkl,../thirdparty/libiconv/build/*.bkl">
-        autoconf,msvc6prj,msvs2005prj
+        autoconf,msvc6prj,msvs2003prj,msvs2005prj,msvs2008prj
     </del-formats>
 
 </bakefile-gen>

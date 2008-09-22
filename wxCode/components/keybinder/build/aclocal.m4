@@ -496,7 +496,260 @@ dnl ===================== dllar.sh ends here =====================
 ])
 
 dnl
-dnl  This file is part of Bakefile (http://bakefile.sourceforge.net)
+dnl  This file is part of Bakefile (http://www.bakefile.org)
+dnl
+dnl  Copyright (C) 2003-2007 Vaclav Slavik, David Elliott and others
+dnl
+dnl  Permission is hereby granted, free of charge, to any person obtaining a
+dnl  copy of this software and associated documentation files (the "Software"),
+dnl  to deal in the Software without restriction, including without limitation
+dnl  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+dnl  and/or sell copies of the Software, and to permit persons to whom the
+dnl  Software is furnished to do so, subject to the following conditions:
+dnl
+dnl  The above copyright notice and this permission notice shall be included in
+dnl  all copies or substantial portions of the Software.
+dnl
+dnl  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+dnl  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl  DEALINGS IN THE SOFTWARE.
+dnl
+dnl  $Id$
+dnl
+dnl  Compiler detection macros by David Elliott and Vadim Zeitlin
+dnl
+
+
+dnl ===========================================================================
+dnl Macros to detect different C/C++ compilers
+dnl ===========================================================================
+
+dnl Based on autoconf _AC_LANG_COMPILER_GNU
+dnl _AC_BAKEFILE_LANG_COMPILER(NAME, LANG, SYMBOL, IF-YES, IF-NO)
+AC_DEFUN([_AC_BAKEFILE_LANG_COMPILER],
+[
+    AC_LANG_PUSH($2)
+    AC_CACHE_CHECK(
+        [whether we are using the $1 $2 compiler],
+        [bakefile_cv_[]_AC_LANG_ABBREV[]_compiler_[]$3],
+        [AC_TRY_COMPILE(
+            [],
+            [
+             #ifndef $3
+                choke me
+             #endif
+            ],
+            [bakefile_cv_[]_AC_LANG_ABBREV[]_compiler_[]$3=yes],
+            [bakefile_cv_[]_AC_LANG_ABBREV[]_compiler_[]$3=no]
+         )
+        ]
+    )
+    if test "x$bakefile_cv_[]_AC_LANG_ABBREV[]_compiler_[]$3" = "xyes"; then
+        :; $4
+    else
+        :; $5
+    fi
+    AC_LANG_POP($2)
+])
+
+dnl CodeWarrior Metrowerks compiler defines __MWERKS__ for both C and C++
+AC_DEFUN([AC_BAKEFILE_PROG_MWCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Metrowerks, C, __MWERKS__, MWCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_MWCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Metrowerks, C++, __MWERKS__, MWCXX=yes)
+])
+
+dnl IBM xlC compiler defines __xlC__ for both C and C++
+AC_DEFUN([AC_BAKEFILE_PROG_XLCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER([IBM xlC], C, __xlC__, XLCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_XLCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER([IBM xlC], C++, __xlC__, XLCXX=yes)
+])
+
+dnl recent versions of SGI mipsPro compiler define _SGI_COMPILER_VERSION
+dnl
+dnl NB: old versions define _COMPILER_VERSION but this could probably be
+dnl     defined by other compilers too so don't test for it to be safe
+AC_DEFUN([AC_BAKEFILE_PROG_SGICC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(SGI, C, _SGI_COMPILER_VERSION, SGICC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_SGICXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(SGI, C++, _SGI_COMPILER_VERSION, SGICXX=yes)
+])
+
+dnl Sun compiler defines __SUNPRO_C/__SUNPRO_CC
+AC_DEFUN([AC_BAKEFILE_PROG_SUNCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Sun, C, __SUNPRO_C, SUNCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_SUNCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Sun, C++, __SUNPRO_CC, SUNCXX=yes)
+])
+
+dnl Intel icc compiler defines __INTEL_COMPILER for both C and C++
+AC_DEFUN([AC_BAKEFILE_PROG_INTELCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Intel, C, __INTEL_COMPILER, INTELCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_INTELCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Intel, C++, __INTEL_COMPILER, INTELCXX=yes)
+])
+
+dnl HP-UX aCC: see http://docs.hp.com/en/6162/preprocess.htm#macropredef
+AC_DEFUN([AC_BAKEFILE_PROG_HPCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(HP, C, __HP_cc, HPCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_HPCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(HP, C++, __HP_aCC, HPCXX=yes)
+])
+
+dnl Tru64 cc and cxx
+AC_DEFUN([AC_BAKEFILE_PROG_COMPAQCC],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Compaq, C, __DECC, COMPAQCC=yes)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_COMPAQCXX],
+[
+    _AC_BAKEFILE_LANG_COMPILER(Compaq, C++, __DECCXX, COMPAQCXX=yes)
+])
+
+dnl ===========================================================================
+dnl macros to detect specialty compiler options
+dnl ===========================================================================
+
+dnl Figure out if we need to pass -ext o to compiler (MetroWerks)
+AC_DEFUN([AC_BAKEFILE_METROWERKS_EXTO],
+[AC_CACHE_CHECK([if the _AC_LANG compiler requires -ext o], bakefile_cv_[]_AC_LANG_ABBREV[]_exto,
+dnl First create an empty conf test
+[AC_LANG_CONFTEST([AC_LANG_PROGRAM()])
+dnl Now remove .o and .c.o or .cc.o
+rm -f conftest.$ac_objext conftest.$ac_ext.o
+dnl Now compile the test
+AS_IF([AC_TRY_EVAL(ac_compile)],
+dnl If the test succeeded look for conftest.c.o or conftest.cc.o
+[for ac_file in `(ls conftest.* 2>/dev/null)`; do
+    case $ac_file in
+        conftest.$ac_ext.o)
+            bakefile_cv_[]_AC_LANG_ABBREV[]_exto="-ext o"
+            ;;
+        *)
+            ;;
+    esac
+done],
+[AC_MSG_FAILURE([cannot figure out if compiler needs -ext o: cannot compile])
+]) dnl AS_IF
+
+rm -f conftest.$ac_ext.o conftest.$ac_objext conftest.$ac_ext
+]) dnl AC_CACHE_CHECK
+
+if test "x$bakefile_cv_[]_AC_LANG_ABBREV[]_exto" '!=' "x"; then
+    if test "[]_AC_LANG_ABBREV[]" = "c"; then
+        CFLAGS="$bakefile_cv_[]_AC_LANG_ABBREV[]_exto $CFLAGS"
+    fi
+    if test "[]_AC_LANG_ABBREV[]" = "cxx"; then
+        CXXFLAGS="$bakefile_cv_[]_AC_LANG_ABBREV[]_exto $CXXFLAGS"
+    fi
+fi
+]) dnl AC_DEFUN
+
+
+dnl ===========================================================================
+dnl Macros to do all of the compiler detections as one macro
+dnl ===========================================================================
+
+dnl check for different proprietary compilers depending on target platform
+dnl _AC_BAKEFILE_PROG_COMPILER(LANG)
+AC_DEFUN([_AC_BAKEFILE_PROG_COMPILER],
+[
+    AC_PROG_$1
+
+    dnl Intel compiler can be used under several different OS and even
+    dnl different architectures (x86, amd64 and Itanium) so it's easier to just
+    dnl always test for it
+    AC_BAKEFILE_PROG_INTEL$1
+
+    dnl if we're using gcc, we can't be using any of incompatible compilers
+    if test "x$G$1" != "xyes"; then
+        if test "x$1" = "xC"; then
+            AC_BAKEFILE_METROWERKS_EXTO
+            if test "x$bakefile_cv_c_exto" '!=' "x"; then
+                unset ac_cv_prog_cc_g
+                _AC_PROG_CC_G
+            fi
+        fi
+
+        dnl most of these compilers are only used under well-defined OS so
+        dnl don't waste time checking for them on other ones
+        case `uname -s` in
+            AIX*)
+                AC_BAKEFILE_PROG_XL$1
+                ;;
+
+            Darwin)
+                AC_BAKEFILE_PROG_MW$1
+                AC_BAKEFILE_PROG_XL$1
+                ;;
+
+            IRIX*)
+                AC_BAKEFILE_PROG_SGI$1
+                ;;
+
+            Linux*)
+                dnl Sun CC is now available under Linux too
+                AC_BAKEFILE_PROG_SUN$1
+                ;;
+
+            HP-UX*)
+                AC_BAKEFILE_PROG_HP$1
+                ;;
+
+            OSF1)
+                AC_BAKEFILE_PROG_COMPAQ$1
+                ;;
+
+            SunOS)
+                AC_BAKEFILE_PROG_SUN$1
+                ;;
+        esac
+    fi
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_CC],
+[
+    _AC_BAKEFILE_PROG_COMPILER(CC)
+])
+
+AC_DEFUN([AC_BAKEFILE_PROG_CXX],
+[
+    _AC_BAKEFILE_PROG_COMPILER(CXX)
+])
+
+
+dnl
+dnl  This file is part of Bakefile (http://www.bakefile.org)
 dnl
 dnl  Copyright (C) 2003-2007 Vaclav Slavik and others
 dnl
@@ -805,27 +1058,17 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
       ;;
 
       *-*-linux* )
-        if test "x$GCC" != "xyes"; then
-            AC_CACHE_CHECK([for Intel compiler], bakefile_cv_prog_icc,
-            [
-                AC_TRY_COMPILE([],
-                    [
-                        #ifndef __INTEL_COMPILER
-                        This is not ICC
-                        #endif
-                    ],
-                    bakefile_cv_prog_icc=yes,
-                    bakefile_cv_prog_icc=no
-                )
-            ])
-            if test "$bakefile_cv_prog_icc" = "yes"; then
-                PIC_FLAG="-KPIC"
-            fi
+        if test "$INTELCC" = "yes"; then
+            PIC_FLAG="-KPIC"
+        elif test "x$SUNCXX" = "xyes"; then
+            SHARED_LD_CC="${CC} -G -o"
+            SHARED_LD_CXX="${CXX} -G -o"
+            PIC_FLAG="-KPIC"
         fi
       ;;
 
       *-*-solaris2* )
-        if test "x$GCC" != xyes ; then
+        if test "x$SUNCXX" = xyes ; then
             SHARED_LD_CC="${CC} -G -o"
             SHARED_LD_CXX="${CXX} -G -o"
             PIC_FLAG="-KPIC"
@@ -837,7 +1080,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
         chmod +x shared-ld-sh
 
         SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
-        SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
+        SHARED_LD_MODULE_CXX="CXX=\$(CXX) $SHARED_LD_MODULE_CC"
 
         dnl Most apps benefit from being fully binded (its faster and static
         dnl variables initialized at startup work).
@@ -995,8 +1238,13 @@ AC_DEFUN([AC_BAKEFILE_SHARED_VERSIONS],
     SONAME_FLAG=
 
     case "${BAKEFILE_HOST}" in
-      *-*-linux* | *-*-freebsd* | *-*-k*bsd*-gnu )
-        SONAME_FLAG="-Wl,-soname,"
+      *-*-linux* | *-*-freebsd* | *-*-openbsd* | *-*-netbsd* | \
+      *-*-k*bsd*-gnu | *-*-mirbsd* )
+        if test "x$SUNCXX" = "xyes"; then
+            SONAME_FLAG="-h "
+        else
+            SONAME_FLAG="-Wl,-soname,"
+        fi
         USE_SOVERSION=1
         USE_SOVERLINUX=1
         USE_SOSYMLINKS=1
@@ -1141,18 +1389,21 @@ AC_DEFUN([AC_BAKEFILE_CHECK_BASIC_STUFF],
     AC_CHECK_TOOL(STRIP, strip, :)
     AC_CHECK_TOOL(NM, nm, :)
 
-    case ${BAKEFILE_HOST} in
-        *-hp-hpux* )
-            dnl HP-UX install doesn't handle the "-d" switch so don't
-            dnl use it there
-            INSTALL_DIR="mkdir -p"
-            ;;
-        * )
-            dnl we must refer to makefile's $(INSTALL) variable and not
-            dnl current value of shell variable, hence the single quoting:
-            INSTALL_DIR='$(INSTALL) -d'
-            ;;
-    esac
+    dnl This check is necessary because "install -d" doesn't exist on
+    dnl all platforms (e.g. HP/UX), see http://www.bakefile.org/ticket/80
+    AC_MSG_CHECKING([for command to install directories])
+    INSTALL_TEST_DIR=acbftest$$
+    $INSTALL -d $INSTALL_TEST_DIR > /dev/null 2>&1
+    if test $? = 0 -a -d $INSTALL_TEST_DIR; then
+        rmdir $INSTALL_TEST_DIR
+        dnl we must refer to makefile's $(INSTALL) variable and not
+        dnl current value of shell variable, hence the single quoting:
+        INSTALL_DIR='$(INSTALL) -d'
+        AC_MSG_RESULT([$INSTALL -d])
+    else
+        INSTALL_DIR="mkdir -p"
+        AC_MSG_RESULT([mkdir -p])
+    fi
     AC_SUBST(INSTALL_DIR)
 
     LDFLAGS_GUI=
@@ -1300,6 +1551,12 @@ AC_DEFUN([AC_BAKEFILE],
 [
     AC_PREREQ([2.58])
 
+    dnl We need to always run C/C++ compiler tests, but it's also possible
+    dnl for the user to call these macros manually, hence this instead of
+    dnl simply calling these macros. See http://www.bakefile.org/ticket/64
+    AC_REQUIRE([AC_BAKEFILE_PROG_CC])
+    AC_REQUIRE([AC_BAKEFILE_PROG_CXX])
+
     if test "x$BAKEFILE_HOST" = "x"; then
                if test "x${host}" = "x" ; then
                        AC_MSG_ERROR([You must call the autoconf "CANONICAL_HOST" macro in your configure.ac (or .in) file.])
@@ -1320,7 +1577,11 @@ AC_DEFUN([AC_BAKEFILE],
     AC_BAKEFILE_DEPS
     AC_BAKEFILE_RES_COMPILERS
 
-    BAKEFILE_BAKEFILE_M4_VERSION="0.2.2"
+    dnl OBJCFLAGS is set by Autoconf, but OBJCXXFLAGS is not:
+    AC_SUBST(OBJCXXFLAGS)
+
+
+    BAKEFILE_BAKEFILE_M4_VERSION="0.2.3"
 
     dnl includes autoconf_inc.m4:
     $1
@@ -1348,24 +1609,20 @@ D='$'
 cat <<EOF >bk-deps
 #!/bin/sh
 
-# This script is part of Bakefile (http://bakefile.sourceforge.net) autoconf
+# This script is part of Bakefile (http://www.bakefile.org) autoconf
 # script. It is used to track C/C++ files dependencies in portable way.
 #
 # Permission is given to use this file in any way.
 
 DEPSMODE=${DEPSMODE}
-DEPSDIR=.deps
 DEPSFLAG="${DEPSFLAG}"
-
-mkdir -p ${D}DEPSDIR
+DEPSDIRBASE=.deps
 
 if test ${D}DEPSMODE = gcc ; then
     ${D}* ${D}{DEPSFLAG}
     status=${D}?
-    if test ${D}{status} != 0 ; then
-        exit ${D}{status}
-    fi
-    # move created file to the location we want it in:
+
+    # determine location of created files:
     while test ${D}# -gt 0; do
         case "${D}1" in
             -o )
@@ -1380,24 +1637,37 @@ if test ${D}DEPSMODE = gcc ; then
         esac
         shift
     done
+    objfilebase=\`basename ${D}objfile\`
+    builddir=\`dirname ${D}objfile\`
     depfile=\`basename ${D}srcfile | sed -e 's/\\..*${D}/.d/g'\`
     depobjname=\`echo ${D}depfile |sed -e 's/\\.d/.o/g'\`
+    depsdir=${D}builddir/${D}DEPSDIRBASE
+    mkdir -p ${D}depsdir
+
+    # if the compiler failed, we're done:
+    if test ${D}{status} != 0 ; then
+        rm -f ${D}depfile
+        exit ${D}{status}
+    fi
+
+    # move created file to the location we want it in:
     if test -f ${D}depfile ; then
-        sed -e "s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
+        sed -e "s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{depsdir}/${D}{objfilebase}.d
         rm -f ${D}depfile
     else
         # "g++ -MMD -o fooobj.o foosrc.cpp" produces fooobj.d
-        depfile=\`basename ${D}objfile | sed -e 's/\\..*${D}/.d/g'\`
+        depfile=\`echo "${D}objfile" | sed -e 's/\\..*${D}/.d/g'\`
         if test ! -f ${D}depfile ; then
             # "cxx -MD -o fooobj.o foosrc.cpp" creates fooobj.o.d (Compaq C++)
             depfile="${D}objfile.d"
         fi
         if test -f ${D}depfile ; then
-            sed -e "/^${D}objfile/!s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
+            sed -e "\\,^${D}objfile,!s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{depsdir}/${D}{objfilebase}.d
             rm -f ${D}depfile
         fi
     fi
     exit 0
+
 elif test ${D}DEPSMODE = mwcc ; then
     ${D}* || exit ${D}?
     # Run mwcc again with -MM and redirect into the dep file we want
@@ -1417,8 +1687,15 @@ elif test ${D}DEPSMODE = mwcc ; then
         fi
         prevarg="${D}arg"
     done
-    ${D}* ${D}DEPSFLAG >${D}{DEPSDIR}/${D}{objfile}.d
+    
+    objfilebase=\`basename ${D}objfile\`
+    builddir=\`dirname ${D}objfile\`
+    depsdir=${D}builddir/${D}DEPSDIRBASE
+    mkdir -p ${D}depsdir
+
+    ${D}* ${D}DEPSFLAG >${D}{depsdir}/${D}{objfilebase}.d
     exit 0
+
 elif test ${D}DEPSMODE = unixcc; then
     ${D}* || exit ${D}?
     # Run compiler again with deps flag and redirect into the dep file.
@@ -1439,8 +1716,15 @@ elif test ${D}DEPSMODE = unixcc; then
         esac
         shift
     done
-    eval "${D}cmd ${D}DEPSFLAG" | sed "s|.*:|${D}objfile:|" >${D}{DEPSDIR}/${D}{objfile}.d
+    
+    objfilebase=\`basename ${D}objfile\`
+    builddir=\`dirname ${D}objfile\`
+    depsdir=${D}builddir/${D}DEPSDIRBASE
+    mkdir -p ${D}depsdir
+    
+    eval "${D}cmd ${D}DEPSFLAG" | sed "s|.*:|${D}objfile:|" >${D}{DEPSDIR}/${D}{objfilebase}.d
     exit 0
+
 else
     ${D}*
     exit ${D}?
@@ -1471,6 +1755,10 @@ objects=""
 linking_flag="-dynamiclib"
 ldargs="-r -keep_private_externs -nostdlib"
 
+if test "x${D}CXX" = "x"; then
+    CXX="c++"
+fi
+
 while test ${D}# -gt 0; do
     case ${D}1 in
 
@@ -1481,6 +1769,12 @@ while test ${D}# -gt 0; do
        -o|-compatibility_version|-current_version|-framework|-undefined|-install_name)
         # collect these options and values
         args="${D}{args} ${D}1 ${D}2"
+        shift
+        ;;
+       
+       -arch|-isysroot)
+        # collect these options and values
+        ldargs="${D}{ldargs} ${D}1 ${D}2"
         shift
         ;;
 
@@ -1523,9 +1817,9 @@ status=0
 # Link one module containing all the others
 #
 if test ${D}{verbose} = 1; then
-    echo "c++ ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o"
+    echo "${D}CXX ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o"
 fi
-c++ ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o
+${D}CXX ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o
 status=${D}?
 
 #
@@ -1534,9 +1828,9 @@ status=${D}?
 #
 if test ${D}{status} = 0; then
     if test ${D}{verbose} = 1; then
-        echo "c++ ${D}{linking_flag} master.${D}${D}.o ${D}{args}"
+        echo "${D}CXX ${D}{linking_flag} master.${D}${D}.o ${D}{args}"
     fi
-    c++ ${D}{linking_flag} master.${D}${D}.o ${D}{args}
+    ${D}CXX ${D}{linking_flag} master.${D}${D}.o ${D}{args}
     status=${D}?
 fi
 
@@ -1559,7 +1853,7 @@ D='$'
 cat <<EOF >bk-make-pch
 #!/bin/sh
 
-# This script is part of Bakefile (http://bakefile.sourceforge.net) autoconf
+# This script is part of Bakefile (http://www.bakefile.org) autoconf
 # script. It is used to generated precompiled headers.
 #
 # Permission is given to use this file in any way.
@@ -1568,6 +1862,8 @@ outfile="${D}{1}"
 header="${D}{2}"
 shift
 shift
+
+builddir=\`echo ${D}outfile | sed -e 's,/\\.pch/.*${D},,g'\`
 
 compiler=""
 headerfile=""
@@ -1600,8 +1896,8 @@ else
     else
         mkdir -p \`dirname ${D}{outfile}\`
     fi
-    depsfile=".deps/\`echo ${D}{outfile} | tr '/.' '__'\`.d"
-    mkdir -p .deps
+    depsfile="${D}{builddir}/.deps/\`echo ${D}{outfile} | tr '/.' '__'\`.d"
+    mkdir -p ${D}{builddir}/.deps
     if test "x${GCC_PCH}" = "x1" ; then
         # can do this because gcc is >= 3.4:
         ${D}{compiler} -o ${D}{outfile} -MMD -MF "${D}{depsfile}" "${D}{headerfile}"

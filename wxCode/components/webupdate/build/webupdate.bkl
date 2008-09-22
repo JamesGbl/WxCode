@@ -8,45 +8,45 @@
 
 
 
-    <!-- The wxHttpEngine dependency -->
-    <!-- =========================== -->
+    <!-- The wxCURL dependency -->
+    <!-- ===================== -->
 
-    <set var="USE_HTTPENGINE_DEFAULT">1</set>
-    <set var="HTTPENGINE_DIR_DEFAULT">$(nativePaths('../../httpengine'))</set>
+    <set var="USE_CURL_DEFAULT">1</set>
+    <set var="CURL_DIR_DEFAULT">$(nativePaths('../../wxcurl'))</set>
 
     <if cond="FORMAT_SUPPORTS_CONDITIONS=='1'">
-        <option name="USE_HTTPENGINE">
+        <option name="USE_CURL">
             <values>1,0</values>
-            <default-value>$(USE_HTTPENGINE_DEFAULT)</default-value>
-            <description>If 1 then wxHTTPEngine component will be used for proxy/authentication stuff</description>
+            <default-value>$(USE_CURL_DEFAULT)</default-value>
+            <description>If 1 then wxCURL component will be used for proxy/authentication stuff</description>
         </option>
 
         <!-- on unix-like OS we assume that the component is installed in system folders -->
-        <option name="HTTPENGINE_DIR" category="path">
-            <default-value>$(HTTPENGINE_DIR_DEFAULT)</default-value>
-            <description>The path to the wxHTTPBuilder (httpengine) component</description>
+        <option name="CURL_DIR" category="path">
+            <default-value>$(CURL_DIR_DEFAULT)</default-value>
+            <description>The path to the wxHTTPBuilder (CURL) component</description>
         </option>
     </if>
     <if cond="FORMAT_SUPPORTS_CONDITIONS=='0'">
-        <set var="USE_HTTPENGINE">$(USE_HTTPENGINE_DEFAULT)</set>
-        <set var="HTTPENGINE_DIR">$(HTTPENGINE_DIR_DEFAULT)</set>
+        <set var="USE_CURL">$(USE_CURL_DEFAULT)</set>
+        <set var="CURL_DIR">$(CURL_DIR_DEFAULT)</set>
     </if>
 
-    <!-- handle the HTTPENGINE optional dependency -->
-    <set var="HTTPENGINEDEP_LIBPATH">
-        <if cond="PLATFORM_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
+    <!-- handle the CURL optional dependency -->
+    <set var="CURLDEP_LIBPATH">
+        <if cond="PLATFORM_WIN32=='1'">$(CURL_DIR)/lib</if>
     </set>
-    <set var="HTTPENGINEDEP_INCPATH">
-        <if cond="PLATFORM_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
+    <set var="CURLDEP_INCPATH">
+        <if cond="PLATFORM_WIN32=='1'">$(CURL_DIR)/include</if>
     </set>
-    <set var="HTTPENGINEDEP_DEF">
-        <if cond="PLATFORM_WIN32=='1'">wxUSE_HTTPENGINE=1</if>
-        <if cond="PLATFORM_WIN32=='0'">wxUSE_HTTPENGINE=0</if>
+    <set var="CURLDEP_DEF">
+        <if cond="USE_CURL=='1'">wxUSE_CURL=1</if>
+        <if cond="USE_CURL=='0'">wxUSE_CURL=0</if>
     </set>
-    <set-wxlike var="HTTPENGINEDEP_LIB"
+    <set-wxlike var="CURLDEP_LIB"
                 prefix="wxcode"
-                cond="USE_HTTPENGINE=='1'">
-        httpengine
+                cond="USE_CURL=='1'">
+        wxcurl
     </set-wxlike>
 
 
@@ -87,18 +87,18 @@
     
     <template id="webupdatecommon">
         <if cond="TARGETING_WIN32=='1'">
-            <!-- for wxHttpEngine dependency  (on unix they should be installed in system paths)-->
-            <lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
-            <include>$(HTTPENGINEDEP_INCPATH)</include>
+            <!-- for wxCURL dependency  (on unix they should be installed in system paths)-->
+            <lib-path>$(CURLDEP_LIBPATH)</lib-path>
+            <include>$(CURLDEP_INCPATH)</include>
         </if>
-        <define>$(HTTPENGINEDEP_DEF)</define>
+        <define>$(CURLDEP_DEF)</define>
 
         <!-- miscellaneous -->
         <optimize>$(MYOPTIMIZEFLAG)</optimize>
         <define>$(MODDED_DEF)</define>
     </template>
     <define-tag name="webupdatelibs" rules="exe,dll">
-        <sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+        <sys-lib>$(CURLDEP_LIB)</sys-lib>
 
         <!-- the MSVC compiler can build without the ADV & HTML libraries... -->
         <if cond="FORMAT!='msvc' and FORMAT!='msvc6prj'">
@@ -145,12 +145,15 @@
             <linguas>it de</linguas>
             <install-to>$(LOCALEDIR)</install-to>
         </gettext-catalogs>
-        <action id="i18n">
-            <scanxrc>$(XRCFILE)</scanxrc>
-            <create-pot>$(POTFILE)</create-pot>
-            <update-and-compile-po>locale/it.po</update-and-compile-po>
-            <update-and-compile-po>locale/de.po</update-and-compile-po>
-        </action>
+
+        <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
+            <action id="i18n">
+                <scanxrc>$(XRCFILE)</scanxrc>
+                <create-pot>$(POTFILE)</create-pot>
+                <update-and-compile-po>locale/it.po</update-and-compile-po>
+                <update-and-compile-po>locale/de.po</update-and-compile-po>
+            </action>
+        </if>
 
         <!-- the WebUpdater utility... -->
         <exe id="webupdater" template="wx,wxlike,wxcode-basic,webupdatecommon">

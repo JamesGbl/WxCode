@@ -17,8 +17,8 @@
 <makefile>
 
     <using module="datafiles"/>
-    <requires version="0.1.5"/>
-    
+    <requires version="0.2.3"/>
+
 
     <!-- This is a bakefile, that is, a generic template used to    -->
     <!-- generate makefiles ALL supported compilers.                -->
@@ -46,7 +46,7 @@
     <!--                      GENERIC OPTIONS                       -->
     <!--                                                            -->
 
-    
+
     <!--    This is a standard option that determines               -->
     <!--    whether the user wants to build this library as         -->
     <!--    a dll or as a static library.                           -->
@@ -62,7 +62,7 @@
     <option name="UNICODE">
         <values>0,1</values>
         <values-description>,Unicode</values-description>
-        <default-value>0</default-value>        
+        <default-value>0</default-value>
         <description>Compile Unicode build?</description>
     </option>
 
@@ -98,14 +98,14 @@
     <!--    to nothing (literally).                                 -->
     <set var="UNICODE_DEFINE">
         <if cond="FORMAT!='autoconf' and UNICODE=='1'">_UNICODE</if>
-    </set>    
-    
-    <!--    The debug define we need with win32 compilers           -->    
-    <!--    (on Linux, the wx-config program is used).              -->    
-    <set var="DEBUG_DEFINE">        
+    </set>
+
+    <!--    The debug define we need with win32 compilers           -->
+    <!--    (on Linux, the wx-config program is used).              -->
+    <set var="DEBUG_DEFINE">
         <if cond="FORMAT!='autoconf' and BUILD=='debug'">
             __WXDEBUG__
-        </if>    
+        </if>
     </set>
 
     <!--    Value we will use later on for the debug-info           -->
@@ -146,15 +146,15 @@
         <set var="WARNINGS">default</set>
         <set var="MYCPPFLAGS">-Wall</set>
     </if>
-    
+
     <!-- same for MYCPPFLAGS -->
     <set var="MYLDFLAGS"></set>
-    <if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">
+    <if cond="FORMAT.startswith('msv')">
         <set var="MYLDFLAGS">/NODEFAULTLIB:MSVCRTD.lib</set>
     </if>
 
-    
-    
+
+
 
 
 
@@ -171,11 +171,8 @@
     <!--          behaviour can be overridden by the                -->
     <!--                        FULL_OPTIONS_SUPPORT                -->
     <!--          variable defined below...                         -->
-    
-    <set var="FULL_OPTIONS_SUPPORT">
-        <if cond="FORMAT=='msvc6prj'">0</if>
-        <if cond="FORMAT!='msvc6prj'">1</if>
-    </set>
+
+    <set var="FULL_OPTIONS_SUPPORT">$(FORMAT_SUPPORTS_ACTIONS)</set>
 
     <option name="ICONV_DIR" category="path">
         <default-value>c:\iconv</default-value>
@@ -229,25 +226,25 @@
         <default-value>1</default-value>
         <description>Enable DocBook support</description>
     </option>
-    
+
     <option name="WITH_XPATH">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable XPath support</description>
     </option>
-    
+
     <option name="WITH_XPTR">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable XPointer support</description>
     </option>
-    
+
     <option name="WITH_XINCLUDE">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable XInclude support</description>
     </option>
-    
+
     <!-- see the note #2 -->
     <if cond="FULL_OPTIONS_SUPPORT=='0'">
         <set var="WITH_ICONV">1</set>
@@ -259,13 +256,13 @@
             <description>Enable iconv support</description>
         </option>
     </if>
-    
+
     <option name="WITH_ISO8859X">
         <values>0,1</values>
         <default-value>0</default-value>
         <description>Enable iso8859x support</description>
     </option>
-    
+
     <!-- see the note #2 -->
     <if cond="FULL_OPTIONS_SUPPORT=='0'">
         <set var="WITH_ZLIB">0</set>
@@ -277,79 +274,79 @@
             <description>Enable ZLIB support</description>
         </option>
     </if>
-    
+
     <option name="WITH_REGEXPS">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable regular expressions</description>
     </option>
-    
+
     <option name="WITH_TREE">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable tree api</description>
     </option>
-    
+
     <option name="WITH_READER">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable xmlReader api</description>
     </option>
-    
+
     <option name="WITH_WRITER">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable xmlWriter api</description>
     </option>
-    
+
     <option name="WITH_WALKER">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable xmlDocWalker api</description>
-    </option>    
-    
+    </option>
+
     <option name="WITH_PATTERN">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable xmlPattern api</description>
     </option>
-    
+
     <option name="WITH_PUSH">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable push api</description>
     </option>
-    
+
     <option name="WITH_VALID">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable DTD validation support</description>
     </option>
-    
+
     <option name="WITH_SAX1">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable SAX1 api</description>
-    </option>    
-                    
+    </option>
+
     <option name="WITH_SCHEMAS">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable XML Schema support</description>
     </option>
-    
+
     <option name="WITH_LEGACY">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable deprecated APIs</description>
-    </option>    
-                    
+    </option>
+
     <option name="WITH_OUTPUT">
         <values>0,1</values>
         <default-value>1</default-value>
         <description>Enable serialization support</description>
-    </option>					
-                    
+    </option>
+
     <option name="WITH_PYTHON">
         <values>0,1</values>
         <default-value>0</default-value>
@@ -361,7 +358,7 @@
 
     <!--                                                            -->
     <!--                    LIBXML2 VARIABLES                       -->
-    <!--                                                            -->   
+    <!--                                                            -->
 
     <!-- Put all the objects files generated by         -->
     <!-- the compilation in a subfolder of BUILD        -->
@@ -369,15 +366,15 @@
 
     <!-- The root directory of libxml2 -->
     <set var="XMLBASEDIR">..</set>
-    
+
     <!-- The directory where libxml2' tests will be put -->
     <set var="XMLTESTDIR">$(XMLBASEDIR)$(DIRSEP)bin</set>
-    
+
     <set var="LIBXML_MAJOR_VERSION">2</set>
     <set var="LIBXML_MINOR_VERSION">6</set>
     <set var="LIBXML_MICRO_VERSION">20</set>
     <set var="LIBXML_VERSION">$(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION).$(LIBXML_MICRO_VERSION)</set>
-    
+
     <!-- some defines related to threads -->
     <set var="REENTRANT_DEF">
         <if cond="WITH_THREADS=='native'">
@@ -419,24 +416,24 @@
             <if cond="WITH_THREADS=='posix'">$(THREADS_DEF) __MT__</if>
         </set>
     </if>	-->
-    
-    
+
+
     <!-- some other conditional defines -->
     <set var="ZLIB_DEF"><if cond="WITH_ZLIB=='1'">HAVE_ZLIB_H</if></set>
     <set var="DEBUG_DEF"><if cond="BUILD=='debug'">_DEBUG</if></set>
     <set var="DEBUG_DEF"><if cond="BUILD=='release'">NDEBUG</if></set>
-    
+
     <!-- this is very very important when compiling with MINGW: without this line,
     the test programs (and all the programs built with libxml2 which use xmlFree)
     won't build because of "undefined references to __xmlFree" -->
     <set var="STATIC_DEF"><if cond="SHARED=='0'">LIBXML_STATIC</if></set>
-    
+
     <!-- some conditional libraries dependencies -->
     <set var="ICONV_LIB"><if cond="WITH_ICONV=='1'">iconv</if></set>
     <set var="WSOCK32_LIB"><if cond="WITH_THREADS=='native'">wsock32</if></set>
     <set var="ZLIB_LIB"><if cond="WITH_ZLIB=='1'">zdll</if></set>
     <set var="POSIX_LIB"><if cond="WITH_THREADS=='posix'">pthreadVC</if></set>
-    
+
     <set var="XMLINCLUDEDIR">$(XMLBASEDIR)$(DIRSEP)include$(DIRSEP)libxml$(DIRSEP)</set>
 
 
@@ -444,12 +441,12 @@
 
     <!--                                                            -->
     <!--               ABOUT CONFIG.H HEADER CREATION               -->
-    <!--                                                            -->   
-    
+    <!--                                                            -->
+
     <set var="CONFIG_SRCNAME">win32config.h</set>
     <set var="CONFIG_DSTNAME">config.h</set>
-    
-    <if cond="FORMAT!='msvc6prj' and FORMAT!='autoconf' and FORMAT!='gnu'">
+
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='1' and FORMAT!='autoconf' and FORMAT!='gnu'">
         <copy-file-to-file id="setup">
             <!-- On win32 we need to manually copy a default config.h file -->
             <!-- from the include/mc/msw folder to include/mc			   -->
@@ -462,52 +459,41 @@
             <!-- not need to do anything here...							  -->
         </copy-file-to-file>
     </if>
-    <if cond="FORMAT=='msvc6prj' or FORMAT=='autoconf' or FORMAT=='gnu'">
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='0' or FORMAT=='autoconf' or FORMAT=='gnu'">
         <phony id="setup"/>
     </if>
-    
-    <if cond="FORMAT!='msvc6prj'">
-    
+
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
+
         <!-- setupbuilddir is required by "libonly" phony target - bakefile autogenerates this but that auto-generated target
                 is bypassed by "libonly" which thus would not work without this... -->
-        <mkdir id="setupbuilddir">			
+        <mkdir id="setupbuilddir">
             <dir>$(BUILDDIR)</dir>
             <set var="__targetname">setupbuilddir</set>		<!-- must be after <dir> tag; used to avoid to get two targets with the same name -->
         </mkdir>
         <mkdir id="setuplibdir"><dir>$(XMLBASEDIR)$(DIRSEP)lib</dir></mkdir>
         <mkdir id="setupbindir"><dir>$(XMLBASEDIR)$(DIRSEP)bin</dir></mkdir>
-            
-        <!-- Creates all output folders -->	
+
+        <!-- Creates all output folders -->
         <phony id="setupdirs">
-            <dependency-of>all</dependency-of>	    
+            <dependency-of>all</dependency-of>
             <depends>setupbuilddir</depends>
             <depends>setuplibdir</depends>
             <depends>setupbindir</depends>
         </phony>
     </if>
-    <if cond="FORMAT=='msvc6prj'">
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='0'">
         <phony id="setupdirs"/>
     </if>
 
-    <!-- This defines a tag which includes headers on MSVC          -->
-    <!-- Note that $(value) is stuck in there by bakefile,          -->
-    <!-- and is the value between the beginning and end tag.        -->
-    <define-tag name="headers" rules="dll,lib,exe">
-        <if cond="FORMAT=='msvc6prj'">
-            <msvc-project-files>
-                $(value)
-            </msvc-project-files>
-        </if>
-    </define-tag>
-            
     <!-- Creates the following custom build rule for MSVC6PRJ file:
         copies ..\include\win32config.h into ..\config.h
         NOTE: this tag must be used before the <sources> tag if you want that the configuration
             file will be created before any other source file is compiled... -->
     <define-tag name="msvc-copy-setup-h" rules="dll,lib,action">
-        <if cond="FORMAT=='msvc6prj'">
+        <if cond="FORMAT.startswith('msvs')">
             <headers>$(XMLBASEDIR)\include\$(CONFIG_SRCNAME)</headers>
-            <set var="__subdir">$(value)</set>
+            <!--<set var="__subdir">$(value)</set>-->
             <set var="_custom_build_files" append="1">$(XMLBASEDIR)\include\$(CONFIG_SRCNAME)</set>
             <set var="_custom_build____include_win32config_h">
 Creating the configuration file ..\$(CONFIG_DSTNAME) from ..\include\win32\$(CONFIG_SRCNAME)
@@ -525,15 +511,15 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
 
     <!--                                                            -->
     <!--                          TEMPLATES                         -->
-    <!--                                                            -->   
+    <!--                                                            -->
 
     <!-- The basic template: used by all the targets -->
     <template id="base">
-        <if cond="FORMAT=='mingw'">                    
+        <if cond="FORMAT=='mingw'">
             <define>HAVE_W32API_H</define>
             <ldflags>-mthreads</ldflags>
         </if>
-    
+
         <cflags>$(MYCPPFLAGS)</cflags>
         <ldflags>$(MYLDFLAGS)</ldflags>
         <warnings>$(WARNINGS)</warnings>
@@ -542,15 +528,15 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <debug-info>$(DEBUGINFO)</debug-info>
         <debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
     </template>
-    
+
     <!-- The template used both by the library and by the test programs -->
     <template id="xml2" template="base">
-    
+
         <!-- -I & -L equivalents -->
         <include>$(XMLBASEDIR)$(DIRSEP)include</include>
         <include>$(ICONV_DIR)$(DIRSEP)include</include>
-        <lib-path>$(ICONV_DIR)$(DIRSEP)lib</lib-path>    
-        
+        <lib-path>$(ICONV_DIR)$(DIRSEP)lib</lib-path>
+
         <!-- some conditional define flags -->
         <define>$(REENTRANT_DEF)</define>
         <define>$(WIN32_THREADS_DEF)</define>
@@ -559,9 +545,9 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <define>$(ZLIB_DEF)</define>
         <define>$(DEBUG_DEF)</define>
         <define>$(STATIC_DEF)</define>
-    
+
         <!-- these must always be defined on win32 -->
-        <define>WIN32</define>		
+        <define>WIN32</define>
         <define>_WINDOWS</define>
         <define>_MBCS</define>
 
@@ -570,17 +556,17 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
             <define>EILSEQ=2</define>
         </if>
     </template>
-    
+
     <!-- The template used by libxml2 test programs -->
     <template id="xml2test" template="xml2">
         <dirname>$(XMLTESTDIR)</dirname>
-        <app-type>console</app-type>        
+        <app-type>console</app-type>
 
         <library>libxml2_lib</library>
-        
+
         <sys-lib>$(ICONV_LIB)</sys-lib>
         <sys-lib>$(WSOCK32_LIB)</sys-lib>
-        <sys-lib>$(ZLIB_LIB)</sys-lib> 
+        <sys-lib>$(ZLIB_LIB)</sys-lib>
         <sys-lib>$(POSIX_LIB)</sys-lib>
     </template>
 
@@ -591,23 +577,23 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
 
     <!--                                                            -->
     <!--                  LIBXML2 LIBRARY TARGET                    -->
-    <!--                                                            -->  
-    
+    <!--                                                            -->
+
     <template id="xml2sources">
-        
+
         <!-- this is useful only when using MSVC6PRJ -->
-        <if cond="FORMAT=='msvc6prj'">
+        <if cond="FORMAT.startswith('msvs')">
             <msvc-copy-setup-h/>
             <msvc-file-group>Config headers:*config.h</msvc-file-group>
         </if>
-        <if cond="FORMAT!='msvc6prj'">
+        <if cond="not FORMAT.startswith('msvs')">
             <depends>setup</depends>
             <depends>setuplibdir</depends>
         </if>
-            
+
         <!-- output folder -->
         <dirname>$(XMLBASEDIR)$(DIRSEP)lib</dirname>
-        
+
         <!-- The output name must be "libxml2.lib" with all compilers.
             Since mingw format autoadds the "lib" prefix to the library
             name, we must intercept that case to avoid to get "liblibxml2.a" -->
@@ -617,8 +603,8 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <if cond="FORMAT=='mingw'">
             <libname>xml2</libname>
         </if>
-                
-        <!-- the list of source files to compile -->            
+
+        <!-- the list of source files to compile -->
         <sources>
             $(XMLBASEDIR)$(DIRSEP)c14n.c
             $(XMLBASEDIR)$(DIRSEP)catalog.c
@@ -662,7 +648,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
             $(XMLBASEDIR)$(DIRSEP)xpointer.c
             $(XMLBASEDIR)$(DIRSEP)xmlstring.c
         </sources>
-        
+
         <!-- the list of header files (for IDE projects) -->
         <headers>
             $(XMLINCLUDEDIR)c14n.h
@@ -706,7 +692,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
             $(XMLINCLUDEDIR)xmlschemastypes.h
             $(XMLINCLUDEDIR)xmlstring.h
             $(XMLINCLUDEDIR)xmlunicode.h
-            $(XMLINCLUDEDIR)xmlversion.h			
+            $(XMLINCLUDEDIR)xmlversion.h
             $(XMLINCLUDEDIR)xmlwriter.h
             $(XMLINCLUDEDIR)xpath.h
             $(XMLINCLUDEDIR)xpathInternals.h
@@ -718,7 +704,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
             $(XMLBASEDIR)$(DIRSEP)libxml.h
             $(XMLBASEDIR)$(DIRSEP)triodef.h
             $(XMLBASEDIR)$(DIRSEP)trionan.h
-            $(XMLBASEDIR)$(DIRSEP)include$(DIRSEP)wsockcompat.h			
+            $(XMLBASEDIR)$(DIRSEP)include$(DIRSEP)wsockcompat.h
     </headers>
     </template>
     <lib id="libxml2_lib" template="xml2,xml2sources" cond="SHARED=='0'"/>
@@ -727,11 +713,11 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <dllname>libxml2</dllname>
         <sys-lib>$(ICONV_LIB)</sys-lib>
         <sys-lib>$(WSOCK32_LIB)</sys-lib>
-        <sys-lib>$(ZLIB_LIB)</sys-lib> 
+        <sys-lib>$(ZLIB_LIB)</sys-lib>
         <sys-lib>$(POSIX_LIB)</sys-lib>
     </dll>
     <set var="MSVC6PRJ_MERGED_TARGETS">libxml2=libxml2_lib+libxml2_dll</set>
-    
+
     <phony id="libonly">
         <set var="DEPNAME">
             <if cond="SHARED=='1'">libxml2_dll</if>
@@ -741,14 +727,14 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <depends>setupdirs</depends>
         <depends>$(DEPNAME)</depends>
     </phony>
-    
-    
+
+
 
 
     <!--                                                -->
     <!--               LIBXML2 test programs            -->
     <!--                                                -->
-    
+
     <set var="BUILD_ALL_TESTS">
 
         <!-- when using full options support with MSVC6PRJ we should

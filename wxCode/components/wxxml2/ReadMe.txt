@@ -33,6 +33,10 @@
  ChangeLog
  ---------
 
+ 1.9
+     - fixed a problem in the build system which appeared when compiling
+       in Unicode mode under Windows (reported by Kevin Colwell).
+
  1.8
 
      - revise source code for better compatibility with wxWidgets 2.8
