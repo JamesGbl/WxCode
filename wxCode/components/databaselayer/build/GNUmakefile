@@ -1539,28 +1539,28 @@ uninstall_databaselayer_tds_dll_headers:
 endif
 
 ../tests/runner_sqlite: $(TEST_SQLITE_OBJECTS) $(__databaselayer_sqlite_lib___depname)
-	$(CXX) -o $@ $(TEST_SQLITE_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(SQLITE_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lsqlite3
+	$(CXX) -o $@ $(TEST_SQLITE_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(SQLITE_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lsqlite3 `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_firebird: $(TEST_FIREBIRD_OBJECTS) $(__databaselayer_firebird_lib___depname)
-	$(CXX) -o $@ $(TEST_FIREBIRD_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(FIREBIRD_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lfbclient
+	$(CXX) -o $@ $(TEST_FIREBIRD_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(FIREBIRD_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lfbclient `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_firebird_embedded: $(TEST_FIREBIRD_EMBEDDED_OBJECTS) $(__databaselayer_firebird_lib___depname)
-	$(CXX) -o $@ $(TEST_FIREBIRD_EMBEDDED_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(FIREBIRD_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lfbclient
+	$(CXX) -o $@ $(TEST_FIREBIRD_EMBEDDED_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(FIREBIRD_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lfbclient `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_mysql: $(TEST_MYSQL_OBJECTS) $(__databaselayer_mysql_lib___depname)
-	$(CXX) -o $@ $(TEST_MYSQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(MYSQL_LIB_LOCATION)/lib `mysql_config --libs`  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	$(CXX) -o $@ $(TEST_MYSQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(MYSQL_LIB_LOCATION)/lib `mysql_config --libs`  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_postgresql: $(TEST_POSTGRESQL_OBJECTS) $(__databaselayer_postgresql_lib___depname)
-	$(CXX) -o $@ $(TEST_POSTGRESQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(POSTGRESQL_LIB_LOCATION)/lib -L`pg_config --libdir`/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lpq
+	$(CXX) -o $@ $(TEST_POSTGRESQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(POSTGRESQL_LIB_LOCATION)/lib -L`pg_config --libdir`/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lpq `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_oracle: $(TEST_ORACLE_OBJECTS) $(__databaselayer_oracle_lib___depname)
-	$(CXX) -o $@ $(TEST_ORACLE_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(ORACLE_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lclntsh
+	$(CXX) -o $@ $(TEST_ORACLE_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(ORACLE_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lclntsh `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_odbc: $(TEST_ODBC_OBJECTS) $(__databaselayer_odbc_lib___depname)
-	$(CXX) -o $@ $(TEST_ODBC_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lodbc
+	$(CXX) -o $@ $(TEST_ODBC_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lodbc `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_tds: $(TEST_TDS_OBJECTS) $(__databaselayer_tds_lib___depname)
-	$(CXX) -o $@ $(TEST_TDS_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(TDS_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -ltdssrv
+	$(CXX) -o $@ $(TEST_TDS_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(TDS_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -ltdssrv `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 sqlite: $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname)
 
