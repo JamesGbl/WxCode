@@ -207,7 +207,7 @@ void FirebirdDatabaseLayer::BeginTransaction()
 {
   ResetErrorCodes();
 
-  wxLogDebug(_("Beginning transaction\n"));
+  wxLogDebug(_("Beginning transaction"));
   if (m_pDatabase)
   {
     m_pTransaction = 0L;
@@ -224,7 +224,7 @@ void FirebirdDatabaseLayer::Commit()
 {
   ResetErrorCodes();
 
-  wxLogDebug(_("Committing transaction\n"));
+  wxLogDebug(_("Committing transaction"));
   if (m_pDatabase && m_pTransaction)
   {
     int nReturn = isc_commit_transaction(m_Status, &m_pTransaction);
@@ -245,7 +245,7 @@ void FirebirdDatabaseLayer::RollBack()
 {
   ResetErrorCodes();
 
-  wxLogDebug(_("Rolling back transaction\n"));
+  wxLogDebug(_("Rolling back transaction"));
   if (m_pDatabase && m_pTransaction)
   {
     int nReturn = isc_rollback_transaction(m_Status, &m_pTransaction);
@@ -263,7 +263,7 @@ void FirebirdDatabaseLayer::RollBack()
 }
 
 // query database
-bool FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
+int FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 {
   ResetErrorCodes();
   if (m_pDatabase != NULL)
@@ -280,6 +280,7 @@ bool FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
     wxArrayString::iterator start = QueryArray.begin();
     wxArrayString::iterator stop = QueryArray.end();
 
+    int nRows = 1;
     if (QueryArray.size() > 0)
     {
       bool bQuickieTransaction = false;
@@ -297,7 +298,7 @@ bool FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
         {
           wxLogError(_("Unable to start transaction"));
           ThrowDatabaseException();
-          return false;
+          return DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
       }
 
@@ -315,7 +316,7 @@ bool FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
           m_pTransaction = NULL;
 
           ThrowDatabaseException();
-          return false;
+          return DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
         start++;
       }
@@ -326,17 +327,17 @@ bool FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
         if (GetErrorCode() != DATABASE_LAYER_OK)
         {
           ThrowDatabaseException();
-          return false;
+          return DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
       }
     }
 
-    return true;
+    return nRows;
   }
   else
   {
     wxLogError(_("Database handle is NULL"));
-    return false;
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
 }
 
@@ -346,7 +347,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
   if (m_pDatabase != NULL)
   {
     wxCharBuffer sqlDebugBuffer = ConvertToUnicodeStream(strQuery);
-    wxLogDebug(_("Running query: \"%s\"\n"), (const char*)sqlDebugBuffer);
+    wxLogDebug(_("Running query: \"%s\""), (const char*)sqlDebugBuffer);
     
     wxArrayString QueryArray = ParseQueries(strQuery);
 
@@ -568,6 +569,7 @@ PreparedStatement* FirebirdDatabaseLayer::PrepareStatement(const wxString& strQu
     wxDELETE(pStatement); // This sets the pointer to NULL after deleting it
 
     ThrowDatabaseException();
+    return NULL;
   }
 
   LogStatementForCleanup(pStatement);
@@ -890,7 +892,7 @@ wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(int nCode, ISC_STATUS
 
 void FirebirdDatabaseLayer::InterpretErrorCodes()
 {
-  wxLogDebug(_("FirebirdDatabaseLayer::InterpretErrorCodes()\n"));
+  wxLogDebug(_("FirebirdDatabaseLayer::InterpretErrorCodes()"));
 
   long nSqlCode = isc_sqlcode(m_Status);
   SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, m_Status));

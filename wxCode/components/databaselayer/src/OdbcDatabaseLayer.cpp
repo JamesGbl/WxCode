@@ -238,7 +238,7 @@ void OdbcDatabaseLayer::RollBack()
    }
 }
 
-bool OdbcDatabaseLayer::RunQuery( const wxString& strQuery, bool bParseQuery )
+int OdbcDatabaseLayer::RunQuery( const wxString& strQuery, bool bParseQuery )
 {
    ResetErrorCodes();
 

@@ -155,9 +155,10 @@ int PostgresPreparedStatement::GetParameterCount()
 }
 
   
-void PostgresPreparedStatement::RunQuery()
+int PostgresPreparedStatement::RunQuery()
 {
   // Iterate through the statements and have them run their queries
+  int nRows = DATABASE_LAYER_QUERY_RESULT_ERROR;
   for (unsigned int i=0; i<(m_Statements.size()); i++)
   {
     m_Statements[i].RunQuery();
@@ -166,9 +167,10 @@ void PostgresPreparedStatement::RunQuery()
       SetErrorCode(m_Statements[i].GetErrorCode());
       SetErrorMessage(m_Statements[i].GetErrorMessage());
       ThrowDatabaseException();
-      return;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
   }
+  return nRows;
 }
 
 DatabaseResultSet* PostgresPreparedStatement::RunQueryWithResults()

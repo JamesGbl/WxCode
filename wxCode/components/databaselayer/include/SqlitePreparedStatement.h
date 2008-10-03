@@ -47,7 +47,7 @@ public:
   virtual void SetParamBool(int nPosition, bool bValue);
   virtual int GetParameterCount();
 
-  virtual void RunQuery();
+  virtual int RunQuery();
   virtual DatabaseResultSet* RunQueryWithResults();
 
   sqlite3_stmt* GetLastStatement() { return (m_Statements.size() > 0) ? m_Statements[m_Statements.size()-1] : NULL; }

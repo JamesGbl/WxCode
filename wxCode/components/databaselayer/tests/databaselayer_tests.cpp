@@ -133,6 +133,8 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         TEST_CASE(testSmallMemoryBuffer)
         TEST_CASE(testLargeMemoryBuffer)
         TEST_CASE(testReusePreparedStatementWithResults)
+        TEST_CASE(testRunQueryReturnValue)
+        TEST_CASE(testPreparedStatementRunQueryReturnValue)
       }
 
     private:
@@ -5174,6 +5176,105 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
             FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
           }
       
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
+
+      void testRunQueryReturnValue()
+      {
+        puts("testRunQueryReturnValue");
+        ASSERT( m_pDatabaseLayer != NULL );
+        
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif  
+            // Place the code for your test here
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('ONE', 'TWO');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('THREE', 'FOUR');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('THREE', 'FOUR');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            DatabaseErrorCheck(m_pDatabaseLayer);
+
+            int rows = m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('SEVEN', 'EIGHT');"));
+            ASSERT_EQUALS(1, rows);
+
+            rows = m_pDatabaseLayer->RunQuery(_("UPDATE table1 SET column2 = '4' WHERE column1 = 'THREE';"));
+            ASSERT_EQUALS(2, rows);
+
+            rows = m_pDatabaseLayer->RunQuery(_("DELETE FROM table1 WHERE column1 = 'FIVE';"));
+            ASSERT_EQUALS(3, rows);
+
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
+
+      void testPreparedStatementRunQueryReturnValue()
+      {
+        puts("testPreparedStatementRunQueryReturnValue");
+        ASSERT( m_pDatabaseLayer != NULL );
+        
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif  
+            // Place the code for your test here
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('ONE', 'TWO');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('THREE', 'FOUR');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('THREE', 'FOUR');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            m_pDatabaseLayer->RunQuery(_("INSERT INTO table1 (column1, column2) VALUES ('FIVE', 'SIX');"));
+            DatabaseErrorCheck(m_pDatabaseLayer);
+
+            PreparedStatement* pStatement = m_pDatabaseLayer->PrepareStatement(_("INSERT INTO table1 (column1, column2) VALUES ('SEVEN', 'EIGHT');"));
+            DatabaseErrorCheck(m_pDatabaseLayer);
+            ASSERT(pStatement != NULL);
+            if (pStatement)
+            {
+              int rows = pStatement->RunQuery();
+              ASSERT_EQUALS(1, rows);
+              m_pDatabaseLayer->CloseStatement(pStatement);
+            }
+
+            pStatement = m_pDatabaseLayer->PrepareStatement(_("UPDATE table1 SET column2 = '4' WHERE column1 = 'THREE';"));
+            DatabaseErrorCheck(m_pDatabaseLayer);
+            ASSERT(pStatement != NULL);
+            if (pStatement)
+            {
+              int rows = pStatement->RunQuery();
+              ASSERT_EQUALS(2, rows);
+              m_pDatabaseLayer->CloseStatement(pStatement);
+            }
+
+            pStatement = m_pDatabaseLayer->PrepareStatement(_("DELETE FROM table1 WHERE column1 = 'FIVE';"));
+            DatabaseErrorCheck(m_pDatabaseLayer);
+            ASSERT(pStatement != NULL);
+            if (pStatement)
+            {
+              int rows = pStatement->RunQuery();
+              ASSERT_EQUALS(3, rows);
+              m_pDatabaseLayer->CloseStatement(pStatement);
+            }
+
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
           }
           catch (DatabaseLayerException& e)

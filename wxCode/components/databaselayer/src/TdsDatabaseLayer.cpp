@@ -145,7 +145,11 @@ bool TdsDatabaseLayer::Connect()
     // Reset the variables so there are not mistaken as initialized
     m_pDatabase = NULL;
     m_pLogin = NULL;
-    m_pContext = NULL;
+    if (m_pContext)
+    {
+      tds_free_context(m_pContext);
+      m_pContext = NULL;
+    }
     ThrowDatabaseException();
 		return false;
 	}
@@ -176,7 +180,7 @@ bool TdsDatabaseLayer::Connect()
       tds_set_version(m_pLogin, 8, 0);
       break;
     default:
-      tds_set_version(m_pLogin, 8, 0);
+      tds_set_version(m_pLogin, 0, 0);
       break;
   };
   
@@ -187,8 +191,16 @@ bool TdsDatabaseLayer::Connect()
     SetError(DATABASE_LAYER_ERROR, wxT("Failed to allocate context"));
     // Reset the variables so there are not mistaken as initialized
     m_pDatabase = NULL;
-    m_pLogin = NULL;
-    m_pContext = NULL;
+    if (m_pLogin)
+    {
+      tds_free_login(m_pLogin);
+      m_pLogin = NULL;
+    }
+    if (m_pContext)
+    {
+      tds_free_context(m_pContext);
+      m_pContext = NULL;
+    }
     ThrowDatabaseException();
     return false;
   }
@@ -206,8 +218,16 @@ bool TdsDatabaseLayer::Connect()
     SetError(DATABASE_LAYER_ERROR, wxT("Failed to allocate socket"));
     // Reset the variables so there are not mistaken as initialized
     m_pDatabase = NULL;
-    m_pLogin = NULL;
-    m_pContext = NULL;
+    if (m_pLogin)
+    {
+      tds_free_login(m_pLogin);
+      m_pLogin = NULL;
+    }
+    if (m_pContext)
+    {
+      tds_free_context(m_pContext);
+      m_pContext = NULL;
+    }
     ThrowDatabaseException();
     return false;
   }
@@ -223,11 +243,22 @@ bool TdsDatabaseLayer::Connect()
 			tds_free_connection(pConnection);
 		}
 		//fprintf(stderr, "tds_connect() failed\n");
-    SetError(DATABASE_LAYER_ERROR, wxT("Database connection failed"));
+    if (GetErrorCode() == DATABASE_LAYER_OK)
+    {
+      SetError(DATABASE_LAYER_ERROR, wxT("Database connection failed"));
+    }
     // Reset the variables so there are not mistaken as initialized
     m_pDatabase = NULL;
-    m_pLogin = NULL;
-    m_pContext = NULL;
+    if (m_pLogin)
+    {
+      tds_free_login(m_pLogin);
+      m_pLogin = NULL;
+    }
+    if (m_pContext)
+    {
+      tds_free_context(m_pContext);
+      m_pContext = NULL;
+    }
     ThrowDatabaseException();
 		return false;
 	}
@@ -392,7 +423,7 @@ void TdsDatabaseLayer::RollBack()
 }
 
 // query database
-bool TdsDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
+int TdsDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 {
   ResetErrorCodes();
 

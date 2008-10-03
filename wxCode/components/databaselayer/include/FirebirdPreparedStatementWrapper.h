@@ -42,7 +42,7 @@ public:
   void SetParam(int nPosition, bool bValue);
   int GetParameterCount();
   
-  void RunQuery();
+  int RunQuery();
   DatabaseResultSet* RunQueryWithResults();
 
   void SetTransaction(isc_tr_handle pTransaction) { m_pTransaction = pTransaction; }

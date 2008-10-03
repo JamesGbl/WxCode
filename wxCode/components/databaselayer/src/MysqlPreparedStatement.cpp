@@ -126,23 +126,25 @@ int MysqlPreparedStatement::GetParameterCount()
   return nParameters;
 }
 
-void MysqlPreparedStatement::RunQuery()
+int MysqlPreparedStatement::RunQuery()
 {
   MysqlStatementWrapperArray::iterator start = m_Statements.begin();
   MysqlStatementWrapperArray::iterator stop = m_Statements.end();
 
+  int nRows = -1;
   while (start != stop)
   {
-    ((MysqlPreparedStatementWrapper*)(*start))->RunQuery();
+    nRows = ((MysqlPreparedStatementWrapper*)(*start))->RunQuery();
     if (((MysqlPreparedStatementWrapper*)(*start))->GetErrorCode() != DATABASE_LAYER_OK)
     {
       SetErrorCode(((MysqlPreparedStatementWrapper*)(*start))->GetErrorCode());
       SetErrorMessage(((MysqlPreparedStatementWrapper*)(*start))->GetErrorMessage());
       ThrowDatabaseException();
-      return;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
     start++;
   }
+  return nRows;
 }
 
 DatabaseResultSet* MysqlPreparedStatement::RunQueryWithResults()

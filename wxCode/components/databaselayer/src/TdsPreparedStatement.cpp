@@ -146,7 +146,8 @@ void TdsPreparedStatement::SetParamInt(int nPosition, int nValue)
   curcol->column_varint_size = 1;
   curcol->column_cur_size = sizeof(TDS_INT);
 
-  tds_alloc_param_data(m_pParameters, curcol);
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   memcpy(curcol->column_data, &nValue, sizeof(nValue));
 }
 
@@ -164,7 +165,8 @@ void TdsPreparedStatement::SetParamDouble(int nPosition, double dblValue)
   curcol->column_varint_size = 1;
   curcol->column_cur_size = sizeof(TDS_FLOAT);
 
-  tds_alloc_param_data(m_pParameters, curcol);
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   memcpy(curcol->column_data, &dblValue, sizeof(dblValue));
 }
 
@@ -186,7 +188,8 @@ void TdsPreparedStatement::SetParamString(int nPosition, const wxString& strValu
   curcol->column_varint_size = 1;
   curcol->column_cur_size = nLength+1;
 
-  tds_alloc_param_data(m_pParameters, curcol);
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   memcpy(curcol->column_data, valueBuffer, nLength+1);
 }
 
@@ -205,7 +208,9 @@ void TdsPreparedStatement::SetParamNull(int nPosition)
   //curcol->column_cur_size = nLength;
   //curcol->column_nullbind = -1;
   curcol->column_cur_size = -1;
-  tds_alloc_param_data(m_pParameters, curcol);
+
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   curcol->column_data = NULL;
 
   //tds_alloc_param_data(m_pParameters, curcol);
@@ -246,7 +251,10 @@ void TdsPreparedStatement::SetParamBlob(int nPosition, const void* pData, long n
   curcol->on_server.column_size = ret;
   curcol->column_varint_size = 1;
   curcol->column_cur_size = ret;
-  tds_alloc_param_data(m_pParameters, curcol);
+
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
+
   //fprintf(stderr, "Ready for memcpy of %d bytes\n", ret);
   memcpy(curcol->column_data, cr.ib, ret);
   //fprintf(stderr, "Memcpy completed\n");
@@ -278,7 +286,8 @@ void TdsPreparedStatement::SetParamDate(int nPosition, const wxDateTime& dateVal
   curcol->column_varint_size = 1;
   curcol->column_cur_size = valueSize;
 
-  tds_alloc_param_data(m_pParameters, curcol);
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   memcpy(curcol->column_data, &cr.dt, valueSize);
 }
 
@@ -296,7 +305,8 @@ void TdsPreparedStatement::SetParamBool(int nPosition, bool bValue)
   curcol->column_varint_size = 1;
   curcol->column_cur_size = sizeof(TDS_DATETIME);
 
-  tds_alloc_param_data(m_pParameters, curcol);
+  //tds_alloc_param_data(m_pParameters, curcol);
+  tds_alloc_param_data(curcol);
   memcpy(curcol->column_data, &bValue , sizeof(bool));
 }
 
@@ -313,7 +323,7 @@ int TdsPreparedStatement::GetParameterCount()
   return nReturn;
 }
 
-void TdsPreparedStatement::RunQuery()
+int TdsPreparedStatement::RunQuery()
 {
   ResetErrorCodes();
 
@@ -338,7 +348,7 @@ void TdsPreparedStatement::RunQuery()
     SetErrorInformationFromDatabaseLayer();
     FreeAllocatedResultSets();
     ThrowDatabaseException();
-    return;
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
   FreeAllocatedResultSets();
   tds_free_input_params(m_pStatement);
@@ -355,6 +365,8 @@ void TdsPreparedStatement::RunQuery()
   }
   //fprintf(stderr, "Statement executed.  Freeing results\n");
   FreeAllocatedResultSets();
+
+  return DATABASE_LAYER_QUERY_RESULT_ERROR;
 }
 
 DatabaseResultSet* TdsPreparedStatement::RunQueryWithResults()

@@ -223,7 +223,7 @@ void OTLDatabaseLayer::RollBack()
 
 
 // query database
-bool OTLDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
+int OTLDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 {
   try
   {

@@ -226,7 +226,7 @@ void PostgresDatabaseLayer::RollBack()
 
   
 // query database
-bool PostgresDatabaseLayer::RunQuery(const wxString& strQuery, bool WXUNUSED(bParseQuery))
+int PostgresDatabaseLayer::RunQuery(const wxString& strQuery, bool WXUNUSED(bParseQuery))
 {
   // PostgreSQL takes care of parsing the queries itself so bParseQuery is ignored
 
@@ -240,12 +240,15 @@ bool PostgresDatabaseLayer::RunQuery(const wxString& strQuery, bool WXUNUSED(bPa
     SetErrorMessage(ConvertFromUnicodeStream(PQerrorMessage(m_pDatabase)));
     PQclear(pResultCode);
     ThrowDatabaseException();
-    return false;
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
   else
   {
+    wxString rowsAffected = ConvertFromUnicodeStream(PQcmdTuples(pResultCode));
+    long rows = -1;
+    rowsAffected.ToLong(&rows);
     PQclear(pResultCode);
-    return true;
+    return (int)rows;
   }
 }
 

@@ -39,7 +39,7 @@ public:
   void SetParam(int nPosition, bool bValue);
   int GetParameterCount();
   
-  void RunQuery();
+  int RunQuery();
   DatabaseResultSet* RunQueryWithResults();
 
 private:

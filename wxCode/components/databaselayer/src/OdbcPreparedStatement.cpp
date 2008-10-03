@@ -163,7 +163,7 @@ int OdbcPreparedStatement::GetParameterCount()
     return nReturn;
 }
 
-void OdbcPreparedStatement::RunQuery()
+int OdbcPreparedStatement::RunQuery()
 {
     ResetErrorCodes();
 

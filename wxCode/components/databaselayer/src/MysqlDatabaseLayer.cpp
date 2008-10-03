@@ -241,7 +241,7 @@ void MysqlDatabaseLayer::RollBack()
 
   
 // query database
-bool MysqlDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
+int MysqlDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 {
   ResetErrorCodes();
 
@@ -264,11 +264,11 @@ bool MysqlDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
       SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
       SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
       ThrowDatabaseException();
-      return false;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
     start++;
   }
-  return true;
+  return mysql_affected_rows(m_pDatabase);
 }
 
 DatabaseResultSet* MysqlDatabaseLayer::RunQueryWithResults(const wxString& strQuery)

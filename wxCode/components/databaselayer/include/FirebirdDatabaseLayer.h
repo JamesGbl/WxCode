@@ -38,7 +38,7 @@ public:
   virtual void RollBack();
   
   // query database
-  virtual bool RunQuery(const wxString& strQuery, bool bParseQuery);
+  virtual int RunQuery(const wxString& strQuery, bool bParseQuery);
   virtual DatabaseResultSet* RunQueryWithResults(const wxString& strQuery);
   
   // PreparedStatement support

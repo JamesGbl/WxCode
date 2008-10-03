@@ -153,7 +153,7 @@ int FirebirdPreparedStatementWrapper::GetParameterCount()
     return m_pParameters->sqld;
 }
   
-void FirebirdPreparedStatementWrapper::RunQuery()
+int FirebirdPreparedStatementWrapper::RunQuery()
 {
   ResetErrorCodes();
 
@@ -165,7 +165,35 @@ void FirebirdPreparedStatementWrapper::RunQuery()
   {
     InterpretErrorCodes();
     ThrowDatabaseException();
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
+
+  int nRows = 0;
+  static char requestedInfoTypes[] = { isc_info_sql_records, isc_info_end };
+  char resultBuffer[1024];
+  memset(resultBuffer, 0, sizeof(resultBuffer));
+  nReturn = isc_dsql_sql_info(m_Status, &m_pStatement, sizeof(requestedInfoTypes), requestedInfoTypes, sizeof(resultBuffer), resultBuffer);
+  if (nReturn == 0)
+  {
+    char* pBufferPosition = resultBuffer + 3;
+    while(*pBufferPosition != isc_info_end)
+    {
+      char infoType = *pBufferPosition;
+      pBufferPosition++;
+      short nLength = isc_vax_integer (pBufferPosition, 2);
+      pBufferPosition += 2;
+      long infoData = isc_vax_integer (pBufferPosition, nLength);
+      pBufferPosition += nLength;
+
+      if( infoType == isc_info_req_insert_count || 
+        infoType == isc_info_req_update_count || 
+        infoType == isc_info_req_delete_count )
+      {
+        nRows += infoData;
+      }
+    }
+  }
+  return nRows;
 }
 
 DatabaseResultSet* FirebirdPreparedStatementWrapper::RunQueryWithResults()

@@ -66,7 +66,7 @@ int MysqlPreparedStatementWrapper::GetParameterCount()
   return mysql_stmt_param_count(m_pStatement);
 }
 
-void MysqlPreparedStatementWrapper::RunQuery()
+int MysqlPreparedStatementWrapper::RunQuery()
 {
   MYSQL_BIND* pBoundParameters = m_Parameters.GetMysqlParameterBindings();
 
@@ -77,7 +77,7 @@ void MysqlPreparedStatementWrapper::RunQuery()
     SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
     wxDELETEA(pBoundParameters);
     ThrowDatabaseException();
-    return;
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
   else
   {
@@ -88,10 +88,12 @@ void MysqlPreparedStatementWrapper::RunQuery()
       SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
       wxDELETEA(pBoundParameters);
       ThrowDatabaseException();
-      return;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
   }
   wxDELETEA(pBoundParameters);
+
+  return (m_pStatement->affected_rows);
 }
 
 DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()

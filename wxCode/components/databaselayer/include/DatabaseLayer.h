@@ -52,9 +52,9 @@ public:
  
   // query database
   /// Run an insert, update, or delete query on the database
-  virtual bool RunQuery(const wxString& strQuery);
+  virtual int RunQuery(const wxString& strQuery);
   /// Run an insert, update, or delete query on the database
-  virtual bool RunQuery(const wxString& strQuery, bool bParseQueries) = 0;
+  virtual int RunQuery(const wxString& strQuery, bool bParseQueries) = 0;
   /// Run a select query on the database
   virtual DatabaseResultSet* RunQueryWithResults(const wxString& strQuery) = 0;
   
@@ -70,7 +70,7 @@ public:
   // function names more consistent with JDBC and wxSQLite3
   // these just provide wrappers for existing functions
   /// See RunQuery
-  bool ExecuteUpdate(const wxString& strQuery) { return RunQuery(strQuery); }
+  int ExecuteUpdate(const wxString& strQuery) { return RunQuery(strQuery); }
   /// See RunQueryWithResults
   DatabaseResultSet* ExecuteQuery(const wxString& strQuery) { return RunQueryWithResults(strQuery); }
 

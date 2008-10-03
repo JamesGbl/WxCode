@@ -222,7 +222,7 @@ int OTLPreparedStatement::GetParameterCount()
 }
 
 
-void OTLPreparedStatement::RunQuery()
+int OTLPreparedStatement::RunQuery()
 {
   try
   {

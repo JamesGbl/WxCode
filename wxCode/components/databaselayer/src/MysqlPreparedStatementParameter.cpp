@@ -95,7 +95,10 @@ MysqlPreparedStatementParameter::~MysqlPreparedStatementParameter()
 
 void MysqlPreparedStatementParameter::ClearBuffer()
 {
-  memset(m_pBind->buffer, 0, m_pBind->buffer_length);
+  if (m_pBind && m_pBind->buffer && (m_pBind->buffer_length > 0))
+  {
+    memset(m_pBind->buffer, 0, m_pBind->buffer_length);
+  }
 }
 
 void MysqlPreparedStatementParameter::SetInt(int nValue)

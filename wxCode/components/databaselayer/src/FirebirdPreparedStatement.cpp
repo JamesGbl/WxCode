@@ -81,6 +81,7 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_han
     // If we're using exceptions, then assume that the calling program won't
     //  won't get the pStatement pointer back.  So delete is now before
     //  throwing the exception
+    DatabaseLayerException error(pStatement->GetErrorCode(), pStatement->GetErrorMessage());
     try
     {
       delete pStatement; //It's probably better to manually iterate over the list and close the statements, but for now just let close do it
@@ -89,10 +90,9 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_han
     {
     }
 
-    DatabaseLayerException error(pStatement->GetErrorCode(), pStatement->GetErrorMessage());
     throw error;
 #endif
-    return pStatement;
+    return NULL;
   }
   
   
@@ -248,19 +248,20 @@ int FirebirdPreparedStatement::GetParameterCount()
   return nParameters;
 }
   
-void FirebirdPreparedStatement::RunQuery()
+int FirebirdPreparedStatement::RunQuery()
 {
   FirebirdStatementVector::iterator start = m_Statements.begin();
   FirebirdStatementVector::iterator stop = m_Statements.end();
 
+  int nRows = -1;
   while (start != stop)
   {
-    ((FirebirdPreparedStatementWrapper*)(*start))->RunQuery();
+    nRows = ((FirebirdPreparedStatementWrapper*)(*start))->RunQuery();
     if (((FirebirdPreparedStatementWrapper*)(*start))->GetErrorCode() != DATABASE_LAYER_OK)
     {
       SetErrorCode(((FirebirdPreparedStatementWrapper*)(*start))->GetErrorCode());
       SetErrorMessage(((FirebirdPreparedStatementWrapper*)(*start))->GetErrorMessage());
-      return;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
     
     start++;
@@ -278,6 +279,8 @@ void FirebirdPreparedStatement::RunQuery()
       ThrowDatabaseException();
     }
   }
+
+  return nRows;
 }
 
 DatabaseResultSet* FirebirdPreparedStatement::RunQueryWithResults()

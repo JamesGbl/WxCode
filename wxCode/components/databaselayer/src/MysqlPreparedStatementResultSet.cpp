@@ -279,7 +279,11 @@ double MysqlPreparedStatementResultSet::GetResultDouble(int nField)
 bool MysqlPreparedStatementResultSet::IsFieldNull(int nField)
 {
   MYSQL_BIND* pResultBinding = GetResultBinding(nField);
-  return (*(pResultBinding->is_null));
+  my_bool isNull = *(pResultBinding->is_null);
+  if (isNull)
+    return true;
+  else
+    return false;
 }
 
 int MysqlPreparedStatementResultSet::LookupField(const wxString& strField)
@@ -293,8 +297,8 @@ int MysqlPreparedStatementResultSet::LookupField(const wxString& strField)
     throw error;
 #else
     wxLogError(msg);
-#endif
     return -1;
+#endif
   }
   else
   {
@@ -314,8 +318,8 @@ MYSQL_BIND* MysqlPreparedStatementResultSet::GetResultBinding(int nField)
     throw error;
 #else
     wxLogError(msg);
-#endif
     return NULL;
+#endif
   }
   else
   {

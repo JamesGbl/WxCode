@@ -1,6 +1,7 @@
 #include "../include/SqlitePreparedStatement.h"
 #include "../include/SqliteResultSet.h"
 #include "../include/SqliteDatabaseLayer.h"
+#include "../include/DatabaseErrorCodes.h"
 
 // ctor
 SqlitePreparedStatement::SqlitePreparedStatement(sqlite3* pDatabase)
@@ -220,7 +221,7 @@ int SqlitePreparedStatement::GetParameterCount()
   return nReturn;
 }
 
-void SqlitePreparedStatement::RunQuery()
+int SqlitePreparedStatement::RunQuery()
 {
   ResetErrorCodes();
 
@@ -238,10 +239,12 @@ void SqlitePreparedStatement::RunQuery()
       SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(nReturn));
       SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg(m_pDatabase)));
       ThrowDatabaseException();
-      return;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
     start++;
   }
+
+  return sqlite3_changes(m_pDatabase);
 }
 
 DatabaseResultSet* SqlitePreparedStatement::RunQueryWithResults()

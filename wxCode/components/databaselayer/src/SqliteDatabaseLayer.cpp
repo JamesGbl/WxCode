@@ -114,7 +114,7 @@ void SqliteDatabaseLayer::RollBack()
 }
 
 // query database
-bool SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
+int SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 {
   ResetErrorCodes();
 
@@ -148,12 +148,12 @@ bool SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
       SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
       SetErrorMessage(strErrorMessage);
       ThrowDatabaseException();
-      return false;
+      return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
 
     start++;
   }
-  return true;
+  return (sqlite3_changes(m_pDatabase));
 }
 
 DatabaseResultSet* SqliteDatabaseLayer::RunQueryWithResults(const wxString& strQuery)

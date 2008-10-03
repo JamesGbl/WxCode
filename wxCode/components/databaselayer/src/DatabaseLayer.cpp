@@ -15,7 +15,7 @@ DatabaseLayer::~DatabaseLayer()
   CloseStatements();
 }
 
-bool DatabaseLayer::RunQuery(const wxString& strQuery)
+int DatabaseLayer::RunQuery(const wxString& strQuery)
 {
   return RunQuery(strQuery, true);
 }

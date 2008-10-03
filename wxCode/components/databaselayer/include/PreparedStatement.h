@@ -53,14 +53,14 @@ public:
   virtual int GetParameterCount() = 0;
   
   /// Run an insert, update, or delete query on the database
-  virtual void RunQuery() = 0;
+  virtual int RunQuery() = 0;
   /// Run an insert, update, or delete query on the database
   virtual DatabaseResultSet* RunQueryWithResults() = 0;
 
   // function names more consistent with JDBC and wxSQLite3
   // these just provide wrappers for existing functions
   /// See RunQuery
-  void ExecuteUpdate() { RunQuery(); } 
+  int ExecuteUpdate() { return RunQuery(); } 
   /// See RunQueryWithResults
   DatabaseResultSet* ExecuteQuery() { return RunQueryWithResults(); }
 

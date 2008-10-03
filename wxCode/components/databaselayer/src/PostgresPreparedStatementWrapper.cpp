@@ -56,8 +56,9 @@ int PostgresPreparedStatementWrapper::GetParameterCount()
   return m_strSQL.Freq('?');
 }
 
-void PostgresPreparedStatementWrapper::RunQuery()
+int PostgresPreparedStatementWrapper::RunQuery()
 {
+  long nRows = -1;
   int nParameters = m_Parameters.GetSize();
   char** paramValues = m_Parameters.GetParamValues();
   int* paramLengths = m_Parameters.GetParamLengths();
@@ -73,6 +74,12 @@ void PostgresPreparedStatementWrapper::RunQuery()
       SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(status));
       SetErrorMessage(ConvertFromUnicodeStream(PQresultErrorMessage(pResult)));
     }
+
+    if (GetErrorCode() == DATABASE_LAYER_OK)
+    {
+      wxString rowsAffected = ConvertFromUnicodeStream(PQcmdTuples(pResult));
+      rowsAffected.ToLong(&nRows);
+    }
     PQclear(pResult);
   }
   delete []paramValues;
@@ -82,7 +89,10 @@ void PostgresPreparedStatementWrapper::RunQuery()
   if (GetErrorCode() != DATABASE_LAYER_OK)
   {
     ThrowDatabaseException();
+    return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
+
+  return (int)nRows;
 }
 
 DatabaseResultSet* PostgresPreparedStatementWrapper::RunQueryWithResults()

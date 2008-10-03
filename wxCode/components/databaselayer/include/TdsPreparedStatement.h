@@ -41,7 +41,7 @@ public:
   virtual void SetParamBool(int nPosition, bool bValue);
   virtual int GetParameterCount();
 
-  virtual void RunQuery();
+  virtual int RunQuery();
   virtual DatabaseResultSet* RunQueryWithResults();
 
 private:
