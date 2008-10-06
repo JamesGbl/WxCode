@@ -26,7 +26,6 @@ class WXDLLIMPEXP_XS xsProperty;
 class WXDLLIMPEXP_XS xsSerializable;
 
 WX_DECLARE_OBJARRAY_WITH_DECL(wxRealPoint, RealPointArray, class WXDLLIMPEXP_XS);
-
 WX_DECLARE_LIST_WITH_DECL(wxRealPoint, RealPointList, class WXDLLIMPEXP_XS);
 
 WX_DEFINE_USER_EXPORTED_ARRAY_CHAR(char, CharArray, class WXDLLIMPEXP_XS);
@@ -77,8 +76,9 @@ public:
      * \param parent Pointer to parent XML node
      * \param name Name of new XML node
      * \param value Content of new XML node
+     * \param type Type of new XML (content) node
      */
-     wxXmlNode* AddPropertyNode(wxXmlNode* parent, const wxString& name, const wxString& value);
+     static wxXmlNode* AddPropertyNode(wxXmlNode* parent, const wxString& name, const wxString& value, wxXmlNodeType type = wxXML_TEXT_NODE );
 
 protected:
 
@@ -188,54 +188,12 @@ XS_DECLARE_EXPORTED_IO_HANDLER(bool, xsBoolPropIO, WXDLLIMPEXP_XS);
 /*!
  * \brief Property class encapsulating I/O functions used by 'double' properties.
  */
-class WXDLLIMPEXP_XS xsDoublePropIO : public xsPropertyIO
-{
-public:
-	DECLARE_DYNAMIC_CLASS(xsDoublePropIO);
-	xsDoublePropIO()
-	{
-	    // test whether current platform uses '.' or ',' as its decimal point character
-	    if( wxString::Format(wxT("%.2f"), 3.14).Find('.') == wxNOT_FOUND ) m_fChangeDP = true;
-	    else
-            m_fChangeDP = false;
-    }
-	virtual ~xsDoublePropIO(){;}
-
-	virtual void Read(xsProperty *property, wxXmlNode *source);
-	virtual void Write(xsProperty *property, wxXmlNode *target);
-	virtual wxString GetValueStr(xsProperty *property);
-	static wxString ToString(double value);
-	static double FromString(const wxString& value);
-
-protected:
-    static bool m_fChangeDP;
-};
+XS_DECLARE_EXPORTED_IO_HANDLER(double, xsDoublePropIO, WXDLLIMPEXP_XS);
 
 /*!
  * \brief Property class encapsulating I/O functions used by 'float' properties.
  */
-class WXDLLIMPEXP_XS xsFloatPropIO : public xsPropertyIO
-{
-public:
-	DECLARE_DYNAMIC_CLASS(xsFloatPropIO);
-	xsFloatPropIO()
-	{
-	    // test whether current platform uses '.' or ',' as its decimal point character
-	    if( wxString::Format(wxT("%.2f"), 3.14).Find('.') == wxNOT_FOUND ) m_fChangeDP = true;
-	    else
-            m_fChangeDP = false;
-    }
-	virtual ~xsFloatPropIO(){;}
-
-	virtual void Read(xsProperty *property, wxXmlNode *source);
-	virtual void Write(xsProperty *property, wxXmlNode *target);
-	virtual wxString GetValueStr(xsProperty *property);
-	static wxString ToString(float value);
-	static float FromString(const wxString& value);
-
-protected:
-    static bool m_fChangeDP;
-};
+XS_DECLARE_EXPORTED_IO_HANDLER(float, xsFloatPropIO, WXDLLIMPEXP_XS);
 
 /*!
  * \brief Property class encapsulating I/O functions used by 'wxPoint' properties.

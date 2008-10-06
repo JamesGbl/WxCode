@@ -26,7 +26,7 @@ WX_DEFINE_EXPORTED_LIST(SerializableList);
 // static members
 PropertyIOMap wxXmlSerializer::m_mapPropertyIOHandlers;
 int wxXmlSerializer::m_nRefCounter = 0;
-wxString wxXmlSerializer::m_sLibraryVersion = wxT("1.1.6 beta");
+wxString wxXmlSerializer::m_sLibraryVersion = wxT("1.1.7 beta");
 
 /////////////////////////////////////////////////////////////////////////////////////
 // xsProperty class /////////////////////////////////////////////////////////////////
@@ -49,6 +49,8 @@ xsSerializable::xsSerializable()
     m_fSerialize = true;
 	m_fClone = true;
     m_nId = -1;
+
+    XS_SERIALIZE(m_nId, wxT("id"));
 }
 
 xsSerializable::xsSerializable(const xsSerializable& obj)
@@ -59,6 +61,8 @@ xsSerializable::xsSerializable(const xsSerializable& obj)
     m_fSerialize = obj.m_fSerialize;
 	m_fClone = obj.m_fClone;
     m_nId = obj.m_nId;
+
+    XS_SERIALIZE(m_nId, wxT("id"));
 }
 
 xsSerializable::~xsSerializable()
@@ -145,9 +149,19 @@ xsSerializable* xsSerializable::GetSibbling()
     return NULL;
 }
 
-xsSerializable* xsSerializable::GetChild(long id)
+xsSerializable* xsSerializable::GetChild(long id, bool recursive)
 {
-    SerializableList::compatibility_iterator node = m_lstChildItems.GetFirst();
+    SerializableList lstChildren;
+    SerializableList::compatibility_iterator node = NULL;
+
+    if( recursive )
+    {
+        GetChildrenRecursively( CLASSINFO(xsSerializable), lstChildren );
+        node = lstChildren.GetFirst();
+    }
+    else
+        node = m_lstChildItems.GetFirst();
+
     while(node)
     {
 		if( node->GetData()->GetId() == id) return node->GetData();
