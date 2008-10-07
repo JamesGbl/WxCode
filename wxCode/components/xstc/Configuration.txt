@@ -1,0 +1,118 @@
+First commandline macros:
+
+XSTC_CLASS value 0 tells XSTC that wxStyledTextCtrl is being used
+           Value 1 is wxScintilla, nothing else should work
+
+XSTC_NO_KEYS if this is defined, then all keyword functionality and the structure for 
+             keywords will not compile in.
+
+XSTC_USELVL not normally a commandline macro, it is defined internally, but should you be using 
+            a version wxSTC newer than the wx2.6.x release in 2.6.x or older you can define
+            it and get the newer functionality
+
+Now Extentions:
+
+
+    .extention_lexer|property1|property2|property3|property4|property5|comment
+    
+    the first [dot] in the extention will be removed if present
+    lexer is the name of the lexer define without the prefix stuff
+      wxSTC_LEX_ASM would be asm. the case does not matter, internally
+      it is changed to lower.
+    properties are used verbatim in GetPropStr so the correct format should be used
+      Scintilla property_value, the property is whatever the respective string might
+      be "fold" for example. the value is a bool number 0 or 1 so the property to 
+      turn off folding is: "fold_0". yes case does matter.
+
+Now coloring:
+
+
+    most of the colors are easy, all of the definitions just use the definition name
+    to define the string value for finding in wxFileConfig. the prepix for all color
+    settings is "XSTColor" then the groups and setting go after it. all you need to do
+    is write to the config object, it is deleted for you when the instance exits, so
+    remember to deal with your pointer to it. wxSTC_C_DEFAULT to write the style string
+    for this definition, you would use the folowing string in Read():
+      "XSTColor/C/DEFAULT". the string value for the setting is passed verbatim to 
+      StyleSetSpec(). the options are:
+        bold, italic, underline. these will toggle the settings on, but there absence
+        i don't think turns them off.
+        fore:, back: these take a hexidecimal color string. #FF0000 would be fire-engine red
+        #RRGGBB red green blue. just so you know a hex number only takes 0-9 and A-F. a simple
+        way to get color values is to find an html color chart on the internet.
+    
+    what about those settings that do not have a style associated with them, or XSTC
+    settings? not all XSTC settings are loadable from a file(this will change), but there 
+    are not many of them either. alphalvl is an int that sets markers, caret background 
+    and selection to the same value, on the other hand a config file can set each 
+    individually. none of these settings have a style associated with them, they are set 
+    using a function instead. there are three other ways of setting things in the config 
+    file.(or stream)
+      bool used only once as of yet for caretLineBackground color visibility.
+        to set this to true use eiter a single 1 or true, case is automatically set to lower
+      int just put in the number corrosponds to the setting.
+      RGB color setting, some settings take functions to be set, that is why an rgb value
+        is needed. wxColour can take a string constructor, but it uses colornames, not
+        hexvalues. so there must be a way to use the RGB constructor for wxColour:
+        (R,G,B) doesn't matter how much space is outside the parenthases, but inside there
+        should not be any. to set an RGB settings to magenta, use this as the value:
+        (255,0,255)
+
+   Here is a list of all settings that do not take the stylespec string value:
+   
+   MISIC/ALPHALVL          int  Alpha Level internal setting for all three alpha settings
+   MISIC/CARETALPHA        int  CaretBackground Alpha Level
+   MISIC/SELALPHA          int  Selection Alpha Level
+   MISIC/MARKALPHA         int  Mareker Alpha Level
+   MISIC/errorcol          int  Errorline
+   MISIC/actbrkptcol       int  Active Breakpoint
+   MISIC/brkptcol          int  Breakpoint
+   MISIC/SELBG             RGB  Selection Background
+   MISIC/SELFG             RGB  Selection Foreground
+   MISIC/CFG               RGB  Caret (Foreground) Color
+   MISIC/CLBG              RGB  CaretLineBackground
+   MISIC/WSBG              RGB  WhiteSpace Background
+   MISIC/WSFG              RGB  WhiteSpace Foreground
+   MISIC/FMHI              RGB  FoldMarginHiColor
+   MISIC/FMC               RGB  FoldMarginColor
+   MISIC/CARETLV           bool CaretLineBack visible
+   MISIC/CACHEMOD          int  Cache Mode
+   MISIC/WRAPVF            int  Wrap Visual Flags
+   MISIC/EDGMOD            int  Edge Mode
+   MISIC/EDGCOLM           int  Edge Column
+   MISIC/EDGCOLR           RGB  Edge Color
+   MARKNUM/FOLDERTAIL_B    RGB  Background color
+   MARKNUM/FOLDERTAIL_F    RGB  Foreground color
+   MARKNUM/FOLDERSUB_B     RGB  Background color
+   MARKNUM/FOLDERSUB_F     RGB  Foreground color
+   MARKNUM/FOLDEROPENMID_B RGB  Background color
+   MARKNUM/FOLDEROPENMID_F RGB  Foreground color
+   MARKNUM/FOLDERMIDTAIL_B RGB  Background color
+   MARKNUM/FOLDERMIDTAIL_F RGB  Foreground color
+   MARKNUM/FOLDEREND_B     RGB  Background color
+   MARKNUM/FOLDEREND_F     RGB  Foreground color
+   MARKNUM/FOLDEROPEN_B    RGB  Background color
+   MARKNUM/FOLDEROPEN_F    RGB  Foreground color
+   MARKNUM/FOLDER_B        RGB  Background color
+   MARKNUM/FOLDER_F        RGB  Foreground color
+   MISIC/M0BG              RGB  Marker #0 Background color
+   MISIC/M0FG              RGB  Marker #0 Foreground color
+   
+   {errorcol
+   actbrkptcol
+   brkptcol} what the heck? 
+               these are only for convienience, 
+               if you don't need it, dont use it.
+
+   um, all the MARKNUM are #defines, can't i just use the stylespeck string on them?
+       you'd think so, but it doesn't work. two functions called:
+       MarkerSetForeground
+       MarkerSetBackground
+       are needed to set the settings, so they require the rgb setting.
+
+   some of these settings use #defines and if that changes in the future then i have a lot
+   of annoying work ahead of me to try changing them all in my source code,
+   if CACHE_NONE changes from 0 to 15 or something.
+     yes that is a concern, but it is more effective to use an int rather than the respective
+     string name, so this is how to deal with it. when you write the config settings use the
+     int version of Write, and pass the #define of what you want, like Write(XSTC_DEF(CACHE_NONE));
