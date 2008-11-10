@@ -1,27 +1,34 @@
-
+ 
  wxAdvTable ReadMe
- ------------------
-
- Website: http://wxcode.sourceforge.net/components/advtable
- Author: Name Surname
- Version: 1.0
+ -------------
+ 
+ Website: http://wxcode.sourceforge.net/components/wxadvtable
+ Author: Moskvichev Andrey V.
+ Version: 1.0 
  Description:
- [description of this component]
-
-
+ wxAdvTable is table component (like wxGrid) designed with simplicity and flexibility in mind.
+ It has many advanced features like: 
+  - composite rows/columns
+  - sorting and filtering support
+  - flexible rendering and editing support
+  - dynamic row/columns add/removal
+  - and visual features like: highlight modes, cell attributes, etc.
+ wxAdvTable designed after Java Swing(tm) table classes (JTable, ...) and has
+ MCV (Model-Controller-View) design.
+ 
 
  Installation - win32
  --------------------
-
+ 
  When building on win32, you can use the makefiles in the BUILD folder using the
  WX_DIR, WX_DEBUG, WX_UNICODE and WX_SHARED to match your wxWidgets build.
  Examples:
-
+ 
    > nmake -fmakefile.vc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
    > make -fmakefile.bcc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
 
 
-
+     
  Installation - unix
  -------------------
 
@@ -31,16 +38,16 @@
   ./configure
   make
 
- to build against the default build of wxWidgets (the one listed as 'default'
+ to build against the default build of wxWidgets (the one listed as 'default' 
  by wx-config --list). Type "./configure --help" for more info.
 
 
 
  ChangeLog
  ---------
-
- 1.0 - first version of MYCOMP at wxCode
-
-
+ 
+ 1.0 - first version of wxAdvTable at wxCode
+ 
+ 
  [optionally: Known bugs, Author's info, ... ]
 
