@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        MainFrame.h
-// Purpose:     Definitions of MainFrame - mainWindow of demo application
+// Name:        demo.h
+// Purpose:
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
@@ -22,16 +22,21 @@
     #include <wx/wx.h>
 #endif
 
-#include "wxadvtable.h"
+#include "wx/wxadvtable.h"
 
 class ControlPanel : public wxPanel
 {
 public:
-	ControlPanel(wxWindow *parent, wxAdvTable *_table);
+	ControlPanel(wxWindow *parent, wxAdvTable *advTable);
 	virtual ~ControlPanel();
 
 private:
-	wxAdvTable *table;
+	void OnChoiceSelectMode(wxCommandEvent &ev);
+	void OnChoiceHighlightMode(wxCommandEvent &ev);
+	void OnCheckShowRows(wxCommandEvent &ev);
+	void OnCheckShowCols(wxCommandEvent &ev);
+
+	wxAdvTable *m_advTable;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -50,7 +55,8 @@ private:
 
 	void OnExit(wxCommandEvent &ev);
 
-	wxAdvTable *advTable;
+	wxAdvTable *m_advTable;
+	ControlPanel *m_controlPanel;
 
 	DECLARE_EVENT_TABLE()
 };

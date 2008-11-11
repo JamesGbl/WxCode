@@ -21,9 +21,12 @@
     #include <wx/wx.h>
 #endif
 
+// include grid.h for events definitions
+#include <wx/grid.h>
+
 #include <wx/dynarray.h>
 #include "observable.h"
-#include "cutils.h"
+#include "wxadvtabledefs.h"
 
 #define FOREACH_HDRCELL(n, hdrCells) for (size_t n = 0; n < hdrCells.GetCount(); n++)
 
@@ -54,7 +57,7 @@ WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual
 /**
  * Base class for receiving wxAdvTableDataModel events.
  */
-class wxAdvTableDataModelObserver
+class WXDLLIMPEXP_ADV wxAdvTableDataModelObserver
 {
 public:
 	wxAdvTableDataModelObserver();
@@ -76,7 +79,7 @@ public:
 /**
  * Model for wxAdvTable data, such as cell values, formats.
  */
-class wxAdvTableDataModel : public Observable<wxAdvTableDataModelObserver>
+class WXDLLIMPEXP_ADV wxAdvTableDataModel : public Observable<wxAdvTableDataModelObserver>
 {
 public:
 	wxAdvTableDataModel();
@@ -97,7 +100,7 @@ protected:
  * Simpliest table model for wxAdvTable.
  * Stores data as strings, all cells have string format.
  */
-class wxAdvStringTableDataModel : public wxAdvTableDataModel
+class WXDLLIMPEXP_ADV wxAdvStringTableDataModel : public wxAdvTableDataModel
 {
 public:
 	wxAdvStringTableDataModel(size_t _numRows, size_t _numCols, bool _readOnly);
@@ -110,16 +113,16 @@ public:
 	virtual bool IsCellEditable(size_t row, size_t col);
 
 private:
-	bool readOnly;
+	bool m_readOnly;
 
-	wxArrayArrayString data;
+	wxArrayArrayString m_data;
 };
 
 /**
  * Stores data in double array of strings, and updates it when underlaying model
  * data has been changed.
  */
-class wxAdvFilterTableDataModel : public wxAdvTableDataModel, public wxAdvTableDataModelObserver
+class WXDLLIMPEXP_ADV wxAdvFilterTableDataModel : public wxAdvTableDataModel, public wxAdvTableDataModelObserver
 {
 public:
 	/**
@@ -147,10 +150,10 @@ public:
 private:
 	void UpdateValues();
 
-	wxAdvTableDataModel *model;
+	wxAdvTableDataModel *m_undelayingModel;
 
-	wxArrayArrayString data;
-	bool needUpdate;
+	wxArrayArrayString m_data;
+	bool m_needUpdate;
 };
 
 //
@@ -160,7 +163,7 @@ private:
 /**
  * Draws cell content.
  */
-class wxAdvTableCellRenderer
+class WXDLLIMPEXP_ADV wxAdvTableCellRenderer
 {
 public:
 	wxAdvTableCellRenderer();
@@ -172,7 +175,7 @@ public:
 /**
  * Draws cell content as text.
  */
-class wxAdvStringCellRenderer : public wxAdvTableCellRenderer
+class WXDLLIMPEXP_ADV wxAdvStringCellRenderer : public wxAdvTableCellRenderer
 {
 public:
 	wxAdvStringCellRenderer();
@@ -184,7 +187,7 @@ public:
 /**
  * Renderer to draw boolean cell values (draws checkmarks).
  */
-class wxAdvBoolTableCellRenderer : public wxAdvTableCellRenderer
+class WXDLLIMPEXP_ADV wxAdvBoolTableCellRenderer : public wxAdvTableCellRenderer
 {
 public:
 	wxAdvBoolTableCellRenderer();
@@ -200,7 +203,7 @@ public:
 
 /**
  */
-class wxAdvTableCellEditor
+class WXDLLIMPEXP_ADV wxAdvTableCellEditor
 {
 public:
 	wxAdvTableCellEditor();
@@ -220,7 +223,7 @@ public:
 /**
  * Performs table data sorting
  */
-class wxAdvTableSorter
+class WXDLLIMPEXP_ADV wxAdvTableSorter
 {
 public:
 	wxAdvTableSorter();
@@ -232,7 +235,7 @@ public:
 /**
  * Sorts data by
  */
-class wxAdvTableStringSorter : public wxAdvTableSorter
+class WXDLLIMPEXP_ADV wxAdvTableStringSorter : public wxAdvTableSorter
 {
 public:
 	wxAdvTableStringSorter();
@@ -251,7 +254,7 @@ const int undefinedSize = 0;
  * Row/column description.
  *
  */
-class wxAdvHdrCell
+class WXDLLIMPEXP_ADV wxAdvHdrCell
 {
 	friend class wxAdvTable;
 public:
@@ -259,44 +262,44 @@ public:
 	wxAdvHdrCell(const wxAdvHdrCell &o)
 	{
 		// copy attributes
-		subCells = o.subCells;
-		label = o.label;
-		size  = o.size;
-		alignVertical = o.alignVertical;
-		alignHorizontal = o.alignHorizontal;
-		spacing = o.spacing;
-		verticalText = o.verticalText;
-		sortable = o.sortable;
+		m_subCells = o.m_subCells;
+		m_label = o.m_label;
+		m_size  = o.m_size;
+		m_alignVertical = o.m_alignVertical;
+		m_alignHorizontal = o.m_alignHorizontal;
+		m_spacing = o.m_spacing;
+		m_verticalText = o.m_verticalText;
+		m_sortable = o.m_sortable;
 
 		// copy internals
-		rc = o.rc;
-		index = o.index;
-		isRow = o.isRow;
-		isReal = o.isReal;
+		m_rc = o.m_rc;
+		m_index = o.m_index;
+		m_isRow = o.m_isRow;
+		m_isReal = o.m_isReal;
 	}
 
-	wxAdvHdrCell(const wxChar *_label = wxT(""))
+	wxAdvHdrCell(const wxChar *label = wxT(""))
 	{
-		label = _label;
-		size = undefinedSize;
-		alignVertical = wxALIGN_TOP;
-		alignHorizontal = wxALIGN_CENTER;
-		spacing = 5;
-		verticalText = false;
-		sortable = false;
-		isReal = false;
+		m_label = label;
+		m_size = undefinedSize;
+		m_alignVertical = wxALIGN_TOP;
+		m_alignHorizontal = wxALIGN_CENTER;
+		m_spacing = 5;
+		m_verticalText = false;
+		m_sortable = false;
+		m_isReal = false;
 	}
 
-	wxAdvHdrCell(wxString &_label)
+	wxAdvHdrCell(wxString &label)
 	{
-		label = _label;
-		size = undefinedSize;
-		alignVertical = wxALIGN_TOP;
-		alignHorizontal = wxALIGN_CENTER;
-		spacing = 5;
-		verticalText = false;
-		sortable = false;
-		isReal = false;
+		m_label = label;
+		m_size = undefinedSize;
+		m_alignVertical = wxALIGN_TOP;
+		m_alignHorizontal = wxALIGN_CENTER;
+		m_spacing = 5;
+		m_verticalText = false;
+		m_sortable = false;
+		m_isReal = false;
 	}
 
 	virtual ~wxAdvHdrCell()
@@ -305,92 +308,97 @@ public:
 
 	/**
 	 * Adds sub row/column.
+	 * @param subHdrCell sub row/column
 	 */
-	wxAdvHdrCell &Sub(wxAdvHdrCell subRowCol)
+	wxAdvHdrCell &Sub(wxAdvHdrCell subHdrCell)
 	{
-		subCells.Add(subRowCol);
+		m_subCells.Add(subHdrCell);
 		return *this;
 	}
 
-	wxAdvHdrCell &Sub(const wxChar *_label)
+	/**
+	 * Adds sub row/column.
+	 * @param label label for sub row/column
+	 */
+	wxAdvHdrCell &Sub(const wxChar *label)
 	{
-		subCells.Add(wxAdvHdrCell(_label));
+		m_subCells.Add(wxAdvHdrCell(label));
 		return *this;
 	}
 
 	bool IsComposite()
 	{
-		return subCells.Count() != 0;
+		return m_subCells.Count() != 0;
 	}
 
 	/**
 	 * Sets vertical text alignment for header cell (not table values).
 	 * @param _alignVertical vertical alignment
 	 */
-	wxAdvHdrCell &AlignVertical(int _alignVertical)
+	wxAdvHdrCell &AlignVertical(int alignVertical)
 	{
-		alignVertical = _alignVertical;
+		m_alignVertical = alignVertical;
 		return *this;
 	}
 
 	int AlignVertical()
 	{
-		return alignVertical;
+		return m_alignVertical;
 	}
 
 	/**
 	 * Sets horizontal text alignment for header cell (not table values).
 	 * @param _alignHorizontal horizontal alignment
 	 */
-	wxAdvHdrCell &AlignHorizontal(int _alignHorizontal)
+	wxAdvHdrCell &AlignHorizontal(int alignHorizontal)
 	{
-		alignHorizontal = _alignHorizontal;
+		m_alignHorizontal = alignHorizontal;
 		return *this;
 	}
 
 	int AlignHorizontal()
 	{
-		return alignHorizontal;
+		return m_alignHorizontal;
 	}
 
 	wxAdvHdrCell &VerticalText()
 	{
-		verticalText = true;
+		m_verticalText = true;
 		return *this;
 	}
 
 	wxAdvHdrCell &Sortable()
 	{
-		sortable = true;
+		m_sortable = true;
 		return *this;
 	}
 
-	wxAdvHdrCell &Spacing(wxCoord _spacing)
+	wxAdvHdrCell &Spacing(wxCoord spacing)
 	{
-		spacing = _spacing;
+		m_spacing = spacing;
 		return *this;
 	}
 
 	wxSize CalcExtent(wxDC &dc)
 	{
 		// TODO add support for multiline text
-		wxSize extent = dc.GetTextExtent(label);
+		wxSize extent = dc.GetTextExtent(m_label);
 
-		extent.IncBy(2 * spacing);
+		extent.IncBy(2 * m_spacing);
 
-		if (verticalText) {
+		if (m_verticalText) {
 			// rotate by 90 degrees
 			wxCoord tmp = extent.x;
 			extent.x = extent.y;
 			extent.y = tmp;
 		}
 
-		if (size != undefinedSize) {
-			if (isRow) {
-				extent.SetHeight(size);
+		if (m_size != undefinedSize) {
+			if (m_isRow) {
+				extent.SetHeight(m_size);
 			}
 			else {
-				extent.SetWidth(size);
+				extent.SetWidth(m_size);
 			}
 		}
 		return extent;
@@ -405,9 +413,9 @@ public:
 		size_t layers = 1;
 		size_t maxSubLayers = IsComposite() ? 1 : 0;
 
-		FOREACH_HDRCELL(nsub, subCells) {
-			if (subCells[nsub].IsComposite()) {
-				size_t subLayers = subCells[nsub].Layers();
+		FOREACH_HDRCELL(nsub, m_subCells) {
+			if (m_subCells[nsub].IsComposite()) {
+				size_t subLayers = m_subCells[nsub].Layers();
 				if (subLayers > maxSubLayers)
 					maxSubLayers = subLayers;
 			}
@@ -419,9 +427,9 @@ public:
 	 * Set header cell label.
 	 * @param _label label
 	 */
-	wxAdvHdrCell &Label(wxString _label)
+	wxAdvHdrCell &Label(const wxString &label)
 	{
-		label = _label;
+		m_label = label;
 		return *this;
 	}
 
@@ -430,21 +438,21 @@ public:
 	 */
 	wxString Label()
 	{
-		return label;
+		return m_label;
 	}
 
 	/**
 	 * Sets size (width for column, height for row) for header cell.
 	 */
-	wxAdvHdrCell &Size(wxCoord _size)
+	wxAdvHdrCell &Size(wxCoord size)
 	{
-		size = _size;
+		m_size = size;
 		return *this;
 	}
 
 	wxCoord Size()
 	{
-		return size;
+		return m_size;
 	}
 
 	/**
@@ -459,8 +467,8 @@ public:
 			return 1;
 		}
 
-		FOREACH_HDRCELL(n, subCells) {
-			count += subCells[n].GetRealCellCount();
+		FOREACH_HDRCELL(n, m_subCells) {
+			count += m_subCells[n].GetRealCellCount();
 		}
 		return count;
 	}
@@ -484,39 +492,42 @@ private:
 		SetIsRowRecursive(false);
 	}
 
-	void SetIsRowRecursive(bool _isRow)
+	void SetIsRowRecursive(bool isRow)
 	{
-		isRow = _isRow;
+		m_isRow = isRow;
 
-		FOREACH_HDRCELL(n, subCells) {
-			subCells[n].SetIsRowRecursive(_isRow);
+		FOREACH_HDRCELL(n, m_subCells) {
+			m_subCells[n].SetIsRowRecursive(isRow);
 		}
 	}
 
-	wxAdvHdrCellArray subCells;
-	wxString label;
-	wxCoord size;
+	wxAdvHdrCellArray m_subCells;
+	wxString m_label;
+	wxCoord m_size;
 
-	int alignVertical;
-	int alignHorizontal;
+	int m_alignVertical;
+	int m_alignHorizontal;
 
-	wxCoord spacing;
+	wxCoord m_spacing;
 
-	bool verticalText;
+	bool m_verticalText;
 
-	bool sortable;
+	bool m_sortable;
 
 	//
 	// used internally by wxAdvTable
 	//
 	// for wxAdvTable to store row/column position
-	wxRect rc;
-	size_t index;
-	bool isRow;
-	bool isReal;
+	wxRect m_rc;
+	size_t m_index;
+	bool m_isRow;
+	bool m_isReal;
 };
 
-class wxAdvRange
+/**
+ * Range
+ */
+class WXDLLIMPEXP_ADV wxAdvRange
 {
 	friend class wxAdvTable;
 
@@ -526,43 +537,54 @@ public:
 		Set(-1, -1, -1, -1);
 	}
 
-	wxAdvRange(size_t _row1, size_t _col1, size_t _row2, size_t _col2)
+	wxAdvRange(size_t row1, size_t col1, size_t row2, size_t col2)
 	{
-		Set(_row1, _col1, _row2, _col2);
+		Set(row1, col1, row2, col2);
 	}
 
 	virtual ~wxAdvRange()
 	{
 	}
 
-	void Set(size_t _row, size_t _col)
+	/**
+	 * Setup range to single cell.
+	 * @param _row row index
+	 * @param _col row index
+	 */
+	void Set(size_t row, size_t col)
 	{
-		row1 = _row;
-		col1 = _col;
-		row2 = _row;
-		col2 = _col;
+		m_row1 = row;
+		m_col1 = col;
+		m_row2 = row;
+		m_col2 = col;
 	}
 
-	void Set(size_t _row1, size_t _col1, size_t _row2, size_t _col2)
+	void Set(size_t row1, size_t col1, size_t row2, size_t col2)
 	{
-		row1 = min(_row1, _row2);
-		col1 = min(_col1, _col2);
-		row2 = max(_row1, _row2);
-		col2 = max(_col1, _col2);
+		m_row1 = min(row1, row2);
+		m_col1 = min(col1, col2);
+		m_row2 = max(row1, row2);
+		m_col2 = max(col1, col2);
 	}
 
-	bool Contains(size_t _row, size_t _col)
+	/**
+	 * Determines if specified cell is in range.
+	 * @param row row index
+	 * @param col column index
+	 * @return true if cell in range
+	 */
+	bool Contains(size_t row, size_t col)
 	{
-		return (_row >= row1 && _row <= row2) &&
-				(_col >= col1 && _col <= col2);
+		return (row >= m_row1 && row <= m_row2) &&
+				(col >= m_col1 && col <= m_col2);
 	}
 
 	void operator = (const wxAdvRange &o)
 	{
-		row1 = o.row1;
-		col1 = o.col1;
-		row2 = o.row2;
-		col2 = o.col2;
+		m_row1 = o.m_row1;
+		m_col1 = o.m_col1;
+		m_row2 = o.m_row2;
+		m_col2 = o.m_col2;
 	}
 
 private:
@@ -594,8 +616,8 @@ private:
 		return m;
 	}
 
-	size_t row1, col1;
-	size_t row2, col2;
+	size_t m_row1, m_col1;
+	size_t m_row2, m_col2;
 };
 
 /**
@@ -613,7 +635,7 @@ private:
  * - TODO: add printing support
  * - TODO: add filters support
  */
-class wxAdvTable : public wxScrolledWindow, public wxAdvTableDataModelObserver
+class WXDLLIMPEXP_ADV wxAdvTable : public wxScrolledWindow, public wxAdvTableDataModelObserver
 {
 public:
 	enum SortMode {
@@ -639,14 +661,14 @@ public:
 	 * Create table and arrange rows and columns.
 	 * Call this after you create wxAdvTable before using it.
 	 * wxAdvTable takes ownership for table model
-	 * @param _rows rows array
+	 * @param rows rows array
 	 * @param numRows number of elements in rows array
-	 * @param _cols columns arrray
+	 * @param cols columns arrray
 	 * @param numCols number of elements in columns array
-	 * @param _corner string to use as corner
+	 * @param cornerLabel string to use as corner
 	 * @param model data model
 	 */
-	void Create(wxAdvHdrCell *_rows, size_t numRows, wxAdvHdrCell *_cols, size_t numCols, wxString _corner, wxAdvTableDataModel *_model);
+	void Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
 	/**
 	 * Create table and arrange rows and columns,
@@ -654,11 +676,12 @@ public:
 	 * Call this after you create wxAdvTable before using it.
 	 * wxAdvTable takes ownership for table model
 	 * @param numRows number of elements in rows array
-	 * @param _cols columns array
+	 * @param cols columns array
 	 * @param numCols number of elements in columns array
-	 * @param _model data model
+	 * @param cornerLabel string to use as corner
+	 * @param model data model
 	 */
-	void Create(size_t numRows, wxAdvHdrCell *_cols, size_t numCols, wxAdvTableDataModel *_model);
+	void Create(size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
 	/**
 	 * Create table and arrange rows and columns,
@@ -666,11 +689,12 @@ public:
 	 * Call this after you create wxAdvTable before using it.
 	 * wxAdvTable takes ownership for table model
 	 * @param numRows number of elements in rows array
-	 * @param _cols columns array
+	 * @param cols columns array
 	 * @param numCols number of elements in columns array
-	 * @param _model data model
+	 * @param cornerLabel string to use as corner
+	 * @param model data model
 	 */
-	void Create(wxAdvHdrCell *_rows, size_t numRows, size_t numCols, wxAdvTableDataModel *_model);
+	void Create(wxAdvHdrCell *rows, size_t numRows, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
 	/**
 	 * Create table and arrange rows and columns, with specified
@@ -679,18 +703,19 @@ public:
 	 * wxAdvTable takes ownership for table model
 	 * @param numRows number of elements in rows array
 	 * @param numCols number of elements in columns array
-	 * @param _model data model
+	 * @param cornerLabel string to use as corner
+	 * @param model data model
 	 */
-	void Create(size_t numRows, size_t numCols, wxAdvTableDataModel *_model);
+	void Create(size_t numRows, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
 	void DestroyTable();
 
 	//
 	// Dynamic row/column add/remove functions.
 	//
-	void AddRows(wxAdvHdrCell *_rows, size_t numRows);
+	void AddRows(wxAdvHdrCell *rows, size_t numRows);
 
-	void AddCols(wxAdvHdrCell *_cols, size_t numCols);
+	void AddCols(wxAdvHdrCell *cols, size_t numCols);
 
 	/**
 	 * Remove rows from
@@ -700,46 +725,46 @@ public:
 	void RemoveCols(size_t from, size_t to);
 */
 
-	void SetShowHeaders(bool _showRows, bool _showCols);
+	void SetShowHeaders(bool showRows, bool showCols);
 
-	void SetShowRows(bool _showRows)
+	void SetShowRows(bool showRows)
 	{
-		SetShowHeaders(_showRows, showCols);
+		SetShowHeaders(showRows, m_showCols);
 	}
 
 	bool GetShowRows()
 	{
-		return showRows;
+		return m_showRows;
 	}
 
-	void SetShowCols(bool _showCols)
+	void SetShowCols(bool showCols)
 	{
-		SetShowHeaders(showRows, _showCols);
+		SetShowHeaders(m_showRows, showCols);
 	}
 
 	bool GetShowCols()
 	{
-		return showCols;
+		return m_showCols;
 	}
 
 	/**
 	 * Sets sorter for table data.
 	 * wxAdvTable takes ownership for sorter object.
-	 * @param _sorter new sorter
+	 * @param sorter new sorter
 	 */
-	void SetSorter(wxAdvTableSorter *_sorter);
+	void SetSorter(wxAdvTableSorter *sorter);
 
-	void SetSortMode(SortMode _sortMode);
+	void SetSortMode(SortMode sortMode);
 
-	void SetSortingIndex(size_t _sortingIndex);
+	void SetSortingIndex(size_t sortingIndex);
 
 	//void SetFilter(wxAdvTableFilter *_filter);
 
-	void SetHighlighMode(HighlightMode _highlightMode);
+	void SetHighlightMode(HighlightMode highlightMode);
 
 	HighlightMode GetHighlightMode()
 	{
-		return highlightMode;
+		return m_highlightMode;
 	}
 
 	//
@@ -747,7 +772,7 @@ public:
 	//
     size_t GetRowCount()
 	{
-		return rows.GetCount();
+		return m_rows.GetCount();
 	}
 
     /**
@@ -755,12 +780,12 @@ public:
      */
 	size_t GetRealRowCount()
 	{
-		return realRows.Count();
+		return m_realRows.Count();
 	}
 
 	size_t GetColCount()
 	{
-		return cols.GetCount();
+		return m_cols.GetCount();
 	}
 
     /**
@@ -768,22 +793,22 @@ public:
      */
 	size_t GetRealColCount()
 	{
-		return realCols.Count();
+		return m_realCols.Count();
 	}
 
 	wxAdvHdrCell &GetRow(size_t index)
 	{
-		return rows[index];
+		return m_rows[index];
 	}
 
 	wxAdvHdrCell *GetRealRow(size_t index)
 	{
-		return realRows[index];
+		return m_realRows[index];
 	}
 
 	wxAdvHdrCell *GetRealCol(size_t index)
 	{
-		return realCols[index];
+		return m_realCols[index];
 	}
 
 	wxAdvTableCellRenderer *GetRendererForCell(size_t nRow, size_t nCol);
@@ -835,7 +860,7 @@ public:
 	 */
 	bool IsCellSelected(size_t row, size_t col)
 	{
-		return selected.Contains(row, col);
+		return m_selected.Contains(row, col);
 	}
 
 	/**
@@ -863,7 +888,7 @@ public:
 	 * Sets select mode.
 	 * @param _selectMode new select mode, possible values: SelectCell, SelectRows, SelectCols, SelectBlock.
 	 */
-	void SetSelectMode(SelectMode _selectMode);
+	void SetSelectMode(SelectMode selectMode);
 
 	int GetSelectMode();
 
@@ -874,29 +899,29 @@ public:
 	 */
 	bool IsCellFocused(size_t row, size_t col)
 	{
-		return (focusedRow == row) && (focusedCol == col);
+		return (m_focusedRow == row) && (m_focusedCol == col);
 	}
 
 	void SetFocusedCell(size_t row, size_t col);
 
 	wxCoord GetTotalColsWidth()
 	{
-		return SumDimensions(realCols, true);
+		return SumDimensions(m_realCols, true);
 	}
 
 	wxCoord GetTotalRowsHeight()
 	{
-		return SumDimensions(realRows, false);
+		return SumDimensions(m_realRows, false);
 	}
 
 	wxCoord GetTotalRowLayersWidth()
 	{
-		return SumLayerSizes(rowLayerWidths);
+		return SumLayerSizes(m_rowLayerWidths);
 	}
 
 	wxCoord GetTotalColLayersHeight()
 	{
-		return SumLayerSizes(colLayerHeights);
+		return SumLayerSizes(m_colLayerHeights);
 	}
 
 	/**
@@ -913,8 +938,8 @@ public:
 	 */
 	wxRect GetRowsRect()
 	{
-		if (showRows) {
-			wxCoord y = (showCols) ? GetTotalColLayersHeight() : 0;
+		if (m_showRows) {
+			wxCoord y = (m_showCols) ? GetTotalColLayersHeight() : 0;
 			return wxRect(0, y,
 					GetTotalRowLayersWidth(), GetTotalRowsHeight());
 		}
@@ -928,10 +953,10 @@ public:
 	 */
 	wxRect GetColsRect()
 	{
-		if (showCols) {
-			wxCoord x = (showRows) ? SumLayerSizes(rowLayerWidths) : 0;
+		if (m_showCols) {
+			wxCoord x = (m_showRows) ? SumLayerSizes(m_rowLayerWidths) : 0;
 			return wxRect(x, 0,
-					GetTotalColsWidth(), SumLayerSizes(colLayerHeights));
+					GetTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
 		}
 		else {
 			return wxRect(0, 0, 0, 0);
@@ -1029,54 +1054,55 @@ private:
 	 */
 	wxPoint ToViewportPosition(wxPoint &pt);
 
+	void SendEvent();
 
-	bool created;
+	bool m_tableCreated;
 
-	bool showRows;
-	bool showCols;
+	bool m_showRows;
+	bool m_showCols;
 
-	wxAdvHdrCellArray rows;
-	wxAdvHdrCellArray cols;
-	wxAdvHdrCell cornerCell;
-	wxAdvTableSorter *sorter;
-	SortMode sortMode;
+	wxAdvHdrCellArray m_rows;
+	wxAdvHdrCellArray m_cols;
+	wxAdvHdrCell m_cornerCell;
+	wxAdvTableSorter *m_sorter;
+	SortMode m_sortMode;
 
-	wxIndexArray rowsOrder;
-	wxIndexArray colsOrder;
+	wxIndexArray m_rowsOrder;
+	wxIndexArray m_colsOrder;
 
-	wxAdvHdrCellPtrArray realRows;
-	wxAdvHdrCellPtrArray realCols;
+	wxAdvHdrCellPtrArray m_realRows;
+	wxAdvHdrCellPtrArray m_realCols;
 
-	wxCoordArray rowLayerWidths;
-	wxCoordArray colLayerHeights;
+	wxCoordArray m_rowLayerWidths;
+	wxCoordArray m_colLayerHeights;
 
-	HighlightMode highlightMode;
+	HighlightMode m_highlightMode;
 
-	wxAdvRangeArray cellConcats;
+	wxAdvRangeArray m_cellConcats;
 
 	// graphic objects
-	wxPen gridPen;
-	wxPen focusedPen;
-	wxBrush bgBrush;
-	wxBrush selectedBgBrush;
-	wxBrush focusedBgBrush;
-	wxBrush highlightedBgBrush;
+	wxPen m_gridPen;
+	wxPen m_focusedPen;
+	wxBrush m_bgBrush;
+	wxBrush m_selectedBgBrush;
+	wxBrush m_focusedBgBrush;
+	wxBrush m_highlightedBgBrush;
 
-	wxAdvTableDataModel *model;
-	wxAdvTableCellRenderer *defaultRenderer;
+	wxAdvTableDataModel *m_model;
+	wxAdvTableCellRenderer *m_defaultRenderer;
 
-	wxAdvTableCellRendererMap renderers;
+	wxAdvTableCellRendererMap m_renderers;
 
-	wxAdvHdrCell *clickedCell;
+	wxAdvHdrCell *m_clickedCell;
 
-	SelectMode selectMode;
-	wxAdvRange selected;
-	size_t selRow, selCol;
+	SelectMode m_selectMode;
+	wxAdvRange m_selected;
+	size_t m_selRow, m_selCol;
 
-	size_t sortingIndex;
-	int sortDirection;
+	size_t m_sortingIndex;
+	int m_sortDirection;
 
-	size_t focusedRow, focusedCol;
+	size_t m_focusedRow, m_focusedCol;
 
 	DECLARE_EVENT_TABLE()
 };

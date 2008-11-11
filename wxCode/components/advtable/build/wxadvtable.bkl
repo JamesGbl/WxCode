@@ -64,6 +64,9 @@
 
     <set var="COMP_SRC">wxadvtable.cpp</set>
     <set var="COMP_HDR">wx/wxadvtable.h</set>
+    
+    <set var="COMP_SAMPLE_SRC">demo.cpp</set>
+    <set var="COMP_SAMPLE_HDR">demo.h</set>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Library settings                                                  -->

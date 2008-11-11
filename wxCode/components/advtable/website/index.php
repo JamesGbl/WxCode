@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
+  // Author: Moskvichev Andrey V.
+  // Creation date: 11/11/2008
   // RCS-ID: $Id: index.php,v 1.7 2005/09/01 22:26:16 frm Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "wxAdvTable";
+      $subdir = "advtable";
       require("compwebsite.inc.php");
   ?>
 
@@ -43,7 +43,7 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+    <?php writeScreenshotLink("wxadvtable1.png", "Demo application screenshot"); ?>
   </div>
 
 

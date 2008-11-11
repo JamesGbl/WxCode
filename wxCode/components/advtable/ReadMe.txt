@@ -48,6 +48,9 @@
  
  1.0 - first version of wxAdvTable at wxCode
  
- 
- [optionally: Known bugs, Author's info, ... ]
-
+ Known bugs:
+ - lack of events system (cell click, double click, etc). I think to reuse wxGrid event classes 
+ in wxAdvTable event system.
+ - some selection bugs.
+ - lack of different renderers and editors.
+ - table headers looks ugly on Windows XP (tm) with themes enabled.
