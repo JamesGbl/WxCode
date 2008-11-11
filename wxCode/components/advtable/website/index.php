@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "wxAdvTable";
+      $compname = "advtable";
       $subdir = "advtable";
       require("compwebsite.inc.php");
   ?>
