@@ -57,7 +57,7 @@ WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual
 /**
  * Base class for receiving wxAdvTableDataModel events.
  */
-class WXDLLIMPEXP_ADV wxAdvTableDataModelObserver
+class WXDLLEXPORT wxAdvTableDataModelObserver
 {
 public:
 	wxAdvTableDataModelObserver();
@@ -79,7 +79,7 @@ public:
 /**
  * Model for wxAdvTable data, such as cell values, formats.
  */
-class WXDLLIMPEXP_ADV wxAdvTableDataModel : public Observable<wxAdvTableDataModelObserver>
+class WXDLLEXPORT wxAdvTableDataModel : public Observable<wxAdvTableDataModelObserver>
 {
 public:
 	wxAdvTableDataModel();
@@ -100,7 +100,7 @@ protected:
  * Simpliest table model for wxAdvTable.
  * Stores data as strings, all cells have string format.
  */
-class WXDLLIMPEXP_ADV wxAdvStringTableDataModel : public wxAdvTableDataModel
+class WXDLLEXPORT wxAdvStringTableDataModel : public wxAdvTableDataModel
 {
 public:
 	wxAdvStringTableDataModel(size_t _numRows, size_t _numCols, bool _readOnly);
@@ -122,7 +122,7 @@ private:
  * Stores data in double array of strings, and updates it when underlaying model
  * data has been changed.
  */
-class WXDLLIMPEXP_ADV wxAdvFilterTableDataModel : public wxAdvTableDataModel, public wxAdvTableDataModelObserver
+class WXDLLEXPORT wxAdvFilterTableDataModel : public wxAdvTableDataModel, public wxAdvTableDataModelObserver
 {
 public:
 	/**
@@ -163,7 +163,7 @@ private:
 /**
  * Draws cell content.
  */
-class WXDLLIMPEXP_ADV wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvTableCellRenderer
 {
 public:
 	wxAdvTableCellRenderer();
@@ -175,7 +175,7 @@ public:
 /**
  * Draws cell content as text.
  */
-class WXDLLIMPEXP_ADV wxAdvStringCellRenderer : public wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvStringCellRenderer : public wxAdvTableCellRenderer
 {
 public:
 	wxAdvStringCellRenderer();
@@ -187,7 +187,7 @@ public:
 /**
  * Renderer to draw boolean cell values (draws checkmarks).
  */
-class WXDLLIMPEXP_ADV wxAdvBoolTableCellRenderer : public wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvBoolTableCellRenderer : public wxAdvTableCellRenderer
 {
 public:
 	wxAdvBoolTableCellRenderer();
@@ -203,7 +203,7 @@ public:
 
 /**
  */
-class WXDLLIMPEXP_ADV wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvTableCellEditor
 {
 public:
 	wxAdvTableCellEditor();
@@ -223,7 +223,7 @@ public:
 /**
  * Performs table data sorting
  */
-class WXDLLIMPEXP_ADV wxAdvTableSorter
+class WXDLLEXPORT wxAdvTableSorter
 {
 public:
 	wxAdvTableSorter();
@@ -235,7 +235,7 @@ public:
 /**
  * Sorts data by
  */
-class WXDLLIMPEXP_ADV wxAdvTableStringSorter : public wxAdvTableSorter
+class WXDLLEXPORT wxAdvTableStringSorter : public wxAdvTableSorter
 {
 public:
 	wxAdvTableStringSorter();
@@ -254,7 +254,7 @@ const int undefinedSize = 0;
  * Row/column description.
  *
  */
-class WXDLLIMPEXP_ADV wxAdvHdrCell
+class WXDLLEXPORT wxAdvHdrCell
 {
 	friend class wxAdvTable;
 public:
@@ -527,7 +527,7 @@ private:
 /**
  * Range
  */
-class WXDLLIMPEXP_ADV wxAdvRange
+class WXDLLEXPORT wxAdvRange
 {
 	friend class wxAdvTable;
 
@@ -635,7 +635,7 @@ private:
  * - TODO: add printing support
  * - TODO: add filters support
  */
-class WXDLLIMPEXP_ADV wxAdvTable : public wxScrolledWindow, public wxAdvTableDataModelObserver
+class WXDLLEXPORT wxAdvTable : public wxScrolledWindow, public wxAdvTableDataModelObserver
 {
 public:
 	enum SortMode {
@@ -725,11 +725,11 @@ public:
 	void RemoveCols(size_t from, size_t to);
 */
 
-	void SetShowHeaders(bool showRows, bool showCols);
+	void SetShowHeaders(bool showRows, bool showCols, bool showCorner);
 
 	void SetShowRows(bool showRows)
 	{
-		SetShowHeaders(showRows, m_showCols);
+		SetShowHeaders(showRows, m_showCols, m_showCorner);
 	}
 
 	bool GetShowRows()
@@ -739,13 +739,24 @@ public:
 
 	void SetShowCols(bool showCols)
 	{
-		SetShowHeaders(m_showRows, showCols);
+		SetShowHeaders(m_showRows, showCols, m_showCorner);
 	}
 
 	bool GetShowCols()
 	{
 		return m_showCols;
 	}
+
+	void SetShowCorner(bool showCorner)
+	{
+		SetShowHeaders(m_showRows, m_showCols, showCorner);
+	}
+
+	bool GetShowCorner()
+	{
+		return m_showCorner;
+	}
+
 
 	/**
 	 * Sets sorter for table data.
@@ -829,7 +840,7 @@ public:
 	 */
 	wxString GetCellValue(size_t nRow, size_t nCol);
 
-	void GetRealCellIndex(size_t row, size_t col, size_t &realRow, size_t &realCol);
+	void GetUnsortedCellIndex(size_t row, size_t col, size_t &realRow, size_t &realCol);
 
 	/**
 	 * Returns table cell rectangle.
@@ -939,7 +950,7 @@ public:
 	wxRect GetRowsRect()
 	{
 		if (m_showRows) {
-			wxCoord y = (m_showCols) ? GetTotalColLayersHeight() : 0;
+			wxCoord y = (m_showCols || m_showCorner) ? GetTotalColLayersHeight() : 0;
 			return wxRect(0, y,
 					GetTotalRowLayersWidth(), GetTotalRowsHeight());
 		}
@@ -954,7 +965,7 @@ public:
 	wxRect GetColsRect()
 	{
 		if (m_showCols) {
-			wxCoord x = (m_showRows) ? SumLayerSizes(m_rowLayerWidths) : 0;
+			wxCoord x = (m_showRows || m_showCorner) ? SumLayerSizes(m_rowLayerWidths) : 0;
 			return wxRect(x, 0,
 					GetTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
 		}
@@ -1054,12 +1065,13 @@ private:
 	 */
 	wxPoint ToViewportPosition(wxPoint &pt);
 
-	void SendEvent();
+	void SendEvent(const wxEventType, size_t row, size_t col);
 
 	bool m_tableCreated;
 
 	bool m_showRows;
 	bool m_showCols;
+	bool m_showCorner;
 
 	wxAdvHdrCellArray m_rows;
 	wxAdvHdrCellArray m_cols;

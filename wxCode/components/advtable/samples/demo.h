@@ -35,6 +35,7 @@ private:
 	void OnChoiceHighlightMode(wxCommandEvent &ev);
 	void OnCheckShowRows(wxCommandEvent &ev);
 	void OnCheckShowCols(wxCommandEvent &ev);
+	void OnCheckShowCorner(wxCommandEvent &ev);
 
 	wxAdvTable *m_advTable;
 

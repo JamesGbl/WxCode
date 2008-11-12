@@ -15,17 +15,7 @@
     -->
     <input>wxadvtable.bkl</input>
 
-    <!--
-        The wxCode's wxcode.bkgen file will enable some default formats.
-        If you don't want a format declared there to be generated for
-        your project, just use:
-
-             <disable-formats>xxx</disable-formats>
-
-        Instead, if you want to generate a format not declared there,
-        use:
-
-             <add-formats>yyy</add-formats>
-    -->
-
+    <disable-formats>msvs2005prj,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+    <add-formats>autoconf,borland,mingw,msvc,msvc6prj,watcom</add-formats>
+    
 </bakefile-gen>

@@ -180,10 +180,7 @@ wxAdvBoolTableCellRenderer::~wxAdvBoolTableCellRenderer()
 
 void wxAdvBoolTableCellRenderer::Draw(wxDC &dc, wxRect rc, wxString value, bool selected, bool focused)
 {
-	// TODO
-	//int flags = wxCONTROL_CHECKED;
-
-	//wxRendererNative::Get()->DrawCheckBox(wnd, dc, rc, flags);
+	// TODO not implemented
 }
 
 wxAdvStringCellRenderer::wxAdvStringCellRenderer()
@@ -308,6 +305,7 @@ m_cornerCell(wxEmptyString)
 
 	m_showRows = true;
 	m_showCols = true;
+	m_showCorner = true;
 
 	// Graphics initialization
 	m_bgBrush = *wxWHITE_BRUSH;
@@ -473,28 +471,28 @@ void wxAdvTable::CalcHeaderGeometry(wxDC &dc)
 	wxCoord y0 = 0;
 
 	x0 = 0;
-	y0 = (m_showCols) ? totalColHeight : 0;
+	y0 = (m_showCols || m_showCorner) ? totalColHeight : 0;
 	FOREACH_HDRCELL(n, m_rows) {
 		UpdateHeaderPositions(m_rows[n], x0, y0, m_rowLayerWidths, 0, true);
 		y0 += m_rows[n].m_rc.height;
 	}
 
-	x0 = (m_showRows) ? totalRowWidth : 0;
+	x0 = (m_showRows || m_showCorner) ? totalRowWidth : 0;
 	y0 = 0;
 	FOREACH_HDRCELL(n, m_cols) {
 		UpdateHeaderPositions(m_cols[n], x0, y0, m_colLayerHeights, 0, false);
 		x0 += m_cols[n].m_rc.width;
 	}
 
-	m_cornerCell.m_rc = wxRect(0, 0, totalRowWidth, totalColHeight); // XXX
+	m_cornerCell.m_rc = wxRect(0, 0, totalRowWidth, totalColHeight);
 
 	wxCoord virtWidth = GetTotalColsWidth();
 	wxCoord virtHeight = GetTotalRowsHeight();
 
-	if (m_showRows) {
+	if (m_showRows || m_showCorner) {
 		virtWidth += totalRowWidth;
 	}
-	if (m_showCols) {
+	if (m_showCols || m_showCorner) {
 		virtHeight += totalColHeight;
 	}
 
@@ -692,7 +690,7 @@ void wxAdvTable::AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, siz
 }
 
 //
-// Sorting, selection, highligh, etc routines.
+// Sorting, selection, highlight, etc routines.
 //
 void wxAdvTable::SetSorter(wxAdvTableSorter *_sorter)
 {
@@ -804,10 +802,11 @@ void wxAdvTable::ClearSelection()
 	Refresh();
 }
 
-void wxAdvTable::SetShowHeaders(bool _showRows, bool _showCols)
+void wxAdvTable::SetShowHeaders(bool showRows, bool showCols, bool showCorner)
 {
-	m_showRows = _showRows;
-	m_showCols = _showCols;
+	m_showRows = showRows;
+	m_showCols = showCols;
+	m_showCorner = showCorner;
 
 	wxClientDC dc(this);
 	CalcHeaderGeometry(dc);
@@ -891,7 +890,7 @@ void wxAdvTable::DrawTableCell(wxDC &dc, size_t row, size_t col)
 
 	dc.DrawRectangle(rc);
 
-	GetRealCellIndex(row, col, row, col);
+	GetUnsortedCellIndex(row, col, row, col);
 
 	wxString value = GetCellValue(row, col);
 	GetRendererForCell(row, col)->Draw(dc, rc, value, selected, focused);
@@ -936,15 +935,19 @@ wxAdvHdrCell *wxAdvTable::GetHdrCellAt(wxPoint pt)
 	pt = ToViewportPosition(pt);
 
 	wxAdvHdrCell *cell;
-	FOREACH_HDRCELL(nRow, m_rows) {
-		if ((cell = GetHdrCellAtRecursive(&m_rows[nRow], pt)) != NULL) {
-			return cell;
+	if (m_showRows) {
+		FOREACH_HDRCELL(nRow, m_rows) {
+			if ((cell = GetHdrCellAtRecursive(&m_rows[nRow], pt)) != NULL) {
+				return cell;
+			}
 		}
 	}
 
-	FOREACH_HDRCELL(nCol, m_cols) {
-		if ((cell = GetHdrCellAtRecursive(&m_cols[nCol], pt)) != NULL) {
-			return cell;
+	if (m_showCols) {
+		FOREACH_HDRCELL(nCol, m_cols) {
+			if ((cell = GetHdrCellAtRecursive(&m_cols[nCol], pt)) != NULL) {
+				return cell;
+			}
 		}
 	}
 	return NULL;
@@ -996,7 +999,7 @@ void wxAdvTable::SetDefaultRenderer(wxAdvTableCellRenderer *renderer)
 	Refresh();
 }
 
-void wxAdvTable::GetRealCellIndex(size_t row, size_t col, size_t &realRow, size_t &realCol)
+void wxAdvTable::GetUnsortedCellIndex(size_t row, size_t col, size_t &realRow, size_t &realCol)
 {
 	if (m_sorter == NULL || m_sortingIndex >= m_realCols.Count()) {
 		realRow = row;
@@ -1075,6 +1078,11 @@ bool wxAdvTable::IsCellHighlighted(size_t row, size_t col)
 	}
 }
 
+void wxAdvTable::SendEvent(const wxEventType, size_t row, size_t col)
+{
+	// TODO
+}
+
 //
 // Event handlers
 //
@@ -1112,7 +1120,7 @@ void wxAdvTable::OnPaint(wxPaintEvent &ev)
 	}
 
 	// draw corner
-	if (m_showRows && m_showCols) {
+	if (m_showCorner) {
 		dc.SetDeviceOrigin(0, 0);
 		DrawHeaderCell(dc, m_cornerCell);
 	}

@@ -44,7 +44,8 @@ enum CONTROL_IDS {
 	CHOICE_SELECT_MODE = 101,
 	CHOICE_HIGHLIGHT_MODE,
 	CHECK_SHOW_ROWS,
-	CHECK_SHOW_COLS
+	CHECK_SHOW_COLS,
+	CHECK_SHOW_CORNER,
 };
 
 BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
@@ -52,6 +53,7 @@ BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
 	EVT_CHOICE(CHOICE_HIGHLIGHT_MODE, ControlPanel::OnChoiceHighlightMode)
 	EVT_CHECKBOX(CHECK_SHOW_ROWS, ControlPanel::OnCheckShowRows)
 	EVT_CHECKBOX(CHECK_SHOW_COLS, ControlPanel::OnCheckShowCols)
+	EVT_CHECKBOX(CHECK_SHOW_CORNER, ControlPanel::OnCheckShowCorner)
 END_EVENT_TABLE()
 
 ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
@@ -85,12 +87,17 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 
 	wxCheckBox *checkBox;
 	checkBox = new wxCheckBox(this, CHECK_SHOW_ROWS, wxT("Show rows"), wxDefaultPosition, wxDefaultSize);
-	checkBox->SetValue(true);
+	checkBox->SetValue(m_advTable->GetShowRows());
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
 	checkBox = new wxCheckBox(this, CHECK_SHOW_COLS, wxT("Show columns"), wxDefaultPosition, wxDefaultSize);
-	checkBox->SetValue(true);
+	checkBox->SetValue(m_advTable->GetShowCols());
+	sizer->Add(checkBox,
+			0, wxEXPAND);
+
+	checkBox = new wxCheckBox(this, CHECK_SHOW_CORNER, wxT("Show corner"), wxDefaultPosition, wxDefaultSize);
+	checkBox->SetValue(m_advTable->GetShowCorner());
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
@@ -104,41 +111,51 @@ ControlPanel::~ControlPanel()
 
 void ControlPanel::OnChoiceSelectMode(wxCommandEvent &ev)
 {
+	int mode;
+
 	switch (ev.GetSelection()) {
 	case 0:
-		m_advTable->SetSelectMode(wxAdvTable::SelectCell);
+		mode = wxAdvTable::SelectCell;
 		break;
 	case 1:
-		m_advTable->SetSelectMode(wxAdvTable::SelectRows);
+		mode = wxAdvTable::SelectRows;
 		break;
 	case 2:
-		m_advTable->SetSelectMode(wxAdvTable::SelectCols);
+		mode = wxAdvTable::SelectCols;
 		break;
 	case 3:
-		m_advTable->SetSelectMode(wxAdvTable::SelectBlock);
+		mode = wxAdvTable::SelectBlock;
 		break;
+	default:
+		return ;
 	}
 
+	m_advTable->SetSelectMode((wxAdvTable::SelectMode) mode);
 	wxLogMessage(wxT("Select mode %s"), ev.GetString().c_str());
 }
 
 void ControlPanel::OnChoiceHighlightMode(wxCommandEvent &ev)
 {
+	int mode;
+
 	switch (ev.GetSelection()) {
 	case 0:
-		m_advTable->SetHighlightMode(wxAdvTable::HighlightNone);
+		mode = wxAdvTable::HighlightNone;
 		break;
 	case 1:
-		m_advTable->SetHighlightMode(wxAdvTable::HighlightRows);
+		mode = wxAdvTable::HighlightRows;
 		break;
 	case 2:
-		m_advTable->SetHighlightMode(wxAdvTable::HighlightCols);
+		mode = wxAdvTable::HighlightCols;
 		break;
 	case 3:
-		m_advTable->SetHighlightMode(wxAdvTable::HighlightBoth);
+		mode = wxAdvTable::HighlightBoth;
 		break;
+	default:
+		return ;
 	}
 
+	m_advTable->SetHighlightMode((wxAdvTable::HighlightMode) mode);
 	wxLogMessage(wxT("Highlight mode %s"), ev.GetString().c_str());
 }
 
@@ -152,16 +169,22 @@ void ControlPanel::OnCheckShowCols(wxCommandEvent &ev)
 	m_advTable->SetShowCols(ev.IsChecked());
 }
 
+void ControlPanel::OnCheckShowCorner(wxCommandEvent &ev)
+{
+	m_advTable->SetShowCorner(ev.IsChecked());
+}
+
 //
 // MainFrame
 //
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
+
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo"), wxDefaultPosition, wxSize(800, 445))
+: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo"), wxDefaultPosition, wxSize(900, 600))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -173,7 +196,7 @@ MainFrame::MainFrame()
 
 	wxTextCtrl *logCtrl = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize,
 			wxTE_MULTILINE | wxTE_READONLY);
-	auiManager->AddPane(logCtrl, wxAuiPaneInfo().Bottom().Caption(wxT("Messages")).CloseButton(false));
+	auiManager->AddPane(logCtrl, wxAuiPaneInfo().Bottom().Caption(wxT("Messages")).CloseButton(false).MinSize(500, 200));
 	wxLog::SetActiveTarget(new wxLogTextCtrl(logCtrl));
 
 	auiManager->Update();
@@ -217,7 +240,7 @@ void MainFrame::CreateTableStructure()
 		wxAdvHdrCell(wxT("Col V")),
 	};
 
-	wxString cornerLabel = wxT("Test table");
+	wxString cornerLabel = wxT("Table corner");
 
 	wxAdvStringTableDataModel *model = new wxAdvStringTableDataModel(
 			wxAdvHdrCell::GetRealCellCount(rows, N(rows)),
