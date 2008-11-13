@@ -45,7 +45,9 @@ class wxAdvTable;
 class wxAdvHdrCell;
 class wxAdvRange;
 class wxAdvTableCellRenderer;
+class wxAdvTableCellEditor;
 
+// arrays/maps declarations
 WX_DECLARE_OBJARRAY(wxArrayString, wxArrayArrayString);
 WX_DECLARE_OBJARRAY(wxAdvHdrCell, wxAdvHdrCellArray);
 WX_DECLARE_OBJARRAY(wxAdvHdrCell *, wxAdvHdrCellPtrArray);
@@ -53,6 +55,7 @@ WX_DECLARE_OBJARRAY(wxAdvRange, wxAdvRangeArray);
 WX_DECLARE_OBJARRAY(wxCoord, wxCoordArray);
 WX_DECLARE_OBJARRAY(size_t, wxIndexArray);
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellRendererMap);
+WX_DECLARE_HASH_MAP(int, wxAdvTableCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellEditorMap);
 
 /**
  * Base class for receiving wxAdvTableDataModel events.
@@ -202,6 +205,9 @@ public:
 //
 
 /**
+ * Table cell editors base class.
+ * TODO: create activate/deactivate methods, implement editors for all standard
+ * values types.
  */
 class WXDLLEXPORT wxAdvTableCellEditor
 {
@@ -213,6 +219,8 @@ public:
 	 * Return true, if editor activated with one click (such as boolean cells editor).
 	 */
 	virtual bool OneClickActivate();
+
+	//virtual void Activate(wxAdvTable *table,
 };
 
 
@@ -233,7 +241,7 @@ public:
 };
 
 /**
- * Sorts data by
+ * Sorts data by comparing string values.
  */
 class WXDLLEXPORT wxAdvTableStringSorter : public wxAdvTableSorter
 {
@@ -824,6 +832,8 @@ public:
 
 	wxAdvTableCellRenderer *GetRendererForCell(size_t nRow, size_t nCol);
 
+	wxAdvTableCellEditor *GetEditorForCell(size_t nRow, size_t nCol);
+
 	/**
 	 * Sets table cell renderer for cell format.
 	 * @param format cell format
@@ -883,6 +893,7 @@ public:
 
 	//
 	// Selection functions
+	// They are don't trigger selection events
 	//
 	void SetSelection(wxAdvRange &range);
 
@@ -993,10 +1004,16 @@ private:
 	// event handlers
 	//
 	void OnPaint(wxPaintEvent &ev);
-	void OnLeftDown(wxMouseEvent &ev);
-	void OnLeftUp(wxMouseEvent &ev);
-	void OnMotion(wxMouseEvent &ev);
+	void OnMouseEvents(wxMouseEvent &ev);
 	void OnKeyDown(wxKeyEvent &ev);
+
+	void HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell);
+	void HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col);
+
+	/**
+	 * Update selection, called from mouse and key event handlers.
+	 */
+	void SelectCells(wxMouseEvent &ev, size_t row, size_t col);
 
 	//
 	// drawing functions
@@ -1065,7 +1082,8 @@ private:
 	 */
 	wxPoint ToViewportPosition(wxPoint &pt);
 
-	void SendEvent(const wxEventType, size_t row, size_t col);
+	void SendEvent(const wxEventType type, size_t row, size_t col, wxMouseEvent &ev);
+	void SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2, wxMouseEvent &ev);
 
 	bool m_tableCreated;
 
@@ -1104,6 +1122,7 @@ private:
 	wxAdvTableCellRenderer *m_defaultRenderer;
 
 	wxAdvTableCellRendererMap m_renderers;
+	wxAdvTableCellEditorMap m_editors;
 
 	wxAdvHdrCell *m_clickedCell;
 

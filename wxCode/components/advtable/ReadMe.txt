@@ -2,7 +2,7 @@
  wxAdvTable ReadMe
  -------------
  
- Website: http://wxcode.sourceforge.net/components/wxadvtable
+ Website: http://wxcode.sourceforge.net/components/advtable
  Author: Moskvichev Andrey V.
  Version: 1.0 
  Description:
@@ -52,5 +52,7 @@
  - lack of events system (cell click, double click, etc). I think to reuse wxGrid event classes 
  in wxAdvTable event system.
  - some selection bugs.
- - lack of different renderers and editors.
+ - lack of renderers and editors for various data types (boolean, double, etc).
  - table headers looks ugly on Windows XP (tm) with themes enabled.
+ - tested only on wxMSW (Windows XP(tm) SP2) and wxGTK (Gentoo Linux x86_64), 
+   if someone can test on other wxWidgets ports, please let me know.

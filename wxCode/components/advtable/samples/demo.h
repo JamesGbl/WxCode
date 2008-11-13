@@ -54,7 +54,14 @@ public:
 private:
 	void CreateTableStructure();
 
+	void OnAbout(wxCommandEvent &ev);
 	void OnExit(wxCommandEvent &ev);
+
+	void OnGridLeftClick(wxGridEvent &ev);
+	void OnGridRightClick(wxGridEvent &ev);
+	void OnGridLeftDClick(wxGridEvent &ev);
+	void OnGridRightDClick(wxGridEvent &ev);
+	void OnGridRangeSelect(wxGridRangeSelectEvent &ev);
 
 	wxAdvTable *m_advTable;
 	ControlPanel *m_controlPanel;

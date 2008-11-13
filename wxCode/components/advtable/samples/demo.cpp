@@ -10,6 +10,7 @@
 
 #include "demo.h"
 #include <wx/aui/aui.h>
+#include <wx/aboutdlg.h>
 
 /**
  * Demo application.
@@ -31,6 +32,7 @@ IMPLEMENT_APP(DemoApp);
 
 //
 // ControlPanel
+// Is control to set various properties to wxAdvTable
 //
 
 #define ADD_FIELD(parent, sizer, label, ctrl) do {			\
@@ -64,6 +66,7 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	wxSizer *sizer = new wxFlexGridSizer(0, 1, 5, 5);
 	wxSizer *choiceSizer = new wxFlexGridSizer(0, 2, 5, 5);
 
+	// select mode choices
 	wxArrayString choicesSelectMode;
 	choicesSelectMode.Add(wxT("SelectCell"));
 	choicesSelectMode.Add(wxT("SelectRows"));
@@ -73,6 +76,7 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 			new wxChoice(this, CHOICE_SELECT_MODE, wxDefaultPosition, wxDefaultSize,
 					choicesSelectMode));
 
+	// highlight mode choices
 	wxArrayString choicesHighlightMode;
 	choicesHighlightMode.Add(wxT("HighlightNone"));
 	choicesHighlightMode.Add(wxT("HighlightRows"));
@@ -180,11 +184,16 @@ void ControlPanel::OnCheckShowCorner(wxCommandEvent &ev)
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
-
+	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+	EVT_GRID_CELL_LEFT_CLICK(MainFrame::OnGridLeftClick)
+	EVT_GRID_CELL_RIGHT_CLICK(MainFrame::OnGridRightClick)
+	EVT_GRID_CELL_LEFT_DCLICK(MainFrame::OnGridLeftDClick)
+	EVT_GRID_CELL_RIGHT_DCLICK(MainFrame::OnGridRightDClick)
+	EVT_GRID_RANGE_SELECT(MainFrame::OnGridRangeSelect)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo"), wxDefaultPosition, wxSize(900, 600))
+: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo 1.0"), wxDefaultPosition, wxSize(900, 600))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -209,7 +218,11 @@ MainFrame::MainFrame()
 	wxMenu *menuFile = new wxMenu();
 	menuFile->Append(wxID_EXIT, wxT("E&xit"));
 
+	wxMenu *menuHelp = new wxMenu();
+	menuHelp->Append(wxID_ABOUT, wxT("&About"));
+
 	menuBar->Append(menuFile, wxT("&File"));
+	menuBar->Append(menuHelp, wxT("&Help"));
 
 	SetMenuBar(menuBar);
 
@@ -220,24 +233,66 @@ MainFrame::~MainFrame()
 {
 }
 
+void MainFrame::OnAbout(wxCommandEvent &ev)
+{
+	wxAboutDialogInfo about;
+	about.SetName(wxT("wxAdvTable demo"));
+	about.SetVersion(wxT("1.0"));
+	about.SetDescription(wxT("This demo shows wxAdvTable features"));
+	about.SetCopyright(wxT("(C) 2008 Moskvichev Andrey V."));
+
+	wxAboutBox(about);
+}
+
 void MainFrame::OnExit(wxCommandEvent &ev)
 {
 	Close();
 }
 
+//
+// wxAdvTable event handlers
+//
+void MainFrame::OnGridLeftClick(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_LEFT_CLICK row=%i col=%i"), ev.GetRow(), ev.GetCol());
+}
+
+void MainFrame::OnGridRightClick(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_RIGHT_CLICK row=%i col=%i"), ev.GetRow(), ev.GetCol());
+}
+
+void MainFrame::OnGridLeftDClick(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_LEFT_DCLICK row=%i col=%i"), ev.GetRow(), ev.GetCol());
+}
+
+void MainFrame::OnGridRightDClick(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_RIGHT_DCLICK row=%i col=%i"), ev.GetRow(), ev.GetCol());
+}
+
+void MainFrame::OnGridRangeSelect(wxGridRangeSelectEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_RANGE_SELECT row1=%i col1=%i, row2=%i col2=%i"),
+			ev.GetTopRow(), ev.GetLeftCol(),
+			ev.GetBottomRow(), ev.GetRightCol());
+}
+
 void MainFrame::CreateTableStructure()
 {
+	// rows definition
 	wxAdvHdrCell rows[] = {
 		wxAdvHdrCell(wxT("Row I")),
 		wxAdvHdrCell(wxT("Row II")).Sub(wxAdvHdrCell(wxT("Row II-I")).Sub(wxT("Row II-I-I")).Sub(wxT("Row II-I-II"))).Sub(wxT("Row II-II")).Sub(wxT("Row II-III")),
 	};
 
+	// columns definition
 	wxAdvHdrCell cols[] = {
 		wxAdvHdrCell(wxT("Col I")).Size(100),
-		wxAdvHdrCell(wxT("Col II")),
+		wxAdvHdrCell(wxT("Col II")).Sub(wxT("Col II-I")).Sub(wxT("Col II-II")).Sub(wxT("Col\nII-III")),
 		wxAdvHdrCell(wxT("Col III")),
-		wxAdvHdrCell(wxT("Col IV")).Sub(wxT("Col IV-I")).Sub(wxT("Col IV-II")).Sub(wxT("Col\nIV-III")),
-		wxAdvHdrCell(wxT("Col V")),
+		wxAdvHdrCell(wxT("Col IV")),
 	};
 
 	wxString cornerLabel = wxT("Table corner");
@@ -247,6 +302,7 @@ void MainFrame::CreateTableStructure()
 			wxAdvHdrCell::GetRealCellCount(cols, N(cols)),
 			true);
 
+	//
 	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
 
 	m_advTable->SetSelectMode(wxAdvTable::SelectCell);
