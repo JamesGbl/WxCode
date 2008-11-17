@@ -7,7 +7,7 @@
 <bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
 
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
-    <add-formats>xcode2</add-formats>
+<!--     <add-formats>xcode2</add-formats> -->
     <input>
         wxcurl.bkl
         ../thirdparty/curl/build/curl.bkl
