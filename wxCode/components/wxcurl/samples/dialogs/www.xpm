@@ -1,5 +1,5 @@
 /* XPM */
-static char *www_xpm[] = {
+static const char *www_xpm[] = {
 "146 107 256 3",
 "000 c None",
 "001 c #F0EFF3",
