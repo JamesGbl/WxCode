@@ -40,10 +40,16 @@ enum {
 	wxBoolFormat,
 };
 
+// boolean true - string representation
+#define boolTrue wxT("1")
+#define boolFalse wxT("0")
+
 // Forward declarations
 class wxAdvTable;
 class wxAdvHdrCell;
+class wxAdvCoord;
 class wxAdvRange;
+class wxAdvCellAttribute;
 class wxAdvTableCellRenderer;
 class wxAdvTableCellEditor;
 
@@ -56,6 +62,192 @@ WX_DECLARE_OBJARRAY(wxCoord, wxCoordArray);
 WX_DECLARE_OBJARRAY(size_t, wxIndexArray);
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellRendererMap);
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellEditorMap);
+
+
+/**
+ * Table cell coordinate.
+ */
+class WXDLLEXPORT wxAdvCoord
+{
+public:
+	wxAdvCoord()
+	{
+		Unset();
+	}
+
+	virtual ~wxAdvCoord()
+	{
+	}
+
+	void Set(size_t row, size_t col)
+	{
+		m_row = row;
+		m_col = col;
+	}
+
+	bool IsSet()
+	{
+		return (m_row != (size_t) -1) && (m_col != (size_t) -1);
+	}
+
+	void Unset()
+	{
+		m_row = (size_t) -1;
+		m_col = (size_t) -1;
+	}
+
+	bool Equal(size_t row, size_t col)
+	{
+		return (m_row == row) && (m_col == col);
+	}
+
+	size_t Row()
+	{
+		return m_row;
+	}
+
+	size_t Col()
+	{
+		return m_col;
+	}
+
+private:
+	size_t m_row, m_col;
+};
+
+/**
+ * Range
+ */
+class WXDLLEXPORT wxAdvRange
+{
+	friend class wxAdvTable;
+
+public:
+	wxAdvRange()
+	{
+		Set(-1, -1, -1, -1);
+	}
+
+	wxAdvRange(size_t row1, size_t col1, size_t row2, size_t col2)
+	{
+		Set(row1, col1, row2, col2);
+	}
+
+	virtual ~wxAdvRange()
+	{
+	}
+
+	/**
+	 * Setup range to single cell.
+	 * @param _row row index
+	 * @param _col row index
+	 */
+	void Set(size_t row, size_t col)
+	{
+		m_row1 = row;
+		m_col1 = col;
+		m_row2 = row;
+		m_col2 = col;
+	}
+
+	void Set(size_t row1, size_t col1, size_t row2, size_t col2)
+	{
+		m_row1 = min(row1, row2);
+		m_col1 = min(col1, col2);
+		m_row2 = max(row1, row2);
+		m_col2 = max(col1, col2);
+	}
+
+	/**
+	 * Determines if specified cell is in range.
+	 * @param row row index
+	 * @param col column index
+	 * @return true if cell in range
+	 */
+	bool Contains(size_t row, size_t col)
+	{
+		return (row >= m_row1 && row <= m_row2) &&
+				(col >= m_col1 && col <= m_col2);
+	}
+
+	void operator = (const wxAdvRange &o)
+	{
+		m_row1 = o.m_row1;
+		m_col1 = o.m_col1;
+		m_row2 = o.m_row2;
+		m_col2 = o.m_col2;
+	}
+
+private:
+	size_t min(size_t a, size_t b)
+	{
+		size_t m = MIN(a, b);
+		if (m == (size_t) -1) {
+			if (a != (size_t) -1) {
+				m = a;
+			}
+			else if (b != (size_t) -1) {
+				m = b;
+			}
+		}
+		return m;
+	}
+
+	size_t max(size_t a, size_t b)
+	{
+		size_t m = MAX(a, b);
+		if (m == (size_t) -1) {
+			if (a != (size_t) -1) {
+				m = a;
+			}
+			else if (b != (size_t) -1) {
+				m = b;
+			}
+		}
+		return m;
+	}
+
+	size_t m_row1, m_col1;
+	size_t m_row2, m_col2;
+};
+
+class WXDLLEXPORT wxAdvCellAttribute
+{
+public:
+	wxAdvCellAttribute();
+	virtual ~wxAdvCellAttribute();
+
+	void Alignment(int alignment)
+	{
+		m_alignment = alignment;
+	}
+
+	int Alignment()
+	{
+		return m_alignment;
+	}
+
+	const wxFont &Font()
+	{
+		return m_font;
+	}
+
+	const wxBrush &Brush()
+	{
+		return m_brush;
+	}
+
+	void Brush(wxBrush brush)
+	{
+		m_brush = brush;
+	}
+
+private:
+	wxBrush m_brush;
+	wxFont m_font;
+
+	int m_alignment;
+};
 
 /**
  * Base class for receiving wxAdvTableDataModel events.
@@ -90,9 +282,13 @@ public:
 
 	virtual wxString GetCellValue(size_t row, size_t col) = 0;
 
+	virtual bool SetCellValue(size_t row, size_t col, wxString value) = 0;
+
 	virtual int GetCellFormat(size_t row, size_t col) = 0;
 
 	virtual bool IsCellEditable(size_t row, size_t col) = 0;
+
+	virtual wxAdvCellAttribute &GetCellAttribute(size_t row, size_t col) = 0;
 
 protected:
 	FIRE_WITH_VALUE2(CellChanged, size_t, row, size_t, col);
@@ -111,14 +307,19 @@ public:
 
 	virtual wxString GetCellValue(size_t row, size_t col);
 
+	virtual bool SetCellValue(size_t row, size_t col, wxString value);
+
 	virtual int GetCellFormat(size_t row, size_t col);
 
 	virtual bool IsCellEditable(size_t row, size_t col);
+
+	virtual wxAdvCellAttribute &GetCellAttribute(size_t row, size_t col);
 
 private:
 	bool m_readOnly;
 
 	wxArrayArrayString m_data;
+	wxAdvCellAttribute m_defaultCellAttribute;
 };
 
 /**
@@ -139,9 +340,13 @@ public:
 
 	virtual wxString GetCellValue(size_t row, size_t col);
 
+	virtual bool SetCellValue(size_t row, size_t col, wxString value);
+
 	virtual int GetCellFormat(size_t row, size_t col);
 
 	virtual bool IsCellEditable(size_t row, size_t col);
+
+	virtual wxAdvCellAttribute &GetCellAttribute(size_t row, size_t col);
 
 	//
 	// wxAdvTableDataModelObserver
@@ -172,7 +377,7 @@ public:
 	wxAdvTableCellRenderer();
 	virtual ~wxAdvTableCellRenderer();
 
-	virtual void Draw(wxDC &dc, wxRect rc, wxString value, bool selected, bool focused) = 0;
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute &attr) = 0;
 };
 
 /**
@@ -184,7 +389,7 @@ public:
 	wxAdvStringCellRenderer();
 	virtual ~wxAdvStringCellRenderer();
 
-	virtual void Draw(wxDC &dc, wxRect rc, wxString value, bool selected, bool focused);
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute &attr);
 };
 
 /**
@@ -196,7 +401,7 @@ public:
 	wxAdvBoolTableCellRenderer();
 	virtual ~wxAdvBoolTableCellRenderer();
 
-	virtual void Draw(wxDC &dc, wxRect rc, wxString value, bool selected, bool focused);
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute &attr);
 };
 
 
@@ -220,7 +425,50 @@ public:
 	 */
 	virtual bool OneClickActivate();
 
-	//virtual void Activate(wxAdvTable *table,
+	void Activate(wxAdvTable *table, size_t row, size_t col);
+
+	virtual void Deactivate(wxAdvTable *table) = 0;
+
+protected:
+	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col) = 0;
+
+	void SetNewValue(wxAdvTable *table, wxString newValue);
+
+	wxAdvCoord m_cell;
+};
+
+class WXDLLEXPORT wxAdvStringTableCellEditor : public wxAdvTableCellEditor
+{
+public:
+	wxAdvStringTableCellEditor(wxAdvTable *table);
+	virtual ~wxAdvStringTableCellEditor();
+
+	virtual bool OneClickActivate();
+
+	virtual void Deactivate(wxAdvTable *table);
+
+protected:
+	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+
+private:
+	wxTextCtrl *m_textCtrl;
+};
+
+class WXDLLEXPORT wxAdvBoolTableCellEditor : public wxAdvTableCellEditor
+{
+public:
+	wxAdvBoolTableCellEditor(wxAdvTable *table);
+	virtual ~wxAdvBoolTableCellEditor();
+
+	virtual bool OneClickActivate();
+
+	virtual void Deactivate(wxAdvTable *table);
+
+protected:
+	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+
+private:
+	wxCheckBox *m_checkBox;
 };
 
 
@@ -533,102 +781,6 @@ private:
 };
 
 /**
- * Range
- */
-class WXDLLEXPORT wxAdvRange
-{
-	friend class wxAdvTable;
-
-public:
-	wxAdvRange()
-	{
-		Set(-1, -1, -1, -1);
-	}
-
-	wxAdvRange(size_t row1, size_t col1, size_t row2, size_t col2)
-	{
-		Set(row1, col1, row2, col2);
-	}
-
-	virtual ~wxAdvRange()
-	{
-	}
-
-	/**
-	 * Setup range to single cell.
-	 * @param _row row index
-	 * @param _col row index
-	 */
-	void Set(size_t row, size_t col)
-	{
-		m_row1 = row;
-		m_col1 = col;
-		m_row2 = row;
-		m_col2 = col;
-	}
-
-	void Set(size_t row1, size_t col1, size_t row2, size_t col2)
-	{
-		m_row1 = min(row1, row2);
-		m_col1 = min(col1, col2);
-		m_row2 = max(row1, row2);
-		m_col2 = max(col1, col2);
-	}
-
-	/**
-	 * Determines if specified cell is in range.
-	 * @param row row index
-	 * @param col column index
-	 * @return true if cell in range
-	 */
-	bool Contains(size_t row, size_t col)
-	{
-		return (row >= m_row1 && row <= m_row2) &&
-				(col >= m_col1 && col <= m_col2);
-	}
-
-	void operator = (const wxAdvRange &o)
-	{
-		m_row1 = o.m_row1;
-		m_col1 = o.m_col1;
-		m_row2 = o.m_row2;
-		m_col2 = o.m_col2;
-	}
-
-private:
-	size_t min(size_t a, size_t b)
-	{
-		size_t m = MIN(a, b);
-		if (m == (size_t) -1) {
-			if (a != (size_t) -1) {
-				m = a;
-			}
-			else if (b != (size_t) -1) {
-				m = b;
-			}
-		}
-		return m;
-	}
-
-	size_t max(size_t a, size_t b)
-	{
-		size_t m = MAX(a, b);
-		if (m == (size_t) -1) {
-			if (a != (size_t) -1) {
-				m = a;
-			}
-			else if (b != (size_t) -1) {
-				m = b;
-			}
-		}
-		return m;
-	}
-
-	size_t m_row1, m_col1;
-	size_t m_row2, m_col2;
-};
-
-/**
  * Flexible and simple table control implementation.
  *
  * Features:
@@ -765,6 +917,9 @@ public:
 		return m_showCorner;
 	}
 
+	//
+	// Sorting functions.
+	//
 
 	/**
 	 * Sets sorter for table data.
@@ -787,8 +942,9 @@ public:
 	}
 
 	//
-	// Row column access functions.
+	// Row/column access functions.
 	//
+
     size_t GetRowCount()
 	{
 		return m_rows.GetCount();
@@ -830,9 +986,16 @@ public:
 		return m_realCols[index];
 	}
 
-	wxAdvTableCellRenderer *GetRendererForCell(size_t nRow, size_t nCol);
+	wxAdvTableDataModel *GetModel()
+	{
+		return m_model;
+	}
 
 	wxAdvTableCellEditor *GetEditorForCell(size_t nRow, size_t nCol);
+
+	void SetEditorForFormat(int format, wxAdvTableCellEditor *editor);
+
+	wxAdvTableCellRenderer *GetRendererForCell(size_t nRow, size_t nCol);
 
 	/**
 	 * Sets table cell renderer for cell format.
@@ -907,11 +1070,19 @@ public:
 	const wxAdvRange &GetSelection();
 
 	/**
+	 * Clear selection.
+	 */
+	void ClearSelection();
+
+	/**
 	 * Sets select mode.
 	 * @param _selectMode new select mode, possible values: SelectCell, SelectRows, SelectCols, SelectBlock.
 	 */
 	void SetSelectMode(SelectMode selectMode);
 
+	/**
+	 * Returns select mode.
+	 */
 	int GetSelectMode();
 
 	/**
@@ -921,27 +1092,32 @@ public:
 	 */
 	bool IsCellFocused(size_t row, size_t col)
 	{
-		return (m_focusedRow == row) && (m_focusedCol == col);
+		return m_focused.Equal(row, col);
 	}
 
+	/**
+	 * Sets focused cell.
+	 * @param row row index of cell
+	 * @param col column index of cell
+	 */
 	void SetFocusedCell(size_t row, size_t col);
 
-	wxCoord GetTotalColsWidth()
+	wxCoord CalcTotalColsWidth()
 	{
 		return SumDimensions(m_realCols, true);
 	}
 
-	wxCoord GetTotalRowsHeight()
+	wxCoord CalcTotalRowsHeight()
 	{
 		return SumDimensions(m_realRows, false);
 	}
 
-	wxCoord GetTotalRowLayersWidth()
+	wxCoord CalcTotalRowLayersWidth()
 	{
 		return SumLayerSizes(m_rowLayerWidths);
 	}
 
-	wxCoord GetTotalColLayersHeight()
+	wxCoord CalcTotalColLayersHeight()
 	{
 		return SumLayerSizes(m_colLayerHeights);
 	}
@@ -949,21 +1125,21 @@ public:
 	/**
 	 * Returns table area rectangle.
 	 */
-	wxRect GetTableRect()
+	wxRect CalcTableRect()
 	{
-		return wxRect(GetTotalRowLayersWidth(), GetTotalColLayersHeight(),
-				GetTotalColsWidth(), GetTotalRowsHeight());
+		return wxRect(CalcTotalRowLayersWidth(), CalcTotalColLayersHeight(),
+				CalcTotalColsWidth(), CalcTotalRowsHeight());
 	}
 
 	/**
 	 * Returns rows area rectangle.
 	 */
-	wxRect GetRowsRect()
+	wxRect CalcRowsRect()
 	{
 		if (m_showRows) {
-			wxCoord y = (m_showCols || m_showCorner) ? GetTotalColLayersHeight() : 0;
+			wxCoord y = (m_showCols || m_showCorner) ? CalcTotalColLayersHeight() : 0;
 			return wxRect(0, y,
-					GetTotalRowLayersWidth(), GetTotalRowsHeight());
+					CalcTotalRowLayersWidth(), CalcTotalRowsHeight());
 		}
 		else {
 			return wxRect(0, 0, 0, 0);
@@ -973,19 +1149,17 @@ public:
 	/**
 	 * Returns columns area rectangle.
 	 */
-	wxRect GetColsRect()
+	wxRect CalcColsRect()
 	{
 		if (m_showCols) {
 			wxCoord x = (m_showRows || m_showCorner) ? SumLayerSizes(m_rowLayerWidths) : 0;
 			return wxRect(x, 0,
-					GetTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
+					CalcTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
 		}
 		else {
 			return wxRect(0, 0, 0, 0);
 		}
 	}
-
-	void ClearSelection();
 
 	/**
 	 * wxWindow override.
@@ -1006,6 +1180,7 @@ private:
 	void OnPaint(wxPaintEvent &ev);
 	void OnMouseEvents(wxMouseEvent &ev);
 	void OnKeyDown(wxKeyEvent &ev);
+	void OnKillFocus(wxFocusEvent &ev);
 
 	void HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell);
 	void HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col);
@@ -1016,14 +1191,22 @@ private:
 	void SelectCells(wxMouseEvent &ev, size_t row, size_t col);
 
 	//
+	// Editing internal functions.
+	//
+	void EditCell(wxAdvTableCellEditor *editor, size_t row, size_t col);
+	void StopEditing();
+
+	//
 	// drawing functions
 	//
-	void DrawTable(wxDC &dc);
+	void DrawTable(wxDC &dc, wxRegion reg);
 	void DrawTableCell(wxDC &dc, size_t nRow, size_t nCol);
 
 	void DrawHdrCells(wxDC &dc, wxAdvHdrCellArray &hdrCells);
 	void DrawHdrCell(wxDC &dc, wxAdvHdrCell &hdrCell);
 	void DrawHeaderCell(wxDC &dc, wxAdvHdrCell &hdrCell);
+
+	void RedrawViewportRect(wxRect rc);
 
     void FindRealSubCells(wxAdvHdrCellArray &hdrCells, wxAdvHdrCellPtrArray &flattenRowCols);
 	void FindRealSubCell(wxAdvHdrCell &hdrCell, wxAdvHdrCellPtrArray &flattenRowCols);
@@ -1080,7 +1263,7 @@ private:
 	 * Translate point from window to viewport coordinates.
 	 * @param pt point in window coordinates
 	 */
-	wxPoint ToViewportPosition(wxPoint &pt);
+	wxPoint ToViewportPosition(wxPoint &pt, bool transVert = true, bool transHoriz = true);
 
 	void SendEvent(const wxEventType type, size_t row, size_t col, wxMouseEvent &ev);
 	void SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2, wxMouseEvent &ev);
@@ -1119,21 +1302,27 @@ private:
 	wxBrush m_highlightedBgBrush;
 
 	wxAdvTableDataModel *m_model;
-	wxAdvTableCellRenderer *m_defaultRenderer;
 
+	wxAdvTableCellRenderer *m_defaultRenderer;
 	wxAdvTableCellRendererMap m_renderers;
 	wxAdvTableCellEditorMap m_editors;
 
 	wxAdvHdrCell *m_clickedCell;
 
+	// selection variables
 	SelectMode m_selectMode;
 	wxAdvRange m_selected;
-	size_t m_selRow, m_selCol;
+	wxAdvCoord m_sel;
 
+	// sorting variables
 	size_t m_sortingIndex;
 	int m_sortDirection;
 
-	size_t m_focusedRow, m_focusedCol;
+	wxAdvCoord m_focused;
+
+	wxAdvTableCellEditor *m_currentEditor;
+
+	wxAdvHdrCell *m_currentHdrCell;
 
 	DECLARE_EVENT_TABLE()
 };

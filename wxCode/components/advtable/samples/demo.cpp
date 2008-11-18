@@ -300,11 +300,13 @@ void MainFrame::CreateTableStructure()
 	wxAdvStringTableDataModel *model = new wxAdvStringTableDataModel(
 			wxAdvHdrCell::GetRealCellCount(rows, N(rows)),
 			wxAdvHdrCell::GetRealCellCount(cols, N(cols)),
-			true);
+			false);
 
 	//
 	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
 
 	m_advTable->SetSelectMode(wxAdvTable::SelectCell);
 	m_advTable->SetHighlightMode(wxAdvTable::HighlightNone);
+
+	m_advTable->SetEditorForFormat(wxStringFormat, new wxAdvStringTableCellEditor(m_advTable));
 }
