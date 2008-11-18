@@ -52,7 +52,8 @@
  - lack of events system (cell click, double click, etc). I think to reuse wxGrid event classes 
  in wxAdvTable event system.
  - some selection bugs.
- - lack of renderers and editors for various data types (boolean, double, etc).
- - table headers looks ugly on Windows XP (tm) with themes enabled.
+ - paint system must be cleaned up and optimized.
+ - lack of filtering.
+ - many sorting bugs.
  - tested only on wxMSW (Windows XP(tm) SP2) and wxGTK (Gentoo Linux x86_64), 
    if someone can test on other wxWidgets ports, please let me know.

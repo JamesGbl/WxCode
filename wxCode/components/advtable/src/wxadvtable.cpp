@@ -209,13 +209,8 @@ wxAdvBoolTableCellRenderer::~wxAdvBoolTableCellRenderer()
 
 void wxAdvBoolTableCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute &attr)
 {
-	// TODO not implemented
 	int flags = 0;
-
-	//if (selected) {
-	//	flags |= wxCONTROL_CURRENT;
-	//}
-	if (value.Cmp(wxT("1")) == 0) {
+	if (value.Cmp(boolTrue) == 0) {
 		flags |= wxCONTROL_CHECKED;
 	}
 
@@ -233,6 +228,7 @@ wxAdvStringCellRenderer::~wxAdvStringCellRenderer()
 void wxAdvStringCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute &attr)
 {
 	// TODO implement cell vertical/horizontal alignments, colored text, and fonts
+	wxDCClipper clip(dc, rc);
 
 	dc.SetBrush(attr.Brush());
 	dc.DrawRectangle(rc);
@@ -260,6 +256,8 @@ bool wxAdvTableCellEditor::OneClickActivate()
 void wxAdvTableCellEditor::Activate(wxAdvTable *table, size_t row, size_t col)
 {
 	m_cell.Set(row, col);
+	m_table = table;
+
 	DoActivate(table, row, col);
 }
 
@@ -269,15 +267,25 @@ void wxAdvTableCellEditor::SetNewValue(wxAdvTable *table, wxString newValue)
 	table->GetModel()->SetCellValue(m_cell.Row(), m_cell.Col(), newValue);
 }
 
+void wxAdvTableCellEditor::EndEditing()
+{
+	wxCHECK_RET(m_table != NULL, "wxAdvTableCellEditor::EndEditing");
+	m_table->StopEditing();
+}
+
 //
 // wxAdvStringTableCellEditor
 //
+BEGIN_EVENT_TABLE(wxAdvStringTableCellEditor, wxEvtHandler)
+	EVT_TEXT_ENTER(wxID_ANY, wxAdvStringTableCellEditor::OnTextEnter)
+END_EVENT_TABLE()
+
 wxAdvStringTableCellEditor::wxAdvStringTableCellEditor(wxAdvTable *table)
 {
 	m_textCtrl = new wxTextCtrl(table, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 			wxTE_PROCESS_ENTER | wxBORDER_NONE);
 	m_textCtrl->Show(false);
-
+	m_textCtrl->SetNextHandler(this);
 }
 
 wxAdvStringTableCellEditor::~wxAdvStringTableCellEditor()
@@ -294,6 +302,7 @@ void wxAdvStringTableCellEditor::DoActivate(wxAdvTable *table, size_t row, size_
 {
 	wxRect rc = table->GetCellRect(row, col);
 	rc.Deflate(1, 1);
+	table->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
 
 	m_textCtrl->ChangeValue(table->GetModel()->GetCellValue(row, col));
 
@@ -308,6 +317,11 @@ void wxAdvStringTableCellEditor::Deactivate(wxAdvTable *table)
 	m_textCtrl->Show(false);
 
 	SetNewValue(table, m_textCtrl->GetValue());
+}
+
+void wxAdvStringTableCellEditor::OnTextEnter(wxCommandEvent &ev)
+{
+	EndEditing();
 }
 
 //
@@ -1467,6 +1481,8 @@ void wxAdvTable::OnMouseEvents(wxMouseEvent &ev)
 			m_currentHdrCell = NULL;
 		}
 	}
+
+	ev.Skip();
 }
 
 void wxAdvTable::HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell)
@@ -1549,6 +1565,7 @@ void wxAdvTable::HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col)
 
 void wxAdvTable::OnKeyDown(wxKeyEvent &ev)
 {
+	// TODO handle alphanumber keycodes to activate editor
 #if 0
 	int keyCode = ev.GetKeyCode();
 

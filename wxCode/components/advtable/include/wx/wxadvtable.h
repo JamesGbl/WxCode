@@ -139,8 +139,8 @@ public:
 
 	/**
 	 * Setup range to single cell.
-	 * @param _row row index
-	 * @param _col row index
+	 * @param row row index
+	 * @param col row index
 	 */
 	void Set(size_t row, size_t col)
 	{
@@ -331,11 +331,11 @@ class WXDLLEXPORT wxAdvFilterTableDataModel : public wxAdvTableDataModel, public
 public:
 	/**
 	 * Constructs new object.
-	 * @param _model underlaying model, wxAdvFilterTableDataModel takes ownership for _model
-	 * @param _numRows number of rows
-	 * @param _numCol number of columns
+	 * @param model underlaying model, wxAdvFilterTableDataModel takes ownership for _model
+	 * @param numRows number of rows
+	 * @param numCols number of columns
 	 */
-	wxAdvFilterTableDataModel(wxAdvTableDataModel *_model, size_t _numRows, size_t _numCols);
+	wxAdvFilterTableDataModel(wxAdvTableDataModel *model, size_t numRows, size_t numCols);
 	virtual ~wxAdvFilterTableDataModel();
 
 	virtual wxString GetCellValue(size_t row, size_t col);
@@ -411,8 +411,6 @@ public:
 
 /**
  * Table cell editors base class.
- * TODO: create activate/deactivate methods, implement editors for all standard
- * values types.
  */
 class WXDLLEXPORT wxAdvTableCellEditor
 {
@@ -434,10 +432,19 @@ protected:
 
 	void SetNewValue(wxAdvTable *table, wxString newValue);
 
+	/**
+	 * Call this when editor initiate self deactivation.
+	 */
+	void EndEditing();
+
+	wxAdvTable *m_table;
 	wxAdvCoord m_cell;
 };
 
-class WXDLLEXPORT wxAdvStringTableCellEditor : public wxAdvTableCellEditor
+/**
+ *
+ */
+class WXDLLEXPORT wxAdvStringTableCellEditor : public wxAdvTableCellEditor, public wxEvtHandler
 {
 public:
 	wxAdvStringTableCellEditor(wxAdvTable *table);
@@ -451,7 +458,11 @@ protected:
 	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
 
 private:
+	void OnTextEnter(wxCommandEvent &ev);
+
 	wxTextCtrl *m_textCtrl;
+
+	DECLARE_EVENT_TABLE()
 };
 
 class WXDLLEXPORT wxAdvBoolTableCellEditor : public wxAdvTableCellEditor
@@ -589,7 +600,7 @@ public:
 
 	/**
 	 * Sets vertical text alignment for header cell (not table values).
-	 * @param _alignVertical vertical alignment
+	 * @param alignVertical vertical alignment
 	 */
 	wxAdvHdrCell &AlignVertical(int alignVertical)
 	{
@@ -604,7 +615,7 @@ public:
 
 	/**
 	 * Sets horizontal text alignment for header cell (not table values).
-	 * @param _alignHorizontal horizontal alignment
+	 * @param alignHorizontal horizontal alignment
 	 */
 	wxAdvHdrCell &AlignHorizontal(int alignHorizontal)
 	{
@@ -681,7 +692,7 @@ public:
 
 	/**
 	 * Set header cell label.
-	 * @param _label label
+	 * @param label label
 	 */
 	wxAdvHdrCell &Label(const wxString &label)
 	{
@@ -781,7 +792,8 @@ private:
 };
 
 /**
- * Flexible and simple table control implementation.
+ * Main component class.
+ * Table control implementation.
  *
  * Features:
  * - composite rows/columns.
@@ -848,8 +860,8 @@ public:
 	 * with specified column count.
 	 * Call this after you create wxAdvTable before using it.
 	 * wxAdvTable takes ownership for table model
+	 * @param rows rows array
 	 * @param numRows number of elements in rows array
-	 * @param cols columns array
 	 * @param numCols number of elements in columns array
 	 * @param cornerLabel string to use as corner
 	 * @param model data model
@@ -993,12 +1005,24 @@ public:
 
 	wxAdvTableCellEditor *GetEditorForCell(size_t nRow, size_t nCol);
 
+	/**
+	 * Set cell editor for specified cell format.
+	 * wxAdvTable takes ownership over editor.
+	 * @param format cell format
+	 * @param editor cell editor for format
+	 */
 	void SetEditorForFormat(int format, wxAdvTableCellEditor *editor);
+
+	/**
+	 * Deactivate editor if active, and commit changes.
+	 */
+	void StopEditing();
 
 	wxAdvTableCellRenderer *GetRendererForCell(size_t nRow, size_t nCol);
 
 	/**
-	 * Sets table cell renderer for cell format.
+	 * Sets table cell renderer for specified cell format.
+	 * wxAdvTable takes ownership over renderer.
 	 * @param format cell format
 	 * @param renderer renderer for cell format
 	 */
@@ -1076,7 +1100,7 @@ public:
 
 	/**
 	 * Sets select mode.
-	 * @param _selectMode new select mode, possible values: SelectCell, SelectRows, SelectCols, SelectBlock.
+	 * @param selectMode new select mode, possible values: SelectCell, SelectRows, SelectCols, SelectBlock.
 	 */
 	void SetSelectMode(SelectMode selectMode);
 
@@ -1194,7 +1218,6 @@ private:
 	// Editing internal functions.
 	//
 	void EditCell(wxAdvTableCellEditor *editor, size_t row, size_t col);
-	void StopEditing();
 
 	//
 	// drawing functions
