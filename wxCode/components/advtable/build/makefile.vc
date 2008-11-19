@@ -106,6 +106,9 @@ __wxadvtable_dll___depname = \
 	..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll
 !endif
 !if "$(WX_MONOLITHIC)" == "0"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib
+!endif
+!if "$(WX_MONOLITHIC)" == "0"
 __WXLIB_AUI_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui.lib
 !endif
 !if "$(SHARED)" == "0"
@@ -235,7 +238,7 @@ make_dir_wxadvtable_lib:
 !if "$(WX_SHARED)" == "1"
 ..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll: make_dir_wxadvtable_dll  $(WXADVTABLE_DLL_OBJECTS)
 	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) /pdb:"..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.pdb" /LIBPATH:..$(WXLIBPATH) @<<
-	$(WXADVTABLE_DLL_OBJECTS)  $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.lib
+	$(WXADVTABLE_DLL_OBJECTS)  $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.lib
 <<
 !endif
 
@@ -249,6 +252,17 @@ make_dir_wxadvtable_dll:
 
 make_sample_dir_wxadvtable_sample: 
 	if not exist ..\samples mkdir ..\samples
+
+tarball: 
+	make distclean
+	( cd ..\.. && tar -cvzf advtable.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" advtable\* )
+
+zip: clean
+	del ..\..\advtable.zip
+	( cd ..\.. && zip -r9 advtable.zip advtable -x "*.pdb" -x "*.log" -x "*.o*" )
+
+docs: 
+	( cd ..\docs && doxygen )
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_lib_wxadvtable.obj: ..\src\wxadvtable.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXADVTABLE_LIB_CXXFLAGS) ..\src\wxadvtable.cpp

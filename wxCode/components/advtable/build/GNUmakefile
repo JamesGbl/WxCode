@@ -81,7 +81,6 @@ WXADVTABLE_LIB_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_3) -W -Wall \
 WXADVTABLE_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_lib_wxadvtable.o
 WXADVTABLE_LIB_HEADERS =  \
-	include/wx/cutils.h \
 	include/wx/observable.h \
 	include/wx/wxadvtable.h \
 	include/wx/wxadvtabledefs.h
@@ -91,7 +90,6 @@ WXADVTABLE_DLL_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_3) -W -Wall \
 WXADVTABLE_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_dll_wxadvtable.o
 WXADVTABLE_DLL_HEADERS =  \
-	include/wx/cutils.h \
 	include/wx/observable.h \
 	include/wx/wxadvtable.h \
 	include/wx/wxadvtabledefs.h
@@ -254,7 +252,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxadvtable_dll  $(WXADVTABLE_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS) $(LDFLAGS) $(____wxadvtable_3) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS) $(LDFLAGS) $(____wxadvtable_3) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -296,6 +294,16 @@ endif
 
 make_sample_dir_wxadvtable_sample: 
 	@mkdir -p ../samples
+
+tarball: 
+	make clean
+	( cd ../.. && tar -cvzf advtable.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" advtable/* )
+
+zip: clean
+	( cd ../.. && zip -r9 advtable.zip advtable -x "*.pdb" -x "*.log" -x "*.o*" )
+
+docs: 
+	( cd ../docs && doxygen )
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_lib_wxadvtable.o: ../src/wxadvtable.cpp
 	$(CXX) -c -o $@ $(WXADVTABLE_LIB_CXXFLAGS) $(CPPDEPS) $<

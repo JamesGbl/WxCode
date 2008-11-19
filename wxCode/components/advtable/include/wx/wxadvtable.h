@@ -54,12 +54,12 @@ class wxAdvTableCellRenderer;
 class wxAdvTableCellEditor;
 
 // arrays/maps declarations
-WX_DECLARE_OBJARRAY(wxArrayString, wxArrayArrayString);
-WX_DECLARE_OBJARRAY(wxAdvHdrCell, wxAdvHdrCellArray);
-WX_DECLARE_OBJARRAY(wxAdvHdrCell *, wxAdvHdrCellPtrArray);
-WX_DECLARE_OBJARRAY(wxAdvRange, wxAdvRangeArray);
-WX_DECLARE_OBJARRAY(wxCoord, wxCoordArray);
-WX_DECLARE_OBJARRAY(size_t, wxIndexArray);
+WX_DECLARE_EXPORTED_OBJARRAY(wxArrayString, wxArrayArrayString);
+WX_DECLARE_EXPORTED_OBJARRAY(wxAdvHdrCell, wxAdvHdrCellArray);
+WX_DECLARE_EXPORTED_OBJARRAY(wxAdvHdrCell *, wxAdvHdrCellPtrArray);
+WX_DECLARE_EXPORTED_OBJARRAY(wxAdvRange, wxAdvRangeArray);
+WX_DECLARE_EXPORTED_OBJARRAY(wxCoord, wxCoordArray);
+WX_DECLARE_EXPORTED_OBJARRAY(size_t, wxIndexArray);
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellRendererMap);
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellEditorMap);
 
@@ -125,7 +125,7 @@ class WXDLLEXPORT wxAdvRange
 public:
 	wxAdvRange()
 	{
-		Set(-1, -1, -1, -1);
+		Set((size_t) -1, (size_t) -1, (size_t) -1, (size_t) -1);
 	}
 
 	wxAdvRange(size_t row1, size_t col1, size_t row2, size_t col2)
@@ -459,6 +459,8 @@ protected:
 
 private:
 	void OnTextEnter(wxCommandEvent &ev);
+	void OnKillFocus(wxFocusEvent &ev);
+	void OnTextKeydown(wxKeyEvent &ev);
 
 	wxTextCtrl *m_textCtrl;
 
@@ -1185,6 +1187,9 @@ public:
 		}
 	}
 
+	wxRect CalcEntireRowRect(size_t row, size_t col);
+	wxRect CalcEntireColRect(size_t row, size_t col);
+
 	/**
 	 * wxWindow override.
 	 */
@@ -1219,6 +1224,9 @@ private:
 	//
 	void EditCell(wxAdvTableCellEditor *editor, size_t row, size_t col);
 
+	void SetPressedHdrCell(wxAdvHdrCell *cell);
+	void SetCurrentHdrCell(wxAdvHdrCell *cell);
+
 	//
 	// drawing functions
 	//
@@ -1229,7 +1237,9 @@ private:
 	void DrawHdrCell(wxDC &dc, wxAdvHdrCell &hdrCell);
 	void DrawHeaderCell(wxDC &dc, wxAdvHdrCell &hdrCell);
 
+	void RedrawHdrCell(wxAdvHdrCell *cell);
 	void RedrawViewportRect(wxRect rc);
+	void RedrawHighlightRect();
 
     void FindRealSubCells(wxAdvHdrCellArray &hdrCells, wxAdvHdrCellPtrArray &flattenRowCols);
 	void FindRealSubCell(wxAdvHdrCell &hdrCell, wxAdvHdrCellPtrArray &flattenRowCols);
@@ -1330,7 +1340,7 @@ private:
 	wxAdvTableCellRendererMap m_renderers;
 	wxAdvTableCellEditorMap m_editors;
 
-	wxAdvHdrCell *m_clickedCell;
+	wxAdvHdrCell *m_pressedHdrCell;
 
 	// selection variables
 	SelectMode m_selectMode;
@@ -1348,6 +1358,8 @@ private:
 	wxAdvHdrCell *m_currentHdrCell;
 
 	DECLARE_EVENT_TABLE()
+	DECLARE_CLASS(wxAdvTable)
+	DECLARE_NO_COPY_CLASS(wxAdvTable)
 };
 
 #endif /*_WX_WXADVTABLE_H_*/

@@ -9,7 +9,7 @@
  wxAdvTable is table component (like wxGrid) designed with simplicity and flexibility in mind.
  It has many advanced features like: 
   - composite rows/columns
-  - sorting and filtering support
+  - built-in sorting and filtering support
   - flexible rendering and editing support
   - dynamic row/columns add/removal
   - and visual features like: highlight modes, cell attributes, etc.
@@ -48,12 +48,13 @@
  
  1.0 - first version of wxAdvTable at wxCode
  
- Known bugs:
+ Known issues:
+ - lack of Perl and Python bindings.
  - lack of events system (cell click, double click, etc). I think to reuse wxGrid event classes 
  in wxAdvTable event system.
  - some selection bugs.
  - paint system must be cleaned up and optimized.
  - lack of filtering.
  - many sorting bugs.
- - tested only on wxMSW (Windows XP(tm) SP2) and wxGTK (Gentoo Linux x86_64), 
+ - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64), 
    if someone can test on other wxWidgets ports, please let me know.

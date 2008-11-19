@@ -67,18 +67,8 @@
     <!-- Additional utilities                                              -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <!-- Put here one or more of the following tags if you need them:
-
-            <make-tarball/>    => for adding a "tarball" target on your Unix
-                                  makefiles. Very very useful to make clean tarballs
-                                  of your component at release-time.
-
-            <make-zip>         => for adding a "zip" target on your Win makefiles.
-                                  Very very useful  to make clean zip archives
-                                  of your component at release-time.
-
-            <make-docs>        => for adding a "docs" target on your makefiles
-                                  which runs "doxygen" in yourCompFolder/docs
-    -->
+    <make-tarball/>
+    <make-zip/>
+    <make-docs/>
 
 </makefile>
