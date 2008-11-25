@@ -3,7 +3,7 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.28 2008-07-28 13:56:47 pgriddev Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.29 2008-11-25 14:23:47 pgriddev Exp $
 // Copyright:   (c) 2004-2008 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -552,13 +552,15 @@ AppFrame::AppFrame (const wxString &title)
     CheckStyle (myID_SELECTEXTENDED, wxTR_EXTENDED);
 
     // initialize tree
-    wxSize sz = GetClientSize ();
-    int k = wxMax (sz.x * 2/3, 200);
+    int k = 250;
     m_treelist->AddColumn (_T("Main"), k - 32, wxALIGN_LEFT);
     m_treelist->SetColumnEditable (0, true);
-    m_treelist->AddColumn (_T("Second"), wxMax (sz.x - k, 100), wxALIGN_LEFT);
+    m_treelist->AddColumn (_T("Second"), k, wxALIGN_LEFT);
     m_treelist->SetColumnEditable (1, true);
     m_treelist->SetColumnAlignment (1, wxALIGN_LEFT);
+    m_treelist->AddColumn (_T("Third"), k, wxALIGN_CENTER);
+    m_treelist->SetColumnEditable (2, true);
+    m_treelist->SetColumnAlignment (2, wxALIGN_CENTER);
     FillTree();
 
 #if wxUSE_LOG
@@ -1087,46 +1089,62 @@ void AppFrame::CreateMenu () {
 }
 
 void AppFrame::FillTree () {
-    // initialize tree
-    wxTreeItemId root = m_treelist->AddRoot (_T("Root"));
-    m_treelist->SetItemText (root, 1, wxString::Format (_T("Root, text 0")));
-    wxTreeItemId parent;
-    wxTreeItemId item;
     int n = 0;
     int m = 0;
+    // initialize tree
+    wxTreeItemId root = m_treelist->AddRoot (_T("Root"));
+    m_treelist->SetItemText (root, 1, wxString::Format (_T("Root, text #%d"), 0));
+    m_treelist->SetItemText (root, 2, wxString::Format (_T("Root, text #%d"), 0));
+    wxTreeItemId parent;
+    wxTreeItemId item;
     item = m_treelist->AppendItem (root, wxString::Format (_T("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     parent = item;
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (root, wxString::Format (_T("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     parent = item;
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (root, wxString::Format (_T("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     parent = item;
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     item = m_treelist->AppendItem (parent, wxString::Format (_T("Item #%d"), ++n), 4);
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     m_treelist->ExpandAll (root);
 }
 
