@@ -50,8 +50,6 @@
  
  Known issues:
  - lack of Perl and Python bindings.
- - lack of events system (cell click, double click, etc). I think to reuse wxGrid event classes 
- in wxAdvTable event system.
  - some selection bugs.
  - paint system must be cleaned up and optimized.
  - lack of filtering.

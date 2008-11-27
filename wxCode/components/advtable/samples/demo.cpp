@@ -298,8 +298,8 @@ void MainFrame::CreateTableStructure()
 	wxString cornerLabel = wxT("Table corner");
 
 	wxAdvStringTableDataModel *model = new wxAdvStringTableDataModel(
-			wxAdvHdrCell::GetRealCellCount(rows, N(rows)),
-			wxAdvHdrCell::GetRealCellCount(cols, N(cols)),
+			wxAdvHdrCell::GetDecompCellCount(rows, N(rows)),
+			wxAdvHdrCell::GetDecompCellCount(cols, N(cols)),
 			false);
 
 	//
