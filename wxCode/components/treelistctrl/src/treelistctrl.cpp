@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.103 2008-08-18 11:29:34 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.104 2008-11-27 10:23:48 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -42,6 +42,7 @@
 #if wxCHECK_VERSION(2, 7, 0)
 #include <wx/renderer.h>
 #endif
+#include <wx/apptrait.h>
 
 #ifdef __WXMAC__
 #include "wx/mac/private.h"
@@ -629,7 +630,6 @@ protected:
                          m_ownsImageListState,
                          m_ownsImageListButtons;
     bool                 m_isDragging; // true between BEGIN/END drag events
-    bool                 m_renameAccept;
     bool                 m_lastOnSame;  // last click on the same item as prev
     bool                 m_left_down_selection;
 
@@ -641,9 +641,11 @@ protected:
     wxTimer             *m_dragTimer;
     wxTreeListItem      *m_dragItem;
 
-    wxTimer             *m_renameTimer;
-    wxString             m_renameRes;
-    wxEditTextCtrl      *m_renameControl;
+    wxTimer             *m_editTimer;
+    bool                 m_editAccept;  // currently unused, OnRenameAccept() argument makes it redundant
+    wxString             m_editRes;
+    int                  m_editCol;
+    wxEditTextCtrl      *m_editControl;
 
     // char navigation
     wxTimer             *m_findTimer;
@@ -690,7 +692,7 @@ protected:
     bool TagAllChildrenUntilLast (wxTreeListItem *crt_item, wxTreeListItem *last_item);
     bool TagNextChildren (wxTreeListItem *crt_item, wxTreeListItem *last_item);
     void UnselectAllChildren (wxTreeListItem *item );
-    bool SendEvent(wxEventType event_type, wxTreeListItem *item, const wxPoint &p = wxDefaultPosition, bool veto = false);  // returns true if processed  --TODO: redesign to always use SendEvent()
+    bool SendEvent(wxEventType event_type, wxTreeListItem *item = NULL, wxTreeEvent *event = NULL);  // returns true if processed
 
 private:
     DECLARE_EVENT_TABLE()
@@ -727,7 +729,9 @@ public:
                     const wxString &name = wxTextCtrlNameStr );
     ~wxEditTextCtrl();
 
-    void CancelEdit();
+    virtual bool Destroy();  // wxWindow override
+    void EndEdit(bool isCancelled);
+    void SetOwner(wxTreeListMainWindow *owner) { m_owner = owner; }
 
     void OnChar( wxKeyEvent &event );
     void OnKeyUp( wxKeyEvent &event );
@@ -739,7 +743,7 @@ private:
     bool               *m_accept;
     wxString           *m_res;
     wxString            m_startValue;
-    bool                m_finished;
+    bool                m_finished;  // true==deleting, don't process events anymore
 
     DECLARE_EVENT_TABLE()
 };
@@ -974,7 +978,7 @@ wxEditTextCtrl::wxEditTextCtrl (wxWindow *parent,
                                 int style,
                                 const wxValidator& validator,
                                 const wxString &name)
-    : wxTextCtrl (parent, id, value, pos, size, style|wxSIMPLE_BORDER, validator, name)
+    : wxTextCtrl (parent, id, value, pos, size, style | wxSIMPLE_BORDER, validator, name)
 {
     m_res = res;
     m_accept = accept;
@@ -986,29 +990,32 @@ wxEditTextCtrl::wxEditTextCtrl (wxWindow *parent,
 }
 
 wxEditTextCtrl::~wxEditTextCtrl() {
-    CancelEdit();
+    EndEdit(true); // cancelled
 }
 
-void wxEditTextCtrl::CancelEdit() {
+void wxEditTextCtrl::EndEdit(bool isCancelled) {
     if (m_finished) return;
-
-    (*m_accept) = false;
-    (*m_res) = m_startValue;
-
     m_finished = true;
+
     if (m_owner) {
-        m_owner->OnRenameAccept(true);  // cancelled
-        if (m_owner->m_renameControl == this) {
-            m_owner->m_renameControl = NULL;
-            m_owner->m_editItem = NULL;
+        (*m_accept) = ! isCancelled;
+        (*m_res) = isCancelled ? m_startValue : GetValue();
+        if ((*m_res) != m_startValue || isCancelled) {
+            m_owner->OnRenameAccept(isCancelled);
         }
+        m_owner->m_editControl = NULL;
+        m_owner->m_editItem = NULL;
         m_owner->SetFocus(); // This doesn't work. TODO.
+        m_owner = NULL;
     }
 
-    Hide();
+    Destroy();
+}
 
-    if (!wxPendingDelete.Member(this))
-        wxPendingDelete.Append(this);
+bool wxEditTextCtrl::Destroy() {
+    Hide();
+    wxTheApp->GetTraits()->ScheduleForDestroy(this);
+    return true;
 }
 
 void wxEditTextCtrl::OnChar( wxKeyEvent &event )
@@ -1020,23 +1027,12 @@ void wxEditTextCtrl::OnChar( wxKeyEvent &event )
     }
     if (event.GetKeyCode() == WXK_RETURN)
     {
-        (*m_accept) = true;
-        (*m_res) = GetValue();
-
-        if ((*m_res) != m_startValue)
-            if (m_owner) m_owner->OnRenameAccept(false);  // not cancelled
-
-        if (!wxPendingDelete.Member(this))
-            wxPendingDelete.Append(this);
-
-        m_finished = true;
-        if (m_owner) m_owner->SetFocus(); // This doesn't work. TODO.
-
+        EndEdit(false);  // not cancelled
         return;
     }
     if (event.GetKeyCode() == WXK_ESCAPE)
     {
-        CancelEdit();
+        EndEdit(true);  // not cancelled
         return;
     }
     event.Skip();
@@ -1071,14 +1067,7 @@ void wxEditTextCtrl::OnKillFocus( wxFocusEvent &event )
         return;
     }
 
-    if (!wxPendingDelete.Member(this))
-        wxPendingDelete.Append(this);
-
-    (*m_accept) = true;
-    (*m_res) = GetValue();
-
-    if ((*m_res) != m_startValue)
-        if (m_owner) m_owner->OnRenameAccept(false);  // not cancelled
+    EndEdit(false);  // not cancelled
 }
 
 //-----------------------------------------------------------------------------
@@ -1851,8 +1840,8 @@ void wxTreeListMainWindow::Init() {
     m_dragTimer = new wxTimer (this, -1);
     m_dragItem = (wxTreeListItem*)NULL;
 
-    m_renameTimer = new wxTreeListRenameTimer (this);
-    m_renameControl = (wxEditTextCtrl *)NULL;
+    m_editTimer = new wxTreeListRenameTimer (this);
+    m_editControl = NULL;
 
     m_lastOnSame = false;
     m_left_down_selection = false;
@@ -1938,13 +1927,16 @@ wxTreeListMainWindow::~wxTreeListMainWindow() {
     delete m_hilightUnfocusedBrush;
 
     delete m_dragTimer;
-    delete m_renameTimer;
+    delete m_editTimer;
     delete m_findTimer;
     if (m_ownsImageListNormal) delete m_imageListNormal;
     if (m_ownsImageListState) delete m_imageListState;
     if (m_ownsImageListButtons) delete m_imageListButtons;
 
-    if (m_renameControl) delete m_renameControl;
+    if (m_editControl) {
+        m_editControl->SetOwner(NULL);    // prevent control from calling us during delete
+        delete m_editControl;
+    }
 
     DeleteRoot();
 }
@@ -2479,6 +2471,11 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
 
     m_dirty = true; // do this first so stuff below doesn't cause flicker
 
+    // cancel any editing
+    if (m_editControl) {
+        m_editControl->EndEdit(true);  // cancelled
+    }
+
     // don't stay with invalid m_curItem: take next sibling or reset to NULL
     // NOTE: this might be slighty inefficient when deleting a whole tree
     //  but has the advantage that all deletion side-effects are handled here
@@ -2497,10 +2494,6 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     if (item == m_selectItem) {
         m_selectItem = m_curItem;
         SelectItem(m_selectItem, NULL, true);  // unselect others
-    }
-    // cancel any editing
-    if (m_renameControl) {
-        m_renameControl->CancelEdit();
     }
 
     // recurse children, starting from the right to prevent multiple selection
@@ -2525,23 +2518,16 @@ void wxTreeListMainWindow::Expand (const wxTreeItemId& itemId) {
     if (!item->HasPlus() || item->IsExpanded()) return;
 
     // send event to user code
-    // NOTE: can't used SendEvent has we need to check event state afterwards
-    wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_EXPANDING, m_owner->GetId());
-#if !wxCHECK_VERSION(2, 5, 0)
-    event.SetItem ((long)item);
-#else
-    event.SetItem (item);
-#endif
-    event.SetEventObject (m_owner);
-    event.SetInt (m_curColumn); // the colum clicked
-    if (m_owner->ProcessEvent (event) && !event.IsAllowed()) return; // expand canceled
+    wxTreeEvent event(wxEVT_COMMAND_TREE_ITEM_EXPANDING, 0);
+    event.SetInt(m_curColumn);
+    if (SendEvent(0, item, &event) && !event.IsAllowed()) return; // expand canceled
 
     item->Expand();
     m_dirty = true;
 
     // send event to user code
     event.SetEventType (wxEVT_COMMAND_TREE_ITEM_EXPANDED);
-    m_owner->ProcessEvent (event);
+    SendEvent(0, NULL, &event);
 }
 
 void wxTreeListMainWindow::ExpandAll (const wxTreeItemId& itemId) {
@@ -2568,23 +2554,16 @@ void wxTreeListMainWindow::Collapse (const wxTreeItemId& itemId) {
     if (!item->HasPlus() || !item->IsExpanded()) return;
 
     // send event to user code
-    // NOTE: can't used SendEvent has we need to check event state afterwards
-    wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_COLLAPSING, m_owner->GetId() );
-#if !wxCHECK_VERSION(2, 5, 0)
-    event.SetItem ((long)item);
-#else
-    event.SetItem (item);
-#endif
-    event.SetInt (m_curColumn); // the colum clicked
-    event.SetEventObject (m_owner);
-    if (m_owner->ProcessEvent (event) && !event.IsAllowed()) return; // collapse canceled
+    wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_COLLAPSING, 0 );
+    event.SetInt(m_curColumn);
+    if (SendEvent(0, item, &event) && !event.IsAllowed()) return; // collapse canceled
 
     item->Collapse();
     m_dirty = true;
 
     // send event to user code
     event.SetEventType (wxEVT_COMMAND_TREE_ITEM_COLLAPSED);
-    ProcessEvent (event);
+    SendEvent(0, NULL, &event);
 }
 
 void wxTreeListMainWindow::CollapseAndReset (const wxTreeItemId& item) {
@@ -2687,19 +2666,14 @@ bool wxTreeListMainWindow::SelectItem (const wxTreeItemId& itemId,
     wxTreeListItem *item = itemId.IsOk() ? (wxTreeListItem*) itemId.m_pItem : NULL;
 
     // send selecting event to the user code
-    // NOTE: not using SendEvent() as we need to check event afterwards
-    wxTreeEvent event( wxEVT_COMMAND_TREE_SEL_CHANGING, m_owner->GetId() );
+    wxTreeEvent event( wxEVT_COMMAND_TREE_SEL_CHANGING, 0);
+    event.SetInt(m_curColumn);
 #if !wxCHECK_VERSION(2, 5, 0)
-    event.SetItem ((long)item);
     event.SetOldItem ((long)m_curItem);
 #else
-    event.SetItem (item);
     event.SetOldItem (m_curItem);
 #endif
-    event.SetEventObject (m_owner);
-    event.SetInt (m_curColumn); // the colum clicked
-    if (m_owner->GetEventHandler()->ProcessEvent (event) && !event.IsAllowed())
-        return false;  // veto on selection change
+    if (SendEvent(0, item, &event) && !event.IsAllowed()) return false;  // veto on selection change
 
     // unselect all if unselect other items
     bool bUnselectedAll = false; // see that UnselectAll is done only once
@@ -2748,7 +2722,7 @@ bool wxTreeListMainWindow::SelectItem (const wxTreeItemId& itemId,
 
     // send event to user code
     event.SetEventType(wxEVT_COMMAND_TREE_SEL_CHANGED);
-    m_owner->GetEventHandler()->ProcessEvent (event);
+    SendEvent(0, NULL, &event);
 
     return true;
 }
@@ -2759,17 +2733,14 @@ void wxTreeListMainWindow::SelectAll() {
     wxCHECK_RET (root.IsOk(), _T("no tree"));
 
     // send event to user code
-    // NOTE: not using SendEvent() as we need to check event afterwards
-    wxTreeEvent event (wxEVT_COMMAND_TREE_SEL_CHANGING, m_owner->GetId());
-    event.SetItem (GetRootItem());
+    wxTreeEvent event (wxEVT_COMMAND_TREE_SEL_CHANGING, 0);
 #if !wxCHECK_VERSION(2, 5, 0)
     event.SetOldItem ((long)m_curItem);
 #else
     event.SetOldItem (m_curItem);
 #endif
-    event.SetEventObject (m_owner);
     event.SetInt (-1); // no colum clicked
-    if (m_owner->GetEventHandler()->ProcessEvent (event) && !event.IsAllowed()) return;
+    if (SendEvent(0, m_rootItem, &event) && !event.IsAllowed()) return;  // selection change vetoed
 
 #if !wxCHECK_VERSION(2, 5, 0)
     long cookie = 0;
@@ -2784,7 +2755,7 @@ void wxTreeListMainWindow::SelectAll() {
 
     // send event to user code
     event.SetEventType (wxEVT_COMMAND_TREE_SEL_CHANGED);
-    m_owner->GetEventHandler()->ProcessEvent (event);
+    SendEvent(0, NULL, &event);
 }
 
 void wxTreeListMainWindow::FillArray (wxTreeListItem *item,
@@ -3490,11 +3461,10 @@ void wxTreeListMainWindow::OnKillFocus( wxFocusEvent &event )
 
 void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
     // send event to user code
-    // NOTE: we don't use SendEvent() because this one needs SetKeyEvent()
-    wxTreeEvent nevent (wxEVT_COMMAND_TREE_KEY_DOWN, m_owner->GetId());
+    wxTreeEvent nevent (wxEVT_COMMAND_TREE_KEY_DOWN, 0 );
+    nevent.SetInt(m_curColumn);
     nevent.SetKeyEvent (event);
-    nevent.SetEventObject (m_owner);
-    if (m_owner->GetEventHandler()->ProcessEvent (nevent)) return; // handled in user code
+    if (SendEvent(0, NULL, &nevent)) return; // char event handled in user code
 
     // if no item current, select root
     bool curItemSet = false;
@@ -3752,38 +3722,38 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
 
     m_editItem = (wxTreeListItem*) item.m_pItem;
 
-    // NOTE: we can't use SendEvent() because we need to check the event's state afterwards
-    wxTreeEvent te( wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT, m_owner->GetId() );
-#if !wxCHECK_VERSION(2, 5, 0)
-    te.SetItem ((long)m_editItem);
-#else
-    te.SetItem (m_editItem);
-#endif
+    wxTreeEvent te( wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT, 0 );
     te.SetInt (column);
-    te.SetEventObject (m_owner );
-    m_owner->GetEventHandler()->ProcessEvent (te); if (!te.IsAllowed()) return;
+    SendEvent(0, m_editItem, &te); if (!te.IsAllowed()) return;
 
     // ensure that the position of the item it calculated in any case
     if (m_dirty) CalculatePositions();
 
     wxTreeListHeaderWindow* header_win = m_owner->GetHeaderWindow();
+
+    // position & size are rather unpredictable (tsssk, tssssk) so were
+    //  set by trial & error (on Win 2003 pre-XP style)
     int x = 0;
-    int y = m_editItem->GetY() + 1; // wxTextCtrl needs 1 pixels above the text
-    int w = 0;
-    int h = m_editItem->GetHeight();
+    int w = +4;  // +4 is necessary, don't know why (simple border erronously counted somewhere ?)
+    int y = m_editItem->GetY() + 1;  // this is cell, not text
+    int h = m_editItem->GetHeight() - 1;  // consequence from above
     long style = 0;
     if (column == GetMainColumn()) {
-        x += m_editItem->GetTextX() - 2; // wxTextCtrl needs 2 pixels before the text
-        w = wxMin (m_editItem->GetWidth(), m_owner->GetHeaderWindow()->GetWidth() - x);
-    }else{
+        x += m_editItem->GetTextX() - 2;  // wrong by 2, don't know why
+        w += m_editItem->GetWidth();
+    } else {
         for (int i = 0; i < column; ++i) x += header_win->GetColumnWidth (i); // start of column
-        switch (header_win->GetColumnAlignment (column)) {
-            case wxALIGN_LEFT: {style = wxTE_LEFT; break;}
-            case wxALIGN_RIGHT: {style = wxTE_RIGHT; break;}
-            case wxALIGN_CENTER: {style = wxTE_CENTER; break;}
-        }
-        w = header_win->GetColumnWidth (column); // width of column
+        w += header_win->GetColumnWidth (column);  // currently non-main column width not pre-computed
     }
+    switch (header_win->GetColumnAlignment (column)) {
+        case wxALIGN_LEFT:   {style = wxTE_LEFT;   x -= 1; break;}
+        case wxALIGN_CENTER: {style = wxTE_CENTER; x -= 1; break;}
+        case wxALIGN_RIGHT:  {style = wxTE_RIGHT;  x += 0; break;}  // yes, strange but that's the way it is
+    }
+    // wxTextCtrl simple border style requires 2 extra pixels before and after
+    //  (measured by changing to style wxNO_BORDER in wxEditTextCtrl::wxEditTextCtrl() )
+    y -= 2; x -= 2;
+    w += 4; h += 4;
 
     wxClientDC dc (this);
     PrepareDC (dc);
@@ -3791,13 +3761,14 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
     y = dc.LogicalToDeviceY (y);
 
     // cancel any editing
-    if (m_renameControl) {
-        m_renameControl->CancelEdit();
+    if (m_editControl) {
+        m_editControl->EndEdit(true);  // cancelled
     }
-    m_renameControl = new wxEditTextCtrl (this, -1, &m_renameAccept, &m_renameRes,
+    m_editCol = column;  // only used in OnRenameAccept()
+    m_editControl = new wxEditTextCtrl (this, -1, &m_editAccept, &m_editRes,
                                                this, m_editItem->GetText (column),
                                                wxPoint (x, y), wxSize (w, h), style);
-    m_renameControl->SetFocus();
+    m_editControl->SetFocus();
 }
 
 void wxTreeListMainWindow::OnRenameTimer() {
@@ -3807,22 +3778,13 @@ void wxTreeListMainWindow::OnRenameTimer() {
 void wxTreeListMainWindow::OnRenameAccept(bool isCancelled) {
 
     // TODO if the validator fails this causes a crash
-    // NOTE: we can't use SendEvent() because we need to check the event's state afterwards (+ call to SetEditCanceled())
-    wxTreeEvent le( wxEVT_COMMAND_TREE_END_LABEL_EDIT, m_owner->GetId() );
-#if !wxCHECK_VERSION(2, 5, 0)
-    le.SetItem((long)m_editItem);
-#else
-    le.SetItem(m_editItem);
-#endif
-    le.SetEventObject( /*this*/m_owner );
-    le.SetLabel( m_renameRes );
-    le.SetInt(GetMainColumn());  // label column
+    wxTreeEvent le( wxEVT_COMMAND_TREE_END_LABEL_EDIT, 0 );
+    le.SetLabel( m_editRes );
     le.SetEditCanceled(isCancelled);
-    m_owner->GetEventHandler()->ProcessEvent( le );
-
-    if (! isCancelled  && le.IsAllowed())
+    le.SetInt(m_editCol);
+    SendEvent(0, m_editItem, &le); if (! isCancelled  && le.IsAllowed())
     {
-        SetItemText (m_editItem, m_curColumn, m_renameRes);
+        SetItemText (m_editItem, le.GetInt(), le.GetLabel());
     }
 }
 
@@ -3906,7 +3868,10 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 RefreshSelected();
 
                 // send drag end event
-                SendEvent(wxEVT_COMMAND_TREE_END_DRAG, item, p);
+                wxTreeEvent event(wxEVT_COMMAND_TREE_END_DRAG, 0);
+                event.SetPoint(p);
+                event.SetInt(m_curColumn);
+                SendEvent(0, item, &event);
 
                 bSkip = false;
             }
@@ -3929,10 +3894,13 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             RefreshSelected();
 
             // send drag start event
-            wxEventType command = event.LeftIsDown()
+            wxTreeEvent nevent(event.LeftIsDown()
                                   ? wxEVT_COMMAND_TREE_BEGIN_DRAG
-                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG;
-            SendEvent(command, item, p, true);
+                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG, 0);
+            nevent.SetPoint(p);
+            nevent.SetInt(m_curColumn);
+            nevent.Veto();
+            SendEvent(0, item, &nevent);
 
             bSkip = false;
 
@@ -3966,8 +3934,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             // keep or discard already selected ?
             m_lastOnSame = (item == m_curItem);
             bool unselect_others =
-                event.RightDown()  // a right-click always unselect all others
-             || ! (HasFlag(wxTR_MULTIPLE) && (event.ShiftDown() || event.ControlDown()));
+                ! (HasFlag(wxTR_MULTIPLE) && (event.ShiftDown() || event.ControlDown()));
 
             // set / remember item at shift down before current item gets changed
             if (event.LeftDown() && HasFlag(wxTR_MULTIPLE) && event.ShiftDown())  {
@@ -3991,7 +3958,12 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
         }
         if (event.RightDown()) {
             SendEvent(wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, item);
-            if (item) SendEvent(wxEVT_COMMAND_TREE_ITEM_MENU, item, p);
+            if (item) {
+                wxTreeEvent nevent(wxEVT_COMMAND_TREE_ITEM_MENU, 0);
+                nevent.SetPoint(p);
+                nevent.SetInt(m_curColumn);
+                SendEvent(0, item, &nevent);
+            }
         }
 
         // if 2nd left click finishes on same item, will edit it
@@ -4000,7 +3972,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 (m_owner->GetHeaderWindow()->IsColumnEditable (m_curColumn)) &&
                 (flags & (wxTREE_HITTEST_ONITEMLABEL | wxTREE_HITTEST_ONITEMCOLUMN))
             ){
-                m_renameTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
+                m_editTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
             }
             m_lastOnSame = false;
         }
@@ -4011,7 +3983,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
     if (mayClick && mayDoubleClick && event.LeftDClick()) {
 
         // double clicking should not start editing the item label
-        m_renameTimer->Stop();
+        m_editTimer->Stop();
         m_lastOnSame = false;
 
         // selection reset to that single item which was double-clicked
@@ -4332,20 +4304,25 @@ int wxTreeListMainWindow::GetBestColumnWidth (int column, wxTreeItemId parent) {
 }
 
 
-bool wxTreeListMainWindow::SendEvent(wxEventType event_type, wxTreeListItem *item, const wxPoint &p, bool veto) {
-    wxTreeEvent nevent (event_type, m_owner->GetId());
-    nevent.SetEventObject (m_owner);
-    nevent.SetInt (m_curColumn); // the mouse colum
-    nevent.SetPoint (p);  // only meaningfull for drag & contextual menu
+bool wxTreeListMainWindow::SendEvent(wxEventType event_type, wxTreeListItem *item, wxTreeEvent *event) {
+wxTreeEvent nevent (event_type, 0);
+
+    if (event == NULL) {
+        event = &nevent;
+        event->SetInt (m_curColumn); // the mouse colum
+    }
+
+    event->SetEventObject (m_owner);
+    event->SetId(m_owner->GetId());
+    if (item) {
 #if !wxCHECK_VERSION(2, 5, 0)
-    nevent.SetItem ((long)item);
+        event->SetItem ((long)item);
 #else
-    nevent.SetItem (item);
+        event->SetItem (item);
 #endif
+    }
 
-    if (veto) nevent.Veto(); // must then be explicit allowed!
-
-    return m_owner->GetEventHandler()->ProcessEvent (nevent);
+    return m_owner->GetEventHandler()->ProcessEvent (*event);
 }
 
 
