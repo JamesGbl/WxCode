@@ -97,9 +97,6 @@ __wxadvtable_dll___depname = \
 	..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll
 endif
 ifeq ($(WX_MONOLITHIC),0)
-__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv
-endif
-ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_AUI_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui
 endif
 ifeq ($(SHARED),0)
@@ -146,6 +143,9 @@ ____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
 ifeq ($(WX_SHARED),1)
 ____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv
 endif
 ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core
@@ -217,7 +217,7 @@ make_dir_wxadvtable_dll:
 	if not exist ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
 ..\samples\wxadvtable_sample.exe: $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample  $(__wxadvtable_lib___depname)
-	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows   ..\lib\gcc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows   ..\lib\gcc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(__WXLIB_ADV_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 make_sample_dir_wxadvtable_sample: 
 	if not exist ..\samples mkdir ..\samples

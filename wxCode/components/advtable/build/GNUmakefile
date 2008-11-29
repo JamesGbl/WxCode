@@ -290,16 +290,17 @@ uninstall_wxadvtable_dll_headers:
 endif
 
 ../samples/wxadvtable_sample: $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample $(__wxadvtable_lib___depname)
-	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) $(LDFLAGS) $(____wxadvtable_3) -L../lib  $(__wxadvtable_sample_RPATH)  ../lib/gcc_$(__wxadvtable_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs aui,core,base`
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) $(LDFLAGS) $(____wxadvtable_3) -L../lib  $(__wxadvtable_sample_RPATH)  ../lib/gcc_$(__wxadvtable_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
 
 make_sample_dir_wxadvtable_sample: 
 	@mkdir -p ../samples
 
 tarball: 
-	make clean
+	make distclean
 	( cd ../.. && tar -cvzf advtable.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" advtable/* )
 
 zip: clean
+	del ../../advtable.zip
 	( cd ../.. && zip -r9 advtable.zip advtable -x "*.pdb" -x "*.log" -x "*.o*" )
 
 docs: 

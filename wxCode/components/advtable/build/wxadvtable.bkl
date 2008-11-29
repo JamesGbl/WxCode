@@ -57,6 +57,7 @@
              to be initialized correctly. -->
 
         <library>wxadvtable_lib</library>
+        <wx-lib>adv</wx-lib>
         <wx-lib>aui</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->

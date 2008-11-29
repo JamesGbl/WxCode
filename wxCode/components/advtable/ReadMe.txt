@@ -12,9 +12,8 @@
   - built-in sorting and filtering support
   - flexible rendering and editing support
   - dynamic row/columns add/removal
-  - and visual features like: highlight modes, cell attributes, etc.
- wxAdvTable designed after Java Swing(tm) table classes (JTable, ...) and has
- MCV (Model-Controller-View) design.
+  - and visual features like: highlight modes, cell attributes, etc
+  - MCV (Model-Controller-View) design
  
 
  Installation - win32

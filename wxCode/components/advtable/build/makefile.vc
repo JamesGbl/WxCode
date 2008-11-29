@@ -106,9 +106,6 @@ __wxadvtable_dll___depname = \
 	..\lib\vc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll
 !endif
 !if "$(WX_MONOLITHIC)" == "0"
-__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib
-!endif
-!if "$(WX_MONOLITHIC)" == "0"
 __WXLIB_AUI_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui.lib
 !endif
 !if "$(SHARED)" == "0"
@@ -173,6 +170,9 @@ ____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 !endif
 !if "$(WX_SHARED)" == "1"
 ____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+!endif
+!if "$(WX_MONOLITHIC)" == "0"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib
 !endif
 !if "$(WX_MONOLITHIC)" == "0"
 __WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib
@@ -247,7 +247,7 @@ make_dir_wxadvtable_dll:
 
 ..\samples\wxadvtable_sample.exe: $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample  $(__wxadvtable_lib___depname)
 	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) /pdb:"..\samples\wxadvtable_sample.pdb" /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS  @<<
-	$(WXADVTABLE_SAMPLE_OBJECTS)  ..\lib\vc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.lib $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(WXADVTABLE_SAMPLE_OBJECTS)  ..\lib\vc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.lib $(__WXLIB_ADV_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 make_sample_dir_wxadvtable_sample: 
