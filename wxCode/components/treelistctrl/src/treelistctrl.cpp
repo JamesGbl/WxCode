@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.104 2008-11-27 10:23:48 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.105 2008-12-01 17:23:41 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -576,6 +576,7 @@ public:
     void OnMouse( wxMouseEvent &event );
     void OnIdle( wxIdleEvent &event );
     void OnScroll(wxScrollWinEvent& event);
+    void OnCaptureLost(wxMouseCaptureLostEvent &event) { ;; }
 
     // implementation helpers
     int GetColumnCount() const
@@ -607,7 +608,6 @@ protected:
     wxTreeListItem       *m_rootItem; // root item
     wxTreeListItem       *m_curItem; // current item, either selected or marked
     wxTreeListItem       *m_shiftItem; // item, where the shift key was pressed
-    wxTreeListItem       *m_editItem; // item, which is currently edited
     wxTreeListItem       *m_selectItem; // current selected item, not with wxTR_MULTIPLE
 
     int                  m_curColumn;
@@ -629,7 +629,6 @@ protected:
     bool                 m_ownsImageListNormal,
                          m_ownsImageListState,
                          m_ownsImageListButtons;
-    bool                 m_isDragging; // true between BEGIN/END drag events
     bool                 m_lastOnSame;  // last click on the same item as prev
     bool                 m_left_down_selection;
 
@@ -637,10 +636,13 @@ protected:
                         *m_imageListState,
                         *m_imageListButtons;
 
-    int                  m_dragCount;
-    wxTimer             *m_dragTimer;
+    bool                 m_isDragStarted;  // set at the very beginning of dragging
+    bool                 m_isDragging; // set once a drag begin event was fired
+    wxPoint              m_dragStartPos;  // set whenever m_isDragStarted is set to true
     wxTreeListItem      *m_dragItem;
+    int                  m_dragCol;
 
+    wxTreeListItem       *m_editItem; // item, which is currently edited
     wxTimer             *m_editTimer;
     bool                 m_editAccept;  // currently unused, OnRenameAccept() argument makes it redundant
     wxString             m_editRes;
@@ -1000,9 +1002,7 @@ void wxEditTextCtrl::EndEdit(bool isCancelled) {
     if (m_owner) {
         (*m_accept) = ! isCancelled;
         (*m_res) = isCancelled ? m_startValue : GetValue();
-        if ((*m_res) != m_startValue || isCancelled) {
-            m_owner->OnRenameAccept(isCancelled);
-        }
+        m_owner->OnRenameAccept(*m_res == m_startValue);
         m_owner->m_editControl = NULL;
         m_owner->m_editItem = NULL;
         m_owner->SetFocus(); // This doesn't work. TODO.
@@ -1032,7 +1032,7 @@ void wxEditTextCtrl::OnChar( wxKeyEvent &event )
     }
     if (event.GetKeyCode() == WXK_ESCAPE)
     {
-        EndEdit(true);  // not cancelled
+        EndEdit(true);  // cancelled
         return;
     }
     event.Skip();
@@ -1081,6 +1081,7 @@ BEGIN_EVENT_TABLE(wxTreeListHeaderWindow,wxWindow)
     EVT_MOUSE_EVENTS  (wxTreeListHeaderWindow::OnMouse)
     EVT_SET_FOCUS     (wxTreeListHeaderWindow::OnSetFocus)
 END_EVENT_TABLE()
+
 
 void wxTreeListHeaderWindow::Init()
 {
@@ -1792,12 +1793,14 @@ BEGIN_EVENT_TABLE(wxTreeListMainWindow, wxScrolledWindow)
     EVT_KILL_FOCUS     (wxTreeListMainWindow::OnKillFocus)
     EVT_IDLE           (wxTreeListMainWindow::OnIdle)
     EVT_SCROLLWIN      (wxTreeListMainWindow::OnScroll)
+    EVT_MOUSE_CAPTURE_LOST(wxTreeListMainWindow::OnCaptureLost)
 END_EVENT_TABLE()
 
 
 // ---------------------------------------------------------------------------
 // construction/destruction
 // ---------------------------------------------------------------------------
+
 
 void wxTreeListMainWindow::Init() {
 
@@ -1835,10 +1838,9 @@ void wxTreeListMainWindow::Init() {
     m_btnWidth = 0, m_btnWidth2 = 0;
     m_btnHeight = 0, m_btnHeight2 = 0;
 
-    m_dragCount = 0;
-    m_isDragging = false;
-    m_dragTimer = new wxTimer (this, -1);
-    m_dragItem = (wxTreeListItem*)NULL;
+    m_isDragStarted = m_isDragging = false;
+    m_dragItem = NULL;
+    m_dragCol = -1;
 
     m_editTimer = new wxTreeListRenameTimer (this);
     m_editControl = NULL;
@@ -1926,7 +1928,6 @@ wxTreeListMainWindow::~wxTreeListMainWindow() {
     delete m_hilightBrush;
     delete m_hilightUnfocusedBrush;
 
-    delete m_dragTimer;
     delete m_editTimer;
     delete m_findTimer;
     if (m_ownsImageListNormal) delete m_imageListNormal;
@@ -2461,8 +2462,10 @@ void wxTreeListMainWindow::DeleteChildren (const wxTreeItemId& itemId) {
     wxArrayTreeListItems& children = item->GetChildren();
     for (size_t n = children.GetCount(); n>0; n--) {
         DoDeleteItem(children[n-1]);
+        // immediately remove child from array, otherwise it might get selected
+        // as current item (see m_curItem handling in DoDeleteItem() )
+        children.RemoveAt(n-1);
     }
-    item->DeleteChildren();
 }
 
 
@@ -2474,6 +2477,13 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     // cancel any editing
     if (m_editControl) {
         m_editControl->EndEdit(true);  // cancelled
+    }
+
+    // cancel any dragging
+    if (item == m_dragItem) {
+        // stop dragging
+        m_isDragStarted = m_isDragging = false;
+        if (HasCapture()) ReleaseMouse();
     }
 
     // don't stay with invalid m_curItem: take next sibling or reset to NULL
@@ -2501,8 +2511,10 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     wxArrayTreeListItems& children = item->GetChildren();
     for (size_t n = children.GetCount(); n>0; n--) {
         DoDeleteItem(children[n-1]);
+        // immediately remove child from array, otherwise it might get selected
+        // as current item (see m_curItem handling above)
+        children.RemoveAt(n-1);
     }
-    item->DeleteChildren();
 
     // delete item itself
     SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, item);
@@ -3060,7 +3072,10 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
     wxDCClipper clipper (dc, 0, item->GetY(), total_w, total_h); // only within line
 
     int text_w = 0, text_h = 0;
-    dc.GetTextExtent( item->GetText(GetMainColumn()), &text_w, &text_h );
+    dc.GetTextExtent( item->GetText(GetMainColumn()).size() > 0
+            ? item->GetText(GetMainColumn())
+            : " ",  // dummy text to avoid zero height and no highlight width
+        &text_w, &text_h );
 
     // determine background and show it
     wxColour colBg;
@@ -3072,14 +3087,8 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
     dc.SetBrush (wxBrush (colBg, wxSOLID));
     dc.SetPen (*wxTRANSPARENT_PEN);
     if (HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
-        if (item == m_dragItem) {
-            dc.SetBrush (*m_hilightBrush);
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-            dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
-            dc.SetTextForeground (colTextHilight);
-        }else if (item->IsSelected()) {
-            if (!m_isDragging && m_hasFocus) {
+        if (item->IsSelected()) {
+            if (! m_isDragging && m_hasFocus) {
                 dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
                 dc.SetPen (*wxBLACK_PEN);
@@ -3150,13 +3159,7 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
 
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
             if (i == GetMainColumn()) {
-                if (item == m_dragItem) {
-                    dc.SetBrush (*m_hilightBrush);
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                    dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
-                    dc.SetTextForeground (colTextHilight);
-                }else if (item->IsSelected()) {
+                if (item->IsSelected()) {
                     if (!m_isDragging && m_hasFocus) {
                         dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
@@ -3832,109 +3835,30 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
     }
 
 
-// ----------  HANDLE DRAGGING  ----------
-// NOTE: drag is only with left mouse button
-// (no changes to selection)
-    if (mayDrag) {  // actually this is always true
-
-        // CASE 1: we were dragging => continue, end, abort
-        if (m_isDragging) {
-
-            // CASE 1.1: click aborts drag:
-            if (event.LeftDown() || event.MiddleDown() || event.RightDown()) {
-
-                // stop dragging
-                m_dragCount = 0;
-                m_isDragging = false;
-                if (HasCapture()) ReleaseMouse();
-                RefreshSelected();
-
-                // middle & right-click may be processed further below
-                bSkip = false;
-
-            // CASE 1.2: still dragging
-            } else if (event.Dragging()) {
-
-                ;; // nothing to do
-                bSkip = false;
-
-            // CASE 1.3: dragging now ends normally
-            } else {
-
-                // stop dragging
-                m_dragCount = 0;
-                m_isDragging = false;
-                if (HasCapture()) ReleaseMouse();
-                RefreshSelected();
-
-                // send drag end event
-                wxTreeEvent event(wxEVT_COMMAND_TREE_END_DRAG, 0);
-                event.SetPoint(p);
-                event.SetInt(m_curColumn);
-                SendEvent(0, item, &event);
-
-                bSkip = false;
-            }
-
-        // CASE 2: not were not dragging => no change, start
-        } else if (event.Dragging()){
-
-            // determine drag start
-            if (m_dragCount == 0) {
-                m_dragTimer->Start (DRAG_TIMER_TICKS, wxTIMER_ONE_SHOT);
-            }
-            m_dragCount++;
-            if (m_dragCount < 3) return; // minimum drag 3 pixel
-            if (m_dragTimer->IsRunning()) return;
-
-            // we're going to drag
-            m_dragCount = 0;
-            m_isDragging = true;
-            CaptureMouse();
-            RefreshSelected();
-
-            // send drag start event
-            wxTreeEvent nevent(event.LeftIsDown()
-                                  ? wxEVT_COMMAND_TREE_BEGIN_DRAG
-                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG, 0);
-            nevent.SetPoint(p);
-            nevent.SetInt(m_curColumn);
-            nevent.Veto();
-            SendEvent(0, item, &nevent);
-
-            bSkip = false;
-
-        } else {
-            // just in case dragging had been initiated
-            if (m_dragCount > 0) {
-                m_dragCount = 0;  // end dragging
-            }
-        }
-    }
-
-
 // HANDLE SIMPLE-CLICKS (selection change, contextual menu)
     if (mayClick) {
 
         // left-click on haircross is expand (and no select)
         if (bCrosshair && event.LeftDown()) {
 
+            bSkip = false;
+
             // note that we only toggle the item for a single click, double
             // click on the button doesn't do anything
             Toggle (item);
-
-            bSkip = false;
         }
 
-        // normally left and right click change selection
-        // NOTE: unlike Windows, for right-click we don't care if CTRL or SHIFT is pressed
-        if (maySelect && (event.LeftDown() || event.RightDown())) {
+        // is there a selection change ? normally left and right down-click
+        //  change selection, but there are special cases:
+        if (maySelect && (
+            // click on already selected item: to allow drag of multiple items,
+            //  change selection on button up
+            ((event.LeftUp() || event.RightUp()) && item != NULL && item->IsSelected() && item != m_curItem)
+            // normal clicks, act already on button down
+         || ((event.LeftDown() || event.RightDown()) && (item == NULL || ! item->IsSelected()))
+        )) {
 
-            // how is selection altered
-            // keep or discard already selected ?
-            m_lastOnSame = (item == m_curItem);
-            bool unselect_others =
-                ! (HasFlag(wxTR_MULTIPLE) && (event.ShiftDown() || event.ControlDown()));
+            bSkip = false;
 
             // set / remember item at shift down before current item gets changed
             if (event.LeftDown() && HasFlag(wxTR_MULTIPLE) && event.ShiftDown())  {
@@ -3943,6 +3867,13 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 m_shiftItem = (wxTreeListItem*)NULL;
             }
 
+            // how is selection altered
+            // keep or discard already selected ?
+            bool unselect_others = ! (HasFlag(wxTR_MULTIPLE) && (
+                event.ShiftDown()
+             || event.ControlDown()
+            ));
+
             // check is selection change is not vetoed
             if (SelectItem(item, m_shiftItem, unselect_others)) {
 
@@ -3950,20 +3881,27 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 EnsureVisible (item);
                 m_curItem = item;
             }
+
+        // no selection change, then we might edit
+        } else {
+            if (event.LeftDown())
+                m_lastOnSame = (item == m_curItem);
         }
 
         // generate click & menu events
         if (event.MiddleDown()) {
+            bSkip = false;
             SendEvent(wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK, item);
         }
         if (event.RightDown()) {
+            bSkip = false;
             SendEvent(wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, item);
-            if (item) {
-                wxTreeEvent nevent(wxEVT_COMMAND_TREE_ITEM_MENU, 0);
-                nevent.SetPoint(p);
-                nevent.SetInt(m_curColumn);
-                SendEvent(0, item, &nevent);
-            }
+        }
+        if (event.RightUp()) {
+            wxTreeEvent nevent(wxEVT_COMMAND_TREE_ITEM_MENU, 0);
+            nevent.SetPoint(p);
+            nevent.SetInt(m_curColumn);
+            SendEvent(0, item, &nevent);
         }
 
         // if 2nd left click finishes on same item, will edit it
@@ -3973,6 +3911,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 (flags & (wxTREE_HITTEST_ONITEMLABEL | wxTREE_HITTEST_ONITEMCOLUMN))
             ){
                 m_editTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
+                bSkip = false;
             }
             m_lastOnSame = false;
         }
@@ -3981,6 +3920,8 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
 
 // ----------  HANDLE DOUBLE-CLICKS  ----------
     if (mayClick && mayDoubleClick && event.LeftDClick()) {
+
+        bSkip = false;
 
         // double clicking should not start editing the item label
         m_editTimer->Stop();
@@ -3998,10 +3939,84 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 if (item && item->HasPlus()) Toggle(item);
             }
         }
-
-        // no further processing allowed
-        bSkip = false;
     }
+
+
+// ----------  HANDLE DRAGGING  ----------
+// NOTE: drag itself makes no change to selection
+    if (mayDrag) {  // actually this is always true
+
+        // CASE 1: we were dragging => continue, end, abort
+        if (m_isDragging) {
+
+            // CASE 1.1: click aborts drag:
+            if (event.LeftDown() || event.MiddleDown() || event.RightDown()) {
+
+                bSkip = false;
+
+                // stop dragging
+                m_isDragStarted = m_isDragging = false;
+                if (HasCapture()) ReleaseMouse();
+                RefreshSelected();
+
+            // CASE 1.2: still dragging
+            } else if (event.Dragging()) {
+
+                ;; // nothing to do
+
+            // CASE 1.3: dragging now ends normally
+            } else {
+
+                bSkip = false;
+
+                // stop dragging
+                m_isDragStarted = m_isDragging = false;
+                if (HasCapture()) ReleaseMouse();
+                RefreshSelected();
+
+                // send drag end event
+                wxTreeEvent event(wxEVT_COMMAND_TREE_END_DRAG, 0);
+                event.SetPoint(p);
+                event.SetInt(m_curColumn);
+                SendEvent(0, item, &event);
+            }
+
+        // CASE 2: not were not dragging => continue, start
+        } else if (event.Dragging()) {
+
+            // We will really start dragging if we've moved beyond a few pixels
+            if (m_isDragStarted) {
+                const int tolerance = 3;
+                int dx = abs(p.x - m_dragStartPos.x);
+                int dy = abs(p.y - m_dragStartPos.y);
+                if (dx <= tolerance && dy <= tolerance)
+                    return;
+            // determine drag start
+            } else {
+                m_dragStartPos = p;
+                m_dragCol = m_curColumn;
+                m_dragItem = item;
+                m_isDragStarted = true;
+                return;
+            }
+
+            bSkip = false;
+
+            // we are now dragging
+            m_isDragging = true;
+            RefreshSelected();
+            CaptureMouse(); // TODO: usefulness unclear
+
+            wxTreeEvent nevent(event.LeftIsDown()
+                                  ? wxEVT_COMMAND_TREE_BEGIN_DRAG
+                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG, 0);
+            nevent.SetPoint(p);
+            nevent.SetInt(m_dragCol);
+            nevent.Veto();
+            SendEvent(0, m_dragItem, &nevent);
+        }
+    }
+
 
     if (bSkip) event.Skip();
 }
@@ -4039,21 +4054,22 @@ void wxTreeListMainWindow::CalculateSize (wxTreeListItem *item, wxDC &dc) {
     wxCoord text_h = 0;
 
     dc.SetFont (GetItemFont (item));
-
-    dc.GetTextExtent (item->GetText (m_main_column), &text_w, &text_h);
-
+    dc.GetTextExtent (item->GetText(m_main_column).size() > 0
+            ? item->GetText (m_main_column)
+            : " ",  // blank to avoid zero height and no highlight width
+        &text_w, &text_h);
     // restore normal font
     dc.SetFont (m_normalFont);
 
-    int total_h = (m_imgHeight > text_h) ? m_imgHeight : text_h;
-    if (total_h < 30) { // add 10% space if greater than 30 pixels
-        total_h += 2; // minimal 2 pixel space
+    int max_h = (m_imgHeight > text_h) ? m_imgHeight : text_h;
+    if (max_h < 30) { // add 10% space if greater than 30 pixels
+        max_h += 2; // minimal 2 pixel space
     }else{
-        total_h += total_h / 10; // otherwise 10% space
+        max_h += max_h / 10; // otherwise 10% space
     }
 
-    item->SetHeight (total_h);
-    if (total_h > m_lineHeight) m_lineHeight = total_h;
+    item->SetHeight (max_h);
+    if (max_h > m_lineHeight) m_lineHeight = max_h;
     item->SetWidth(m_imgWidth + text_w+2);
 }
 
