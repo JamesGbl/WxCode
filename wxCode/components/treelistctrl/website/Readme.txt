@@ -1,6 +1,7 @@
 Latest information:
 ===================
 
+* 2008-12-05 : new release (fixed several crashes --upgrade recommended)
 * 2008-07-21 : new release (important fixes & enhancements to: events, selection, delete --upgrade recommended)
 * 2008-06-18 : new release (minor changes only)
 * 2008-05-26 : change of maintainer from Otto Wyss to Ronan Chartois
@@ -9,6 +10,17 @@ Latest information:
 
 Release History:
 ================
+
+* treelistctrl_2008-12-05.tar.gz
+  - Fixed: non-compliant declarations in class wxTreeListMainWindow [#2051640]
+  - Fixed: edit changes commited to wrong column [#2342061]
+  - Fixed: crash after rename / cell edit [#2342054]
+  - Fixed: crash on deletion of selected item (seen with multiple selection enabled on shutdown); bug introduced in v2008-07-21
+  - Fixed: empty item text (in main & other columns)
+  - Fixed: Drag from treelistctrl to another works improperly (drag origin not remembered accurately) [#1811335]
+  - Fixed: allow multiple selection in right-click & dragging [#1488235]
+  - Fixed: assertion in DoNotifyWindowAboutCaptureLost in wxMSW 2.7.1 [#1583135]
+  - Changed: better positioning and size of editing cell
 
 * treelistctrl_2008-07-21.tar.gz
   - Fixed: selection behavior
@@ -45,4 +57,4 @@ Release History:
 Known problems:
 ===============
 
-None
+Possibly (not reviewed / confirmed): old bugs #1811335, #1583135, #1488235

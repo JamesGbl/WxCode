@@ -118,15 +118,15 @@ The sample program includes a log pane reporting events as they are fired.
 <table>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_DRAG(id, func)</b></font></td>
-<td valign=TOP>Begin dragging with the left mouse button.</td>
+<td valign=TOP>Begin dragging with the left mouse button (see also note below).</td>
 </tr>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_RDRAG(id, func)</b></font></td>
-<td valign=TOP>Begin dragging with the right mouse button.</td>
+<td valign=TOP>Begin dragging with the right mouse button (see also note below).</td>
 </tr>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_END_DRAG(id, func)</b></font></td>
-<td valign=TOP>End dragging with the left or right mouse button.</td>
+<td valign=TOP>End dragging with the left or right mouse button (see also note below).</td>
 </tr>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_LABEL_EDIT(id, func)</b></font></td>
@@ -169,7 +169,7 @@ The sample program includes a log pane reporting events as they are fired.
 </tr>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_ITEM_RIGHT_CLICK(id, func)</b></font></td>
-<td valign=TOP>The user has clicked the item with the right mouse button  (this changes the selection).</td>
+<td valign=TOP>The user has clicked the item with the right mouse button  (changes selection unless item is already selected or CTRL is pressed).</td>
 </tr>
 <tr>
 <td valign=TOP width=277><tt><b>EVT_TREE_ITEM_MIDDLE_CLICK(id, func)</b></font></td>
@@ -200,6 +200,17 @@ The sample program includes a log pane reporting events as they are fired.
 <td valign=TOP><i>-----NOT IMPLEMENTED-----</i></td>
 </tr>
 </table>
+<p>
+<br>
+<b>Note on drag &amp; drop in the current implementation: </b>
+each control generates its own drag begin and end events;
+when the mouse leaves the control, a drag end is fired;
+when the mouse enters a control whilst already dragging, a drag begin is also fired
+(this is just reflecting wxMouseEvent behavior).
+To implement drag &amp; drop over multiple windows, the application shoud only
+process the first drag begin event and then wait for the mouse button to be
+released.
+</p>
 <p>
 <h3>See also</h3>
 </p>
