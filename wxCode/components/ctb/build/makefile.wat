@@ -84,6 +84,10 @@ LIBFLAG = -gpib
 LIBFLAG = d-gpib
 !endif
 !endif
+GPIBFLAG =
+!ifeq GPIB 1
+GPIBFLAG = _gpib
+!endif
 ____GPIBSRC_FILENAMES_OBJECTS =
 !ifeq GPIB 1
 ____GPIBSRC_FILENAMES_OBJECTS =  &
@@ -139,22 +143,18 @@ __SYSLIB2_p = gpib32.lib
 WXCTB_LIB_CXXFLAGS = $(____DEBUG) $(____DEBUG_0) -bm $(__OPTIMIZE_FLAG) &
 	-i=..\include $(CPPFLAGS) $(CXXFLAGS)
 WXCTB_LIB_OBJECTS =  &
-	$(OUTPUT)\wxctb_lib_expect.obj &
 	$(OUTPUT)\wxctb_lib_fifo.obj &
 	$(OUTPUT)\wxctb_lib_getopt.obj &
 	$(OUTPUT)\wxctb_lib_iobase.obj &
-	$(OUTPUT)\wxctb_lib_match.obj &
 	$(OUTPUT)\wxctb_lib_serport.obj &
 	$(OUTPUT)\wxctb_lib_timer.obj &
 	$(____GPIBSRC_FILENAMES_OBJECTS)
 WXCTB_DLL_CXXFLAGS = -bd $(____DEBUG) $(____DEBUG_0) -bm $(__OPTIMIZE_FLAG) &
 	-i=..\include $(CPPFLAGS) $(CXXFLAGS)
 WXCTB_DLL_OBJECTS =  &
-	$(OUTPUT)\wxctb_dll_expect.obj &
 	$(OUTPUT)\wxctb_dll_fifo.obj &
 	$(OUTPUT)\wxctb_dll_getopt.obj &
 	$(OUTPUT)\wxctb_dll_iobase.obj &
-	$(OUTPUT)\wxctb_dll_match.obj &
 	$(OUTPUT)\wxctb_dll_serport.obj &
 	$(OUTPUT)\wxctb_dll_timer.obj &
 	$(____GPIBSRC_FILENAMES_1_OBJECTS)
@@ -170,7 +170,7 @@ $(OUTPUT) :
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxctb$(LIBFLAG)-0.12.lib ..\lib\wxctb$(LIBFLAG)-0.12.dll $(OUTPUT)\ctbtest.exe tip-win32
+all : .SYMBOLIC ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll $(OUTPUT)\ctbtest.exe tip-win32
 
 clean : .SYMBOLIC 
 	-if exist $(OUTPUT)\*.obj del $(OUTPUT)\*.obj
@@ -178,17 +178,17 @@ clean : .SYMBOLIC
 	-if exist $(OUTPUT)\*.lbc del $(OUTPUT)\*.lbc
 	-if exist $(OUTPUT)\*.ilk del $(OUTPUT)\*.ilk
 	-if exist $(OUTPUT)\*.pch del $(OUTPUT)\*.pch
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.12.lib del ..\lib\wxctb$(LIBFLAG)-0.12.lib
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.12.dll del ..\lib\wxctb$(LIBFLAG)-0.12.dll
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.12.lib del ..\lib\wxctb$(LIBFLAG)-0.12.lib
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
 	-if exist $(OUTPUT)\ctbtest.exe del $(OUTPUT)\ctbtest.exe
 
-..\lib\wxctb$(LIBFLAG)-0.12.lib :  $(WXCTB_LIB_OBJECTS)
+..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib :  $(WXCTB_LIB_OBJECTS)
 	@%create $(OUTPUT)\wxctb_lib.lbc
 	@for %i in ($(WXCTB_LIB_OBJECTS)) do @%append $(OUTPUT)\wxctb_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @$(OUTPUT)\wxctb_lib.lbc
 
-..\lib\wxctb$(LIBFLAG)-0.12.dll :  $(WXCTB_DLL_OBJECTS)
+..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll :  $(WXCTB_DLL_OBJECTS)
 	@%create $(OUTPUT)\wxctb_dll.lbc
 	@%append $(OUTPUT)\wxctb_dll.lbc option quiet
 	@%append $(OUTPUT)\wxctb_dll.lbc name $^@
@@ -199,26 +199,26 @@ clean : .SYMBOLIC
 	@%append $(OUTPUT)\wxctb_dll.lbc
 	@%append $(OUTPUT)\wxctb_dll.lbc system nt_dll
 	wlink @$(OUTPUT)\wxctb_dll.lbc
-	wlib -q -n -b ..\lib\wxctb$(LIBFLAG)-0.12.lib +$^@
+	wlib -q -n -b ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib +$^@
 
-$(OUTPUT)\ctbtest.exe :  $(CTBTEST_OBJECTS) ..\lib\wxctb$(LIBFLAG)-0.12.lib
+$(OUTPUT)\ctbtest.exe :  $(CTBTEST_OBJECTS) ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
 	@%create $(OUTPUT)\ctbtest.lbc
 	@%append $(OUTPUT)\ctbtest.lbc option quiet
 	@%append $(OUTPUT)\ctbtest.lbc name $^@
 	@%append $(OUTPUT)\ctbtest.lbc option caseexact
 	@%append $(OUTPUT)\ctbtest.lbc $(LDFLAGS) $(____DEBUG_2) libpath ..\lib
 	@for %i in ($(CTBTEST_OBJECTS)) do @%append $(OUTPUT)\ctbtest.lbc file %i
-	@for %i in ( ..\lib\wxctb$(LIBFLAG)-0.12.lib winmm.lib $(__SYSLIB2_p)) do @%append $(OUTPUT)\ctbtest.lbc library %i
+	@for %i in ( ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib winmm.lib $(__SYSLIB2_p)) do @%append $(OUTPUT)\ctbtest.lbc library %i
 	@%append $(OUTPUT)\ctbtest.lbc
 	wlink @$(OUTPUT)\ctbtest.lbc
 
 wxinstall :  
-	@copy ..\lib\wxctb$(LIBFLAG)-0.12.lib $(INSTALLDIR)\lib\watcom_lib
-	@copy ..\lib\wxctb$(LIBFLAG)-0.12.dll $(INSTALLDIR)\lib\watcom_lib
+	@copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib $(INSTALLDIR)\lib\watcom_lib
+	@copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll $(INSTALLDIR)\lib\watcom_lib
 	
-	@if not exist $(INSTALLDIR)\include\wx\ctb-0.12\win32 mkdir $(INSTALLDIR)\include\wx\ctb-0.12\win32
-	@copy ..\include\wx\ctb-0.12\*.h $(INSTALLDIR)\include\wx\ctb-0.12
-	@copy ..\include\wx\ctb-0.12\win32\*.h $(INSTALLDIR)\include\wx\ctb-0.12\win32
+	@if not exist $(INSTALLDIR)\include\wx\ctb-0.13\win32 mkdir $(INSTALLDIR)\include\wx\ctb-0.13\win32
+	@copy ..\include\wx\ctb-0.13\*.h $(INSTALLDIR)\include\wx\ctb-0.13
+	@copy ..\include\wx\ctb-0.13\win32\*.h $(INSTALLDIR)\include\wx\ctb-0.13\win32
 
 tip-win32 :  
 	@echo "                                                                "
@@ -232,7 +232,7 @@ tip-win32 :
 	@echo " to install the libraries in:                                   "
 	@echo " $(INSTALLDIR)\lib\watcom_lib               "
 	@echo " and the header files in"
-	@echo " $(INSTALLDIR)\wx\ctb-0.12"
+	@echo " $(INSTALLDIR)\wx\ctb-0.13"
 	@echo "                                                                "
 	@echo " If you are using another compiler (Borland, Watcom, mingw,...) "
 	@echo " take a look in the README in this directory!                   "
@@ -242,9 +242,6 @@ tip-win32 :
 	@echo "================================================================"
 	@echo "                                                                "
 
-$(OUTPUT)\wxctb_lib_expect.obj :  .AUTODEPEND .\..\src\expect.cpp
-	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
-
 $(OUTPUT)\wxctb_lib_fifo.obj :  .AUTODEPEND .\..\src\fifo.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
 
@@ -252,9 +249,6 @@ $(OUTPUT)\wxctb_lib_getopt.obj :  .AUTODEPEND .\..\src\getopt.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
 
 $(OUTPUT)\wxctb_lib_iobase.obj :  .AUTODEPEND .\..\src\iobase.cpp
-	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
-
-$(OUTPUT)\wxctb_lib_match.obj :  .AUTODEPEND .\..\src\match.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
 
 $(OUTPUT)\wxctb_lib_serport.obj :  .AUTODEPEND .\..\src\win32\serport.cpp
@@ -266,9 +260,6 @@ $(OUTPUT)\wxctb_lib_timer.obj :  .AUTODEPEND .\..\src\win32\timer.cpp
 $(OUTPUT)\wxctb_lib_gpib.obj :  .AUTODEPEND .\..\src\gpib.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_LIB_CXXFLAGS) $<
 
-$(OUTPUT)\wxctb_dll_expect.obj :  .AUTODEPEND .\..\src\expect.cpp
-	$(CXX) -zq -fo=$^@ $(WXCTB_DLL_CXXFLAGS) $<
-
 $(OUTPUT)\wxctb_dll_fifo.obj :  .AUTODEPEND .\..\src\fifo.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_DLL_CXXFLAGS) $<
 
@@ -276,9 +267,6 @@ $(OUTPUT)\wxctb_dll_getopt.obj :  .AUTODEPEND .\..\src\getopt.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_DLL_CXXFLAGS) $<
 
 $(OUTPUT)\wxctb_dll_iobase.obj :  .AUTODEPEND .\..\src\iobase.cpp
-	$(CXX) -zq -fo=$^@ $(WXCTB_DLL_CXXFLAGS) $<
-
-$(OUTPUT)\wxctb_dll_match.obj :  .AUTODEPEND .\..\src\match.cpp
 	$(CXX) -zq -fo=$^@ $(WXCTB_DLL_CXXFLAGS) $<
 
 $(OUTPUT)\wxctb_dll_serport.obj :  .AUTODEPEND .\..\src\win32\serport.cpp

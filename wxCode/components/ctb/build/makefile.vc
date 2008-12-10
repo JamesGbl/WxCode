@@ -43,8 +43,8 @@ INSTALLDIR = $(WXWIN)
 ### Variables: ###
 
 WXCTB_LIB_CXXFLAGS = /MT$(____DEBUG_4) /DWIN32 $(____DEBUG) $(____DEBUG_2) \
-	$(______DEBUG) /Fd..\lib\wxctb$(LIBFLAG)-0.13.pdb $(__OPTIMIZE_FLAG) \
-	/I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	$(______DEBUG) /Fd..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.pdb \
+	$(__OPTIMIZE_FLAG) /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXCTB_LIB_OBJECTS =  \
 	$(OUTPUT)\wxctb_lib_fifo.obj \
 	$(OUTPUT)\wxctb_lib_getopt.obj \
@@ -53,8 +53,8 @@ WXCTB_LIB_OBJECTS =  \
 	$(OUTPUT)\wxctb_lib_timer.obj \
 	$(____GPIBSRC_FILENAMES_OBJECTS)
 WXCTB_DLL_CXXFLAGS = /MT$(____DEBUG_4) /DWIN32 $(____DEBUG) $(____DEBUG_2) \
-	$(______DEBUG) /Fd..\lib\wxctb$(LIBFLAG)-0.13.pdb $(__OPTIMIZE_FLAG) \
-	/I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	$(______DEBUG) /Fd..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.pdb \
+	$(__OPTIMIZE_FLAG) /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXCTB_DLL_OBJECTS =  \
 	$(OUTPUT)\wxctb_dll_fifo.obj \
 	$(OUTPUT)\wxctb_dll_getopt.obj \
@@ -79,14 +79,11 @@ OUTPUT = debug
 !if "$(WXDIR)" == ""
 INSTALLDIR = ..\lib
 !endif
-!if "$(DEBUG)" == "1" && "$(GPIB)" == "0"
+!if "$(DEBUG)" == "1"
 LIBFLAG = d
 !endif
-!if "$(DEBUG)" == "0" && "$(GPIB)" == "1"
-LIBFLAG = -gpib
-!endif
-!if "$(DEBUG)" == "1" && "$(GPIB)" == "1"
-LIBFLAG = d-gpib
+!if "$(GPIB)" == "1"
+GPIBFLAG = _gpib
 !endif
 !if "$(GPIB)" == "1"
 ____GPIBSRC_FILENAMES_OBJECTS =  \
@@ -149,40 +146,40 @@ $(OUTPUT):
 
 ### Targets: ###
 
-all: ..\lib\wxctb$(LIBFLAG)-0.13.lib ..\lib\wxctb$(LIBFLAG)-0.13.dll $(OUTPUT)\ctbtest.exe tip-win32
+all: ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll $(OUTPUT)\ctbtest.exe tip-win32
 
 clean: 
 	-if exist $(OUTPUT)\*.obj del $(OUTPUT)\*.obj
 	-if exist $(OUTPUT)\*.res del $(OUTPUT)\*.res
 	-if exist $(OUTPUT)\*.pch del $(OUTPUT)\*.pch
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)-0.13.lib
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.13.dll del ..\lib\wxctb$(LIBFLAG)-0.13.dll
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.13.ilk del ..\lib\wxctb$(LIBFLAG)-0.13.ilk
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.13.pdb del ..\lib\wxctb$(LIBFLAG)-0.13.pdb
-	-if exist ..\lib\wxctb$(LIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)-0.13.lib
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.ilk del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.ilk
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.pdb del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.pdb
+	-if exist ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib del ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
 	-if exist $(OUTPUT)\ctbtest.exe del $(OUTPUT)\ctbtest.exe
 	-if exist $(OUTPUT)\ctbtest.ilk del $(OUTPUT)\ctbtest.ilk
 	-if exist $(OUTPUT)\ctbtest.pdb del $(OUTPUT)\ctbtest.pdb
 
-..\lib\wxctb$(LIBFLAG)-0.13.lib: $(WXCTB_LIB_OBJECTS)
+..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib: $(WXCTB_LIB_OBJECTS)
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
 	$(WXCTB_LIB_OBJECTS)
 <<
 
-..\lib\wxctb$(LIBFLAG)-0.13.dll: $(WXCTB_DLL_OBJECTS)
+..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll: $(WXCTB_DLL_OBJECTS)
 	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(____DEBUG_3)  /LIBPATH:..\lib @<<
-	$(WXCTB_DLL_OBJECTS)  winmm.lib $(__SYSLIB2_p) /IMPLIB:..\lib\wxctb$(LIBFLAG)-0.13.lib
+	$(WXCTB_DLL_OBJECTS)  winmm.lib $(__SYSLIB2_p) /IMPLIB:..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
 <<
 
-$(OUTPUT)\ctbtest.exe: $(CTBTEST_OBJECTS) ..\lib\wxctb$(LIBFLAG)-0.13.lib
+$(OUTPUT)\ctbtest.exe: $(CTBTEST_OBJECTS) ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(____DEBUG_3) /LIBPATH:..\lib @<<
-	$(CTBTEST_OBJECTS)  ..\lib\wxctb$(LIBFLAG)-0.13.lib winmm.lib $(__SYSLIB2_p)
+	$(CTBTEST_OBJECTS)  ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib winmm.lib $(__SYSLIB2_p)
 <<
 
 wxinstall: 
-	@copy ..\lib\wxctb$(LIBFLAG)-0.13.lib $(INSTALLDIR)\lib\vc_lib
-	@copy ..\lib\wxctb$(LIBFLAG)-0.13.dll $(INSTALLDIR)\lib\vc_lib
+	@copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.lib $(INSTALLDIR)\lib\vc_lib
+	@copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-0.13.dll $(INSTALLDIR)\lib\vc_lib
 	
 	@if not exist $(INSTALLDIR)\include\wx\ctb-0.13\win32 mkdir $(INSTALLDIR)\include\wx\ctb-0.13\win32
 	@copy ..\include\wx\ctb-0.13\*.h $(INSTALLDIR)\include\wx\ctb-0.13

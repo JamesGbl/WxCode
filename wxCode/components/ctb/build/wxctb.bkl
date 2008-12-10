@@ -42,9 +42,7 @@
 
   <!-- set the library name dependent on debug/gpib support -->
   <set var="LIBFLAG">
-    <if cond="DEBUG=='1' and GPIB=='0'">d</if>
-    <if cond="DEBUG=='0' and GPIB=='1'">-gpib</if>
-    <if cond="DEBUG=='1' and GPIB=='1'">d-gpib</if>
+    <if cond="DEBUG=='1'">d</if>
   </set>
 
   <set var="SYSLIB1">
@@ -63,12 +61,18 @@
   </set>
 
   <set var="GPIBFLAG">
-    <if cond="GPIB=='1'">gpib</if>
+    <if cond="GPIB=='1'">_gpib</if>
   </set>
 
   <set var="GPIBSRC">
     <if cond="GPIB=='1'">
 	 ../src/gpib.cpp
+    </if>
+  </set>
+
+  <set var="GPIBINC">
+    <if cond="GPIB=='1'">
+	 gpib.h
     </if>
   </set>
 
@@ -121,15 +125,12 @@
   <data-files-tree id="install-headers">
     <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)ctb-$(VERSION)</srcdir>
     <files>
-	 expect.h
 	 fifo.h
 	 getopt.h
-	 gpib.h
+	 $(GPIBINC)
 	 iobase.h
-	 linux/gpib.h
 	 linux/serport.h
 	 linux/timer.h
-	 match.h
 	 serport.h
 	 serportx.h
 	 timer.h
@@ -139,7 +140,7 @@
 
   <lib id="wxctb_lib" template="simple">
     <dirname>../lib</dirname>
-    <libname>wxctb$(LIBFLAG)-$(VERSION)</libname>
+    <libname>wxctb$(LIBFLAG)$(GPIBFLAG)-$(VERSION)</libname>
     <!-- for /MT -->
     <threading>multi</threading>
     <runtime-libs>static</runtime-libs>
@@ -157,10 +158,10 @@
   <dll id="wxctb_dll" template="simple">
     <dirname>../lib</dirname>
     <threading>multi</threading>
-    <dllname>wxctb$(LIBFLAG)-$(VERSION)</dllname>
+    <dllname>wxctb$(LIBFLAG)$(GPIBFLAG)-$(VERSION)</dllname>
     <runtime-libs>static</runtime-libs>
     <optimize>$(OPTIMIZE_FLAG)</optimize>
-    <libname>wxctb$(LIBFLAG)-$(VERSION)</libname>
+    <libname>wxctb$(LIBFLAG)$(GPIBFLAG)-$(VERSION)</libname>
     <sources>
 	 $(FILES)
 	 $(GPIBSRC)
@@ -194,8 +195,8 @@
   <action id="wxinstall" cond="PLATFORM_WIN32=='1'">
     <command>
 	 <!-- copy the libraries (lib,dll) -->
-	 @copy ..\lib\wxctb$(LIBFLAG)-$(VERSION).lib $(INSTALLDIR)\lib\$(LIBNAME)_lib
-	 @copy ..\lib\wxctb$(LIBFLAG)-$(VERSION).dll $(INSTALLDIR)\lib\$(LIBNAME)_lib
+	 @copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-$(VERSION).lib $(INSTALLDIR)\lib\$(LIBNAME)_lib
+	 @copy ..\lib\wxctb$(LIBFLAG)$(GPIBFLAG)-$(VERSION).dll $(INSTALLDIR)\lib\$(LIBNAME)_lib
 	 <!-- copy the header files -->
 	 @if not exist $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32 mkdir $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
 	 @copy ..\include\wx\ctb-$(VERSION)\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)

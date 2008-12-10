@@ -81,19 +81,13 @@ ifeq ($(DEBUG),1)
 OUTPUT = debug
 endif
 ifeq ($(DEBUG),1)
-ifeq ($(GPIB),0)
 LIBFLAG = d
 endif
-endif
-ifeq ($(DEBUG),0)
 ifeq ($(GPIB),1)
-LIBFLAG = -gpib
+GPIBFLAG = _gpib
 endif
-endif
-ifeq ($(DEBUG),1)
 ifeq ($(GPIB),1)
-LIBFLAG = d-gpib
-endif
+GPIBINC = gpib.h
 endif
 ifeq ($(GPIB),1)
 __GPIBSRC_OBJECTS =  \
@@ -138,11 +132,11 @@ $(OUTPUT):
 
 ### Targets: ###
 
-all: ../lib/libwxctb$(LIBFLAG)-0.13.a ../lib/libwxctb$(LIBFLAG)-0.13.so $(OUTPUT)/ctbtest tip-linux
+all: ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so $(OUTPUT)/ctbtest tip-linux
 
 install: all install_wxctb_lib install_wxctb_dll
 	$(INSTALL) -d $(prefix)/include/wx/ctb-0.13
-	for f in expect.h fifo.h getopt.h gpib.h iobase.h linux/gpib.h linux/serport.h linux/timer.h match.h serport.h serportx.h timer.h; do \
+	for f in fifo.h getopt.h $(GPIBINC) iobase.h linux/serport.h linux/timer.h serport.h serportx.h timer.h; do \
 	if test ! -d $(prefix)/include/wx/ctb-0.13/`dirname $$f` ; then \
 	$(INSTALL) -d $(prefix)/include/wx/ctb-0.13/`dirname $$f`; \
 	fi; \
@@ -154,9 +148,9 @@ uninstall:
 clean: 
 	rm -f $(OUTPUT)/*.o
 	rm -f $(OUTPUT)/*.d
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.13.a
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.13.so
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.13.so
+	rm -f ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a
+	rm -f ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so
+	rm -f ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so
 	rm -f $(OUTPUT)/ctbtest
 
 tarball: 
@@ -182,25 +176,25 @@ tarball:
 	--exclude=*.___\
 	--exclude=*.o* ./)
 
-../lib/libwxctb$(LIBFLAG)-0.13.a: $(WXCTB_LIB_OBJECTS)
+../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a: $(WXCTB_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXCTB_LIB_OBJECTS)
 	$(RANLIB) $@
 
 install_wxctb_lib: 
 	$(INSTALL) -d $(prefix)/lib
-	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.13.a $(prefix)/lib
+	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a $(prefix)/lib
 
-../lib/libwxctb$(LIBFLAG)-0.13.so: $(WXCTB_DLL_OBJECTS)
+../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so: $(WXCTB_DLL_OBJECTS)
 	$(CXX) -shared -fPIC -o $@ $(WXCTB_DLL_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -pthread -L../lib  -lpthread $(__SYSLIB2_p)
 
 install_wxctb_dll: 
 	$(INSTALL) -d $(prefix)/lib
-	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.13.so $(prefix)/lib
-	install -c ../lib/libwxctb$(LIBFLAG)-0.13.so $(prefix)/lib
+	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so $(prefix)/lib
+	install -c ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.so $(prefix)/lib
 
-$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS) ../lib/libwxctb$(LIBFLAG)-0.13.a
-	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  ../lib/libwxctb$(LIBFLAG)-0.13.a -lpthread $(__SYSLIB2_p)
+$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS) ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a
+	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a -lpthread $(__SYSLIB2_p)
 
 tip-linux: 
 	@echo " "
