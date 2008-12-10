@@ -443,4 +443,4 @@ def GetVersion():
     x.y means the version of the underlaying ctb lib, z the version
     of the python port.
     """
-    return "0.12.3"
+    return "0.13"

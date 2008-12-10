@@ -1,5 +1,5 @@
 %{
-#include "wx/ctb-0.12/iobase.h"
+#include "wx/ctb-0.13/iobase.h"
 %}
 
 enum {

@@ -1,5 +1,5 @@
 %{
-#include "wx/ctb-0.12/serportx.h"
+#include "wx/ctb-0.13/serportx.h"
 %}
 
 %include iobase.i

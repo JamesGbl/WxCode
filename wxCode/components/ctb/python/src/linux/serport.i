@@ -1,7 +1,7 @@
 %module serport
 
 %{
-#include "wx/ctb-0.12/linux/serport.h"
+#include "wx/ctb-0.13/linux/serport.h"
 %}
 
 %include ../serportx.i

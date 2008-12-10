@@ -1,5 +1,5 @@
 %{
-#include "wx/ctb-0.12/linux/timer.h"
+#include "wx/ctb-0.13/linux/timer.h"
 %}
 
 %include cpointer.i
