@@ -15,7 +15,6 @@
 ////@@end gen include
 
 ////@@begin custom include
-%%CUSTOMINCLUDE%%
 ////@@end custom include
 
 ////@@begin gen forward
@@ -27,7 +26,6 @@ class %%ARROWSETNAME%%;
 ////@@end gen forward
 
 ////@@begin custom forward
-%%CUSTOMFORWARD%%
 ////@@end custom forward
 
 ////@@begin gen arClass

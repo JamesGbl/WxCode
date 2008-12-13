@@ -153,6 +153,9 @@ void wxActiveRecordRow::CollectRowSet(wxActiveRecordRowSet* set){
 	garbageRowSets.RemoveAt(index);
 }
 
+DatabaseLayer* wxActiveRecordRow::GetDatabase()const{
+	return m_database;
+}
 //end WX_ACTIVE_RECORD_ROW
 
 //begin WX_ACTIVE_RECORD_ROW_SET

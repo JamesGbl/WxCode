@@ -162,6 +162,7 @@ protected:
 	wxString GetInsert() const;
 	wxString GetIncludes() const;
 	wxString GetRowFromResult() const;
+	wxString GetGetFromResult() const;
 	wxString GetRelationsDecl() const;
 	wxString GetRelationsImpl() const;
 	wxString GetCmpsDecl() const;
@@ -204,7 +205,7 @@ struct arRelation{
 		keyId=src.keyId;
 	}
 	
-	arRelation& operator=(const arRelation& src){
+	arRelation& arRelation::operator=(const arRelation& src){
 		relationType=src.relationType;
 		itemName=src.itemName;
 		table=src.table;

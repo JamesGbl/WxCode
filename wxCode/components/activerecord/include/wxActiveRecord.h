@@ -119,6 +119,7 @@ public:
         virtual bool Delete();
         void CollectRow(wxActiveRecordRow* row);
         void CollectRowSet(wxActiveRecordRowSet* set);
+		DatabaseLayer* GetDatabase()const;
 public:
         long id;
 };

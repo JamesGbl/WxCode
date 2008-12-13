@@ -97,12 +97,7 @@ bool wxActiveRecordGenerator::Prepare(const wxString& table,const wxString& arCl
 		m_idField=idField;
 		m_autoIncr=autoIncr;
 		
-		wxString query;
-		if(m_dbType==AR_FIREBIRD||m_dbType==AR_FIREBIRD_EMBEDDED)
-			query=wxString::Format(wxT("SELECT FIRST 1 * FROM %s"),table.c_str());
-		else
-			query=wxString::Format(wxT("SELECT * FROM %s LIMIT 1"),table.c_str());
-		
+		wxString query=wxString::Format(wxT("SELECT * FROM %s LIMIT 1"),table.c_str());
 		DatabaseResultSet* result=m_database->ExecuteQuery(query);
 		result->Next();
 		ResultSetMetaData* metaData=result->GetMetaData();
@@ -146,13 +141,8 @@ bool wxActiveRecordGenerator::Prepare(arNode node){
 			BelongsTo(node.m_belongsToRelations.Item(i)->itemName,node.m_belongsToRelations.Item(i)->table,node.m_belongsToRelations.Item(i)->foreignId,node.m_belongsToRelations.Item(i)->keyId,node.m_belongsToRelations.Item(i)->arClassName);
 		for(unsigned int i=0;i<node.m_hasManyRelations.Count();i++)
 			HasMany(node.m_hasManyRelations.Item(i)->itemName,node.m_hasManyRelations.Item(i)->table,node.m_hasManyRelations.Item(i)->foreignId,node.m_hasManyRelations.Item(i)->keyId,node.m_hasManyRelations.Item(i)->arClassName);
-		
-		wxString query;
-		if(m_dbType==AR_FIREBIRD||m_dbType==AR_FIREBIRD_EMBEDDED)
-			query=wxString::Format(wxT("SELECT FIRST 1 * FROM %s"),node.m_tableName.c_str());
-		else
-			query=wxString::Format(wxT("SELECT * FROM %s LIMIT 1"),node.m_tableName.c_str());
 
+		wxString query=wxString::Format(wxT("SELECT * FROM %s LIMIT 1"),node.m_tableName.c_str());
 		DatabaseResultSet* result=m_database->ExecuteQuery(query);
 		result->Next();
 		ResultSetMetaData* metaData=result->GetMetaData();
@@ -226,9 +216,6 @@ bool wxActiveRecordGenerator::BelongsTo(const wxString& itemName,const wxString&
 }
 
 bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
-	
-	//If the table is read-only erase the Write stuff
-	//Else...leave the labels to be replaced later
 	{
 		wxRegEx reg(wxT("////@@begin template arWrite(.*)////@@end template arWrite"));
 		bool matched=reg.Matches(fileContent);
@@ -259,8 +246,6 @@ bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
 				reg.Replace(&fileContent,wxT("\\1"));
 		}
 	}
-	
-	//Replace the labels
 
 	fileContent.Replace(wxT("%%IFDEF%%"),GetIfdef(),true);
 	fileContent.Replace(wxT("%%ARROWSETNAME%%"),m_className+wxT("RowSet"),true);
@@ -290,27 +275,23 @@ bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
 	wxString vars=wxT("");
 	VarHash::const_iterator it;
     for( it = m_varHash.begin() ; it != m_varHash.end(); ++it )
-    {	
-		if(it->first==m_idField)
-			continue;
+    {
 		if(it!=m_varHash.begin()) vars+=wxT("\t");
-		vars+=GetVarDecl(it->first,it->second)+wxT("\n\t");
+		vars+=GetVarDecl(it->first,it->second)+wxT("\n");
     }
 
 	fileContent.Replace(wxT("%%VARDECL%%"),vars,true);
-	
-	//CUSTOM DECLARATION
 
 	if(m_customArClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMAR%%"),wxT(""),true);
+		fileContent.Replace(wxT("%%CUSTOMAR%%"),wxT("public:"),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMAR%%"),m_customArClass,true);
 	if(m_customArRowClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMARROW%%"),wxT(""),true);
+		fileContent.Replace(wxT("%%CUSTOMARROW%%"),wxT("public:"),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMARROW%%"),m_customArRowClass,true);
 	if(m_customArClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),wxT(""),true);
+		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),wxT("public:"),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),m_customArRowSetClass,true);
 
@@ -334,9 +315,6 @@ wxString wxActiveRecordGenerator::GetIfdef() const{
 }
 
 bool wxActiveRecordGenerator::GenerateImpl(wxString& fileContent)const{
-	//If the table is read-only erase the Write stuff
-	//Else...leave the labels to be replaced later
-
 	{
 		wxRegEx reg(wxT("////@@begin template arWrite(.*)////@@end template arWrite"));
 		bool matched=reg.Matches(fileContent);
@@ -367,8 +345,6 @@ bool wxActiveRecordGenerator::GenerateImpl(wxString& fileContent)const{
 				reg.Replace(&fileContent,wxT("\\1"));
 		}
 	}
-	
-	//Replace the labels
 
 	fileContent.Replace(wxT("%%ARROWSETNAME%%"),m_className+wxT("RowSet"),true);
 	fileContent.Replace(wxT("%%ARROWNAME%%"),m_className+wxT("Row"),true);
@@ -400,7 +376,8 @@ bool wxActiveRecordGenerator::GenerateImpl(wxString& fileContent)const{
 	fileContent.Replace(wxT("%%COPYCONST%%"),vars,true);
 	fileContent.Replace(wxT("%%SAVE%%"),GetSave(),true);
 	fileContent.Replace(wxT("%%INSERT%%"),GetInsert(),true);
-	fileContent.Replace(wxT("%%GETFROMRESULT%%"),GetRowFromResult(),true);
+	fileContent.Replace(wxT("%%ROWFROMRESULT%%"),GetRowFromResult(),true);
+	fileContent.Replace(wxT("%%GETFROMRESULT%%"),GetGetFromResult(),true);
 	fileContent.Replace(wxT("%%RELATIONSIMPL%%"),GetRelationsImpl(),true);
 	fileContent.Replace(wxT("%%CMPSIMPL%%"),GetCmpsImpl(),true);
 	fileContent.Replace(wxT("%%CUSTOMIMPLS%%"),m_customImpls,true);
@@ -423,7 +400,7 @@ wxString wxActiveRecordGenerator::GetTypeString(int value){
 	else if(value==ResultSetMetaData::COLUMN_BOOL)
 		str=wxT("bool");
 	else if(value==ResultSetMetaData::COLUMN_BLOB)
-		str=wxT("wxMemoryBuffer");
+		str=wxT("wxString");
 	else if(value==ResultSetMetaData::COLUMN_DATE)
 		str=wxT("wxDateTime");
 	else
@@ -563,19 +540,13 @@ wxString wxActiveRecordGenerator::GetSave() const{
 
 	VarHash::const_iterator it;
 
-	bool first_item=false;
-
     for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField)
 			continue;
-		if(!first_item)
-			first_item=true;
-		else
+		if(it!=m_varHash.begin())
 			str+=wxT(",");
 		str+=it->first+wxT("=?");
-		
-
 
     }
 	str+=wxString::Format(wxT(" WHERE %s=?\"),m_table.c_str()));\n"),m_idField.c_str());
@@ -643,28 +614,22 @@ wxString wxActiveRecordGenerator::GetInsert() const{
 	wxString str=wxT("PreparedStatement* pStatement=m_database->PrepareStatement(wxString::Format(wxT(\"INSERT INTO %s (");
 
 	VarHash::const_iterator it;
-	bool first_item=false;
 
     for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField && m_autoIncr)
 			continue;
-		if(!first_item)
-			first_item=true;
-		else
+		if(it!=m_varHash.begin())
 			str+=wxT(",");
-		str+=it->first;		
+		str+=it->first;
 	}
 
-	first_item=false;
 	str+=wxT(") VALUES (");
 	for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField && m_autoIncr)
 			continue;
-		if(!first_item)
-			first_item=true;
-		else
+		if(it!=m_varHash.begin())
 			str+=wxT(",");
 		str+=wxT("?");
 	}
@@ -716,16 +681,21 @@ wxString wxActiveRecordGenerator::GetRowFromResult() const{
 	wxString vars=wxT("");
 	VarHash::const_iterator it;
     for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
-    {			
+    {
 		if(it!=m_varHash.begin()) vars+=wxT("\t");
-		if(it->second==ResultSetMetaData::COLUMN_BLOB){
-			vars+=wxT("result->GetResult")+GetParamString(it->second);
-			vars+=wxT("(wxT(\"")+it->first+wxT("\"),")+it->first+wxT(");\n");
-		}
-		else{
-			vars+=it->first+wxT("=result->GetResult")+GetParamString(it->second);
-			vars+=wxT("(wxT(\"")+it->first+wxT("\"));\n");
-		}
+		vars+=wxT("row->")+it->first+wxT("=result->GetResult")+GetParamString(it->second);
+		vars+=wxT("(wxT(\"")+it->first+wxT("\"));\n");
+    }
+	return vars;
+}
+
+wxString wxActiveRecordGenerator::GetGetFromResult() const{
+	wxString vars=wxT("");
+	VarHash::const_iterator it;
+    for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
+    {
+		vars+=wxT("\t")+it->first+wxT("=result->GetResult")+GetParamString(it->second);
+		vars+=wxT("(wxT(\"")+it->first+wxT("\"));\n");
     }
 	return vars;
 }
@@ -879,11 +849,6 @@ bool wxActiveRecordGenerator::GenerateH(bool overwrite, const wxString& dir,cons
 
 	if(fn!=wxEmptyString)
 		fileName=wxFileName(dir,fn);
-
-	m_customArClass=wxT("");
-	m_customArRowClass=wxT("");
-	m_customArRowSetClass=wxT("");
-
 
 	if(!overwrite){
 		wxString oldStr=wxT("");
