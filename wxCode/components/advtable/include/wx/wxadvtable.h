@@ -23,6 +23,7 @@
 
 // include grid.h for events definitions
 #include <wx/grid.h>
+#include <wx/spinctrl.h>
 
 #include <wx/dynarray.h>
 #include "observable.h"
@@ -38,6 +39,7 @@ enum {
 	wxIntFormat,
 	wxDoubleFormat,
 	wxBoolFormat,
+	wxColourFormat,
 };
 
 // boolean true - string representation
@@ -85,6 +87,12 @@ public:
 		m_col = col;
 	}
 
+	void operator = (const wxAdvCoord &o)
+	{
+		m_row = o.m_row;
+		m_col = o.m_col;
+	}
+
 	bool IsSet()
 	{
 		return (m_row != (size_t) -1) && (m_col != (size_t) -1);
@@ -125,7 +133,7 @@ class WXDLLEXPORT wxAdvRange
 public:
 	wxAdvRange()
 	{
-		Set((size_t) -1, (size_t) -1, (size_t) -1, (size_t) -1);
+		Unset();
 	}
 
 	wxAdvRange(size_t row1, size_t col1, size_t row2, size_t col2)
@@ -156,6 +164,11 @@ public:
 		m_col1 = min(col1, col2);
 		m_row2 = max(row1, row2);
 		m_col2 = max(col1, col2);
+	}
+
+	void Unset()
+	{
+		Set((size_t) -1, (size_t) -1, (size_t) -1, (size_t) -1);
 	}
 
 	/**
@@ -211,6 +224,9 @@ private:
 	size_t m_row2, m_col2;
 };
 
+/**
+ * Cell attribute defines text alignment, font, color, etc.
+ */
 class WXDLLEXPORT wxAdvCellAttribute
 {
 public:
@@ -421,6 +437,17 @@ public:
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
 };
 
+/**
+ * Renderer to draw colour cell values (draws coloured rectangles).
+ */
+class WXDLLEXPORT wxAdvColourTableCellRenderer : public wxAdvTableCellRenderer
+{
+public:
+	wxAdvColourTableCellRenderer();
+	virtual ~wxAdvColourTableCellRenderer();
+
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
+};
 
 //
 // Editors
@@ -501,8 +528,6 @@ protected:
 	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
 
 private:
-	//void SetNewValue(bool newValue);
-
 	void OnKillFocus(wxFocusEvent &ev);
 	void OnCheckbox(wxCommandEvent &ev);
 
@@ -511,6 +536,41 @@ private:
 	DECLARE_EVENT_TABLE()
 };
 
+/**
+ * Editor for colour cell values. Uses wxColourDialog for editing.
+ */
+class WXDLLEXPORT wxAdvColourTableCellEditor : public wxAdvTableCellEditor
+{
+public:
+	wxAdvColourTableCellEditor();
+	virtual ~wxAdvColourTableCellEditor();
+
+	virtual bool OneClickActivate();
+
+	virtual void Deactivate(wxAdvTable *table);
+
+protected:
+	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+};
+
+class WXDLLEXPORT wxAdvIntervalTableCellEditor : public wxAdvTableCellEditor
+{
+public:
+	wxAdvIntervalTableCellEditor(wxAdvTable *table);
+	virtual ~wxAdvIntervalTableCellEditor();
+
+	virtual bool OneClickActivate();
+
+	virtual void Deactivate(wxAdvTable *table);
+
+	void SetRange(int minValue, int maxValue);
+
+protected:
+	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+
+private:
+	wxSpinCtrl *m_spinCtrl;
+};
 
 //
 // Sorters
@@ -845,7 +905,6 @@ private:
  * - MCV design (designed after Java(tm) JTable classes).
  *   Data accesed through wxAdvTableModel, renderered by wxAdvTableCellRenderer, edited by wxAdvTableCellEditor
  * - rows/columns dynamic add/remove support
- * - TODO: implement editors and various renderers (for bool, color, etc data types)
  * - TODO: make drawing code optimizations (it is too slow now)
  * - TODO: add printing support
  * - TODO: add filters support
@@ -1082,6 +1141,11 @@ public:
 	 */
 	void SetRendererForFormat(int format, wxAdvTableCellRenderer *renderer);
 
+	/**
+	 * Sets default renderer to draw cell values.
+	 * wxAdvTable takes ownership over renderer.
+	 * @param renderer new default renderer
+	 */
 	void SetDefaultRenderer(wxAdvTableCellRenderer *renderer);
 
 	/**
@@ -1162,6 +1226,8 @@ public:
 
 	void SetSelection(size_t row1, size_t col1, size_t row2, size_t col2);
 
+	bool GetVisibleRange(wxAdvRange &range);
+
 	/**
 	 * Returns selection range.
 	 */
@@ -1220,12 +1286,26 @@ public:
 		return SumLayerSizes(m_colLayerHeights);
 	}
 
+	//
+	// Areas calculation functions.
+	//
+
 	/**
 	 * Returns table area rectangle.
 	 */
 	wxRect CalcTableRect()
 	{
-		return wxRect(CalcTotalRowLayersWidth(), CalcTotalColLayersHeight(),
+		wxCoord x = 0;
+		wxCoord y = 0;
+
+		if (m_showCorner || m_showRows) {
+			x = CalcTotalRowLayersWidth();
+		}
+		if (m_showCorner || m_showCols) {
+			y = CalcTotalColLayersHeight();
+		}
+
+		return wxRect(x, y,
 				CalcTotalColsWidth(), CalcTotalRowsHeight());
 	}
 
@@ -1262,6 +1342,8 @@ public:
 	wxRect CalcEntireRowRect(size_t row, size_t col);
 	wxRect CalcEntireColRect(size_t row, size_t col);
 
+	void GetRangeRect(wxRect &rc, size_t row1, size_t col1, size_t row2, size_t col2);
+
 	/**
 	 * wxWindow override.
 	 */
@@ -1282,6 +1364,7 @@ private:
 	void OnMouseEvents(wxMouseEvent &ev);
 	void OnKeyDown(wxKeyEvent &ev);
 	void OnKillFocus(wxFocusEvent &ev);
+	void OnSize(wxSizeEvent &ev);
 
 	void HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell);
 	void HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col);
@@ -1300,25 +1383,31 @@ private:
 	void SetCurrentHdrCell(wxAdvHdrCell *cell);
 
 	//
-	// drawing functions
+	// Drawing functions.
 	//
-	void DrawTable(wxDC &dc, wxRegion reg);
+	void DrawTable(wxDC &dc);
 	void DrawTableCell(wxDC &dc, size_t row, size_t col);
 
 	void DrawHdrCells(wxDC &dc, wxAdvHdrCellArray &hdrCells);
-	void DrawHdrCell(wxDC &dc, wxAdvHdrCell &hdrCell);
-	void DrawHeaderCell(wxDC &dc, wxAdvHdrCell &hdrCell);
+	void DrawHdrCell(wxDC &dc, wxAdvHdrCell *hdrCell);
+	void DrawHdrCellSelf(wxDC &dc, wxAdvHdrCell *hdrCell);
+
+	//
+	// Redraw functions.
+	//
+	void ResizeBackBitmaps();
 
 	void RedrawHdrCell(wxAdvHdrCell *cell);
-	void RedrawViewportRect(wxRect rc);
-	void RedrawRangeRect(wxAdvRange *range);
-	void RedrawHighlightRect();
+	void RedrawRange(wxAdvRange *range);
+	void RedrawRange(size_t row1, size_t col1, size_t row2, size_t col2);
+	void RedrawHighlighted(wxAdvCoord *coord);
+	void RedrawAll();
 
     void DecomposeHdrCells(wxAdvHdrCellArray &hdrCells, wxAdvHdrCellPtrArray &decompHdrCells);
 	void DecomposeHdrCell(wxAdvHdrCell &hdrCell, wxAdvHdrCellPtrArray &decompHdrCells);
 
 	//
-	// table geometry functions
+	// Table geometry functions.
 	//
 
 	/**
@@ -1399,8 +1488,6 @@ private:
 
 	HighlightMode m_highlightMode;
 
-	wxAdvRangeArray m_cellConcats;
-
 	// graphic objects
 	wxPen m_gridPen;
 	wxPen m_focusedPen;
@@ -1430,6 +1517,12 @@ private:
 
 	wxAdvHdrCell *m_pressedHdrCell;
 	wxAdvHdrCell *m_currentHdrCell;
+
+	wxBitmap m_backBitmap;
+	wxBitmap m_backBitmapRows;
+	wxBitmap m_backBitmapCols;
+
+	bool m_needRedraw;
 
 	DECLARE_EVENT_TABLE()
 	DECLARE_CLASS(wxAdvTable)
