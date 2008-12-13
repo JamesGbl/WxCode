@@ -1,12 +1,9 @@
 <?xml version="1.0" ?>
 
 <!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.4 2007/03/21 05:23:40 mszeftel Exp $ -->
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
+     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
+     <disable-formats>cbuilderx,dmars,dmars_smake,msevc4prj,symbian,xcode2</disable-formats>
 
-<bakefile-gen>
-	<include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
-	
-	<disable-formats>msvs2005prj,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
-    <add-formats>autoconf,borland,mingw,msvc,msvc6prj,msevc4prj,watcom</add-formats>
-    
-	<input>wxarg.bkl</input>
+     <input>wxarg.bkl</input>
 </bakefile-gen>

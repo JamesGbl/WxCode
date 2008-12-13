@@ -475,7 +475,8 @@ wxString wxActiveRecordGenerator::GetIdFieldImpl() const{
 	str+=wxString::Format(wxT("\t\tpStatement->SetParam%s(1,key);\n"),GetParamString(it->second).c_str());
 	str+=wxT("\t\tDatabaseResultSet* result= pStatement->ExecuteQuery();\n\n");
 
-	str+=wxT("\t\tresult->Next();\n");
+	str+=wxT("\t\tif(!result->Next())\n");
+	str+=wxT("\t\t\treturn NULL;");
 	str+=wxT("\t\t")+m_className+wxT("Row* ")+wxT("row=RowFromResult(result);\n");
 	str+=wxT("\t\tgarbageRows.Add(row);\n");
 	str+=wxT("\t\tm_database->CloseResultSet(result);\n");
