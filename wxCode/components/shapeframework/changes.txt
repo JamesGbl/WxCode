@@ -1,0 +1,347 @@
+Changes in version 1.7.1 beta (2008-12-20):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.9:
+  - Added functions xsSerializable::GetFirstChild(wxClassInfo *type), xsSerializable::GetLastChild(wxClassInfo *type), xsSerializable::GetSibbling(wxClassInfo *type).
+  - Changed declaration of xsSerializable::GetChildrenRecursively(wxClassInfo *type, SerializableList& list) function to
+    xsSerializable::GetChildrenRecursively(wxClassInfo *type, SerializableList& list, SEARCHMODE mode), where 'mode' parameter can be 'searchDFS' for Depth-First-Search
+    or 'searchBFS' for Breadth-First-Search algorithm. The 'searchBFS' is default.
+  - Changed declaration of wxXmlSerializer::GetItems(wxClassInfo* type, SerializableList& list) function to wxXmlSerializer::GetItems(wxClassInfo* type, SerializableList& list,
+    xsSerializable::SEARCHMODE mode = xsSerializable::searchBFS).
+
+- Significant speed improvements and optimizations in shape canvas and diagram manager. These improvements required some small
+  API changes; see the lines bellow for more information.
+- Changed declaration of wxSFDiagramManager::GetShapes(ShapeList& shapes) function to wxSFDiagramManager::GetShapes(wxClassInfo* shapeInfo, ShapeList& shapes 
+  xsSerializable::SEARCHMODE mode = xsSerializable::searchBFS).
+- Changed declaration of wxSFShapeBase::GetChildShapes(ShapeList& children, bool recursive = false) to wxSFShapeBase::GetChildShapes(wxClassInfo *type, ShapeList& children,
+  bool recursive = false, xsSerializable::SEARCHMODE mode = xsSerializable::searchBFS).
+- Functions wxSFDiagramManager::GetAssignedConnections, wxSFDiagramManager::GetShapes, wxSFDiagramManager::GetShapesAtPosition,
+  wxSFDiagramManager::GetShapesInside and wxSFShapeCanvas::GetSelectedShapes don't return number of found elements anymore
+  ( user can call wxList::GetCount() function later if neccessary ).
+- Line shapes connected to child shapes are moved together with their parent if dragged or moved by keys.
+- Fixed propagation of some key events to shapes (arrow keys on lines weren't processed correctly).
+- Fixed possible crash if parent shape was dropped (in some special cases) to its child shape.
+
+Changes in version 1.7.0 beta (2008-12-05):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.8:
+  - Improved detection of locales (decimal point).
+  - Alpha channel of wxColour data structure is serialized now.
+  - Improved deserialization speed of wxPoint and wxColour data structures.
+
+- Added experimental support for wxGraphicsContext. The feature can be activated via static function wxSFShapeCanvas::EnableGC().
+  If enabled then new wxWidgets renderer class is used by wxSFScaledDC class so the shapes are antialiazed, support semitransparency via
+  colour aplha channel and support alpha channel in images. This feature can be used only if both wxSF and wxWidgets
+  libraries are compiler with wxUSE_GRAPHICS_CONTEXT=1. Note that only subset of drawing functions declared in wxDC class are
+  currently redirected to use wxGraphicsContext (rectangle, rounded rectangle, ellipse, line, point, polygon, polypolygon, text and bitmap). 
+- wxSFScaledPaintDC class was replaced by wxSFScaledDC class derived directly from wxDC class which is used as a wrapper for any other DC.
+  This modification allowed the library to use wxGraphicsContext together with all other DCs (paint, memory, print, ...).
+- Added shape's alignment flags valignEXPAND and halignEXPAND.
+- Shapes assigned to a grid shape are now aligned inside the grid cells in accordance to the shapes' current alignment flags.
+- Improved line and curve shapes' drawing speed.
+- New shapes created by wxSFDiagramManager::AddShape(wxClassInfo* shapeInfo, const wxPoint& pos, bool saveState) function
+  are assigned to an underlying shape (if exists) as its child automatically.
+- Added function wxSFShapeBase::IsInside(const wxRect& rct) returning TRUE if a shape is completely inside given rectangle.
+- Functions GetShapeAtPosition(), GetShapesAtPosition() and GetShapesInside() are now members of wxSFDiagramManager class. Their
+  previous implementation in wxSFShapeCanvas class now calls these new originals. This modification allows user to call the functions
+  even if no canvas exists yet.
+- Fixed mixed multiple selection of child and top-most shapes (all shapes had been assigned to the last clicked shape's parent).
+- Fixed potentional assertion fault in wxSFLineShape::OnLeftDoubleClick(const wxPoint& pos) event handler.
+- Fixed grid shapes in such way they do not accept line shapes as managed shapes anymore.
+- Update and fixed wxSFDemo sample project.
+- Code clean-up.
+
+Changes in version 1.6.2 beta (2008-09-27):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.7:
+  - Function xsPropertyIO::AddPropertyNode() is now static and takes information about xml node type.
+  - Function xsSerializable::GetChild() now allows recursive search.
+  - IDs of managed serialized items are now serialized automatically by default (in previous library version this task had to be
+    done explicitelly by a user).
+  - Fixed bug dealing with reading of float and double values on platforms which use ',' decimal character (fix no.2).
+
+- Added wxSFFlexGridShape with a behaviour similar to classic wxFlexGridSizer (each grid's column and row can have different size).
+- wxSFShapeBitmap::CreateFromFile() function now takes also bitmap type parameter (use bitmap types supported by wxBitmap class). Previously
+  only BMP files were supported.
+- wxSFDiagramManager::AddShape(wxClassInfo* shapeInfo, const wxPoint& pos, bool saveState) function doesn't Refresh() new shape anymore
+  (the wxSFShapeBase::wxRefresh() must be called explicitelly if neccessary).
+- Fixed wxSFGridShape's RTTI information
+- Fixed grid shapes minimal size. Even empty grid shape with zero cell space has non-zero size now.
+
+Changes in version 1.6.1 beta (2008-09-24):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.6:
+  - Added support for new (exported) dynamic data containers (CharArray, IntArray, FloatArray, DoubleArray).
+  - Fixed bug dealing with reading of float and double values on platforms which use ',' decimal character.
+
+- Added a posibility to interactivelly change ending line points connected to shapes (it means that the connection lines
+  do not point to the shape center only anymore). The ending points can be changed by simple placing of the ending line handles somewhere
+  over the shape.
+- Added new wxSFGridShape which has the same behaviour like classic wxGridSizer known from wxWidgets (it means that its child shapes
+  are layouted into a grid defined by number of rows and columns).
+- Added virtual function wxSFShapeBase::OnChildDropped(const wxRealPoint& pos, wxSFShapeBase *child) called when other 
+  dragged shape(s) are dropped above target shape (the dropped shapes must be accepted by the target).
+
+- Changed declaration of GetBorderPoint() function. Now it takes two parameters (starting and ending point of a virtual
+  line intersecting the shape's border).
+
+- Fixed control shape to proper set its size in accordance to managed GUI control (virtual function wxSFShapeBase::Update () should works now).
+- Fixed wxSFDiagramManager::GetNewId() function to respect also ID used in the diagram root item.
+
+- Updated wxSFDemo sample projekt to demonstrate the wxSFGridShape.
+- Updated wxSFSample4 (added possibility to create a gui control consisting of wxPanel and wxButton used for the real-time panel resizing).
+
+Changes in version 1.6.0 beta (2008-06-02):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.5:
+  - Function xsSerializable::AddChild() returns pointer to the added child item. It also sets
+    new unique ID to the added object if its previous ID was undefined (in the previous library
+    version the ID was assigned by wxXmlSerializer::AddItem() function only).
+  - Added support for NaN and INF values for double and float data types (proposed by fantaz).
+  - Modified Sample1 code to demonstrate the ability to handle NaN and INF values.
+  - Name of function xsSerializable::GetChildren() changed to xsSerializable::GetChildrenList().
+  - Added function xsSerializable::GetChildren(wxClassInfo *type, SerializableList& list) returning
+    the child objects of given type (or all children if type is NULL).
+  - Added function xsSerializable::GetChildrenRecursively(wxClassInfo *type, SerializableList& list) returning
+    all child objects of given type recursively (or all children recursively if type is NULL).
+  - Function wxXmlSerializer::GetItems(wxClassInfo* type, SerializableList& list) doesn't return
+    the number of found items anymore.
+
+- Implemented shadows under shapes. Class wxSFShapeBase has a new style sfsSHOW_SHADOW which causes
+  appearance of a shadow under this shape. Shadows can be collectively set by wxSFShapeCanvas::ShowShadows()
+  function and the shadow style can be modified by functions SetShadowOffset(), SetShadowFill() and SetShadowTextColour()
+  which are member functions of wxSFShapeCanvas class. Also analogical GetXXX() functions are available there.
+- Enhanced wxSFDemo sample to show the new shadowing feature.
+
+- Implemented printing support.
+- Enhanced wxSFDemo sample to demonstrate this new feature.
+
+- Added new shape (wxSFControlShape) able to manage GUI controls (widgets). Assigned GUI controls can be resized and
+  positioned via parent control shape. For more details see the library reference.
+- Added new sample project (wxSFSample4) demostrating a usage of wxSFControlShape.
+
+- Added default constructor for wxSFShapeCanvas class. Note that the user must call 
+  wxSFShapeCanvas::SetDiagramManager() function later to complete the canvas' initilization.
+- Implemented virtual bool wxScrolledWindow::Create() function for two-step canvas window construction.
+
+- Function name wxSFShapeBase::GetChildren(ShapeList& children, bool recursive) changed to
+  wxSFShapeBase::GetChildShapes(ShapeList& children, bool recursive)
+
+- All drawing (virtual) functions now use reference to wxDC instead of wxSFScaledPaintDC which leads
+  to more universal drawing approach. In addition new global conversion functions called Conv2Point(), Conv2Size()
+  and Conv2RealPoint() have been added for easy conversion between wxPoint, wxSize and wxRealPoint() objects
+  (these functions are usefull especialy in user-defined drawing routines).
+
+- Fixed compilation problem which occured in wxSFDemo and wxSFSample3 if the wx2.6.x compatibility is switched off
+  (due to unknown wxSAVE and wxOPEN defines previously declared in the wxFileDialog).
+- Fixed segmentation fault in wxSFDemo3 occured when the DEL key was pressed together with a star title selected.
+
+
+Changes in version 1.5.2 beta (2008-02-22):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.1.4
+- Decimal point in stored real values is always converted to character "." (locale settings are
+  ignored). This change may cause some previously saved project unreadable (if your default decimal
+  point character is set to ",").
+- Enhanced wxSFSample3 project to show some usefull features (some of new shape events, shapes' behaviour
+  customizations, etc...).
+- Fixed function wxSFShapeCanvas::SetScaleToViewAll()
+- Suppressed compiler warnings dealing with unused function arguments (patch from fantaz).
+- Added bakefiles-based build system. Also prebuilt makefiles for several platforms have beed 
+  included into the release package.
+- Source object references in the copy constructors are constant now.
+
+Changes in version 1.5.1 beta (2008-01-22):
+--------------------------------------------
+- Switched to use wxXmlSerializer (wxXS) 1.1.3
+- Updated code to use wxList::compatibility_iterator instead of pointers to wxNode class (so the
+  STL lists are supported now).
+- Multiedit control now disappears after usage of the undo/redo commands.
+- Improved drawing of curve shapes (lines consisting of only one segment are drawn as a simple lines).
+- Improved finding of shapes under a mouse cursor.
+- Implemented wxEVT_SF_ON_PASTE event (macro EVT_SF_ON_PASTE) encapsulated by wxSFShapePasteEvent class
+  generated when shapes are pasted from the clipboard to a canvas.
+- Added function wxSFShapeCanvas::SetScaleToViewAll() which adjusts the diagram scale so all
+  elements are visible.
+- Improved testing whether the interactive line shape creation process can be started.
+
+Changes in version 1.5.0 beta (2007-12-27):
+--------------------------------------------
+- Switched to use wxXmlSerializer (wxXS) 1.1.2
+- Implemented drag & drop. The D&D operation starts in two cases: if any shape is dragged out of
+  the canvas and if any shape is dragged with CTRL key pressed down (in this case the dragged shapes
+  are copied to the new location). User can handle dropped shapes via wxSFShapeCanvas::OnDrop() virtual
+  function. The function emits new wxEVT_SF_ON_DROP event (encapsulated by new wxSFShapeDropEvent class)
+  in its default implementation.
+- Significantly improved library performance/drawing speed (also new function wxSFShapeCanvas::GetShapeUnderCursor()
+  is provided.)
+- Significantly improved Undo/Redo speed. The canvas history manager (wxSFCanvasHistory) now can
+  work in two modes: using standard serialization (default, no extra code needed) or using canvas clonning
+  (fast, small extra code overhead is needed). See the documentation and samples for more details.
+- Added shape style sfsPROCESS_DEL. If used then the DEL key is processed by the shape, otherwise
+  the shape is deleted by the shape canvas.
+- Added shape style sfsSHOW_HANDLES. If used then the shape's handles are shown if the shape is 
+  selected (even if the sfsSIZE_CHANGE style is not present).
+- The shape canvas background can be filled with a gradient brush (use canvas style sfsGRADIENT_BACKGROUND and functions
+  wxSFShapeCanvas::SetGradientFrom() and wxSFShapeCanvas::SetGradientTo()).
+- Updated samples to reflect new features.
+- Fixed function wxSFShapeCanvas::GetShapeUnderCursor() (now it omits inactive or invisible shapes).
+- Fixed double generation of the wxEVT_SF_TEXT_CHANGE event.
+- Fixed code so it doesn't generate assertion messages on Linux platform with debug version of wxWidgets anymore.
+- Fixed some issues in shapes' and shape manager's copy constructors (all diagram manager's content can be now 
+  copied via its copy constructor or function wxXmlSerializer::CopyItems() - please, for more information
+  see the library documentation).
+
+Changes in version 1.4.1 beta (2007-12-07):
+--------------------------------------------
+- Improved (accelerated) function wxSFShapeCanvas::GetTopmostHandleAtPosition().
+- Improved wxXmlSerializer (XS_DECLARE_IO_HANDLER and XS_DEFINE_IO_HANDLER macros are
+  now available for easy implementation of custom data types I/O handlers)
+- Fixed wxShapeCanvas::Copy() and wxShapeCanvas::Cut() functions. Lines connected to 
+  the copied shapes are copied as well.
+- Fixed potential crash in wxDiagramManager::RemoveShapes() occured when double-linked shapes
+  were removed.
+- Improved canvas draving
+- Removed accessor functions for partial canvas flags (UseGrid(), ShowGrid(), EnableMultiselection(), EnableMultiSizeChange()).
+  These and some new canvas's flags can be now managed via universal canvas member functions SetStyle(), AddStyle(), RemoveStyle()
+  and ContainsStyle(). See the canvas class's STYLE enumeration for all available flags.
+
+Changes in version 1.4.0 beta (2007-11-22):
+--------------------------------------------
+- New (more flexible) version of wxXmlSerializer (saved files are compatible with the previous version).
+- Project's directory structure fulfills requirements for integration into wxWidgets/wxAdditions
+  distribution (all headers are now located in '../wx/wxsf' and 'wx/wxxmlserializer' subdirs).
+- Line shapes connecting child shapes with their parents starts/end at the parent's border, not the center.
+- Fixed crash occuring when a parent shape connected with his child shape is removed
+- Added "premake" build system
+
+Changes in version 1.3.2 beta (2007-10-26):
+--------------------------------------------
+- Functions GetAssignedConnections() and GetNeighbours() now allow definition of the connection line type.
+- Added function wxSFEditTextShape::EditLabel() which starts label's editation process.
+- F2 key now starts the editable shape's label editation mode.
+- wxXmlSerializer now allows serialization of its root node properties. Requested behaviour can be set by agrument 'withroot'
+  of wxXmlSerializer::SerializeToXml() functions.
+
+Changes in version 1.3.1 beta (2007-09-26):
+--------------------------------------------
+- Fixed wxSFShapeBase::GetCompleteBoundingBox() function to respect non-zero horizontal
+  and verical shape borders.
+- Fixed drawing of multiline text shapes during scaling of the whole shape canvas.
+- wxSFShapeBase::Update() function is now called recursively for all parents.
+- Implemented wxEVT_SF_TEXT_CHANGE event (macro EVT_SF_TEXT_CHANGE). 
+- Added wxSFShapeCanvas::OnTextChange() event handler called by the franework if any ediatble text shape
+  is changed (default implementation generates the wxEVT_SF_TEXT_CHANGE event).
+- Fixed initialization of text shapes after the deserialization if the shape canvas doesn't exist yet.
+- Fixed shape resizing problems occured if the shape has one or more children aligned to
+  the right or bottom.
+- Function wxSFBitmapShape::CreateFromXPM() is now public.
+- Partial shape flags (m_fParentChange, m_fSizeChange, m_fPositionChange, m_fAlwaysInside,
+  m_fHovering and m_fHighlighting) with relevant accessors have been replaced with 
+  one common style property (see STYLE enumeration and wxSFShapeBase::SetStyle(), 
+  wxSFShapeBase::GetStyle(), AddStyle(), RemoveStyle(), ContainsStyle() functions). This modification makes
+  the wxSF much more flexible and reduces size of the project XML files (only one property (style) is now
+  serialized instead of many partial flags).
+- Optimized drawing.
+- Associated user data now knows its parent shape (via xsSerializable::GetParent() function).
+- Unvisible shapes aren't drawn anymore...
+- Non-active shapes can't be selected by multiedit control
+- Fixed crash during removing of shape whose children are connected via lines with another shapes.
+- Code clean-up.
+
+Changes in version 1.3.0 beta (2007-09-07):
+--------------------------------------------
+- wxSF ported to use wxXmlSerialization (new mini-library suitable for automated serialization/
+  deserialization of class objects (arranged into a list or a tree) and their properties 
+  (attributes) to/from XML files). The wxXmlSerialization library is shipped together with the wxSF 
+  and can be used free and separately in other projects.
+- Implemented a container for user-defined data (objects derived from xsSerializable class) which can be
+  assigned to the shape and serialized with it (wxSFShapeBase::SetUserData(), wxSFShapeBase::
+  GetUserData(), wxSFShapeBase::DeleteUserDataOnDestroy()).
+- Implemented wxEVT_SF_LINE_DONE event (macro EVT_SF_LINE_DONE) and related event class 
+wxSFShapeEvent.
+- Applied compiler symbol WXMAKINGDLL_SF which allows compile the dynamic library with defined 
+  WXDLLEXPORT flags.
+- Added support for so called 'composed shapes' (for more details see wxSFSample3).
+- Added three new sample projects to the library sources distribution.
+- Improved C::B and MS Visual Studio project and solution files on Windows.
+- Added C::B project files for Linux.
+- Fixed shape handles' drawing on Linux.
+- Fixed wxSFShapeCanvas::Paste() on Linux.
+- Unified look&feel on both Windows and Linux target platforms.
+- Succesfully tested with wxWidgets 2.8.4 on Windows XP SP2 (both 32- 
+and 64-bit versions), Windows Vista and Linux (Ubuntu 7.04).
+- Changed the development status from 'aplha' to 'beta'.
+- Several minor bug fixes.
+
+  NOTE: wxSF project file format is not comapatible with previous versions.
+
+Changes in version 1.2.4 alpha (2007-08-10):
+--------------------------------------------
+- Removed assertion of valid pointer to diagram manager in a shape's destructor.
+- Shapes acceptance list in diagram manager is tested for record duplicity
+
+Changes in version 1.2.3 alpha (2007-08-03):
+--------------------------------------------
+- Fixed function wxSFShapeBase::GetCompleteBoundingBox().
+- Fixed update of shapes assigned as children to line shapes (alignment of those
+  child shapes is ignored).
+
+Changes in version 1.2.2 alpha (2007-08-02):
+--------------------------------------------
+- Improved testing of invalid pointers among main framework's components (shape base,
+  shape canvas and diagram manager) and thus whole library stability.
+
+Changes in version 1.2.1 alpha (2007-07-30):
+--------------------------------------------
+- Fixed ability to work with shapes without need of existing shape canvas.
+
+Changes in version 1.2.0 alpha (2007-07-27):
+--------------------------------------------
+- Separated data and presentation layer (see wxSFDiagramManager and wxSFShapeCanvas classes)
+- Updated example code to demonstrate this feature (v1.5)
+- Added function wxSFShapeBase::AssignChild()
+- Added functions wxSFShapeBase::SetAlwaysInsideParent() and wxSFShapeBase::IsAlwaysInsideParent().
+  If the property is set to TRUE then shape's parent is always resized to fit this shape, otherwise
+  a size change of child shape doesn't involve parent shape's size.
+
+Changes in version 1.1.6 alpha (2007-07-25):
+--------------------------------------------
+- Added ability to define shape types accepted by shape canvas instance (functions
+  wxSFShapeCanvas::AcceptShape(), wxSFShapeCanvas::IsShapeAccepted(), wxSFShapeCanvas::ClearAcceptedShapes())
+- Updated example code to demonstrate this feature (v1.4)
+- Fixed wxSFShapeBase::DoAlignment() function
+
+Changes in version 1.1.5 alpha (2007-07-24):
+--------------------------------------------
+- Fixed function FitToChildren in diamond shape (wxSFDiamondShape)
+- Fixed canvas refresh during shape handle dragging
+- Added function for alignment of selected shapes in the shape canvas (wxSFShapeCanvas::AlignSelected())
+- Updated example code to demonstrate AlignSelected() function
+
+Changes in version 1.1.4 alpha (2007-07-21):
+--------------------------------------------
+- Various bug fixes, improvements and code clean up
+- Function wxSFShapeBase::Scale() can now scale also child shapes
+
+Changes in version 1.1.3 alpha (2007-07-17):
+--------------------------------------------
+- Added ability to define shape's alignment (child shape can be aligned
+inside its parent with given direction and offset)
+
+Changes in version 1.1.2 alpha (2007-07-12):
+--------------------------------------------
+- Fixed functions wxSFShapeBase::GetNeighbours() and wxSFShapeCanvas::GetNeighbours()
+
+Changes in version 1.1.1 alpha (2007-07-12):
+--------------------------------------------
+- Added ability to find neighbour shapes (functions wxSFShapeBase::GetNeighbours() and wxSFShapeCanvas::GetNeighbours())
+
+Changes in version 1.1.0 alpha (2007-07-12):
+--------------------------------------------
+- Enhanced shapes policy (definitions which shape type can be connected to which one, what can be source or what can be target, etc.).
+- Ability to get wxSF number from canvas class.
+- Several bug fixes.
+
+Changes in version 1.0.0 alpha (2007-07-07):
+--------------------------------------------
+- Initial release.
