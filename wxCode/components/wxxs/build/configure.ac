@@ -15,7 +15,7 @@
 # NOTE: you'll want to replace the first string in [] brackets with the name of your
 #       component, the second string with its version and third one with your mail
 #       (so that users will be able to contact you in case they have problems)
-AC_INIT([wxxs], [1.1.6], [michal.bliznak@tiscali.cz])
+AC_INIT([wxxs], [1.1.9], [michal.bliznak@tiscali.cz])
 AC_CONFIG_AUX_DIR(build)        # this is needed, don't touch it
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
@@ -24,7 +24,7 @@ AC_CONFIG_AUX_DIR(build)        # this is needed, don't touch it
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
-m4_include(./autoconf/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 WXCODE_INIT
 
 

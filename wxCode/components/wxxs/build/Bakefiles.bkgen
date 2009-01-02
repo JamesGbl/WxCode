@@ -6,7 +6,7 @@
 
     <!-- this tag tells bakefile_gen that the user bakefile wants to use the 
          default wxCode settings found in wxCode/build/bakefiles/presets/wxcode.bkgen.
-         Note that this means that such file does exist on your hard-disk at bake-time! ../../../build
+         Note that this means that such file does exist on your hard-disk at bake-time!
     -->
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
 
@@ -27,6 +27,5 @@
 
              <add-formats>yyy</add-formats>
     -->
-    <disable-formats>msvc6prj,msvs2003prj,msvs2005prj</disable-formats>
 
 </bakefile-gen>

@@ -17,7 +17,7 @@
   <meta name="generator" content="wxCode">
 
   <style type="text/css"> /* <![CDATA[ */ @import url(default.css); /* ]]> */ </style>
-  <title>wxPlotCtrl Component</title>
+  <title>wxXmlSerializer Component</title>
 
 
 </head>

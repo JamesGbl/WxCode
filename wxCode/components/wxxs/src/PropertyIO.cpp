@@ -168,7 +168,7 @@ wxString xsDoublePropIO::ToString(double value)
     {
         // use '.' decimal point character
         sVal= wxString::Format(wxT("%lf"), value);
-        sVal.Replace(wxT(","), wxT("."));
+        sVal.Replace(wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER), wxT("."));
     }
 
     return sVal;
@@ -190,15 +190,14 @@ double xsDoublePropIO::FromString(const wxString& value)
 	    }
 	    else
 	    {
-	        // decimal point character used in wxXS is strictly '.'
-            if( wxString::Format(wxT("%1.1lf"), 1.1).Find('.') == wxNOT_FOUND )
-            {
-                wxString sNum = value;
-                sNum.Replace(wxT("."), wxT(","));
-                sNum.ToDouble(&num);
-            }
-            else
-                value.ToDouble(&num);
+	        // decimal point character used in wxXS is strictly '.'...
+#ifdef __WXMSW__
+			value.ToDouble(&num);
+#else
+	        wxString sNum = value;
+	        sNum.Replace(wxT("."), wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER) );
+	        sNum.ToDouble(&num);
+#endif
 	    }
 	}
 
@@ -225,7 +224,7 @@ wxString xsFloatPropIO::ToString(float value)
     else
     {
         sVal = wxString::Format(wxT("%f"), value);
-        sVal.Replace(wxT(","), wxT("."));
+        sVal.Replace(wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER), wxT("."));
     }
 
     return sVal;
@@ -248,14 +247,13 @@ float xsFloatPropIO::FromString(const wxString& value)
 	    else
 	    {
 	        // decimal point character used in wxXS is strictly '.'...
-            if( wxString::Format(wxT("%1.1f"), 1.1).Find('.') == wxNOT_FOUND )
-            {
-                wxString sNum = value;
-                sNum.Replace(wxT("."), wxT(","));
-                sNum.ToDouble(&num);
-            }
-            else
-                value.ToDouble(&num);
+#ifdef __WXMSW__
+			value.ToDouble(&num);
+#else
+	        wxString sNum = value;
+	        sNum.Replace(wxT("."), wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER) );
+	        sNum.ToDouble(&num);
+#endif
 	    }
 	}
 
@@ -276,16 +274,19 @@ wxString xsPointPropIO::ToString(wxPoint value)
 wxPoint xsPointPropIO::FromString(const wxString& value)
 {
 	wxPoint pt;
-	long x, y;
+	
+	//long x, y;
 
 	if(!value.IsEmpty())
 	{
-		wxStringTokenizer tokens(value, wxT(","), wxTOKEN_STRTOK);
-
-		tokens.GetNextToken().ToLong(&x);
-		tokens.GetNextToken().ToLong(&y);
-		pt.x = x;
-		pt.y = y;
+		wxSscanf( value, wxT("%d,%d"), &pt.x, &pt.y );
+		
+//		wxStringTokenizer tokens(value, wxT(","), wxTOKEN_STRTOK);
+//
+//		tokens.GetNextToken().ToLong(&x);
+//		tokens.GetNextToken().ToLong(&y);
+//		pt.x = x;
+//		pt.y = y;
 	}
 
 	return pt;
@@ -342,25 +343,38 @@ XS_DEFINE_IO_HANDLER(wxColour, xsColourPropIO);
 
 wxString xsColourPropIO::ToString(wxColour value)
 {
-    return wxString::Format(wxT("%d,%d,%d"), value.Red(), value.Green(), value.Blue());
+    return wxString::Format(wxT("%d,%d,%d,%d"), value.Red(), value.Green(), value.Blue(), value.Alpha());
 }
 
 wxColour xsColourPropIO::FromString(const wxString& value)
 {
-	long nRed = 0;
-	long nGreen = 0;
-	long nBlue = 0;
+	int nRed = 0;
+	int nGreen = 0;
+	int nBlue = 0;
+	int nAlpha = 0;
+	
+//	long nRed = 0;
+//	long nGreen = 0;
+//	long nBlue = 0;
+//	long nAlpha = 0;
 
 	if(!value.IsEmpty())
 	{
-		wxStringTokenizer tokens(value, wxT(","), wxTOKEN_STRTOK);
-
-		tokens.GetNextToken().ToLong(&nRed);
-		tokens.GetNextToken().ToLong(&nGreen);
-		tokens.GetNextToken().ToLong(&nBlue);
+		if( wxSscanf( value, wxT("%d,%d,%d,%d"), &nRed, &nGreen, &nBlue, &nAlpha ) == 3 ) nAlpha = 255;
+		
+//		wxStringTokenizer tokens(value, wxT(","), wxTOKEN_STRTOK);
+//
+//		tokens.GetNextToken().ToLong(&nRed);
+//		tokens.GetNextToken().ToLong(&nGreen);
+//		tokens.GetNextToken().ToLong(&nBlue);
+//
+//		if( tokens.HasMoreTokens() )
+//            tokens.GetNextToken().ToLong(&nAlpha);
+//        else
+//            nAlpha = 255;
 	}
 
-	return wxColour(nRed, nGreen, nBlue);
+	return wxColour(nRed, nGreen, nBlue, nAlpha);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -853,7 +867,7 @@ void xsListRealPointPropIO::Write(xsProperty *property, wxXmlNode *target)
 {
     RealPointList *list = (RealPointList*)property->m_pSourceVariable;
 
-    if(list->GetCount() > 0)
+    if( !list->IsEmpty() )
     {
         wxXmlNode *newNode = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("property"));
 		RealPointList::compatibility_iterator listNode = list->GetFirst();
