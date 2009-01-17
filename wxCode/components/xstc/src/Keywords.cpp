@@ -1,31 +1,89 @@
 
+/*
+ * Keywords.h
+ * 
+ * this file is licensed under the wxWindows licence
+ * just a quick reminder of what that means:
+ * 
+ * This software is released under the GNU GPL licence
+ * with a few exceptins applied, check the wxWindows licence
+ * to see what those are
+ * 
+ * visit: http://opensource.org/ to see both
+ * the GNU GPL and wxWindows licences.
+ * 
+ * this software has absolutely no warranty, express or implied
+ * 
+ * just so you know, i don't care if you change the code
+ * don't email me if you did someting to it.
+ * 
+ * no need to mark changes, you obviously may want to change the color
+ * settings, it would only be a real pain if you had to mark them.
+ * 
+ * if you edit a function to change its behavior, it would be courtious
+ * to others to let them know that the file is not an official release,
+ * but you don't have to do that either.
+ * 
+ * you must not misrepresent the origins of this software, if you distribute
+ * it, let the user know where to get it and that you where not the original 
+ * creator. (except for any code you add obviously)
+ *
+ * this notice may not be changed in any way and must remain at the top of every
+ * source file.
+ * 
+ * XSTC was developed by Nuklear Zelph
+ * copyright (C) 2006
+ */
+
 #ifndef XSTC_NO_KEYS
 
 #ifdef XSTC_H_FLAT
   #include "xstc.h"
 #else
-  #include <wx/xstc.h>
+  #include <wx/XSTC/xstc.h>
 #endif
 
 
 void XSTC::PurgeKeys()
 {
+#ifndef XSTC_NO_ABAQUS
+this->Keys_Set.abaqus = wxT("");
+this->Keys_Set.abaqus1 = wxT("");
+this->Keys_Set.abaqus2 = wxT("");
+this->Keys_Set.abaqus3 = wxT("");
+this->Keys_Set.abaqus4 = wxT("");
+this->Keys_Set.abaqus5 = wxT("");
+#endif //XSTC_NO_ABAQUS
+#ifndef XSTC_NO_ADA
+this->Keys_Set.ada = wxT("");
+#endif //XSTC_NO_ADA
+#ifndef XSTC_NO_APDL
 this->Keys_Set.apdl = wxT("");
 this->Keys_Set.apdl1 = wxT("");
 this->Keys_Set.apdl2 = wxT("");
 this->Keys_Set.apdl3 = wxT("");
 this->Keys_Set.apdl4 = wxT("");
 this->Keys_Set.apdl5 = wxT("");
+#endif //XSTC_NO_APDL
+#ifndef XSTC_NO_ASM
 this->Keys_Set.asm_0 = wxT("");
 this->Keys_Set.asm_1 = wxT("");
 this->Keys_Set.asm_2 = wxT("");
 this->Keys_Set.asm_3 = wxT("");
 this->Keys_Set.asm_4 = wxT("");
 this->Keys_Set.asm_5 = wxT("");
+#endif //XSTC_NO_ASM
+#ifndef XSTC_NO_ASN1
 this->Keys_Set.asn1_0 = wxT("");
 this->Keys_Set.asn1_1 = wxT("");
 this->Keys_Set.asn1_2 = wxT("");
 this->Keys_Set.asn1_3 = wxT("");
+#endif //XSTC_NO_ASN1
+#ifndef XSTC_NO_ASYMPTOTE
+this->Keys_Set.asymptote = wxT("");
+this->Keys_Set.asymptote1 = wxT("");
+#endif //XSTC_NO_ASYMPTOTE
+#ifndef XSTC_NO_AU3
 this->Keys_Set.au3_0 = wxT("");
 this->Keys_Set.au3_1 = wxT("");
 this->Keys_Set.au3_2 = wxT("");
@@ -34,27 +92,60 @@ this->Keys_Set.au3_4 = wxT("");
 this->Keys_Set.au3_5 = wxT("");
 this->Keys_Set.au3_6 = wxT("");
 this->Keys_Set.au3_7 = wxT("");
+#endif //XSTC_NO_AU3
+#ifndef XSTC_NO_AVE
 this->Keys_Set.ave = wxT("");
 this->Keys_Set.ave1 = wxT("");
 this->Keys_Set.ave2 = wxT("");
 this->Keys_Set.ave3 = wxT("");
 this->Keys_Set.ave4 = wxT("");
 this->Keys_Set.ave5 = wxT("");
+#endif //XSTC_NO_AVE
+#ifndef XSTC_NO_BAAN
 this->Keys_Set.baan = wxT("");
 this->Keys_Set.baan1 = wxT("");
+#endif //XSTC_NO_BAAN
+
+#ifndef XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
 this->Keys_Set.basic = wxT("");
-this->Keys_Set.basic1bl = wxT("");
-this->Keys_Set.basic1po = wxT("");
-this->Keys_Set.basic1pu = wxT("");
-this->Keys_Set.basic1fr = wxT("");
 this->Keys_Set.basic2 = wxT("");
 this->Keys_Set.basic3 = wxT("");
+#endif //XSTC_NO_PUREBASIC
+#endif //XSTC_NO_POWERBASIC
+#endif //XSTC_NO_FREEBASIC
+#endif //XSTC_NO_BLITZBASIC
+
+#ifndef XSTC_NO_BLITZBASIC
+this->Keys_Set.basic1bl = wxT("");
+#endif //XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
+this->Keys_Set.basic1fr = wxT("");
+#endif //XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
+this->Keys_Set.basic1po = wxT("");
+#endif //XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
+this->Keys_Set.basic1pu = wxT("");
+#endif //XSTC_NO_PUREBASIC
+
+#ifndef XSTC_NO_BASH
 this->Keys_Set.bash = wxT("");
+#endif //XSTC_NO_BASH
+#ifndef XSTC_NO_BATCH
 this->Keys_Set.batch = wxT("");
+#endif //XSTC_NO_BATCH
+#ifndef XSTC_NO_BULLANT
 this->Keys_Set.bullant = wxT("");
+#endif //XSTC_NO_BULLANT
+#ifndef XSTC_NO_CAML
 this->Keys_Set.caml = wxT("");
 this->Keys_Set.caml1 = wxT("");
 this->Keys_Set.caml2 = wxT("");
+#endif //XSTC_NO_CAML
+#ifndef XSTC_NO_CLW
 this->Keys_Set.clw = wxT("");
 this->Keys_Set.clw1 = wxT("");
 this->Keys_Set.clw2 = wxT("");
@@ -64,51 +155,93 @@ this->Keys_Set.clw5 = wxT("");
 this->Keys_Set.clw6 = wxT("");
 this->Keys_Set.clw7 = wxT("");
 this->Keys_Set.clw8 = wxT("");
+#endif //XSTC_NO_CLW
+#ifndef XSTC_NO_CMAKE
+this->Keys_Set.cmake = wxT("");
+this->Keys_Set.cmake1 = wxT("");
+this->Keys_Set.cmake2 = wxT("");
+#endif //XSTC_NO_CMAKE
+#ifndef XSTC_NO_CONF
 this->Keys_Set.conf = wxT("");
 this->Keys_Set.conf1 = wxT("");
+#endif //XSTC_NO_CONF
+#ifndef XSTC_NO_CPP
 this->Keys_Set.cpp = wxT("");
 this->Keys_Set.cpp1 = wxT("");
 this->Keys_Set.cpp2 = wxT("");
 this->Keys_Set.cpp3 = wxT("");
-this->Keys_Set.nncrontab = wxT("");
-this->Keys_Set.nncrontab1 = wxT("");
-this->Keys_Set.nncrontab2 = wxT("");
+#endif //XSTC_NO_CPP
+#ifndef XSTC_NO_CSOUND
 this->Keys_Set.csound = wxT("");
 this->Keys_Set.csound1 = wxT("");
 this->Keys_Set.csound2 = wxT("");
-this->Keys_Set. css = wxT("");
+#endif //XSTC_NO_CSOUND
+#ifndef XSTC_NO_CSS
+this->Keys_Set.css = wxT("");
 this->Keys_Set.css1 = wxT("");
 this->Keys_Set.css2 = wxT("");
-this->Keys_Set.diff = wxT("");
+#endif //XSTC_NO_CSS
+#ifndef XSTC_NO_D
+this->Keys_Set.d = wxT("");
+this->Keys_Set.d1 = wxT("");
+this->Keys_Set.d2 = wxT("");
+this->Keys_Set.d3 = wxT("");
+#endif //XSTC_NO_D
+#ifndef XSTC_NO_EIFFEL
 this->Keys_Set.eiffel = wxT("");
+#endif //XSTC_NO_EIFFEL
+#ifndef XSTC_NO_EIFFELKW
 this->Keys_Set.eiffelkw = wxT("");
+#endif //XSTC_NO_EIFFELKW
+#ifndef XSTC_NO_ERLANG
 this->Keys_Set.erlang = wxT("");
-this->Keys_Set.errorlist = wxT("");
+#endif //XSTC_NO_ERLANG
+#ifndef XSTC_NO_ESCRIPT
 this->Keys_Set.escript = wxT("");
 this->Keys_Set.escript1 = wxT("");
 this->Keys_Set.escript2 = wxT("");
+#endif //XSTC_NO_ESCRIPT
+#ifndef XSTC_NO_F77
+this->Keys_Set.f77_0 = wxT("");
+this->Keys_Set.f77_1 = wxT("");
+this->Keys_Set.f77_2 = wxT("");
+#endif //XSTC_NO_F77
+#ifndef XSTC_NO_FLAGSHIP
 this->Keys_Set.flagship = wxT("");
 this->Keys_Set.flagship1 = wxT("");
 this->Keys_Set.flagship2 = wxT("");
 this->Keys_Set.flagship3 = wxT("");
+#endif //XSTC_NO_FLAGSHIP
+#ifndef XSTC_NO_FORTH
 this->Keys_Set.forth = wxT("");
 this->Keys_Set.forth1 = wxT("");
 this->Keys_Set.forth2 = wxT("");
 this->Keys_Set.forth3 = wxT("");
 this->Keys_Set.forth4 = wxT("");
 this->Keys_Set.forth5 = wxT("");
+#endif //XSTC_NO_FORTH
+#ifndef XSTC_NO_FORTRAN
 this->Keys_Set.fortran = wxT("");
 this->Keys_Set.fortran1 = wxT("");
 this->Keys_Set.fortran2 = wxT("");
-this->Keys_Set.f77_0 = wxT("");
-this->Keys_Set.f77_1 = wxT("");
-this->Keys_Set.f77_2 = wxT("");
+#endif //XSTC_NO_FORTRAN
+#ifndef XSTC_NO_GAP
+this->Keys_Set.gap = wxT("");
+this->Keys_Set.gap1 = wxT("");
+this->Keys_Set.gap2 = wxT("");
+this->Keys_Set.gap3 = wxT("");
+#endif //XSTC_NO_GAP
+#ifndef XSTC_NO_GUI4CLI
 this->Keys_Set.gui4cli = wxT("");
 this->Keys_Set.gui4cli1 = wxT("");
 this->Keys_Set.gui4cli2 = wxT("");
 this->Keys_Set.gui4cli3 = wxT("");
 this->Keys_Set.gui4cli4 = wxT("");
+#endif //XSTC_NO_GUI4CLI
+#ifndef XSTC_NO_HASKELL
 this->Keys_Set.haskell = wxT("");
+#endif //XSTC_NO_HASKELL
+#ifndef XSTC_NO_HTM
 this->Keys_Set.html = wxT("");
 this->Keys_Set.html1 = wxT("");
 this->Keys_Set.html2 = wxT("");
@@ -117,30 +250,41 @@ this->Keys_Set.html4 = wxT("");
 this->Keys_Set.html5 = wxT("");
 this->Keys_Set.html6 = wxT("");
 this->Keys_Set.html7 = wxT("");
-#ifdef XSTC_USELVL
+#endif //XSTC_NO_HTM
+#ifndef XSTC_NO_INNOSETUP
 this->Keys_Set.inno = wxT("");
 this->Keys_Set.inno1 = wxT("");
 this->Keys_Set.inno2 = wxT("");
 this->Keys_Set.inno3 = wxT("");
 this->Keys_Set.inno4 = wxT("");
 this->Keys_Set.inno5 = wxT("");
-#endif
+#endif //XSTC_NO_INNOSETUP
+#ifndef XSTC_NO_JS
 this->Keys_Set.js = wxT("");
 this->Keys_Set.js1 = wxT("");
 this->Keys_Set.js2 = wxT("");
+#endif //XSTC_NO_JS
+#ifndef XSTC_NO_JAVA
 this->Keys_Set.java = wxT("");
 this->Keys_Set.java1 = wxT("");
 this->Keys_Set.java2 = wxT("");
 this->Keys_Set.java3 = wxT("");
+#endif //XSTC_NO_JAVA
+#ifndef XSTC_NO_KIX
 this->Keys_Set.kix = wxT("");
 this->Keys_Set.kix1 = wxT("");
 this->Keys_Set.kix2 = wxT("");
-this->Keys_Set.latex = wxT("");
+#endif //XSTC_NO_KIX
+#ifndef XSTC_NO_LISP
 this->Keys_Set.lisp = wxT("");
 this->Keys_Set.lisp1 = wxT("");
+#endif //XSTC_NO_LISP
+#ifndef XSTC_NO_LOUT
 this->Keys_Set.lout = wxT("");
 this->Keys_Set.lout1 = wxT("");
 this->Keys_Set.lout2 = wxT("");
+#endif //XSTC_NO_LOUT
+#ifndef XSTC_NO_LUA
 this->Keys_Set.lua = wxT("");
 this->Keys_Set.lua1 = wxT("");
 this->Keys_Set.lua2 = wxT("");
@@ -149,32 +293,55 @@ this->Keys_Set.lua4 = wxT("");
 this->Keys_Set.lua5 = wxT("");
 this->Keys_Set.lua6 = wxT("");
 this->Keys_Set.lua7 = wxT("");
-this->Keys_Set.makefile = wxT("");
+#endif //XSTC_NO_LUA
+#ifndef XSTC_NO_MAGIK
+this->Keys_Set.magik = wxT("");
+this->Keys_Set.magik1 = wxT("");
+this->Keys_Set.magik2 = wxT("");
+this->Keys_Set.magik3 = wxT("");
+this->Keys_Set.magik4 = wxT("");
+#endif //XSTC_NO_MAGIK
+#ifndef XSTC_NO_MATLAB
 this->Keys_Set.matlab = wxT("");
+#endif //XSTC_NO_MATLAB
+#ifndef XSTC_NO_METAPOST
 this->Keys_Set.metapost = wxT("");
 this->Keys_Set.metapost1 = wxT("");
+#endif //XSTC_NO_METAPOST
+#ifndef XSTC_NO_MMIXAL
 this->Keys_Set.mmixal = wxT("");
 this->Keys_Set.mmixal1 = wxT("");
 this->Keys_Set.mmixal2 = wxT("");
-this->Keys_Set.mssql = wxT("");
-this->Keys_Set.mssql1 = wxT("");
-this->Keys_Set.mssql2 = wxT("");
-this->Keys_Set.mssql3 = wxT("");
-this->Keys_Set.mssql4 = wxT("");
-this->Keys_Set.mssql5 = wxT("");
-this->Keys_Set.mssql6 = wxT("");
+#endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NNCRONTAB
+this->Keys_Set.nncrontab = wxT("");
+this->Keys_Set.nncrontab1 = wxT("");
+this->Keys_Set.nncrontab2 = wxT("");
+#endif //XSTC_NO_NNCRONTAB
+#ifndef XSTC_NO_NSIS
 this->Keys_Set.nsis = wxT("");
 this->Keys_Set.nsis1 = wxT("");
 this->Keys_Set.nsis2 = wxT("");
 this->Keys_Set.nsis3 = wxT("");
+#endif //XSTC_NO_NSIS
+#ifndef XSTC_NO_OCTAVE
 this->Keys_Set.octave = wxT("");
-#ifdef XSTC_USELVL
+#endif //XSTC_NO_OCTAVE
+#ifndef XSTC_NO_OPAL
 this->Keys_Set.opal = wxT("");
 this->Keys_Set.opal1 = wxT("");
-#endif
+#endif //XSTC_NO_OPAL
+#ifndef XSTC_NO_PASCAL
 this->Keys_Set.pas = wxT("");
 this->Keys_Set.pas1 = wxT("");
+#endif //XSTC_NO_PASCAL
+#ifndef XSTC_NO_PERL
 this->Keys_Set.perl = wxT("");
+#endif //XSTC_NO_PERL
+#ifndef XSTC_NO_PLM
+this->Keys_Set.plm = wxT("");
+#endif //XSTC_NO_PLM
+#ifndef XSTC_NO_POV
 this->Keys_Set.pov = wxT("");
 this->Keys_Set.pov1 = wxT("");
 this->Keys_Set.pov2 = wxT("");
@@ -183,29 +350,79 @@ this->Keys_Set.pov4 = wxT("");
 this->Keys_Set.pov5 = wxT("");
 this->Keys_Set.pov6 = wxT("");
 this->Keys_Set.pov7 = wxT("");
-this->Keys_Set.properties = wxT("");
+#endif //XSTC_NO_POV
+#ifndef XSTC_NO_POWERSHELL
+this->Keys_Set.powershell = wxT("");
+this->Keys_Set.powershell1 = wxT("");
+this->Keys_Set.powershell2 = wxT("");
+#endif //XSTC_NO_POWERSHELL
+#ifndef XSTC_NO_PROGRESS
+this->Keys_Set.progress = wxT("");
+this->Keys_Set.progress1 = wxT("");
+this->Keys_Set.progress2 = wxT("");
+#endif //XSTC_NO_PROGRESS
+#ifndef XSTC_NO_PS
 this->Keys_Set.ps = wxT("");
 this->Keys_Set.ps1 = wxT("");
 this->Keys_Set.ps2 = wxT("");
 this->Keys_Set.ps3 = wxT("");
 this->Keys_Set.ps4 = wxT("");
+#endif //XSTC_NO_PS
+#ifndef XSTC_NO_PYTHON
 this->Keys_Set.python = wxT("");
 this->Keys_Set.python1 = wxT("");
+#endif //XSTC_NO_PYTHON
+#ifndef XSTC_NO_R
+this->Keys_Set.r = wxT("");
+this->Keys_Set.r1 = wxT("");
+this->Keys_Set.r2 = wxT("");
+#endif //XSTC_NO_R
+#ifndef XSTC_NO_REBOL
 this->Keys_Set.rebol = wxT("");
 this->Keys_Set.rebol1 = wxT("");
 this->Keys_Set.rebol2 = wxT("");
+#endif //XSTC_NO_REBOL
+#ifndef XSTC_NO_RUBY
 this->Keys_Set.ruby = wxT("");
+#endif //XSTC_NO_RUBY
+#ifndef XSTC_NO_SCRIPTOL
 this->Keys_Set.scriptol = wxT("");
+#endif //XSTC_NO_SCRIPTOL
+#ifndef XSTC_NO_SMALLTALK
 this->Keys_Set.smalltalk = wxT("");
+#endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SPECMAN
 this->Keys_Set.specman = wxT("");
 this->Keys_Set.specman1 = wxT("");
 this->Keys_Set.specman2 = wxT("");
 this->Keys_Set.specman3 = wxT("");
-#ifdef XSTC_USELVL
+#endif //XSTC_NO_SPECMAN
+#ifndef XSTC_NO_SPICE
 this->Keys_Set.spice = wxT("");
 this->Keys_Set.spice1 = wxT("");
 this->Keys_Set.spice2 = wxT("");
-#endif
+#endif //XSTC_NO_SPICE
+#ifndef XSTC_NO_MSSQL
+this->Keys_Set.mssql = wxT("");
+this->Keys_Set.mssql1 = wxT("");
+this->Keys_Set.mssql2 = wxT("");
+this->Keys_Set.mssql3 = wxT("");
+this->Keys_Set.mssql4 = wxT("");
+this->Keys_Set.mssql5 = wxT("");
+this->Keys_Set.mssql6 = wxT("");
+#endif //XSTC_NO_MSSQL
+#ifndef XSTC_NO_MYSQL
+this->Keys_Set.mysql = wxT("");
+this->Keys_Set.mysql1 = wxT("");
+this->Keys_Set.mysql2 = wxT("");
+this->Keys_Set.mysql3 = wxT("");
+this->Keys_Set.mysql4 = wxT("");
+this->Keys_Set.mysql5 = wxT("");
+this->Keys_Set.mysql6 = wxT("");
+this->Keys_Set.mysql7 = wxT("");
+this->Keys_Set.mysql8 = wxT("");
+#endif //XSTC_NO_MYSQL
+#ifndef XSTC_NO_SQL
 this->Keys_Set.sql = wxT("");
 this->Keys_Set.sql1 = wxT("");
 this->Keys_Set.sql2 = wxT("");
@@ -214,11 +431,14 @@ this->Keys_Set.sql4 = wxT("");
 this->Keys_Set.sql5 = wxT("");
 this->Keys_Set.sql6 = wxT("");
 this->Keys_Set.sql7 = wxT("");
+#endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TADS3
 this->Keys_Set.tads3_0 = wxT("");
 this->Keys_Set.tads3_1 = wxT("");
 this->Keys_Set.tads3_2 = wxT("");
 this->Keys_Set.tads3_3 = wxT("");
-#ifdef XSTC_USELVL
+#endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TCL
 this->Keys_Set.tcl = wxT("");
 this->Keys_Set.tcl1 = wxT("");
 this->Keys_Set.tcl2 = wxT("");
@@ -228,20 +448,29 @@ this->Keys_Set.tcl5 = wxT("");
 this->Keys_Set.tcl6 = wxT("");
 this->Keys_Set.tcl7 = wxT("");
 this->Keys_Set.tcl8 = wxT("");
-#endif
+#endif //XSTC_NO_TCL
+#ifndef XSTC_NO_TEX
 this->Keys_Set.tex = wxT("");
+#endif //XSTC_NO_TEX
+#ifndef XSTC_NO_VB
 this->Keys_Set.vb = wxT("");
 this->Keys_Set.vb1 = wxT("");
 this->Keys_Set.vb2 = wxT("");
 this->Keys_Set.vb3 = wxT("");
+#endif //XSTC_NO_VB
+#ifndef XSTC_NO_VBSCRIPT
 this->Keys_Set.vbscript = wxT("");
 this->Keys_Set.vbscript1 = wxT("");
 this->Keys_Set.vbscript2 = wxT("");
 this->Keys_Set.vbscript3 = wxT("");
+#endif //XSTC_NO_VBSCRIPT
+#ifndef XSTC_NO_VERILOG
 this->Keys_Set.verilog = wxT("");
 this->Keys_Set.verilog1 = wxT("");
 this->Keys_Set.verilog2 = wxT("");
 this->Keys_Set.verilog3 = wxT("");
+#endif //XSTC_NO_VERILOG
+#ifndef XSTC_NO_VHDL
 this->Keys_Set.vhdl = wxT("");
 this->Keys_Set.vhdl1 = wxT("");
 this->Keys_Set.vhdl2 = wxT("");
@@ -249,17 +478,39 @@ this->Keys_Set.vhdl3 = wxT("");
 this->Keys_Set.vhdl4 = wxT("");
 this->Keys_Set.vhdl5 = wxT("");
 this->Keys_Set.vhdl6 = wxT("");
+#endif //XSTC_NO_VHDL
+#ifndef XSTC_NO_YAML
+this->Keys_Set.yaml = wxT("");
+#endif //XSTC_NO_YAML
 }
 
 void XSTC::InitKeys()
 {
+#ifndef XSTC_NO_KEYS_DEFINED
+#ifndef XSTC_NO_ABAQUS
+this->Keys_Set.abaqus =  wxT("");
+
+this->Keys_Set.abaqus1 =  wxT("");
+
+this->Keys_Set.abaqus2 =  wxT("");
+
+this->Keys_Set.abaqus3 =  wxT("");
+
+this->Keys_Set.abaqus4 =  wxT("");
+
+this->Keys_Set.abaqus5 =  wxT("");
+#endif //XSTC_NO_ABAQUS
+
+#ifndef XSTC_NO_ADA
 this->Keys_Set.ada =  wxT("abort abstract accept access aliased all array at begin body "
                       "case constant declare delay delta digits do else elsif end entry exception exit for "
                       "function generic goto if in is limited loop new null of others out package pragma "
                       "private procedure protected raise range record renames requeue return reverse "
                       "select separate subtype tagged task terminate then type until use when while with "
                       "abs and mod not or rem xor ");
+#endif //XSTC_NO_ADA
 
+#ifndef XSTC_NO_APDL
 this->Keys_Set.apdl =  wxT("");
 
 this->Keys_Set.apdl1 =  wxT("");
@@ -271,7 +522,9 @@ this->Keys_Set.apdl3 =  wxT("");
 this->Keys_Set.apdl4 =  wxT("");
 
 this->Keys_Set.apdl5 =  wxT("");
+#endif //XSTC_NO_APDL
 
+#ifndef XSTC_NO_ASM
 this->Keys_Set.asm_0 =  wxT("aaa aad aam aas adc add and call cbw "
                         "clc cld cli cmc cmp cmps cmpsb cmpsw cwd daa das dec div esc hlt "
                         "idiv imul in inc int into iret ja jae jb jbe jc jcxz je jg jge jl "
@@ -395,7 +648,9 @@ this->Keys_Set.asm_5 =  wxT("addpd addps addsd addss andpd andps andnpd andnps "
 	                     "rsqrtps rsqrtss sfence shufpd shufps sqrtpd sqrtps sqrtsd sqrtss "
 	                     "stmxcsr subpd subps subsd subss ucomisd ucomiss "
 	                     "unpckhpd unpckhps unpcklpd unpcklps xorpd xorps ");
+#endif //XSTC_NO_ASM
 
+#ifndef XSTC_NO_ASN1
 this->Keys_Set.asn1_0 =  wxT("ACCESS AGENT AUGMENTS BEGIN BITS "
                          "CAPABILITIES CHOICE COMPLIANCE CONTACT CONVENTION "
                          "DEFINITIONS DEFVAL DESCRIPTION DISPLAY "
@@ -424,7 +679,15 @@ this->Keys_Set.asn1_3 =  wxT("Counter Counter32 Counter64 DisplayString "
                          "IpAddress NetworkAddress NsapAddress "
                          "OBJECT OCTET Opaque PhysAddress STRING "
                          "TimeTicks UInteger32 UNITS Unsigned32 ");
+#endif //XSTC_NO_ASN1
 
+#ifndef XSTC_NO_ASYMPTOTE
+this->Keys_Set.asymptote =  wxT("");
+
+this->Keys_Set.asymptote1 =  wxT("");
+#endif //XSTC_NO_ASYMPTOTE
+
+#ifndef XSTC_NO_AU3
 this->Keys_Set.au3_0 =  wxT("");
 
 this->Keys_Set.au3_1 =  wxT("and byref case continueloop dim do else elseif endfunc endif endselect exit exitloop for func "
@@ -482,7 +745,9 @@ this->Keys_Set.au3_5 =  wxT("{!} {#} {^} {{} {}} {+} {alt} {altdown} {altup} {ap
 this->Keys_Set.au3_6 =  wxT("#include #include-once ");
 
 this->Keys_Set.au3_7 =  wxT("#region #endregion ");
+#endif //XSTC_NO_AU3
 
+#ifndef XSTC_NO_AVE
 this->Keys_Set.ave =  wxT("nil true false else for if while then elseif end av self in exit ");
 
 this->Keys_Set.ave1 =  wxT("nil true false else for if while then elseif end av self in exit ");
@@ -498,51 +763,29 @@ this->Keys_Set.ave4 =  wxT("a b c d e f g h i j k l m n o p q r s t u v w x y z 
                        "0 1 2 3 4 5 6 7 8 9 _# ");
 
 this->Keys_Set.ave5 =  wxT("");
+#endif //XSTC_NO_AVE
 
+#ifndef XSTC_NO_BAAN
 this->Keys_Set.baan =  wxT("");
 
 this->Keys_Set.baan1 =  wxT("");
+#endif //XSTC_NO_BAAN
 
+#ifndef XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
 this->Keys_Set.basic =  wxT("");
 
-this->Keys_Set.basic1po =  wxT("");
+this->Keys_Set.basic2 =  wxT("");
 
-this->Keys_Set.basic1pu =  wxT("and break case continue data "
-                           "datasection declare declarecdll declaredll default deftype dim else "
-                           "elseif end enddatasection endenumeration endif endinterface endprocedure "
-                           "endselect endstructure endstructureunion enumeration extends fakereturn "
-                           "for foreach forever global gosub goto if includebinary includefile "
-                           "includepath interface newlist next or procedure procedurecdll "
-                           "proceduredll procedurereturn protected read repeat restore return select "
-                           "shared static step structure structureunion to until wend while xincludefile ");
+this->Keys_Set.basic3 =  wxT("");
+#endif //XSTC_NO_PUREBASIC
+#endif //XSTC_NO_POWERBASIC
+#endif //XSTC_NO_FREEBASIC
+#endif //XSTC_NO_BLITZBASIC
 
-this->Keys_Set.basic1fr =  wxT("append as asc asin asm atan2 atn beep bin binary bit bitreset bitset bload "
-                           "bsave byref byte byval call callocate case cbyte cdbl cdecl chain chdir chr "
-                           "cint circle clear clng clngint close cls color command common cons const "
-                           "continue cos cshort csign csng csrlin cubyte cuint culngint cunsg curdir "
-                           "cushort custom cvd cvi cvl cvlongint cvs cvshort data date deallocate declare "
-                           "defbyte defdbl defined defint deflng deflngint defshort defsng defstr defubyte "
-                           "defuint defulngint defushort dim dir do double draw dylibload dylibsymbol else "
-                           "elseif end enum environ environ$ eof eqv erase err error exec exepath exit exp "
-                           "export extern field fix flip for fre freefile function get getjoystick getkey "
-                           "getmouse gosub goto hex hibyte hiword if iif imagecreate imagedestroy imp "
-                           "inkey inp input instr int integer is kill lbound lcase left len let lib line "
-                           "lobyte loc local locate lock lof log long longint loop loword lset ltrim "
-                           "mid mkd mkdir mki mkl mklongint mks mkshort mod multikey mutexcreate "
-                           "mutexdestroy mutexlock mutexunlock name next not oct on once open option or out "
-                           "output overload paint palette pascal pcopy peek peeki peeks pipe pmap point "
-                           "pointer poke pokei pokes pos preserve preset print private procptr pset ptr "
-                           "public put random randomize read reallocate redim rem reset restore resume "
-                           "resume next return rgb rgba right rmdir rnd rset rtrim run sadd screen "
-                           "screencopy screeninfo screenlock screenptr screenres screenset screensync "
-                           "screenunlock seek statement seek function selectcase setdate setenviron "
-                           "setmouse settime sgn shared shell shl short shr sin single sizeof sleep space "
-                           "spc sqr static stdcall step stop str string string strptr sub swap system tab "
-                           "tan then threadcreate threadwait time time timer to trans trim type ubound "
-                           "ubyte ucase uinteger ulongint union unlock unsigned until ushort using va_arg "
-                           "va_first va_next val val64 valint varptr view viewprint wait wend while width "
-                           "window windowtitle with write xor zstring ");
-
+#ifndef XSTC_NO_BLITZBASIC
 this->Keys_Set.basic1bl =  wxT("abs accepttcpstream acos after and apptitle asc asin atan atan2 "
                            "automidhandle autosuspend availvidmem backbuffer banksize before bin calldll "
                            "case ceil changedir channelpan channelpitch channelplaying channelvolume chr "
@@ -587,20 +830,66 @@ this->Keys_Set.basic1bl =  wxT("abs accepttcpstream acos after and apptitle asc 
                            "udpstreamport udptimeouts unlockbuffer until updategamma upper viewport vwait "
                            "waitkey waitmouse waittimer wend while write writebyte writebytes writefile "
                            "writefloat writeint writeline writepixel writepixelfast writeshort writestring xor ");
+#endif //XSTC_NO_BLITZBASIC
 
-this->Keys_Set.basic2 =  wxT("");
+#ifndef XSTC_NO_FREEBASIC
+this->Keys_Set.basic1fr =  wxT("append as asc asin asm atan2 atn beep bin binary bit bitreset bitset bload "
+                           "bsave byref byte byval call callocate case cbyte cdbl cdecl chain chdir chr "
+                           "cint circle clear clng clngint close cls color command common cons const "
+                           "continue cos cshort csign csng csrlin cubyte cuint culngint cunsg curdir "
+                           "cushort custom cvd cvi cvl cvlongint cvs cvshort data date deallocate declare "
+                           "defbyte defdbl defined defint deflng deflngint defshort defsng defstr defubyte "
+                           "defuint defulngint defushort dim dir do double draw dylibload dylibsymbol else "
+                           "elseif end enum environ environ$ eof eqv erase err error exec exepath exit exp "
+                           "export extern field fix flip for fre freefile function get getjoystick getkey "
+                           "getmouse gosub goto hex hibyte hiword if iif imagecreate imagedestroy imp "
+                           "inkey inp input instr int integer is kill lbound lcase left len let lib line "
+                           "lobyte loc local locate lock lof log long longint loop loword lset ltrim "
+                           "mid mkd mkdir mki mkl mklongint mks mkshort mod multikey mutexcreate "
+                           "mutexdestroy mutexlock mutexunlock name next not oct on once open option or out "
+                           "output overload paint palette pascal pcopy peek peeki peeks pipe pmap point "
+                           "pointer poke pokei pokes pos preserve preset print private procptr pset ptr "
+                           "public put random randomize read reallocate redim rem reset restore resume "
+                           "resume next return rgb rgba right rmdir rnd rset rtrim run sadd screen "
+                           "screencopy screeninfo screenlock screenptr screenres screenset screensync "
+                           "screenunlock seek statement seek function selectcase setdate setenviron "
+                           "setmouse settime sgn shared shell shl short shr sin single sizeof sleep space "
+                           "spc sqr static stdcall step stop str string string strptr sub swap system tab "
+                           "tan then threadcreate threadwait time time timer to trans trim type ubound "
+                           "ubyte ucase uinteger ulongint union unlock unsigned until ushort using va_arg "
+                           "va_first va_next val val64 valint varptr view viewprint wait wend while width "
+                           "window windowtitle with write xor zstring ");
+#endif //XSTC_NO_FREEBASIC
 
-this->Keys_Set.basic3 =  wxT("");
+#ifndef XSTC_NO_POWERBASIC
+this->Keys_Set.basic1po =  wxT("");
+#endif //XSTC_NO_POWERBASIC
 
+#ifndef XSTC_NO_PUREBASIC
+this->Keys_Set.basic1pu =  wxT("and break case continue data "
+                           "datasection declare declarecdll declaredll default deftype dim else "
+                           "elseif end enddatasection endenumeration endif endinterface endprocedure "
+                           "endselect endstructure endstructureunion enumeration extends fakereturn "
+                           "for foreach forever global gosub goto if includebinary includefile "
+                           "includepath interface newlist next or procedure procedurecdll "
+                           "proceduredll procedurereturn protected read repeat restore return select "
+                           "shared static step structure structureunion to until wend while xincludefile ");
+#endif //XSTC_NO_PUREBASIC
+
+#ifndef XSTC_NO_BASH
 this->Keys_Set.bash =  wxT("");
+#endif //XSTC_NO_BASH
 
+#ifndef XSTC_NO_BATCH
 this->Keys_Set.batch =  wxT("rem set if exist errorlevel for in do "
                         "break call chcp cd chdir choice cls country ctty date del erase dir echo "
                         "exit goto loadfix loadhigh mkdir md move path pause prompt rename ren "
                         "rmdir rd shift time type ver verify vol "
                         "com con lpt nul "
                         "color copy defined else not start ");
+#endif //XSTC_NO_BATCH
 
+#ifndef XSTC_NO_BULLANT
 this->Keys_Set.bullant = wxT("abstract all ancestor and application "
                          "assert attributes author begin "
                          "callback class concrete config constants construct continue "
@@ -616,7 +905,9 @@ this->Keys_Set.bullant = wxT("abstract all ancestor and application "
                          "boolean character character$ date date$ datetime datetime$ "
                          "float hex$ identifier identifier$ integer interval interval$ "
                          "money money$ raw raw$ string tick tick$ time time$ version version$ ");
+#endif //XSTC_NO_BULLANT
 
+#ifndef XSTC_NO_CAML
 this->Keys_Set.caml =  wxT("and as assert asr begin class constraint do done downto else end "
                        "exception external false for fun function functor if in include "
                        "inherit initializer land lazy let lor lsl lsr lxor match method "
@@ -626,7 +917,37 @@ this->Keys_Set.caml =  wxT("and as assert asr begin class constraint do done dow
 this->Keys_Set.caml1 =  wxT("option Some None ignore ref lnot succ pred ");
 
 this->Keys_Set.caml2 =  wxT("array bool char float int list string unit ");
+#endif //XSTC_NO_CAML
 
+#ifndef XSTC_NO_CLW
+this->Keys_Set.clw =  wxT("");
+
+this->Keys_Set.clw1 =  wxT("");
+
+this->Keys_Set.clw2 =  wxT("");
+
+this->Keys_Set.clw3 =  wxT("");
+
+this->Keys_Set.clw4 =  wxT("");
+
+this->Keys_Set.clw5 =  wxT("");
+
+this->Keys_Set.clw6 =  wxT("");
+
+this->Keys_Set.clw7 =  wxT("");
+
+this->Keys_Set.clw8 =  wxT("");
+#endif //XSTC_NO_CLW
+
+#ifndef XSTC_NO_CMAKE
+this->Keys_Set.cmake =  wxT("");
+
+this->Keys_Set.cmake1 =  wxT("");
+
+this->Keys_Set.cmake2 =  wxT("");
+#endif //XSTC_NO_CMAKE
+
+#ifndef XSTC_NO_CONF
 this->Keys_Set.conf =  wxT("acceptmutex acceptpathinfo accessconfig accessfilename "
                        "action addalt addaltbyencoding addaltbytype addcharset "
                        "adddefaultcharset adddescription addencoding "
@@ -744,11 +1065,13 @@ this->Keys_Set.conf =  wxT("acceptmutex acceptpathinfo accessconfig accessfilena
                        "virtualscriptalias virtualscriptaliasip "
                        "win32disableacceptex xbithack ");
 
-this->Keys_Set.conf =  wxT("on off standalone inetd "
+this->Keys_Set.conf1 =  wxT("on off standalone inetd "
                        "force-response-1 downgrade-1 nokeepalive "
                        "indexes includes followsymlinks none "
                        "x-compress x-gzip ");
+#endif //XSTC_NO_CONF
 
+#ifndef XSTC_NO_CPP
 this->Keys_Set.cpp =  wxT("and and_eq asm auto bitand bitor bool break case catch "
                       "char class compl const const_cast continue default "
                       "delete do double dynamic_cast else enum explicit export "
@@ -783,6 +1106,10 @@ this->Keys_Set.cpp2 = wxT("a addindex addtogroup anchor arg attention author b b
                       "skipline struct subsection test throw todo typedef union until "
                       "var verbatim verbinclude version warning weakgroup $ @ \\ & < > # { } ");
 
+this->Keys_Set.cpp3 = wxT("");
+#endif //XSTC_NO_CPP
+
+#ifndef XSTC_NO_CSOUND
 this->Keys_Set.csound = wxT("");
 
 this->Keys_Set.csound1 = wxT("sr kr ar ksmps nchnls ");
@@ -873,7 +1200,9 @@ this->Keys_Set.csound2 = wxT("a i db in or zr Add Dec Div Inc Mul Sub abs and co
                          "midinoteonpch midipitchbend schedwhenname FLsetTextColor "
                          "schedkwhenname midicontrolchange midiprogramchan "
                          "midipolyaftertouch midichannelaftertouch ");
+#endif //XSTC_NO_CSOUND
 
+#ifndef XSTC_NO_CSS
 this->Keys_Set.css =  wxT("border-top-color border-right-color border-bottom-color border-left-color border-color "
                       "border-top-style border-right-style border-bottom-style border-left-style border-style "
                       "top right bottom left position z-index direction unicode-bidi "
@@ -906,9 +1235,19 @@ this->Keys_Set.css2 =  wxT("border-top-color border-right-color border-bottom-co
                        "volume speak pause-before pause-after pause cue-before cue-after cue "
                        "play-during azimuth elevation speech-rate voice-family pitch pitch-range stress richness "
                        "speak-punctuation speak-numeral ");
+#endif //XSTC_NO_CSS
 
-this->Keys_Set.diff = wxT("");
+#ifndef XSTC_NO_D
+this->Keys_Set.d = wxT("");
 
+this->Keys_Set.d1 = wxT("");
+
+this->Keys_Set.d2 = wxT("");
+
+this->Keys_Set.d3 = wxT("");
+#endif //XSTC_NO_D
+
+#ifndef XSTC_NO_EIFFEL
 this->Keys_Set.eiffel = wxT("alias all and any as bit boolean "
                         "check class character clone create creation current "
                         "debug deferred div do double "
@@ -920,7 +1259,9 @@ this->Keys_Set.eiffel = wxT("alias all and any as bit boolean "
                         "real redefine rename require rescue result retry "
                         "select separate string strip then true undefine unique until "
                         "variant void when xor ");
+#endif //XSTC_NO_EIFFEL
 
+#ifndef XSTC_NO_EIFFELKW
 this->Keys_Set.eiffelkw = wxT("alias all and any as bit boolean "
                           "check class character clone create creation current "
                           "debug deferred div do double "
@@ -932,13 +1273,15 @@ this->Keys_Set.eiffelkw = wxT("alias all and any as bit boolean "
                           "real redefine rename require rescue result retry "
                           "select separate string strip then true undefine unique until "
                           "variant void when xor ");
+#endif //XSTC_NO_EIFFELKW
 
+#ifndef XSTC_NO_ERLANG
 this->Keys_Set.erlang = wxT("after begin case catch cond end fun if let of query receive when "
                         "define record export import include include_lib ifdef ifndef else endif undef "
                         "apply attribute call do in letrec module primop try ");
+#endif //XSTC_NO_ERLANG
 
-this->Keys_Set.errorlist = wxT("");
-
+#ifndef XSTC_NO_ESCRIPT
 this->Keys_Set.escript = wxT("basic basicio boats cfgfile file http npc os uo util accessible addmenuitem appendconfigfileelem "
                          "applyconstraint applydamage applyrawdamage assignrecttoweatherregion append baseskilltorawskill boatfromitem "
                          "broadcast ban cdbl cint cstr checklineofsight checklosat checkskill consumemana consumereagents "
@@ -981,7 +1324,17 @@ this->Keys_Set.escript1 = wxT("array const dictionary global local var and defau
 
 this->Keys_Set.escript2 = wxT("while for endfor function program endprogram endfunction foreach "
                           "case else elseif if endcase endenum endforeach endif endwhile ");
+#endif //XSTC_NO_ESCRIPT
 
+#ifndef XSTC_NO_F77
+this->Keys_Set.f77_0 = wxT("");
+
+this->Keys_Set.f77_1 = wxT("");
+
+this->Keys_Set.f77_2 = wxT("");
+#endif //XSTC_NO_F77
+
+#ifndef XSTC_NO_FLAGSHIP
 this->Keys_Set.flagship = wxT("? @ accept access all alternate announce ansi any append as assign autolock average "
                           "begin bell bitmap blank box call cancel case century charset checkbox clear close cls color combobox commit "
                           "confirm console constant continue copy count create cursor "
@@ -1037,8 +1390,9 @@ this->Keys_Set.flagship1 = wxT("_displarr _displarrerr _displarrstd _displobj _d
 this->Keys_Set.flagship2 = wxT("function procedure return exit ");
 
 this->Keys_Set.flagship3 = wxT("class instance export hidden protect prototype ");
+#endif //XSTC_NO_FLAGSHIP
 
-
+#ifndef XSTC_NO_FORTH
 this->Keys_Set.forth = wxT("AGAIN BEGIN CASE DO ELSE ENDCASE ENDOF IF LOOP OF REPEAT THEN UNTIL  WHILE "
                        "[IF] [ELSE] [THEN] ?DO ");
 
@@ -1074,7 +1428,9 @@ this->Keys_Set.forth3 = wxT("CHAR [CHAR] POSTPONE WITH [\'] TO [COMPILE] CHAR AS
 this->Keys_Set.forth4 = wxT("REQUIRE WINAPI: ");
 
 this->Keys_Set.forth5 = wxT("S\" ABORT\" Z\" \" \" C\" ");
+#endif //XSTC_NO_FORTH
 
+#ifndef XSTC_NO_FORTRAN
 this->Keys_Set.fortran = wxT("access action advance allocatable allocate "
                          "apostrophe assign assignment associate asynchronous backspace "
                          "bind blank blockdata call case character class close common "
@@ -1130,13 +1486,19 @@ this->Keys_Set.fortran2 = wxT("cdabs cdcos cdexp cdlog cdsin cdsqrt cotan cotand
                           "qcosh qdim qexp qext qextd qfloat qimag qlog qlog10 qmax1 qmin1 qmod qreal qsign qsin "
                           "qsind qsinh qsqrt qtan qtand qtanh ran rand randu rewrite segment setdat settim system "
                           "timer undfl unlock union val virtual volatile zabs zcos zexp zlog zsin zsqrt ");
+#endif //XSTC_NO_FORTRAN
 
-this->Keys_Set.f77_0 = wxT("");
+#ifndef XSTC_NO_GAP
+this->Keys_Set.gap = wxT("");
 
-this->Keys_Set.f77_1 = wxT("");
+this->Keys_Set.gap = wxT("");
 
-this->Keys_Set.f77_2 = wxT("");
+this->Keys_Set.gap = wxT("");
 
+this->Keys_Set.gap = wxT("");
+#endif //XSTC_NO_GAP
+
+#ifndef XSTC_NO_GUI4CLI
 this->Keys_Set.gui4cli = wxT("");
 
 this->Keys_Set.gui4cli1 = wxT("");
@@ -1146,9 +1508,13 @@ this->Keys_Set.gui4cli2 = wxT("");
 this->Keys_Set.gui4cli3 = wxT("");
 
 this->Keys_Set.gui4cli4 = wxT("");
+#endif //XSTC_NO_GUI4CLI
 
+#ifndef XSTC_NO_HASKELL
 this->Keys_Set.haskell = wxT("");
+#endif //XSTC_NO_HASKELL
 
+#ifndef XSTC_NO_HTM
 this->Keys_Set.html = wxT("active command contenteditable ping "
                       "article aside calendar canvas card command commandset datagrid datatree "
                       "footer gauge header m menubar menulabel nav progress section switch tabbox "
@@ -1261,9 +1627,9 @@ this->Keys_Set.html5 = wxT("and array as bool boolean break case cfunction class
 this->Keys_Set.html6 = wxT("ELEMENT DOCTYPE ATTLIST ENTITY NOTATION");
 
 this->Keys_Set.html7 = wxT("");
+#endif //XSTC_NO_HTM
 
-
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_INNOSETUP
 this->Keys_Set.inno = wxT("code components custommessages dirs files icons ini installdelete langoptions "
                       "languages messages registry run setup types tasks uninstalldelete uninstallrun _istool");
 
@@ -1312,8 +1678,9 @@ this->Keys_Set.inno4 = wxT("begin break case const continue do downto else end e
                        "if of procedure repeat then to try until uses var while with ");
 
 this->Keys_Set.inno5 = wxT("");
-#endif
+#endif //XSTC_NO_INNOSETUP
 
+#ifndef XSTC_NO_JS
 this->Keys_Set.js =   wxT("abstract array boolean break byte case catch call char class "
                       "const continue debugger default delete do double else enum export extends "
                       "final finally float for function goto if implements import infinity in instanceof "
@@ -1335,10 +1702,14 @@ this->Keys_Set.js1 =  wxT("onAbort onBlur onChange onClick onDblClick onDragDrop
                       "moveAbove moveBelow moveBy moveTo moveToAbsolute resizeBy resizeTo write "
                       "writeln valueOf unescape unshift untaint unwatch ");
 
+this->Keys_Set.js2 = wxT("");
+#endif //XSTC_NO_JS
+
+#ifndef XSTC_NO_JAVA
 this->Keys_Set.java = wxT("instanceof assert if else switch case default break goto return for while do "
                       "continue new throw throws try catch finally this super extends implements import "
                       "true false null ");
-                      
+
 this->Keys_Set.java1 = wxT("package transient strictfp void char short int long double float const static "
                        "volatile byte boolean class interface native private protected public final "
                        "abstract synchronized enum ");
@@ -1346,7 +1717,9 @@ this->Keys_Set.java1 = wxT("package transient strictfp void char short int long 
 this->Keys_Set.java2 = wxT("");
 
 this->Keys_Set.java3 = wxT("");
+#endif //XSTC_NO_JAVA
 
+#ifndef XSTC_NO_KIX
 this->Keys_Set.kix = wxT("? and beep big break call cd cls color cookie1 copy "
 	                 "debug del dim display do until exit flushkb for each next function endfunction "
 	                 "get gets global go gosub goto if else endif md or password play quit "
@@ -1375,9 +1748,9 @@ this->Keys_Set.kix2 = wxT("address build color comment cpu crlf csd curdir "
 	                  "month msecs pid primarygroup priv productsuite producttype pwage ras "
 	                  "result rserver scriptdir scriptexe scriptname serror sid site startdir "
 	                  "syslang ticks time userid userlang wdayno wksta wuserid ydayno year ");
+#endif //XSTC_NO_KIX
 
-this->Keys_Set.latex = wxT("");
-
+#ifndef XSTC_NO_LISP
 this->Keys_Set.lisp = wxT("not defun + - * / = < > <= >= princ "
 	                  "eval apply funcall quote identity function complement backquote lambda set setq setf "
 	                  "defun defmacro gensym make symbol intern symbol name symbol value symbol plist get "
@@ -1431,7 +1804,9 @@ this->Keys_Set.lisp1 = wxT("+ - * / = < > <= >= => "
                        "values vector vector->list vector-fill! vector-length vector-ref vector-set! vector? "
                        "with-input-from-file with-output-to-file write write-char "
                        "zero?");
+#endif //XSTC_NO_LISP
 
+#ifndef XSTC_NO_LOUT
 this->Keys_Set.lout = wxT("@OptGall @Filter @FilterIn @FilterOut "
                       "@FilterErr @FontDef @Family @Face @Name @Metrics @ExtraMetrics "
                       "@Mapping @Recode @Common @Rump @Meld @Insert @OneOf @Next @Plus "
@@ -1457,7 +1832,9 @@ this->Keys_Set.lout1 = wxT("&&& && & ^// ^/ ^|| ^| ^& // / || | ");
 this->Keys_Set.lout2 = wxT("def langdef force horizontally into "
                        "extend import export precedence associativity left right body macro "
                        "named compulsory following preceding foll_or_prec now ");
+#endif //XSTC_NO_LOUT
 
+#ifndef XSTC_NO_LUA
 this->Keys_Set.lua = wxT("and break do else elseif end false for function if "
                      "in local nil not or repeat return then true until while ");
 
@@ -1500,15 +1877,29 @@ this->Keys_Set.lua5 = wxT("");
 this->Keys_Set.lua6 = wxT("");
 
 this->Keys_Set.lua7 = wxT("");
+#endif //XSTC_NO_LUA
 
-this->Keys_Set.makefile = wxT("");
+#ifndef XSTC_NO_MAGIK
+this->Keys_Set.magik = wxT("");
 
+this->Keys_Set.magik1 = wxT("");
+
+this->Keys_Set.magik2 = wxT("");
+
+this->Keys_Set.magik3 = wxT("");
+
+this->Keys_Set.magik4 = wxT("");
+#endif //XSTC_NO_MAGIK
+
+#ifndef XSTC_NO_MATLAB
 this->Keys_Set.matlab = wxT("break case catch continue do "
                         "else elseif end end_unwind_protect endfor "
                         "endif endswitch endwhile for function endfunction global if "
                         "otherwise persistent return switch try until "
                         "unwind_protect unwind_protect_cleanup while ");
+#endif //XSTC_NO_MATLAB
 
+#ifndef XSTC_NO_METAPOST
 this->Keys_Set.metapost = wxT("ahangle ahlength bboxmargin defaultpen defaultscale "
                           "labeloffset background currentpen currentpicture cuttings "
                           "defaultfont extra_beginfig extra_endfig "
@@ -1572,8 +1963,10 @@ this->Keys_Set.metapost = wxT("ahangle ahlength bboxmargin defaultpen defaultsca
                           "extra_beginfig extra_endfig mpxbreak "
                           "end btex verbatimtex etex ");
 
-this->Keys_Set.metapost = wxT("");
+this->Keys_Set.metapost1 = wxT("");
+#endif //XSTC_NO_METAPOST
 
+#ifndef XSTC_NO_MMIXAL
 this->Keys_Set.mmixal = wxT("2ADDU 4ADDU 8ADDU 16ADDU ADD ADDU AND ANDNH ANDNL ANDNMH ANDNML "
 	                     "BDIF BEV BN BNN BNP BNZ BOD BP BSPEC BYTE BZ CMP CMPU CSEV CSN CSNN CSNP CSNZ CSOD CSP CSWAP CSZ "
                       	"DIV DIVU ESPEC EXPR FADD FCMP FCMPE FDIV FEQL FEQLE FIX FIXU FLOT FLOTU FMUL FREM FSQRT FSUB FUN FUNE "
@@ -1590,43 +1983,9 @@ this->Keys_Set.mmixal2 = wxT("@ Text_Segment Data_Segment Pool_Segment Stack_Seg
 	                      "StdErr StdIn StdOut "
 	                      "Fopen Fclose Fread Fwrite Fgets Fputs Fgetws Fputws Ftell Fseek "
 	                      "TextRead TextWrite BinaryRead BinaryWrite BinaryReadWrite ");
+#endif //XSTC_NO_MMIXAL
 
-this->Keys_Set.nsis = wxT("!addincludedir !addplugindir MakeNSIS Portions "
-                      "Contributors: Abort AddBrandingImage AddSize AutoCloseWindow BGFont "
-                      "BGGradient BrandingText BringToFront Call CallInstDLL Caption ChangeUI "
-                      "ClearErrors ComponentText GetDLLVersion GetDLLVersionLocal GetFileTime "
-                      "GetFileTimeLocal CopyFiles CRCCheck CreateDirectory CreateFont CreateShortCut "
-                      "SetDatablockOptimize DeleteINISec DeleteINIStr DeleteRegKey DeleteRegValue "
-                      "Delete DetailPrint DirText DirShow DirVar DirVerify GetInstDirError AllowRootDirInstall "
-                      "CheckBitmap EnableWindow EnumRegKey EnumRegValue Exch Exec ExecWait "
-                      "ExecShell ExpandEnvStrings FindWindow FindClose FindFirst FindNext File FileBufSize "
-                      "FlushINI ReserveFile FileClose FileErrorText FileOpen FileRead FileWrite FileReadByte "
-                      "FileWriteByte FileSeek Function FunctionEnd GetDlgItem GetFullPathName "
-                      "GetTempFileName HideWindow Icon IfAbort IfErrors IfFileExists IfRebootFlag IfSilent "
-                      "InstallDirRegKey InstallColors InstallDir InstProgressFlags InstType IntOp IntCmp "
-                      "IntCmpU IntFmt IsWindow Goto LangString LangStringUP LicenseData "
-                      "LicenseForceSelection LicenseLangString LicenseText LicenseBkColor "
-                      "LoadLanguageFile LogSet LogText MessageBox Nop Name OutFile Page "
-                      "PageCallbacks PageEx PageExEnd Pop Push Quit ReadINIStr ReadRegDWORD "
-                      "ReadRegStr ReadEnvStr Reboot RegDLL Rename Return RMDir Section SectionEnd "
-                      "SectionIn SubSection SectionGroup SubSectionEnd SectionGroupEnd SearchPath "
-                      "SectionSetFlags SectionGetFlags SectionSetInstTypes SectionGetInstTypes "
-                      "SectionGetText SectionSetText SectionGetSize SectionSetSize GetCurInstType "
-                      "SetCurInstType InstTypeSetText InstTypeGetText SendMessage SetAutoClose "
-                      "SetCtlColors SetBrandingImage SetCompress SetCompressor SetCompressorDictSize "
-                      "SetCompressionLevel SetDateSave SetDetailsView SetDetailsPrint SetErrors "
-                      "SetErrorLevel GetErrorLevel SetFileAttributes SetFont SetOutPath SetOverwrite "
-                      "SetPluginUnload SetRebootFlag SetShellVarContext SetSilent ShowInstDetails "
-                      "ShowUninstDetails ShowWindow SilentInstall SilentUnInstall Sleep StrCmp StrCpy "
-                      "StrLen SubCaption UninstallExeName UninstallCaption UninstallIcon UninstPage "
-                      "UninstallText UninstallSubCaption UnRegDLL WindowIcon WriteINIStr WriteRegBin "
-                      "WriteRegDWORD WriteRegStr WriteRegExpandStr WriteUninstaller XPStyle !packhdr "
-                      "!system !execute !AddIncludeDir !include !cd !ifdef !ifndef !endif !define !undef !else !echo !warning "
-                      "!error !verbose !macro !macroend !insertmacro !ifmacrodef !ifmacrondef MiscButtonText "
-                      "DetailsButtonText UninstallButtonText InstallButtonText SpaceTexts "
-                      "CompletedText GetFunctionAddress GetLabelAddress GetCurrentAddress "
-                      "!AddPluginDir InitPluginsDir AllowSkipFiles Var VIAddVersionKey VIProductVersion LockWindow");
-
+#ifndef XSTC_NO_NNCRONTAB
 this->Keys_Set.nncrontab = wxT("AGAIN ALLOT AND Action BEGIN CASE COMPARE CONSTANT CREATE DO Days ELSE "
                          "ENDCASE ENDOF EVAL-SUBST EVALUATE FALSE Hours I IF LEAVE LOOP Minutes "
                          "Months NOT OF OFF ON OR PAD REPEAT Rule SET THEN TRUE Time UNTIL VALUE "
@@ -1665,6 +2024,44 @@ this->Keys_Set.nncrontab2 = wxT("ALL AboveNormalPriority AsService BelowNormalPr
                           "ShowNormal StartIn StartPos StartSize TODEPTH WATCH-CHANGE-ATTRIBUTES "
                           "WATCH-CHANGE-DIR-NAME WATCH-CHANGE-FILE-NAME WATCH-CHANGE-LAST-WRITE "
                           "WATCH-CHANGE-SECURITY WATCH-CHANGE-SIZE WaitFor WatchSubtree WithoutProfile ");
+#endif //XSTC_NO_NNCRONTAB
+
+#ifndef XSTC_NO_NSIS
+this->Keys_Set.nsis = wxT("!addincludedir !addplugindir MakeNSIS Portions "
+                      "Contributors: Abort AddBrandingImage AddSize AutoCloseWindow BGFont "
+                      "BGGradient BrandingText BringToFront Call CallInstDLL Caption ChangeUI "
+                      "ClearErrors ComponentText GetDLLVersion GetDLLVersionLocal GetFileTime "
+                      "GetFileTimeLocal CopyFiles CRCCheck CreateDirectory CreateFont CreateShortCut "
+                      "SetDatablockOptimize DeleteINISec DeleteINIStr DeleteRegKey DeleteRegValue "
+                      "Delete DetailPrint DirText DirShow DirVar DirVerify GetInstDirError AllowRootDirInstall "
+                      "CheckBitmap EnableWindow EnumRegKey EnumRegValue Exch Exec ExecWait "
+                      "ExecShell ExpandEnvStrings FindWindow FindClose FindFirst FindNext File FileBufSize "
+                      "FlushINI ReserveFile FileClose FileErrorText FileOpen FileRead FileWrite FileReadByte "
+                      "FileWriteByte FileSeek Function FunctionEnd GetDlgItem GetFullPathName "
+                      "GetTempFileName HideWindow Icon IfAbort IfErrors IfFileExists IfRebootFlag IfSilent "
+                      "InstallDirRegKey InstallColors InstallDir InstProgressFlags InstType IntOp IntCmp "
+                      "IntCmpU IntFmt IsWindow Goto LangString LangStringUP LicenseData "
+                      "LicenseForceSelection LicenseLangString LicenseText LicenseBkColor "
+                      "LoadLanguageFile LogSet LogText MessageBox Nop Name OutFile Page "
+                      "PageCallbacks PageEx PageExEnd Pop Push Quit ReadINIStr ReadRegDWORD "
+                      "ReadRegStr ReadEnvStr Reboot RegDLL Rename Return RMDir Section SectionEnd "
+                      "SectionIn SubSection SectionGroup SubSectionEnd SectionGroupEnd SearchPath "
+                      "SectionSetFlags SectionGetFlags SectionSetInstTypes SectionGetInstTypes "
+                      "SectionGetText SectionSetText SectionGetSize SectionSetSize GetCurInstType "
+                      "SetCurInstType InstTypeSetText InstTypeGetText SendMessage SetAutoClose "
+                      "SetCtlColors SetBrandingImage SetCompress SetCompressor SetCompressorDictSize "
+                      "SetCompressionLevel SetDateSave SetDetailsView SetDetailsPrint SetErrors "
+                      "SetErrorLevel GetErrorLevel SetFileAttributes SetFont SetOutPath SetOverwrite "
+                      "SetPluginUnload SetRebootFlag SetShellVarContext SetSilent ShowInstDetails "
+                      "ShowUninstDetails ShowWindow SilentInstall SilentUnInstall Sleep StrCmp StrCpy "
+                      "StrLen SubCaption UninstallExeName UninstallCaption UninstallIcon UninstPage "
+                      "UninstallText UninstallSubCaption UnRegDLL WindowIcon WriteINIStr WriteRegBin "
+                      "WriteRegDWORD WriteRegStr WriteRegExpandStr WriteUninstaller XPStyle !packhdr "
+                      "!system !execute !AddIncludeDir !include !cd !ifdef !ifndef !endif !define !undef !else !echo !warning "
+                      "!error !verbose !macro !macroend !insertmacro !ifmacrodef !ifmacrondef MiscButtonText "
+                      "DetailsButtonText UninstallButtonText InstallButtonText SpaceTexts "
+                      "CompletedText GetFunctionAddress GetLabelAddress GetCurrentAddress "
+                      "!AddPluginDir InitPluginsDir AllowSkipFiles Var VIAddVersionKey VIProductVersion LockWindow");
 
 this->Keys_Set.nsis1 = wxT("$0 $1 $2 $3 $4 $5 $6 $7 $8 $9 "
                        "$R0 $R1 $R2 $R3 $R4 $R5 $R6 $R7 $R8 $R9 $\\t $\\\" $\\' $\\` "
@@ -1693,10 +2090,13 @@ this->Keys_Set.nsis2 = wxT("ARCHIVE FILE_ATTRIBUTE_ARCHIVE FILE_ATTRIBUTE_HIDDEN
                        "open print manual alwaysoff");
 
 this->Keys_Set.nsis3 = wxT("");
+#endif //XSTC_NO_NSIS
 
+#ifndef XSTC_NO_OCTAVE
 this->Keys_Set.octave = wxT("");
+#endif //XSTC_NO_OCTAVE
 
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_OPAL
 this->Keys_Set.opal = wxT("ALL AND ANDIF ANY AS ASSERT AXM COMPLETELY DATA DEF DERIVE "
                       "DFD DISCRIMINATORS ELSE EX EXTERNAL FI FIX FUN IF IMPLEMENTATION IMPLIES IMPORT "
                       "IN INHERIT INJECTIONS INTERFACE INTERNAL LAW LAZY LEFTASSOC LET MODULE NOT ONLY "
@@ -1721,8 +2121,9 @@ this->Keys_Set.opal1 = wxT("aEntry agent align anchor ans arg arg1 arg2 array "
                        "sreal state stateId stateRequest string subrel tag textEditor time to tree "
                        "triple union user userid version view void wconfig wconfigCom wday widget "
                        "window wrapStyle ");
-#endif
+#endif //XSTC_NO_OPAL
 
+#ifndef XSTC_NO_PASCAL
 this->Keys_Set.pas = wxT("and array asm begin case cdecl class const constructor default "
                      "destructor div do downto else end except exit exports external far file "
                      "finalization finally for function goto if implementation in index inherited "
@@ -1733,7 +2134,9 @@ this->Keys_Set.pas = wxT("and array asm begin case cdecl class const constructor
                      "until uses var virtual while with write xor");
 
 this->Keys_Set.pas1 = wxT("write read default public protected private property published stored");
+#endif //XSTC_NO_PASCAL
 
+#ifndef XSTC_NO_PERL
 this->Keys_Set.perl = wxT("NULL __FILE__ __LINE__ __PACKAGE__ __DATA__ __END__ AUTOLOAD "
                       "BEGIN CORE DESTROY END EQ GE GT INIT LE LT NE CHECK abs accept "
                       "alarm and atan2 bind binmode bless caller chdir chmod chomp chop "
@@ -1761,7 +2164,13 @@ this->Keys_Set.perl = wxT("NULL __FILE__ __LINE__ __PACKAGE__ __DATA__ __END__ A
                       "uc ucfirst umask undef unless unlink unpack unshift untie until "
                       "use utime values vec wait waitpid wantarray warn while write "
                       "xor");
+#endif //XSTC_NO_PERL
 
+#ifndef XSTC_NO_PLM
+this->Keys_Set.plm = wxT("");
+#endif //XSTC_NO_PLM
+
+#ifndef XSTC_NO_POV
 this->Keys_Set.pov = wxT("declare local include undef fopen fclose read write default version "
                      "case range break debug error warning "
                      "if ifdef ifndef switch while macro else end");
@@ -1839,9 +2248,25 @@ this->Keys_Set.pov5 = wxT("");
 this->Keys_Set.pov6 = wxT("");
 
 this->Keys_Set.pov7 = wxT("");
+#endif //XSTC_NO_POV
 
-this->Keys_Set.properties = wxT("");
+#ifndef XSTC_NO_POWERSHELL
+this->Keys_Set.powershell = wxT("");
 
+this->Keys_Set.powershell1 = wxT("");
+
+this->Keys_Set.powershell2 = wxT("");
+#endif //XSTC_NO_POWERSHELL
+
+#ifndef XSTC_NO_PROGRESS
+this->Keys_Set.progress = wxT("");
+
+this->Keys_Set.progress1 = wxT("");
+
+this->Keys_Set.progress2 = wxT("");
+#endif //XSTC_NO_PROGRESS
+
+#ifndef XSTC_NO_PS
 this->Keys_Set.ps = wxT("$error = == FontDirectory StandardEncoding UserObjects abs add aload "
                     "anchorsearch and arc arcn arcto array ashow astore atan awidthshow begin bind "
                     "bitshift bytesavailable cachestatus ceiling charpath clear cleardictstack "
@@ -1914,7 +2339,9 @@ this->Keys_Set.ps3 = wxT("begintransparencygroup begintransparencymask bytestrin
                      "putdeviceprops setdevice");
 
 this->Keys_Set.ps4 = wxT("");
+#endif //XSTC_NO_PS
 
+#ifndef XSTC_NO_PYTHON
 this->Keys_Set.python = wxT("and assert break class continue def del elif "
                         "else except exec finally for from global if import in is lambda None "
                         "not or pass print raise return try while yield");
@@ -1922,7 +2349,17 @@ this->Keys_Set.python = wxT("and assert break class continue def del elif "
 this->Keys_Set.python1 = wxT("and assert break class continue def del elif "
                          "else except exec finally for from global if import in is lambda None "
                          "not or pass print raise return try while yield");
+#endif //XSTC_NO_PYTHON
 
+#ifndef XSTC_NO_R
+this->Keys_Set.r = wxT("");
+
+this->Keys_Set.r1 = wxT("");
+
+this->Keys_Set.r2 = wxT("");
+#endif //XSTC_NO_R
+
+#ifndef XSTC_NO_REBOL
 this->Keys_Set.rebol = wxT("about abs absolute add "
                        "alert alias all alter and "
                        "any any-block? any-function? any-string? any-type? "
@@ -2010,12 +2447,16 @@ this->Keys_Set.rebol2 = wxT("action! any-block! any-function! any-string! any-ty
                         "lit-word! logic! money! native! none! number! object! op! pair! paren! path! "
                         "port! refinement! routine! series! set-path! set-word! string! struct! symbol! tag! "
                         "time! tuple! unset! url! word!");
+#endif //XSTC_NO_REBOL
 
+#ifndef XSTC_NO_RUBY
 this->Keys_Set.ruby = wxT("__FILE__ and def end in or self unless __LINE__ begin "
                       "defined? ensure module redo super until BEGIN break do false next rescue "
                       "then when END case else for nil retry true while alias class elsif if "
                       "not return undef yield");
+#endif //XSTC_NO_RUBY
 
+#ifndef XSTC_NO_SCRIPTOL
 this->Keys_Set.scriptol = wxT("act action alias always and array as "
                           "bool boolean break by byte "
                           "class case catch const constant continue "
@@ -2029,9 +2470,13 @@ this->Keys_Set.scriptol = wxT("act action alias always and array as "
                           "var text then this true try "
                           "void volatile while when "
                           "undef zero");
+#endif //XSTC_NO_SCRIPTOL
 
+#ifndef XSTC_NO_SMALLTALK
 this->Keys_Set.smalltalk = wxT("ifTrue: ifFalse: whileTrue: whileFalse: ifNil: ifNotNil: whileTrue whileFals" "repeat isNil notNil");
+#endif //XSTC_NO_SMALLTALK
 
+#ifndef XSTC_NO_SPECMAN
 this->Keys_Set.specman = wxT("struct unit "
                          "integer real bool int long uint nibble byte bits bytes bit time string "
                          "var instance event "
@@ -2102,8 +2547,9 @@ this->Keys_Set.specman2 = wxT("any_sequence_item sequence any_sequence_driver dr
                           "stop");
 
 this->Keys_Set.specman3 = wxT("");
+#endif //XSTC_NO_SPECMAN
 
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_SPICE
 this->Keys_Set.spice = wxT("ac  alias  alter  alterparam append askvalues assertvalid autoscale "
                        "break compose copy copytodoc dc  delete  destroy  destroyvec diff  display "
                        "disto  dowhile  echo  else  end  errorstop  fftinit filter foreach  fourier "
@@ -2129,8 +2575,45 @@ this->Keys_Set.spice1 = wxT("abs askvalue atan average ceil cos db differentiate
                         "tfall tolerance trise unitvec vector");
 
 this->Keys_Set.spice2 = wxT("param nodeset include options dcconv subckt ends model");
-#endif
+#endif //XSTC_NO_SPICE
 
+#ifndef XSTC_NO_MSSQL
+this->Keys_Set.mssql = wxT("");
+
+this->Keys_Set.mssql1 = wxT("");
+
+this->Keys_Set.mssql2 = wxT("");
+
+this->Keys_Set.mssql3 = wxT("");
+
+this->Keys_Set.mssql4 = wxT("");
+
+this->Keys_Set.mssql5 = wxT("");
+
+this->Keys_Set.mssql6 = wxT("");
+#endif //XSTC_NO_MSSQL
+
+#ifndef XSTC_NO_MYSQL
+this->Keys_Set.mysql = wxT("");
+
+this->Keys_Set.mysql1 = wxT("");
+
+this->Keys_Set.mysql2 = wxT("");
+
+this->Keys_Set.mysql3 = wxT("");
+
+this->Keys_Set.mysql4 = wxT("");
+
+this->Keys_Set.mysql5 = wxT("");
+
+this->Keys_Set.mysql6 = wxT("");
+
+this->Keys_Set.mysql7 = wxT("");
+
+this->Keys_Set.mysql8 = wxT("");
+#endif //XSTC_NO_MYSQL
+
+#ifndef XSTC_NO_SQL
 this->Keys_Set.sql = wxT("absolute action add admin after aggregate "
                      "alias all allocate alter and any are array as asc "
                      "assertion at authorization "
@@ -2234,7 +2717,9 @@ this->Keys_Set.sql5 = wxT("");
 this->Keys_Set.sql6 = wxT("");
 
 this->Keys_Set.sql7 = wxT("");
+#endif //XSTC_NO_SQL
 
+#ifndef XSTC_NO_TADS3
 this->Keys_Set.tads3_0 = wxT("");
 
 this->Keys_Set.tads3_1 = wxT("");
@@ -2242,8 +2727,9 @@ this->Keys_Set.tads3_1 = wxT("");
 this->Keys_Set.tads3_2 = wxT("");
 
 this->Keys_Set.tads3_3 = wxT("");
+#endif //XSTC_NO_TADS3
 
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_TCL
 this->Keys_Set.tcl = wxT("after append array auto_execok "
                      "auto_import auto_load auto_load_index auto_qualify "
                      "beep bgerror binary break case catch cd clock "
@@ -2328,10 +2814,13 @@ this->Keys_Set.tcl6 = wxT("");
 this->Keys_Set.tcl7 = wxT("");
 
 this->Keys_Set.tcl8 = wxT("");
-#endif
+#endif //XSTC_NO_TCL
 
+#ifndef XSTC_NO_TEX
 this->Keys_Set.tex = wxT("");
+#endif //XSTC_NO_TEX
 
+#ifndef XSTC_NO_VB
 this->Keys_Set.vb = wxT("addressof alias and as attribute base begin binary boolean byref byte byval call case compare "
                     "const currency date decimal declare defbool defbyte defint deflng defcur defsng defdbl defdec "
                     "defdate defstr defobj defvar dim do double each else elseif empty end enum eqv erase error "
@@ -2351,7 +2840,9 @@ this->Keys_Set.vb1 = wxT("appactivate beep chdir chdrive close filecopy get inpu
 this->Keys_Set.vb2 = wxT("");
 
 this->Keys_Set.vb3 = wxT("");
+#endif //XSTC_NO_VB
 
+#ifndef XSTC_NO_VBSCRIPT
 this->Keys_Set.vbscript = wxT("addressof alias and as attribute base begin binary boolean byref byte byval call case compare "
                           "const currency date decimal declare defbool defbyte defint deflng defcur defsng defdbl defdec "
                           "defdate defstr defobj defvar dim do double each else elseif empty end enum eqv erase error "
@@ -2371,7 +2862,9 @@ this->Keys_Set.vbscript1 = wxT("appactivate beep chdir chdrive close filecopy ge
 this->Keys_Set.vbscript2 = wxT("");
 
 this->Keys_Set.vbscript3 = wxT("");
+#endif //XSTC_NO_VBSCRIPT
 
+#ifndef XSTC_NO_VERILOG
 this->Keys_Set.verilog = wxT("always and assign begin "
                         "xbuf buf bufif0 bufif1 case casex casez cmos "
                         "default defparam else end endcase "
@@ -2412,7 +2905,9 @@ this->Keys_Set.verilog2 = wxT("$readmemb $readmemh $sreadmemb $sreadmemh $displa
                         "$setup $hold $setuphold $period $width $skew $recovery");
 
 this->Keys_Set.verilog3 = wxT("");
+#endif //XSTC_NO_VERILOG
 
+#ifndef XSTC_NO_VHDL
 this->Keys_Set.vhdl = wxT("access after alias all architecture array assert attribute begin block "
                        "body buffer bus case component configuration constant disconnect downto else elsif end entity exit file "
                        "for function generate generic group guarded if impure in inertial inout is label library linkage literal "
@@ -2439,7 +2934,37 @@ this->Keys_Set.vhdl5 = wxT("boolean bit character severity_level integer real ti
                        "std_logic_vector X01 X01Z UX01 UX01Z unsigned signed ");
 
 this->Keys_Set.vhdl6 = wxT("");
+#endif //XSTC_NO_VHDL
 
+#ifndef XSTC_NO_YAML
 this->Keys_Set.yaml = wxT("true false yes no");
+#endif //XSTC_NO_YAML
+#endif //XSTC_NO_KEYS_DEFINED
 }
-#endif
+
+wxString XSTC::KeyCheck(wxString keyname)
+{//check the contents of a Keyword_Sets object substring, is it a keywordset or filename
+ //if a '.' {period} is in the string somewhere, it is assumed a filename.
+   if(keyname.Contains(wxT(".")))
+   {
+      keyname = this->LoadKeyWords(keyname);
+   }
+ return keyname;
+}
+
+wxString XSTC::LoadKeyWords(wxString filename)
+{
+   wxString keywords =wxT("");
+   wxFFile *keys = new wxFFile(filename ,wxT("r"));
+
+   if(keys->IsOpened())
+   {
+       keys->ReadAll(&keywords,wxConvUTF8);
+       keys->Close();
+   }
+   wxDELETE(keys)
+
+   return keywords;
+}
+
+#endif //XSTC_NO_KEYS

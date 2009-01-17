@@ -1,48 +1,51 @@
+
 /*
-xstc.cpp
-
-this file is liceced under the wxWindows licence
-just a quick reminder of what that means:
-
-This software is released under the GNU GPL licence
-with a few exceptins applied, check the wxWindows licence
-to see what those are
-
-visit: http://opensource.org/ to see both
-the GNU GPL and wxWindows licences.
-
-this software has absolutely no warranty, express or implied
-
-just so you know, i don't care if you change the code
-don't email me if you did someting to it.
-
-no need to mark changes, you obviously may want to change the color
-settings, it would only be a real pain if you had to mark them.
-
-if you edit a function to change its behavior, it would be courtious
-to others to let them know that the file is not an official release,
-but you don't have to do that either.
-
-XSTC was developed by Nuklear Zelph
-copyright 2006
-*/
+ * xstc.cpp
+ * 
+ * this file is licensed under the wxWindows licence
+ * just a quick reminder of what that means:
+ * 
+ * This software is released under the GNU GPL licence
+ * with a few exceptins applied, check the wxWindows licence
+ * to see what those are
+ * 
+ * visit: http://opensource.org/ to see both
+ * the GNU GPL and wxWindows licences.
+ * 
+ * this software has absolutely no warranty, express or implied
+ * 
+ * just so you know, i don't care if you change the code
+ * don't email me if you did someting to it.
+ * 
+ * no need to mark changes, you obviously may want to change the color
+ * settings, it would only be a real pain if you had to mark them.
+ * 
+ * if you edit a function to change its behavior, it would be courtious
+ * to others to let them know that the file is not an official release,
+ * but you don't have to do that either.
+ * 
+ * you must not misrepresent the origins of this software, if you distribute
+ * it, let the user know where to get it and that you where not the original 
+ * creator. (except for any code you add obviously)
+ *
+ * this notice may not be changed in any way and must remain at the top of every
+ * source file.
+ * 
+ * XSTC was developed by Nuklear Zelph
+ * copyright (C) 2006
+ */
+ 
 //Jeff and Zenburn styles found on codinghorror
 //is you're ide hot or not
 //http://www.codinghorror.com/blog/archives/000682.html
 //given the poor quality of the images i adapted both
 //styles as well as i could.
+
 #ifdef XSTC_H_FLAT
   #include "xstc.h"
 #else
-  #include <wx/xstc.h>
+  #include <wx/XSTC/xstc.h>
 #endif
-
-/*
-
-8- final build option setup, cbp, bakefile whatever
-*/
-
-
 
 XSTC::XSTC(wxWindow *parent, wxWindowID id,
            const wxPoint& pos,
@@ -62,16 +65,16 @@ XSTC_CLASS(parent, id, pos, size, style, name)
                 (wxObjectEventFunction)
                 (wxEventFunction)
                 (wxCommandEventFunction)&XSTC::XSTC::Bmatch);
-   
+
     ResetStyle();
-    
-    linemgn = 0;
+
+    linemgn = 0; //mapped to the margin number
     symmgn = 1;
     fldmgn = 2;
-    linew = 30;
+    linew = 30; //width for the margin number, will set to what it is mapped to
     symw = 15;
     fldw = 15;
-    SetMargins(3,2);
+    SetMargins(3,2); //right and left margins
     SetMarginWidth(linemgn,30);
     SetMarginWidth(symmgn,16);
     SetMarginSensitive(1,true);
@@ -98,16 +101,20 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     prop1[7] = wxT("");
     prop1[8] = wxT("");
     prop1[9] = wxT("");
-    
+
     extset.Empty();
 
     cppcase = false;
     clwcase = false;
     useext  = false;
     usecolor  = false;
+#ifdef XSTC_NO_TRIMTRAIL
     trimspaces = false;
+#endif //XSTC_NO_TRIMTRAIL
+#ifndef XSTC_NO_TABSPACE
     spaceconv = 0;//no convertion
     spaces = 4;
+#endif //XSTC_NO_TABSPACE
 #ifndef XSTC_NO_KEYS
     usekeys = false;
     InitKeys();
@@ -119,10 +126,15 @@ XSTC_CLASS(parent, id, pos, size, style, name)
 
 XSTC::~XSTC()
 {
-   wxDELETE(colorconf)
+#ifdef XSTC_USE_CONFIG
+#ifdef _WXMSW_
+#ifdef XSTC_USE_REG
    wxDELETE(rcconf)
+#endif //_WXMSW_
+#endif //XSTC_USE_REG
+   wxDELETE(colorconf)
    wxDELETE(fcconf)
-
+#endif //XSTC_USE_CONFIG
 }
 
 void XSTC::Bmatch(XSTC_EVENT& event)
@@ -280,278 +292,25 @@ this->SetMarginWidth(fldmgn,fldw);
 int x;
     switch(lexer)
     {
-case XSTC_DEF(LEX_PYTHON):
+#ifndef XSTC_NO_ABAQUS
+case XSTC_DEF(LEX_ABAQUS):
      {
-        this->LexPYTHON();
+        this->LexABAQUS();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.python));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.python1));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.abaqus));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.abaqus1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.abaqus2));
+		   this->SetKeyWords(3,KeyCheck(Keys_Set.abaqus3));
+		   this->SetKeyWords(4,KeyCheck(Keys_Set.abaqus4));
+		   this->SetKeyWords(5,KeyCheck(Keys_Set.abaqus5));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_CPP):
-     {
-        
-        if(prop1[0]==wxT("LOADJS"))
-        {
-           this->LexJS();
-           prop1[0]=wxT("");
-#ifndef XSTC_NO_KEYS
-           if(usekeys)
-              {
-                 this->SetKeyWords(0,KeyCheck(Keys_Set.js));
-                 this->SetKeyWords(1,KeyCheck(Keys_Set.js1));
-                 this->SetKeyWords(2,KeyCheck(Keys_Set.js2));
-              }
-#endif
-        }
-        else
-        if(prop1[0]==wxT("LOADJAVA"))
-        {
-           this->LexJAVA();
-           prop1[0]=wxT("");
-#ifndef XSTC_NO_KEYS
-           if(usekeys)
-              {
-                 this->SetKeyWords(0,KeyCheck(Keys_Set.java));
-                 this->SetKeyWords(1,KeyCheck(Keys_Set.java1));
-                 this->SetKeyWords(2,KeyCheck(Keys_Set.java2));
-                 this->SetKeyWords(4,KeyCheck(Keys_Set.java3));
-              }
-#endif
-        }
-        else
-        {
-           this->LexCPP();
-           for(x=0;x<10;++x)
-              if(prop1[x].Lower() == wxT("cppnocase_1"))
-                 cppcase = false;
-              else
-              if(prop1[x].Lower() == wxT("cppnocase_0"))
-                 cppcase = true;
-           if(!cppcase)
-              lexer = XSTC_DEF(LEX_CPPNOCASE);
-#ifndef XSTC_NO_KEYS
-           if(usekeys)
-           {
-              this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
-              this->SetKeyWords(1,KeyCheck(Keys_Set.cpp1));
-              this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
-              this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
-           }
-#endif
-        }
-        break;
-     }
-case XSTC_DEF(LEX_HTML):
-     {
-        this->LexHTM();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.html));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.html1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.html2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.html3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.html4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.html5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.html6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.html7));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_XML):
-     {
-        this->LexXML();
-        break;
-     }
-case XSTC_DEF(LEX_PERL):
-     {
-        this->LexPERL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.perl));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_SQL):
-     {
-        this->LexSQL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.sql));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.sql1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.sql2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.sql3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.sql4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.sql5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.sql6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.sql7));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_VB):
-     {
-        this->LexVB();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.vb1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_PROPERTIES):
-     {
-        this->LexPROPERTIES();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.properties));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_ERRORLIST):
-     {
-        this->LexERRORLIST();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.errorlist));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_MAKEFILE):
-     {
-        this->LexMAKEFILE();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.makefile));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_MATLAB):
-     {
-        this->LexMATLAB();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.matlab));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_BATCH):
-     {
-        this->LexBATCH();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.batch));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_XCODE):
-     {
-        this->LexXCODE();
-        break;
-     }
-case XSTC_DEF(LEX_LATEX):
-     {
-        this->LexLATEX();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.latex));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_LUA):
-     {
-        this->LexLUA();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.lua));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.lua1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.lua2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.lua3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.lua4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.lua5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.lua6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.lua7));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_DIFF):
-     {
-        this->LexDIFF();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.diff));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_CONF):
-     {
-        this->LexCONF();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.conf));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.conf1));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_PASCAL):
-     {
-        this->LexPAS();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.pas));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.pas1));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_AVE):
-     {
-        this->LexAVE();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.ave));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.ave1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.ave2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.ave3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.ave4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.ave5));
-        }
-#endif
-        break;
-     }
+#endif //XSTC_NO_ABAQUS
+#ifndef XSTC_NO_ADA
 case XSTC_DEF(LEX_ADA):
      {
         this->LexADA();
@@ -560,136 +319,45 @@ case XSTC_DEF(LEX_ADA):
         {
            this->SetKeyWords(0,KeyCheck(Keys_Set.ada));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_LISP):
+#endif //XSTC_NO_ADA
+#ifndef XSTC_NO_APDL
+case XSTC_DEF(LEX_APDL):
      {
-        this->LexLISP();
+        this->LexAPDL();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.lisp));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.lisp1));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.apdl));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.apdl1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.apdl2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.apdl3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.apdl4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.apdl5));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_RUBY):
+#endif //XSTC_NO_APDL
+#ifndef XSTC_NO_ASN1
+case XSTC_DEF(LEX_ASN1):
      {
-        this->LexRUBY();
+        this->LexASN1();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.ruby));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.asn1_0));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.asn1_1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.asn1_2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.asn1_3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_EIFFEL):
-     {
-        this->LexEIFFEL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.eiffel));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_EIFFELKW):
-     {
-        this->LexEIFFELKW();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.eiffelkw));
-        }
-#endif
-        break;
-     }
-#ifdef XSTC_USELVL
-case XSTC_DEF(LEX_TCL):
-     {
-        this->LexTCL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.tcl));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.tcl1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.tcl2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.tcl3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.tcl4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.tcl5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.tcl6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.tcl7));
-           this->SetKeyWords(8,KeyCheck(Keys_Set.tcl8));
-        }
-#endif
-        break;
-     }
-#endif
-case XSTC_DEF(LEX_NNCRONTAB):
-     {
-        this->LexNNCRONTAB();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.nncrontab));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.nncrontab1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.nncrontab2));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_BULLANT):
-     {
-        this->LexBULLANT();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.bullant));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_VBSCRIPT):
-     {
-        this->LexVBSCRIPT();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.vb1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_BAAN):
-     {
-        this->LexBAAN();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.baan));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.baan1));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_SCRIPTOL):
-     {
-        this->LexSCRIPTOL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.scriptol));
-        }
-#endif
-        break;
-     }
+#endif //XSTC_NO_ASN1
+#ifndef XSTC_NO_ASM
 case XSTC_DEF(LEX_ASM):
      {
         this->LexASM();
@@ -703,146 +371,194 @@ case XSTC_DEF(LEX_ASM):
            this->SetKeyWords(4,KeyCheck(Keys_Set.asm_4));
            this->SetKeyWords(5,KeyCheck(Keys_Set.asm_5));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_CPPNOCASE):
+#endif //XSTC_NO_ASM
+#ifndef XSTC_NO_AU3
+case XSTC_DEF(LEX_AU3):
      {
-        this->LexCPP();
+        this->LexAU3();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.cpp1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.au3_0));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.au3_1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.au3_2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.au3_3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.au3_4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.au3_5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.au3_6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.au3_7));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_FORTRAN):
+#endif //XSTC_NO_AU3
+#ifndef XSTC_NO_AVE
+case XSTC_DEF(LEX_AVE):
      {
-        this->LexFORTRAN();
+        this->LexAVE();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.fortran));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.fortran1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.fortran2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.ave));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.ave1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.ave2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.ave3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.ave4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.ave5));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_F77):
+#endif //XSTC_NO_AVE
+#ifndef XSTC_NO_ASYMPTOTE
+case XSTC_DEF(LEX_ASYMPTOTE):
      {
-        this->LexF77();
+        this->LexASYMPTOTE();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.f77_0));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.f77_1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.f77_2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.asymptote));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.asymptote1));
         }
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_CSS):
+#endif //XSTC_NO_ASYMPTOTE
+#ifndef XSTC_NO_BAAN
+case XSTC_DEF(LEX_BAAN):
      {
-        this->LexCSS();
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.css));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.css1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.css2));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_POV):
-     {
-        this->LexPOV();
+        this->LexBAAN();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.pov));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.pov1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.pov2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.pov3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.pov4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.pov5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.pov6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.pov7));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.baan));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.baan1));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_LOUT):
+#endif //XSTC_NO_BAAN
+#ifndef XSTC_NO_BLITZBASIC
+case XSTC_DEF(LEX_BLITZBASIC):
      {
-        this->LexLOUT();
+        this->LexBLBASIC();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.lout));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.lout1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.lout2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1bl));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_ESCRIPT):
+#endif //XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
+case XSTC_DEF(LEX_FREEBASIC):
      {
-        this->LexESCRIPT();
+        this->LexFRBASIC();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.escript));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.escript1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.escript2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1fr));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_PS):
+#endif //XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
+case XSTC_DEF(LEX_POWERBASIC):
      {
-        this->LexPS();
+        this->LexPOBASIC();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.ps));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.ps1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.ps2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.ps3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.ps4));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1po));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_NSIS):
+#endif //XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
+case XSTC_DEF(LEX_PUREBASIC):
      {
-        this->LexNSIS();
+        this->LexPUBASIC();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.nsis));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.nsis1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.nsis2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.nsis3));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1pu));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_MMIXAL):
+#endif //XSTC_NO_PUREBASIC
+#ifndef XSTC_NO_BASH
+case XSTC_DEF(LEX_BASH):
      {
-        this->LexMMIXAL();
+        this->LexBASH();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.mmixal));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.mmixal1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.mmixal2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.bash));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
+#endif //XSTC_NO_BASH
+#ifndef XSTC_NO_BATCH
+case XSTC_DEF(LEX_BATCH):
+     {
+        this->LexBATCH();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.batch));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_BATCH
+#ifndef XSTC_NO_BULLANT
+case XSTC_DEF(LEX_BULLANT):
+     {
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.bullant));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_BULLANT
+#ifndef XSTC_NO_CAML
+case XSTC_DEF(LEX_CAML):
+     {
+        this->LexCAML();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.caml));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.caml1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.caml2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_CAML
+#ifndef XSTC_NO_CLW
 case XSTC_DEF(LEX_CLW):
      {
         this->LexCLW();
@@ -867,57 +583,255 @@ case XSTC_DEF(LEX_CLW):
            this->SetKeyWords(7,KeyCheck(Keys_Set.clw7));
            this->SetKeyWords(8,KeyCheck(Keys_Set.clw8));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_YAML):
+#endif //XSTC_NO_CLW
+#ifndef XSTC_NO_CMAKE
+case XSTC_DEF(LEX_CMAKE):
      {
-        this->LexYAML();
+        this->LexCMAKE();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.yaml));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.cmake));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.cmake1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.cmake2));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_TEX):
+#endif //XSTC_NO_CMAKE
+#ifndef XSTC_NO_CONF
+case XSTC_DEF(LEX_CONF):
      {
-        this->LexTEX();
+        this->LexCONF();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.tex));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.conf));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.conf1));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_METAPOST):
+#endif //XSTC_NO_CONF
+#ifndef XSTC_NO_CPP
+case XSTC_DEF(LEX_CPPNOCASE):
      {
-        this->LexMETAPOST();
+        this->LexCPP();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.metapost));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.metapost1));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.cpp1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_POWERBASIC):
+case XSTC_DEF(LEX_CPP):
      {
-        this->LexPOBASIC();
+
+        if(prop1[0]==wxT("LOADJS"))
+        {
+           this->LexJS();
+           prop1[0]=wxT("");
+#ifndef XSTC_NO_KEYS
+           if(usekeys)
+              {
+                 this->SetKeyWords(0,KeyCheck(Keys_Set.js));
+                 this->SetKeyWords(1,KeyCheck(Keys_Set.js1));
+                 this->SetKeyWords(2,KeyCheck(Keys_Set.js2));
+              }
+#endif //XSTC_NO_KEYS
+        }
+        else
+        if(prop1[0]==wxT("LOADJAVA"))
+        {
+           this->LexJAVA();
+           prop1[0]=wxT("");
+#ifndef XSTC_NO_KEYS
+           if(usekeys)
+              {
+                 this->SetKeyWords(0,KeyCheck(Keys_Set.java));
+                 this->SetKeyWords(1,KeyCheck(Keys_Set.java1));
+                 this->SetKeyWords(2,KeyCheck(Keys_Set.java2));
+                 this->SetKeyWords(4,KeyCheck(Keys_Set.java3));
+              }
+#endif //XSTC_NO_KEYS
+        }
+        else
+        {
+           this->LexCPP();
+           for(x=0;x<10;++x)
+              if(prop1[x].Lower() == wxT("cppnocase_1"))
+                 cppcase = false;
+              else
+              if(prop1[x].Lower() == wxT("cppnocase_0"))
+                 cppcase = true;
+           if(!cppcase)
+              lexer = XSTC_DEF(LEX_CPPNOCASE);
+#ifndef XSTC_NO_KEYS
+           if(usekeys)
+           {
+              this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
+              this->SetKeyWords(1,KeyCheck(Keys_Set.cpp1));
+              this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
+              this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
+           }
+#endif //XSTC_NO_KEYS
+        }
+        break;
+     }
+#endif //XSTC_NO_CPP
+#ifndef XSTC_NO_CSOUND
+case XSTC_DEF(LEX_CSOUND):
+     {
+        this->LexCSOUND();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1po));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.csound));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.csound1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.csound2));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
+#endif //XSTC_NO_CSOUND
+#ifndef XSTC_NO_CSS
+case XSTC_DEF(LEX_CSS):
+     {
+        this->LexCSS();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.css));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.css1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.css2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_CSS
+#ifndef XSTC_NO_D
+case XSTC_DEF(LEX_D):
+     {
+        this->LexD();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.d));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.d1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.d2));
+		   this->SetKeyWords(3,KeyCheck(Keys_Set.d3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_D
+#ifndef XSTC_NO_DIFF
+case XSTC_DEF(LEX_DIFF):
+     {
+        this->LexDIFF();
+        break;
+     }
+#endif //XSTC_NO_DIFF
+#ifndef XSTC_NO_EIFFEL
+case XSTC_DEF(LEX_EIFFEL):
+     {
+        this->LexEIFFEL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.eiffel));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_EIFFEL
+#ifndef XSTC_NO_EIFFELKW
+case XSTC_DEF(LEX_EIFFELKW):
+     {
+        this->LexEIFFELKW();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.eiffelkw));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_EIFFELKW
+#ifndef XSTC_NO_ERLANG
+case XSTC_DEF(LEX_ERLANG):
+     {
+        this->LexERLANG();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.erlang));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_ERLANG
+#ifndef XSTC_NO_ERRORLIST
+case XSTC_DEF(LEX_ERRORLIST):
+     {
+        this->LexERRORLIST();
+        break;
+     }
+#endif //XSTC_NO_ERRORLIST
+#ifndef XSTC_NO_ESCRIPT
+case XSTC_DEF(LEX_ESCRIPT):
+     {
+        this->LexESCRIPT();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.escript));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.escript1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.escript2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_ESCRIPT
+#ifndef XSTC_NO_F77
+case XSTC_DEF(LEX_F77):
+     {
+        this->LexF77();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.f77_0));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.f77_1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.f77_2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_F77
+#ifndef XSTC_NO_FLAGSHIP
+case XSTC_DEF(LEX_FLAGSHIP):
+     {
+        this->LexFLAGSHIP();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.flagship));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.flagship1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.flagship2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.flagship3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_FLAGSHIP
+#ifndef XSTC_NO_FORTH
 case XSTC_DEF(LEX_FORTH):
      {
         this->LexFORTH();
@@ -931,20 +845,286 @@ case XSTC_DEF(LEX_FORTH):
            this->SetKeyWords(4,KeyCheck(Keys_Set.forth4));
            this->SetKeyWords(5,KeyCheck(Keys_Set.forth5));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_ERLANG):
+#endif //XSTC_NO_FORTH
+#ifndef XSTC_NO_FORTRAN
+case XSTC_DEF(LEX_FORTRAN):
      {
-        this->LexERLANG();
+        this->LexFORTRAN();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.erlang));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.fortran));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.fortran1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.fortran2));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
+#endif //XSTC_NO_FORTRAN
+#ifndef XSTC_NO_GAP
+case XSTC_DEF(LEX_GAP):
+     {
+        this->LexGAP();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.gap));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.gap1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.gap2));
+		   this->SetKeyWords(3,KeyCheck(Keys_Set.gap3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_GAP
+#ifndef XSTC_NO_GUI4CLI
+case XSTC_DEF(LEX_GUI4CLI):
+     {
+        this->LexGUI4CLI();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.gui4cli));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.gui4cli1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.gui4cli2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.gui4cli3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.gui4cli4));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_GUI4CLI
+#ifndef XSTC_NO_HASKELL
+case XSTC_DEF(LEX_HASKELL):
+     {
+        this->LexHASKELL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.haskell));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_HASKELL
+#ifndef XSTC_NO_HTM
+case XSTC_DEF(LEX_HTML):
+     {
+        this->LexHTM();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.html));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.html1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.html2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.html3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.html4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.html5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.html6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.html7));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_HTM
+#ifndef XSTC_NO_INNOSETUP
+case XSTC_DEF(LEX_INNOSETUP):
+     {
+        this->LexINNO();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.inno));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.inno1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.inno2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.inno3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.inno4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.inno5));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+
+     }
+#endif //XSTC_NO_INNOSETUP
+#ifndef XSTC_NO_KIX
+case XSTC_DEF(LEX_KIX):
+     {
+        this->LexKIX();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.kix));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.kix1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.kix2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_KIX
+#ifndef XSTC_NO_LATEX
+case XSTC_DEF(LEX_LATEX):
+     {
+        this->LexLATEX();
+        break;
+     }
+#endif //XSTC_NO_LATEX
+#ifndef XSTC_NO_LISP
+case XSTC_DEF(LEX_LISP):
+     {
+        this->LexLISP();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.lisp));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.lisp1));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_LISP
+#ifndef XSTC_NO_LOT
+case XSTC_DEF(LEX_LOT):
+     {
+        this->LexLOT();
+        break;
+     }
+#endif //XSTC_NO_LOT
+#ifndef XSTC_NO_LOUT
+case XSTC_DEF(LEX_LOUT):
+     {
+        this->LexLOUT();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.lout));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.lout1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.lout2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_LOUT
+#ifndef XSTC_NO_LUA
+case XSTC_DEF(LEX_LUA):
+     {
+        this->LexLUA();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.lua));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.lua1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.lua2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.lua3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.lua4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.lua5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.lua6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.lua7));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_LUA
+#ifndef XSTC_NO_MAGIK
+case XSTC_DEF(LEX_MAGIK):
+     {
+        this->LexMAGIK();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.magik));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.magik1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.magik2));
+		   this->SetKeyWords(3,KeyCheck(Keys_Set.magik3));
+		   this->SetKeyWords(4,KeyCheck(Keys_Set.magik4));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_MAGIK
+#ifndef XSTC_NO_MAKEFILE
+case XSTC_DEF(LEX_MAKEFILE):
+     {
+        this->LexMAKEFILE();
+        break;
+     }
+#endif //XSTC_NO_MAKEFILE
+#ifndef XSTC_NO_MATLAB
+case XSTC_DEF(LEX_MATLAB):
+     {
+        this->LexMATLAB();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.matlab));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_MATLAB
+#ifndef XSTC_NO_METAPOST
+case XSTC_DEF(LEX_METAPOST):
+     {
+        this->LexMETAPOST();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.metapost));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.metapost1));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_METAPOST
+#ifndef XSTC_NO_MMIXAL
+case XSTC_DEF(LEX_MMIXAL):
+     {
+        this->LexMMIXAL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.mmixal));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.mmixal1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.mmixal2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NNCRONTAB
+case XSTC_DEF(LEX_NNCRONTAB):
+     {
+        this->LexNNCRONTAB();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.nncrontab));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.nncrontab1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.nncrontab2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_NNCRONTAB
+#ifndef XSTC_NO_NSIS
+case XSTC_DEF(LEX_NSIS):
+     {
+        this->LexNSIS();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.nsis));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.nsis1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.nsis2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.nsis3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_NSIS
+#ifndef XSTC_NO_OCTAVE
 case XSTC_DEF(LEX_OCTAVE):
      {
         this->LexOCTAVE();
@@ -953,9 +1133,260 @@ case XSTC_DEF(LEX_OCTAVE):
         {
            this->SetKeyWords(0,KeyCheck(Keys_Set.octave));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
+#endif //XSTC_NO_OCTAVE
+#ifndef XSTC_NO_OPAL
+case XSTC_DEF(LEX_OPAL):
+     {
+        this->LexOPAL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.opal));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.opal1));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_OPAL
+#ifndef XSTC_NO_PASCAL
+case XSTC_DEF(LEX_PASCAL):
+     {
+        this->LexPAS();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.pas));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.pas1));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PASCAL
+#ifndef XSTC_NO_PERL
+case XSTC_DEF(LEX_PERL):
+     {
+        this->LexPERL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.perl));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PERL
+#ifndef XSTC_NO_PLM
+case XSTC_DEF(LEX_PLM):
+     {
+        this->LexPLM();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.plm));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PLM
+#ifndef XSTC_NO_PO
+case XSTC_DEF(LEX_PO):
+     {
+        this->LexPO();
+        break;
+     }
+#endif //XSTC_NO_PO
+#ifndef XSTC_NO_POWERSHELL
+case XSTC_DEF(LEX_POWERSHELL):
+     {
+        this->LexPOWERSHELL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.powershell));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.powershell1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.powershell2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_POWERSHELL
+#ifndef XSTC_NO_POV
+case XSTC_DEF(LEX_POV):
+     {
+        this->LexPOV();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.pov));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.pov1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.pov2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.pov3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.pov4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.pov5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.pov6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.pov7));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_POV
+#ifndef XSTC_NO_PROGRESS
+case XSTC_DEF(LEX_PROGRESS):
+     {
+        this->LexPROGRESS();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.progress));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.progress1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.progress2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PROGRESS
+#ifndef XSTC_NO_PROPERTIES
+case XSTC_DEF(LEX_PROPERTIES):
+     {
+        this->LexPROPERTIES();
+        break;
+     }
+#endif //XSTC_NO_PROPERTIES
+#ifndef XSTC_NO_PS
+case XSTC_DEF(LEX_PS):
+     {
+        this->LexPS();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.ps));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.ps1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.ps2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.ps3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.ps4));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PS
+#ifndef XSTC_NO_PYTHON
+case XSTC_DEF(LEX_PYTHON):
+     {
+        this->LexPYTHON();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.python));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.python1));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_PYTHON
+#ifndef XSTC_NO_R
+case XSTC_DEF(LEX_R):
+     {
+        this->LexR();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.r));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.r1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.r2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_R
+#ifndef XSTC_NO_REBOL
+case XSTC_DEF(LEX_REBOL):
+     {
+        this->LexREBOL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.rebol));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.rebol));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.rebol));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_REBOL
+#ifndef XSTC_NO_RUBY
+case XSTC_DEF(LEX_RUBY):
+     {
+        this->LexRUBY();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.ruby));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_RUBY
+#ifndef XSTC_NO_SCRIPTOL
+case XSTC_DEF(LEX_SCRIPTOL):
+     {
+        this->LexSCRIPTOL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.scriptol));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_SCRIPTOL
+#ifndef XSTC_NO_SMALLTALK
+case XSTC_DEF(LEX_SMALLTALK):
+     {
+        this->LexSMALLTALK();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.smalltalk));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SPECMAN
+case XSTC_DEF(LEX_SPECMAN):
+     {
+        this->LexSPECMAN();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.specman));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.specman1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.specman2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.specman3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_SPECMAN
+#ifndef XSTC_NO_SPICE
+case XSTC_DEF(LEX_SPICE):
+     {
+        this->LexSPICE();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.spice));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.spice1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.spice2));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_SPICE
+#ifndef XSTC_NO_MSSQL
 case XSTC_DEF(LEX_MSSQL):
      {
         this->LexMSSQL();
@@ -970,9 +1401,102 @@ case XSTC_DEF(LEX_MSSQL):
             this->SetKeyWords(5,KeyCheck(Keys_Set.mssql5));
             this->SetKeyWords(6,KeyCheck(Keys_Set.mssql6));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
+#endif //XSTC_NO_MSSQL
+#ifndef XSTC_NO_MYSQL
+case XSTC_DEF(LEX_MYSQL):
+     {
+        this->LexMYSQL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.mysql));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.mysql1));
+		   this->SetKeyWords(2,KeyCheck(Keys_Set.mysql2));
+		   this->SetKeyWords(3,KeyCheck(Keys_Set.mysql3));
+		   this->SetKeyWords(4,KeyCheck(Keys_Set.mysql4));
+		   this->SetKeyWords(5,KeyCheck(Keys_Set.mysql5));
+		   this->SetKeyWords(6,KeyCheck(Keys_Set.mysql6));
+		   this->SetKeyWords(7,KeyCheck(Keys_Set.mysql7));
+		   this->SetKeyWords(8,KeyCheck(Keys_Set.mysql8));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_MYSQL
+#ifndef XSTC_NO_SQL
+case XSTC_DEF(LEX_SQL):
+     {
+        this->LexSQL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.sql));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.sql1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.sql2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.sql3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.sql4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.sql5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.sql6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.sql7));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TADS3
+case XSTC_DEF(LEX_TADS3):
+     {
+        this->LexTADS3();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.tads3_0));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.tads3_1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.tads3_2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.tads3_3));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TCL
+case XSTC_DEF(LEX_TCL):
+     {
+        this->LexTCL();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.tcl));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.tcl1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.tcl2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.tcl3));
+           this->SetKeyWords(4,KeyCheck(Keys_Set.tcl4));
+           this->SetKeyWords(5,KeyCheck(Keys_Set.tcl5));
+           this->SetKeyWords(6,KeyCheck(Keys_Set.tcl6));
+           this->SetKeyWords(7,KeyCheck(Keys_Set.tcl7));
+           this->SetKeyWords(8,KeyCheck(Keys_Set.tcl8));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_TCL
+#ifndef XSTC_NO_TEX
+case XSTC_DEF(LEX_TEX):
+     {
+        this->LexTEX();
+#ifndef XSTC_NO_KEYS
+        if(usekeys)
+        {
+           this->SetKeyWords(0,KeyCheck(Keys_Set.tex));
+        }
+#endif //XSTC_NO_KEYS
+        break;
+     }
+#endif //XSTC_NO_TEX
+#ifndef XSTC_NO_VERILOG
 case XSTC_DEF(LEX_VERILOG):
      {
         this->LexVERILOG();
@@ -984,110 +1508,11 @@ case XSTC_DEF(LEX_VERILOG):
            this->SetKeyWords(2,KeyCheck(Keys_Set.verilog2));
            this->SetKeyWords(3,KeyCheck(Keys_Set.verilog3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_KIX):
-     {
-        this->LexKIX();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.kix));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.kix1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.kix2));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_GUI4CLI):
-     {
-        this->LexGUI4CLI();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.gui4cli));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.gui4cli1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.gui4cli2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.gui4cli3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.gui4cli4));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_SPECMAN):
-     {
-        this->LexSPECMAN();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.specman));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.specman1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.specman2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.specman3));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_AU3):
-     {
-        this->LexAU3();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.au3_0));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.au3_1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.au3_2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.au3_3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.au3_4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.au3_5));
-           this->SetKeyWords(6,KeyCheck(Keys_Set.au3_6));
-           this->SetKeyWords(7,KeyCheck(Keys_Set.au3_7));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_APDL):
-     {
-        this->LexAPDL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.apdl));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.apdl1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.apdl2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.apdl3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.apdl4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.apdl5));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_BASH):
-     {
-        this->LexBASH();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.bash));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_ASN1):
-     {
-        this->LexASN1();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.asn1_0));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.asn1_1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.asn1_2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.asn1_3));
-        }
-#endif
-        break;
-     }
+#endif //XSTC_NO_VERILOG
+#ifndef XSTC_NO_VHDL
 case XSTC_DEF(LEX_VHDL):
      {
         this->LexVHDL();
@@ -1102,184 +1527,70 @@ case XSTC_DEF(LEX_VHDL):
            this->SetKeyWords(5,KeyCheck(Keys_Set.vhdl5));
            this->SetKeyWords(6,KeyCheck(Keys_Set.vhdl6));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_CAML):
+#endif //XSTC_NO_VHDL
+#ifndef XSTC_NO_VB
+case XSTC_DEF(LEX_VB):
      {
-        this->LexCAML();
+        this->LexVB();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.caml));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.caml1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.caml2));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.vb1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_BLITZBASIC):
+#endif //XSTC_NO_VB
+#ifndef XSTC_NO_VBSCRIPT
+case XSTC_DEF(LEX_VBSCRIPT):
      {
-        this->LexBLBASIC();
+        this->LexVBSCRIPT();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1bl));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
+           this->SetKeyWords(1,KeyCheck(Keys_Set.vb1));
+           this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
+           this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_PUREBASIC):
+#endif //XSTC_NO_VBSCRIPT
+#ifndef XSTC_NO_XCODE
+case XSTC_DEF(LEX_XCODE):
      {
-        this->LexPUBASIC();
+        this->LexXCODE();
+        break;
+     }
+#endif //XSTC_NO_XCODE
+#ifndef XSTC_NO_XML
+case XSTC_DEF(LEX_XML):
+     {
+        this->LexXML();
+        break;
+     }
+#endif //XSTC_NO_XML
+#ifndef XSTC_NO_YAML
+case XSTC_DEF(LEX_YAML):
+     {
+        this->LexYAML();
 #ifndef XSTC_NO_KEYS
         if(usekeys)
         {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1pu));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
+           this->SetKeyWords(0,KeyCheck(Keys_Set.yaml));
         }
-#endif
+#endif //XSTC_NO_KEYS
         break;
      }
-case XSTC_DEF(LEX_HASKELL):
-     {
-        this->LexHASKELL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.haskell));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_TADS3):
-     {
-        this->LexTADS3();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.tads3_0));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.tads3_1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.tads3_2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.tads3_3));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_REBOL):
-     {
-        this->LexREBOL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.rebol));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.rebol));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.rebol));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_SMALLTALK):
-     {
-        this->LexSMALLTALK();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.smalltalk));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_FLAGSHIP):
-     {
-        this->LexFLAGSHIP();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.flagship));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.flagship1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.flagship2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.flagship3));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_CSOUND):
-     {
-        this->LexCSOUND();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.csound));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.csound1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.csound2));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_FREEBASIC):
-     {
-        this->LexFRBASIC();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.basic1fr));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
-        }
-#endif
-        break;
-     }
-#ifdef XSTC_USELVL
-case XSTC_DEF(LEX_INNOSETUP):
-     {
-        this->LexINNO();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.inno));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.inno1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.inno2));
-           this->SetKeyWords(3,KeyCheck(Keys_Set.inno3));
-           this->SetKeyWords(4,KeyCheck(Keys_Set.inno4));
-           this->SetKeyWords(5,KeyCheck(Keys_Set.inno5));
-        }
-#endif
-        break;
+#endif //XSTC_NO_YAML
 
-     }
-case XSTC_DEF(LEX_OPAL):
-     {
-        this->LexOPAL();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.opal));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.opal1));
-        }
-#endif
-        break;
-     }
-case XSTC_DEF(LEX_SPICE):
-     {
-        this->LexSPICE();
-#ifndef XSTC_NO_KEYS
-        if(usekeys)
-        {
-           this->SetKeyWords(0,KeyCheck(Keys_Set.spice));
-           this->SetKeyWords(1,KeyCheck(Keys_Set.spice1));
-           this->SetKeyWords(2,KeyCheck(Keys_Set.spice2));
-        }
-#endif
-        break;
-     }
-#endif
 default:
      {
         this->SetMarginWidth(fldmgn,0);
@@ -1327,31 +1638,31 @@ default:
           theprop = GetPropStr(prop1[4]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(prop1[5] == wxT("")))
        {
           theprop = GetPropStr(prop1[5]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(prop1[6] == wxT("")))
        {
           theprop = GetPropStr(prop1[6]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(prop1[7] == wxT("")))
        {
           theprop = GetPropStr(prop1[7]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(prop1[8] == wxT("")))
        {
           theprop = GetPropStr(prop1[8]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(prop1[9] == wxT("")))
        {
           theprop = GetPropStr(prop1[9]);
@@ -1392,31 +1703,31 @@ default:
           theprop = GetPropStr(properties[4]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(properties[5] == wxT("")))
        {
           theprop = GetPropStr(properties[5]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(properties[6] == wxT("")))
        {
           theprop = GetPropStr(properties[6]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(properties[7] == wxT("")))
        {
           theprop = GetPropStr(properties[7]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(properties[8] == wxT("")))
        {
           theprop = GetPropStr(properties[8]);
           this->SetProperty(theprop.L, theprop.R);
        }
-       
+
        if(!(properties[9] == wxT("")))
        {
           theprop = GetPropStr(properties[9]);
@@ -1425,114 +1736,224 @@ default:
     }
 }
 
-wxString XSTC::LoadKeyWords(wxString filename)
-{
-   wxString keywords =wxT("");
-   wxFFile *keys = new wxFFile(filename ,wxT("r"));
-
-   if(keys->IsOpened())
-   {
-       keys->ReadAll(&keywords,wxConvUTF8);
-       keys->Close();
-   }
-   wxDELETE(keys)
-   
-   return keywords;
-}
-
-bool XSTC::LoadFileX(wxString filename, bool setlexer)
+int XSTC::LoadFileX(wxString filename, bool setlexer)
 {//loads a file and sets the lexer for its file extention
    bool result = false;
-   result = this->LoadFile(filename);
-   if(setlexer)
+   result = LoadFile(filename);
+   if(setlexer && result)
    {
       SetLexerX(AutoEXT(filename), false, NULL);
+      XFilename = filename;
+      return FILE_OK;
    }
-   XFilename = filename;
-   return result;
+   else
+   if(setlexer && !result)
+   {
+      CloseFile();//since we are going to replace the current file anyway
+      XFilename = wxT("Untitled");
+      return FILE_NOT_FOUND;
+   }
+   else
+   if(!setlexer && result)
+   {
+      XFilename = filename;
+      return FILE_OK;
+   }
+
+   return FILE_NOT_FOUND;
 }
 
-bool XSTC::SaveFileX(const wxString filename, bool saveas)
+int XSTC::SaveFileX(const wxString filename, int saveas)
 {
-   bool result = false;
-   int useropt;
+   int status = FILE_NOT_FOUND; //results we return
+   wxString file = filename;
+   bool usexfilename = false; //if filename is empty, XFilename is used
+#ifndef XSTC_NO_AUTOSAVEAS
+   int useropt; //result from the file dialog
+#endif //XSTC_NO_AUTOSAVEAS
+#ifndef XSTC_NO_TRIMTRAIL
    if(trimspaces)
       this->TrimTrailing();
+#endif //XSTC_NO_TRIMTRAIL
+#ifndef XSTC_NO_TABSPACE
    if(spaceconv == 1)
       TabSpace(true, spaces);
-   else 
+   else
    if(spaceconv == 2)
       TabSpace(false, spaces);
-   
-   wxFileDialog *fileobj = new wxFileDialog(this, wxT("Save File As"), wxT(""), wxT(""), wxT("*.*"), wxSAVE | wxCHANGE_DIR | wxOVERWRITE_PROMPT, wxDefaultPosition);
-   if(saveas)
-   {
+#endif  //XSTC_NO_TABSPACE
+
+    if(filename == wxT(""))
+       usexfilename = true; //when an empty filename is passed the internal filename is used.
+                            //internally "XFilename" is used as the argument automatically
+                            //the variable is reused since we only need to know what filename
+                            //to use initially
+
+#ifndef XSTC_NO_AUTOSAVEAS
+#if wxMAJOR_VERSION <= 2
+#if wxMINOR_VERSION <= 6
+    wxFileDialog* fileobj = new wxFileDialog(this, wxT("Which file to read?"), wxT(""), wxT(""), wxT("*.*"), wxOPEN | wxCHANGE_DIR | FILE_MUST_EXIST, wxDefaultPosition);
+#else
+    wxFileDialog* fileobj = new wxFileDialog(this, wxT("Which file to read?"), wxT(""), wxT(""), wxT("*.*"), wxFD_OPEN | wxFD_CHANGE_DIR | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
+#endif //wxMINOR_VERSION <= 6
+#endif //wxMAJOR_VERSION <= 2
+
+
+    if(saveas == SAVE_AS_ALWAYS)
+    {
       useropt = fileobj->ShowModal();
       if(useropt == wxID_CANCEL)
       {
-         return result;
-      }
-      XFilename = fileobj->GetPath();
-      if(!(XFilename.IsEmpty()))
-      {
-         result = this->SaveFile(XFilename);
-      }
-   }
-   else
-   {
-      if(filename == wxT("Untitled"))
-      {
-         useropt = fileobj->ShowModal();
-         if(useropt == wxID_CANCEL)
-         {
-            return result;
-         }
-         XFilename = fileobj->GetPath();
-         if(!(XFilename.IsEmpty()))
-         {
-            result = this->SaveFile(XFilename);
-         }
+         status = FILE_SAVE_ERROR;
       }
       else
+      if(useropt == wxID_OK)
       {
-         if(filename.IsEmpty())
+         file = fileobj->GetPath();
+         if(!(file.IsEmpty()))
          {
-            useropt = fileobj->ShowModal();
-            if(useropt == wxID_CANCEL)
+            usexfilename = this->SaveFile(file);
+            if(usexfilename)
             {
-               return result;
+                XFilename = file;
+                status = FILE_OK;
             }
-            XFilename = fileobj->GetPath();
-            if(!(XFilename.IsEmpty()))
+            else
             {
-               result = this->SaveFile(XFilename);
+                status = FILE_SAVE_ERROR;
             }
          }
          else
          {
-            result = this->SaveFile(filename);
-            XFilename = filename;
-            if(!result)
-            {
-               fileobj->SetMessage(wxT("File Unreachable, set new target!"));
-               fileobj->SetFilename(filename);
-               useropt = fileobj->ShowModal();
-               if(useropt == wxID_CANCEL)
-               {
-                  return result;
-               }
-               XFilename = fileobj->GetPath();
-               if(!(XFilename.IsEmpty()))
-               {
-                  result = this->SaveFile(XFilename);
-               }
-            }
+            status = FILE_SAVE_ERROR;
          }
       }
-   }
-   wxDELETE(fileobj)
-   
-   return result;
+      else
+      {
+         status = FILE_SAVE_ERROR;
+      }
+    }
+    else
+    if(saveas == SAVE_AS_ON_FAIL)
+    {
+       if(usexfilename)
+       {
+          usexfilename = this->SaveFile(XFilename);
+          if(usexfilename)
+          {
+             status = FILE_OK;
+          }
+          else
+          {
+             file = fileobj->GetPath();
+             if(!(file.IsEmpty()))
+             {
+                usexfilename = this->SaveFile(file);
+                if(usexfilename)
+                {
+                    XFilename = file;
+                    status = FILE_OK;
+                }
+                else
+                {
+                    status = FILE_SAVE_ERROR;
+                }
+             }
+             else
+             {
+                status = FILE_SAVE_ERROR;
+             }
+          }
+       }
+       else
+       {
+          usexfilename = this->SaveFile(filename);
+          if(usexfilename)
+          {
+             status = FILE_OK;
+          }
+          else
+          {
+             file = fileobj->GetPath();
+             if(!(file.IsEmpty()))
+             {
+                usexfilename = this->SaveFile(file);
+                if(usexfilename)
+                {
+                    XFilename = file;
+                    status = FILE_OK;
+                }
+                else
+                {
+                    status = FILE_SAVE_ERROR;
+                }
+             }
+             else
+             {
+                status = FILE_SAVE_ERROR;
+             }
+          }
+       }
+    }
+    else
+    if(saveas == SAVE_AS_NEVER)
+    {
+       if(usexfilename)
+       {
+          usexfilename = this->SaveFile(XFilename);
+          if(usexfilename)
+          {
+             status = FILE_OK;
+          }
+          else
+          {
+             status = FILE_SAVE_ERROR;
+          }
+       }
+       else
+       {
+          usexfilename = this->SaveFile(filename);
+          if(usexfilename)
+          {
+             status = FILE_OK;
+          }
+          else
+          {
+             status = FILE_SAVE_ERROR;
+          }
+       }
+    }
+    wxDELETE(fileobj)
+#endif //XSTC_NO_AUTOSAVEAS
+
+#ifdef XSTC_NO_AUTOSAVEAS
+    if(usexfilename)
+    {
+       usexfilename = this->SaveFile(XFilename);
+       if(usexfilename)
+       {
+          status = FILE_OK;
+       }
+       else
+       {
+          status = FILE_SAVE_ERROR;
+       }
+    }
+    else
+    {
+       usexfilename = this->SaveFile(filename);
+       if(usexfilename)
+       {
+          status = FILE_OK;
+       }
+       else
+       {
+          status = FILE_SAVE_ERROR;
+       }
+    }
+#endif //XSTC_NO_AUTOSAVEAS in use
+
+   return status;
 }
 
 void XSTC::CloseFile()
@@ -1548,7 +1969,7 @@ int XSTC::AutoEXT(wxString filename)
  filename.MakeLower();
  filename.Trim(true);
  filename.Trim(false);
- wxString place,filext =wxT("");
+ wxString place,filext = wxT("");
  wxArrayString hold;
  hold.Empty();
  int thelexer = XSTC_DEF(LEX_NULL);
@@ -1597,7 +2018,7 @@ int XSTC::AutoEXT(wxString filename)
        return thelexer;
     }
  }
-
+#ifndef XSTC_NO_CPP
     for(x=0;x<=7;++x)
     {
        if(filext == c_ext_array[x])
@@ -1614,7 +2035,245 @@ int XSTC::AutoEXT(wxString filename)
        }
 
     }
-
+#endif //XSTC_NO_CPP
+#ifndef XSTC_NO_ADA
+       if(filext == wxT("adb") || filext == wxT("ads"))
+       {
+          return XSTC_DEF(LEX_ADA);
+       }
+#endif //XSTC_NO_ADA
+#ifndef XSTC_NO_APDL
+       else
+       if(filext == wxT("mac"))
+       {
+          return XSTC_DEF(LEX_APDL);
+       }
+#endif //XSTC_NO_APDL
+#ifndef XSTC_NO_ASM
+       else
+       if(filext == wxT("asm"))
+       {
+          return XSTC_DEF(LEX_ASM);
+       }
+#endif //XSTC_NO_ASM
+#ifndef XSTC_NO_ASN1
+       else
+       if(filext == wxT("mib"))
+       {
+          return XSTC_DEF(LEX_ASN1);
+       }
+#endif //XSTC_NO_ASN1
+#ifndef XSTC_NO_ASYMPTOTE
+	   else
+       if(filext == wxT("asy"))
+       {
+          return XSTC_DEF(LEX_ASYMPTOTE);
+       }
+#endif //XSTC_NO_ASYMPTOTE
+#ifndef XSTC_NO_AU3
+       else
+       if(filext == wxT("au3"))
+       {
+          return XSTC_DEF(LEX_AU3);
+       }
+#endif //XSTC_NO_AU3
+#ifndef XSTC_NO_AVE
+       else
+       if(filext == wxT("ave"))
+       {
+          return XSTC_DEF(LEX_AVE);
+       }
+#endif //XSTC_NO_AVE
+#ifndef XSTC_NO_BAAN
+       else
+       if(filext == wxT("bc") || filext == wxT("cln"))
+       {
+          return XSTC_DEF(LEX_BAAN);
+       }
+#endif //XSTC_NO_BAAN
+#ifndef XSTC_NO_BLITZBASIC
+       else
+       if(filext == wxT("bb"))
+       {
+          return XSTC_DEF(LEX_BLITZBASIC);
+       }
+#endif //XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
+       else
+       if(filext == wxT("bas") || filext == wxT("bi"))
+       {
+          return XSTC_DEF(LEX_FREEBASIC);
+       }
+#endif //XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
+       else
+       if(filext == wxT("powerbasic"))
+       {
+          return XSTC_DEF(LEX_POWERBASIC);
+       }
+#endif //XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
+       else
+       if(filext == wxT("pb"))
+       {
+          return XSTC_DEF(LEX_PUREBASIC);
+       }
+#endif //XSTC_NO_PUREBASIC
+#ifndef XSTC_NO_BASH
+       else
+       if(filext == wxT("sh") || filext == wxT("bsh") || filext == wxT("configure"))
+       {
+          return XSTC_DEF(LEX_BASH);
+       }
+#endif //XSTC_NO_BASH
+#ifndef XSTC_NO_BATCH
+       else
+       if(filext == wxT("bat") || filext == wxT("cmd") || filext == wxT("nt"))
+       {
+          return XSTC_DEF(LEX_BATCH);
+       }
+#endif //XSTC_NO_BATCH
+#ifndef XSTC_NO_BULLANT
+       else
+       if(filext == wxT("ant"))
+       {
+          return XSTC_DEF(LEX_BULLANT);
+       }
+#endif //XSTC_NO_BULLANT
+#ifndef XSTC_NO_CAML
+       else
+       if(filext == wxT("ml") || filext == wxT("mli"))
+       {
+          return XSTC_DEF(LEX_CAML);
+       }
+#endif //XSTC_NO_CAML
+#ifndef XSTC_NO_CMAKE
+	   else
+       if(filext == wxT("cmake"))
+       {
+          return XSTC_DEF(LEX_CMAKE);
+       }
+#endif //XSTC_NO_CMAKE
+#ifndef XSTC_NO_CONF
+       else
+       if(filext == wxT("conf"))
+       {
+          return XSTC_DEF(LEX_CONF);
+       }
+#endif //XSTC_NO_CONF
+#ifndef XSTC_NO_CSOUND
+       else
+       if(filext == wxT("orc") || filext == wxT("sco") || filext == wxT("csd"))
+       {
+          return XSTC_DEF(LEX_CSOUND);
+       }
+#endif //XSTC_NO_CSOUND
+#ifndef XSTC_NO_CSS
+       else
+       if(filext == wxT("css"))
+       {
+          return XSTC_DEF(LEX_CSS);
+       }
+#endif //XSTC_NO_CSS
+#ifndef XSTC_NO_D
+	   else
+       if(filext == wxT("d"))
+       {
+          return XSTC_DEF(LEX_D);
+       }
+#endif //XSTC_NO_D
+#ifndef XSTC_NO_DIFF
+       else
+       if(filext == wxT("diff") || filext == wxT("patch"))
+       {
+          return XSTC_DEF(LEX_DIFF);
+       }
+#endif //XSTC_NO_DIFF
+#ifndef XSTC_NO_EIFFEL
+       else
+       if(filext == wxT("e"))
+       {
+          return XSTC_DEF(LEX_EIFFEL);
+       }
+#endif //XSTC_NO_EIFFEL
+#ifndef XSTC_NO_EIFFELKW
+       else
+       if(filext == wxT("ek"))
+       {
+          return XSTC_DEF(LEX_EIFFELKW);
+       }
+#endif //XSTC_NO_EIFFELKW
+#ifndef XSTC_NO_ERLANG
+       else
+       if(filext == wxT("erl"))
+       {
+          return XSTC_DEF(LEX_ERLANG);
+       }
+#endif //XSTC_NO_ERLANG
+#ifndef XSTC_NO_ERRORLIST
+       else
+       if(filext == wxT("err"))
+       {
+          return XSTC_DEF(LEX_ERRORLIST);
+       }
+#endif //XSTC_NO_ERRORLIST
+#ifndef XSTC_NO_ESCRIPT
+       else
+       if(filext == wxT("src") || filext == wxT("em"))
+       {
+          return XSTC_DEF(LEX_ESCRIPT);
+       }
+#endif //XSTC_NO_ESCRIPT
+#ifndef XSTC_NO_F77
+       else
+       if(filext == wxT("f77"))
+       {
+          return XSTC_DEF(LEX_F77);
+       }
+#endif //XSTC_NO_F77
+#ifndef XSTC_NO_FLAGSHIP
+       else
+       if(filext == wxT("prg"))
+       {
+          return XSTC_DEF(LEX_FLAGSHIP);
+       }
+#endif //XSTC_NO_FLAGSHIP
+#ifndef XSTC_NO_FORTH
+       else
+       if(filext == wxT("forth"))
+       {
+          return XSTC_DEF(LEX_FORTH);
+       }
+#endif //XSTC_NO_FORTH
+#ifndef XSTC_NO_FORTRAN
+       else
+       if(filext == wxT("f") || filext == wxT("for") || filext == wxT("f90") || filext == wxT("f95") || filext == wxT("f2k"))
+       {
+          return XSTC_DEF(LEX_FORTRAN);
+       }
+#endif //XSTC_NO_FORTRAN
+#ifndef XSTC_NO_GAP
+	   else
+       if(filext == wxT("g"))
+       {
+          return XSTC_DEF(LEX_GAP);
+       }
+#endif //XSTC_NO_GAP
+#ifndef XSTC_NO_GUI4CLI
+	   else
+       if(filext == wxT("cli"))
+       {
+          return XSTC_DEF(LEX_GUI4CLI);
+       }
+#endif //XSTC_NO_GUI4CLI
+#ifndef XSTC_NO_HASKELL
+       else
+       if(filext == wxT("haskell"))
+       {
+          return XSTC_DEF(LEX_HASKELL);
+       }
+#endif //XSTC_NO_HASKELL
+#ifndef XSTC_NO_HTM
        if(filext == wxT("htm") || filext == wxT("html") || filext == wxT("xhtml") || filext == wxT("shtml")  || filext == wxT("docbook") || filext == wxT("php") || filext == wxT("php3") || filext == wxT("phtml") || filext == wxT("asp") || filext == wxT("jsp"))
        {
           prop1[0]=wxT("fold.html_1");
@@ -1622,6 +2281,15 @@ int XSTC::AutoEXT(wxString filename)
           prop1[2]=wxT("fold.compact_0");
           return XSTC_DEF(LEX_HTML);
        }
+#endif //XSTC_NO_HTM
+#ifndef XSTC_NO_INNOSETUP
+       else
+       if(filext == wxT("iss"))
+       {
+          return XSTC_DEF(LEX_INNOSETUP);
+       }
+#endif //XSTC_NO_INNOSETUP
+#ifndef XSTC_NO_CPP
        else
        if(filext == wxT("js"))
        {
@@ -1638,363 +2306,297 @@ int XSTC::AutoEXT(wxString filename)
           prop1[2]=wxT("fold.compact_0");
           return XSTC_DEF(LEX_CPP);
        }
-       else
-       if(filext == wxT("powerbasic"))
-       {
-          return XSTC_DEF(LEX_POWERBASIC);
-       }
-       else
-       if(filext == wxT("xml") || filext == wxT("xsl") || filext == wxT("xslt") || filext == wxT("svg") || filext == wxT("xul") || filext == wxT("xsd") || filext == wxT("dtd") || filext == wxT("xrc") || filext == wxT("axl"))
-       {
-          return XSTC_DEF(LEX_XML);
-          prop1[0]=wxT("fold_1");
-       }
-       else
-       if(filext == wxT("vhd") || filext == wxT("vhdl"))
-       {
-          return XSTC_DEF(LEX_VHDL);
-       }
-       else
-       if(filext == wxT("v") || filext == wxT("vh"))
-       {
-          return XSTC_DEF(LEX_VERILOG);
-       }
-       else
-       if(filext == wxT("vbs"))
-       {
-          return XSTC_DEF(LEX_VBSCRIPT);
-       }
-       else
-       if(filext == wxT("vb") || filext == wxT("vbp") || filext == wxT("frm") || filext == wxT("cls") || filext == wxT("clt") || filext == wxT("pag") || filext == wxT("dsr") || filext == wxT("dsm") || filext == wxT("dob"))
-       {
-          return XSTC_DEF(LEX_VB);
-          prop1[0]=wxT("fold_1");
-       }
-       else
-       if(filext == wxT("adb") || filext == wxT("ads"))
-       {
-          return XSTC_DEF(LEX_ADA);
-       }
-       else
-       if(filext == wxT("yml") || filext == wxT("yaml"))
-       {
-          return XSTC_DEF(LEX_YAML);
-       }
-       else
-       if(filext == wxT("asm"))
-       {
-          return XSTC_DEF(LEX_ASM);
-       }
-       else
-       if(filext == wxT("mib"))
-       {
-          return XSTC_DEF(LEX_ASN1);
-       }
-       else
-       if(filext == wxT("au3"))
-       {
-          return XSTC_DEF(LEX_AU3);
-       }
-       else
-       if(filext == wxT("ave"))
-       {
-          return XSTC_DEF(LEX_AVE);
-       }
-       else
-       if(filext == wxT("bc") || filext == wxT("cln"))
-       {
-          return XSTC_DEF(LEX_BAAN);
-       }
-       else
-       if(filext == wxT("tads3"))
-       {
-          return XSTC_DEF(LEX_TADS3);
-       }
-       else
-       if(filext == wxT("bb"))
-       {
-          return XSTC_DEF(LEX_BLITZBASIC);
-       }
-       else
-       if(filext == wxT("haskell"))
-       {
-          return XSTC_DEF(LEX_HASKELL);
-       }
-       else
-       if(filext == wxT("ant"))
-       {
-          return XSTC_DEF(LEX_BULLANT);
-       }
-       else
-       if(filext == wxT("ml") || filext == wxT("mli"))
-       {
-          return XSTC_DEF(LEX_CAML);
-       }
-       else
-       if(filext == wxT("conf"))
-       {
-          return XSTC_DEF(LEX_CONF);
-       }
-       else
-       if(filext == wxT("orc") || filext == wxT("sco") || filext == wxT("csd"))
-       {
-          return XSTC_DEF(LEX_CSOUND);
-       }
-       else
-       if(filext == wxT("e"))
-       {
-          return XSTC_DEF(LEX_EIFFEL);
-       }
-       else
-       if(filext == wxT("ek"))
-       {
-          return XSTC_DEF(LEX_EIFFELKW);
-       }
-       else
-       if(filext == wxT("erl"))
-       {
-          return XSTC_DEF(LEX_ERLANG);
-       }
-       else
-       if(filext == wxT("err"))
-       {
-          return XSTC_DEF(LEX_ERRORLIST);
-       }
-       else
-       if(filext == wxT("src") || filext == wxT("em"))
-       {
-          return XSTC_DEF(LEX_ESCRIPT);
-       }
-       else
-       if(filext == wxT("prg"))
-       {
-          return XSTC_DEF(LEX_FLAGSHIP);
-       }
-       else
-       if(filext == wxT("forth"))
-       {
-          return XSTC_DEF(LEX_FORTH);
-       }
-       else
-       if(filext == wxT("sh") || filext == wxT("bsh") || filext == wxT("configure"))
-       {
-          return XSTC_DEF(LEX_BASH);
-       }
-       else
-       if(filext == wxT("f77"))
-       {
-          return XSTC_DEF(LEX_F77);
-       }
-       else
-       if(filext == wxT("f") || filext == wxT("for") || filext == wxT("f90") || filext == wxT("f95") || filext == wxT("f2k"))
-       {
-          return XSTC_DEF(LEX_FORTRAN);
-       }
-       else
-       if(filext == wxT("bas") || filext == wxT("bi"))
-       {
-          return XSTC_DEF(LEX_FREEBASIC);
-       }
-#ifdef XSTC_USELVL
-       else
-       if(filext == wxT("iss"))
-       {
-          return XSTC_DEF(LEX_INNOSETUP);
-       }
-#endif
+#endif //XSTC_NO_CPP
+#ifndef XSTC_NO_KIX
        else
        if(filext == wxT("kix"))
        {
           return XSTC_DEF(LEX_KIX);
        }
-       else
-       if(filext == wxT("lsp") || filext == wxT("lisp"))
-       {
-          return XSTC_DEF(LEX_LISP);
-       }
-       else
-       if(filext == wxT("lot"))
-       {
-          return XSTC_DEF(LEX_LOT);
-       }
-       else
-       if(filext == wxT("lt"))
-       {
-          return XSTC_DEF(LEX_LOUT);
-       }
-       else
-       if(filext == wxT("lua"))
-       {
-          return XSTC_DEF(LEX_LUA);
-       }
-       else
-       if(filext == wxT("m"))
-       {
-          return XSTC_DEF(LEX_MATLAB);
-       }
-       else
-       if(filext == wxT("octave"))
-       {
-          return XSTC_DEF(LEX_OCTAVE);
-       }
-       else
-       if(filext == wxT("mp") || filext == wxT("mpx") || filext == wxT("mpy"))
-       {
-          return XSTC_DEF(LEX_METAPOST);
-       }
-       else
-       if(filext == wxT("mms"))
-       {
-          return XSTC_DEF(LEX_MMIXAL);
-       }
-       else
-       if(filext == wxT("tab") || filext == wxT("spf"))
-       {
-          return XSTC_DEF(LEX_NNCRONTAB);
-       }
-       else
-       if(filext == wxT("nsi") || filext == wxT("nsh"))
-       {
-          return XSTC_DEF(LEX_NSIS);
-       }
-#ifdef XSTC_USELVL
-       else
-       if(filext == wxT("impl") || filext == wxT("sign"))
-       {
-          return XSTC_DEF(LEX_OPAL);
-       }
-#endif
-       else
-       if(filext == wxT("inf") || filext == wxT("aut") || filext == wxT("cnf") || filext == wxT("cfg") || filext == wxT("url") || filext == wxT("reg") || filext == wxT("ini") || filext == wxT("properties"))
-       {
-          return XSTC_DEF(LEX_PROPERTIES);
-       }
-       else
-       if(filext == wxT("bat") || filext == wxT("cmd") || filext == wxT("nt"))
-       {
-          return XSTC_DEF(LEX_BATCH);
-       }
-       else
-       if(filext == wxT("makefile") || filext == wxT("mak"))
-       {
-          return XSTC_DEF(LEX_MAKEFILE);
-       }
-       else
-       if(filext == wxT("pas") || filext == wxT("pp") || filext == wxT("inc") || filext == wxT("dpk") || filext == wxT("dfm") || filext == wxT("dpr"))
-       {
-          return XSTC_DEF(LEX_PASCAL);
-       }
-       else
-       if(filext == wxT("sh") || filext == wxT("bsh") || filext == wxT("configure"))
-       {
-          return XSTC_DEF(LEX_BASH);
-       }
-       else
-       if(filext == wxT("pl") || filext == wxT("pm") || filext == wxT("cgi") || filext == wxT("pod"))
-       {
-          return XSTC_DEF(LEX_PERL);
-       }
-       else
-       if(filext == wxT("pov") || filext == wxT("inc"))
-       {
-          return XSTC_DEF(LEX_POV);
-       }
-       else
-       if(filext == wxT("ps"))
-       {
-          return XSTC_DEF(LEX_PS);
-       }
-       else
-       if(filext == wxT("pb"))
-       {
-          return XSTC_DEF(LEX_PUREBASIC);
-       }
-       else
-       if(filext == wxT("py") || filext == wxT("pyw"))
-       {
-          return XSTC_DEF(LEX_PYTHON);
-       }
-       else
-       if(filext == wxT("r") || filext == wxT("reb"))
-       {
-          return XSTC_DEF(LEX_REBOL);
-       }
-       else
-       if(filext == wxT("rb") || filext == wxT("rbw"))
-       {
-          return XSTC_DEF(LEX_RUBY);
-       }
-       else
-       if(filext == wxT("sol"))
-       {
-          return XSTC_DEF(LEX_SCRIPTOL);
-       }
-       else
-       if(filext == wxT("st"))
-       {
-          return XSTC_DEF(LEX_SMALLTALK);
-       }
-       else
-       if(filext == wxT("e"))
-       {
-          return XSTC_DEF(LEX_SPECMAN);
-       }
-#ifdef XSTC_USELVL
-       else
-       if(filext == wxT("scp") || filext == wxT("out") || filext == wxT("spice"))
-       {
-          return XSTC_DEF(LEX_SPICE);
-       }
-#endif
-       else
-       if(filext == wxT("sql") || filext == wxT("sp") || filext == wxT("sf") || filext == wxT("spb") || filext == wxT("sps") || filext == wxT("body") || filext == wxT("spec"))
-       {
-          return XSTC_DEF(LEX_SQL);
-       }
-#ifdef XSTC_USELVL
-       else
-       if(filext == wxT("tcl") || filext == wxT("itcl"))
-       {
-          return XSTC_DEF(LEX_TCL);
-       }
-#endif
-       else
-       if(filext == wxT("tex") || filext == wxT("tuo") || filext == wxT("tui") || filext == wxT("idx") || filext == wxT("toc") || filext == wxT("aux") || filext == wxT("sty"))
-       {
-          return XSTC_DEF(LEX_TEX);
-       }
+#endif //XSTC_NO_KIX
+#ifndef XSTC_NO_LATEX
        else
        if(filext == wxT("latex"))
        {
           return XSTC_DEF(LEX_LATEX);
        }
+#endif //XSTC_NO_LATEX
+#ifndef XSTC_NO_LISP
        else
-       if(filext == wxT("css"))
+       if(filext == wxT("lsp") || filext == wxT("lisp"))
        {
-          return XSTC_DEF(LEX_CSS);
+          return XSTC_DEF(LEX_LISP);
        }
+#endif //XSTC_NO_LISP
+#ifndef XSTC_NO_LOT
        else
-       if(filext == wxT("xcode"))
+       if(filext == wxT("lot"))
        {
-          return XSTC_DEF(LEX_XCODE);
+          return XSTC_DEF(LEX_LOT);
        }
+#endif //XSTC_NO_LOT
+#ifndef XSTC_NO_LOUT
        else
-       if(filext == wxT("txt") || filext == wxT("nfo") || filext == wxT("diz") || filext == wxT("doc") || filext == wxT("rtf") || filext == wxT("lst") || filext == wxT("log") || filext == wxT("text"))
+       if(filext == wxT("lt"))
        {
-          return thelexer;
+          return XSTC_DEF(LEX_LOUT);
        }
+#endif //XSTC_NO_LOUT
+#ifndef XSTC_NO_LUA
        else
-       if(filext == wxT("pas"))
+       if(filext == wxT("lua"))
+       {
+          return XSTC_DEF(LEX_LUA);
+       }
+#endif //XSTC_NO_LUA
+#ifndef XSTC_NO_MAKEFILE
+       else
+       if(filext == wxT("makefile") || filext == wxT("mak"))
+       {
+          return XSTC_DEF(LEX_MAKEFILE);
+       }
+#endif //XSTC_NO_MAKEFILE
+#ifndef XSTC_NO_MATLAB
+       else
+       if(filext == wxT("m"))
+       {
+          return XSTC_DEF(LEX_MATLAB);
+       }
+#endif //XSTC_NO_MATLAB
+#ifndef XSTC_NO_METAPOST
+       else
+       if(filext == wxT("mp") || filext == wxT("mpx") || filext == wxT("mpy"))
+       {
+          return XSTC_DEF(LEX_METAPOST);
+       }
+#endif //XSTC_NO_METAPOST
+#ifndef XSTC_NO_MMIXAL
+       else
+       if(filext == wxT("mms"))
+       {
+          return XSTC_DEF(LEX_MMIXAL);
+       }
+#endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NNCRONTAB
+       else
+       if(filext == wxT("tab") || filext == wxT("spf"))
+       {
+          return XSTC_DEF(LEX_NNCRONTAB);
+       }
+#endif //XSTC_NO_NNCRONTAB
+#ifndef XSTC_NO_NSIS
+       else
+       if(filext == wxT("nsi") || filext == wxT("nsh"))
+       {
+          return XSTC_DEF(LEX_NSIS);
+       }
+#endif //XSTC_NO_NSIS
+#ifndef XSTC_NO_OCTAVE
+       else
+       if(filext == wxT("octave"))
+       {
+          return XSTC_DEF(LEX_OCTAVE);
+       }
+#endif //XSTC_NO_OCTAVE
+#ifndef XSTC_NO_OPAL
+       else
+       if(filext == wxT("impl") || filext == wxT("sign"))
+       {
+          return XSTC_DEF(LEX_OPAL);
+       }
+#endif //XSTC_NO_OPAL
+#ifndef XSTC_NO_PASCAL
+       else
+       if(filext == wxT("pas") || filext == wxT("pp") || filext == wxT("inc") || filext == wxT("dpk") || filext == wxT("dfm") || filext == wxT("dpr"))
        {
           prop1[0]=wxT("fold.comment_1");
           prop1[1]=wxT("fold.preprocessor_1");
           prop1[2]=wxT("fold.compact_0");
           return XSTC_DEF(LEX_PASCAL);
        }
+#endif //XSTC_NO_PASCAL
+#ifndef XSTC_NO_PERL
        else
-       if(filext == wxT("diff") || filext == wxT("patch"))
+       if(filext == wxT("pl") || filext == wxT("pm") || filext == wxT("cgi") || filext == wxT("pod"))
        {
-          return XSTC_DEF(LEX_DIFF);
+          return XSTC_DEF(LEX_PERL);
+       }
+#endif //XSTC_NO_PERL
+#ifndef XSTC_NO_PO
+	   else
+       if(filext == wxT("po"))
+       {
+          return XSTC_DEF(LEX_PO);
+       }
+#endif //XSTC_NO_PO
+#ifndef XSTC_NO_POV
+       else
+       if(filext == wxT("pov") || filext == wxT("inc"))
+       {
+          return XSTC_DEF(LEX_POV);
+       }
+#endif //XSTC_NO_POV
+#ifndef XSTC_NO_POWERSHELL
+	   else
+       if(filext == wxT("ps1"))
+       {
+          return XSTC_DEF(LEX_POWERSHELL);
+       }
+#endif //XSTC_NO_POWERSHELL
+#ifndef XSTC_NO_PROPERTIES
+       else
+       if(filext == wxT("inf") || filext == wxT("aut") || filext == wxT("cnf") || filext == wxT("cfg") || filext == wxT("url") || filext == wxT("reg") || filext == wxT("ini") || filext == wxT("properties"))
+       {
+          return XSTC_DEF(LEX_PROPERTIES);
+       }
+#endif //XSTC_NO_PROPERTIES
+#ifndef XSTC_NO_PS
+       else
+       if(filext == wxT("ps"))
+       {
+          return XSTC_DEF(LEX_PS);
+       }
+#endif //XSTC_NO_PS
+#ifndef XSTC_NO_PYTHON
+       else
+       if(filext == wxT("py") || filext == wxT("pyw"))
+       {
+          return XSTC_DEF(LEX_PYTHON);
+       }
+#endif //XSTC_NO_PYTHON
+#ifndef XSTC_NO_R
+	   else
+       if(filext == wxT("r"))
+       {
+          return XSTC_DEF(LEX_R);
+       }
+#endif //XSTC_NO_R
+#ifndef XSTC_NO_REBOL
+       else
+       if(filext == wxT("r") || filext == wxT("reb"))
+       {
+          return XSTC_DEF(LEX_REBOL);
+       }
+#endif //XSTC_NO_REBOL
+#ifndef XSTC_NO_RUBY
+       else
+       if(filext == wxT("rb") || filext == wxT("rbw"))
+       {
+          return XSTC_DEF(LEX_RUBY);
+       }
+#endif //XSTC_NO_RUBY
+#ifndef XSTC_NO_SCRIPTOL
+       else
+       if(filext == wxT("sol"))
+       {
+          return XSTC_DEF(LEX_SCRIPTOL);
+       }
+#endif //XSTC_NO_SCRIPTOL
+#ifndef XSTC_NO_SMALLTALK
+       else
+       if(filext == wxT("st"))
+       {
+          return XSTC_DEF(LEX_SMALLTALK);
+       }
+#endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SPECMAN
+       else
+       if(filext == wxT("e"))
+       {
+          return XSTC_DEF(LEX_SPECMAN);
+       }
+#endif //XSTC_NO_SPECMAN
+#ifndef XSTC_NO_SPICE
+       else
+       if(filext == wxT("scp") || filext == wxT("out") || filext == wxT("spice"))
+       {
+          return XSTC_DEF(LEX_SPICE);
+       }
+#endif //XSTC_NO_SPICE
+#ifndef XSTC_NO_SQL
+       else
+       if(filext == wxT("sql") || filext == wxT("sp") || filext == wxT("sf") || filext == wxT("spb") || filext == wxT("sps") || filext == wxT("body") || filext == wxT("spec"))
+       {
+          return XSTC_DEF(LEX_SQL);
+       }
+#endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TADS3
+       else
+       if(filext == wxT("tads3"))
+       {
+          return XSTC_DEF(LEX_TADS3);
+       }
+#endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TCL
+       else
+       if(filext == wxT("tcl") || filext == wxT("itcl"))
+       {
+          return XSTC_DEF(LEX_TCL);
+       }
+#endif //XSTC_NO_TCL
+#ifndef XSTC_NO_TEX
+       else
+       if(filext == wxT("tex") || filext == wxT("tuo") || filext == wxT("tui") || filext == wxT("idx") || filext == wxT("toc") || filext == wxT("aux") || filext == wxT("sty"))
+       {
+          return XSTC_DEF(LEX_TEX);
+       }
+#endif //XSTC_NO_TEX
+#ifndef XSTC_NO_VB
+       else
+       if(filext == wxT("vb") || filext == wxT("vbp") || filext == wxT("frm") || filext == wxT("cls") || filext == wxT("clt") || filext == wxT("pag") || filext == wxT("dsr") || filext == wxT("dsm") || filext == wxT("dob"))
+       {
+          return XSTC_DEF(LEX_VB);
+          prop1[0]=wxT("fold_1");
+       }
+#endif //XSTC_NO_VB
+#ifndef XSTC_NO_VBSCRIPT
+       else
+       if(filext == wxT("vbs"))
+       {
+          return XSTC_DEF(LEX_VBSCRIPT);
+       }
+#endif //XSTC_NO_VBSCRIPT
+#ifndef XSTC_NO_VERILOG
+       else
+       if(filext == wxT("v") || filext == wxT("vh"))
+       {
+          return XSTC_DEF(LEX_VERILOG);
+       }
+#endif //XSTC_NO_VERILOG
+#ifndef XSTC_NO_VHDL
+       else
+       if(filext == wxT("vhd") || filext == wxT("vhdl"))
+       {
+          return XSTC_DEF(LEX_VHDL);
+       }
+#endif //XSTC_NO_VHDL
+#ifndef XSTC_NO_XCODE
+       else
+       if(filext == wxT("xcode"))
+       {
+          return XSTC_DEF(LEX_XCODE);
+       }
+#endif //XSTC_NO_XCODE
+#ifndef XSTC_NO_XML
+       else
+       if(filext == wxT("xml") || filext == wxT("xsl") || filext == wxT("xslt") || filext == wxT("svg") || filext == wxT("xul") || filext == wxT("xsd") || filext == wxT("dtd") || filext == wxT("xrc") || filext == wxT("axl"))
+       {
+          return XSTC_DEF(LEX_XML);
+          prop1[0]=wxT("fold_1");
+       }
+#endif //XSTC_NO_XML
+#ifndef XSTC_NO_YAML
+       else
+       if(filext == wxT("yml") || filext == wxT("yaml"))
+       {
+          return XSTC_DEF(LEX_YAML);
+       }
+#endif //XSTC_NO_YAML
+//this is for plain text
+       else
+       if(filext == wxT("txt") || filext == wxT("nfo") || filext == wxT("diz") || filext == wxT("doc") || filext == wxT("rtf") || filext == wxT("lst") || filext == wxT("log") || filext == wxT("text"))
+       {
+          return thelexer;
        }
    return thelexer;
 }
@@ -2050,7 +2652,7 @@ void XSTC::FoldConf()
       g=0;
       b=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/M0STYLE"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -2430,6 +3032,13 @@ void XSTC::FoldBox()
       fg = wxColour(0x3F,0x3F,0x3F);
       bg = wxColour(0x80,0x80,0x80);
    }
+   if(colorstyle == wxT("matrix"))
+   {
+      fgc = wxT("#282828");
+      bgc = wxT("#00FF00");
+      fg = wxColour(0x28,0x28,0x28);
+      bg = wxColour(0x00,0xFF,0x00);
+   }
    if(colorstyle == wxT("null"))
    {
       fgc = wxT("#000000");
@@ -2437,14 +3046,14 @@ void XSTC::FoldBox()
       fg = wxColour(0xFF,0xFF,0xFF);
       bg = wxColour(0x00,0x00,0x00);
    }
-   
-#if XCLASS == 0 //wxStyledTextCtrl
+
+#ifdef XSTC_USE_WXSTC
 
    if(markoutline)
       this->MarkerDefine(0, markshape, bg, fg);
    else
       this->MarkerDefine(0, markshape, fg, bg);
-   
+
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_BOXPLUS),           fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_BOXMINUS),          fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_BOXPLUSCONNECTED),  fg, bg);
@@ -2453,7 +3062,8 @@ void XSTC::FoldBox()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),             fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER),           fg, bg);
 
-#elif XCLASS == 1 //wxScintilla
+#endif //XSTC_USE_WXSTC
+#ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
    if(markoutline)
@@ -2466,7 +3076,7 @@ void XSTC::FoldBox()
       this->MarkerSetForeground(0, fg);
       this->MarkerSetBackground(0, bg);
    }
-   
+
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_BOXPLUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_BOXMINUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_BOXPLUSCONNECTED));
@@ -2491,10 +3101,10 @@ void XSTC::FoldBox()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
 
-#endif //wxscintilla
+#endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
-   
+
    if(usecolor)
    {
       FoldConf();
@@ -2549,6 +3159,13 @@ void XSTC::FoldCircle()
       fg = wxColour(0x3F,0x3F,0x3F);
       bg = wxColour(0x80,0x80,0x80);
    }
+   if(colorstyle == wxT("matrix"))
+   {
+      fgc = wxT("#282828");
+      bgc = wxT("#00FF00");
+      fg = wxColour(0x28,0x28,0x28);
+      bg = wxColour(0x00,0xFF,0x00);
+   }
    if(colorstyle == wxT("null"))
    {
       fgc = wxT("#000000");
@@ -2557,7 +3174,7 @@ void XSTC::FoldCircle()
       bg = wxColour(0x00,0x00,0x00);
    }
 
-#if XCLASS == 0 //wxStyledTextCtrl
+#ifdef XSTC_USE_WXSTC
 
    if(markoutline)
       this->MarkerDefine(0, markshape, bg, fg);
@@ -2572,7 +3189,8 @@ void XSTC::FoldCircle()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),                fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNERCURVE),              fg, bg);
 
-#elif XCLASS == 1 //wxScintilla
+#endif //XSTC_USE_WXSTC
+#ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
    if(markoutline)
@@ -2610,7 +3228,7 @@ void XSTC::FoldCircle()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
 
-#endif //wxscintilla
+#endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
 
@@ -2668,6 +3286,13 @@ void XSTC::FoldArrow()
       fg = wxColour(0x3F,0x3F,0x3F);
       bg = wxColour(0x80,0x80,0x80);
    }
+   if(colorstyle == wxT("matrix"))
+   {
+      fgc = wxT("#282828");
+      bgc = wxT("#00FF00");
+      fg = wxColour(0x28,0x28,0x28);
+      bg = wxColour(0x00,0xFF,0x00);
+   }
    if(colorstyle == wxT("null"))
    {
       fgc = wxT("#000000");
@@ -2676,7 +3301,7 @@ void XSTC::FoldArrow()
       bg = wxColour(0x00,0x00,0x00);
    }
 
-#if XCLASS == 0 //wxStyledTextCtrl
+#ifdef XSTC_USE_WXSTC
 
    if(markoutline)
       this->MarkerDefine(0, markshape, bg, fg);
@@ -2691,7 +3316,8 @@ void XSTC::FoldArrow()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY),     fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY),     fg, bg);
 
-#elif XCLASS == 1 //wxScintilla
+#endif //XSTC_USE_WXSTC
+#ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
    if(markoutline)
@@ -2729,7 +3355,7 @@ void XSTC::FoldArrow()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
 
-#endif //wxscintilla
+#endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
 
@@ -2787,6 +3413,13 @@ void XSTC::FoldSimple()
       fg = wxColour(0x3F,0x3F,0x3F);
       bg = wxColour(0x80,0x80,0x80);
    }
+   if(colorstyle == wxT("matrix"))
+   {
+      fgc = wxT("#282828");
+      bgc = wxT("#00FF00");
+      fg = wxColour(0x28,0x28,0x28);
+      bg = wxColour(0x00,0xFF,0x00);
+   }
    if(colorstyle == wxT("null"))
    {
       fgc = wxT("#000000");
@@ -2795,7 +3428,7 @@ void XSTC::FoldSimple()
       bg = wxColour(0x00,0x00,0x00);
    }
 
-#if XCLASS == 0 //wxStyledTextCtrl
+#ifdef XSTC_USE_WXSTC
 
    if(markoutline)
       this->MarkerDefine(0, markshape, bg, fg);
@@ -2809,9 +3442,10 @@ void XSTC::FoldSimple()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_MINUS), fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY), fg, bg);
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY), fg, bg);
-                                                                             
-#elif XCLASS == 1 //wxScintilla                                              
-      
+
+#endif //XSTC_USE_WXSTC
+#ifdef XSTC_USE_WXSCINTILLA
+
    this->MarkerDefine(0, markshape);
    if(markoutline)
    {
@@ -2823,7 +3457,7 @@ void XSTC::FoldSimple()
       this->MarkerSetForeground(0, fg);
       this->MarkerSetBackground(0, bg);
    }
-                                                                       
+
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_PLUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_MINUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_PLUS));
@@ -2848,7 +3482,7 @@ void XSTC::FoldSimple()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
 
-#endif //wxscintilla
+#endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
 
@@ -2863,8 +3497,8 @@ void XSTC::StyleConf()
    wxString colorval,temp;
    int r=0,g=0,b=0;
    long n;
-   
-   
+
+
    if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLR"), &colorval) && colorval != wxT(""))
    {
       temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
@@ -2880,14 +3514,14 @@ void XSTC::StyleConf()
       temp = colorval.BeforeFirst(')');
       temp.ToLong(&n,10);
       b=n;
-      
+
       this->SetEdgeColour(wxColour(r,g,b));
       colorval = wxT("");
       r=0;
       g=0;
       b=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLM"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -2895,7 +3529,7 @@ void XSTC::StyleConf()
       this->SetEdgeColumn(r);
       r=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/EDGMOD"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -2911,7 +3545,7 @@ void XSTC::StyleConf()
       this->SetWrapMode(r);
       r=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/WRAPVF"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -3221,8 +3855,8 @@ void XSTC::StyleConf()
 
    if(colorconf->Read(wxT("XSTColor/STYLE/MAX"), &colorval) && colorval != wxT(""))
        this->StyleSetSpec(XSTC_DEF(STYLE_MAX),                colorval);
-      
-#ifdef XSTC_USELVL
+
+#ifndef XSTC_NO_ALPHA
    if(colorconf->Read(wxT("XSTColor/MISIC/MARKALPHA"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -3230,7 +3864,7 @@ void XSTC::StyleConf()
       this->MarkerSetAlpha(0, r);
       r=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/SELALPHA"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -3238,7 +3872,7 @@ void XSTC::StyleConf()
       this->SetSelAlpha(r);
       r=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/CARETALPHA"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -3246,7 +3880,7 @@ void XSTC::StyleConf()
       this->SetCaretALPHA(r);
       r=0;
    }
-   
+
    if(colorconf->Read(wxT("XSTColor/MISIC/ALPHALVL"), &colorval) && colorval != wxT(""))
    {
       colorval.ToLong(&n,10);
@@ -3254,7 +3888,7 @@ void XSTC::StyleConf()
       alphalvl = r;
       r=0;
    }
-#endif
+#endif //XSTC_NO_ALPHA
 
       if(colorconf->Read(wxT("XSTColor/XS/XS_COMMENT"), &colorval) && colorval != wxT(""))
          XS_comment = colorval;
@@ -3358,9 +3992,9 @@ void XSTC::DarkStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#FFFFFF,back:#000000"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#FFFFFF,back:#000000"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#FFFFFF,back:#000000"));
@@ -3383,11 +4017,11 @@ void XSTC::DarkStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
     XS_comment = wxT("fore:#464646,back:#000000");
 	 XS_comment2 = wxT("fore:#FF4646,back:#000000");
 	 XS_comment3 = wxT("fore:#029c9bc,back:#000000");
@@ -3414,7 +4048,7 @@ void XSTC::DarkStyle()
    if(usecolor)
    {
       StyleConf();
-   } 
+   }
 }
 
 void XSTC::VisualStudioStyle()
@@ -3446,7 +4080,7 @@ void XSTC::VisualStudioStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN),  wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_MINUS),      wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_PLUS),       wxT("fore:#000000,back:#FFFFFF"));
-   
+
 
    this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT),  wxT("fore:#000000,back:#FFFFFF"));
@@ -3454,9 +4088,9 @@ void XSTC::VisualStudioStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#FFFFFF,back:#000000"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#FFFFFF,back:#000000"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#000000,back:#FFFFFF"));
@@ -3479,11 +4113,11 @@ void XSTC::VisualStudioStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
 	 XS_comment = wxT("fore:#008000,italic,back:#FFFFFF");
 	 XS_comment2 = wxT("fore:#008000,italic,bold,back:#FFFFFF");
 	 XS_comment3 = wxT("fore:#008000,italic,underline,back:#FFFFFF");
@@ -3550,9 +4184,9 @@ void XSTC::ClassicStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#FFFFFF,back:#000000"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#FFFFFF,back:#000000"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#000000,back:#E0DFE3"));
@@ -3575,11 +4209,11 @@ void XSTC::ClassicStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
      XS_comment = wxT("fore:#C8C7CA,italic,back:#FFFFFF");
 	 XS_comment2 = wxT("fore:#C8C7CA,bold,back:#FFFFFF");
 	 XS_comment3 = wxT("fore:#ACABAD,italic,back:#FFFFFF");
@@ -3617,7 +4251,6 @@ void XSTC::BorlandStyle()
    this->SetWhitespaceForeground(true, wxColour(0x00,0xFF,0x00));
    this->SetWhitespaceBackground(true, wxColour(0x00,0x00,0x80));
    this->SetCaretForeground(wxColour(0xFF,0xFF,0x00));
-   this->SetSelBackground(true, wxColour(0xC0,0xC0,0xC0));
    this->SetSelForeground(true, wxColour(0x00,0x00,0x80));
 
    this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE),          wxT("fore:#FFFF00,back:#000080"));
@@ -3646,9 +4279,9 @@ void XSTC::BorlandStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#FFFF00,back:#000080"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#FFFFFF,back:#000000"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#FFFFFF,back:#000000"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#FFFFFF,back:#000000"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#00FF00,back:#000080"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#FFFF00,back:#000080"));
@@ -3658,7 +4291,6 @@ void XSTC::BorlandStyle()
    this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE),    wxT("fore:#FFFF00,back:#000080"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), wxT("fore:#FFFF00,back:#000080"));
    this->StyleSetSpec(XSTC_DEF(STYLE_MAX),            wxT("fore:#FFFF00,back:#000080"));
-
 
    colorstyle   = wxT("borland");
    brkptcol     = wxT("#800000");
@@ -3672,12 +4304,12 @@ void XSTC::BorlandStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
-    XS_comment = wxT("fore:#008080,back:#000080");
+#endif //XSTC_NO_ALPHA
+     XS_comment = wxT("fore:#008080,back:#000080");
 	 XS_comment2 = wxT("fore:#008080,back:#000080");
 	 XS_comment3 = wxT("fore:#008080,back:#000080");
 	 XS_s_string = wxT("fore:#FF0000,back:#000080");
@@ -3743,9 +4375,9 @@ void XSTC::JeffStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER),  wxT("fore:#000000,back:#FFFFFF"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#000000,back:#FFFFFF"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#FFFFFF,back:#808080"));
@@ -3755,7 +4387,6 @@ void XSTC::JeffStyle()
    this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE),    wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), wxT("fore:#000000,back:#FFFFFF"));
    this->StyleSetSpec(XSTC_DEF(STYLE_MAX),            wxT("fore:#000000,back:#FFFFFF"));
-
 
    colorstyle   = wxT("jeff");
    brkptcol     = wxT("#800000");
@@ -3769,11 +4400,11 @@ void XSTC::JeffStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
      XS_comment = wxT("fore:#008000,back:#FFFFFF");
 	 XS_comment2 = wxT("fore:#00CC00,back:#FFFFFF");
 	 XS_comment3 = wxT("fore:#808080,back:#FFFFFF");
@@ -3840,9 +4471,9 @@ void XSTC::ZenburnStyle()
    this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#DFDFBF,back:#3F3F3F"));
    this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#DFDFBF,back:#3F3F3F"));
    this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#DFDFBF,back:#3F3F3F"));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_MARK_FULLRECT
    this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#DFDFBF,back:#3F3F3F"));
-#endif
+#endif //XSTC_NO_MARK_FULLRECT
 
    this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#DFDFBF,back:#3F3F3F"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#85AC8D,back:#3F3F3F"));
@@ -3852,7 +4483,6 @@ void XSTC::ZenburnStyle()
    this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE),    wxT("fore:#DFDFBF,back:#3F3F3F"));
    this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), wxT("fore:#DFDFBF,back:#3F3F3F"));
    this->StyleSetSpec(XSTC_DEF(STYLE_MAX),            wxT("fore:#DFDFBF,back:#3F3F3F"));
-
 
    colorstyle   = wxT("zenburn");
    brkptcol     = wxT("#800000");
@@ -3866,11 +4496,11 @@ void XSTC::ZenburnStyle()
    this->SetWrapVisualFlags(wrapvf);
    this->SetLayoutCache(cachemod);
    this->SetCaretLineVisible(caretlv);
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
      XS_comment = wxT("fore:#85AC8D,back:#3F3F3F");
 	 XS_comment2 = wxT("fore:#466661,back:#3F3F3F");
 	 XS_comment3 = wxT("fore:#808080,back:#3F3F3F");
@@ -3900,8 +4530,104 @@ void XSTC::ZenburnStyle()
    }
 }
 
+void XSTC::MatrixStyle()
+{
+   this->SetCaretBk(wxColour(0x28,0x28,0x28));
+   this->SetFoldMarginColour(true, wxColour(0x28,0x28,0x28));
+   this->SetFoldMarginHiColour(true, wxColour(0x28,0x28,0x28));
+   this->SetWhitespaceForeground(true, wxColour(0x80,0x80,0x80));
+   this->SetWhitespaceBackground(true, wxColour(0x00,0x00,0x00));
+   this->SetCaretForeground(wxColour(0x00,0xFF,0x00));
+   this->SetSelBackground(true, wxColour(0x28,0x28,0x28));
+   this->SetSelForeground(true, wxColour(0x00,0x80,0x00));
+
+   this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE),          wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(WS_VISIBLEALWAYS),      wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(WS_VISIBLEAFTERINDENT), wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(EOL_CRLF),              wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(EOL_CR),                wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(EOL_LF),                wxT("fore:#808080,back:#000000"));
+
+   this->StyleSetSpec(XSTC_DEF(CP_DBCS),         wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARKER_MAX),      wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_CIRCLE),     wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROW),      wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_SMALLRECT),  wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_SHORTARROW), wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_EMPTY),      wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN),  wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_MINUS),      wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_PLUS),       wxT("fore:#808080,back:#000000"));
+
+
+   this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), wxT("fore:#008000,back:#808080"));
+   this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT),  wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROWS),     wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER),  wxT("fore:#808080,back:#000000"));
+#ifndef XSTC_NO_MARK_FULLRECT
+   this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   wxT("fore:#808080,back:#000000"));
+#endif //
+
+   this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     wxT("fore:#00FF00,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_BRACELIGHT),     wxT("fore:#000080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_BRACEBAD),       wxT("fore:#FF0000,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_CONTROLCHAR),    wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE),    wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), wxT("fore:#808080,back:#000000"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_MAX),            wxT("fore:#808080,back:#000000"));
+
+   colorstyle   = wxT("matrix");
+   brkptcol     = wxT("#808080");
+   actbrkptcol  = wxT("#000080");
+   errorcol     = wxT("#FF0000");
+
+   this->SetEdgeColour(edgcolr);
+   this->SetEdgeColumn(edgcolm);
+   this->SetEdgeMode(edgmod);
+   this->SetWrapMode(wrapmod);
+   this->SetWrapVisualFlags(wrapvf);
+   this->SetLayoutCache(cachemod);
+   this->SetCaretLineVisible(caretlv);
+#ifndef XSTC_NO_ALPHA
+   this->MarkerSetAlpha(0, alphalvl);
+   this->SetSelAlpha(alphalvl);
+   this->SetCaretALPHA(alphalvl);
+#endif //XSTC_NO_ALPHA
+     XS_comment = wxT("fore:#808080,back:#000000");
+	 XS_comment2 = wxT("fore:#808080,back:#000000");
+	 XS_comment3 = wxT("fore:#808080,back:#000000");
+	 XS_s_string = wxT("fore:#CCCCCC,back:#000000");
+	 XS_d_string = wxT("fore:#CCCCCC,back:#000000");
+	 XS_number = wxT("fore:#008000,back:#000000");
+	 XS_char = wxT("fore:#008000,back:#000000");
+	 XS_default = wxT("fore:#00FF00,back:#000000");
+	 XS_key1 = wxT("fore:#008000,back:#000000");
+	 XS_key2 = wxT("fore:#008000,back:#000000");
+	 XS_key3 = wxT("fore:#008000,back:#000000");
+	 XS_key4 = wxT("fore:#008000,back:#000000");
+	 XS_preproc = wxT("fore:#008000,back:#000000");
+	 XS_symbol = wxT("fore:#008000,back:#000000");
+	 XS_tag = wxT("fore:#00FF00,bold,back:#000000");
+	 XS_user = wxT("fore:#00FF00,back:#000000");
+	 XS_misic = wxT("fore:#00FF00,bold,back:#000000");
+	 XS_lang = wxT("fore:#00FF00,italic,back:#000000");
+	 XS_global = wxT("fore:#00FF00,bold,back:#000000");
+	 XS_bad = wxT("fore:#FF0000,back:#000000"); //illegal, error
+	 XS_instruction = wxT("fore:#00FF00,back:#000000"); //whatever
+	 XS_dtype = wxT("fore:#00FF00,back:#000000"); //datatype
+
+   if(usecolor)
+   {
+      StyleConf();
+   }
+}
+
 void XSTC::ResetStyle()
-{   
+{
     brkptcol     = wxT("#FF0000");
     actbrkptcol  = wxT("#0000FF");
     errorcol     = wxT("#800000");
@@ -3915,9 +4641,9 @@ void XSTC::ResetStyle()
     wrapvf       = XSTC_DEF(WRAPVISUALFLAG_END);
     cachemod     = XSTC_DEF(CACHE_CARET);
     caretlv      = true;
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
     alphalvl     = XSTC_DEF(ALPHA_NOALPHA);
-#endif
+#endif //XSTC_NO_ALPHA
 	 XS_comment = wxT("fore:#000000,back:#FFFFFF");
 	 XS_comment2 = wxT("fore:#000000,back:#FFFFFF");
 	 XS_comment3 = wxT("fore:#000000,back:#FFFFFF");
@@ -3958,11 +4684,11 @@ void XSTC::ResetStyle()
    this->MarkerSetBackground(0, wxColour(*wxCYAN));
    this->SetSelBackground(true, wxColour(0x00,0x00,0x00));
    this->SetSelForeground(true, wxColour(0xFF,0xFF,0xFF));
-#ifdef XSTC_USELVL
+#ifndef XSTC_NO_ALPHA
    this->MarkerSetAlpha(0, alphalvl);
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
-#endif
+#endif //XSTC_NO_ALPHA
 }
 
 PropSTR XSTC::GetPropStr(wxString property)
@@ -3978,19 +4704,9 @@ PropSTR XSTC::GetPropStr(wxString property)
  return result;
 }
 
-wxString XSTC::KeyCheck(wxString keyname)
-{//check the contents of a Keyword_Sets object substring, is it a keywordset or filename
- //if a '.' {period} is in the string somewhere, it is assumed a filename.
-   if(keyname.Contains(wxT(".")))
-   {
-      keyname = this->LoadKeyWords(keyname);
-   }
- return keyname;
-}
-
 void XSTC::SetConfEXT(wxString extconf)
 {
-   
+
    wxString passbuff,chop;
    int point,itr;
    PropSTR undot;
@@ -4003,7 +4719,7 @@ void XSTC::SetConfEXT(wxString extconf)
    }
    else
       passbuff = extconf;
-   
+
    point = passbuff.Freq('\n');
    extset.Empty();
    extset.Alloc(point);
@@ -4057,137 +4773,64 @@ int XSTC::GetEXTLexer(wxString extparam)
    }
    extparam.MakeLower();
 
-   if(extparam==wxT("container"))
-      return XSTC_DEF(LEX_CONTAINER);
-
+//all of these are always defined whether or not a language is set so they are always availible
+  
    if(extparam==wxT("null"))
       return XSTC_DEF(LEX_NULL);
 
-   if(extparam==wxT("python"))
-      return XSTC_DEF(LEX_PYTHON);
+   if(extparam==wxT("automatic"))
+      return XSTC_DEF(LEX_AUTOMATIC);
+  
+   if(extparam==wxT("container"))
+      return XSTC_DEF(LEX_CONTAINER);
 
-   if(extparam==wxT("cpp"))
-      return XSTC_DEF(LEX_CPP);
-
-   if(extparam==wxT("html"))
-      return XSTC_DEF(LEX_HTML);
-
-   if(extparam==wxT("xml"))
-      return XSTC_DEF(LEX_XML);
-
-   if(extparam==wxT("perl"))
-      return XSTC_DEF(LEX_PERL);
-
-   if(extparam==wxT("sql"))
-      return XSTC_DEF(LEX_SQL);
-
-   if(extparam==wxT("vb"))
-      return XSTC_DEF(LEX_VB);
-
-   if(extparam==wxT("properties"))
-      return XSTC_DEF(LEX_PROPERTIES);
-
-   if(extparam==wxT("errorlist"))
-      return XSTC_DEF(LEX_ERRORLIST);
-
-   if(extparam==wxT("makefile"))
-      return XSTC_DEF(LEX_MAKEFILE);
-
-   if(extparam==wxT("batch"))
-      return XSTC_DEF(LEX_BATCH);
-
-   if(extparam==wxT("xcode"))
-      return XSTC_DEF(LEX_XCODE);
-
-   if(extparam==wxT("latex"))
-      return XSTC_DEF(LEX_LATEX);
-
-   if(extparam==wxT("lua"))
-      return XSTC_DEF(LEX_LUA);
-
-   if(extparam==wxT("diff"))
-      return XSTC_DEF(LEX_DIFF);
-
-   if(extparam==wxT("conf"))
-      return XSTC_DEF(LEX_CONF);
-
-   if(extparam==wxT("pascal"))
-      return XSTC_DEF(LEX_PASCAL);
-
-   if(extparam==wxT("ave"))
-      return XSTC_DEF(LEX_AVE);
-
+   if(extparam==wxT("abaqus"))
+      return XSTC_DEF(LEX_ABAQUS);
+  
    if(extparam==wxT("ada"))
       return XSTC_DEF(LEX_ADA);
 
-   if(extparam==wxT("lisp"))
-      return XSTC_DEF(LEX_LISP);
+   if(extparam==wxT("apdl"))
+      return XSTC_DEF(LEX_APDL);
 
-   if(extparam==wxT("ruby"))
-      return XSTC_DEF(LEX_RUBY);
-
-   if(extparam==wxT("eiffel"))
-      return XSTC_DEF(LEX_EIFFEL);
-
-   if(extparam==wxT("eiffelkw"))
-      return XSTC_DEF(LEX_EIFFELKW);
-
-   if(extparam==wxT("tcl"))
-      return XSTC_DEF(LEX_TCL);
-
-   if(extparam==wxT("nncrontab"))
-      return XSTC_DEF(LEX_NNCRONTAB);
-
-   if(extparam==wxT("bullant"))
-      return XSTC_DEF(LEX_BULLANT);
-
-   if(extparam==wxT("vbscript"))
-      return XSTC_DEF(LEX_VBSCRIPT);
-
-   if(extparam==wxT("baan"))
-      return XSTC_DEF(LEX_BAAN);
-
-   if(extparam==wxT("wxT(matlab"))
-      return XSTC_DEF(LEX_MATLAB);
-
-   if(extparam==wxT("scriptol"))
-      return XSTC_DEF(LEX_SCRIPTOL);
+   if(extparam==wxT("asn1"))
+      return XSTC_DEF(LEX_ASN1);
 
    if(extparam==wxT("asm"))
       return XSTC_DEF(LEX_ASM);
 
-   if(extparam==wxT("cppnocase"))
-      {
-         cppcase = false;
-         return XSTC_DEF(LEX_CPP);
-      }
+   if(extparam==wxT("au3"))
+      return XSTC_DEF(LEX_AU3);
 
-   if(extparam==wxT("fortran"))
-      return XSTC_DEF(LEX_FORTRAN);
+   if(extparam==wxT("ave"))
+      return XSTC_DEF(LEX_AVE);
 
-   if(extparam==wxT("f77"))
-      return XSTC_DEF(LEX_F77);
+   if(extparam==wxT("asymptote"))
+      return XSTC_DEF(LEX_ASYMPTOTE);
 
-   if(extparam==wxT("css"))
-      return XSTC_DEF(LEX_CSS);
+   if(extparam==wxT("baan"))
+      return XSTC_DEF(LEX_BAAN);
 
-   if(extparam==wxT("pov"))
-      return XSTC_DEF(LEX_POV);
+   if(extparam==wxT("blitzbasic"))
+      return XSTC_DEF(LEX_BLITZBASIC);
+  
+   if(extparam==wxT("freebasic"))
+      return XSTC_DEF(LEX_FREEBASIC);
+  
+   if(extparam==wxT("powerbasic"))
+      return XSTC_DEF(LEX_POWERBASIC);
+  
+   if(extparam==wxT("purebasic"))
+      return XSTC_DEF(LEX_PUREBASIC);
+  
+   if(extparam==wxT("bash"))
+      return XSTC_DEF(LEX_BASH);
 
-   if(extparam==wxT("lout"))
-      return XSTC_DEF(LEX_LOUT);
+   if(extparam==wxT("batch"))
+      return XSTC_DEF(LEX_BATCH);
 
-   if(extparam==wxT("escript"))
-      return XSTC_DEF(LEX_ESCRIPT);
-
-   if(extparam==wxT("ps"))
-      return XSTC_DEF(LEX_PS);
-
-   if(extparam==wxT("nsis"))
-      return XSTC_DEF(LEX_NSIS);
-
-   if(extparam==wxT("mmixal"))
-      return XSTC_DEF(LEX_MMIXAL);
+   if(extparam==wxT("bullant"))
+      return XSTC_DEF(LEX_BULLANT);
 
    if(extparam==wxT("clw"))
       return XSTC_DEF(LEX_CLW);
@@ -4198,63 +4841,215 @@ int XSTC::GetEXTLexer(wxString extparam)
          return XSTC_DEF(LEX_CLW);
       }
 
-   if(extparam==wxT("lot"))
-      return XSTC_DEF(LEX_LOT);
+   if(extparam==wxT("cmake"))
+      return XSTC_DEF(LEX_CMAKE);
+  
+   if(extparam==wxT("conf"))
+      return XSTC_DEF(LEX_CONF);
 
-   if(extparam==wxT("yaml"))
-      return XSTC_DEF(LEX_YAML);
+   if(extparam==wxT("cpp"))
+      return XSTC_DEF(LEX_CPP);
 
-   if(extparam==wxT("tex"))
-      return XSTC_DEF(LEX_TEX);
+   if(extparam==wxT("cppnocase"))
+      {
+         cppcase = false;
+         return XSTC_DEF(LEX_CPP);
+      }
 
-   if(extparam==wxT("metapost"))
-      return XSTC_DEF(LEX_METAPOST);
+   if(extparam==wxT("csound"))
+      return XSTC_DEF(LEX_CSOUND);
 
-   if(extparam==wxT("powerbasic"))
-      return XSTC_DEF(LEX_POWERBASIC);
+   if(extparam==wxT("css"))
+      return XSTC_DEF(LEX_CSS);
 
-   if(extparam==wxT("wxT(forth"))
-      return XSTC_DEF(LEX_FORTH);
+   if(extparam==wxT("d"))
+      return XSTC_DEF(LEX_D);
+
+   if(extparam==wxT("diff"))
+      return XSTC_DEF(LEX_DIFF);
+
+   if(extparam==wxT("eiffel"))
+      return XSTC_DEF(LEX_EIFFEL);
+
+   if(extparam==wxT("eiffelkw"))
+      return XSTC_DEF(LEX_EIFFELKW);
 
    if(extparam==wxT("erlang"))
       return XSTC_DEF(LEX_ERLANG);
 
-   if(extparam==wxT("octave"))
-      return XSTC_DEF(LEX_OCTAVE);
+   if(extparam==wxT("errorlist"))
+      return XSTC_DEF(LEX_ERRORLIST);
 
-   if(extparam==wxT("mssql"))
-      return XSTC_DEF(LEX_MSSQL);
+   if(extparam==wxT("escript"))
+      return XSTC_DEF(LEX_ESCRIPT);
 
-   if(extparam==wxT("verilog"))
-      return XSTC_DEF(LEX_VERILOG);
+   if(extparam==wxT("f77"))
+      return XSTC_DEF(LEX_F77);
 
-   if(extparam==wxT("kix"))
-      return XSTC_DEF(LEX_KIX);
+   if(extparam==wxT("flagship"))
+      return XSTC_DEF(LEX_FLAGSHIP);
+
+   if(extparam==wxT("forth"))
+      return XSTC_DEF(LEX_FORTH);
+
+   if(extparam==wxT("fortran"))
+      return XSTC_DEF(LEX_FORTRAN);
+
+   if(extparam==wxT("gap"))
+      return XSTC_DEF(LEX_GAP);
 
    if(extparam==wxT("gui4cli"))
       return XSTC_DEF(LEX_GUI4CLI);
 
+   if(extparam==wxT("haskell"))
+      return XSTC_DEF(LEX_HASKELL);
+
+   if(extparam==wxT("html"))
+      return XSTC_DEF(LEX_HTML);
+
+   if(extparam==wxT("inno"))
+      return XSTC_DEF(LEX_INNOSETUP);
+
+   if(extparam==wxT("js"))
+      return XSTC_DEF(LEX_CPP);
+
+   if(extparam==wxT("java"))
+      return XSTC_DEF(LEX_CPP);
+
+   if(extparam==wxT("kix"))
+      return XSTC_DEF(LEX_KIX);
+
+   if(extparam==wxT("latex"))
+      return XSTC_DEF(LEX_LATEX);
+
+   if(extparam==wxT("lisp"))
+      return XSTC_DEF(LEX_LISP);
+
+   if(extparam==wxT("lot"))
+      return XSTC_DEF(LEX_LOT);
+
+   if(extparam==wxT("lout"))
+      return XSTC_DEF(LEX_LOUT);
+
+   if(extparam==wxT("lua"))
+      return XSTC_DEF(LEX_LUA);
+
+   if(extparam==wxT("magik"))
+      return XSTC_DEF(LEX_MAGIK);
+    
+   if(extparam==wxT("makefile"))
+      return XSTC_DEF(LEX_MAKEFILE);
+
+   if(extparam==wxT("matlab"))
+      return XSTC_DEF(LEX_MATLAB);
+
+   if(extparam==wxT("metapost"))
+      return XSTC_DEF(LEX_METAPOST);
+
+   if(extparam==wxT("mmixal"))
+      return XSTC_DEF(LEX_MMIXAL);
+
+   if(extparam==wxT("nncrontab"))
+      return XSTC_DEF(LEX_NNCRONTAB);
+
+   if(extparam==wxT("nsis"))
+      return XSTC_DEF(LEX_NSIS);
+
+   if(extparam==wxT("octave"))
+      return XSTC_DEF(LEX_OCTAVE);
+
+   if(extparam==wxT("opal"))
+      return XSTC_DEF(LEX_OPAL);
+
+   if(extparam==wxT("pascal"))
+      return XSTC_DEF(LEX_PASCAL);
+
+   if(extparam==wxT("perl"))
+      return XSTC_DEF(LEX_PERL);
+  
+   if(extparam==wxT("plm"))
+      return XSTC_DEF(LEX_PLM);
+  
+   if(extparam==wxT("po"))
+      return XSTC_DEF(LEX_PO);
+
+   if(extparam==wxT("powershell"))
+      return XSTC_DEF(LEX_POWERSHELL);
+
+   if(extparam==wxT("pov"))
+      return XSTC_DEF(LEX_POV);
+
+   if(extparam==wxT("progress"))
+      return XSTC_DEF(LEX_PROGRESS);
+
+   if(extparam==wxT("properties"))
+      return XSTC_DEF(LEX_PROPERTIES);
+
+   if(extparam==wxT("ps"))
+      return XSTC_DEF(LEX_PS);
+
+   if(extparam==wxT("python"))
+      return XSTC_DEF(LEX_PYTHON);
+
+   if(extparam==wxT("r"))
+      return XSTC_DEF(LEX_R);
+  
+   if(extparam==wxT("rebol"))
+      return XSTC_DEF(LEX_REBOL);
+
+   if(extparam==wxT("ruby"))
+      return XSTC_DEF(LEX_RUBY);
+
+   if(extparam==wxT("scriptol"))
+      return XSTC_DEF(LEX_SCRIPTOL);
+
+   if(extparam==wxT("smalltalk"))
+      return XSTC_DEF(LEX_SMALLTALK);
+
    if(extparam==wxT("specman"))
       return XSTC_DEF(LEX_SPECMAN);
 
-   if(extparam==wxT("au3"))
-      return XSTC_DEF(LEX_AU3);
+   if(extparam==wxT("spice"))
+      return XSTC_DEF(LEX_SPICE);
 
-   if(extparam==wxT("apdl"))
-      return XSTC_DEF(LEX_APDL);
+   if(extparam==wxT("mssql"))
+      return XSTC_DEF(LEX_MSSQL);
 
-   if(extparam==wxT("bash"))
-      return XSTC_DEF(LEX_BASH);
+   if(extparam==wxT("mysql"))
+      return XSTC_DEF(LEX_MYSQL);
 
-   if(extparam==wxT("asn1"))
-      return XSTC_DEF(LEX_ASN1);
+   if(extparam==wxT("sql"))
+      return XSTC_DEF(LEX_SQL);
+
+   if(extparam==wxT("tads3"))
+      return XSTC_DEF(LEX_TADS3);
+
+   if(extparam==wxT("tcl"))
+      return XSTC_DEF(LEX_TCL);
+
+   if(extparam==wxT("tex"))
+      return XSTC_DEF(LEX_TEX);
+
+   if(extparam==wxT("verilog"))
+      return XSTC_DEF(LEX_VERILOG);
 
    if(extparam==wxT("vhdl"))
       return XSTC_DEF(LEX_VHDL);
 
-   if(extparam==wxT("automatic"))
-      return XSTC_DEF(LEX_AUTOMATIC);
+   if(extparam==wxT("vb"))
+      return XSTC_DEF(LEX_VB);
 
+   if(extparam==wxT("vbscript"))
+      return XSTC_DEF(LEX_VBSCRIPT);
+
+   if(extparam==wxT("xcode"))
+      return XSTC_DEF(LEX_XCODE);
+
+   if(extparam==wxT("xml"))
+      return XSTC_DEF(LEX_XML);
+
+   if(extparam==wxT("yaml"))
+      return XSTC_DEF(LEX_YAML);
 
    return XSTC_DEF(LEX_NULL);
 }
@@ -4381,6 +5176,7 @@ void XSTC::SetMgnsWidth(int line, int symbol, int fold)
    fldw = fold;
 }
 
+#ifndef XSTC_NO_TRIMTRAIL
 void XSTC::TrimTrailing()
 {
    wxString editor,text;
@@ -4401,7 +5197,9 @@ void XSTC::TrimTrailing()
    }
    this->SetText(editor);
 }
+#endif //XSTC_NO_TRIMTRAIL
 
+#ifndef XSTC_NO_TABSPACE
 void XSTC::TabSpace(bool tabs, int spaces)
 {
    wxString editor = this->GetText();
@@ -4411,7 +5209,7 @@ void XSTC::TabSpace(bool tabs, int spaces)
    for(x=0;x<spaces;++x)
       ed2 = ed2 + wxT(" ");
    len = editor.length();
-   
+
    if(tabs)
    {
       for(x=0;x<len;++x)
@@ -4440,15 +5238,16 @@ void XSTC::TabSpace(bool tabs, int spaces)
    }
    this->SetText(editor);
 }
+#endif //XSTC_NO_TABSPACE
 
-
+#ifdef XSTC_USE_CONFIG
 wxFileConfig* XSTC::SetColorConf(bool localf, wxString app, wxString vendor, wxString local, wxString global)
 {
    if(localf)
       fcconf = new wxFileConfig(app, vendor, local, global, wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_RELATIVE_PATH, wxConvUTF8);
    else
       fcconf = new wxFileConfig(app, vendor, local, global, wxCONFIG_USE_GLOBAL_FILE, wxConvUTF8);
-   
+
    usecolor = true;
 	colorconf = (wxConfigBase*)fcconf;
    return fcconf;
@@ -4462,9 +5261,14 @@ wxFileConfig* XSTC::SetColorConf(wxInputStream& is)
    return fcconf;
 }
 
+#ifdef _WXMSW_ 
+#ifdef XSTC_USE_REG
 wxRegConfig* XSTC::SetColorConf(wxString appName, wxString vendorName, wxString Filename)
 {
     rcconf = new wxRegConfig(appName,vendorName,Filename,wxEmptyString,wxCONFIG_USE_LOCAL_FILE);
 	 colorconf = (wxConfigBase*)rcconf;
     return rcconf;
 }
+#endif //XSTC_USE_REG
+#endif //_WXMSW_
+#endif //XSTC_USE_CONFIG
