@@ -58,6 +58,8 @@
 #include <wx/arrstr.h>
 #include <wx/filedlg.h>
 #include <wx/utils.h>
+#include <wx/gdicmn.h>
+#include <wx/colour.h>
 
 #ifndef XSTC_NO_KEYS
 /**
@@ -1582,6 +1584,85 @@ void LexYAML();
     \detailed doens't do any well formed checks, just looks for characters
     */
     bool FilevalidCheck(wxString entry);
+    
+    /**
+    \brief creates a range of bookmarks of characters
+
+    \detailed any character is valid, so a number or an alpha character or even a symbol
+              this automatically remembers the markers set and will remove all of them
+              when UnSetAlphaBmarks() is called. this can be called several times and the
+              unset function will remove all of them. marker 0 the default bookmark can be 
+              written over, but will not be removed. the breakpoint colors are managed by
+              XSTC, but it does not set any markers for them. character marker colors are
+              managed my the stylecolor functions, so they will be ready to go. remember 
+              you need to create a meathod to set the markers, only marker 0 the default 
+              bookmark is taken care of for you.
+              
+              remember that this is only going to set character markers.
+    */
+    bool SetAlphaBmarks(int startmarker, int mnumber, wxString chars);
+    
+    /**
+    \brief removes the monitored alpha bookmarks that where set with SetAlphaBmarks
+
+    \detailed this will remove all of the markers set even if more than one call to set 
+              the markers was made. marker 0 the default bookmark is not removeable, it
+              only removes markers that where monitored.
+    */
+    bool UnSetAlphaBmarks();
+    
+    /**
+    \brief removes the marker monitor from all markers. if you don't want XSTC to remove any
+           of them when you call UnSetAlphaBmarks()
+
+    \detailed doing this does not make much sense if you call SetAlphaBmarks once, but if you
+              set markers you cant to deal with, then call this and set the rest of them, this
+              can make your life easier. instead of calling UnmonitorBmark() for each marker.
+    */
+    bool UnmonitorBmarks();
+    
+    /**
+    \brief removes the marker monitor from a specific makrer set with SetAlphaBmarks.
+
+    \detailed useful if you want to ret all the markers and then remove a few for your own controling.
+    */
+    bool UnmonitorBmark(int mark);
+    
+    /**
+    \brief removes all markers and resets marker 0 to the markshape setting.
+
+    \detailed this is an easy way to clear the slate, remember that it will not reset your marking
+              code.
+    */
+    bool ResetMarkers();
+    
+    /**
+    \brief checks the value of a config color setting and converts it to a wxColor
+
+    \detailed this function was added to make configuration files more flexible. that way either a 
+              #RRGGBB or (r,g,b) string can be used interchangably. if the string it gets is invalid or
+              empty it will fail.
+    */
+    bool Ccolor(wxString configvalue, wxColour* color);
+    
+    /**
+    \brief checks the value of a config color setting and converts it to a #RRGGB string
+
+    \detailed if the string is an #RRGGBB, then it is passed verbatim, the (r,g,b) is converted to 
+              #RRGGB format and a string name ie red is converted to #RRGGBB too. the string name uses
+              wxColourDatabase to convert. if they are ot in the database then it will fail.
+    */
+    bool CcolorS(wxString configvalue, wxString* color);
+    
+    /**
+    \brief gives the user a pointer to the color database, XSTC still destroys it internally.
+
+    \detailed the color string option for Ccolor and CcolorS are not availible till this is called, because
+              no database has been created. it will send a new pointer if the database was already created.
+              (this function was already called) the database agrument may be NULL if pass is false. this lets
+              you just create and get the pointer later if you need it.
+    */
+    void GetColorDbase(wxColourDatabase* dbase, bool pass = false);
 
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************
@@ -1879,15 +1960,34 @@ void LexYAML();
     \detailed widths for settings margins
     */
     int linew, symw, fldw;
+    
+    /**
+    \brief the color database that XSTC uses for name to color
+
+    \detailed this is not readily useable and GetColorDbase() must be called first
+              that way unneded memory is not allocated. remember is name strings are used
+              then color setting will fail on those entries when this is not initialized.
+              the user can add entries as they wish, because a pointer is passed with the
+              function call.
+    */
+    wxColourDatabase* XSTCcolorDbase;
+    
+    /**
+    \brief array that holds the bookmarks indexes for removal.
+
+    \detailed when UnSetAlphaBmarks() is called the markers in this array will be nullified
+              this will hold up to 20 markers
+    */
+    int charmarkers[20];
 
 
- /**
+    /**
     \brief c/c++ extention array
 
     \detailed a space saving way to check the c++ file extentions in AutoEXT()
     */
     wxString c_ext_array[8];
- /**
+    /**
     \brief these variables are for lexcolor functions, this way there is a fast easy way to chnge default in all functions at once.
 
     \detailed  these are strings that are used in StyleSetSpec()
