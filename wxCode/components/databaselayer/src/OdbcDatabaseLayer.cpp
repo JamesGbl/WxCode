@@ -249,21 +249,22 @@ int OdbcDatabaseLayer::RunQuery( const wxString& strQuery, bool bParseQuery )
    {
      try
      {
-       pStatement->RunQuery();
+       int nRows = pStatement->RunQuery();
        wxDELETE( pStatement );
-       return true;
+       return nRows;
      }
      catch (...)
      {
+   puts("5");
        SetErrorCode(pStatement->GetErrorCode());
        SetErrorMessage(pStatement->GetErrorMessage());
        wxDELETE( pStatement );
        ThrowDatabaseException();
-       return false;
+       return DATABASE_LAYER_QUERY_RESULT_ERROR;
      }
    }
    else
-     return false;
+     return DATABASE_LAYER_QUERY_RESULT_ERROR;
 }
 
 DatabaseResultSet* OdbcDatabaseLayer::RunQueryWithResults(const wxString& strQuery)

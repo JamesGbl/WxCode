@@ -147,12 +147,12 @@ public:
   virtual wxArrayDouble GetResultsArrayDouble(const wxString& strSQL, const wxString& Field);
 #endif
   
-protected:
   /// Close all result set objects that have been generated but not yet closed
   void CloseResultSets();
   /// Close all prepared statement objects that have been generated but not yet closed
   void CloseStatements();
   
+protected:
   /// Add result set object pointer to the list for "garbage collection"
   void LogResultSetForCleanup(DatabaseResultSet* pResultSet) { m_ResultSets.insert(pResultSet); }
   /// Add prepared statement object pointer to the list for "garbage collection"

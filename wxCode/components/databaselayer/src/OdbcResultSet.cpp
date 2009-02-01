@@ -95,7 +95,6 @@ bool OdbcResultSet::Next()
         if ( nReturn == SQL_NO_DATA )
             return false;
 
-        wxLogError(_T("Error with RunQueryWithResults\n"));
         InterpretErrorCodes(nReturn, m_pOdbcStatement);
         ThrowDatabaseException();
         return false;
@@ -112,6 +111,23 @@ bool OdbcResultSet::Next()
 // get field
 bool OdbcResultSet::IsFieldNull(int nField)
 {
+  // Some ODBC drivers (i.e. MS SQL SERVER) need the fields to be retrieved in order
+  for (int ctr = 1; ctr < nField; ctr++)
+  {
+    if (m_fieldValues[ctr-1].IsNull())
+    {
+      if (IsBlob(ctr))
+      {
+        wxMemoryBuffer buffer;
+        GetResultBlob(ctr, buffer);
+      }
+      else
+      {
+        RetrieveFieldData(ctr);
+      }
+    }
+  }
+/*
   SQLTCHAR      col_name[8192];
   SQLSMALLINT   col_name_length;
   SQLSMALLINT   col_data_type;
@@ -124,13 +140,15 @@ bool OdbcResultSet::IsFieldNull(int nField)
   SQLRETURN nRet = SQLDescribeCol( m_pOdbcStatement, nField, col_name, 
       8192, &col_name_length, &col_data_type, &col_size, &col_decimal_digits, &col_nullable );
 
-  if (col_data_type != SQL_BIT &&
-     col_data_type != SQL_BINARY && 
-     col_data_type != SQL_VARBINARY &&
-     col_data_type != SQL_LONGVARBINARY)
+  if (col_data_type != SQL_BIT && col_data_type != SQL_BINARY && 
+    col_data_type != SQL_VARBINARY && col_data_type != SQL_LONGVARBINARY)
+*/
+  if (!IsBlob(nField))
   {
     if (m_RetrievedValues.find(nField) == m_RetrievedValues.end())
+    {
       RetrieveFieldData(nField);
+    }
   }
   else
   {
@@ -145,8 +163,26 @@ bool OdbcResultSet::IsFieldNull(int nField)
 
 int OdbcResultSet::GetFieldLength(int nField)
 {
+    // Some ODBC drivers (i.e. MS SQL SERVER) need the fields to be retrieved in order
+    for (int ctr = 1; ctr <= nField; ctr++)
+    {
+        if (m_fieldValues[ctr-1].IsNull())
+        {
+            if (!IsBlob(ctr))
+            {
+                RetrieveFieldData(ctr);
+            }
+            else
+            {
+                wxMemoryBuffer buffer;
+                GetResultBlob(ctr, buffer);
+            }
+        }
+    }
+    /*
     if (m_fieldValues[nField-1].IsNull())
-      RetrieveFieldData(nField);
+        RetrieveFieldData(nField);
+        */
 
     wxString strValue = m_fieldValues[nField-1].GetString();
 
@@ -161,12 +197,12 @@ void OdbcResultSet::RetrieveFieldData(int nField)
     if (nField != -1)
     {
         wxString strValue;
-        SQLTCHAR buff[8192];
+        SQLPOINTER buff[8192];
 
         memset(buff, 0, 8192*sizeof(SQLTCHAR));
 
-        SQLINTEGER  col_size         = 8192;
-        SQLINTEGER  real_size        = 0;
+        SQLLEN  col_size         = 8192;
+        SQLLEN  real_size        = 0;
 
         if (m_pOdbcStatement == NULL)
             m_pOdbcStatement = m_pStatement->GetLastStatement();
@@ -175,7 +211,6 @@ void OdbcResultSet::RetrieveFieldData(int nField)
             col_size, &real_size );
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
         {
-            wxLogError(_T("Error with RunQueryWithResults\n"));
             InterpretErrorCodes(nRet, m_pOdbcStatement);
             ThrowDatabaseException();
         }
@@ -195,7 +230,6 @@ void OdbcResultSet::RetrieveFieldData(int nField)
                     col_size, &real_size );
                 if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO && nRet != SQL_NO_DATA )
                 {
-                    wxLogError(_T("Error with RunQueryWithResults\n"));
                     InterpretErrorCodes(nRet, m_pOdbcStatement);
                     ThrowDatabaseException();
                 }
@@ -325,6 +359,9 @@ void* OdbcResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
         tempBuffer.SetDataLen(0);
         tempBuffer.SetBufSize(0);
         Buffer = tempBuffer;
+
+        // Add null blobs to the map as well
+        m_BlobMap[nField] = tempBuffer;
         return NULL;
       }
 
@@ -410,8 +447,6 @@ ResultSetMetaData* OdbcResultSet::GetMetaData()
 
 void OdbcResultSet::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
 {
-  wxLogDebug(_("OdbcResultSet::InterpretErrorCodes()\n"));
-
   //if ((nCode != SQL_SUCCESS) ) // && (nCode != SQL_SUCCESS_WITH_INFO))
   {
     SQLINTEGER iNativeCode;
@@ -431,4 +466,21 @@ void OdbcResultSet::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
   }
 }
 
+bool OdbcResultSet::IsBlob(int nField)
+{
+  SQLTCHAR      col_name[8192];
+  SQLSMALLINT   col_name_length;
+  SQLSMALLINT   col_data_type;
+  SQLUINTEGER   col_size;
+  SQLSMALLINT   col_decimal_digits;
+  SQLSMALLINT   col_nullable;
+
+  memset(col_name, 0, 8192);
+
+  SQLRETURN nRet = SQLDescribeCol( m_pOdbcStatement, nField, col_name, 
+      8192, &col_name_length, &col_data_type, &col_size, &col_decimal_digits, &col_nullable );
+
+  return (col_data_type == SQL_BIT || col_data_type == SQL_BINARY || 
+    col_data_type == SQL_VARBINARY || col_data_type == SQL_LONGVARBINARY);
+}
 

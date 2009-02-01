@@ -1,6 +1,7 @@
 #include "../include/OdbcPreparedStatement.h"
 #include "../include/OdbcResultSet.h"
 #include "../include/OdbcDatabaseLayer.h"
+#include "../include/DatabaseErrorCodes.h"
 
 // ctor
 OdbcPreparedStatement::OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC)
@@ -169,28 +170,75 @@ int OdbcPreparedStatement::RunQuery()
 
     BindParameters();
 
+    SQLINTEGER nRows = DATABASE_LAYER_QUERY_RESULT_ERROR;
     StatementVector::iterator start = m_Statements.begin();
     StatementVector::iterator stop = m_Statements.end();
     while (start != stop)
     {
         SQLRETURN nRet = 0;
+        // Free any previous statement handles
         nRet = SQLFreeStmt((SQLHSTMT)(*start), SQL_CLOSE);
-        if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
+        if (nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO)
         {
             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
             ThrowDatabaseException();
-            return;
+            return DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
 
+        // Execute the current statement
         nRet = SQLExecute((SQLHSTMT)(*start));
-        if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO && nRet != SQL_NO_DATA )
+        if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO && nRet != SQL_NO_DATA && nRet != SQL_NEED_DATA)
         {
             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
             ThrowDatabaseException();
-            return;
+            return DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
+
+		    if ( nRet == SQL_NEED_DATA)
+        {
+            PTR pParmID;
+            nRet = SQLParamData((SQLHSTMT)(*start), &pParmID);
+            while (nRet == SQL_NEED_DATA)
+            {
+                // Find the parameter
+                for (unsigned int i = 0; i < m_Parameters.size(); i++)
+                {
+                    OdbcParameter* pParameter = m_Parameters[i];
+                    if (pParmID == pParameter->GetDataPtr())
+                    {
+                        // We found it.  Store the parameter.
+                        nRet = SQLPutData((SQLHSTMT)(*start), pParmID, pParameter->GetDataLength());
+                        if (nRet != SQL_SUCCESS)
+                        {
+                            InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
+                            ThrowDatabaseException();
+                            return DATABASE_LAYER_QUERY_RESULT_ERROR;
+                        }
+                        break;
+                     }
+                }
+                 nRet = SQLParamData((SQLHSTMT)(*start), &pParmID);
+             }
+
+             // Check the last return code
+             if (nRet != SQL_SUCCESS && nRet != SQL_NO_DATA_FOUND && nRet != SQL_SUCCESS_WITH_INFO)
+             {
+                 InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
+                 ThrowDatabaseException();
+                 return DATABASE_LAYER_QUERY_RESULT_ERROR;
+             }
+         }
+
+        // Get the affected record count
+        if (SQL_SUCCESS != SQLRowCount((SQLHSTMT)(*start), &nRows))
+        {
+          nRows = DATABASE_LAYER_QUERY_RESULT_ERROR;
+        }
+
+        // Move to the next query
         start++;
     }
+    return nRows;
 }
 
 DatabaseResultSet* OdbcPreparedStatement::RunQueryWithResults()
@@ -254,10 +302,23 @@ void OdbcPreparedStatement::BindParameters()
 
     if ((nIndex > -1) && (pParameter != NULL))
     {
+      // Determine the data type (if supported by the ODBC driver)
+      SQLSMALLINT dataType;
+      SQLULEN dataSize;
+      SQLSMALLINT dataDigits;
+      SQLSMALLINT isNullable;
+      SQLRETURN ret = SQLDescribeParam(m_Statements[nIndex], nPosition, &dataType, &dataSize, 
+        &dataDigits, &isNullable);
+      if ( ret != SQL_SUCCESS )
+      {
+        dataType = pParameter->GetParameterType();
+        dataSize = pParameter->GetColumnSize();
+        dataDigits = pParameter->GetDecimalDigits();
+      }
+
       SQLRETURN nRet = SQLBindParameter(m_Statements[nIndex], nPosition, SQL_PARAM_INPUT,
-        pParameter->GetValueType(), pParameter->GetParameterType(),
-        pParameter->GetColumnSize(), pParameter->GetDecimalDigits(), pParameter->GetDataPtr(),
-        pParameter->GetDataLength(), pParameter->GetParameterLengthPtr() );
+        pParameter->GetValueType(), dataType, dataSize, dataDigits, pParameter->GetDataPtr(),
+        pParameter->GetDataLength(), pParameter->GetParameterLengthPtr());
 
       if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
       {

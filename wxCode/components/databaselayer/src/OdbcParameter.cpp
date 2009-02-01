@@ -174,13 +174,15 @@ SQLSMALLINT OdbcParameter::GetParameterType()
       nReturn = SQL_DOUBLE;
       break;
     case OdbcParameter::PARAM_DATETIME:
-      nReturn = SQL_TYPE_TIMESTAMP;
+      //nReturn = SQL_TYPE_TIMESTAMP;
+      nReturn = SQL_TIMESTAMP;
       break;
     case OdbcParameter::PARAM_BOOL:
       nReturn = SQL_INTEGER;
       break;
     case OdbcParameter::PARAM_BLOB:
       nReturn = SQL_BINARY;
+      //nReturn = SQL_LONGVARBINARY;
       break;
     case OdbcParameter::PARAM_NULL:
       nReturn = SQL_NULL_DATA;
@@ -235,10 +237,12 @@ SQLUINTEGER OdbcParameter::GetColumnSize()
       break;
     case OdbcParameter::PARAM_INT:
     case OdbcParameter::PARAM_DOUBLE:
-    case OdbcParameter::PARAM_DATETIME:
     case OdbcParameter::PARAM_BOOL:
     case OdbcParameter::PARAM_NULL:
       nReturn = 0;
+      break;
+    case OdbcParameter::PARAM_DATETIME:
+      nReturn = 19;
       break;
     default:
       nReturn = 0;
@@ -251,4 +255,3 @@ SQLINTEGER* OdbcParameter::GetParameterLengthPtr()
 {
   return &m_nBufferLength;
 }
-

@@ -62,6 +62,7 @@ private:
   void RetrieveFieldData(int nField);
   void InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr=NULL );
   virtual int LookupField(const wxString& strField);
+  bool IsBlob(int nField);
   
   OdbcPreparedStatement* m_pStatement;
   SQLHSTMT m_pOdbcStatement;

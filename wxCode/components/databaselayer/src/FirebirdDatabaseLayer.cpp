@@ -863,18 +863,10 @@ wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(int nCode, ISC_STATUS
   if (nCode < -900)  // Error codes less than -900 indicate that it wasn't a SQL error but an ibase system error
   {
     long* pVector = (long*)status;
-#if FB_API_VER>=15
-    isc_interprete(szError, &pVector);
-#else
     fb_interpret(szError, 512, (const ISC_STATUS**)&pVector);
-#endif
     //puts(szError);
     strReturn = wxString::Format(_("%s\n"), szError);
-#if FB_API_VER>=15
-    while (isc_interprete(szError, &pVector))
-#else
     while (fb_interpret(szError, 512, (const ISC_STATUS**)&pVector))
-#endif
     {
       //puts(szError);
       strReturn += wxString::Format(_("%s\n"), szError);

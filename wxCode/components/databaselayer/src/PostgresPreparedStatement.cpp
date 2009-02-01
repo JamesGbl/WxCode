@@ -161,7 +161,7 @@ int PostgresPreparedStatement::RunQuery()
   int nRows = DATABASE_LAYER_QUERY_RESULT_ERROR;
   for (unsigned int i=0; i<(m_Statements.size()); i++)
   {
-    m_Statements[i].RunQuery();
+    nRows = m_Statements[i].RunQuery();
     if (m_Statements[i].GetErrorCode() != DATABASE_LAYER_OK)
     {
       SetErrorCode(m_Statements[i].GetErrorCode());

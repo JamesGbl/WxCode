@@ -224,6 +224,9 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
 #endif
         if (m_pDatabaseLayer)
         {
+          // Close and prepared statements and result sets that may have been left open
+          m_pDatabaseLayer->CloseResultSets();
+          m_pDatabaseLayer->CloseStatements();
           
           // Remove all the tables unique to each of the unit tests
           wxArrayString::iterator start = m_DeleteStatements.begin();
@@ -2397,6 +2400,8 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
               }
               else
               {
+                m_pDatabaseLayer->CloseResultSet(pResultSet);
+                m_pDatabaseLayer->CloseStatement(pStatement);
                 FAIL("Error: No results found when inserting a table row with all NULL values");
               }
 
@@ -3327,6 +3332,11 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           wxPrintf(_("Checking if row count = 1\n"));
           ASSERT_EQUALS( 1, nCount );
 
+          // Add a view just for this test
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
           SQL_STATEMENT_ARRAY::iterator createTableSql = m_SqlMap.find(CREATE_VIEW1);
           if (createTableSql != m_SqlMap.end())
           {
@@ -3336,7 +3346,15 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
             }
           }
           DatabaseErrorCheck(m_pDatabaseLayer);
-
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            // Don't stop on error here since this could be a "view already exists" error
+            ProcessException(e, false);
+          }
+#endif
+          
           // Make sure that the tearDown function knows to remove this test table
           m_DeleteStatements.push_back(_("DROP VIEW view1;"));
 
@@ -3848,6 +3866,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
               //puts("BlobCol should NOT be NULL");
               ASSERT(pResultSet->IsFieldNull(_("BlobCol")) == false);
 
+              //puts("GetResultBlob");
               wxMemoryBuffer BufferOut;
               void* pBlob = pResultSet->GetResultBlob(_("BlobCol"), BufferOut);
                 
@@ -4061,7 +4080,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           }
           catch (DatabaseLayerException& e)
           {
-            // Don't stop on error here since this could be a "table already exists" error
+            // Don't stop on error here since this could be a "view already exists" error
             ProcessException(e, false);
           }
 #endif
@@ -4109,7 +4128,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           }
           catch (DatabaseLayerException& e)
           {
-            // Don't stop on error here since this could be a "table already exists" error
+            // Don't stop on error here since this could be a "view already exists" error
             ProcessException(e, false);
           }
 #endif
@@ -6020,8 +6039,8 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         m_SqlMap[CREATE_TABLE8] = createTable8Scripts;
 
         wxArrayString createComplexRollbackTablesScripts;
-        createComplexRollbackTablesScripts.Add(_("CREATE TABLE mainTable (mainId int PRIMARY KEY, description VARCHAR(50));"));
-        createComplexRollbackTablesScripts.Add(_("CREATE TABLE secondaryTable (secondaryTableId int PRIMARY KEY, foreignKey int, description VARCHAR(50));"));
+        createComplexRollbackTablesScripts.Add(_("CREATE TABLE mainTable (mainId int IDENTITY, description VARCHAR(50));"));
+        createComplexRollbackTablesScripts.Add(_("CREATE TABLE secondaryTable (secondaryTableId int IDENTITY, foreignKey int, description VARCHAR(50));"));
         m_SqlMap[CREATE_COMPLEX_ROLLBACK_TABLES] = createComplexRollbackTablesScripts;
 
         //wxArrayString dropComplexRollbackTablesScripts;
@@ -6029,7 +6048,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         //m_SqlMap[DROP_COMPLEX_ROLLBACK_TABLES] = dropComplexRollbackTablesScripts;
 
         wxArrayString createTable9Scripts;
-        createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
+        createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATETIME);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
 
         wxArrayString createView1Scripts;
