@@ -2625,12 +2625,15 @@ int XSTC::AutoEXT(wxString filename)
 
 void XSTC::FoldConf()
 {
-   wxString colorval,temp;
-   int r=0,g=0,b=0;
-   long n;
+   wxString colorval;
+   wxColor color;
+   int r=0;
+   long n=0;
 
    if(colorconf->Read(wxT("XSTColor/MISIC/M0FG"), &colorval) && colorval != wxT(""))
-   {
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(0, color);
+   /*{ //leaving this block in case there are problems with the code change
       temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
       colorval = temp;
       temp = colorval.BeforeFirst(',');
@@ -2650,30 +2653,11 @@ void XSTC::FoldConf()
       r=0;
       g=0;
       b=0;
-   }
+   }*/
 
    if(colorconf->Read(wxT("XSTColor/MISIC/M0BG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(0, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(0, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/M0STYLE"), &colorval) && colorval != wxT(""))
    {
@@ -2684,421 +2668,80 @@ void XSTC::FoldConf()
    }
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDER_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDER_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDER), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDER), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEROPEN_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEROPEN_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPEN), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPEN), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEREND_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEREND), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEREND), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEREND_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEREND), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEREND), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERMIDTAIL_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERMIDTAIL_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEROPENMID_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPENMID), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPENMID), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDEROPENMID_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERSUB_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERSUB), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERSUB), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERSUB_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERTAIL_F"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERTAIL), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERTAIL), color);
 
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERTAIL_B"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL), wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL), color);
 }
 
 void XSTC::FoldBox()
 {
-   wxString fgc, bgc;
-   wxColour fg;
-   wxColour bg;
-
-   if(colorstyle == wxT("dark"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#000000");
-      fg = wxColour(0x00,0x00,0x00);
-      bg = wxColour(0xFF,0xFF,0xFF);
-   }
-   if(colorstyle == wxT("borland"))
-   {
-      fgc = wxT("#FFFF00");
-      bgc = wxT("#000080");
-      fg = wxColour(0x00,0x00,0x80);
-      bg = wxColour(0xFF,0xFF,0x00);
-   }
-   if(colorstyle == wxT("classic"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xE0,0xDF,0xE3);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("vistudio"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("jeff"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#808080");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("zenburn"))
-   {
-      fgc = wxT("#3F3F3F");
-      bgc = wxT("#808080");
-      fg = wxColour(0x3F,0x3F,0x3F);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("matrix"))
-   {
-      fgc = wxT("#282828");
-      bgc = wxT("#00FF00");
-      fg = wxColour(0x28,0x28,0x28);
-      bg = wxColour(0x00,0xFF,0x00);
-   }
-   if(colorstyle == wxT("null"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
 
 #ifdef XSTC_USE_WXSTC
 
-   if(markoutline)
-      this->MarkerDefine(0, markshape, bg, fg);
-   else
-      this->MarkerDefine(0, markshape, fg, bg);
-
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_BOXPLUS),           fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_BOXMINUS),          fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_BOXPLUSCONNECTED),  fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER),           fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_BOXMINUSCONNECTED), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),             fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER),           fg, bg);
+   this->MarkerDefine(0, markshape, wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_BOXPLUS),           wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_BOXMINUS),          wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_BOXPLUSCONNECTED),  wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER),           wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_BOXMINUSCONNECTED), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),             wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER),           wxNullColour, wxNullColour);
 
 #endif //XSTC_USE_WXSTC
 #ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
-   if(markoutline)
-   {
-      this->MarkerSetForeground(0, bg);
-      this->MarkerSetBackground(0, fg);
-   }
-   else
-   {
-      this->MarkerSetForeground(0, fg);
-      this->MarkerSetBackground(0, bg);
-   }
-
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_BOXPLUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_BOXMINUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_BOXPLUSCONNECTED));
@@ -3107,125 +2750,30 @@ void XSTC::FoldBox()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER));
 
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER),        fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN),    fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEREND),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPENMID), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERSUB),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERTAIL),    fg);
-
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDER),        bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPEN),    bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEREND),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
-
 #endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
-
-   if(usecolor)
-   {
-      FoldConf();
-   }
+   this->FoldColors();
 }
 
 void XSTC::FoldCircle()
 {
-   wxString fgc, bgc;
-   wxColour fg;
-   wxColour bg;
-
-   if(colorstyle == wxT("dark"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#000000");
-      fg = wxColour(0x00,0x00,0x00);
-      bg = wxColour(0xFF,0xFF,0xFF);
-   }
-   if(colorstyle == wxT("borland"))
-   {
-      fgc = wxT("#FFFF00");
-      bgc = wxT("#000080");
-      fg = wxColour(0x00,0x00,0x80);
-      bg = wxColour(0xFF,0xFF,0x00);
-   }
-   if(colorstyle == wxT("classic"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xE0,0xDF,0xE3);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("vistudio"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("jeff"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#808080");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("zenburn"))
-   {
-      fgc = wxT("#3F3F3F");
-      bgc = wxT("#808080");
-      fg = wxColour(0x3F,0x3F,0x3F);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("matrix"))
-   {
-      fgc = wxT("#282828");
-      bgc = wxT("#00FF00");
-      fg = wxColour(0x28,0x28,0x28);
-      bg = wxColour(0x00,0xFF,0x00);
-   }
-   if(colorstyle == wxT("null"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
 
 #ifdef XSTC_USE_WXSTC
 
-   if(markoutline)
-      this->MarkerDefine(0, markshape, bg, fg);
-   else
-      this->MarkerDefine(0, markshape, fg, bg);
-
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_CIRCLEPLUS),           fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_CIRCLEMINUS),          fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_CIRCLEPLUSCONNECTED),  fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNERCURVE),              fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_CIRCLEMINUSCONNECTED), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),                fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNERCURVE),              fg, bg);
+   this->MarkerDefine(0, markshape, wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_CIRCLEPLUS),           wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_CIRCLEMINUS),          wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_CIRCLEPLUSCONNECTED),  wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNERCURVE),         wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_CIRCLEMINUSCONNECTED), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),                wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNERCURVE),         wxNullColour, wxNullColour);
 
 #endif //XSTC_USE_WXSTC
 #ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
-   if(markoutline)
-   {
-      this->MarkerSetForeground(0, bg);
-      this->MarkerSetBackground(0, fg);
-   }
-   else
-   {
-      this->MarkerSetForeground(0, fg);
-      this->MarkerSetBackground(0, bg);
-   }
-
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_CIRCLEPLUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_CIRCLEMINUS));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_CIRCLEPLUSCONNECTED));
@@ -3234,241 +2782,87 @@ void XSTC::FoldCircle()
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNERCURVE));
 
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER),        fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN),    fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEREND),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPENMID), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERSUB),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERTAIL),    fg);
-
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDER),        bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPEN),    bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEREND),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
-
 #endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
-
-   if(usecolor)
-   {
-      FoldConf();
-   }
+   this->FoldColors();
 }
 
 void XSTC::FoldArrow()
 {
-   wxString fgc, bgc;
-   wxColour fg;
-   wxColour bg;
-
-   if(colorstyle == wxT("dark"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#000000");
-      fg = wxColour(0x00,0x00,0x00);
-      bg = wxColour(0xFF,0xFF,0xFF);
-   }
-   if(colorstyle == wxT("borland"))
-   {
-      fgc = wxT("#FFFF00");
-      bgc = wxT("#000080");
-      fg = wxColour(0x00,0x00,0x80);
-      bg = wxColour(0xFF,0xFF,0x00);
-   }
-   if(colorstyle == wxT("classic"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xE0,0xDF,0xE3);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("vistudio"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("jeff"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#808080");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("zenburn"))
-   {
-      fgc = wxT("#3F3F3F");
-      bgc = wxT("#808080");
-      fg = wxColour(0x3F,0x3F,0x3F);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("matrix"))
-   {
-      fgc = wxT("#282828");
-      bgc = wxT("#00FF00");
-      fg = wxColour(0x28,0x28,0x28);
-      bg = wxColour(0x00,0xFF,0x00);
-   }
-   if(colorstyle == wxT("null"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
 
 #ifdef XSTC_USE_WXSTC
 
-   if(markoutline)
-      this->MarkerDefine(0, markshape, bg, fg);
-   else
-      this->MarkerDefine(0, markshape, fg, bg);
+   this->MarkerDefine(0, markshape, wxNullColour, wxNullColour);
 
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_ARROW),     fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_ARROWDOWN), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_ARROW),     fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_EMPTY),     fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_ARROWDOWN), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY),     fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY),     fg, bg);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_ARROW),     wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_ARROWDOWN), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_ARROW),     wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER),     wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_ARROWDOWN), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE),     wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER),     wxNullColour, wxNullColour);
 
 #endif //XSTC_USE_WXSTC
 #ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
-   if(markoutline)
-   {
-      this->MarkerSetForeground(0, bg);
-      this->MarkerSetBackground(0, fg);
-   }
-   else
-   {
-      this->MarkerSetForeground(0, fg);
-      this->MarkerSetBackground(0, bg);
-   }
-
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_ARROW));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_ARROWDOWN));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_ARROW));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_EMPTY));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER));
    this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_ARROWDOWN));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY));
-
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER),        fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN),    fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEREND),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPENMID), fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERSUB),     fg);
-   this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDERTAIL),    fg);
-
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDER),        bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPEN),    bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEREND),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERMIDTAIL), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
-   this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER));
 
 #endif //XSTC_USE_WXSCINTILLA
 
    this->SetFoldFlags(foldline);
-
-   if(usecolor)
-   {
-      FoldConf();
-   }
+   this->FoldColors();
 }
 
 void XSTC::FoldSimple()
 {
-   wxString fgc, bgc;
-   wxColour fg;
-   wxColour bg;
-
-   if(colorstyle == wxT("dark"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#000000");
-      fg = wxColour(0x00,0x00,0x00);
-      bg = wxColour(0xFF,0xFF,0xFF);
-   }
-   if(colorstyle == wxT("borland"))
-   {
-      fgc = wxT("#FFFF00");
-      bgc = wxT("#000080");
-      fg = wxColour(0x00,0x00,0x80);
-      bg = wxColour(0xFF,0xFF,0x00);
-   }
-   if(colorstyle == wxT("classic"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xE0,0xDF,0xE3);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("vistudio"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
-   if(colorstyle == wxT("jeff"))
-   {
-      fgc = wxT("#FFFFFF");
-      bgc = wxT("#808080");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("zenburn"))
-   {
-      fgc = wxT("#3F3F3F");
-      bgc = wxT("#808080");
-      fg = wxColour(0x3F,0x3F,0x3F);
-      bg = wxColour(0x80,0x80,0x80);
-   }
-   if(colorstyle == wxT("matrix"))
-   {
-      fgc = wxT("#282828");
-      bgc = wxT("#00FF00");
-      fg = wxColour(0x28,0x28,0x28);
-      bg = wxColour(0x00,0xFF,0x00);
-   }
-   if(colorstyle == wxT("null"))
-   {
-      fgc = wxT("#000000");
-      bgc = wxT("#FFFFFF");
-      fg = wxColour(0xFF,0xFF,0xFF);
-      bg = wxColour(0x00,0x00,0x00);
-   }
 
 #ifdef XSTC_USE_WXSTC
 
-   if(markoutline)
-      this->MarkerDefine(0, markshape, bg, fg);
-   else
-      this->MarkerDefine(0, markshape, fg, bg);
-
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_PLUS),  fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_MINUS), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_PLUS),  fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_EMPTY), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_MINUS), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY), fg, bg);
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY), fg, bg);
+   this->MarkerDefine(0, markshape, wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_PLUS),  wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_MINUS), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_PLUS),  wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_MINUS), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE), wxNullColour, wxNullColour);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER), wxNullColour, wxNullColour);
 
 #endif //XSTC_USE_WXSTC
 #ifdef XSTC_USE_WXSCINTILLA
 
    this->MarkerDefine(0, markshape);
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_PLUS));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_MINUS));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_PLUS));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_TCORNER));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_MINUS));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_VLINE));
+   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_LCORNER));
+#endif //XSTC_USE_WXSCINTILLA
+
+   this->SetFoldFlags(foldline);
+   this->FoldColors();
+}
+
+void XSTC::FoldColors()
+{
+   wxColour fg = wxColour(foldfg);
+   wxColour bg = wxColour(foldbg);
+
+   if(colorstyle == wxT("null"))
+   {
+      fg = wxColour(wxT("#FFFFFF"));
+      bg = wxColour(wxT("#000000"));
+   }
+
    if(markoutline)
    {
       this->MarkerSetForeground(0, bg);
@@ -3479,14 +2873,6 @@ void XSTC::FoldSimple()
       this->MarkerSetForeground(0, fg);
       this->MarkerSetBackground(0, bg);
    }
-
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDER),       XSTC_DEF(MARK_PLUS));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPEN),   XSTC_DEF(MARK_MINUS));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEREND),    XSTC_DEF(MARK_PLUS));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERMIDTAIL),XSTC_DEF(MARK_EMPTY));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDEROPENMID),XSTC_DEF(MARK_MINUS));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERSUB),    XSTC_DEF(MARK_EMPTY));
-   this->MarkerDefine(XSTC_DEF(MARKNUM_FOLDERTAIL),   XSTC_DEF(MARK_EMPTY));
 
    this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDER),        fg);
    this->MarkerSetForeground(XSTC_DEF(MARKNUM_FOLDEROPEN),    fg);
@@ -3503,10 +2889,6 @@ void XSTC::FoldSimple()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDEROPENMID), bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
-
-#endif //XSTC_USE_WXSCINTILLA
-
-   this->SetFoldFlags(foldline);
 
    if(usecolor)
    {
@@ -3516,33 +2898,15 @@ void XSTC::FoldSimple()
 
 void XSTC::StyleConf()
 {
-   wxString colorval,temp;
-   int r=0,g=0,b=0;
+   wxString colorval, colorstr, temp;
+   wxColour color;
+   int r=0, g=0, b=0;
    long n;
 
 
    if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLR"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetEdgeColour(wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetEdgeColour(color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLM"), &colorval) && colorval != wxT(""))
    {
@@ -3593,7 +2957,10 @@ void XSTC::StyleConf()
    }
 
    if(colorconf->Read(wxT("XSTColor/MISIC/FMC"), &colorval) && colorval != wxT(""))
-   {
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginColour(true, color);
+
+   /*{ //leaving this block in case there are problems with the new code change.
       temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
       colorval = temp;
       temp = colorval.BeforeFirst(',');
@@ -3613,177 +2980,47 @@ void XSTC::StyleConf()
       r=0;
       g=0;
       b=0;
-   }
+   }*/
 
    if(colorconf->Read(wxT("XSTColor/MISIC/FMHI"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetFoldMarginHiColour(true, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginHiColour(true, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/WSFG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetWhitespaceForeground(true, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/WSBG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetWhitespaceBackground(true, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceBackground(true, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/CLBG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetCaretBk(wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetCaretBk(color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/CFG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetCaretForeground(wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetCaretForeground(color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/SELFG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetSelForeground(true, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetSelForeground(true, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/SELBG"), &colorval) && colorval != wxT(""))
-   {
-      temp = colorval.Mid(colorval.First('(')+1,colorval.First(')'));
-      colorval = temp;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      r=n;
-      temp = colorval.BeforeFirst(',');
-      colorval.Remove(0,colorval.First(',')+1);
-      temp.ToLong(&n,10);
-      g=n;
-      temp = colorval.BeforeFirst(')');
-      temp.ToLong(&n,10);
-      b=n;
-
-      this->SetSelBackground(true, wxColour(r,g,b));
-      colorval = wxT("");
-      r=0;
-      g=0;
-      b=0;
-   }
+        if(Ccolor(colorval, color))
+            this->SetSelBackground(true, color);
 
    if(colorconf->Read(wxT("XSTColor/MISIC/BRKPTCOL"), &colorval) && colorval != wxT(""))
-      brkptcol = colorval;
+        if(CcolorS(colorval, colorstr))
+            brkptcol = colorstr;
 
    if(colorconf->Read(wxT("XSTColor/MISIC/ACTBRKPTCOL"), &colorval) && colorval != wxT(""))
-      actbrkptcol = colorval;
+        if(CcolorS(colorval, colorstr))
+            actbrkptcol = colorstr;
 
    if(colorconf->Read(wxT("XSTColor/MISIC/ERRORCOL"), &colorval) && colorval != wxT(""))
-      errorcol = colorval;
+        if(CcolorS(colorval, colorstr))
+            errorcol = colorstr;
 
    if(colorconf->Read(wxT("XSTColor/WS/INVISIBLE"), &colorval) && colorval != wxT(""))
        this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE),                colorval);
@@ -4067,6 +3304,10 @@ void XSTC::DarkStyle()
 	 XS_instruction = wxT("fore:#800000,back:#EEEE00"); //whatever
 	 XS_dtype = wxT("fore:#B8B9B9,back:#00CC00"); //datatype
 
+	 foldfg = wxT("#000000");
+	 foldbg = wxT("#FFFFFF");
+	 this->FoldColors();
+
    if(usecolor)
    {
       StyleConf();
@@ -4162,6 +3403,10 @@ void XSTC::VisualStudioStyle()
 	 XS_bad = wxT("fore:#FF0000,back:#800000"); //illegal, error
 	 XS_instruction = wxT("fore:#000000,back:#FFFFFF"); //whatever
 	 XS_dtype = wxT("fore:#000000,back:#FFFFFF"); //datatype
+
+	 foldfg = wxT("#FFFFFF");
+	 foldbg = wxT("#000000");
+	 this->FoldColors();
 
    if(usecolor)
    {
@@ -4259,6 +3504,10 @@ void XSTC::ClassicStyle()
 	 XS_instruction = wxT("fore:#008000,back:#FFFFFF"); //whatever
 	 XS_dtype = wxT("fore:#008000,back:#FFFFFF"); //datatype
 
+	 foldfg = wxT("#E0DFE3");
+	 foldbg = wxT("#000000");
+	 this->FoldColors();
+
    if(usecolor)
    {
       StyleConf();
@@ -4353,6 +3602,10 @@ void XSTC::BorlandStyle()
 	 XS_bad = wxT("fore:#000000,back:#FF00FF"); //illegal, error
 	 XS_instruction = wxT("fore:#808080,back:#000080"); //whatever
 	 XS_dtype = wxT("fore:#00FFFF,back:#000080"); //datatype
+
+	 foldfg = wxT("#000080");
+	 foldbg = wxT("#FFFF00");
+	 this->FoldColors();
 
    if(usecolor)
    {
@@ -4450,6 +3703,10 @@ void XSTC::JeffStyle()
 	 XS_instruction = wxT("fore:#FFFFDC,back:#FFFFFF"); //whatever
 	 XS_dtype = wxT("fore:#E6FFFF,back:#FFFFFF"); //datatype
 
+	 foldfg = wxT("#FFFFFF");
+	 foldbg = wxT("#808080");
+	 this->FoldColors();
+
    if(usecolor)
    {
       StyleConf();
@@ -4545,6 +3802,10 @@ void XSTC::ZenburnStyle()
 	 XS_bad = wxT("fore:#793F3F,back:#3F3F3F"); //illegal, error
 	 XS_instruction = wxT("fore:#FFFF00,back:#3F3F3F"); //whatever
 	 XS_dtype = wxT("fore:#00FFFF,back:#3F3F3F"); //datatype
+
+	 foldfg = wxT("#3F3F3F");
+	 foldbg = wxT("#808080");
+	 this->FoldColors();
 
    if(usecolor)
    {
@@ -4642,6 +3903,10 @@ void XSTC::MatrixStyle()
 	 XS_instruction = wxT("fore:#00FF00,back:#000000"); //whatever
 	 XS_dtype = wxT("fore:#00FF00,back:#000000"); //datatype
 
+	 foldfg = wxT("#282828");
+	 foldbg = wxT("#00FF00");
+	 this->FoldColors();
+
    if(usecolor)
    {
       StyleConf();
@@ -4650,21 +3915,35 @@ void XSTC::MatrixStyle()
 
 void XSTC::ResetStyle()
 {
+    this->StyleClearAll();
     brkptcol     = wxT("#FF0000");
     actbrkptcol  = wxT("#0000FF");
     errorcol     = wxT("#800000");
+    colorstyle   = wxT("null");
     markshape    = XSTC_DEF(MARK_CIRCLE);
     markoutline  = false;
     foldline     = XSTC_DEF(FOLDFLAG_LINEAFTER_CONTRACTED);
+    this->SetFoldFlags(foldline);
     edgcolr      = wxColour(0x00,0xFF,0x00);
+    this->SetEdgeColour(edgcolr);
     edgcolm      = 50;
+    this->SetEdgeColumn(edgcolm);
     edgmod       = XSTC_DEF(EDGE_LINE);
+    this->SetEdgeMode(edgmod);
     wrapmod      = XSTC_DEF(WRAP_WORD);
+    this->SetWrapMode(wrapmod);
     wrapvf       = XSTC_DEF(WRAPVISUALFLAG_END);
+    this->SetWrapVisualFlags(wrapvf);
     cachemod     = XSTC_DEF(CACHE_CARET);
+    this->SetLayoutCache(cachemod);
     caretlv      = true;
+    this->SetCaretLineVisible(caretlv);
+    this->SetViewWhiteSpace(XSTC_DEF(WS_VISIBLEALWAYS));
 #ifndef XSTC_NO_ALPHA
     alphalvl     = XSTC_DEF(ALPHA_NOALPHA);
+    this->MarkerSetAlpha(0, alphalvl);
+    this->SetSelAlpha(alphalvl);
+    this->SetCaretALPHA(alphalvl);
 #endif //XSTC_NO_ALPHA
 	 XS_comment = wxT("fore:#000000,back:#FFFFFF");
 	 XS_comment2 = wxT("fore:#000000,back:#FFFFFF");
@@ -4689,29 +3968,64 @@ void XSTC::ResetStyle()
 	 XS_instruction = wxT("fore:#000000,back:#FFFFFF"); //whatever
 	 XS_dtype = wxT("fore:#000000,back:#FFFFFF"); //datatype
 
-   this->SetLexer(XSTC_DEF(LEX_NULL));
-   this->StyleClearAll();
+	 foldfg = wxT("#FFFFFF");
+	 foldbg = wxT("#000000");
+
    this->SetCaretBk(wxColour(*wxCYAN));
-   this->SetStyleBits(GetStyleBitsNeeded());
-   this->SetFoldFlags(foldline);
-   this->SetEdgeColour(edgcolr);
-   this->SetEdgeColumn(edgcolm);
-   this->SetEdgeMode(edgmod);
-   this->SetWrapMode(wrapmod);
-   this->SetWrapVisualFlags(wrapvf);
-   this->SetViewWhiteSpace(XSTC_DEF(WS_VISIBLEALWAYS));
-   this->SetLayoutCache(cachemod);
-   this->SetCaretLineVisible(caretlv);
+   this->SetCaretForeground(wxColour(wxT("#000000")));
+
    this->MarkerDefine(0, markshape);
-   this->MarkerSetForeground(0, wxColour(0x00, 0x00, 0x00));
+   this->MarkerSetForeground(0, wxColour(wxT("#000000")));
    this->MarkerSetBackground(0, wxColour(*wxCYAN));
-   this->SetSelBackground(true, wxColour(0x00,0x00,0x00));
-   this->SetSelForeground(true, wxColour(0xFF,0xFF,0xFF));
-#ifndef XSTC_NO_ALPHA
-   this->MarkerSetAlpha(0, alphalvl);
-   this->SetSelAlpha(alphalvl);
-   this->SetCaretALPHA(alphalvl);
-#endif //XSTC_NO_ALPHA
+   this->SetSelBackground(true, wxColour(wxT("#000000")));
+   this->SetSelForeground(true, wxColour(wxT("#FFFFFF")));
+
+   this->SetFoldMarginColour(true, wxColour(wxT("#FFFFFF")));
+   this->SetFoldMarginHiColour(true, wxColour(wxT("#E0DFE3")));
+   this->SetWhitespaceForeground(true, wxColour(wxT("#000000")));
+   this->SetWhitespaceBackground(true, wxColour(wxT("#FFFFFF")));
+
+   this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE),          XS_default);
+   this->StyleSetSpec(XSTC_DEF(WS_VISIBLEALWAYS),      XS_default);
+   this->StyleSetSpec(XSTC_DEF(WS_VISIBLEAFTERINDENT), XS_default);
+   this->StyleSetSpec(XSTC_DEF(EOL_CRLF),              XS_default);
+   this->StyleSetSpec(XSTC_DEF(EOL_CR),                XS_default);
+   this->StyleSetSpec(XSTC_DEF(EOL_LF),                XS_default);
+
+   this->StyleSetSpec(XSTC_DEF(CP_DBCS),         XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARKER_MAX),      XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_CIRCLE),     XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROW),      XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_SMALLRECT),  XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_SHORTARROW), XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_EMPTY),      XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN),  XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_MINUS),      XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_PLUS),       XS_default);
+
+   this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT),  XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_ARROWS),     XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP),     XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT),  XS_default);
+   this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER),  XS_default);
+#ifndef XSTC_NO_MARK_FULLRECT
+   this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT),   XS_default);
+#endif //
+
+   this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT),        XS_default);
+   this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER),     XS_default);
+   this->StyleSetSpec(XSTC_DEF(STYLE_BRACELIGHT),     wxT("fore:#0000FF,back:#FFFFFF"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_BRACEBAD),       wxT("fore:#FF0000,back:#FFFFFF"));
+   this->StyleSetSpec(XSTC_DEF(STYLE_CONTROLCHAR),    XS_default);
+   this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE),    XS_default);
+   this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), XS_default);
+   this->StyleSetSpec(XSTC_DEF(STYLE_MAX),            XS_default);
+
+   this->SetStyleBits(5);
+   this->SetLexer(XSTC_DEF(LEX_NULL));
+   this->FoldColors();
 }
 
 PropSTR XSTC::GetPropStr(wxString property)
