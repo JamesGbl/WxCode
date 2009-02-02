@@ -1542,6 +1542,10 @@ void LexYAML();
     */
     void FoldSimple();
 
+    /**
+    \brief sets the foldimg marker colors
+    */
+    void FoldColors();
 
     /**
     \brief sets up extention to lexer maps
@@ -2018,6 +2022,21 @@ void LexYAML();
              XS_instruction, //whatever
              XS_dtype; //datatype
 
+    /**
+    \brief fold margin foreground color string
+
+    \detailed to simplify code, the colorstyle function sets this value instead of checking for
+              the value of the 'colorstyle' string in each fold setup function
+    */
+    wxString foldfg;
+
+    /**
+    \brief fold margin background color string
+
+    \detailed to simplify code, the colorstyle function sets this value instead of checking for
+              the value of the 'colorstyle' string in each fold setup function
+    */
+    wxString foldbg;
 
     /**
     \brief holds the id passed to the constructor
