@@ -1,36 +1,36 @@
 
 /*
  * xstc.h
- * 
+ *
  * this file is licensed under the wxWindows licence
  * just a quick reminder of what that means:
- * 
+ *
  * This software is released under the GNU GPL licence
  * with a few exceptins applied, check the wxWindows licence
  * to see what those are
- * 
+ *
  * visit: http://opensource.org/ to see both
  * the GNU GPL and wxWindows licences.
- * 
+ *
  * this software has absolutely no warranty, express or implied
- * 
+ *
  * just so you know, i don't care if you change the code
  * don't email me if you did someting to it.
- * 
+ *
  * no need to mark changes, you obviously may want to change the color
  * settings, it would only be a real pain if you had to mark them.
- * 
+ *
  * if you edit a function to change its behavior, it would be courtious
  * to others to let them know that the file is not an official release,
  * but you don't have to do that either.
- * 
+ *
  * you must not misrepresent the origins of this software, if you distribute
- * it, let the user know where to get it and that you where not the original 
+ * it, let the user know where to get it and that you where not the original
  * creator. (except for any code you add obviously)
  *
  * this notice may not be changed in any way and must remain at the top of every
  * source file.
- * 
+ *
  * XSTC was developed by Nuklear Zelph
  * copyright (C) 2006
  */
@@ -594,7 +594,7 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
          wxString vhdl5;//types
          wxString vhdl6;//user
 #endif //XSTC_NO_VHDL
-//xcode dunno		 
+//xcode dunno
 //xml V1.21
 #ifndef XSTC_NO_YAML
 //V1.55
@@ -685,11 +685,11 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 
     \detailed if trimming space, space to tab or any other functionality
               was aded to xstc and set to on for saving, then it will be
-              called in this function. 
-              
+              called in this function.
+
               savemode is a three mode flag. for utilizing a saveas dialog automatically.
               never always or on failed attempt of the used filename
-              
+
               if no filename is passed then the internal "XFilename" copy is used
               if one is passed that variable is ignored
     */
@@ -1493,7 +1493,7 @@ void LexYAML();
 
  #ifdef _WXMSW_
  #ifdef XSTC_USE_REG
- 
+
 	     /**
     \brief overloaded version that supports registry rather than file
 
@@ -1584,33 +1584,33 @@ void LexYAML();
     \detailed doens't do any well formed checks, just looks for characters
     */
     bool FilevalidCheck(wxString entry);
-    
+
     /**
     \brief creates a range of bookmarks of characters
 
     \detailed any character is valid, so a number or an alpha character or even a symbol
               this automatically remembers the markers set and will remove all of them
               when UnSetAlphaBmarks() is called. this can be called several times and the
-              unset function will remove all of them. marker 0 the default bookmark can be 
+              unset function will remove all of them. marker 0 the default bookmark can be
               written over, but will not be removed. the breakpoint colors are managed by
               XSTC, but it does not set any markers for them. character marker colors are
-              managed my the stylecolor functions, so they will be ready to go. remember 
-              you need to create a meathod to set the markers, only marker 0 the default 
+              managed my the stylecolor functions, so they will be ready to go. remember
+              you need to create a meathod to set the markers, only marker 0 the default
               bookmark is taken care of for you.
-              
+
               remember that this is only going to set character markers.
     */
     bool SetAlphaBmarks(int startmarker, int mnumber, wxString chars);
-    
+
     /**
     \brief removes the monitored alpha bookmarks that where set with SetAlphaBmarks
 
-    \detailed this will remove all of the markers set even if more than one call to set 
+    \detailed this will remove all of the markers set even if more than one call to set
               the markers was made. marker 0 the default bookmark is not removeable, it
               only removes markers that where monitored.
     */
     bool UnSetAlphaBmarks();
-    
+
     /**
     \brief removes the marker monitor from all markers. if you don't want XSTC to remove any
            of them when you call UnSetAlphaBmarks()
@@ -1620,14 +1620,14 @@ void LexYAML();
               can make your life easier. instead of calling UnmonitorBmark() for each marker.
     */
     bool UnmonitorBmarks();
-    
+
     /**
     \brief removes the marker monitor from a specific makrer set with SetAlphaBmarks.
 
     \detailed useful if you want to ret all the markers and then remove a few for your own controling.
     */
     bool UnmonitorBmark(int mark);
-    
+
     /**
     \brief removes all markers and resets marker 0 to the markshape setting.
 
@@ -1635,25 +1635,28 @@ void LexYAML();
               code.
     */
     bool ResetMarkers();
-    
-    /**
-    \brief checks the value of a config color setting and converts it to a wxColor
 
-    \detailed this function was added to make configuration files more flexible. that way either a 
-              #RRGGBB or (r,g,b) string can be used interchangably. if the string it gets is invalid or
-              empty it will fail.
-    */
-    bool Ccolor(wxString configvalue, wxColour* color);
-    
     /**
-    \brief checks the value of a config color setting and converts it to a #RRGGB string
+    \brief converts the input string to a color. this is used in the configuration code for loading in colors.
 
-    \detailed if the string is an #RRGGBB, then it is passed verbatim, the (r,g,b) is converted to 
-              #RRGGB format and a string name ie red is converted to #RRGGBB too. the string name uses
-              wxColourDatabase to convert. if they are ot in the database then it will fail.
+    \detailed takes a valid color string and converts it to a color. if the color database was set a name can
+              be used if it is in the database. otherwize an html or rgb string can be used #RRGGBB or rgb(r, g, b)
+              the rgb string can be used with or without the rgb prefix, but that is how the wxColour class takes it.
     */
-    bool CcolorS(wxString configvalue, wxString* color);
-    
+    bool Ccolor(wxString configvalue, wxColour& color);
+
+    /**
+    \brief checks the value of a config color setting and converts it to a string defaults to #RRGGBB
+
+    \detailed converts the input value to a specified output value. it uses Ccolor() and then gets
+              the appropriate type string. defaults to html color string.
+              type used the wxColour flags which are:
+              wxC2S_NAME          red
+              wxC2S_CSS_SYNTAX    rgb(255, 0, 0)
+              wxC2S_HTML_SYNTAX   #FF0000
+    */
+    bool CcolorS(wxString configvalue, wxString& color, long type = wxC2S_HTML_SYNTAX);
+
     /**
     \brief gives the user a pointer to the color database, XSTC still destroys it internally.
 
@@ -1662,7 +1665,7 @@ void LexYAML();
               (this function was already called) the database agrument may be NULL if pass is false. this lets
               you just create and get the pointer later if you need it.
     */
-    void GetColorDbase(wxColourDatabase* dbase, bool pass = false);
+    void SetColorDbase(wxColourDatabase& dbase);
 
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************
@@ -1782,7 +1785,7 @@ void LexYAML();
               this won't work too well cus the program doesn't have eyes, but
               its workth a try.
     */
-    wxString colorstyle; //this is for the fold marker coloring and to programmically determing 
+    wxString colorstyle; //this is for the fold marker coloring and to programmically determing
                          //if/what the setting is
     /**
     \brief color of the edge column
@@ -1960,7 +1963,7 @@ void LexYAML();
     \detailed widths for settings margins
     */
     int linew, symw, fldw;
-    
+
     /**
     \brief the color database that XSTC uses for name to color
 
@@ -1971,7 +1974,7 @@ void LexYAML();
               function call.
     */
     wxColourDatabase* XSTCcolorDbase;
-    
+
     /**
     \brief array that holds the bookmarks indexes for removal.
 
@@ -2022,8 +2025,8 @@ void LexYAML();
     \detailed The window id is needed to dynamically connect events to this
               instance of the editor. its here so you can use it if you need
     */
-    wxWindowID WIN_ID; //this way we can use connect to dynamically connect events to our 
-	                   //component and the user still has the option over what the id 
+    wxWindowID WIN_ID; //this way we can use connect to dynamically connect events to our
+	                   //component and the user still has the option over what the id
 	                   //setting is.
 
 #ifdef XSTC_USE_CONFIG

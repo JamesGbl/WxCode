@@ -1,40 +1,40 @@
 
 /*
  * xstc.cpp
- * 
+ *
  * this file is licensed under the wxWindows licence
  * just a quick reminder of what that means:
- * 
+ *
  * This software is released under the GNU GPL licence
  * with a few exceptins applied, check the wxWindows licence
  * to see what those are
- * 
+ *
  * visit: http://opensource.org/ to see both
  * the GNU GPL and wxWindows licences.
- * 
+ *
  * this software has absolutely no warranty, express or implied
- * 
+ *
  * just so you know, i don't care if you change the code
  * don't email me if you did someting to it.
- * 
+ *
  * no need to mark changes, you obviously may want to change the color
  * settings, it would only be a real pain if you had to mark them.
- * 
+ *
  * if you edit a function to change its behavior, it would be courtious
  * to others to let them know that the file is not an official release,
  * but you don't have to do that either.
- * 
+ *
  * you must not misrepresent the origins of this software, if you distribute
- * it, let the user know where to get it and that you where not the original 
+ * it, let the user know where to get it and that you where not the original
  * creator. (except for any code you add obviously)
  *
  * this notice may not be changed in any way and must remain at the top of every
  * source file.
- * 
+ *
  * XSTC was developed by Nuklear Zelph
  * copyright (C) 2006
  */
- 
+
 //Jeff and Zenburn styles found on codinghorror
 //is you're ide hot or not
 //http://www.codinghorror.com/blog/archives/000682.html
@@ -122,7 +122,7 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     colorstyle = wxT("null");
     XFilename = wxT("Untitled");
     SetMarginMask(fldmgn, XSTC_DEF(MASK_FOLDERS));
-    XSTCcolorDbase = 0;
+    XSTCcolorDbase = NULL;
     charmarkers[0] = 0;
     charmarkers[1] = 0;
     charmarkers[2] = 0;
@@ -147,6 +147,7 @@ XSTC_CLASS(parent, id, pos, size, style, name)
 
 XSTC::~XSTC()
 {
+/*
 #ifdef XSTC_USE_CONFIG
 #ifdef _WXMSW_
 #ifdef XSTC_USE_REG
@@ -156,6 +157,7 @@ XSTC::~XSTC()
    wxDELETE(colorconf)
    wxDELETE(fcconf)
 #endif //XSTC_USE_CONFIG
+*/
 }
 
 void XSTC::Bmatch(XSTC_EVENT& event)
@@ -275,7 +277,7 @@ void XSTC::MarginClicked(XSTC_EVENT& event)
     int line = LineFromPosition(event.GetPosition());
     if (event.GetMargin() == symmgn)
     {
-        
+
         ToggleBookMark(line);
     }
     else
@@ -4795,19 +4797,19 @@ int XSTC::GetEXTLexer(wxString extparam)
    extparam.MakeLower();
 
 //all of these are always defined whether or not a language is set so they are always availible
-  
+
    if(extparam==wxT("null"))
       return XSTC_DEF(LEX_NULL);
 
    if(extparam==wxT("automatic"))
       return XSTC_DEF(LEX_AUTOMATIC);
-  
+
    if(extparam==wxT("container"))
       return XSTC_DEF(LEX_CONTAINER);
 
    if(extparam==wxT("abaqus"))
       return XSTC_DEF(LEX_ABAQUS);
-  
+
    if(extparam==wxT("ada"))
       return XSTC_DEF(LEX_ADA);
 
@@ -4834,16 +4836,16 @@ int XSTC::GetEXTLexer(wxString extparam)
 
    if(extparam==wxT("blitzbasic"))
       return XSTC_DEF(LEX_BLITZBASIC);
-  
+
    if(extparam==wxT("freebasic"))
       return XSTC_DEF(LEX_FREEBASIC);
-  
+
    if(extparam==wxT("powerbasic"))
       return XSTC_DEF(LEX_POWERBASIC);
-  
+
    if(extparam==wxT("purebasic"))
       return XSTC_DEF(LEX_PUREBASIC);
-  
+
    if(extparam==wxT("bash"))
       return XSTC_DEF(LEX_BASH);
 
@@ -4864,7 +4866,7 @@ int XSTC::GetEXTLexer(wxString extparam)
 
    if(extparam==wxT("cmake"))
       return XSTC_DEF(LEX_CMAKE);
-  
+
    if(extparam==wxT("conf"))
       return XSTC_DEF(LEX_CONF);
 
@@ -4957,7 +4959,7 @@ int XSTC::GetEXTLexer(wxString extparam)
 
    if(extparam==wxT("magik"))
       return XSTC_DEF(LEX_MAGIK);
-    
+
    if(extparam==wxT("makefile"))
       return XSTC_DEF(LEX_MAKEFILE);
 
@@ -4987,10 +4989,10 @@ int XSTC::GetEXTLexer(wxString extparam)
 
    if(extparam==wxT("perl"))
       return XSTC_DEF(LEX_PERL);
-  
+
    if(extparam==wxT("plm"))
       return XSTC_DEF(LEX_PLM);
-  
+
    if(extparam==wxT("po"))
       return XSTC_DEF(LEX_PO);
 
@@ -5014,7 +5016,7 @@ int XSTC::GetEXTLexer(wxString extparam)
 
    if(extparam==wxT("r"))
       return XSTC_DEF(LEX_R);
-  
+
    if(extparam==wxT("rebol"))
       return XSTC_DEF(LEX_REBOL);
 
@@ -5282,7 +5284,7 @@ wxFileConfig* XSTC::SetColorConf(wxInputStream& is)
    return fcconf;
 }
 
-#ifdef _WXMSW_ 
+#ifdef _WXMSW_
 #ifdef XSTC_USE_REG
 wxRegConfig* XSTC::SetColorConf(wxString appName, wxString vendorName, wxString Filename)
 {
@@ -5324,96 +5326,76 @@ bool XSTC::ResetMarkers()
     return false;
 }
 
-bool XSTC::Ccolor(wxString configvalue, wxColour* color)
+bool XSTC::Ccolor(wxString configvalue, wxColour& color)
 {
     bool result = false;
-    wxString colorval, temp;
-    int r=0,g=0,b=0;
-    long n;
-    wxColour* thecolor = 0;
-    if(configvalue.Contains(wxT("(")) && configvalue.Contains(wxT(")")) && (configvalue.Freq(',') == 2))
+    configvalue.Trim(true);
+    configvalue.Trim(false);
+
+    if(configvalue.Contains(wxT("(")) && configvalue.Contains(wxT(")")))
     {
-        colorval = configvalue.Mid(configvalue.First('(')+1, configvalue.First(')'));
-        temp = colorval.BeforeFirst(',');
-        temp.Trim(true);
-        temp.Trim(false);
-        colorval.Remove(0,colorval.First(',')+1);
-        if(temp != wxT(""))
+        configvalue = configvalue.Mid(configvalue.First('('), configvalue.First(')') - configvalue.First('(') + 1);
+        configvalue = "rgb" + configvalue;
+        color = wxColour(configvalue);
+        if(color.IsOk())
         {
-            temp.ToLong(&n,10);
-            r=n;
-            temp = colorval.BeforeFirst(',');
-            colorval.Remove(0,colorval.First(',')+1);
-            if(temp != wxT(""))
-            {
-                temp.ToLong(&n,10);
-                g=n;
-                temp = colorval.BeforeFirst(')');
-                if(temp != wxT(""))
-                {
-                    temp.ToLong(&n,10);
-                    b=n;
-                    thecolor = new wxColour(r,g,b);
-                    if(thecolor->IsOk())
-                    {
-                        color = thecolor;
-                        result = true;
-                    }
-                }
-            }
+            result = true;
         }
     }
     else
     if(configvalue.Contains(wxT("#")))
     {
-        if(configvalue.Len() >= 7)
+        if(configvalue.Len() == 7)
         {
-            temp = configvalue.Mid(configvalue.Find('#'), 7);
-            thecolor = new wxColour(temp);
-            if(thecolor->IsOk())
+            color = wxColour(configvalue);
+            if(color.IsOk())
             {
-                color = thecolor;
                 result = true;
             }
         }
     }
     else
     {
-        temp = configvalue;
-        temp.Trim(true);
-        temp.Trim(false);
-        thecolor = new wxColour(XSTCcolorDbase->Find(temp));
-        if(thecolor->IsOk())
+        if(XSTCcolorDbase)
         {
-            color = thecolor;
-            result = true;
+            color = wxColour(XSTCcolorDbase->Find(configvalue));
+            if(color.IsOk())
+            {
+                result = true;
+            }
         }
     }
-    
+
     return result;
 }
 
-bool XSTC::CcolorS(wxString configvalue, wxString* color)
+bool XSTC::CcolorS(wxString configvalue, wxString& color, long type)
 {
     bool result = false;
-    wxColour* thecolor = 0;
+    wxColour thecolor = wxNullColour;
+    configvalue.Trim(true);
+    configvalue.Trim(false);
     if(Ccolor(configvalue, thecolor))
     {
-        color = new wxString(thecolor->GetAsString(wxC2S_HTML_SYNTAX));
-        if(color->Contains(wxT("#")))
+        if(thecolor.IsOk())
         {
+            color = thecolor.GetAsString(type);
             result = true;
         }
     }
     return result;
 }
 
-void XSTC::GetColorDbase(wxColourDatabase* dbase, bool pass)
+void XSTC::SetColorDbase(wxColourDatabase& dbase)
 {
-    XSTCcolorDbase = new wxColourDatabase();
-    if(pass)
+    if(XSTCcolorDbase)
     {
-        dbase = XSTCcolorDbase;
+        delete XSTCcolorDbase;
+        XSTCcolorDbase = &dbase;
+    }
+    else
+    {
+        XSTCcolorDbase = &dbase;
     }
 }
 
