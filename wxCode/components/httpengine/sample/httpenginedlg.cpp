@@ -68,6 +68,8 @@ enum
     Minimal_About,
     Minimal_Go,
 		Minimal_HeadGo,
+		Minimal_DeleteGo,
+		Minimal_PutGo,
     Minimal_AddField,
 
     Minimal_ProxySettings,
@@ -129,6 +131,8 @@ BEGIN_EVENT_TABLE(wxHTTPEngineDialog, wxFrame)
     EVT_BUTTON(Minimal_Go, wxHTTPEngineDialog::OnGo)
 		EVT_MENU(Minimal_Go, wxHTTPEngineDialog::OnGo)
 		EVT_MENU(Minimal_HeadGo, wxHTTPEngineDialog::OnHeadGo)
+		EVT_MENU(Minimal_DeleteGo, wxHTTPEngineDialog::OnDeleteGo)
+		EVT_MENU(Minimal_PutGo, wxHTTPEngineDialog::OnPutGo)
     EVT_BUTTON(Minimal_AddField, wxHTTPEngineDialog::OnAddField)
     EVT_CLOSE(wxHTTPEngineDialog::OnClose)
 
@@ -187,8 +191,12 @@ wxHTTPEngineDialog::wxHTTPEngineDialog(const wxString& title, const wxPoint& pos
 		wxMenuItem *tmp = optionsMenu->AppendCheckItem(Minimal_SaveResults, _T("Save Results"), _T("Save results as file, otherwise view in textbox"));
 		tmp->Check(true);
     optionsMenu->AppendSeparator();
-		optionsMenu->Append(Minimal_Go, _T("Go"), _T("Send built information and receive results."));
+		optionsMenu->Append(Minimal_Go, _T("Go (POST/GET)"), _T("Send built information and receive results."));
 		optionsMenu->Append(Minimal_HeadGo, _T("Go (HEAD)"), _T("Send built information and receive headers only."));
+
+		optionsMenu->Append(Minimal_DeleteGo, _T("Go (DELETE)"), _T("Delete a file from the server."));
+		optionsMenu->Append(Minimal_PutGo, _T("Go (PUT)"), _T("Put a file onto the server."));
+
     optionsMenu->Append(Minimal_Stop, _T("Stop"), _T("Stop downloading"));
 
     fileMenu->Append(Minimal_ProxySettings, _T("Proxy Settings"), _T("Set proxy settings"));
@@ -478,7 +486,7 @@ void wxHTTPEngineDialog::OnGo(wxCommandEvent &)
 #ifdef USETHREAD
 
   m_thread = new wxHTTPBuilderThread(this, Minimal_Thread, m_http, szURL);
-	m_thread->SaveToFile(true, szSaveAs);
+	m_thread->SaveToFile(szSaveAs);
 
   if( m_thread->Create() != wxTHREAD_NO_ERROR )
   {
@@ -682,7 +690,7 @@ void wxHTTPEngineDialog::OnHeadGo( wxCommandEvent &event)
 #ifdef USETHREAD
 
   m_thread = new wxHTTPBuilderThread(this, Minimal_Thread2, m_http, szURL);
-	m_thread->GetHeadRequest(true);
+	m_thread->SetHeadRequest();
 
   if( m_thread->Create() != wxTHREAD_NO_ERROR )
   {
@@ -707,6 +715,358 @@ void wxHTTPEngineDialog::OnHeadGo( wxCommandEvent &event)
 		
 		m_pleaseWaitDlg = new wxPleaseWaitDlg( _T("wxHTTPEngine"),
                             _T("Sending HEAD request, please wait..."),
+                            this,   // parent
+                            wxPW_APP_MODAL|
+                            wxPW_CAN_CANCEL|
+                            wxPW_SHOW_NOW);
+	#endif
+
+#else
+	// No threads, we need to tell the socket to not wait
+	m_http->SetFlags(wxSOCKET_NONE|wxSOCKET_BLOCK);
+
+	int retCode = m_http->GetHeadResponse(szURL);
+	if( retCode < 0 )
+	{
+		wxMessageBox( wxString::Format(wxT("Head request error: %s\nProtocol error code: %d"), m_http->GetLastError().c_str(), m_http->GetError() ) );
+	}
+	else
+	{
+		//int read = m_http->GetBytesRead();
+		int sent = m_http->GetBytesSent();
+		int contentLength = m_http->GetContentLength();
+		// We are done!
+		SetStatusText(wxT("Download complete"), 1);
+
+		wxString msg;
+		if( sent > 0 )
+			msg = wxString::Format(wxT("Sent: %dK, Returned Content-Length: %dK"), sent/1024, contentLength/1024);
+		else
+			msg = wxString::Format(wxT("Returned Content-Length: %dK"), contentLength/1024);
+		SetStatusText(msg, 1);
+		SetStatusText(wxT("Request completed."), 0);
+
+		wxMessageBox( wxString::Format(wxT("Head request response code: %d\nHeaders follow...\n\n%s"), retCode, m_http->GetRawHeaders().c_str() ) );
+	}
+
+#endif
+
+  /*
+  // Get Imput Stream:  Example not using a thread:
+  in_stream = http->GetInputStream(wxT("/phpinfo.php?FileName=productsServices.pdf"));
+
+  if( in_stream )
+  {
+    wxFile file;
+    file.Open( szSaveAs, wxFile::write );
+
+    int nBytesRead = 0;
+
+    while( in_stream->Eof() == false )
+    {
+      wxChar buf[8192];
+      in_stream->Read( buf, WXSIZEOF(buf) );
+
+      file.Write( buf, in_stream->LastRead() );
+
+      if( in_stream->LastRead() == 0 )
+        break;
+
+      nBytesRead += in_stream->LastRead();
+    }
+    file.Close();
+
+    delete in_stream;
+  }
+  */
+#ifndef USETHREAD
+  delete m_http;
+  m_http = NULL;
+#endif
+}
+
+void wxHTTPEngineDialog::OnDeleteGo(wxCommandEvent &)
+{
+	if( m_http )
+    return;
+
+  wxString szURL = m_txtUrl->GetValue();
+  if( szURL.IsEmpty() )
+  {
+    wxMessageBox( _T("You did not enter a URL.") );
+    return;
+  }
+
+	m_http = new wxHTTPBuilder();
+  m_http->InitContentTypes(); // Initialise the content types on the page
+
+  if( m_bUseProxy )
+  {
+#ifdef TESTPROXYSETTINGSCLASS
+    wxProxySettings set;
+    m_proxySettings.SetUseProxy(true);
+    m_http->SetProxySettings(m_proxySettings);
+#else
+    m_http->HttpProxy(m_szProxyHost, m_nProxyPort );
+    if( m_bProxyAuth )
+      m_http->HttpProxyAuth( m_szProxyUsername, m_szProxyPassword);
+#endif
+  }
+  
+  if( m_bUseAuth )
+  {
+#ifdef TESTHTTPAUTHSETTINGSCLASS
+    m_authSettings.SetBasicAuth(); // Set the class to use the authentication settings
+    m_http->SetAuthentication( m_authSettings );
+#else
+    m_http->Authenticate(m_szAuthUsername, m_szAuthPassword);
+#endif
+  }
+
+  // Add some values:
+  for( unsigned long x = 0; x < (unsigned long)m_lcData->GetItemCount(); x++ )
+  {
+    wxString szName = m_lcData->GetItemText(x);
+    wxString szValue = wxT("");
+    wxString szType = wxT("");
+    wxListItem item;
+    item.m_itemId = x;
+    item.m_col = 1;
+    item.m_mask = wxLIST_MASK_TEXT;
+    if( m_lcData->GetItem( item ) )
+      szValue = item.m_text;
+    item.m_itemId = x;
+    item.m_col = 2;
+    item.m_mask = wxLIST_MASK_TEXT;
+    if( m_lcData->GetItem( item ) )
+    {
+      szType = item.m_text;
+
+      wxHTTPBuilder::wxHTTP_Type nType = wxHTTPBuilder::wxHTTP_TYPE_ANY;
+			// Only Query string and cookie values can be sent in a DELETE
+      if( szType == wxT("GET") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_GET;
+      if( szType == wxT("COOKIE") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_COOKIE;
+      if( szType == wxT("COOKIERAW") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_COOKIERAW;
+
+      m_http->SetValue( szName, szValue, nType );
+    }
+  }
+
+
+
+  //http->Authenticate(wxT("username"), "password"); // Auth Type basic
+
+#ifdef USETHREAD
+
+  m_thread = new wxHTTPBuilderThread(this, Minimal_Thread, m_http, szURL);
+	m_thread->SetDelete();
+
+  if( m_thread->Create() != wxTHREAD_NO_ERROR )
+  {
+		m_thread = NULL;
+    delete m_http;
+    m_http = NULL;
+  }
+  else
+  {
+    m_thread->Run();
+  }
+  SetStatusText(wxT("Sending DELETE request, please wait..."), 1);
+
+	if( m_timer )
+		delete m_timer;
+  m_timer = new wxTimer(this, Minimal_Timer);
+  m_timer->Start( 500, FALSE ); // Fire every 1/2 second
+	
+	#ifdef USEPLEASEWAITDLG
+		if(m_pleaseWaitDlg)
+			delete m_pleaseWaitDlg; // Close the last dialog if it wasnt destoryed previously
+		
+		m_pleaseWaitDlg = new wxPleaseWaitDlg( _T("wxHTTPEngine"),
+                            _T("Sending DELETE request, please wait..."),
+                            this,   // parent
+                            wxPW_APP_MODAL|
+                            wxPW_CAN_CANCEL|
+                            wxPW_SHOW_NOW);
+	#endif
+
+#else
+	// No threads, we need to tell the socket to not wait
+	m_http->SetFlags(wxSOCKET_NONE|wxSOCKET_BLOCK);
+
+	int retCode = m_http->GetHeadResponse(szURL);
+	if( retCode < 0 )
+	{
+		wxMessageBox( wxString::Format(wxT("Head request error: %s\nProtocol error code: %d"), m_http->GetLastError().c_str(), m_http->GetError() ) );
+	}
+	else
+	{
+		//int read = m_http->GetBytesRead();
+		int sent = m_http->GetBytesSent();
+		int contentLength = m_http->GetContentLength();
+		// We are done!
+		SetStatusText(wxT("Download complete"), 1);
+
+		wxString msg;
+		if( sent > 0 )
+			msg = wxString::Format(wxT("Sent: %dK, Returned Content-Length: %dK"), sent/1024, contentLength/1024);
+		else
+			msg = wxString::Format(wxT("Returned Content-Length: %dK"), contentLength/1024);
+		SetStatusText(msg, 1);
+		SetStatusText(wxT("Request completed."), 0);
+
+		wxMessageBox( wxString::Format(wxT("Head request response code: %d\nHeaders follow...\n\n%s"), retCode, m_http->GetRawHeaders().c_str() ) );
+	}
+
+#endif
+
+  /*
+  // Get Imput Stream:  Example not using a thread:
+  in_stream = http->GetInputStream(wxT("/phpinfo.php?FileName=productsServices.pdf"));
+
+  if( in_stream )
+  {
+    wxFile file;
+    file.Open( szSaveAs, wxFile::write );
+
+    int nBytesRead = 0;
+
+    while( in_stream->Eof() == false )
+    {
+      wxChar buf[8192];
+      in_stream->Read( buf, WXSIZEOF(buf) );
+
+      file.Write( buf, in_stream->LastRead() );
+
+      if( in_stream->LastRead() == 0 )
+        break;
+
+      nBytesRead += in_stream->LastRead();
+    }
+    file.Close();
+
+    delete in_stream;
+  }
+  */
+#ifndef USETHREAD
+  delete m_http;
+  m_http = NULL;
+#endif
+}
+
+void wxHTTPEngineDialog::OnPutGo(wxCommandEvent &)
+{
+	if( m_http )
+    return;
+
+  wxString szURL = m_txtUrl->GetValue();
+  if( szURL.IsEmpty() )
+  {
+    wxMessageBox( _T("You did not enter a URL.") );
+    return;
+  }
+
+	wxString szUploadFile = wxT("");
+	szUploadFile = wxFileSelector( wxT("Select file to upload"), wxT(""), wxT(""), wxT(""), wxT("*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, this );
+	if( szUploadFile.IsEmpty() )
+		return;
+	
+	// wxMessageBox( szUploadFile );
+
+
+	m_http = new wxHTTPBuilder();
+  m_http->InitContentTypes(); // Initialise the content types on the page
+
+  if( m_bUseProxy )
+  {
+#ifdef TESTPROXYSETTINGSCLASS
+    wxProxySettings set;
+    m_proxySettings.SetUseProxy(true);
+    m_http->SetProxySettings(m_proxySettings);
+#else
+    m_http->HttpProxy(m_szProxyHost, m_nProxyPort );
+    if( m_bProxyAuth )
+      m_http->HttpProxyAuth( m_szProxyUsername, m_szProxyPassword);
+#endif
+  }
+  
+  if( m_bUseAuth )
+  {
+#ifdef TESTHTTPAUTHSETTINGSCLASS
+    m_authSettings.SetBasicAuth(); // Set the class to use the authentication settings
+    m_http->SetAuthentication( m_authSettings );
+#else
+    m_http->Authenticate(m_szAuthUsername, m_szAuthPassword);
+#endif
+  }
+
+  // Add some values:
+  for( unsigned long x = 0; x < (unsigned long)m_lcData->GetItemCount(); x++ )
+  {
+    wxString szName = m_lcData->GetItemText(x);
+    wxString szValue = wxT("");
+    wxString szType = wxT("");
+    wxListItem item;
+    item.m_itemId = x;
+    item.m_col = 1;
+    item.m_mask = wxLIST_MASK_TEXT;
+    if( m_lcData->GetItem( item ) )
+      szValue = item.m_text;
+    item.m_itemId = x;
+    item.m_col = 2;
+    item.m_mask = wxLIST_MASK_TEXT;
+    if( m_lcData->GetItem( item ) )
+    {
+      szType = item.m_text;
+
+      wxHTTPBuilder::wxHTTP_Type nType = wxHTTPBuilder::wxHTTP_TYPE_ANY;
+			// Only Query string and cookie values can be sent in a HEAD
+      if( szType == wxT("GET") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_GET;
+      if( szType == wxT("COOKIE") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_COOKIE;
+      if( szType == wxT("COOKIERAW") )
+        nType = wxHTTPBuilder::wxHTTP_TYPE_COOKIERAW;
+
+      m_http->SetValue( szName, szValue, nType );
+    }
+  }
+
+
+
+  //http->Authenticate(wxT("username"), "password"); // Auth Type basic
+
+#ifdef USETHREAD
+
+  m_thread = new wxHTTPBuilderThread(this, Minimal_Thread, m_http, szURL);
+	m_thread->SetPutFile(szUploadFile);
+
+  if( m_thread->Create() != wxTHREAD_NO_ERROR )
+  {
+		m_thread = NULL;
+    delete m_http;
+    m_http = NULL;
+  }
+  else
+  {
+    m_thread->Run();
+  }
+  SetStatusText(wxT("Sending PUT request, please wait..."), 1);
+
+	if( m_timer )
+		delete m_timer;
+  m_timer = new wxTimer(this, Minimal_Timer);
+  m_timer->Start( 500, FALSE ); // Fire every 1/2 second
+	
+	#ifdef USEPLEASEWAITDLG
+		if(m_pleaseWaitDlg)
+			delete m_pleaseWaitDlg; // Close the last dialog if it wasnt destoryed previously
+		
+		m_pleaseWaitDlg = new wxPleaseWaitDlg( _T("wxHTTPEngine"),
+                            _T("Sending PUT request, please wait..."),
                             this,   // parent
                             wxPW_APP_MODAL|
                             wxPW_CAN_CANCEL|
@@ -945,7 +1305,7 @@ void wxHTTPEngineDialog::OnDownloadComplete(wxHTTPBuilderEvent &)
 		//dlg.ShowModal();
 		wxMessageBox(szContents);
 	}
-	else if( response != 200 ) // something happeend
+	else if( response < 200 || response > 299 ) // something happeend
 	{
 		wxMessageBox(szResponseStr);
 	}
@@ -1285,7 +1645,5 @@ void AboutDialog::OnMenu(wxCommandEvent &event)
 }
 
 // eof
-
-
 
 

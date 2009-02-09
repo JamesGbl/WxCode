@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "httpengine", "httpengine_httpengine.vcproj", "{14E40898-764C-46B7-A6FC-F1A33625C04D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "httpenginetest", "httpengine_httpenginetest.vcproj", "{F4A3EBC6-7691-4BD1-A031-420475AB0F62}"

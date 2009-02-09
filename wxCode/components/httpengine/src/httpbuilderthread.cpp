@@ -49,8 +49,7 @@ wxHTTPBuilderThread::wxHTTPBuilderThread(wxWindow *parent, int id, wxHTTPBuilder
   m_url = url;
   m_http = (wxHTTPBuilderThreadObj*)http;
   m_data = wxT("");
-  m_saveToFile = false;
-	m_headRequest = false;
+	m_operation = wxHTTPBuilderThread_SaveAsString;
 }
 
 //! wxHTTPBuilderThread destructor
@@ -76,12 +75,25 @@ void* wxHTTPBuilderThread::Entry(void)
 	// wxSOCKET_BLOCK will block the thread, which is fine.
 	// If you do not include wxSOCKET_BLOCK, you will see your processor usage go through the roof.
 
-	if( m_headRequest )
-		m_http->GetHeadResponse(m_url);
-  else if( m_saveToFile )
-    m_http->SaveFile(m_filename, m_url, m_tempDir);
-  else
-    m_data = m_http->GetInputString( m_url, m_tempDir);
+	switch( m_operation )
+	{
+		case wxHTTPBuilderThread_SaveToFile: {
+			m_http->SaveFile(m_filename, m_url, m_tempDir);
+		}; break;
+		case wxHTTPBuilderThread_HeadRequest: {
+			m_http->GetHeadResponse(m_url);
+		}; break;
+		case wxHTTPBuilderThread_Delete: {
+			m_http->GetDeleteResponse(m_url);
+		}; break;
+		case wxHTTPBuilderThread_PutFile: {
+			m_http->GetPutResponse(m_filename, m_url);
+		}; break;
+		case wxHTTPBuilderThread_SaveAsString:
+		default: {
+			m_data = m_http->GetInputString( m_url, m_tempDir);
+		};
+	}
 
   return NULL;
 }

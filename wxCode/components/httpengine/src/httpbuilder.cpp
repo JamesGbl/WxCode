@@ -208,6 +208,79 @@ bool wxHTTPBuilder::SaveFile(const wxString &filename, const wxString& url, cons
   return true;
 }
 
+//! Send DELETE request.  Returns 20x/30x/40x/50x response code if successful.  Returns -1 if error.
+int wxHTTPBuilder::GetDeleteResponse(const wxString &url)
+{
+  wxString szToReturn = wxT("");
+  wxInputStream *inp_stream = GetInputStream(url, wxEmptyString, wxHTTP_DELETE);
+  if( inp_stream == NULL )
+    return -1; // There was an error
+
+  m_bytesRead = 0;
+
+  // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
+  char buf[8192];
+
+	// read the rest of the string, if anything is there...
+  while( true )
+  {
+    inp_stream->Read( buf, WXSIZEOF(buf) );
+    int lastRead = inp_stream->LastRead();
+    if( lastRead == 0 )
+      break;
+
+    AddBytesRead( lastRead );
+
+    if( StopCheck() ) // For threads, they can stop this reading
+      break;
+  }
+
+  delete inp_stream;
+  inp_stream = NULL;
+
+  return GetResponse();
+}
+
+int wxHTTPBuilder::GetPutResponse(const wxString &filename, const wxString &url )
+{
+	// First, get the size of the file...
+	wxULongLong ulContentLength = wxFileName::GetSize(filename);
+	if( ulContentLength == wxInvalidSize )
+		return -1;
+	
+	// tell the server what the size of the file is we are sending
+	SetHeader( wxT("Content-Length"), wxString::Format( wxT("%lu"), ulContentLength ) );
+	
+	wxString szToReturn = wxT("");
+  wxInputStream *inp_stream = GetInputStream(url, wxEmptyString, wxHTTP_PUT, filename);
+  if( inp_stream == NULL )
+    return -1; // There was an error
+
+	m_bytesRead = 0;
+
+  // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
+  char buf[8192];
+
+	// read the rest of the string, if anything is there...
+  while( true )
+  {
+    inp_stream->Read( buf, WXSIZEOF(buf) );
+    int lastRead = inp_stream->LastRead();
+    if( lastRead == 0 )
+      break;
+
+    AddBytesRead( lastRead );
+
+    if( StopCheck() ) // For threads, they can stop this reading
+      break;
+  }
+
+  delete inp_stream;
+  inp_stream = NULL;
+
+  return GetResponse();
+}
+
 //! Send HEAD request.  Returns 20x/30x/40x/50x response code if successful.  Returns -1 if error.
 int wxHTTPBuilder::GetHeadResponse(const wxString &url)
 {
@@ -242,7 +315,7 @@ int wxHTTPBuilder::GetHeadResponse(const wxString &url)
 }
 
 //! Returns an wxInputStream pointer to read information from the web server.
-wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
+wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString& tempDirOrPrefix, const wxHTTP_Req req, const wxString& put_file )
 {
   wxHTTPBuilderStream *inp_stream = NULL;
   m_error = wxT("");
@@ -320,7 +393,7 @@ wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString
     path += szRequest;
   }
 
-  if ( !SendRequest(path, tempDirOrPrefix, req) )
+  if ( !SendRequest(path, tempDirOrPrefix, req, put_file) )
   {
     m_error = wxT("Sending Request");
     return NULL;
@@ -381,14 +454,19 @@ wxString wxHTTPBuilder::GetInputString(const wxString &url, const wxString& temp
 //! This function may take a while to return.  It is highly recommended
 //! you write your application to use threads.
 //! 
-bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
+bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrPrefix, const wxHTTP_Req req, const wxString& put_file )
 {
   wxHTTP_Req req_method = req;
   wxString szTempFile = wxEmptyString;
   wxString szPostBuf = wxEmptyString;
   wxInputStream *streamPost = NULL;
+	wxInputStream *streamPut = NULL;
 
-  if( m_MultiPartCount > 0 )
+	if( req == wxHTTP_PUT )
+	{
+		streamPut = (wxInputStream*) new wxFileInputStream(put_file);
+	}
+  else if( m_MultiPartCount > 0 )
   {
     szTempFile = wxFileName::CreateTempFileName( tempDirOrPrefix  );
     streamPost = GetPostBufferStream(szTempFile);
@@ -403,17 +481,23 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   const wxChar *request; // Build the request here
 
   switch (req_method) {
-  case wxHTTP_GET:
-    request = wxT("GET");
-    break;
-  case wxHTTP_POST:
-    request = wxT("POST");
-    break;
-	case wxHTTP_HEAD:
-    request = wxT("HEAD");
-    break;
-  default:
-    return false;
+		case wxHTTP_GET:
+			request = wxT("GET");
+			break;
+		case wxHTTP_POST:
+			request = wxT("POST");
+			break;
+		case wxHTTP_HEAD:
+			request = wxT("HEAD");
+			break;
+		case wxHTTP_PUT:
+			request = wxT("PUT");
+			break;
+		case wxHTTP_DELETE:
+			request = wxT("DELETE");
+			break;
+		default:
+			return false;
   }
 
   m_http_response = 0;
@@ -487,6 +571,23 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   SendHeaders();
   Write("\r\n", 2);		// NOTE: don't use the wxT() macro here - HTTP 1.1 uses US-ASCII (see RFC 2616)
   m_bytesSent = 0;
+
+	if( streamPut )
+	{
+		// Loop through stream and write to socket
+    wxChar buf[8192]; // 8192 is a good size, though in the future this size could be bigger on newer operating systems.
+    while( streamPut->Eof() == false )
+    {
+      streamPut->Read( buf, WXSIZEOF(buf) );
+      Write( buf, streamPut->LastRead() );
+      AddBytesSent( LastCount() );
+
+      if( StopCheck() ) // For threads, they can stop this writing to the socket
+        break;
+    }
+    delete streamPut;
+    streamPut = NULL;
+	}
 
   if( req_method == wxHTTP_POST )
   {

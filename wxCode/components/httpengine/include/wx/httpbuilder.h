@@ -136,6 +136,15 @@ public:
   // Destructor
   ~wxHTTPBuilder();
 
+  enum wxHTTP_Req
+  {
+    wxHTTP_GET,
+    wxHTTP_POST,
+    wxHTTP_HEAD,
+		wxHTTP_PUT,
+		wxHTTP_DELETE
+  };
+
   // variable and authentication types
   enum wxHTTP_Type
   {
@@ -218,13 +227,19 @@ public:
 	bool SaveFile(const wxString& filename, const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString);
 
   // Send the built HTTP request and return a stream of the returned data from server.
-  wxInputStream* GetInputStream(const wxString& url, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET );
+  wxInputStream* GetInputStream(const wxString& url, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET, const wxString& put_file = wxEmptyString );
 
   // Send the build HTTP request and return a string returned from the server.
   wxString GetInputString(const wxString &url, const wxString& tempDirOrPrefix = wxEmptyString);
 
-	// Send the built HTTP 'HEAD' request and return the HTTP response code information
+	// Send the HTTP 'HEAD' request and return the HTTP response code information
 	int GetHeadResponse(const wxString &url);
+	
+	// Send the HTTP 'DELETE' request and return the HTTP response code information
+	int GetDeleteResponse(const wxString &url);
+
+	// Send the HTTP 'PUT' request and return the HTTP response code information
+	int GetPutResponse(const wxString& filename, const wxString& url);
 
   // Error message
   wxString GetLastError(void) { return m_error; };
@@ -237,7 +252,7 @@ public:
 protected:
   
   // helper functions that may be accessed by an extended class
-  bool SendRequest(const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET  );
+  bool SendRequest(const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET, const wxString &put_file = wxEmptyString );
   wxString CreateBoundary( const int length );
 
 	bool ParseHeaders();

@@ -42,6 +42,8 @@ public:
 	void OnAddField( wxCommandEvent &event );
 	void OnGo( wxCommandEvent &event );
 	void OnHeadGo( wxCommandEvent &event );
+	void OnDeleteGo( wxCommandEvent &event );
+	void OnPutGo( wxCommandEvent &event );
 	void OnClose( wxCloseEvent &event );
 	void OnAbout( wxCommandEvent &event );
 	void OnQuit( wxCommandEvent &event );

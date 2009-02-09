@@ -86,6 +86,15 @@ public:
   wxHTTPBuilderThread(wxWindow *parent, int id, wxHTTPBuilder *http, const wxString &url);
   ~wxHTTPBuilderThread();
 
+	enum wxHTTPBuilderThread_Operation
+  {
+    wxHTTPBuilderThread_SaveAsString,
+		wxHTTPBuilderThread_SaveToFile,
+		wxHTTPBuilderThread_HeadRequest,
+    wxHTTPBuilderThread_Delete,
+		wxHTTPBuilderThread_PutFile
+  };
+
   // Required thread functions:
   virtual void OnExit(void);
 	virtual void* Entry(void);
@@ -94,21 +103,25 @@ public:
   int GetId(void) { return m_id; };
 
   // Thread properties, call before starting thread
-  void SaveToFile( const bool saveToFile = false, const wxString &filename = wxEmptyString ) { m_saveToFile = saveToFile; m_filename = filename; };
+	void SaveAsString(void) { m_operation = wxHTTPBuilderThread_SaveAsString; };
+  void SaveToFile( const wxString &filename = wxEmptyString ) { m_operation = wxHTTPBuilderThread_SaveToFile; m_filename = filename; };
   void SetTempDirOrPrefix(const wxString &tempDir) { m_tempDir = tempDir; };
-	void GetHeadRequest(const bool getHeadReq = true ) { m_headRequest = getHeadReq; m_saveToFile = false; };
+	void SetHeadRequest(void) { m_operation = wxHTTPBuilderThread_HeadRequest; };
+	void SetDelete(void) { m_operation = wxHTTPBuilderThread_Delete; };
+	void SetPutFile( const wxString &filename = wxEmptyString ) { m_operation = wxHTTPBuilderThread_PutFile; m_filename = filename; };
+	wxString GetReturnedString(void) { return m_returnedString; };
 
 private:
 
   wxHTTPBuilderThreadObj  *m_http;
-  wxWindow           	*m_parent;
+  wxWindow           			*m_parent;
   int                    	m_id;
-  wxString             	m_data;
-  bool                   	m_saveToFile;
-	bool										m_headRequest;
+  wxString             		m_data;
+	int											m_operation;
   wxString              	m_url;
-  wxString             	m_tempDir;
+  wxString             		m_tempDir;
   wxString              	m_filename;
+	wxString								m_returnedString;
 };
 
 #endif

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="httpenginetest"
 	ProjectGUID="{F4A3EBC6-7691-4BD1-A031-420475AB0F62}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -51,7 +52,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_lib\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjd_lib\httpenginetest/"
@@ -83,6 +84,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -104,9 +107,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -150,7 +150,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_lib\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjd_lib\httpenginetest/"
@@ -182,6 +182,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -203,9 +205,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -250,7 +249,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_lib\httpenginetest/httpengine_httpenginetest.pch"
@@ -280,6 +279,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -301,9 +302,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -347,7 +345,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_lib\httpenginetest/httpengine_httpenginetest.pch"
@@ -377,6 +375,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -398,9 +398,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -445,7 +442,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_lib\httpenginetest/httpengine_httpenginetest.pch"
@@ -475,6 +472,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -496,9 +495,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -542,7 +538,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_dll\httpenginetest/httpengine_httpenginetest.pch"
@@ -572,6 +568,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -593,9 +591,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -639,7 +634,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_lib\httpenginetest/httpengine_httpenginetest.pch"
@@ -669,6 +664,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -690,9 +687,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -736,7 +730,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_dll\httpenginetest/httpengine_httpenginetest.pch"
@@ -766,6 +760,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -787,9 +783,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -834,7 +827,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_dll\httpenginetest/httpengine_httpenginetest.pch"
@@ -864,6 +857,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -885,9 +880,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -931,7 +923,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_dll\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjd_dll\httpenginetest/"
@@ -963,6 +955,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -984,9 +978,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1031,7 +1022,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu,$(WXWIN)\include,..\include,provainc"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS;prova"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_dll\httpenginetest/httpengine_httpenginetest.pch"
@@ -1061,6 +1052,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1082,9 +1075,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1129,7 +1119,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_lib\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjud_lib\httpenginetest/"
@@ -1161,6 +1151,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1182,9 +1174,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1228,7 +1217,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_dll\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjd_dll\httpenginetest/"
@@ -1260,6 +1249,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1281,9 +1272,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1328,7 +1316,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_dll\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjud_dll\httpenginetest/"
@@ -1360,6 +1348,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1381,9 +1371,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1428,7 +1415,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_lib\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjud_lib\httpenginetest/"
@@ -1460,6 +1447,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1481,9 +1470,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1528,7 +1514,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;prova"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_dll\httpenginetest/httpengine_httpenginetest.pch"
 				AssemblerListingLocation=".\msvc6prjud_dll\httpenginetest/"
@@ -1560,6 +1546,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\sample/httpenginetest.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -1581,9 +1569,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

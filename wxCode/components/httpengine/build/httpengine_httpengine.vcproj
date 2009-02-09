@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="httpengine"
 	ProjectGUID="{14E40898-764C-46B7-A6FC-F1A33625C04D}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -46,7 +47,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_lib\httpengine/httpengine_httpengine.pch"
@@ -121,7 +122,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_lib\httpengine/httpengine_httpengine.pch"
@@ -196,7 +197,7 @@
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXDEBUG__;__WXMSW__"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_lib\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjud_lib\httpengine/"
@@ -272,7 +273,7 @@
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXDEBUG__;__WXMSW__"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_lib\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjud_lib\httpengine/"
@@ -347,7 +348,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_lib\httpengine/httpengine_httpengine.pch"
@@ -421,7 +422,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_lib\httpengine/httpengine_httpengine.pch"
@@ -495,7 +496,7 @@
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXDEBUG__;__WXMSW__"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_lib\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjd_lib\httpengine/"
@@ -570,7 +571,7 @@
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXDEBUG__;__WXMSW__"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_lib\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjd_lib\httpengine/"
@@ -651,7 +652,7 @@
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_dll\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjd_dll\httpengine/"
@@ -682,6 +683,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\lib/httpengined.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengined.lib"
 				TargetMachine="1"
 			/>
@@ -704,9 +707,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -750,7 +750,7 @@
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjd_dll\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjd_dll\httpengine/"
@@ -781,6 +781,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\lib/httpengined.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengined.lib"
 				TargetMachine="1"
 			/>
@@ -803,9 +805,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -850,7 +849,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_dll\httpengine/httpengine_httpengine.pch"
@@ -879,6 +878,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\lib/httpengineu.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengineu.lib"
 				TargetMachine="1"
 			/>
@@ -901,9 +902,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -948,7 +946,7 @@
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_dll\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjud_dll\httpengine/"
@@ -979,6 +977,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\lib/httpengineud.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengineud.lib"
 				TargetMachine="1"
 			/>
@@ -1001,9 +1001,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1048,7 +1045,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prju_dll\httpengine/httpengine_httpengine.pch"
@@ -1077,6 +1074,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\lib/httpengineu.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengineu.lib"
 				TargetMachine="1"
 			/>
@@ -1099,9 +1098,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1146,7 +1142,7 @@
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;WXUSINGDLL;__WXDEBUG__;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prjud_dll\httpengine/httpengine_httpengine.pch"
 				AssemblerListingLocation=".\msvc6prjud_dll\httpengine/"
@@ -1177,6 +1173,8 @@
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\lib/httpengineud.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengineud.lib"
 				TargetMachine="1"
 			/>
@@ -1199,9 +1197,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1245,7 +1240,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_dll\httpengine/httpengine_httpengine.pch"
@@ -1274,6 +1269,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\lib/httpengine.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengine.lib"
 				TargetMachine="1"
 			/>
@@ -1296,9 +1293,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1342,7 +1336,7 @@
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw,$(WXWIN)\include,..\include"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_HTTPENGINE"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\msvc6prj_dll\httpengine/httpengine_httpengine.pch"
@@ -1371,6 +1365,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\lib"
 				ProgramDatabaseFile=".\..\lib/httpengine.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\lib\httpengine.lib"
 				TargetMachine="1"
 			/>
@@ -1393,9 +1389,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
