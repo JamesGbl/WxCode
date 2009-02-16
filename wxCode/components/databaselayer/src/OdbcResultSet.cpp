@@ -196,6 +196,70 @@ void OdbcResultSet::RetrieveFieldData(int nField)
 {
     if (nField != -1)
     {
+      SQLRETURN rc;
+      SQLSMALLINT buflen;
+      unsigned long int colType;
+      rc = SQLColAttribute(m_pOdbcStatement, nField, SQL_DESC_TYPE, NULL, 0,
+        &buflen, &colType);
+
+      if (SQL_FLOAT == colType || SQL_DOUBLE == colType)
+      {
+        SQLFLOAT ret;
+        SQLINTEGER sqlPtr;
+        rc = SQLGetData(m_pOdbcStatement, nField, SQL_C_DOUBLE, &ret, 0, &sqlPtr);
+        if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
+        {
+          InterpretErrorCodes(rc, m_pOdbcStatement);
+          ThrowDatabaseException();
+          return;
+        }
+        // Mark this field as retrieved
+        m_RetrievedValues.insert(nField);
+        // Record whether this field is NULL
+        if (sqlPtr == SQL_NULL_DATA)
+        {
+          m_NullValues.insert(nField);
+          ret = 0;
+          m_fieldValues[nField-1] = ret;
+        }
+        else
+        {
+          m_fieldValues[nField-1] = ret;
+        }
+      }
+      else if (SQL_DATETIME == colType)
+      {
+        TIMESTAMP_STRUCT ret;
+        SQLINTEGER sqlPtr;
+        rc = SQLGetData(m_pOdbcStatement, nField, SQL_C_TIMESTAMP, &ret, sizeof(ret),
+          &sqlPtr);
+
+        if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
+        {
+          InterpretErrorCodes(rc, m_pOdbcStatement);
+          ThrowDatabaseException();
+          return;
+        }
+        // Mark this field as retrieved
+        m_RetrievedValues.insert(nField);
+        // Record whether this field is NULL
+        if (sqlPtr == SQL_NULL_DATA)
+        {
+          m_NullValues.insert(nField);
+          //m_fieldValues[nField-1] = wxInvalidDateTime;
+        }
+        else
+        {
+          /*
+          wxPrintf(_T("day = %d, month = %d, year = %d, hour = %d, minute = %d, second = %d, fraction = %d\n"), 
+            ret.day, ret.month, ret.year, ret.hour, ret.minute, ret.second, ret.fraction);*/
+          wxDateTime dt(ret.day, wxDateTime::Month(ret.month-1), ret.year, ret.hour,
+            ret.minute, ret.second, ret.fraction);
+          m_fieldValues[nField-1] = dt;
+        }
+      }
+      else
+      {
         wxString strValue;
         SQLPOINTER buff[8192];
 
@@ -213,6 +277,7 @@ void OdbcResultSet::RetrieveFieldData(int nField)
         {
             InterpretErrorCodes(nRet, m_pOdbcStatement);
             ThrowDatabaseException();
+            return;
         }
         strValue += ConvertFromUnicodeStream((const char*)buff);
 
@@ -232,12 +297,14 @@ void OdbcResultSet::RetrieveFieldData(int nField)
                 {
                     InterpretErrorCodes(nRet, m_pOdbcStatement);
                     ThrowDatabaseException();
+                    return;
                 }
                 strValue += ConvertFromUnicodeStream((const char*)buff);
             }
         }
 
         m_fieldValues[nField-1] = strValue;//.Trim();
+      }
     }
 }
 
