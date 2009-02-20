@@ -83,6 +83,7 @@ wxAuthenticateDlg::wxAuthenticateDlg(wxWindow* parent, wxWindowID id, const wxSt
   hsizer = new wxBoxSizer( wxHORIZONTAL );
     bn = new wxButton(this, wxID_OK, _T("&OK") );
     hsizer->Add(bn);
+		bn->SetDefault();
     hsizer->Add(0,0,1, wxGROW);
     bn = new wxButton(this, wxID_CANCEL, _T("&Cancel") );
     hsizer->Add(bn);
