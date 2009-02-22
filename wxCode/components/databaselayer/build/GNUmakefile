@@ -255,7 +255,8 @@ DATABASELAYER_MYSQL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlPreparedStatementParameterCollection.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlPreparedStatementResultSet.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlPreparedStatementWrapper.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlResultSetMetaData.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlResultSetMetaData.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlInterface.o
 DATABASELAYER_MYSQL_LIB_HEADERS =  \
 	include/DatabaseLayer.h \
 	include/DatabaseResultSet.h \
@@ -273,7 +274,8 @@ DATABASELAYER_MYSQL_LIB_HEADERS =  \
 	include/MysqlPreparedStatementParameterCollection.h \
 	include/MysqlPreparedStatementResultSet.h \
 	include/MysqlPreparedStatementWrapper.h \
-	include/MysqlResultSetMetaData.h
+	include/MysqlResultSetMetaData.h \
+	include/MysqlInterface.h
 DATABASELAYER_MYSQL_DLL_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(MYSQL_HEADER_LOCATION) \
 	-I$(MYSQL_LIB_LOCATION)/include -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
@@ -292,7 +294,8 @@ DATABASELAYER_MYSQL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlPreparedStatementParameterCollection.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlPreparedStatementResultSet.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlPreparedStatementWrapper.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlResultSetMetaData.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlResultSetMetaData.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlInterface.o
 DATABASELAYER_MYSQL_DLL_HEADERS =  \
 	include/DatabaseLayer.h \
 	include/DatabaseResultSet.h \
@@ -310,7 +313,8 @@ DATABASELAYER_MYSQL_DLL_HEADERS =  \
 	include/MysqlPreparedStatementParameterCollection.h \
 	include/MysqlPreparedStatementResultSet.h \
 	include/MysqlPreparedStatementWrapper.h \
-	include/MysqlResultSetMetaData.h
+	include/MysqlResultSetMetaData.h \
+	include/MysqlInterface.h
 DATABASELAYER_POSTGRESQL_LIB_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include \
 	-I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config --includedir` \
 	-I$(POSTGRESQL_LIB_LOCATION)/include `$(WX_CONFIG) --cxxflags \
@@ -1189,7 +1193,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__databaselayer_5)/libwxcode_$(WX_PORT)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_databaselayer_mysql_dll  $(DATABASELAYER_MYSQL_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_MYSQL_DLL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib -L$(MYSQL_LIB_LOCATION)/lib `mysql_config --libs`  -lmysqld `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_MYSQL_DLL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib -L$(MYSQL_LIB_LOCATION)/lib `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -1548,7 +1552,7 @@ endif
 	$(CXX) -o $@ $(TEST_FIREBIRD_EMBEDDED_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(FIREBIRD_LIB_LOCATION)/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lfbclient `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_mysql: $(TEST_MYSQL_OBJECTS) $(__databaselayer_mysql_lib___depname)
-	$(CXX) -o $@ $(TEST_MYSQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(MYSQL_LIB_LOCATION)/lib `mysql_config --libs`  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
+	$(CXX) -o $@ $(TEST_MYSQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(MYSQL_LIB_LOCATION)/lib `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
 
 ../tests/runner_postgresql: $(TEST_POSTGRESQL_OBJECTS) $(__databaselayer_postgresql_lib___depname)
 	$(CXX) -o $@ $(TEST_POSTGRESQL_OBJECTS) $(LDFLAGS) $(VAR_15) -L../lib  -L$(POSTGRESQL_LIB_LOCATION)/lib -L`pg_config --libdir`/lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base` ../lib/gcc_$(__databaselayer)/libwxcode_$(WX_PORT)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lpq `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs base`
@@ -1772,6 +1776,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlPreparedSta
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlResultSetMetaData.o: ../src/MysqlResultSetMetaData.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_lib_MysqlInterface.o: ../src/MysqlInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_DatabaseLayer.o: ../src/DatabaseLayer.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -1812,6 +1819,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlPreparedSta
 	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlResultSetMetaData.o: ../src/MysqlResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_mysql_dll_MysqlInterface.o: ../src/MysqlInterface.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_MYSQL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/databaselayer_postgresql_lib_DatabaseLayer.o: ../src/DatabaseLayer.cpp

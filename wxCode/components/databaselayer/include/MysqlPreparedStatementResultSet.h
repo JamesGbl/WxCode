@@ -16,6 +16,7 @@
 
 #include "DatabaseResultSet.h"
 #include "MysqlPreparedStatementParameter.h"
+#include "MysqlInterface.h"
 
 #include "mysql.h"
 
@@ -25,8 +26,8 @@ class MysqlPreparedStatementResultSet : public DatabaseResultSet
 {
 public:
   // ctor
-  MysqlPreparedStatementResultSet();
-  MysqlPreparedStatementResultSet(MYSQL_STMT* pStatement, bool bManageStatement = false);
+  MysqlPreparedStatementResultSet(MysqlInterface* pInterface);
+  MysqlPreparedStatementResultSet(MysqlInterface* pInterface, MYSQL_STMT* pStatement, bool bManageStatement = false);
 
   //dtor
   virtual ~MysqlPreparedStatementResultSet();
@@ -52,7 +53,8 @@ public:
 private:
   void ClearPreviousData();
   MYSQL_BIND* GetResultBinding(int nField);
-  
+
+  MysqlInterface* m_pInterface; 
   MYSQL_STMT* m_pStatement;
   MYSQL_BIND* m_pResultBindings;
   

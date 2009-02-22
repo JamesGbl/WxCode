@@ -2,15 +2,16 @@
 #include "mysql_com.h"
 
 // ctor
-MysqlResultSetMetaData::MysqlResultSetMetaData(MYSQL_RES* pMetaData)
+MysqlResultSetMetaData::MysqlResultSetMetaData(MysqlInterface* pInterface, MYSQL_RES* pMetaData)
 {
+  m_pInterface = pInterface;
   m_pMetaData = pMetaData;
 }
 
 // dtor
 MysqlResultSetMetaData::~MysqlResultSetMetaData()
 {
-  mysql_free_result(m_pMetaData);
+  m_pInterface->GetMysqlFreeResult()(m_pMetaData);
 }
 
 int MysqlResultSetMetaData::GetColumnType(int i)
@@ -81,7 +82,7 @@ wxString MysqlResultSetMetaData::GetColumnName(int i)
 
 int MysqlResultSetMetaData::GetColumnCount()
 {
-  return mysql_num_fields(m_pMetaData);
+  return m_pInterface->GetMysqlNumFields()(m_pMetaData);
 }
 
 MYSQL_FIELD* MysqlResultSetMetaData::GetColumn(int nField)

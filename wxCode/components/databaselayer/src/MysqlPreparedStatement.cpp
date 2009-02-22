@@ -2,15 +2,17 @@
 #include "../include/MysqlDatabaseLayer.h"
 #include "../include/DatabaseErrorCodes.h"
 
-MysqlPreparedStatement::MysqlPreparedStatement()
+MysqlPreparedStatement::MysqlPreparedStatement(MysqlInterface* pInterface)
  : PreparedStatement()
 {
+  m_pInterface = pInterface;
   m_Statements.clear();
 }
 
-MysqlPreparedStatement::MysqlPreparedStatement(MYSQL_STMT* pStatement)
+MysqlPreparedStatement::MysqlPreparedStatement(MysqlInterface* pInterface, MYSQL_STMT* pStatement)
  : PreparedStatement()
 {
+  m_pInterface = pInterface;
   AddPreparedStatement(pStatement);
 }
 
@@ -42,7 +44,7 @@ void MysqlPreparedStatement::Close()
 
 void MysqlPreparedStatement::AddPreparedStatement(MYSQL_STMT* pStatement)
 {
-  MysqlPreparedStatementWrapper* pStatementWrapper = new MysqlPreparedStatementWrapper(pStatement);
+  MysqlPreparedStatementWrapper* pStatementWrapper = new MysqlPreparedStatementWrapper(m_pInterface, pStatement);
   if (pStatementWrapper)
     pStatementWrapper->SetEncoding(GetEncoding());
   m_Statements.push_back(pStatementWrapper);

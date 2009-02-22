@@ -13,6 +13,7 @@
 #endif
 
 #include "ResultSetMetaData.h"
+#include "MysqlInterface.h"
 
 #include "mysql.h"
 
@@ -20,7 +21,7 @@ class MysqlResultSetMetaData : public ResultSetMetaData
 {
 public:
   // ctor
-  MysqlResultSetMetaData(MYSQL_RES* pMetaData);
+  MysqlResultSetMetaData(MysqlInterface* pInterface, MYSQL_RES* pMetaData);
 
   // dtor
   virtual ~MysqlResultSetMetaData();
@@ -32,7 +33,8 @@ public:
   
 private:
   MYSQL_FIELD* GetColumn(int nField);
-  
+
+  MysqlInterface* m_pInterface;
   MYSQL_RES* m_pMetaData;
 };
 

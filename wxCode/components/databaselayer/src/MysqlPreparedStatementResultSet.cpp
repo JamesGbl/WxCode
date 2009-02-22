@@ -4,30 +4,32 @@
 #include "../include/DatabaseErrorCodes.h"
 #include "../include/DatabaseLayerException.h"
 
-MysqlPreparedStatementResultSet::MysqlPreparedStatementResultSet()
+MysqlPreparedStatementResultSet::MysqlPreparedStatementResultSet(MysqlInterface* pInterface)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pStatement = NULL;
   m_pResultBindings = NULL;
   m_bManageStatement = false;
 }
 
-MysqlPreparedStatementResultSet::MysqlPreparedStatementResultSet(MYSQL_STMT* pStatement, bool bManageStatement /* = false*/)
+MysqlPreparedStatementResultSet::MysqlPreparedStatementResultSet(MysqlInterface* pInterface, MYSQL_STMT* pStatement, bool bManageStatement /* = false*/)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pStatement = pStatement;
   m_pResultBindings = NULL;
   m_bManageStatement = bManageStatement;
-  MYSQL_RES* pResultMetadata = mysql_stmt_result_metadata(m_pStatement);
+  MYSQL_RES* pResultMetadata = m_pInterface->GetMysqlStmtResultMetadata()(m_pStatement);
   if (!pResultMetadata)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
     ThrowDatabaseException();
   }
   else
   {
-    int nParameters = mysql_num_fields(pResultMetadata);
+    int nParameters = m_pInterface->GetMysqlNumFields()(pResultMetadata);
     m_pResultBindings = new MYSQL_BIND[nParameters];
     memset(m_pResultBindings, 0, sizeof(MYSQL_BIND)*nParameters);
 
@@ -49,8 +51,8 @@ MysqlPreparedStatementResultSet::MysqlPreparedStatementResultSet(MYSQL_STMT* pSt
       pCurrentBinding++;
       pCurrentField++;
     }
-    mysql_stmt_bind_result(m_pStatement, m_pResultBindings);
-    mysql_free_result(pResultMetadata);
+    m_pInterface->GetMysqlStmtBindResult()(m_pStatement, m_pResultBindings);
+    m_pInterface->GetMysqlFreeResult()(pResultMetadata);
   }
 }
 
@@ -62,7 +64,7 @@ MysqlPreparedStatementResultSet::~MysqlPreparedStatementResultSet()
 bool MysqlPreparedStatementResultSet::Next()
 {
   ClearPreviousData();
-  return (mysql_stmt_fetch(m_pStatement) != MYSQL_NO_DATA);
+  return (m_pInterface->GetMysqlStmtFetch()(m_pStatement) != MYSQL_NO_DATA);
 }
 
 void MysqlPreparedStatementResultSet::Close()
@@ -71,16 +73,16 @@ void MysqlPreparedStatementResultSet::Close()
 
   CloseMetaData();
 
-  MYSQL_RES* pResultMetadata = mysql_stmt_result_metadata(m_pStatement);
+  MYSQL_RES* pResultMetadata = m_pInterface->GetMysqlStmtResultMetadata()(m_pStatement);
   if (!pResultMetadata)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
     ThrowDatabaseException();
   }
   else
   {
-    int nParameters = mysql_num_fields(pResultMetadata);
+    int nParameters = m_pInterface->GetMysqlNumFields()(pResultMetadata);
     for (int i=0; i<nParameters; i++)
     {
 //      int nType = m_pResultBindings[i].buffer_type;
@@ -95,7 +97,7 @@ void MysqlPreparedStatementResultSet::Close()
 //      }
 //      }
     }
-    mysql_free_result(pResultMetadata);
+    m_pInterface->GetMysqlFreeResult()(pResultMetadata);
   }
 
   IntToMysqlParameterMap::iterator start = m_BindingWrappers.begin();
@@ -112,9 +114,9 @@ void MysqlPreparedStatementResultSet::Close()
 
   if (m_pStatement != NULL)
   {
-    mysql_stmt_free_result(m_pStatement);
+    m_pInterface->GetMysqlStmtFreeResult()(m_pStatement);
     if (m_bManageStatement)
-      mysql_stmt_close(m_pStatement);
+      m_pInterface->GetMysqlStmtClose()(m_pStatement);
     m_pStatement = NULL;
   }
 }
@@ -329,7 +331,7 @@ MYSQL_BIND* MysqlPreparedStatementResultSet::GetResultBinding(int nField)
 
 ResultSetMetaData* MysqlPreparedStatementResultSet::GetMetaData()
 {
-  ResultSetMetaData* pMetaData = new MysqlResultSetMetaData(mysql_stmt_result_metadata(m_pStatement));
+  ResultSetMetaData* pMetaData = new MysqlResultSetMetaData(m_pInterface, m_pInterface->GetMysqlStmtResultMetadata()(m_pStatement));
   LogMetaDataForCleanup(pMetaData);
   return pMetaData;
 }

@@ -10,6 +10,13 @@
 MysqlDatabaseLayer::MysqlDatabaseLayer()
  : DatabaseLayer()
 {
+  if (!m_Interface.Init())
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
+    SetErrorMessage(wxT("Error loading MySQL library"));
+    ThrowDatabaseException();
+    return;
+  }
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -21,6 +28,13 @@ MysqlDatabaseLayer::MysqlDatabaseLayer()
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase)
  : DatabaseLayer()
 {
+  if (!m_Interface.Init())
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
+    SetErrorMessage(wxT("Error loading MySQL library"));
+    ThrowDatabaseException();
+    return;
+  }
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -32,6 +46,13 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase)
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase)
  : DatabaseLayer()
 {
+  if (!m_Interface.Init())
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
+    SetErrorMessage(wxT("Error loading MySQL library"));
+    ThrowDatabaseException();
+    return;
+  }
   InitDatabase();
   ParseServerAndPort(strServer);
   m_strUser = _("");
@@ -42,6 +63,13 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase, const wxString& strUser, const wxString& strPassword)
  : DatabaseLayer()
 {
+  if (!m_Interface.Init())
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
+    SetErrorMessage(wxT("Error loading MySQL library"));
+    ThrowDatabaseException();
+    return;
+  }
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -53,6 +81,13 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase, const wxStri
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase, const wxString& strUser, const wxString& strPassword)
  : DatabaseLayer()
 {
+  if (!m_Interface.Init())
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
+    SetErrorMessage(wxT("Error loading MySQL library5"));
+    ThrowDatabaseException();
+    return;
+  }
   InitDatabase();
   ParseServerAndPort(strServer);
   m_strUser = strUser;
@@ -64,10 +99,10 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString
 MysqlDatabaseLayer::~MysqlDatabaseLayer()
 {
   Close();
-  //mysql_close(m_pDatabase);
+  //m_Interface.GetMysqlClose()(m_pDatabase);
   //delete m_pDatabase;
-  //mysql_library_end();
-  mysql_server_end();
+  //m_Interface.GetMysqlLibraryEnd()();
+  m_Interface.GetMysqlServerEnd()();
 }
 
 // open database
@@ -77,12 +112,12 @@ void MysqlDatabaseLayer::InitDatabase()
   //int num_elements = sizeof(server_options)/ sizeof(char *);
 
   //char *server_groups[] = { "libmysqld_server", "libmysqld_client" };
-  //mysql_server_init(num_elements, server_options, server_groups);
+  //m_Interface.GetMysqlServerInit()(num_elements, server_options, server_groups);
   //m_pDatabase = new MYSQL();
-  //mysql_library_init();
-  //mysql_init(m_pDatabase);
-//  mysql_server_init( 0, NULL, NULL );
-  m_pDatabase = mysql_init(NULL);
+  //m_Interface.GetMysqlLibraryInit()();
+  //m_Interface.GetMysqlInit()(m_pDatabase);
+//  m_Interface.GetMysqlServerInit()( 0, NULL, NULL );
+  m_pDatabase = m_Interface.GetMysqlInit()(NULL);
 }
 
 // open database
@@ -123,14 +158,14 @@ bool MysqlDatabaseLayer::Open(const wxString& strDatabase)
   connectFlags |= CLIENT_MULTI_RESULTS; 
   connectFlags |= CLIENT_MULTI_STATEMENTS; 
 #endif 
-   if (mysql_real_connect(m_pDatabase, serverCharBuffer, userCharBuffer, passwordCharBuffer, databaseNameCharBuffer, m_iPort, NULL/*socket*/, connectFlags) != NULL)   
+   if (m_Interface.GetMysqlRealConnect()(m_pDatabase, serverCharBuffer, userCharBuffer, passwordCharBuffer, databaseNameCharBuffer, m_iPort, NULL/*socket*/, connectFlags) != NULL)   
   {
 #if wxUSE_UNICODE
     const char* sqlStatement = "SET CHARACTER_SET_CLIENT=utf8, "
                  "CHARACTER_SET_CONNECTION=utf8, "
                  "CHARACTER_SET_RESULTS=utf8;";
 
-    mysql_real_query(m_pDatabase, sqlStatement, strlen(sqlStatement));
+    m_Interface.GetMysqlRealQuery()(m_pDatabase, sqlStatement, strlen(sqlStatement));
     wxCSConv conv(_("UTF-8"));
     SetEncoding(&conv);
 #endif
@@ -139,8 +174,8 @@ bool MysqlDatabaseLayer::Open(const wxString& strDatabase)
   }
   else
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
     return false;
   }
@@ -170,10 +205,10 @@ bool MysqlDatabaseLayer::Close()
   ResetErrorCodes();
   if (m_pDatabase)
   {
-    mysql_close(m_pDatabase);
+    m_Interface.GetMysqlClose()(m_pDatabase);
     m_pDatabase = NULL;
   }
-//  mysql_server_end();
+//  m_Interface.GetMysqlServerEnd()();
   //delete m_pDatabase;
   //m_pDatabase = NULL;
   return true;
@@ -190,11 +225,11 @@ void MysqlDatabaseLayer::BeginTransaction()
 {
   ResetErrorCodes();
 
-  int nReturn = mysql_autocommit(m_pDatabase, 0);
+  int nReturn = m_Interface.GetMysqlAutoCommit()(m_pDatabase, 0);
   if (nReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
   }
 }
@@ -203,18 +238,18 @@ void MysqlDatabaseLayer::Commit()
 {
   ResetErrorCodes();
 
-  int nReturn = mysql_commit(m_pDatabase);
+  int nReturn = m_Interface.GetMysqlCommit()(m_pDatabase);
   if (nReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
   }
-  nReturn = mysql_autocommit(m_pDatabase, 1);
+  nReturn = m_Interface.GetMysqlAutoCommit()(m_pDatabase, 1);
   if (nReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
   }
 }
@@ -223,18 +258,18 @@ void MysqlDatabaseLayer::RollBack()
 {
   ResetErrorCodes();
 
-  int nReturn = mysql_rollback(m_pDatabase);
+  int nReturn = m_Interface.GetMysqlRollback()(m_pDatabase);
   if (nReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
   }
-  nReturn = mysql_autocommit(m_pDatabase, 1);
+  nReturn = m_Interface.GetMysqlAutoCommit()(m_pDatabase, 1);
   if (nReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
     ThrowDatabaseException();
   }
 }
@@ -258,17 +293,17 @@ int MysqlDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
   {
     wxCharBuffer sqlBuffer = ConvertToUnicodeStream(*start);
     //puts(sqlBuffer);
-    int nReturn = mysql_query(m_pDatabase, sqlBuffer);
+    int nReturn = m_Interface.GetMysqlQuery()(m_pDatabase, sqlBuffer);
     if (nReturn != 0)
     {
-      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-      SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
       ThrowDatabaseException();
       return DATABASE_LAYER_QUERY_RESULT_ERROR;
     }
     start++;
   }
-  return mysql_affected_rows(m_pDatabase);
+  return m_Interface.GetMysqlAffectedRows()(m_pDatabase);
 }
 
 DatabaseResultSet* MysqlDatabaseLayer::RunQueryWithResults(const wxString& strQuery)
@@ -282,23 +317,23 @@ DatabaseResultSet* MysqlDatabaseLayer::RunQueryWithResults(const wxString& strQu
   for (int i=0; i<nArraySize; i++)
   {
     wxString strCurrentQuery = QueryArray[i];
-    MYSQL_STMT* pMysqlStatement = mysql_stmt_init(m_pDatabase);
+    MYSQL_STMT* pMysqlStatement = m_Interface.GetMysqlStmtInit()(m_pDatabase);
     if (pMysqlStatement != NULL)
     {
       wxCharBuffer sqlBuffer = ConvertToUnicodeStream(strCurrentQuery);
       //puts(sqlBuffer);
       wxString sqlUTF8((const char*)sqlBuffer, wxConvUTF8);
-      if (mysql_stmt_prepare(pMysqlStatement, sqlBuffer, sqlUTF8.Length()) == 0)
+      if (m_Interface.GetMysqlStmtPrepare()(pMysqlStatement, sqlBuffer, sqlUTF8.Length()) == 0)
       {
-        int nReturn = mysql_stmt_execute(pMysqlStatement);
+        int nReturn = m_Interface.GetMysqlStmtExecute()(pMysqlStatement);
         if (nReturn != 0)
         {
-          SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(pMysqlStatement)));
-          SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(pMysqlStatement)));
+          SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlStmtErrno()(pMysqlStatement)));
+          SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlStmtError()(pMysqlStatement)));
 
           // Clean up after ourselves
-          mysql_stmt_free_result(pMysqlStatement);
-          mysql_stmt_close(pMysqlStatement);
+          m_Interface.GetMysqlStmtFreeResult()(pMysqlStatement);
+          m_Interface.GetMysqlStmtClose()(pMysqlStatement);
 
           ThrowDatabaseException();
           return NULL;
@@ -306,13 +341,13 @@ DatabaseResultSet* MysqlDatabaseLayer::RunQueryWithResults(const wxString& strQu
       }
       else
       {
-        SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-        SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+        SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+        SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
         ThrowDatabaseException();
       }
       if (i == nArraySize-1)
       {
-        pResultSet = new MysqlPreparedStatementResultSet(pMysqlStatement, true);
+        pResultSet = new MysqlPreparedStatementResultSet(&m_Interface, pMysqlStatement, true);
         if (pResultSet)
           pResultSet->SetEncoding(GetEncoding());
 #if wxUSE_UNICODE
@@ -323,13 +358,13 @@ DatabaseResultSet* MysqlDatabaseLayer::RunQueryWithResults(const wxString& strQu
         return pResultSet;
       }
 
-      mysql_stmt_free_result(pMysqlStatement);
-      mysql_stmt_close(pMysqlStatement);
+      m_Interface.GetMysqlStmtFreeResult()(pMysqlStatement);
+      m_Interface.GetMysqlStmtClose()(pMysqlStatement);
     }
     else
     {
-      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-      SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
       ThrowDatabaseException();
       return NULL;
     }
@@ -348,31 +383,31 @@ PreparedStatement* MysqlDatabaseLayer::PrepareStatement(const wxString& strQuery
   wxArrayString::iterator start = QueryArray.begin();
   wxArrayString::iterator stop = QueryArray.end();
 
-  MysqlPreparedStatement* pStatement = new MysqlPreparedStatement();
+  MysqlPreparedStatement* pStatement = new MysqlPreparedStatement(&m_Interface);
   if (pStatement)
     pStatement->SetEncoding(GetEncoding());
   while (start != stop)
   {
-    MYSQL_STMT* pMysqlStatement = mysql_stmt_init(m_pDatabase);
+    MYSQL_STMT* pMysqlStatement = m_Interface.GetMysqlStmtInit()(m_pDatabase);
     if (pMysqlStatement != NULL)
     {
       wxCharBuffer sqlBuffer = ConvertToUnicodeStream((*start));
       //puts(sqlBuffer);
-      if (mysql_stmt_prepare(pMysqlStatement, sqlBuffer, GetEncodedStreamLength((*start))) == 0)
+      if (m_Interface.GetMysqlStmtPrepare()(pMysqlStatement, sqlBuffer, GetEncodedStreamLength((*start))) == 0)
       {
         pStatement->AddPreparedStatement(pMysqlStatement);
       }
       else
       {
-        SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-        SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+        SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+        SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
         ThrowDatabaseException();
       }
     }
     else
     {
-      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_errno(m_pDatabase)));
-      SetErrorMessage(ConvertFromUnicodeStream(mysql_error(m_pDatabase)));
+      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_Interface.GetMysqlErrno()(m_pDatabase)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetMysqlError()(m_pDatabase)));
       ThrowDatabaseException();
       return NULL;
     }
@@ -390,17 +425,17 @@ bool MysqlDatabaseLayer::TableExists(const wxString& table)
   // Unfortunately MySQL returns both tables and view together
   // So we have to try a SQL call (which may be MySQL version dependent)
   wxCharBuffer tableBuffer = ConvertToUnicodeStream(table);
-  MYSQL_RES* pResults = mysql_list_tables(m_pDatabase, tableBuffer);
+  MYSQL_RES* pResults = m_Interface.GetMysqlListTables()(m_pDatabase, tableBuffer);
   if (pResults != NULL)
   {
     MYSQL_ROW currentRow = NULL;
-    while ((currentRow = mysql_fetch_row(pResults)) != NULL)
+    while ((currentRow = m_Interfce.GetMysqlFetchRow()(pResults)) != NULL)
     {
       wxString strTable = ConvertFromUnicodeStream(currentRow[0]);
       if (strTable == table)
         bReturn = true;
     }
-    mysql_free_result(pResults);
+    m_Interface.GetMysqlFreeResult()(pResults);
   }
 */
   // Keep these variables outside of scope so that we can clean them up
@@ -471,17 +506,17 @@ bool MysqlDatabaseLayer::ViewExists(const wxString& view)
   // Unfortunately MySQL returns both tables and view together
   // So we have to try a SQL call (which may be MySQL version dependent)
   wxCharBuffer viewBuffer = ConvertToUnicodeStream(view);
-  MYSQL_RES* pResults = mysql_list_tables(m_pDatabase, viewBuffer);
+  MYSQL_RES* pResults = m_Interface.GetMysqlListTables()(m_pDatabase, viewBuffer);
   if (pResults != NULL)
   {
     MYSQL_ROW currentRow = NULL;
-    while ((currentRow = mysql_fetch_row(pResults)) != NULL)
+    while ((currentRow = m_Interface.GetMysqlFetchRow()(pResults)) != NULL)
     {
       wxString strView = ConvertFromUnicodeStream(currentRow[0]);
       if (strView == view)
         bReturn = true;
     }
-    mysql_free_result(pResults);
+    m_Interface.GetMysqlFreeResult()(pResults);
   }
 */
   // Keep these variables outside of scope so that we can clean them up
@@ -548,7 +583,7 @@ wxArrayString MysqlDatabaseLayer::GetTables()
 {
   wxArrayString returnArray;
 
-  if (mysql_get_server_version(m_pDatabase) >= 50010)
+  if (m_Interface.GetMysqlGetServerVersion()(m_pDatabase) >= 50010)
   {
     DatabaseResultSet* pResult = NULL;
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
@@ -589,16 +624,16 @@ wxArrayString MysqlDatabaseLayer::GetTables()
   //  This may pick up VIEWS as well as tables unfortunately
   if (returnArray.Count() == 0)
   {
-    MYSQL_RES* pResults = mysql_list_tables(m_pDatabase, NULL);
+    MYSQL_RES* pResults = m_Interface.GetMysqlListTables()(m_pDatabase, NULL);
     if (pResults != NULL)
     {
       MYSQL_ROW currentRow = NULL;
-      while ((currentRow = mysql_fetch_row(pResults)) != NULL)
+      while ((currentRow = m_Interface.GetMysqlFetchRow()(pResults)) != NULL)
       {
         wxString strTable = ConvertFromUnicodeStream(currentRow[0]);
         returnArray.Add(strTable);
       }
-      mysql_free_result(pResults);
+      m_Interface.GetMysqlFreeResult()(pResults);
     }
   }
 
@@ -609,7 +644,7 @@ wxArrayString MysqlDatabaseLayer::GetViews()
 {
   wxArrayString returnArray;
 
-  if (mysql_get_server_version(m_pDatabase) >= 50010)
+  if (m_Interface.GetMysqlGetServerVersion()(m_pDatabase) >= 50010)
   {
     DatabaseResultSet* pResult = NULL;
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS

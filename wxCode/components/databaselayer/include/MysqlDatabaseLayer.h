@@ -16,6 +16,7 @@
 
 #include "DatabaseLayer.h"
 #include "PreparedStatement.h"
+#include "MysqlInterface.h"
 
 #include "mysql.h"
 
@@ -79,6 +80,7 @@ private:
   void InitDatabase();
   void ParseServerAndPort(const wxString& strServer);
 
+  MysqlInterface m_Interface;
   wxString m_strServer;
   wxString m_strDatabase;
   wxString m_strUser;

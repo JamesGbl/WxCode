@@ -5,9 +5,10 @@
 
 #include "errmsg.h"
 
-MysqlPreparedStatementWrapper::MysqlPreparedStatementWrapper(MYSQL_STMT* pStatement)
+MysqlPreparedStatementWrapper::MysqlPreparedStatementWrapper(MysqlInterface* pInterface, MYSQL_STMT* pStatement)
  : DatabaseErrorReporter()
 {
+  m_pInterface = pInterface;
   m_pStatement = pStatement;
 }
 
@@ -20,7 +21,7 @@ void MysqlPreparedStatementWrapper::Close()
 {
   if (m_pStatement != NULL)
   {
-    mysql_stmt_close(m_pStatement);
+    m_pInterface->GetMysqlStmtClose()(m_pStatement);
     m_pStatement = NULL;
   }
 }
@@ -63,29 +64,29 @@ void MysqlPreparedStatementWrapper::SetParam(int nPosition, bool bValue)
 
 int MysqlPreparedStatementWrapper::GetParameterCount()
 {
-  return mysql_stmt_param_count(m_pStatement);
+  return m_pInterface->GetMysqlStmtParamCount()(m_pStatement);
 }
 
 int MysqlPreparedStatementWrapper::RunQuery()
 {
   MYSQL_BIND* pBoundParameters = m_Parameters.GetMysqlParameterBindings();
 
-  int nBindReturn = mysql_stmt_bind_param(m_pStatement, pBoundParameters);
+  int nBindReturn = m_pInterface->GetMysqlStmtBindParam()(m_pStatement, pBoundParameters);
   if (nBindReturn != 0)
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
     wxDELETEA(pBoundParameters);
     ThrowDatabaseException();
     return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
   else
   {
-    int nReturn = mysql_stmt_execute(m_pStatement);
+    int nReturn = m_pInterface->GetMysqlStmtExecute()(m_pStatement);
     if (nReturn != 0)
     {
-      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-      SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
       wxDELETEA(pBoundParameters);
       ThrowDatabaseException();
       return DATABASE_LAYER_QUERY_RESULT_ERROR;
@@ -101,27 +102,27 @@ DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()
   MysqlPreparedStatementResultSet* pResultSet = NULL;
   MYSQL_BIND* pBoundParameters = m_Parameters.GetMysqlParameterBindings();
 
-  if (mysql_stmt_bind_param(m_pStatement, pBoundParameters))
+  if (m_pInterface->GetMysqlStmtBindParam()(m_pStatement, pBoundParameters))
   {
-    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-    SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
     wxDELETEA(pBoundParameters);
     ThrowDatabaseException();
     return NULL;
   }
   else
   {
-    if (mysql_stmt_execute(m_pStatement) != 0)
+    if (m_pInterface->GetMysqlStmtExecute()(m_pStatement) != 0)
     {
-      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
-      SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+      SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(m_pInterface->GetMysqlStmtErrno()(m_pStatement)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetMysqlStmtError()(m_pStatement)));
       wxDELETEA(pBoundParameters);
       ThrowDatabaseException();
       return NULL;
     }
     else
     {
-      pResultSet = new MysqlPreparedStatementResultSet(m_pStatement);
+      pResultSet = new MysqlPreparedStatementResultSet(m_pInterface, m_pStatement);
       if (pResultSet)
         pResultSet->SetEncoding(GetEncoding());
     }

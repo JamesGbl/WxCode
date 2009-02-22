@@ -131,10 +131,6 @@
 
   <dll id="databaselayer_mysql_dll" template="wxcode-dll,mysql_template" cond="WX_SHARED=='1'">
   	<wxlike-dllname prefix="wxcode">databaselayer_mysql</wxlike-dllname>
-    <if cond="TARGETING_WIN32!='1'">
-      <ldflags>`mysql_config --libs`</ldflags>
-    </if>
-    <sys-lib>mysqld</sys-lib>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>base</wx-lib>
@@ -306,12 +302,6 @@
       <cxxflags>`mysql_config --include`</cxxflags>
     </if>
     <stdlib>$(MYSQL_LIB_LOCATION)</stdlib>
-    <if cond="TARGETING_WIN32!='1'">
-      <ldflags>`mysql_config --libs`</ldflags>
-    </if>
-    <if cond="TARGETING_WIN32=='1'">
-      <sys-lib>libmysql</sys-lib>
-    </if>
 	</wxcode-sample>
 
 <!-- PostgreSQL -->

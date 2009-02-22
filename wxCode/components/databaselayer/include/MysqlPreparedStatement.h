@@ -17,6 +17,7 @@
 #include "PreparedStatement.h"
 #include "MysqlPreparedStatementParameter.h"
 #include "MysqlPreparedStatementWrapper.h"
+#include "MysqlInterface.h"
 
 #include "mysql.h"
 
@@ -28,8 +29,8 @@ class MysqlPreparedStatement : public PreparedStatement
 {
 public:
   // ctor
-  MysqlPreparedStatement();
-  MysqlPreparedStatement(MYSQL_STMT* pStatement);
+  MysqlPreparedStatement(MysqlInterface* pInterface);
+  MysqlPreparedStatement(MysqlInterface* pInterface, MYSQL_STMT* pStatement);
 
   // dtor
   virtual ~MysqlPreparedStatement();
@@ -53,7 +54,8 @@ public:
 
 private:
   int FindStatementAndAdjustPositionIndex(int* pPosition);
-    
+
+  MysqlInterface* m_pInterface;
   MysqlStatementWrapperArray m_Statements;
 };
 

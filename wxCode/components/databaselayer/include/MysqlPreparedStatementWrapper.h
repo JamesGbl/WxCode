@@ -17,6 +17,7 @@
 #include "DatabaseErrorReporter.h"
 #include "DatabaseStringConverter.h"
 #include "MysqlPreparedStatementParameterCollection.h"
+#include "MysqlInterface.h"
 
 class DatabaseResultSet;
 
@@ -24,7 +25,7 @@ class MysqlPreparedStatementWrapper : public DatabaseErrorReporter, public Datab
 {
 public:
   // ctor
-  MysqlPreparedStatementWrapper(MYSQL_STMT* pStatement);
+  MysqlPreparedStatementWrapper(MysqlInterface* pInterface, MYSQL_STMT* pStatement);
 
   // dtor
   virtual ~MysqlPreparedStatementWrapper();
@@ -45,6 +46,7 @@ public:
   DatabaseResultSet* RunQueryWithResults();
 
 private:  
+  MysqlInterface* m_pInterface;
   MYSQL_STMT* m_pStatement;
 
   MysqlPreparedStatementParameterCollection m_Parameters;

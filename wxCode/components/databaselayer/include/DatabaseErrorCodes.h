@@ -13,6 +13,7 @@
 #define DATABASE_LAYER_NO_ROWS_FOUND 9
 #define DATABASE_LAYER_NON_UNIQUE_RESULTSET 10
 #define DATABASE_LAYER_UNSUPPORTED_OPERATION 11
+#define DATABASE_LAYER_ERROR_LOADING_LIBRARY 12
 
 // Using 0 for now since this is replacing a
 //  boolean for the return code and we don't want
