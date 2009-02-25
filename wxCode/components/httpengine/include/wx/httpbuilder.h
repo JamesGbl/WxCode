@@ -12,6 +12,11 @@
 #ifndef _WX_HTTPBUILDER_H_
 #define _WX_HTTPBUILDER_H_
 
+#ifndef HTTPBUILDER_BUF_SIZE
+  #define HTTPBUILDER_BUF_SIZE 8192 // 8192 is a good size, though in the future this size could be bigger on newer operating systems.
+	// #define HTTPBUILDER_BUF_SIZE 131072
+	// Note: Last time Angelo tested, 131072 gave the most optimal (fastest) uploads but may not be desired in some cases.
+#endif
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
