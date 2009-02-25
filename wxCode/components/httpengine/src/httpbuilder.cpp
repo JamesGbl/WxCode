@@ -41,6 +41,8 @@
   #include "wx/base64.h"
 #endif
 
+
+
 #include <stdlib.h>
 
 wxProxySettings::wxProxySettings(const wxProxySettings& data)
@@ -186,7 +188,7 @@ bool wxHTTPBuilder::SaveFile(const wxString &filename, const wxString& url, cons
   file.Open( filename, wxFile::write );
 
   m_bytesRead = 0;
-  wxChar buf[8192];
+  wxChar buf[HTTPBUILDER_BUF_SIZE];
 
   while( true )
   {
@@ -219,7 +221,7 @@ int wxHTTPBuilder::GetDeleteResponse(const wxString &url)
   m_bytesRead = 0;
 
   // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
-  char buf[8192];
+  char buf[HTTPBUILDER_BUF_SIZE];
 
 	// read the rest of the string, if anything is there...
   while( true )
@@ -259,7 +261,7 @@ int wxHTTPBuilder::GetPutResponse(const wxString &filename, const wxString &url 
 	m_bytesRead = 0;
 
   // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
-  char buf[8192];
+	char buf[HTTPBUILDER_BUF_SIZE];
 
 	// read the rest of the string, if anything is there...
   while( true )
@@ -292,7 +294,7 @@ int wxHTTPBuilder::GetHeadResponse(const wxString &url)
   m_bytesRead = 0;
 
   // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
-  char buf[8192];
+  char buf[HTTPBUILDER_BUF_SIZE];
 
 	// read the rest of the string, if anything is there...
   while( true )
@@ -420,7 +422,7 @@ wxString wxHTTPBuilder::GetInputString(const wxString &url, const wxString& temp
   m_bytesRead = 0;
 
   // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
-  char buf[8192];
+  char buf[HTTPBUILDER_BUF_SIZE];
 
   while( true )
   {
@@ -575,7 +577,8 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
 	if( streamPut )
 	{
 		// Loop through stream and write to socket
-    wxChar buf[8192]; // 8192 is a good size, though in the future this size could be bigger on newer operating systems.
+ 		wxChar buf[HTTPBUILDER_BUF_SIZE];
+
     while( streamPut->Eof() == false )
     {
       streamPut->Read( buf, WXSIZEOF(buf) );
@@ -594,7 +597,7 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
     if( streamPost )
     {
       // Loop through stream and write to socket
-      wxChar buf[8192]; // 8192 is a good size, though in the future this size could be bigger on newer operating systems.
+      wxChar buf[HTTPBUILDER_BUF_SIZE]; // 8192 is a good size, though in the future this size could be bigger on newer operating systems.
       while( streamPost->Eof() == false )
       {
         streamPost->Read( buf, WXSIZEOF(buf) );
@@ -996,7 +999,7 @@ wxInputStream* wxHTTPBuilder::GetPostBufferStream(const wxString &szTempFile)
       // Read the file and write it into the out file:
       wxFileInputStream *fin = new wxFileInputStream(szFileName);
     
-      wxChar buf[8192];
+      wxChar buf[HTTPBUILDER_BUF_SIZE];
       while( fin && fin->Eof() == false )
       {
         fin->Read( buf, WXSIZEOF(buf) );
