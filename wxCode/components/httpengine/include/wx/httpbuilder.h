@@ -211,8 +211,8 @@ public:
   ////////////////////////////////////////////////////////////
 
   // URL coding and characters:
-	static wxString URLEncode( const wxString &value );
-	static wxString URLDecode( const wxString &value );
+	static wxString URLEncode( const wxString &value, const bool &rfc1738 = false );
+	static wxString URLDecode( const wxString &value, const bool &rfc1738 = false );
   
   // Convert chars to HTML special characters
   static wxString HTMLSpecialChars( const wxString &value, const bool bSingleQuotes = false, const bool bDoubleQuotes = true);

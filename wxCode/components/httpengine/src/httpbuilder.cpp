@@ -717,7 +717,7 @@ int wxHTTPBuilder::IntFromHex(const wxString &chars)
 }
 
 //! URL Decode a string.
-wxString wxHTTPBuilder::URLDecode(const wxString &value)
+wxString wxHTTPBuilder::URLDecode(const wxString &value, const bool &rfc1738)
 {
   wxString szDecoded;
 	wxString szEncoded = value;
@@ -725,7 +725,8 @@ wxString wxHTTPBuilder::URLDecode(const wxString &value)
   unsigned int nEncodedPos = 0;
 
   // eliminiate + and replace with spaces...
-  szEncoded.Replace(wxT("+"), wxT(" "));
+	if( !rfc1738 )
+		szEncoded.Replace(wxT("+"), wxT(" "));
 
   while( nEncodedPos < szEncoded.length() )
   {
@@ -751,7 +752,7 @@ wxString wxHTTPBuilder::URLDecode(const wxString &value)
 }
 
 //! URL encode a string.
-wxString wxHTTPBuilder::URLEncode(const wxString &value)
+wxString wxHTTPBuilder::URLEncode(const wxString &value, const bool &rfc1738)
 {
   wxString szToReturn = wxT("");
   unsigned int nPos = 0;
@@ -760,25 +761,60 @@ wxString wxHTTPBuilder::URLEncode(const wxString &value)
   {
     wxChar cChar = value.GetChar(nPos);
 
-    if( ( wxIsalpha( cChar )) || ( wxIsdigit( cChar )) || (cChar == wxT('-')) || (cChar == wxT('@')) || (cChar == wxT('*')) || (cChar == wxT('_')) )
-    {
-      szToReturn.Append( cChar );
-    }
-    else
-    {
-      switch( cChar )
-      {
-        case wxT(' '):  szToReturn.Append(wxT('+')); break;
+		if( rfc1738 ) // Encode string according to http://www.faqs.org/rfcs/rfc1738
+		{
+			switch( (int)cChar )
+			{
+				// Numbers:
+				case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57:
+				// Letters:
+				case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74:
+				case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84:
+				case 85: case 86: case 87: case 88: case 89: case 90: case 97: case 98: case 99: case 100:
+				case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110:
+				case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120:
+				case 121: case 122:
+				// Other punct (-._):
+				case 45: case 46: case 95:
+					{
+						szToReturn.Append( cChar );
+					}; break;
+				default:
+					{
+						szToReturn.Append(wxT("%"));
+						szToReturn += HexFromInt( cChar );
+					}
+			}
+		}
+		else
+		{
+			switch( (int)cChar )
+			{
+				// Numbers:
+				case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57:
+				// Letters:
+				case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74:
+				case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84:
+				case 85: case 86: case 87: case 88: case 89: case 90: case 97: case 98: case 99: case 100:
+				case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110:
+				case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120:
+				case 121: case 122:
+				// Other punct (-_):
+				case 45: case 95:
+
+				case 32:  szToReturn.Append(wxT('+')); break;
 #ifdef HTTPBUILDER_ENCODE_LN_WITH_CRLN
-        case wxT('\n'): szToReturn.Append(wxT("%0D%0A")); break;
+
+				case 12: szToReturn.Append(wxT("%0D%0A")); break;
+
 #endif
-        default:
-        {
-          szToReturn.Append(wxT("%"));
-          szToReturn += HexFromInt( cChar );
-        }
-      }
-    }
+				default:
+				{
+					szToReturn.Append(wxT("%"));
+					szToReturn += HexFromInt( cChar );
+				}
+			}
+		}
     nPos++;
   }
   return szToReturn;

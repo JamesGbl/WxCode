@@ -1,17 +1,17 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        hyperlinkctrl.cpp
-// Purpose:     wxHyperlinkCtrl
+// Name:        advhyperlink.cpp
+// Purpose:     wxAdvHyperlinkCtrl
 // Author:      Angelo Mandato
 // Created:     2005/08/11
 // RCS-ID:      $Id$
-// Copyright:   (c) 2001-2005 Angelo Mandato
+// Copyright:   (c) 2001-2009 Angelo Mandato
 // Licence:     wxWidgets licence
-// Version:		1.4
+// Version:		1.5
 /////////////////////////////////////////////////////////////////////////////
 
 
 #ifdef __GNUG__
-#pragma implementation "hyperlinkctrl.h"
+#pragma implementation "advhyperlink.h"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
@@ -37,7 +37,7 @@
 #include <wx/event.h>
 #include <wx/tooltip.h>
 
-#include <wx/hyperlinkctrl.h>
+#include <wx/advhyperlink.h>
 
 #ifdef __WIN32__
 	#include <windows.h>
@@ -47,19 +47,19 @@
 
 
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_LINK_CLICKED)
-#ifndef HYPERLINKCTRL_COMMANDEVENT
+#ifndef ADVHYPERLINK_COMMANDEVENT
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_LINK_MCLICKED)
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_LINK_RCLICKED)
 #endif
 
-BEGIN_EVENT_TABLE(wxHyperlinkCtrl, wxStaticText)
-	EVT_MOUSE_EVENTS( wxHyperlinkCtrl::OnMouseEvent)
-	EVT_MOTION(wxHyperlinkCtrl::OnMouseEvent)
-  EVT_MENU(HYPERLINKS_POPUP_COPY, wxHyperlinkCtrl::OnPopUpCopy )
+BEGIN_EVENT_TABLE(wxAdvHyperlinkCtrl, wxStaticText)
+	EVT_MOUSE_EVENTS( wxAdvHyperlinkCtrl::OnMouseEvent)
+	EVT_MOTION(wxAdvHyperlinkCtrl::OnMouseEvent)
+  EVT_MENU(HYPERLINKS_POPUP_COPY, wxAdvHyperlinkCtrl::OnPopUpCopy )
 END_EVENT_TABLE()
 
-//! wxHyperlinkCtrl constructor
-wxHyperlinkCtrl::wxHyperlinkCtrl(wxWindow *parent, wxWindowID id, const wxString &label,
+//! wxAdvHyperlinkCtrl constructor
+wxAdvHyperlinkCtrl::wxAdvHyperlinkCtrl(wxWindow *parent, wxWindowID id, const wxString &label,
                const wxPoint &pos, const wxSize &size, int style, const wxString& name, const wxString& szURL )
 			   : wxStaticText(parent, id, label, pos, size, style|wxPOPUP_WINDOW, name)
 {
@@ -91,7 +91,7 @@ wxHyperlinkCtrl::wxHyperlinkCtrl(wxWindow *parent, wxWindowID id, const wxString
 }
 
 //! Goto the specified URL.  This function may be called statically.  bSameWindowIfPossible only works with Internet Explorer.
-bool wxHyperlinkCtrl::GotoURL( const wxString &szUrl, const wxString &szBrowser, const bool bReportErrors, const bool bSameWinIfPossible )
+bool wxAdvHyperlinkCtrl::GotoURL( const wxString &szUrl, const wxString &szBrowser, const bool bReportErrors, const bool bSameWinIfPossible )
 {
   wxLogNull logOff;
 
@@ -109,6 +109,13 @@ bool wxHyperlinkCtrl::GotoURL( const wxString &szUrl, const wxString &szBrowser,
 
     return false;
 	}
+
+#if wxABI_VERSION >= 20700 /* 2.7.0+ only */
+
+	// Function added in 2.6.1 but was buggy initially so only use if using 2.7.0 or newer...
+	return wxLaunchDefaultBrowser( szUrl, ( /* if */ bSameWinIfPossible ? /* true */ 0 : /* false */ wxBROWSER_NEW_WINDOW) );
+
+#else
 
 #ifdef __WIN32__
 
@@ -188,10 +195,11 @@ bool wxHyperlinkCtrl::GotoURL( const wxString &szUrl, const wxString &szBrowser,
     DisplayError(wxT("Unable to launch browser."), bReportErrors);
 
 	return bResult;
+#endif
 }
 
 //! Captures mouse events for Cursor, Link colors and Underlines
-void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
+void wxAdvHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
 {
 	if ( !event.Moving() )
   {
@@ -227,7 +235,7 @@ void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
         }
         else
         {
-#ifdef HYPERLINKCTRL_COMMANDEVENT
+#ifdef ADVHYPERLINK_COMMANDEVENT
           wxCommandEvent eventOut(wxEVT_COMMAND_LINK_CLICKED, GetId());
           eventOut.SetEventObject(this);
           GetParent()->ProcessEvent( eventOut );
@@ -236,7 +244,7 @@ void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
           posOnParent.x += event.GetPosition().x;
           posOnParent.y += event.GetPosition().y;
 
-				  wxHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_CLICKED, GetId());
+				  wxAdvHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_CLICKED, GetId());
 				  eventOut.SetEventObject(this);
 				  eventOut.SetPosition( posOnParent );
           GetParent()->ProcessEvent( eventOut );
@@ -257,12 +265,12 @@ void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
         }
 				else
 				{
-#ifndef HYPERLINKCTRL_COMMANDEVENT
+#ifndef ADVHYPERLINK_COMMANDEVENT
           wxPoint posOnParent = GetPosition();
           posOnParent.x += event.GetPosition().x;
           posOnParent.y += event.GetPosition().y;
 
-				  wxHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_RCLICKED, GetId());
+				  wxAdvHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_RCLICKED, GetId());
 				  eventOut.SetEventObject(this);
 				  eventOut.SetPosition( posOnParent );
           GetParent()->ProcessEvent( eventOut );
@@ -272,12 +280,12 @@ void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
       }
       else if( event.MiddleUp() )
       {
-#ifndef HYPERLINKCTRL_COMMANDEVENT
+#ifndef ADVHYPERLINK_COMMANDEVENT
         wxPoint posOnParent = GetPosition();
         posOnParent.x += event.GetPosition().x;
         posOnParent.y += event.GetPosition().y;
 
-				wxHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_MCLICKED, GetId());
+				wxAdvHyperlinkEvent eventOut(wxEVT_COMMAND_LINK_MCLICKED, GetId());
 				eventOut.SetEventObject(this);
 				eventOut.SetPosition( posOnParent );
         GetParent()->ProcessEvent( eventOut );
@@ -290,7 +298,7 @@ void wxHyperlinkCtrl::OnMouseEvent(wxMouseEvent& event)
 }
 
 //! Menu pop up copy to clipboard event
-void wxHyperlinkCtrl::OnPopUpCopy( wxCommandEvent &event )
+void wxAdvHyperlinkCtrl::OnPopUpCopy( wxCommandEvent &event )
 {
   wxUnusedVar(event);
   wxTheClipboard->UsePrimarySelection();
@@ -304,7 +312,7 @@ void wxHyperlinkCtrl::OnPopUpCopy( wxCommandEvent &event )
 }
 
 //! Updates the links colors and underline properties
-void wxHyperlinkCtrl::UpdateLink(const bool bRefresh)
+void wxAdvHyperlinkCtrl::UpdateLink(const bool bRefresh)
 {
 	wxFont fontTemp = GetFont();
 
@@ -327,7 +335,7 @@ void wxHyperlinkCtrl::UpdateLink(const bool bRefresh)
 }
 
 #ifdef __WIN95__
-long wxHyperlinkCtrl::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
+long wxAdvHyperlinkCtrl::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 {
 	if (nMsg == WM_NCHITTEST)
 		return (long)HTCLIENT;
@@ -336,7 +344,7 @@ long wxHyperlinkCtrl::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lPara
 }
 #endif
 
-void wxHyperlinkCtrl::DisplayError( const wxString &szError, const bool bReportErrors )
+void wxAdvHyperlinkCtrl::DisplayError( const wxString &szError, const bool bReportErrors )
 {
 	if( bReportErrors )
 		wxMessageBox( szError, wxT("Hyperlink Error"), wxOK | wxCENTRE | wxICON_ERROR  );

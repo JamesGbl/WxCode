@@ -24,7 +24,7 @@
 
 #include <wx/httpbuilder.h>
 #include <wx/httpbuilderthread.h>
-#include <wx/hyperlinkctrl.h>
+#include <wx/advhyperlink.h>
 #include <wx/pleasewaitdlg.h>
 
 // Define a new Dialog type: this is going to be our main Dialog, well Frame!
@@ -127,7 +127,7 @@ class AboutDialog : public wxDialog
 #ifdef HYPERLINKCTRL_COMMANDEVENT
     void OnHyperlink( wxCommandEvent &event );
 #else
-    void OnHyperlink( wxHyperlinkEvent &event );
+    void OnHyperlink( wxAdvHyperlinkEvent &event );
 #endif
 
   DECLARE_EVENT_TABLE()

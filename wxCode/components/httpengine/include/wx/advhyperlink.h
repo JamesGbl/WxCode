@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        hyperlinkctrl.h
+// Name:        advhyperlink.h
 // Purpose:     Hyperlink control for wxWidgets
 //				Features include the ability to perform your own Left, Middle, and Right 
 //				click events to perform your own custom event handling and ability to open
@@ -7,7 +7,7 @@
 // Author:      Angelo Mandato
 // Created:     2005/08/10
 // RCS-ID:      $Id$
-// Copyright:   (c) 2005 Angelo Mandato (http://www.spaceblue.com)
+// Copyright:   (c) 2005-2009 Angelo Mandato (http://www.spaceblue.com)
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -22,31 +22,31 @@
 	
 */////////////////////////////////////////////////
 
-#ifndef _WX_HYPERLINKCTRL_H_
-#define _WX_HYPERLINKCTRL_H_
+#ifndef _WX_ADVHYPERLINK_H_
+#define _WX_ADVHYPERLINK_H_
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "hyperlinkctrl.h"
+#pragma interface "advhyperlink.h"
 #endif
 
 // Define below if you simply want to use wxCommandEvents for single click
 // click events on your links
-//#define HYPERLINKCTRL_COMMANDEVENT
+//#define ADVHYPERLINK_COMMANDEVENT
 
 #include <wx/wx.h>
 #include "wx/httpenginedef.h"
 
 BEGIN_DECLARE_EVENT_TYPES()
   DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_HTTPENGINE, wxEVT_COMMAND_LINK_CLICKED, 7771)
-#ifndef HYPERLINKCTRL_COMMANDEVENT
+#ifndef ADVHYPERLINK_COMMANDEVENT
   DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_HTTPENGINE, wxEVT_COMMAND_LINK_MCLICKED, 7772)
   DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_HTTPENGINE, wxEVT_COMMAND_LINK_RCLICKED, 7773)
 #endif
 END_DECLARE_EVENT_TYPES()
 
 
-#ifdef HYPERLINKCTRL_COMMANDEVENT
+#ifdef ADVHYPERLINK_COMMANDEVENT
 
 #define EVT_LINK(id, fn) \
     DECLARE_EVENT_TABLE_ENTRY( \
@@ -57,12 +57,12 @@ END_DECLARE_EVENT_TYPES()
 
 #else
 
-class WXDLLIMPEXP_HTTPENGINE wxHyperlinkEvent : public wxCommandEvent
+class WXDLLIMPEXP_HTTPENGINE wxAdvHyperlinkEvent : public wxCommandEvent
 {
 public:
-  wxHyperlinkEvent( WXTYPE eventType = wxEVT_COMMAND_LINK_RCLICKED, int id = 0 ) : wxCommandEvent( eventType, id ) { };
+  wxAdvHyperlinkEvent( WXTYPE eventType = wxEVT_COMMAND_LINK_RCLICKED, int id = 0 ) : wxCommandEvent( eventType, id ) { };
 
-	virtual wxEvent *Clone() const { return new wxHyperlinkEvent(*this);  };
+	virtual wxEvent *Clone() const { return new wxAdvHyperlinkEvent(*this);  };
 
 	void SetPosition( const wxPoint &pos ) { m_pos = pos; };
 	wxPoint GetPosition(void) { return m_pos; };
@@ -70,25 +70,25 @@ private:
 	wxPoint	m_pos;
 };
 
-typedef void (wxEvtHandler::*wxHyperlinkEventFunction)(wxHyperlinkEvent);
+typedef void (wxEvtHandler::*wxAdvHyperlinkEventFunction)(wxAdvHyperlinkEvent);
 
-// Event types for wxHyperlinkCtrl:
+// Event types for wxAdvHyperlinkCtrl:
 #define EVT_LINK(id, fn) \
     DECLARE_EVENT_TABLE_ENTRY( \
         wxEVT_COMMAND_LINK_CLICKED, id, -1, \
-        (wxObjectEventFunction)(wxEventFunction)(wxHyperlinkEventFunction)&fn, \
+        (wxObjectEventFunction)(wxEventFunction)(wxAdvHyperlinkEventFunction)&fn, \
         (wxObject *) NULL \
     ),
 #define EVT_LINK_MCLICKED(id, fn) \
     DECLARE_EVENT_TABLE_ENTRY( \
         wxEVT_COMMAND_LINK_MCLICKED, id, -1, \
-        (wxObjectEventFunction)(wxEventFunction)(wxHyperlinkEventFunction)&fn, \
+        (wxObjectEventFunction)(wxEventFunction)(wxAdvHyperlinkEventFunction)&fn, \
         (wxObject *) NULL \
     ),
 #define EVT_LINK_RCLICKED(id, fn) \
     DECLARE_EVENT_TABLE_ENTRY( \
         wxEVT_COMMAND_LINK_RCLICKED, id, -1, \
-        (wxObjectEventFunction)(wxEventFunction)(wxHyperlinkEventFunction)&fn, \
+        (wxObjectEventFunction)(wxEventFunction)(wxAdvHyperlinkEventFunction)&fn, \
         (wxObject *) NULL \
     ),
 
@@ -99,8 +99,8 @@ enum
 	HYPERLINKS_POPUP_COPY = 1000,
 };
 
-// wxHyperlinkCtrl class
-class WXDLLIMPEXP_HTTPENGINE wxHyperlinkCtrl : public wxStaticText
+// wxAdvHyperlinkCtrl class
+class WXDLLIMPEXP_HTTPENGINE wxAdvHyperlinkCtrl : public wxStaticText
 {
 public:
 
@@ -109,7 +109,7 @@ public:
 #endif
 
 	// Constructor
-	wxHyperlinkCtrl( wxWindow *parent, wxWindowID id, const wxString &label,
+	wxAdvHyperlinkCtrl( wxWindow *parent, wxWindowID id, const wxString &label,
 			const wxPoint &pos, const wxSize &size, int style = 0, const wxString& name = wxT("staticText"), const wxString& szURL = wxEmptyString);
 
 	// Link Colours properties

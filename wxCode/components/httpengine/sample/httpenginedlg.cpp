@@ -1476,18 +1476,18 @@ AboutDialog::AboutDialog
 	fntTemp.SetPointSize( fntTemp.GetPointSize() + 2);
 	txtTitle->SetFont( fntTemp );
 
-  new wxStaticText( this, -1, wxT("wxHTTPBuilder and wxHyperlinkCtrl examples"), wxPoint(50,40) );
-	new wxStaticText( this, -1, wxT("Copyright (C) 2002-2005 Angelo Mandato"), wxPoint(50,60) );
+  new wxStaticText( this, -1, wxT("wxHTTPBuilder and wxAdvHyperlinkCtrl examples"), wxPoint(50,40) );
+	new wxStaticText( this, -1, wxT("Copyright (C) 2002-2009 Angelo Mandato"), wxPoint(50,60) );
 
   // Default hyperlink
-	new wxHyperlinkCtrl( this, About_Link1, wxT("wxHTTPEngine at wxCode.sf.net"),
+	new wxAdvHyperlinkCtrl( this, About_Link1, wxT("wxHTTPEngine at wxCode.sf.net"),
 		 	wxPoint(50,80), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://wxcode.sourceforge.net/components/wxhttpengine/") );
 
   // Web link with underline rollovers, opens in new window
-	//wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
+	//wxAdvHyperlinkCtrl *hyper2 = new wxAdvHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
 	//	 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
 
-  wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.leakybagel.com"), 
+  wxAdvHyperlinkCtrl *hyper2 = new wxAdvHyperlinkCtrl( this, About_Link2, wxT("www.leakybagel.com"), 
       wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink1"), wxT("http://www.leakybagel.com") );
 
 	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
@@ -1500,7 +1500,7 @@ AboutDialog::AboutDialog
   //hyper2->SetWindowStyle( hyper2->GetWindowStyle() | wxWANTS_CHARS );
 
 	// Intense link examples..
-	wxHyperlinkCtrl *hyper3 = new wxHyperlinkCtrl( this,About_Link3, wxT("wxWindows online search"),
+	wxAdvHyperlinkCtrl *hyper3 = new wxAdvHyperlinkCtrl( this,About_Link3, wxT("wxWindows online search"),
 	  wxPoint(50,120), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://www.wxwindows.org/search.htm") );
 
 	hyper3->SetToolTip( wxT("Right click for custom pop up menu") );
@@ -1517,7 +1517,7 @@ AboutDialog::AboutDialog
 	hyper3->UpdateLink();
 
 
-	wxHyperlinkCtrl *hyper4 = new wxHyperlinkCtrl( this, About_Link4, wxT("Open Google in current browser window?"),
+	wxAdvHyperlinkCtrl *hyper4 = new wxAdvHyperlinkCtrl( this, About_Link4, wxT("Open Google in current browser window?"),
     wxPoint(50,140), wxDefaultSize, 0, wxT("statictextlink2"), wxT("") );
 
 	hyper4->SetToolTip( wxT("Click link for Yes, No, Cancel Dialog") );
@@ -1538,15 +1538,15 @@ AboutDialog::AboutDialog
 	fntTemp.SetPointSize( fntTemp.GetPointSize() + 2);
 	txtTitle->SetFont( fntTemp );
 
-  new wxStaticText( this, -1, wxT("wxHTTPBuilder and wxHyperlinkCtrl examples"), wxPoint(50,40) ); 
+  new wxStaticText( this, -1, wxT("wxHTTPBuilder and wxAdvHyperlinkCtrl examples"), wxPoint(50,40) ); 
 	new wxStaticText( this, -1, wxT("Copyright (C) 2002-2005 Angelo Mandato"), wxPoint(50,60) ); 
   
   // Default hyperlink
-	new wxHyperlinkCtrl( this, About_Link1, wxT("http://www.spaceblue.com/code.php"),
+	new wxAdvHyperlinkCtrl( this, About_Link1, wxT("http://www.spaceblue.com/code.php"),
 		 	wxPoint(50,80), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://www.spaceblue.com/code.php") );
 
   // Web link with underline rollovers, opens in new window
-	wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.wxwindows.org"),
+	wxAdvHyperlinkCtrl *hyper2 = new wxAdvHyperlinkCtrl( this, About_Link2, wxT("www.wxwindows.org"),
 		 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.wxwindows.org") );
 
 	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
@@ -1559,7 +1559,7 @@ AboutDialog::AboutDialog
   //hyper2->SetWindowStyle( hyper2->GetWindowStyle() | wxWANTS_CHARS );
 
 	// Intense link examples..
-	wxHyperlinkCtrl *hyper3 = new wxHyperlinkCtrl( this,About_Link3, wxT("wxWindows online search"),
+	wxAdvHyperlinkCtrl *hyper3 = new wxAdvHyperlinkCtrl( this,About_Link3, wxT("wxWindows online search"),
 	  wxPoint(50,120), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://www.wxwindows.org/search.htm") );
 
 	hyper3->SetLinkCursor( wxCURSOR_QUESTION_ARROW );
@@ -1575,7 +1575,7 @@ AboutDialog::AboutDialog
 	hyper3->UpdateLink();
 
 
-	wxHyperlinkCtrl *hyper4 = new wxHyperlinkCtrl( this, About_Link4, wxT("Open Google in current browser window?"),
+	wxAdvHyperlinkCtrl *hyper4 = new wxAdvHyperlinkCtrl( this, About_Link4, wxT("Open Google in current browser window?"),
     wxPoint(50,140), wxDefaultSize, 0, wxT("statictextlink2"), wxT("") );
 
 	hyper4->SetToolTip( wxT("Click link for Yes, No, Cancel Dialog") );	
@@ -1595,22 +1595,22 @@ void AboutDialog::OnHyperlink(wxCommandEvent &event)
       int nResult = wxMessageBox( _T("Open Google in current browser window?"), _T("wxHyperlinksCtrl"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
       if( nResult == wxYES )
-        wxHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), "", false, true );
+        wxAdvHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), "", false, true );
       else if( nResult == wxNO )
-        wxHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), "", false, false );
+        wxAdvHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), "", false, false );
     }; break;
   }
 }
 
 #else
 
-void AboutDialog::OnHyperlink(wxHyperlinkEvent &event)
+void AboutDialog::OnHyperlink(wxAdvHyperlinkEvent &event)
 {
   switch( event.GetId() )
   {
   case About_Link2: {
       // Your own custom middle click event: (open link in new window like firefox middle click)
-      wxHyperlinkCtrl::GotoURL(wxT("http://www.wxwindows.org"), wxT(""), false, false );
+      wxAdvHyperlinkCtrl::GotoURL(wxT("http://www.wxwindows.org"), wxT(""), false, false );
     }; break;
   case About_Link3: {
       // Custom right click menu (or what ever you want)
@@ -1625,9 +1625,9 @@ void AboutDialog::OnHyperlink(wxHyperlinkEvent &event)
       int nResult = wxMessageBox( _T("Open Google in current browser window?"), _T("wxHyperlinksCtrl"), wxYES_NO|wxCANCEL|wxICON_QUESTION, this );
 
       if( nResult == wxYES )
-        wxHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), wxT(""), false, true );
+        wxAdvHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), wxT(""), false, true );
       else if( nResult == wxNO )
-        wxHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), wxT(""), false, false );
+        wxAdvHyperlinkCtrl::GotoURL(wxT("http://www.google.com"), wxT(""), false, false );
     }; break;
   }
 }
