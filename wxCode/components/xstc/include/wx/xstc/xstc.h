@@ -1590,55 +1590,11 @@ void LexYAML();
     bool FilevalidCheck(wxString entry);
 
     /**
-    \brief creates a range of bookmarks of characters
+    \brief resets all markers to default
 
-    \detailed any character is valid, so a number or an alpha character or even a symbol
-              this automatically remembers the markers set and will remove all of them
-              when UnSetAlphaBmarks() is called. this can be called several times and the
-              unset function will remove all of them. marker 0 the default bookmark can be
-              written over, but will not be removed. the breakpoint colors are managed by
-              XSTC, but it does not set any markers for them. character marker colors are
-              managed my the stylecolor functions, so they will be ready to go. remember
-              you need to create a meathod to set the markers, only marker 0 the default
-              bookmark is taken care of for you.
-
-              remember that this is only going to set character markers.
+    \detailed this is an easy way to clear the slate, it only resets markers managed my XSTC
     */
-    bool SetAlphaBmarks(int startmarker, int mnumber, wxString chars);
-
-    /**
-    \brief removes the monitored alpha bookmarks that where set with SetAlphaBmarks
-
-    \detailed this will remove all of the markers set even if more than one call to set
-              the markers was made. marker 0 the default bookmark is not removeable, it
-              only removes markers that where monitored.
-    */
-    bool UnSetAlphaBmarks();
-
-    /**
-    \brief removes the marker monitor from all markers. if you don't want XSTC to remove any
-           of them when you call UnSetAlphaBmarks()
-
-    \detailed doing this does not make much sense if you call SetAlphaBmarks once, but if you
-              set markers you cant to deal with, then call this and set the rest of them, this
-              can make your life easier. instead of calling UnmonitorBmark() for each marker.
-    */
-    bool UnmonitorBmarks();
-
-    /**
-    \brief removes the marker monitor from a specific makrer set with SetAlphaBmarks.
-
-    \detailed useful if you want to ret all the markers and then remove a few for your own controling.
-    */
-    bool UnmonitorBmark(int mark);
-
-    /**
-    \brief removes all markers and resets marker 0 to the markshape setting.
-
-    \detailed this is an easy way to clear the slate, remember that it will not reset your marking
-              code.
-    */
-    bool ResetMarkers();
+    void ResetMarkers();
 
     /**
     \brief converts the input string to a color. this is used in the configuration code for loading in colors.
@@ -1939,6 +1895,13 @@ void LexYAML();
     */
     bool IsConfEXT(wxString entry, wxArrayString& dest);//was the extention loaded from conf?
 
+    /**
+    \brief toggles the numbered bookmarks
+
+    \detailed checks the keys and toggles or goto the appropriate bookmark.
+    */
+    void MarkerToggle(wxKeyEvent& event);
+
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************
 ***********************************************************************************************************************/
@@ -1979,14 +1942,21 @@ void LexYAML();
     */
     wxColourDatabase* XSTCcolorDbase;
 
-    /**
-    \brief array that holds the bookmarks indexes for removal.
+    /*
+    \brief stores the position of numbered bookmarks
 
-    \detailed when UnSetAlphaBmarks() is called the markers in this array will be nullified
-              this will hold up to 20 markers
+    \detailed each bookmark is uniqe, so it will only be set once. this stores the line where the bookmark is set.
+              if the bookmark is not found on the line, a search from that point to the top and then that point to the
+              bottom of the document so the location can be updated, or it will be set as off.
     */
-    int charmarkers[20];
+    //int BmarkPos[10];
 
+    /**
+    \brief stores the handle to numbered bookmarks
+
+    \detailed stored bookmark handles for the numbered bookmarks so they can be found when the BmarkPos becomes invalid.
+    */
+    int BmarkHandles[10];
 
     /**
     \brief c/c++ extention array
@@ -1994,6 +1964,7 @@ void LexYAML();
     \detailed a space saving way to check the c++ file extentions in AutoEXT()
     */
     wxString c_ext_array[8];
+
     /**
     \brief these variables are for lexcolor functions, this way there is a fast easy way to chnge default in all functions at once.
 

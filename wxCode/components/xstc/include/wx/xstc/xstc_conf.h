@@ -49,6 +49,8 @@
  *  WXMAKINGDLL standard wxWidgets macro, define this if you are building the library. if not       *
  *              comment it out.                                                                     *
  *                                                                                                  *
+ *  WXDLLIMPEXP_XSTC if WXMAKINGDLL is defined then wxEXPORT is used else it is nothing.            *
+ *                                                                                                  *
  *  XSTC_USE_WXSCINTILLA   these macros are all you will need to make the library work, unless you  *
  *  XSTC_USE_WXSTC         want to redefine the libraries functionality                             *
  *                                                                                                  *

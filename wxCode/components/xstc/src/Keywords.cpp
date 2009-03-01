@@ -1,36 +1,36 @@
 
 /*
  * Keywords.h
- * 
+ *
  * this file is licensed under the wxWindows licence
  * just a quick reminder of what that means:
- * 
+ *
  * This software is released under the GNU GPL licence
  * with a few exceptins applied, check the wxWindows licence
  * to see what those are
- * 
+ *
  * visit: http://opensource.org/ to see both
  * the GNU GPL and wxWindows licences.
- * 
+ *
  * this software has absolutely no warranty, express or implied
- * 
+ *
  * just so you know, i don't care if you change the code
  * don't email me if you did someting to it.
- * 
+ *
  * no need to mark changes, you obviously may want to change the color
  * settings, it would only be a real pain if you had to mark them.
- * 
+ *
  * if you edit a function to change its behavior, it would be courtious
  * to others to let them know that the file is not an official release,
  * but you don't have to do that either.
- * 
+ *
  * you must not misrepresent the origins of this software, if you distribute
- * it, let the user know where to get it and that you where not the original 
+ * it, let the user know where to get it and that you where not the original
  * creator. (except for any code you add obviously)
  *
  * this notice may not be changed in any way and must remain at the top of every
  * source file.
- * 
+ *
  * XSTC was developed by Nuklear Zelph
  * copyright (C) 2006
  */
@@ -2944,10 +2944,27 @@ this->Keys_Set.yaml = wxT("true false yes no");
 
 wxString XSTC::KeyCheck(wxString keyname)
 {//check the contents of a Keyword_Sets object substring, is it a keywordset or filename
- //if a '.' {period} is in the string somewhere, it is assumed a filename.
-   if(keyname.Contains(wxT(".")))
+ //if "^ISFILE^" is at the beggining, it is assumed to be a file or set of coma delimited file names.
+   wxString temp;
+   int x,y;
+
+   if(keyname.Contains(wxT("^ISFILE^")))
    {
-      keyname = this->LoadKeyWords(keyname);
+      temp = keyname;
+      keyname = wxT("");
+      temp.Remove(0, temp.Find("^ISFILE^") + 8);
+      temp.Trim(false);
+      if(temp[0] == ',')
+      {
+         temp.Remove(0, 1);
+      }
+      y = temp.Freq(',');
+      for(x=0;x<=y;x++)
+      {
+         keyname = keyname + this->LoadKeyWords(temp.Mid(0, temp.Find(",")));
+         temp.Remove(0, temp.Find(",")+1);
+         temp.Trim(false);
+      }
    }
  return keyname;
 }

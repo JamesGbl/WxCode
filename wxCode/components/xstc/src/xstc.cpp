@@ -55,6 +55,7 @@ XSTC::XSTC(wxWindow *parent, wxWindowID id,
 XSTC_CLASS(parent, id, pos, size, style, name)
 {//sets up default behavior, links events and calls default coloring
     WIN_ID = this->GetId();
+    int x = 0;
 
     Connect(WIN_ID, XSTC_EVENT_DEF(MARGINCLICK),
                 (wxObjectEventFunction)
@@ -64,7 +65,12 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     Connect(WIN_ID, XSTC_EVENT_DEF(UPDATEUI),
                 (wxObjectEventFunction)
                 (wxEventFunction)
-                (wxCommandEventFunction)&XSTC::XSTC::Bmatch);
+                (wxCommandEventFunction)&XSTC::Bmatch);
+
+    Connect(WIN_ID, wxEVT_KEY_DOWN,
+                (wxObjectEventFunction)
+                (wxEventFunction)
+                (wxCommandEventFunction)&XSTC::MarkerToggle);
 
     ResetStyle();
 
@@ -91,16 +97,10 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     c_ext_array[6] = wxT("cxx");
     c_ext_array[7] = wxT("hxx");
 
-    prop1[0] = wxT("");//empty the properties
-    prop1[1] = wxT("");
-    prop1[2] = wxT("");
-    prop1[3] = wxT("");
-    prop1[4] = wxT("");
-    prop1[5] = wxT("");
-    prop1[6] = wxT("");
-    prop1[7] = wxT("");
-    prop1[8] = wxT("");
-    prop1[9] = wxT("");
+    for(x=0;x<10;x++)
+    {
+        prop1[x] = wxT("");
+    }
 
     extset.Empty();
 
@@ -123,26 +123,11 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     XFilename = wxT("Untitled");
     SetMarginMask(fldmgn, XSTC_DEF(MASK_FOLDERS));
     XSTCcolorDbase = NULL;
-    charmarkers[0] = 0;
-    charmarkers[1] = 0;
-    charmarkers[2] = 0;
-    charmarkers[3] = 0;
-    charmarkers[4] = 0;
-    charmarkers[5] = 0;
-    charmarkers[6] = 0;
-    charmarkers[7] = 0;
-    charmarkers[8] = 0;
-    charmarkers[9] = 0;
-    charmarkers[10] = 0;
-    charmarkers[11] = 0;
-    charmarkers[12] = 0;
-    charmarkers[13] = 0;
-    charmarkers[14] = 0;
-    charmarkers[15] = 0;
-    charmarkers[16] = 0;
-    charmarkers[17] = 0;
-    charmarkers[18] = 0;
-    charmarkers[19] = 0;
+
+    for(x=0;x<10;x++)
+    {
+        BmarkHandles[x] = -1;
+    }
 }
 
 XSTC::~XSTC()
@@ -297,11 +282,60 @@ void XSTC::ToggleBookMark(int line)
     {
         MarkerDelete(line, 0);
     }
-
     else
     {
         MarkerAdd(line, 0);
     }
+}
+
+void XSTC::MarkerToggle(wxKeyEvent& event)
+{
+    int x = event.GetKeyCode();
+    int mod = event.GetModifiers();
+    if(event.ShiftDown())
+        mod = wxMOD_ALTGR; //fail it
+    switch(x)
+    {
+        case 48: { x = 0; break;}
+        case 49: { x = 1; break;}
+        case 50: { x = 2; break;}
+        case 51: { x = 3; break;}
+        case 52: { x = 4; break;}
+        case 53: { x = 5; break;}
+        case 54: { x = 6; break;}
+        case 55: { x = 7; break;}
+        case 56: { x = 8; break;}
+        case 57: { x = 9; break;}
+        default: x = 10;
+    }
+    if(mod == wxMOD_ALT)
+    {
+        if(x != 10)
+        {
+            if(BmarkHandles[x] != -1)
+            {
+                if(MarkerLineFromHandle(BmarkHandles[x]) >= 0)
+                    GotoLine(MarkerLineFromHandle(BmarkHandles[x]));
+            }
+        }
+    }
+    else
+    if(mod == wxMOD_CONTROL)
+    {
+        if(x != 10)
+        {
+            if(BmarkHandles[x] != -1)
+            {
+                    MarkerDeleteHandle(BmarkHandles[x]);
+                    BmarkHandles[x] = -1;
+            }
+            else
+            {
+                BmarkHandles[x] = MarkerAdd(GetCurrentPos(), x + 1);
+            }
+        }
+    }
+    event.Skip();
 }
 
 void XSTC::SetLexerX(int lexer, bool useprop, wxString properties[5])//useprop=true checks the properties arg else uses defaults
@@ -3973,10 +4007,6 @@ void XSTC::ResetStyle()
 
    this->SetCaretBk(wxColour(*wxCYAN));
    this->SetCaretForeground(wxColour(wxT("#000000")));
-
-   this->MarkerDefine(0, markshape);
-   this->MarkerSetForeground(0, wxColour(wxT("#000000")));
-   this->MarkerSetBackground(0, wxColour(*wxCYAN));
    this->SetSelBackground(true, wxColour(wxT("#000000")));
    this->SetSelForeground(true, wxColour(wxT("#FFFFFF")));
 
@@ -4026,6 +4056,7 @@ void XSTC::ResetStyle()
    this->SetStyleBits(5);
    this->SetLexer(XSTC_DEF(LEX_NULL));
    this->FoldColors();
+   this->ResetMarkers();
 }
 
 PropSTR XSTC::GetPropStr(wxString property)
@@ -4610,34 +4641,24 @@ wxRegConfig* XSTC::SetColorConf(wxString appName, wxString vendorName, wxString 
 #endif //_WXMSW_
 #endif //XSTC_USE_CONFIG
 
-bool XSTC::SetAlphaBmarks(int startmarker, int mnumber, wxString chars)
-{
-    //int charmarkers[20];
-    return false;
-}
-
-bool XSTC::UnSetAlphaBmarks()
-{
-    //int charmarkers[20];
-    return false;
-}
-
-bool XSTC::UnmonitorBmarks()
-{
-    //int charmarkers[20];
-    return false;
-}
-
-bool XSTC::UnmonitorBmark(int mark)
-{
-    //int charmarkers[20];
-    return false;
-}
-
-bool XSTC::ResetMarkers()
+void XSTC::ResetMarkers()
 {
     this->MarkerDefine(0, markshape);
-    return false;
+    this->MarkerSetForeground(0, foldfg);
+    this->MarkerSetBackground(0, foldbg);
+    int x = 1, y = 48;
+    while(x<11)
+    {
+        this->MarkerDefine(x, XSTC_DEF(MARK_CHARACTER) + y);
+        this->MarkerSetForeground(x, foldfg);
+        this->MarkerSetBackground(x, foldbg);
+
+#ifndef XSTC_NO_ALPHA
+        this->MarkerSetAlpha(x, alphalvl);
+#endif //XSTC_NO_ALPHA
+        y++;
+        x++;
+    }
 }
 
 bool XSTC::Ccolor(wxString configvalue, wxColour& color)
