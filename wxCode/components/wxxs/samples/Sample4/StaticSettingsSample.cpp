@@ -94,6 +94,9 @@ Settings::Settings()
 	// RealPointList - list of wxRealPoint values
 	m_lstRealPointData.Append(new wxRealPoint(1.2, 3.4));
 	m_lstRealPointData.Append(new wxRealPoint(5.6, 7.8));
+	// StringMap - hash map with string keys and values
+	m_mapStringData[wxT("Key1")] = wxT("Value1");
+	m_mapStringData[wxT("Key2")] = wxT("Value2");
 	// dynamic instances of xsSerializable class or other derived classes
 	m_pDynamicSerializableObject = new SerializableObject();
 	// static instances of xsSerializable class or other derived classes
@@ -138,6 +141,9 @@ Settings::Settings(Settings &obj) : xsSerializable(obj)
 		node = node->GetNext();
 	}
 
+    // copy map content
+	m_mapStringData = obj.m_mapStringData;
+
 	// copy dynamic instances of xsSerializable class or other derived classes
 	m_pDynamicSerializableObject = (SerializableObject*)obj.m_pDynamicSerializableObject->Clone();
 
@@ -177,6 +183,7 @@ void Settings::MarkDataMembers()
 	XS_SERIALIZE(m_arrStringData, wxT("stringarray_data"));
 	XS_SERIALIZE(m_arrRealPointData, wxT("realpointarray_data"));
 	XS_SERIALIZE(m_lstRealPointData, wxT("realpointlist_data"));
+	XS_SERIALIZE(m_mapStringData, wxT("stringmap_data"));
 	XS_SERIALIZE_DYNAMIC_OBJECT_NO_CREATE(m_pDynamicSerializableObject, wxT("dynamicobject_data"));
 	XS_SERIALIZE_STATIC_OBJECT(m_StaticSerializableObject, wxT("staticobject_data"));
 }

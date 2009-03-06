@@ -26,7 +26,7 @@ WX_DEFINE_EXPORTED_LIST(SerializableList);
 // static members
 PropertyIOMap wxXmlSerializer::m_mapPropertyIOHandlers;
 int wxXmlSerializer::m_nRefCounter = 0;
-wxString wxXmlSerializer::m_sLibraryVersion = wxT("1.1.9 beta");
+wxString wxXmlSerializer::m_sLibraryVersion = wxT("1.1.10 beta");
 
 /////////////////////////////////////////////////////////////////////////////////////
 // xsProperty class /////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ xsSerializable* xsSerializable::GetFirstChild(wxClassInfo *type)
 	SerializableList::compatibility_iterator node = m_lstChildItems.GetFirst();
     while( node )
 	{
-		if( node->GetData()->GetClassInfo() == type ) return node->GetData();
+		if( node->GetData()->IsKindOf( type ) ) return node->GetData();
 		node = node->GetNext();
     }
 	return NULL;
@@ -144,7 +144,7 @@ xsSerializable* xsSerializable::GetLastChild(wxClassInfo *type)
     SerializableList::compatibility_iterator node = m_lstChildItems.GetLast();
     while( node )
 	{
-		if( node->GetData()->GetClassInfo() == type ) return node->GetData();
+		if( node->GetData()->IsKindOf( type ) ) return node->GetData();
 		node = node->GetPrevious();
     }
 	return NULL;
@@ -177,7 +177,7 @@ xsSerializable* xsSerializable::GetSibbling(wxClassInfo *type)
 		{
 			sibbling = node->GetNext();
 			
-			if( sibbling && (sibbling->GetData()->GetClassInfo() == type) ) return sibbling->GetData();
+			if( sibbling && (sibbling->GetData()->IsKindOf( type ) ) ) return sibbling->GetData();
 			
 			node = sibbling;
 		}
@@ -467,6 +467,7 @@ void wxXmlSerializer::InitializeAllIOHandlers()
     XS_REGISTER_IO_HANDLER(wxT("arraylong"), xsArrayLongPropIO);
     XS_REGISTER_IO_HANDLER(wxT("arraydouble"), xsArrayDoublePropIO);
     XS_REGISTER_IO_HANDLER(wxT("arrayrealpoint"), xsArrayRealPointPropIO);
+	XS_REGISTER_IO_HANDLER(wxT("mapstring"), xsMapStringPropIO);
     XS_REGISTER_IO_HANDLER(wxT("listrealpoint"), xsListRealPointPropIO);
     XS_REGISTER_IO_HANDLER(wxT("serializablestatic"), xsStaticObjPropIO);
     XS_REGISTER_IO_HANDLER(wxT("serializabledynamic"), xsDynObjPropIO);
@@ -494,7 +495,7 @@ xsSerializable* wxXmlSerializer::GetItem(long id)
     return NULL;
 }
 
-bool wxXmlSerializer::Contains(xsSerializable *object)
+bool wxXmlSerializer::Contains(xsSerializable *object) const
 {
     if( m_pRoot )
     {
@@ -811,7 +812,7 @@ xsSerializable* wxXmlSerializer::_GetItem(long id, xsSerializable* parent)
     return pItem;
 }
 
-bool wxXmlSerializer::_Contains(xsSerializable* object, xsSerializable* parent)
+bool wxXmlSerializer::_Contains(xsSerializable* object, xsSerializable* parent) const
 {
     wxASSERT(parent);
 

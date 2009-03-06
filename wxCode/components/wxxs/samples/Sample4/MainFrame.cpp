@@ -52,7 +52,7 @@ void MainFrame::DumpSerializableObject(xsSerializable *obj, wxTextCtrl *memo)
 	{
 		prop = node->GetData();
 		// get suitable I/O handler for current property (depends on its data type)
-		ioHandler = wxXmlSerializer::m_mapPropertyIOHandlers[prop->m_sDataType];
+		ioHandler = wxXmlSerializer::GetPropertyIOHandler(prop->m_sDataType);
 
 		memo->AppendText(wxString::Format(wxT("Property name: %s, Type: %s, Value: %s\n"), prop->m_sFieldName.c_str(), prop->m_sDataType.c_str(), ioHandler->GetValueStr(prop).c_str()));
 

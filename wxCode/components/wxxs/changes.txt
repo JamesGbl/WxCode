@@ -1,3 +1,15 @@
+Changes in version 1.1.10 beta (2009-03-02):
+-------------------------------------------
+- Added function bool xsSerializable::HasChildren().
+- Added static function xsPropertyIO* wxXmlSerializer::GetPropertyIOHandler(const wxString& datatype) returning pointer to I/O handler suitable for given
+  data type if exists, otherwise NULL.
+- Added new data type and I/O handler for string hash map ('StringMap' data type).
+- Optimized xsPropertyIO::Write() function of array data types for speed.
+- Declaration of xsProperyIO::ToString(T value) changed to xsProperyIO::ToString(const T& value).
+- If a font creation based on a native info stored in XML fails then a default (wxSWISS_FONT) font is used.
+- Improved "const correctness" of member functions.
+- Code clean-up.
+
 Changes in version 1.1.9 beta (2009-01-01):
 ------------------------------------------
 - Added functions xsSerializable::GetFirstChild(wxClassInfo *type), xsSerializable::GetLastChild(wxClassInfo *type), xsSerializable::GetSibbling(wxClassInfo *type).

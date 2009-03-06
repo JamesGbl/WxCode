@@ -98,6 +98,8 @@ protected:
 	RealPointArray m_arrRealPointData;
 	// RealPointList - list of wxRealPoint values
 	RealPointList m_lstRealPointData;
+	// StringMap - hash map with string keys and values
+	StringMap m_mapStringData;
 	// dynamic instances of xsSerializable class or other derived classes
 	SerializableObject *m_pDynamicSerializableObject;
 	// static instances of xsSerializable class or other derived classes

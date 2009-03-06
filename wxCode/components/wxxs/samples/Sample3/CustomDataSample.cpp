@@ -27,14 +27,16 @@ XS_DEFINE_IO_HANDLER(wxColourData, xsColourDataPropIO);
 // two following static member functions of the data handler class MUST be defined manualy:
 
 // wxString xsPropIO::ToString(T value) -> creates a string representation of the given value
-wxString xsColourDataPropIO::ToString(wxColourData value)
+wxString xsColourDataPropIO::ToString(const wxColourData& value)
 {
 	wxString out;
+    wxColourData data = value; // << hack due to bug in WX: function wxColourData::GetCustomColour() isn't constant like wxColourData::GetColour()
 
-	out << xsColourPropIO::ToString(value.GetColour());
+	out << xsColourPropIO::ToString( data.GetColour() );
 	for(int i = 0; i < 16; i++)
 	{
-		out << wxT("|") << xsColourPropIO::ToString(value.GetCustomColour(i));
+		out << wxT("|");
+		out << xsColourPropIO::ToString( data.GetCustomColour(i) );
 	}
 
     return out;
