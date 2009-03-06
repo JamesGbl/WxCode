@@ -100,6 +100,9 @@
 /*! \brief Macro creates new serialized property (type 'list of wxRealPoint objects') */
 #define XS_SERIALIZE_LISTREALPOINT(x, name) XS_SERIALIZE_PROPERTY(x, wxT("listrealpoint"), name);
 
+/*! \brief Macro creates new serialized property (type 'string hash map (StringMap)') */
+#define XS_SERIALIZE_MAPSTRING(x, name) XS_SERIALIZE_PROPERTY(x, wxT("mapstring"), name);
+
 /*! \brief Macro creates new serialized property encapsulating a dynamic serializable object */
 #define XS_SERIALIZE_DYNAMIC_OBJECT(x, name) XS_SERIALIZE_PROPERTY(x, wxT("serializabledynamic"), name);
 /*! \brief Macro creates new serialized property encapsulating a dynamic serializable object */
@@ -171,7 +174,7 @@ public:
     friend class wxXmlSerializer;
 
     XS_DECLARE_CLONABLE_CLASS(xsSerializable);
-	
+
 	enum SEARCHMODE
 	{
 		/*! \brief Depth-First-Search algorithm */
@@ -206,7 +209,7 @@ public:
     xsSerializable* GetFirstChild();
     /*!
      * \brief Get first serializable child object of given type.
-	 * \param type Child object type (can be NULL for any type)  
+	 * \param type Child object type (can be NULL for any type)
      * \return Pointer to child object if exists, otherwise NULL
      */
     xsSerializable* GetFirstChild(wxClassInfo *type);
@@ -217,7 +220,7 @@ public:
     xsSerializable* GetLastChild();
     /*!
      * \brief Get last serializable child object of given type.
-	 * \param type Child object type (can be NULL for any type) 
+	 * \param type Child object type (can be NULL for any type)
      * \return Pointer to child object if exists, otherwise NULL
      */
     xsSerializable* GetLastChild(wxClassInfo *type);
@@ -228,7 +231,7 @@ public:
     xsSerializable* GetSibbling();
     /*!
      * \brief Get next serializable sibbling object of given type.
-	 * \param type Child object type (can be NULL for any type) 
+	 * \param type Child object type (can be NULL for any type)
      * \return Pointer to sibbling object if exists, otherwise NULL
      */
     xsSerializable* GetSibbling(wxClassInfo *type);
@@ -240,6 +243,11 @@ public:
      */
 	xsSerializable* GetChild(long id, bool recursive = xsNORECURSIVE);
 
+    /*!
+     * \brief Function finds out whether this serializable item has some children.
+     * \return TRUE if the parent shape has children, otherwise FALSE
+     */
+	inline bool HasChildren() const { return m_lstChildItems.IsEmpty(); }
     /*!
      * \brief Get list of children (serializable objects) of this object.
      * \return Reference to a list with child serializable objects (can be empty)
@@ -267,7 +275,7 @@ public:
      * \brief Get pointer to list node containing last serializable child object.
      */
     inline SerializableList::compatibility_iterator GetLastChildNode() const { return m_lstChildItems.GetLast(); }
-	
+
     /*!
      * \brief Set serializable parent object.
      * \param parent Pointer to parent object
@@ -580,6 +588,9 @@ public:
     /*! \brief Constructor for RealPointList property. */
     xsProperty(RealPointList* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("listrealpoint")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
 
+    /*! \brief Constructor for StringMap property. */
+    xsProperty(StringMap* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("mapstring")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
+
     /*! \brief Constructor for static serializable property. */
     xsProperty(xsSerializable* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("serializablestatic")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
 
@@ -685,7 +696,7 @@ public:
      * \param type Class type
      * \param list List with matching serializable objects
 	 * \param mode Search mode
-	 * \sa xsSerializable::SEARCHMODE 
+	 * \sa xsSerializable::SEARCHMODE
      */
     void GetItems(wxClassInfo* type, SerializableList& list, xsSerializable::SEARCHMODE mode = xsSerializable::searchBFS);
     /*!
@@ -805,6 +816,12 @@ public:
 	void InitializeAllIOHandlers();
 	/*! \brief Clear all initialized property IO handlers */
 	void ClearIOHandlers();
+	/*!
+	 * \brief Get property I/O handler for given datatype.
+	 * \param datatype String ID of data type
+	 * \return Pointer to I/O handler suitable for given data type if exists, otherwise NULL
+	 */
+	inline static xsPropertyIO* GetPropertyIOHandler(const wxString& datatype) { return m_mapPropertyIOHandlers[datatype]; }
 
     /*! \brief Map of property IO handlers */
     static PropertyIOMap m_mapPropertyIOHandlers;

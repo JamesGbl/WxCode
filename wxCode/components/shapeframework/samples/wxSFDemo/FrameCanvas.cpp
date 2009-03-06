@@ -123,7 +123,14 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
 				if(m_pParentFrame->GetToolMode() == MainFrm::modeTEXT)
 					pShape = GetDiagramManager()->AddShape(CLASSINFO(wxSFTextShape), event.GetPosition(), sfDONT_SAVE_STATE);
 				else
+				{
 					pShape = GetDiagramManager()->AddShape(CLASSINFO(wxSFEditTextShape), event.GetPosition(), sfDONT_SAVE_STATE);
+					// editable text shapes can be forced to be multiline at default like this:
+					// ((wxSFEditTextShape*)pShape)->ForceMultiline( true );
+					
+					// also edit control type can be set here like this:
+					//((wxSFEditTextShape*)pShape)->SetEditType( wxSFEditTextShape::editDIALOG );
+				}
 
                 if(pShape)
                 {
