@@ -3,8 +3,9 @@
 #include "../include/DatabaseLayerException.h"
 
 // ctor
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_nNullFlag = -1;
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
@@ -13,8 +14,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar)
   m_pTransaction = NULL;
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, const wxString& strValue, const wxCSConv* conv)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, const wxString& strValue, const wxCSConv* conv)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_strValue = strValue;
 
@@ -32,8 +34,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, const wxString& strValue, co
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, int nValue)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, int nValue)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_nParameterType = FirebirdParameter::PARAM_INT;
   m_nValue = nValue;
@@ -44,8 +47,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, int nValue)
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, double dblValue)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, double dblValue)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_nParameterType = FirebirdParameter::PARAM_DOUBLE;
   int nType = (m_pParameter->sqltype & ~1);
@@ -68,8 +72,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, double dblValue)
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, bool bValue)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, bool bValue)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_nParameterType = FirebirdParameter::PARAM_BOOL;
   m_bValue = bValue;
@@ -81,8 +86,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, bool bValue)
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, const wxDateTime& dateValue)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, const wxDateTime& dateValue)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_nParameterType = FirebirdParameter::PARAM_DATETIME;
 
@@ -94,7 +100,7 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, const wxDateTime& dateValue)
   dateAsTm.tm_mday = tm.mday;
   dateAsTm.tm_mon = tm.mon;
   dateAsTm.tm_year = tm.year - 1900;
-  isc_encode_timestamp(&dateAsTm, &m_Date);
+  m_pInterface->GetIscEncodeTimestamp()(&dateAsTm, &m_Date);
 
   m_nBufferLength = sizeof(ISC_TIMESTAMP);
   
@@ -104,8 +110,9 @@ FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, const wxDateTime& dateValue)
   m_pParameter->sqlind = &m_nNullFlag; // NULL indicator
 }
 
-FirebirdParameter::FirebirdParameter(XSQLVAR* pVar, isc_db_handle pDatabase, isc_tr_handle pTransaction, const void* pData, long nDataLength)
+FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, isc_db_handle pDatabase, isc_tr_handle pTransaction, const void* pData, long nDataLength)
 {
+  m_pInterface = pInterface;
   m_pParameter = pVar;
   m_pDatabase = pDatabase;
   m_pTransaction = pTransaction;
@@ -129,13 +136,13 @@ void FirebirdParameter::ResetBlob()
   int nDataLength = m_nBufferLength;//m_BufferValue.GetDataLen();
   
   memset(&m_BlobId, 0, sizeof(m_BlobId));
-  int nReturn = isc_create_blob2(status, &m_pDatabase, &m_pTransaction, &m_pBlob, &m_BlobId, 0, NULL);
+  int nReturn = m_pInterface->GetIscCreateBlob2()(status, &m_pDatabase, &m_pTransaction, &m_pBlob, &m_BlobId, 0, NULL);
   if (nReturn != 0)
   {
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
-    long nSqlCode = isc_sqlcode(status);
+    long nSqlCode = m_pInterface->GetIscSqlcode()(status);
     DatabaseLayerException error(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode), 
-        FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, status));
+        FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, status));
 
     throw error;
 #endif
@@ -149,13 +156,13 @@ void FirebirdParameter::ResetBlob()
   while (dataFetched < nDataLength)
   {
     unsigned short segLen = (nDataLength - dataFetched) < 0xFFFF ? (nDataLength - dataFetched) : 0xFFFF ;
-    nReturn = isc_put_segment(status, &m_pBlob, segLen, dataPtr);
+    nReturn = m_pInterface->GetIscPutSegment()(status, &m_pBlob, segLen, dataPtr);
     if (nReturn != 0)
     {
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
-      long nSqlCode = isc_sqlcode(status);
+      long nSqlCode = m_pInterface->GetIscSqlcode()(status);
       DatabaseLayerException error(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode),
-        FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, status));
+        FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, status));
 
       throw error;
 #endif
@@ -168,13 +175,13 @@ void FirebirdParameter::ResetBlob()
     dataPtr += segLen;
   }
   
-  nReturn = isc_close_blob(status, &m_pBlob);
+  nReturn = m_pInterface->GetIscCloseBlob()(status, &m_pBlob);
   if (nReturn != 0)
   {
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
-    long nSqlCode = isc_sqlcode(status);
+    long nSqlCode = m_pInterface->GetIscSqlcode()(status);
     DatabaseLayerException error(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode),
-        FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, status));
+        FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, status));
 
     throw error;
 #endif

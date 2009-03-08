@@ -5429,6 +5429,12 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
 #elif USE_FIREBIRD
         m_pDatabaseLayer = NULL;
+        if (!FirebirdDatabaseLayer::IsAvailable())
+        {
+          wxPrintf(_("Firebird database backend is not available"));
+          FAIL("Firebird database backend is not available");
+          return false;
+        }
         wxString strServer;
         if (config.Read(_("/Firebird/server"), &strServer) == false)
         {
@@ -5481,6 +5487,12 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
   #endif
 #elif USE_POSTGRESQL
         m_pDatabaseLayer = NULL;
+        if (!PostgresDatabaseLayer::IsAvailable())
+        {
+          wxPrintf(_("PostgreSQL database backend is not available"));
+          FAIL("PostgreSQL database backend is not available");
+          return false;
+        }
         wxString strDatabase; // This is the only mandatory setting
         if (config.Read(_("/PostgreSQL/database"), &strDatabase) == false)
         {
@@ -5519,6 +5531,12 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           m_pDatabaseLayer = new PostgresDatabaseLayer(strDatabase);
 #elif USE_MYSQL
         m_pDatabaseLayer = NULL;
+        if (!MysqlDatabaseLayer::IsAvailable())
+        {
+          wxPrintf(_("MySQL database backend is not available"));
+          FAIL("MySQL database backend is not available");
+          return false;
+        }
         wxString strServer;
         if (config.Read(_("/MySQL/server"), &strServer) == false)
         {
@@ -5595,6 +5613,12 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         
 #elif USE_ODBC
         m_pDatabaseLayer = NULL;
+        if (!OdbcDatabaseLayer::IsAvailable())
+        {
+          wxPrintf(_("ODBC database backend is not available"));
+          FAIL("ODBC database backend is not available");
+          return false;
+        }
         wxString strDSN;
         if (config.Read(_("/ODBC/DSN"), &strDSN) == false)
         {

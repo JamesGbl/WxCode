@@ -11,17 +11,19 @@ WX_DEFINE_OBJARRAY(ValuesArray);
 #define ODBC_FIELD_NAME_LEN 71
 
 // ctor
-OdbcResultSet::OdbcResultSet()
+OdbcResultSet::OdbcResultSet(OdbcInterface* pInterface)
  : DatabaseResultSet()
 {
+    m_pInterface = pInterface;
     m_pStatement = NULL;
     m_pOdbcStatement = NULL;
     m_bManageStatement = false;
 }
 
-OdbcResultSet::OdbcResultSet(OdbcPreparedStatement* pStatement, bool bManageStatement, int nCol)
+OdbcResultSet::OdbcResultSet(OdbcInterface* pInterface, OdbcPreparedStatement* pStatement, bool bManageStatement, int nCol)
  : DatabaseResultSet()
 {
+    m_pInterface = pInterface;
     m_pStatement = pStatement;
     m_pOdbcStatement = m_pStatement->GetLastStatement();
     m_bManageStatement = bManageStatement;
@@ -33,7 +35,7 @@ OdbcResultSet::OdbcResultSet(OdbcPreparedStatement* pStatement, bool bManageStat
     for (int i=0; i<nCol; i++)
     {
         UWORD col = i+1;
-        long nReturn = SQLColAttributes(m_pOdbcStatement, col, SQL_COLUMN_NAME,
+        long nReturn = m_pInterface->GetSQLColAttributes()(m_pOdbcStatement, col, SQL_COLUMN_NAME,
 	                      field_name,
                           ODBC_FIELD_NAME_LEN, &colnamelen, 0);
         if ( nReturn != SQL_SUCCESS && nReturn != SQL_SUCCESS_WITH_INFO )
@@ -88,7 +90,7 @@ bool OdbcResultSet::Next()
     if (m_pOdbcStatement == NULL)
         m_pOdbcStatement = m_pStatement->GetLastStatement();
 
-    long nReturn = SQLFetch( m_pOdbcStatement );
+    long nReturn = m_pInterface->GetSQLFetch()( m_pOdbcStatement );
      
     if ( nReturn != SQL_SUCCESS && nReturn != SQL_SUCCESS_WITH_INFO )
     {
@@ -127,22 +129,7 @@ bool OdbcResultSet::IsFieldNull(int nField)
       }
     }
   }
-/*
-  SQLTCHAR      col_name[8192];
-  SQLSMALLINT   col_name_length;
-  SQLSMALLINT   col_data_type;
-  SQLUINTEGER   col_size;
-  SQLSMALLINT   col_decimal_digits;
-  SQLSMALLINT   col_nullable;
 
-  memset(col_name, 0, 8192);
-
-  SQLRETURN nRet = SQLDescribeCol( m_pOdbcStatement, nField, col_name, 
-      8192, &col_name_length, &col_data_type, &col_size, &col_decimal_digits, &col_nullable );
-
-  if (col_data_type != SQL_BIT && col_data_type != SQL_BINARY && 
-    col_data_type != SQL_VARBINARY && col_data_type != SQL_LONGVARBINARY)
-*/
   if (!IsBlob(nField))
   {
     if (m_RetrievedValues.find(nField) == m_RetrievedValues.end())
@@ -199,14 +186,14 @@ void OdbcResultSet::RetrieveFieldData(int nField)
       SQLRETURN rc;
       SQLSMALLINT buflen;
       unsigned long int colType;
-      rc = SQLColAttribute(m_pOdbcStatement, nField, SQL_DESC_TYPE, NULL, 0,
+      rc = m_pInterface->GetSQLColAttribute()(m_pOdbcStatement, nField, SQL_DESC_TYPE, NULL, 0,
         &buflen, &colType);
 
       if (SQL_FLOAT == colType || SQL_DOUBLE == colType)
       {
         SQLFLOAT ret;
         SQLINTEGER sqlPtr;
-        rc = SQLGetData(m_pOdbcStatement, nField, SQL_C_DOUBLE, &ret, 0, &sqlPtr);
+        rc = m_pInterface->GetSQLGetData()(m_pOdbcStatement, nField, SQL_C_DOUBLE, &ret, 0, &sqlPtr);
         if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
         {
           InterpretErrorCodes(rc, m_pOdbcStatement);
@@ -231,7 +218,7 @@ void OdbcResultSet::RetrieveFieldData(int nField)
       {
         TIMESTAMP_STRUCT ret;
         SQLINTEGER sqlPtr;
-        rc = SQLGetData(m_pOdbcStatement, nField, SQL_C_TIMESTAMP, &ret, sizeof(ret),
+        rc = m_pInterface->GetSQLGetData()(m_pOdbcStatement, nField, SQL_C_TIMESTAMP, &ret, sizeof(ret),
           &sqlPtr);
 
         if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
@@ -271,7 +258,7 @@ void OdbcResultSet::RetrieveFieldData(int nField)
         if (m_pOdbcStatement == NULL)
             m_pOdbcStatement = m_pStatement->GetLastStatement();
 
-        SQLRETURN nRet = SQLGetData( m_pOdbcStatement, nField, SQL_C_CHAR, buff,
+        SQLRETURN nRet = m_pInterface->GetSQLGetData()( m_pOdbcStatement, nField, SQL_C_CHAR, buff,
             col_size, &real_size );
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
         {
@@ -291,7 +278,7 @@ void OdbcResultSet::RetrieveFieldData(int nField)
         {
             while ( nRet != SQL_NO_DATA )
             {
-                nRet = SQLGetData( m_pOdbcStatement, nField, SQL_C_CHAR, buff, 
+                nRet = m_pInterface->GetSQLGetData()( m_pOdbcStatement, nField, SQL_C_CHAR, buff, 
                     col_size, &real_size );
                 if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO && nRet != SQL_NO_DATA )
                 {
@@ -399,7 +386,7 @@ void* OdbcResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
 
       memset(buff, 0, 8193*sizeof(unsigned char));
 
-      long nReturn = SQLBindParameter(m_pOdbcStatement, nField, SQL_PARAM_OUTPUT,
+      long nReturn = m_pInterface->GetSQLBindParameter()(m_pOdbcStatement, nField, SQL_PARAM_OUTPUT,
                       SQL_C_BINARY, SQL_BINARY, iLength, 0, &buff, iLength, &iSize);
 
       // Mark this field as retrieved
@@ -411,7 +398,7 @@ void* OdbcResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
         return NULL;
       }
 
-      nReturn = SQLGetData( m_pOdbcStatement, nField, SQL_C_BINARY, &buff, iLength, &iSize );
+      nReturn = m_pInterface->GetSQLGetData()( m_pOdbcStatement, nField, SQL_C_BINARY, &buff, iLength, &iSize );
       if ( nReturn != SQL_SUCCESS && nReturn != SQL_SUCCESS_WITH_INFO )
       {
           wxLogError(_T("Error with RunQueryWithResults - 1\n"));
@@ -440,7 +427,7 @@ void* OdbcResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
 
       while ( iSize > iLength )
       {
-          nReturn = SQLGetData( m_pOdbcStatement, nField, SQL_C_BINARY, &buff, iLength, &iSize );
+          nReturn = m_pInterface->GetSQLGetData()( m_pOdbcStatement, nField, SQL_C_BINARY, &buff, iLength, &iSize );
           if ( nReturn != SQL_SUCCESS && nReturn != SQL_SUCCESS_WITH_INFO )
           {
               wxLogError(_T("Error with RunQueryWithResults - 2\n"));
@@ -507,7 +494,7 @@ int OdbcResultSet::LookupField(const wxString& strField)
 
 ResultSetMetaData* OdbcResultSet::GetMetaData()
 {
-  ResultSetMetaData* pMetaData = new OdbcResultSetMetaData(m_pOdbcStatement);
+  ResultSetMetaData* pMetaData = new OdbcResultSetMetaData(m_pInterface, m_pOdbcStatement);
   LogMetaDataForCleanup(pMetaData);
   return pMetaData;
 }
@@ -524,7 +511,7 @@ void OdbcResultSet::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
     memset(strState, 0, ERR_STATE_LEN*sizeof(SQLTCHAR));
     memset(strBuffer, 0, ERR_BUFFER_LEN*sizeof(SQLTCHAR));
 
-    SQLGetDiagRec(SQL_HANDLE_STMT, stmth_ptr, 1, strState, &iNativeCode, 
+    m_pInterface->GetSQLGetDiagRec()(SQL_HANDLE_STMT, stmth_ptr, 1, strState, &iNativeCode, 
       strBuffer, ERR_BUFFER_LEN, &iMsgLen);  
  
     SetErrorCode((int)iNativeCode);
@@ -544,7 +531,7 @@ bool OdbcResultSet::IsBlob(int nField)
 
   memset(col_name, 0, 8192);
 
-  SQLRETURN nRet = SQLDescribeCol( m_pOdbcStatement, nField, col_name, 
+  SQLRETURN nRet = m_pInterface->GetSQLDescribeCol()( m_pOdbcStatement, nField, col_name, 
       8192, &col_name_length, &col_data_type, &col_size, &col_decimal_digits, &col_nullable );
 
   return (col_data_type == SQL_BIT || col_data_type == SQL_BINARY || 

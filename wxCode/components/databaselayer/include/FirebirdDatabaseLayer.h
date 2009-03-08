@@ -3,6 +3,9 @@
 
 #include "DatabaseLayer.h"
 #include "FirebirdPreparedStatement.h"
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
+#include "FirebirdInterface.h"
+#endif
 
 #include "ibase.h"
 
@@ -45,7 +48,8 @@ public:
   virtual PreparedStatement* PrepareStatement(const wxString& strQuery);
   
   static int TranslateErrorCode(int nCode);
-  static wxString TranslateErrorCodeToString(int nCode, ISC_STATUS_ARRAY status);
+  static wxString TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, ISC_STATUS_ARRAY status);
+  static bool IsAvailable();
 
   void SetServer(const wxString& strServer) { m_strServer = strServer; }
   void SetDatabase(const wxString& strDatabase) { m_strDatabase = strDatabase; }
@@ -64,6 +68,9 @@ private:
   void Connect();
   void InterpretErrorCodes(); 
   
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
+  FirebirdInterface m_Interface;
+#endif
   wxString m_strServer;
   wxString m_strDatabase;
   wxString m_strUser;

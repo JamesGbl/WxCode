@@ -1,7 +1,8 @@
 #include "../include/FirebirdParameterCollection.h"
 
-FirebirdParameterCollection::FirebirdParameterCollection(XSQLDA* pParameters)
+FirebirdParameterCollection::FirebirdParameterCollection(FirebirdInterface* pInterface, XSQLDA* pParameters)
 {
+  m_pInterface = pInterface;
   m_FirebirdParameters = pParameters;
   AllocateParameterSpace();
 }
@@ -29,43 +30,43 @@ FirebirdParameterCollection::~FirebirdParameterCollection()
 // set field
 void FirebirdParameterCollection::SetParam(int nPosition, int nValue)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], nValue);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], nValue);
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition, double dblValue)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], dblValue);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], dblValue);
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition, const wxString& strValue)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], strValue, GetEncoding());
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], strValue, GetEncoding());
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1]);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1]);
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition, isc_db_handle pDatabase, isc_tr_handle pTransaction, const void* pData, long nDataLength)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], pDatabase, pTransaction, pData, nDataLength);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], pDatabase, pTransaction, pData, nDataLength);
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition, const wxDateTime& dateValue)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], dateValue);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], dateValue);
   SetParam(nPosition, pParameter);
 }
 
 void FirebirdParameterCollection::SetParam(int nPosition, bool bValue)
 {
-  FirebirdParameter* pParameter = new FirebirdParameter(&m_FirebirdParameters->sqlvar[nPosition-1], bValue);
+  FirebirdParameter* pParameter = new FirebirdParameter(m_pInterface, &m_FirebirdParameters->sqlvar[nPosition-1], bValue);
   SetParam(nPosition, pParameter);
 }
 

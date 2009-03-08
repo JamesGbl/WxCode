@@ -17,6 +17,7 @@
 #include "DatabaseErrorReporter.h"
 #include "DatabaseStringConverter.h"
 #include "FirebirdParameterCollection.h"
+#include "FirebirdInterface.h"
 
 class DatabaseResultSet;
 
@@ -24,7 +25,7 @@ class FirebirdPreparedStatementWrapper : public DatabaseErrorReporter, public Da
 {
 public:
   // ctor
-  FirebirdPreparedStatementWrapper(isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL);
+  FirebirdPreparedStatementWrapper(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL);
 
   // dtor
   virtual ~FirebirdPreparedStatementWrapper();
@@ -60,6 +61,7 @@ private:
   FirebirdParameterCollection* m_pParameterCollection;
 
   ISC_STATUS_ARRAY m_Status;
+  FirebirdInterface* m_pInterface;
 
   bool m_bManageStatement;
   bool m_bManageTransaction;

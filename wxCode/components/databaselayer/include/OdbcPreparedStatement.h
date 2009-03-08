@@ -16,9 +16,9 @@
 
 #include "PreparedStatement.h"
 #include "OdbcParameter.h"
+#include "OdbcInterface.h"
 
 #include <sql.h>
-#include <sqlext.h>
 
 WX_DEFINE_ARRAY_PTR(SQLHSTMT, StatementVector);
 WX_DEFINE_ARRAY_PTR(OdbcParameter*, ArrayOfOdbcParameters);
@@ -29,9 +29,9 @@ class OdbcPreparedStatement : public PreparedStatement
 {
 public:
     // ctor
-    OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC);
-    OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, SQLHSTMT sqlStatementHandle);
-    OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, StatementVector statements);
+    OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC);
+    OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, SQLHSTMT sqlStatementHandle);
+    OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, StatementVector statements);
 
     // dtor
     virtual ~OdbcPreparedStatement();
@@ -72,6 +72,7 @@ private:
     StatementVector m_Statements;
 
     ArrayOfOdbcParameters m_Parameters;
+    OdbcInterface* m_pInterface;
 };
 
 #endif // __ODBC_PREPARED_STATEMENT_H__

@@ -13,15 +13,15 @@
 #endif
 
 #include "ResultSetMetaData.h"
+#include "OdbcInterface.h"
 
 #include <sql.h>
-#include <sqlext.h>
 
 class OdbcResultSetMetaData : public ResultSetMetaData
 {
 public:
   // ctor
-  OdbcResultSetMetaData(SQLHSTMT sqlOdbcStatement);
+  OdbcResultSetMetaData(OdbcInterface* pInterface, SQLHSTMT sqlOdbcStatement);
 
   // dtor
   virtual ~OdbcResultSetMetaData() { }
@@ -32,7 +32,7 @@ public:
   virtual int GetColumnCount();
   
 private:
-
+  OdbcInterface* m_pInterface;
   SQLHSTMT m_pOdbcStatement;
 };
 

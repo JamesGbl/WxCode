@@ -16,7 +16,9 @@
 
 #include "DatabaseLayer.h"
 #include "PreparedStatement.h"
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
 #include "MysqlInterface.h"
+#endif
 
 #include "mysql.h"
 
@@ -75,12 +77,15 @@ public:
   virtual wxArrayString GetColumns(const wxString& table);
 
   static int TranslateErrorCode(int nCode);
+  static bool IsAvailable();
 
 private:
   void InitDatabase();
   void ParseServerAndPort(const wxString& strServer);
 
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   MysqlInterface m_Interface;
+#endif
   wxString m_strServer;
   wxString m_strDatabase;
   wxString m_strUser;

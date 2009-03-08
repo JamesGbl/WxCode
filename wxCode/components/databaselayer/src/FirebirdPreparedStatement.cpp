@@ -4,9 +4,10 @@
 #include "../include/DatabaseLayerException.h"
 
 // ctor()
-FirebirdPreparedStatement::FirebirdPreparedStatement(isc_db_handle pDatabase, isc_tr_handle pTransaction)
+FirebirdPreparedStatement::FirebirdPreparedStatement(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction)
  : PreparedStatement()
 {
+  m_pInterface = pInterface;
   m_bManageTransaction = false;
   m_pTransaction = pTransaction;
   m_pDatabase = pDatabase;
@@ -43,7 +44,7 @@ void FirebirdPreparedStatement::Close()
   // Close the transaction if we're in charge of it
   if (m_bManageTransaction && m_pTransaction)
   {
-    int nReturn = isc_commit_transaction(m_Status, &m_pTransaction);
+    int nReturn = m_pInterface->GetIscCommitTransaction()(m_Status, &m_pTransaction);
     m_pTransaction = NULL;
     if (nReturn != 0)
     {
@@ -55,12 +56,12 @@ void FirebirdPreparedStatement::Close()
   
 void FirebirdPreparedStatement::AddPreparedStatement(const wxString& strSQL)
 {
-  FirebirdPreparedStatementWrapper* pWrapper = new FirebirdPreparedStatementWrapper(m_pDatabase, m_pTransaction, strSQL);
+  FirebirdPreparedStatementWrapper* pWrapper = new FirebirdPreparedStatementWrapper(m_pInterface, m_pDatabase, m_pTransaction, strSQL);
   pWrapper->SetEncoding(GetEncoding());
   m_Statements.push_back(pWrapper);
 }
 
-FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL, const wxCSConv* conv)
+FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL, const wxCSConv* conv)
 {
   wxArrayString Queries = ParseQueries(strSQL);
 
@@ -71,7 +72,7 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_han
 
   if (Queries.size() < 1)
   {
-    pStatement = new FirebirdPreparedStatement(pDatabase, pTransaction);
+    pStatement = new FirebirdPreparedStatement(pInterface, pDatabase, pTransaction);
     pStatement->SetEncoding(conv);
 
     pStatement->SetErrorCode(DATABASE_LAYER_ERROR);
@@ -101,14 +102,14 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_han
   {
     pTransaction = 0L;
     ISC_STATUS_ARRAY status;
-    int nReturn = isc_start_transaction(status, &pTransaction, 1, &pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
-    pStatement = new FirebirdPreparedStatement(pDatabase, pTransaction);
+    int nReturn = pInterface->GetIscStartTransaction()(status, &pTransaction, 1, &pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+    pStatement = new FirebirdPreparedStatement(pInterface, pDatabase, pTransaction);
     pStatement->SetEncoding(conv);
     if (nReturn != 0)
     {
-      long nSqlCode = isc_sqlcode(status);
+      long nSqlCode = pInterface->GetIscSqlcode()(status);
       pStatement->SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode));
-      pStatement->SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, status));
+      pStatement->SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(pInterface, nSqlCode, status));
 
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
       // If we're using exceptions, then assume that the calling program won't
@@ -132,7 +133,7 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(isc_db_han
   }
   else
   {
-    pStatement = new FirebirdPreparedStatement(pDatabase, pTransaction);
+    pStatement = new FirebirdPreparedStatement(pInterface, pDatabase, pTransaction);
     pStatement->SetEncoding(conv);
     pStatement->SetManageTransaction(false);
   }
@@ -270,7 +271,7 @@ int FirebirdPreparedStatement::RunQuery()
   // If the statement is managing the transaction then commit it now
   if (m_bManageTransaction)
   {
-    int nReturn = isc_commit_retaining(m_Status, &m_pTransaction);
+    int nReturn = m_pInterface->GetIscCommitRetaining()(m_Status, &m_pTransaction);
     //int nReturn = isc_commit_transaction(m_Status, &m_pTransaction);
     // We're done with the transaction, so set it to NULL so that we know that a new transaction must be started if we run any queries
     if (nReturn != 0)
@@ -304,7 +305,7 @@ DatabaseResultSet* FirebirdPreparedStatement::RunQueryWithResults()
     if (m_bManageTransaction)
     {
       //int nReturn = isc_commit_retaining(m_Status, &m_pTransaction);
-      int nReturn = isc_commit_transaction(m_Status, &m_pTransaction);
+      int nReturn = m_pInterface->GetIscCommitTransaction()(m_Status, &m_pTransaction);
       // We're done with the transaction, so set it to NULL so that we know that a new transaction must be started if we run any queries
       if (nReturn != 0)
       {
@@ -313,7 +314,7 @@ DatabaseResultSet* FirebirdPreparedStatement::RunQueryWithResults()
       }
       
       // Start a new transaction
-      nReturn = isc_start_transaction(m_Status, &m_pTransaction, 1, &m_pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+      nReturn = m_pInterface->GetIscStartTransaction()(m_Status, &m_pTransaction, 1, &m_pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
       if (nReturn != 0)
       {
         InterpretErrorCodes();
@@ -399,8 +400,8 @@ void FirebirdPreparedStatement::InterpretErrorCodes()
 {
   wxLogError(_("FirebirdPreparesStatement::InterpretErrorCodes()\n"));
 
-  long nSqlCode = isc_sqlcode(m_Status);
+  long nSqlCode = m_pInterface->GetIscSqlcode()(m_Status);
   SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode));
-  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, m_Status));
+  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, m_Status));
 }
 

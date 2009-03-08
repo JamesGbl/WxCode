@@ -18,9 +18,9 @@
 #include "wx/dynarray.h"
 
 #include "DatabaseResultSet.h"
+#include "OdbcInterface.h"
 
 #include <sql.h>
-#include <sqlext.h>
 
 class OdbcPreparedStatement;
 class OdbcDatabaseLayer;
@@ -33,8 +33,8 @@ class OdbcResultSet : public DatabaseResultSet
 {
 public:
   // ctor
-  OdbcResultSet();
-  OdbcResultSet(OdbcPreparedStatement* pStatement, bool bManageStatement = false, int nCol = 0);
+  OdbcResultSet(OdbcInterface* pInterface);
+  OdbcResultSet(OdbcInterface* pInterface, OdbcPreparedStatement* pStatement, bool bManageStatement = false, int nCol = 0);
 
   // dtor
   virtual ~OdbcResultSet();
@@ -76,6 +76,7 @@ private:
 
   bool m_bManageStatement;
   SQLHSTMT m_pHStmt;
+  OdbcInterface* m_pInterface;
 
   BlobMap m_BlobMap;
 };

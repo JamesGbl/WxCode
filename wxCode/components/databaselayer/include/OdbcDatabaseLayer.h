@@ -15,9 +15,7 @@
 #include "wx/arrstr.h"
 
 #include "DatabaseLayer.h"
-
-#include <sql.h>
-#include <sqlext.h>
+#include "OdbcInterface.h"
 
 #define ERR_BUFFER_LEN 1024
 #define ERR_STATE_LEN 10
@@ -65,6 +63,8 @@ public:
   virtual wxArrayString GetViews();
   virtual wxArrayString GetColumns(const wxString& table);
 
+  static bool IsAvailable();
+
 private:
   virtual PreparedStatement* PrepareStatement(const wxString& strQuery, bool bParseQuery);
   
@@ -83,6 +83,7 @@ private:
 #endif
 
   bool m_bIsConnected;
+  OdbcInterface m_Interface;
 
 public:
 

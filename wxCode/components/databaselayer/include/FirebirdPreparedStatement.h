@@ -16,6 +16,7 @@
 
 #include "PreparedStatement.h"
 #include "FirebirdPreparedStatementWrapper.h"
+#include "FirebirdInterface.h"
 
 class DatabaseResultSet;
 
@@ -25,7 +26,7 @@ class FirebirdPreparedStatement : public PreparedStatement
 {
 public:
   // ctor
-  FirebirdPreparedStatement(isc_db_handle pDatabase, isc_tr_handle pTransaction);
+  FirebirdPreparedStatement(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction);
 
   // dtor
   virtual ~FirebirdPreparedStatement();
@@ -47,7 +48,7 @@ public:
   virtual int RunQuery();
   virtual DatabaseResultSet* RunQueryWithResults();
 
-  static FirebirdPreparedStatement* CreateStatement(isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL, const wxCSConv* conv);
+  static FirebirdPreparedStatement* CreateStatement(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL, const wxCSConv* conv);
 
   void SetManageTransaction(bool bManageTransaction) { m_bManageTransaction = bManageTransaction; }
   //void SetTransaction(isc_tr_handle pTransaction) { m_pTransaction = pTransaction; }
@@ -63,6 +64,7 @@ private:
 
   FirebirdStatementVector m_Statements;
   ISC_STATUS_ARRAY m_Status;
+  FirebirdInterface* m_pInterface;
 };
 
 #endif // __FIREBIRD_PREPARED_STATEMENT_H__

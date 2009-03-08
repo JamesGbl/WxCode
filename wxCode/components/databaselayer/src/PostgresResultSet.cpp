@@ -5,9 +5,10 @@
 #include "../include/DatabaseLayerException.h"
 #include "libpq/libpq-fs.h"
 
-PostgresResultSet::PostgresResultSet()
+PostgresResultSet::PostgresResultSet(PostgresInterface* pInterface)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pResult = NULL;
   m_FieldLookupMap.clear();
   m_nCurrentRow = -1;
@@ -15,18 +16,19 @@ PostgresResultSet::PostgresResultSet()
   m_bBinaryResults = false;
 }
 
-PostgresResultSet::PostgresResultSet(PGresult* pResult)
+PostgresResultSet::PostgresResultSet(PostgresInterface* pInterface, PGresult* pResult)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pResult = pResult;
   m_nCurrentRow = -1;
-  m_nTotalRows = PQntuples(m_pResult);
-  m_bBinaryResults = PQbinaryTuples(m_pResult);
+  m_nTotalRows = m_pInterface->GetPQntuples()(m_pResult);
+  m_bBinaryResults = m_pInterface->GetPQbinaryTuples()(m_pResult);
   
-  int nFields = PQnfields(m_pResult);
+  int nFields = m_pInterface->GetPQnfields()(m_pResult);
   for (int i=0; i<nFields; i++)
   {
-    wxString strField = ConvertFromUnicodeStream(PQfname(pResult, i));
+    wxString strField = ConvertFromUnicodeStream(m_pInterface->GetPQfname()(pResult, i));
     strField.MakeUpper();
     m_FieldLookupMap[strField] = i;
   }
@@ -53,7 +55,7 @@ void PostgresResultSet::Close()
 
   if (m_pResult != NULL)
   {
-    PQclear(m_pResult);
+    m_pInterface->GetPQclear()(m_pResult);
     m_pResult = NULL;
   }
   m_FieldLookupMap.clear();
@@ -78,9 +80,9 @@ wxString PostgresResultSet::GetResultString(int nField)
   {
     if (nField != -1)
     {
-      if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+      if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
       {
-        strValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+        strValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
       }
     }
   }
@@ -99,9 +101,9 @@ long PostgresResultSet::GetResultLong(int nField)
   {
     if (nField != -1)
     {
-      if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+      if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
       {
-        wxString strValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+        wxString strValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
         strValue.ToLong(&nValue);
       }
     }
@@ -121,9 +123,9 @@ bool PostgresResultSet::GetResultBool(int nField)
   {
     if (nField != -1)
     {
-      if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+      if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
       {
-        wxString strValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+        wxString strValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
         bValue = (strValue != _("0"));
       }
     }
@@ -138,9 +140,9 @@ wxDateTime PostgresResultSet::GetResultDate(int nField)
   // TIMESTAMP results should be the same in binary or text results
   if (m_bBinaryResults)
   {
-    if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+    if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
     {
-      wxString strDateValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+      wxString strDateValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
       if (dateValue.ParseDateTime(strDateValue) == NULL)
       {
         if (dateValue.ParseDate(strDateValue) != NULL)
@@ -159,9 +161,9 @@ wxDateTime PostgresResultSet::GetResultDate(int nField)
   }
   else
   {
-    if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+    if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
     {
-      wxString strDateValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+      wxString strDateValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
       if (dateValue.ParseDateTime(strDateValue) == NULL)
       {
         if (dateValue.ParseDate(strDateValue) != NULL)
@@ -184,15 +186,15 @@ wxDateTime PostgresResultSet::GetResultDate(int nField)
 
 void* PostgresResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
 {
-  //int nLength = PQgetlength(m_pResult, m_nCurrentRow, nIndex);
-  unsigned char* pBlob = (unsigned char*)PQgetvalue(m_pResult, m_nCurrentRow, nField-1);
+  //int nLength = m_pInterface->GetPQgetlength()(m_pResult, m_nCurrentRow, nIndex);
+  unsigned char* pBlob = (unsigned char*)m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1);
   size_t nUnescapedLength = 0;
-  unsigned char* pUnescapedBlob = PQunescapeBytea(pBlob, &nUnescapedLength);
+  unsigned char* pUnescapedBlob = m_pInterface->GetPQunescapeBytea()(pBlob, &nUnescapedLength);
 
   wxMemoryBuffer tempBuffer(nUnescapedLength);
   void* pUnescapedBuffer = tempBuffer.GetWriteBuf(nUnescapedLength);
   memcpy(pUnescapedBuffer, pUnescapedBlob, nUnescapedLength);
-  PQfreemem(pUnescapedBlob);
+  m_pInterface->GetPQfreemem()(pUnescapedBlob);
   tempBuffer.UngetWriteBuf(nUnescapedLength);
 
   tempBuffer.SetBufSize(nUnescapedLength);
@@ -216,9 +218,9 @@ double PostgresResultSet::GetResultDouble(int nField)
   }
   else
   {
-    if (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) != 1)
+    if (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) != 1)
     {
-      wxString strValue = ConvertFromUnicodeStream(PQgetvalue(m_pResult, m_nCurrentRow, nField-1));
+      wxString strValue = ConvertFromUnicodeStream(m_pInterface->GetPQgetvalue()(m_pResult, m_nCurrentRow, nField-1));
       strValue.ToDouble(&dblValue);
     }
   }
@@ -228,7 +230,7 @@ double PostgresResultSet::GetResultDouble(int nField)
 
 bool PostgresResultSet::IsFieldNull(int nField)
 {
-  return (PQgetisnull(m_pResult, m_nCurrentRow, nField-1) == 1);
+  return (m_pInterface->GetPQgetisnull()(m_pResult, m_nCurrentRow, nField-1) == 1);
 }
 
 int PostgresResultSet::LookupField(const wxString& strField)
@@ -255,7 +257,7 @@ int PostgresResultSet::LookupField(const wxString& strField)
 
 ResultSetMetaData* PostgresResultSet::GetMetaData()
 {
-  ResultSetMetaData* pMetaData = new PostgresResultSetMetaData(m_pResult);
+  ResultSetMetaData* pMetaData = new PostgresResultSetMetaData(m_pInterface, m_pResult);
   LogMetaDataForCleanup(pMetaData);
   return pMetaData;
 }

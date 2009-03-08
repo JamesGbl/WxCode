@@ -4,26 +4,29 @@
 #include "../include/DatabaseErrorCodes.h"
 
 // ctor
-OdbcPreparedStatement::OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC)
+OdbcPreparedStatement::OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC)
  : PreparedStatement()
 {
+    m_pInterface = pInterface;
     m_sqlEnvHandle = sqlEnvHandle;
     m_sqlHDBC = sqlHDBC;
     m_bOneTimeStatement = false;
 }
 
-OdbcPreparedStatement::OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, SQLHSTMT sqlStatementHandle)
+OdbcPreparedStatement::OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, SQLHSTMT sqlStatementHandle)
  : PreparedStatement()
 {
+    m_pInterface = pInterface;
     m_sqlEnvHandle = sqlEnvHandle;
     m_sqlHDBC = sqlHDBC;
     m_bOneTimeStatement = false;
     m_Statements.push_back(sqlStatementHandle);
 }
 
-OdbcPreparedStatement::OdbcPreparedStatement(SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, StatementVector statements)
+OdbcPreparedStatement::OdbcPreparedStatement(OdbcInterface* pInterface, SQLHENV sqlEnvHandle, SQLHDBC sqlHDBC, StatementVector statements)
  : PreparedStatement()
 {
+    m_pInterface = pInterface;
     m_sqlEnvHandle = sqlEnvHandle;
     m_sqlHDBC = sqlHDBC;
     m_bOneTimeStatement = false;
@@ -47,7 +50,7 @@ void OdbcPreparedStatement::Close()
   {
     if ((*start) != NULL)
     {
-      SQLRETURN nRet = SQLFreeHandle(SQL_HANDLE_STMT, (SQLHSTMT)*start);
+      SQLRETURN nRet = m_pInterface->GetSQLFreeHandle()(SQL_HANDLE_STMT, (SQLHSTMT)*start);
       if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
       {
         InterpretErrorCodes(nRet, (SQLHSTMT)*start);
@@ -151,7 +154,7 @@ int OdbcPreparedStatement::GetParameterCount()
     while (start != stop)
     {
         SQLSMALLINT num = 0;
-        SQLRETURN nRet = SQLNumParams(((SQLHSTMT)(*start)), &num);
+        SQLRETURN nRet = m_pInterface->GetSQLNumParams()(((SQLHSTMT)(*start)), &num);
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
         {
             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
@@ -177,7 +180,7 @@ int OdbcPreparedStatement::RunQuery()
     {
         SQLRETURN nRet = 0;
         // Free any previous statement handles
-        nRet = SQLFreeStmt((SQLHSTMT)(*start), SQL_CLOSE);
+        nRet = m_pInterface->GetSQLFreeStmt()((SQLHSTMT)(*start), SQL_CLOSE);
         if (nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO)
         {
             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
@@ -186,7 +189,7 @@ int OdbcPreparedStatement::RunQuery()
         }
 
         // Execute the current statement
-        nRet = SQLExecute((SQLHSTMT)(*start));
+        nRet = m_pInterface->GetSQLExecute()((SQLHSTMT)(*start));
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO && nRet != SQL_NO_DATA && nRet != SQL_NEED_DATA)
         {
             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
@@ -197,7 +200,7 @@ int OdbcPreparedStatement::RunQuery()
 		    if ( nRet == SQL_NEED_DATA)
         {
             PTR pParmID;
-            nRet = SQLParamData((SQLHSTMT)(*start), &pParmID);
+            nRet = m_pInterface->GetSQLParamData()((SQLHSTMT)(*start), &pParmID);
             while (nRet == SQL_NEED_DATA)
             {
                 // Find the parameter
@@ -207,7 +210,7 @@ int OdbcPreparedStatement::RunQuery()
                     if (pParmID == pParameter->GetDataPtr())
                     {
                         // We found it.  Store the parameter.
-                        nRet = SQLPutData((SQLHSTMT)(*start), pParmID, pParameter->GetDataLength());
+                        nRet = m_pInterface->GetSQLPutData()((SQLHSTMT)(*start), pParmID, pParameter->GetDataLength());
                         if (nRet != SQL_SUCCESS)
                         {
                             InterpretErrorCodes(nRet, (SQLHSTMT)(*start));
@@ -217,7 +220,7 @@ int OdbcPreparedStatement::RunQuery()
                         break;
                      }
                 }
-                 nRet = SQLParamData((SQLHSTMT)(*start), &pParmID);
+                 nRet = m_pInterface->GetSQLParamData()((SQLHSTMT)(*start), &pParmID);
              }
 
              // Check the last return code
@@ -230,7 +233,7 @@ int OdbcPreparedStatement::RunQuery()
          }
 
         // Get the affected record count
-        if (SQL_SUCCESS != SQLRowCount((SQLHSTMT)(*start), &nRows))
+        if (SQL_SUCCESS != m_pInterface->GetSQLRowCount()((SQLHSTMT)(*start), &nRows))
         {
           nRows = DATABASE_LAYER_QUERY_RESULT_ERROR;
         }
@@ -258,7 +261,7 @@ DatabaseResultSet* OdbcPreparedStatement::RunQueryWithResults(bool bLogForCleanu
         for (unsigned int i=0; i<m_Statements.size(); i++)
         {
             SQLRETURN nRet = 0;
-            nRet = SQLFreeStmt(m_Statements[i], SQL_CLOSE);
+            nRet = m_pInterface->GetSQLFreeStmt()(m_Statements[i], SQL_CLOSE);
             if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
             {
                 InterpretErrorCodes(nRet, m_Statements[i]);
@@ -266,7 +269,7 @@ DatabaseResultSet* OdbcPreparedStatement::RunQueryWithResults(bool bLogForCleanu
                 return NULL;
             }
 
-            nRet = SQLExecute(m_Statements[i]);
+            nRet = m_pInterface->GetSQLExecute()(m_Statements[i]);
             if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
             {
                 InterpretErrorCodes(nRet, m_Statements[i]);
@@ -274,7 +277,7 @@ DatabaseResultSet* OdbcPreparedStatement::RunQueryWithResults(bool bLogForCleanu
                 return NULL;
             }
 
-            nRet = SQLNumResultCols(m_Statements[i], &ncol);
+            nRet = m_pInterface->GetSQLNumResultCols()(m_Statements[i], &ncol);
             if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
             {
                 InterpretErrorCodes(nRet, m_Statements[i]);
@@ -285,7 +288,7 @@ DatabaseResultSet* OdbcPreparedStatement::RunQueryWithResults(bool bLogForCleanu
     }
 
     // Work off the assumption that only the last statement will return result
-    DatabaseResultSet* pResultSet = new OdbcResultSet(this, m_bOneTimeStatement, (int)ncol);
+    DatabaseResultSet* pResultSet = new OdbcResultSet(m_pInterface, this, m_bOneTimeStatement, (int)ncol);
     if (bLogForCleanup)
       LogResultSetForCleanup(pResultSet);
     return pResultSet;
@@ -307,7 +310,7 @@ void OdbcPreparedStatement::BindParameters()
       SQLULEN dataSize;
       SQLSMALLINT dataDigits;
       SQLSMALLINT isNullable;
-      SQLRETURN ret = SQLDescribeParam(m_Statements[nIndex], nPosition, &dataType, &dataSize, 
+      SQLRETURN ret = m_pInterface->GetSQLDescribeParam()(m_Statements[nIndex], nPosition, &dataType, &dataSize, 
         &dataDigits, &isNullable);
       if ( ret != SQL_SUCCESS )
       {
@@ -316,7 +319,7 @@ void OdbcPreparedStatement::BindParameters()
         dataDigits = pParameter->GetDecimalDigits();
       }
 
-      SQLRETURN nRet = SQLBindParameter(m_Statements[nIndex], nPosition, SQL_PARAM_INPUT,
+      SQLRETURN nRet = m_pInterface->GetSQLBindParameter()(m_Statements[nIndex], nPosition, SQL_PARAM_INPUT,
         pParameter->GetValueType(), dataType, dataSize, dataDigits, pParameter->GetDataPtr(),
         pParameter->GetDataLength(), pParameter->GetParameterLengthPtr());
 
@@ -342,7 +345,7 @@ int OdbcPreparedStatement::FindStatementAndAdjustPositionIndex(int* pPosition)
     for (unsigned int i=0; i<m_Statements.size(); i++)
     {
         SQLSMALLINT num = 0;
-        SQLRETURN nRet = SQLNumParams(m_Statements[i], &num);
+        SQLRETURN nRet = m_pInterface->GetSQLNumParams()(m_Statements[i], &num);
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
         {
             InterpretErrorCodes(nRet, m_Statements[i]);
@@ -395,10 +398,10 @@ void OdbcPreparedStatement::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr 
     memset(strBuffer, 0, ERR_BUFFER_LEN*sizeof(SQLTCHAR));
 
     if (stmth_ptr)
-      SQLGetDiagRec(SQL_HANDLE_STMT, stmth_ptr, 1, strState, &iNativeCode, 
+      m_pInterface->GetSQLGetDiagRec()(SQL_HANDLE_STMT, stmth_ptr, 1, strState, &iNativeCode, 
         strBuffer, ERR_BUFFER_LEN, &iMsgLen);  
     else
-      SQLGetDiagRec(SQL_HANDLE_DBC, m_sqlHDBC, 1, strState, &iNativeCode,
+      m_pInterface->GetSQLGetDiagRec()(SQL_HANDLE_DBC, m_sqlHDBC, 1, strState, &iNativeCode,
         strBuffer, ERR_BUFFER_LEN, &iMsgLen);  
     
     SetErrorCode((int)iNativeCode);

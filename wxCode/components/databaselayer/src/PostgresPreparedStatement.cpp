@@ -7,14 +7,16 @@
 #include "wx/arrimpl.cpp"
 WX_DEFINE_OBJARRAY(ArrayOfPostgresPreparedStatementWrappers);
 
-PostgresPreparedStatement::PostgresPreparedStatement()
+PostgresPreparedStatement::PostgresPreparedStatement(PostgresInterface* pInterface)
  : PreparedStatement()
 {
+  m_pInterface = pInterface;
 }
 
-PostgresPreparedStatement::PostgresPreparedStatement(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName)
+PostgresPreparedStatement::PostgresPreparedStatement(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName)
  : PreparedStatement()
 {
+  m_pInterface = pInterface;
   AddStatement(pDatabase, strSQL, strStatementName);
 }
 
@@ -33,20 +35,20 @@ void PostgresPreparedStatement::Close()
 
 void PostgresPreparedStatement::AddStatement(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName)
 {
-  PostgresPreparedStatementWrapper Statement(pDatabase, strSQL, strStatementName);
+  PostgresPreparedStatementWrapper Statement(m_pInterface, pDatabase, strSQL, strStatementName);
   Statement.SetEncoding(GetEncoding());
   m_Statements.push_back(Statement);
 }
 
-PostgresPreparedStatement* PostgresPreparedStatement::CreateStatement(PGconn* pDatabase, const wxString& strSQL)
+PostgresPreparedStatement* PostgresPreparedStatement::CreateStatement(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL)
 {
   wxArrayString Queries = ParseQueries(strSQL);
 
   wxArrayString::iterator start = Queries.begin();
   wxArrayString::iterator stop = Queries.end();
 
-  PostgresPreparedStatement* pStatement = new PostgresPreparedStatement();
-  const char* strEncoding = pg_encoding_to_char(PQclientEncoding(pDatabase));
+  PostgresPreparedStatement* pStatement = new PostgresPreparedStatement(pInterface);
+  const char* strEncoding = pInterface->GetPQencodingToChar()(pInterface->GetPQclientEncoding()(pDatabase));
   wxCSConv conv((const wxChar*)strEncoding);
   pStatement->SetEncoding(&conv);
   while (start != stop)
@@ -55,22 +57,23 @@ PostgresPreparedStatement* PostgresPreparedStatement::CreateStatement(PGconn* pD
     pStatement->AddStatement(pDatabase, (*start), strName);
     wxCharBuffer nameBuffer = DatabaseStringConverter::ConvertToUnicodeStream(strName, strEncoding);
     wxCharBuffer sqlBuffer = DatabaseStringConverter::ConvertToUnicodeStream(TranslateSQL((*start)), strEncoding);
-    PGresult* pResult = PQprepare(pDatabase, nameBuffer, sqlBuffer, 0, NULL);
+    PGresult* pResult = pInterface->GetPQprepare()(pDatabase, nameBuffer, sqlBuffer, 0, NULL);
     if (pResult == NULL)
     {
       delete pStatement;
       return NULL;
     }
 
-    if (PQresultStatus(pResult) != PGRES_COMMAND_OK)
+    if (pInterface->GetPQresultStatus()(pResult) != PGRES_COMMAND_OK)
     {
-      pStatement->SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(PQresultStatus(pResult)));
-      pStatement->SetErrorMessage(DatabaseStringConverter::ConvertFromUnicodeStream(PQresultErrorMessage(pResult), strEncoding));
-      PQclear(pResult);
+      pStatement->SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(pInterface->GetPQresultStatus()(pResult)));
+      pStatement->SetErrorMessage(DatabaseStringConverter::ConvertFromUnicodeStream(
+        pInterface->GetPQresultErrorMessage()(pResult), strEncoding));
+      pInterface->GetPQclear()(pResult);
       pStatement->ThrowDatabaseException();
       return pStatement;
     }
-    PQclear(pResult);
+    pInterface->GetPQclear()(pResult);
 
     start++;
   }

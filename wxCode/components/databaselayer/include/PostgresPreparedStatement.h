@@ -18,6 +18,7 @@
 #include "PreparedStatement.h"
 #include "PostgresResultSet.h"
 #include "PostgresPreparedStatementWrapper.h"
+#include "PostgresInterface.h"
 
 WX_DECLARE_OBJARRAY(PostgresPreparedStatementWrapper, ArrayOfPostgresPreparedStatementWrappers);
 
@@ -25,8 +26,8 @@ class PostgresPreparedStatement : public PreparedStatement
 {
 public:
   // ctor
-  PostgresPreparedStatement();
-  PostgresPreparedStatement(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName);
+  PostgresPreparedStatement(PostgresInterface* pInterface);
+  PostgresPreparedStatement(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName);
 
   // dtor
   virtual ~PostgresPreparedStatement();
@@ -34,7 +35,7 @@ public:
   virtual void Close();
 
   void AddStatement(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName);
-  static PostgresPreparedStatement* CreateStatement(PGconn* pDatabase, const wxString& strSQL);
+  static PostgresPreparedStatement* CreateStatement(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL);
   
   // set field
   virtual void SetParamInt(int nPosition, int nValue);
@@ -52,6 +53,7 @@ public:
   static wxString TranslateSQL(const wxString& strOriginalSQL);
 
 private:
+  PostgresInterface* m_pInterface;
   int FindStatementAndAdjustPositionIndex(int* pPosition);
   static wxString GenerateRandomStatementName();
 

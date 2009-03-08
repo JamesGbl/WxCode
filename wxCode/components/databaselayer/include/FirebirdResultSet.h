@@ -15,13 +15,14 @@
 #include "ibase.h"
 
 #include "DatabaseResultSet.h"
+#include "FirebirdInterface.h"
 
 class FirebirdResultSet : public DatabaseResultSet
 {
 public:
   // ctor
-  FirebirdResultSet();
-  FirebirdResultSet(isc_db_handle pDatabase, isc_tr_handle pTransaction, isc_stmt_handle pStatement, XSQLDA* pFields,
+  FirebirdResultSet(FirebirdInterface* pInterface);
+  FirebirdResultSet(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, isc_stmt_handle pStatement, XSQLDA* pFields,
       bool bManageStmt = false, bool bManageTrans = false);
 
   // dtor
@@ -65,6 +66,7 @@ private:
   XSQLDA* m_pFields;
 
   ISC_STATUS_ARRAY m_Status;
+  FirebirdInterface* m_pInterface;
 
   bool m_bManageStatement;
   bool m_bManageTransaction;

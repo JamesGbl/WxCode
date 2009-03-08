@@ -13,6 +13,7 @@
 #endif
 
 #include "ResultSetMetaData.h"
+#include "PostgresInterface.h"
 
 #include "libpq-fe.h"
 
@@ -20,7 +21,7 @@ class PostgresResultSetMetaData : public ResultSetMetaData
 {
 public:
   // ctor
-  PostgresResultSetMetaData(PGresult* pResult);
+  PostgresResultSetMetaData(PostgresInterface* pInterface, PGresult* pResult);
 
   // dtor
   virtual ~PostgresResultSetMetaData() { }
@@ -31,6 +32,7 @@ public:
   virtual int GetColumnCount();
   
 private:
+  PostgresInterface* m_pInterface;
   PGresult* m_pResult;
 };
 

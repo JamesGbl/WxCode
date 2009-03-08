@@ -10,6 +10,7 @@
 MysqlDatabaseLayer::MysqlDatabaseLayer()
  : DatabaseLayer()
 {
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   if (!m_Interface.Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
@@ -17,6 +18,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer()
     ThrowDatabaseException();
     return;
   }
+#endif
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -28,6 +30,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer()
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase)
  : DatabaseLayer()
 {
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   if (!m_Interface.Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
@@ -35,6 +38,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase)
     ThrowDatabaseException();
     return;
   }
+#endif
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -46,6 +50,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase)
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase)
  : DatabaseLayer()
 {
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   if (!m_Interface.Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
@@ -53,6 +58,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString
     ThrowDatabaseException();
     return;
   }
+#endif
   InitDatabase();
   ParseServerAndPort(strServer);
   m_strUser = _("");
@@ -63,6 +69,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase, const wxString& strUser, const wxString& strPassword)
  : DatabaseLayer()
 {
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   if (!m_Interface.Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
@@ -70,6 +77,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase, const wxStri
     ThrowDatabaseException();
     return;
   }
+#endif
   InitDatabase();
   m_strServer = _("localhost");
   m_iPort = 3306; // default
@@ -81,6 +89,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strDatabase, const wxStri
 MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase, const wxString& strUser, const wxString& strPassword)
  : DatabaseLayer()
 {
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
   if (!m_Interface.Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
@@ -88,6 +97,7 @@ MysqlDatabaseLayer::MysqlDatabaseLayer(const wxString& strServer, const wxString
     ThrowDatabaseException();
     return;
   }
+#endif
   InitDatabase();
   ParseServerAndPort(strServer);
   m_strUser = strUser;
@@ -729,5 +739,14 @@ int MysqlDatabaseLayer::TranslateErrorCode(int nCode)
   // For now though, we'll just return error
   return nCode;
   //return DATABASE_LAYER_ERROR;
+}
+
+bool MysqlDatabaseLayer::IsAvailable()
+{
+  bool bAvailable = false;
+  MysqlInterface* pInterface = new MysqlInterface();
+  bAvailable = pInterface && pInterface->Init();
+  wxDELETE(pInterface);
+  return bAvailable;
 }
 

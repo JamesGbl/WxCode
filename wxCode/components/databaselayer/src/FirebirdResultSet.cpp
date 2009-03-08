@@ -4,9 +4,10 @@
 #include "../include/DatabaseErrorCodes.h"
 #include "../include/DatabaseLayerException.h"
 
-FirebirdResultSet::FirebirdResultSet()
+FirebirdResultSet::FirebirdResultSet(FirebirdInterface* pInterface)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pDatabase = NULL;
   m_pTransaction = NULL;
   m_pStatement = NULL;
@@ -16,9 +17,10 @@ FirebirdResultSet::FirebirdResultSet()
 }
 
 //FirebirdResultSet::FirebirdResultSet(const IBPP::Statement& statement)
-FirebirdResultSet::FirebirdResultSet(isc_db_handle pDatabase, isc_tr_handle pTransaction, isc_stmt_handle pStatement, XSQLDA* pFields, bool bManageStmt /*= false*/, bool bManageTrans /*= false*/)
+FirebirdResultSet::FirebirdResultSet(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, isc_stmt_handle pStatement, XSQLDA* pFields, bool bManageStmt /*= false*/, bool bManageTrans /*= false*/)
  : DatabaseResultSet()
 {
+  m_pInterface = pInterface;
   m_pDatabase = pDatabase;
   m_pTransaction = pTransaction;
   m_pStatement = pStatement;
@@ -39,7 +41,7 @@ bool FirebirdResultSet::Next()
 {
   ResetErrorCodes();
   
-  int nReturn = isc_dsql_fetch(m_Status, &m_pStatement, 1, m_pFields);
+  int nReturn = m_pInterface->GetIscDsqlFetch()(m_Status, &m_pStatement, 1, m_pFields);
   if (nReturn == 0) // No errors and retrieval successful
   {
     return true;
@@ -63,7 +65,7 @@ void FirebirdResultSet::Close()
 
   if (m_bManageTransaction && m_pTransaction)
   {
-    int nReturn = isc_commit_transaction(m_Status, &m_pTransaction);
+    int nReturn = m_pInterface->GetIscCommitTransaction()(m_Status, &m_pTransaction);
     // We're done with the transaction, so set it to NULL so that we know that a new transaction must be started if we run any queries
     m_pTransaction = NULL;
     if (nReturn != 0)
@@ -76,7 +78,7 @@ void FirebirdResultSet::Close()
   // Delete the statement if we have ownership of it
   if (m_bManageStatement && m_pStatement)
   {
-    int nReturn = isc_dsql_free_statement(m_Status, &m_pStatement, DSQL_drop);
+    int nReturn = m_pInterface->GetIscDsqlFreeStatement()(m_Status, &m_pStatement, DSQL_drop);
     m_pStatement = NULL;
     if (nReturn != 0)
     {
@@ -228,19 +230,19 @@ wxDateTime FirebirdResultSet::GetResultDate(int nField)
     if (nType == SQL_TIMESTAMP)
     {
       struct tm timeInTm;
-		  isc_decode_timestamp((ISC_TIMESTAMP *)pVar->sqldata, &timeInTm);
+		  m_pInterface->GetIscDecodeTimestamp()((ISC_TIMESTAMP *)pVar->sqldata, &timeInTm);
       SetDateTimeFromTm(dateReturn, timeInTm);
     }
     else if (nType == SQL_TYPE_DATE)
     {
       struct tm timeInTm;
-		  isc_decode_sql_date((ISC_DATE *)pVar->sqldata, &timeInTm);
+		  m_pInterface->GetIscDecodeSqlDate()((ISC_DATE *)pVar->sqldata, &timeInTm);
       SetDateTimeFromTm(dateReturn, timeInTm);
     }
     else if (nType == SQL_TYPE_TIME)
     {
       struct tm timeInTm;
-		  isc_decode_sql_time((ISC_TIME *)pVar->sqldata, &timeInTm);
+		  m_pInterface->GetIscDecodeSqlTime()((ISC_TIME *)pVar->sqldata, &timeInTm);
       SetDateTimeFromTm(dateReturn, timeInTm);
     }
     else
@@ -338,18 +340,18 @@ void* FirebirdResultSet::GetResultBlob(int nField, wxMemoryBuffer& Buffer)
       isc_blob_handle pBlob = NULL;
       char szSegment[128];
       unsigned short nSegmentLength;
-      isc_open_blob2(m_Status, &m_pDatabase, &m_pTransaction, &pBlob, &blobId, 0, NULL);
+      m_pInterface->GetIscOpenBlob2()(m_Status, &m_pDatabase, &m_pTransaction, &pBlob, &blobId, 0, NULL);
 
-      ISC_STATUS blobStatus = isc_get_segment(m_Status, &pBlob, &nSegmentLength, sizeof(szSegment), szSegment);
+      ISC_STATUS blobStatus = m_pInterface->GetIscGetSegment()(m_Status, &pBlob, &nSegmentLength, sizeof(szSegment), szSegment);
       wxMemoryBuffer tempBuffer(nSegmentLength);
       size_t bufferSize = 0;
       while (blobStatus == 0 || m_Status[1] == isc_segment)
       {
         tempBuffer.AppendData(szSegment, nSegmentLength);
         bufferSize += nSegmentLength;
-        blobStatus = isc_get_segment(m_Status, &pBlob, &nSegmentLength, sizeof(szSegment), szSegment);
+        blobStatus = m_pInterface->GetIscGetSegment()(m_Status, &pBlob, &nSegmentLength, sizeof(szSegment), szSegment);
       }
-      isc_close_blob(m_Status, &pBlob);
+      m_pInterface->GetIscCloseBlob()(m_Status, &pBlob);
 
       // Some memory buffer juggling to make sure there's no extra space allocated
       tempBuffer.SetDataLen(bufferSize);
@@ -556,9 +558,9 @@ void FirebirdResultSet::InterpretErrorCodes()
 {
   wxLogError(_("FirebirdResultSet::InterpretErrorCodes()\n"));
 
-  long nSqlCode = isc_sqlcode(m_Status);
+  long nSqlCode = m_pInterface->GetIscSqlcode()(m_Status);
   SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode));
-  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, m_Status));
+  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, m_Status));
 }
 
 ResultSetMetaData* FirebirdResultSet::GetMetaData()

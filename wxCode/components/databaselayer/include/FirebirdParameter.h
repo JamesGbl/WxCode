@@ -15,19 +15,21 @@
 #include "wx/datetime.h"
 
 #include "DatabaseStringConverter.h"
+#include "FirebirdInterface.h"
+
 #include "ibase.h"
 
 class FirebirdParameter : public DatabaseStringConverter
 {
 public:
   // ctor
-  FirebirdParameter(XSQLVAR* pVar);
-  FirebirdParameter(XSQLVAR* pVar, const wxString& strValue, const wxCSConv* conv);
-  FirebirdParameter(XSQLVAR* pVar, int nValue);
-  FirebirdParameter(XSQLVAR* pVar, double dblValue);
-  FirebirdParameter(XSQLVAR* pVar, bool bValue);
-  FirebirdParameter(XSQLVAR* pVar, const wxDateTime& dateValue);
-  FirebirdParameter(XSQLVAR* pVar, isc_db_handle pDatabase, isc_tr_handle pTransaction, const void* pData, long nDataLength);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, const wxString& strValue, const wxCSConv* conv);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, int nValue);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, double dblValue);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, bool bValue);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, const wxDateTime& dateValue);
+  FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVar, isc_db_handle pDatabase, isc_tr_handle pTransaction, const void* pData, long nDataLength);
 
   // dtor
   virtual ~FirebirdParameter();
@@ -72,6 +74,7 @@ private:
   isc_tr_handle m_pTransaction;
   
   XSQLVAR* m_pParameter;
+  FirebirdInterface* m_pInterface;
 };
 
 #endif // __FIREBIRD_PARAMETER_H__

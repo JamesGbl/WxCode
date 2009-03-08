@@ -4,9 +4,10 @@
 #include "../include/DatabaseLayerException.h"
 #include "../include/FirebirdResultSet.h"
 
-FirebirdPreparedStatementWrapper::FirebirdPreparedStatementWrapper(isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL)
+FirebirdPreparedStatementWrapper::FirebirdPreparedStatementWrapper(FirebirdInterface* pInterface, isc_db_handle pDatabase, isc_tr_handle pTransaction, const wxString& strSQL)
  : DatabaseErrorReporter()
 {
+  m_pInterface = pInterface;
   m_pDatabase = pDatabase;
   m_pTransaction = pTransaction;
   m_strSQL = strSQL;
@@ -36,7 +37,7 @@ FirebirdPreparedStatementWrapper::~FirebirdPreparedStatementWrapper()
 
   if (m_pStatement && m_bManageStatement)
   {
-    int nReturn = isc_dsql_free_statement(m_Status, &m_pStatement, DSQL_drop);
+    int nReturn = m_pInterface->GetIscDsqlFreeStatement()(m_Status, &m_pStatement, DSQL_drop);
     if (nReturn != 0)
     {
       wxLogError(_("Error calling isc_dsql_free_statement"));
@@ -56,7 +57,7 @@ void FirebirdPreparedStatementWrapper::Prepare()
 {
   ResetErrorCodes();
 
-  int nReturn = isc_dsql_allocate_statement(m_Status, &m_pDatabase, &m_pStatement);
+  int nReturn = m_pInterface->GetIscDsqlAllocateStatement()(m_Status, &m_pDatabase, &m_pStatement);
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -74,7 +75,7 @@ void FirebirdPreparedStatementWrapper::Prepare()
   m_pParameters->sqln = 1;
 
   wxCharBuffer sqlBuffer = ConvertToUnicodeStream(m_strSQL);
-  nReturn = isc_dsql_prepare(m_Status, &m_pTransaction, &m_pStatement, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, m_pParameters);
+  nReturn = m_pInterface->GetIscDsqlPrepare()(m_Status, &m_pTransaction, &m_pStatement, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, m_pParameters);
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -82,7 +83,7 @@ void FirebirdPreparedStatementWrapper::Prepare()
     return;
   }
 
-  nReturn = isc_dsql_describe_bind(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
+  nReturn = m_pInterface->GetIscDsqlDescribeBind()(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -97,7 +98,7 @@ void FirebirdPreparedStatementWrapper::Prepare()
     m_pParameters = (XSQLDA*)malloc(XSQLDA_LENGTH(nParameters));
     m_pParameters->version = SQLDA_VERSION1;
     m_pParameters->sqln = nParameters;
-    nReturn = isc_dsql_describe_bind(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
+    nReturn = m_pInterface->GetIscDsqlDescribeBind()(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
     if (nReturn != 0)
     {
       InterpretErrorCodes();
@@ -105,7 +106,7 @@ void FirebirdPreparedStatementWrapper::Prepare()
       return;
     }
   }
-  m_pParameterCollection = new FirebirdParameterCollection(m_pParameters);
+  m_pParameterCollection = new FirebirdParameterCollection(m_pInterface, m_pParameters);
   m_pParameterCollection->SetEncoding(GetEncoding());
 }
 
@@ -160,7 +161,7 @@ int FirebirdPreparedStatementWrapper::RunQuery()
   // Blob ID values are invalidated between execute calls, so re-create any BLOB parameters now
   m_pParameterCollection->ResetBlobParameters();
   
-  int nReturn = isc_dsql_execute(m_Status, &m_pTransaction, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
+  int nReturn = m_pInterface->GetIscDsqlExecute()(m_Status, &m_pTransaction, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -172,7 +173,7 @@ int FirebirdPreparedStatementWrapper::RunQuery()
   static char requestedInfoTypes[] = { isc_info_sql_records, isc_info_end };
   char resultBuffer[1024];
   memset(resultBuffer, 0, sizeof(resultBuffer));
-  nReturn = isc_dsql_sql_info(m_Status, &m_pStatement, sizeof(requestedInfoTypes), requestedInfoTypes, sizeof(resultBuffer), resultBuffer);
+  nReturn = m_pInterface->GetIscDsqlSqlInfo()(m_Status, &m_pStatement, sizeof(requestedInfoTypes), requestedInfoTypes, sizeof(resultBuffer), resultBuffer);
   if (nReturn == 0)
   {
     char* pBufferPosition = resultBuffer + 3;
@@ -180,9 +181,9 @@ int FirebirdPreparedStatementWrapper::RunQuery()
     {
       char infoType = *pBufferPosition;
       pBufferPosition++;
-      short nLength = isc_vax_integer (pBufferPosition, 2);
+      short nLength = m_pInterface->GetIscVaxInteger()(pBufferPosition, 2);
       pBufferPosition += 2;
-      long infoData = isc_vax_integer (pBufferPosition, nLength);
+      long infoData = m_pInterface->GetIscVaxInteger()(pBufferPosition, nLength);
       pBufferPosition += nLength;
 
       if( infoType == isc_info_req_insert_count || 
@@ -205,7 +206,7 @@ DatabaseResultSet* FirebirdPreparedStatementWrapper::RunQueryWithResults()
   pOutputSqlda->version = SQLDA_VERSION1;
 
   // Make sure that we have enough space allocated for the result set
-  int nReturn = isc_dsql_describe(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
+  int nReturn = m_pInterface->GetIscDsqlDescribe()(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
   if (nReturn != 0)
   {
     free(pOutputSqlda);
@@ -220,7 +221,7 @@ DatabaseResultSet* FirebirdPreparedStatementWrapper::RunQueryWithResults()
     pOutputSqlda = (XSQLDA*)malloc(XSQLDA_LENGTH(nColumns));
     pOutputSqlda->sqln = nColumns;
     pOutputSqlda->version = SQLDA_VERSION1;
-    nReturn = isc_dsql_describe(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
+    nReturn = m_pInterface->GetIscDsqlDescribe()(m_Status, &m_pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
     if (nReturn != 0)
     {
       free(pOutputSqlda);
@@ -240,7 +241,7 @@ DatabaseResultSet* FirebirdPreparedStatementWrapper::RunQueryWithResults()
   }*/
 
   // Create the result set object
-  FirebirdResultSet* pResultSet = new FirebirdResultSet(m_pDatabase, m_pTransaction, m_pStatement, pOutputSqlda);
+  FirebirdResultSet* pResultSet = new FirebirdResultSet(m_pInterface, m_pDatabase, m_pTransaction, m_pStatement, pOutputSqlda);
   if (pResultSet)
     pResultSet->SetEncoding(GetEncoding());
   if (pResultSet->GetErrorCode() != DATABASE_LAYER_OK)
@@ -271,7 +272,7 @@ DatabaseResultSet* FirebirdPreparedStatementWrapper::RunQueryWithResults()
   
   // Now execute the SQL
   //nReturn = isc_dsql_execute2(m_Status, &m_pTransaction, &m_pStatement, 1, m_pParameters, pOutputSqlda);
-  nReturn = isc_dsql_execute(m_Status, &m_pTransaction, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
+  nReturn = m_pInterface->GetIscDsqlExecute()(m_Status, &m_pTransaction, &m_pStatement, SQL_DIALECT_CURRENT, m_pParameters);
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -312,8 +313,8 @@ void FirebirdPreparedStatementWrapper::InterpretErrorCodes()
 {
   wxLogError(_("FirebirdPreparesStatementWrapper::InterpretErrorCodes()\n"));
 
-  long nSqlCode = isc_sqlcode(m_Status);
+  long nSqlCode = m_pInterface->GetIscSqlcode()(m_Status);
   SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode));
-  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(nSqlCode, m_Status));
+  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, m_Status));
 }
 

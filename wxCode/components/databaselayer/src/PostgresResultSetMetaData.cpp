@@ -8,14 +8,15 @@
     PreparedStatement paramters, we are using a 1-based system here.)
  */
 
-PostgresResultSetMetaData::PostgresResultSetMetaData(PGresult* pResult)
+PostgresResultSetMetaData::PostgresResultSetMetaData(PostgresInterface* pInterface, PGresult* pResult)
 {
+  m_pInterface = pInterface;
   m_pResult = pResult;
 }
 
 int PostgresResultSetMetaData::GetColumnType(int i)
 {
-  int columnType = PQftype(m_pResult, i-1);
+  int columnType = m_pInterface->GetPQftype()(m_pResult, i-1);
   int returnType = COLUMN_UNKNOWN;
   switch (columnType)
   {
@@ -55,18 +56,18 @@ int PostgresResultSetMetaData::GetColumnType(int i)
 
 int PostgresResultSetMetaData::GetColumnSize(int i)
 {
-  return PQfsize(m_pResult, i-1);
+  return m_pInterface->GetPQfsize()(m_pResult, i-1);
 }
 
 wxString PostgresResultSetMetaData::GetColumnName(int i)
 {
-  wxString columnName = ConvertFromUnicodeStream(PQfname(m_pResult, i-1));
+  wxString columnName = ConvertFromUnicodeStream(m_pInterface->GetPQfname()(m_pResult, i-1));
   return columnName;
 }
 
 int PostgresResultSetMetaData::GetColumnCount()
 {
-  return PQnfields(m_pResult);
+  return m_pInterface->GetPQnfields()(m_pResult);
 }
 
 

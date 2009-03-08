@@ -13,14 +13,16 @@
 #endif
 
 #include "DatabaseResultSet.h"
+#include "PostgresInterface.h"
+
 #include "libpq-fe.h"
 
 class PostgresResultSet : public DatabaseResultSet
 {
 public:
   // ctor
-  PostgresResultSet();
-  PostgresResultSet(PGresult* pResult);
+  PostgresResultSet(PostgresInterface* pInterface);
+  PostgresResultSet(PostgresInterface* pInterface, PGresult* pResult);
 
   // dtor
   virtual ~PostgresResultSet();
@@ -44,7 +46,7 @@ public:
   virtual ResultSetMetaData* GetMetaData();
 
 private:
-  
+  PostgresInterface* m_pInterface; 
   PGresult* m_pResult;
 
   StringToIntMap m_FieldLookupMap;

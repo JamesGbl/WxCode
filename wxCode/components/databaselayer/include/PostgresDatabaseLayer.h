@@ -14,6 +14,9 @@
 
 #include "DatabaseLayer.h"
 #include "PreparedStatement.h"
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
+#include "PostgresInterface.h"
+#endif
 
 #include "libpq-fe.h"
 
@@ -74,8 +77,12 @@ public:
   void SetPort(int nPort);
 
   static int TranslateErrorCode(int nCode);
+  static bool IsAvailable();
 
 private:
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
+  PostgresInterface m_Interface;
+#endif
   wxString m_strServer;
   wxString m_strDatabase;
   wxString m_strUser;

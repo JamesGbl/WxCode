@@ -12,11 +12,12 @@
     #include "wx/wx.h"
 #endif
 
-#include "libpq-fe.h"
-
 #include "PostgresPreparedStatementParameterCollection.h"
+#include "PostgresInterface.h"
 #include "DatabaseErrorReporter.h"
 #include "DatabaseStringConverter.h"
+
+#include "libpq-fe.h"
 
 class DatabaseResultSet;
 
@@ -24,7 +25,7 @@ class PostgresPreparedStatementWrapper : public DatabaseErrorReporter, public Da
 {
 public:
   // ctor
-  PostgresPreparedStatementWrapper(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName);
+  PostgresPreparedStatementWrapper(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName);
 
   // dtor
   virtual ~PostgresPreparedStatementWrapper();
@@ -43,6 +44,7 @@ public:
   DatabaseResultSet* RunQueryWithResults();
 
 private:
+  PostgresInterface* m_pInterface;
   PGconn* m_pDatabase;
   wxString m_strSQL;
   wxString m_strStatementName;

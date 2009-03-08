@@ -16,6 +16,8 @@
 
 #include "DatabaseStringConverter.h"
 #include "FirebirdParameter.h"
+#include "FirebirdInterface.h"
+
 #include "ibase.h"
 
 WX_DEFINE_ARRAY_PTR(FirebirdParameter*, FirebirdParameterArray);
@@ -24,7 +26,7 @@ class FirebirdParameterCollection : public DatabaseStringConverter
 {
 public:
   // ctor
-  FirebirdParameterCollection(XSQLDA* pParameters);
+  FirebirdParameterCollection(FirebirdInterface* pInterface, XSQLDA* pParameters);
 
   // dtor
   virtual ~FirebirdParameterCollection();
@@ -46,6 +48,7 @@ public:
 private:
   FirebirdParameterArray m_Parameters;
   XSQLDA* m_FirebirdParameters;
+  FirebirdInterface* m_pInterface;
 };
 
 #endif // __FIREBIRD_PARAMETER_COLLECTION_H__

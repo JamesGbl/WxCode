@@ -108,7 +108,6 @@
 
   <dll id="databaselayer_firebird_dll" template="wxcode-dll,firebird_template" cond="WX_SHARED=='1'">
     <wxlike-dllname prefix="wxcode">databaselayer_firebird</wxlike-dllname>
-    <sys-lib>fbclient</sys-lib>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>base</wx-lib>
@@ -153,7 +152,6 @@
 
   <dll id="databaselayer_postgresql_dll" template="wxcode-dll,postgresql_template" cond="WX_SHARED=='1'">
     <wxlike-dllname prefix="wxcode">databaselayer_postgresql</wxlike-dllname>
-    <sys-lib>pq</sys-lib>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>base</wx-lib>
@@ -204,7 +202,6 @@
 
   <dll id="databaselayer_odbc_dll" template="wxcode-dll,odbc_template" cond="WX_SHARED=='1'">
     <wxlike-dllname prefix="wxcode">databaselayer_odbc</wxlike-dllname>
-    <sys-lib>odbc32</sys-lib>
 
     <!-- remove the libraries which are not required by your project -->
     <wx-lib>base</wx-lib>
@@ -277,7 +274,6 @@
     <library>databaselayer_firebird_lib</library>
     <define>USE_FIREBIRD</define>
     <stdlib>$(FIREBIRD_LIB_LOCATION)</stdlib>
-    <sys-lib>fbclient</sys-lib>
 	</wxcode-sample>
 
 	<!-- The sample of the component: as for the LIB target, this exe derives from a 
@@ -288,7 +284,6 @@
     <define>USE_FIREBIRD</define>
     <define>USE_FIREBIRD_EMBEDDED</define>
     <stdlib>$(FIREBIRD_LIB_LOCATION)</stdlib>
-    <sys-lib>fbclient</sys-lib>
 	</wxcode-sample>
 
 <!-- MySQL -->
@@ -318,17 +313,6 @@
     </if>
 
     <stdlib>$(POSTGRESQL_LIB_LOCATION)</stdlib>
-    <if cond="TARGETING_WIN32!='1'">
-      <stdlib>`pg_config --libdir`</stdlib>
-    </if>
-
-    <if cond="TARGETING_WIN32=='1'">
-      <sys-lib>libpq</sys-lib>
-    </if>
-
-    <if cond="TARGETING_WIN32!='1'">
-      <sys-lib>pq</sys-lib>
-    </if>
 	</wxcode-sample>
 
 <!-- Oracle -->
@@ -364,12 +348,6 @@
       <define>WIN32COMMON</define>
     </if>
     <define>USE_ODBC</define>
-    <if cond="TARGETING_WIN32=='1'">
-      <sys-lib>odbc32</sys-lib>
-    </if>
-    <if cond="TARGETING_WIN32!='1'">
-      <sys-lib>odbc</sys-lib>
-    </if>
 	</wxcode-sample>
 
 <!-- TDS -->

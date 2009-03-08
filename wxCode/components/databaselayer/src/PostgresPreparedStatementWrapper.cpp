@@ -3,9 +3,10 @@
 #include "../include/PostgresDatabaseLayer.h"
 #include "../include/DatabaseErrorCodes.h"
 
-PostgresPreparedStatementWrapper::PostgresPreparedStatementWrapper(PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName)
+PostgresPreparedStatementWrapper::PostgresPreparedStatementWrapper(PostgresInterface* pInterface, PGconn* pDatabase, const wxString& strSQL, const wxString& strStatementName)
  : DatabaseErrorReporter()
 {
+  m_pInterface = pInterface;
   m_pDatabase = pDatabase;
   m_strSQL = strSQL;
   m_strStatementName = strStatementName;
@@ -65,22 +66,22 @@ int PostgresPreparedStatementWrapper::RunQuery()
   int* paramFormats = m_Parameters.GetParamFormats();
   int nResultFormat = 0; // 0 = text, 1 = binary (all or none on the result set, not column based)
   wxCharBuffer statementNameBuffer = ConvertToUnicodeStream(m_strStatementName);
-  PGresult* pResult = PQexecPrepared(m_pDatabase, statementNameBuffer, nParameters, paramValues, paramLengths, paramFormats, nResultFormat);
+  PGresult* pResult = m_pInterface->GetPQexecPrepared()(m_pDatabase, statementNameBuffer, nParameters, paramValues, paramLengths, paramFormats, nResultFormat);
   if (pResult != NULL)
   {
-    ExecStatusType status = PQresultStatus(pResult);
+    ExecStatusType status = m_pInterface->GetPQresultStatus()(pResult);
     if ((status != PGRES_COMMAND_OK) && (status != PGRES_TUPLES_OK))
     {
       SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(status));
-      SetErrorMessage(ConvertFromUnicodeStream(PQresultErrorMessage(pResult)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetPQresultErrorMessage()(pResult)));
     }
 
     if (GetErrorCode() == DATABASE_LAYER_OK)
     {
-      wxString rowsAffected = ConvertFromUnicodeStream(PQcmdTuples(pResult));
+      wxString rowsAffected = ConvertFromUnicodeStream(m_pInterface->GetPQcmdTuples()(pResult));
       rowsAffected.ToLong(&nRows);
     }
-    PQclear(pResult);
+    m_pInterface->GetPQclear()(pResult);
   }
   delete []paramValues;
   delete []paramLengths;
@@ -103,14 +104,14 @@ DatabaseResultSet* PostgresPreparedStatementWrapper::RunQueryWithResults()
   int* paramFormats = m_Parameters.GetParamFormats();
   int nResultFormat = 0; // 0 = text, 1 = binary (all or none on the result set, not column based)
   wxCharBuffer statementNameBuffer = ConvertToUnicodeStream(m_strStatementName);
-  PGresult* pResult = PQexecPrepared(m_pDatabase, statementNameBuffer, nParameters, paramValues, paramLengths, paramFormats, nResultFormat);
+  PGresult* pResult = m_pInterface->GetPQexecPrepared()(m_pDatabase, statementNameBuffer, nParameters, paramValues, paramLengths, paramFormats, nResultFormat);
   if (pResult != NULL)
   {
-    ExecStatusType status = PQresultStatus(pResult);
+    ExecStatusType status = m_pInterface->GetPQresultStatus()(pResult);
     if ((status != PGRES_COMMAND_OK) && (status != PGRES_TUPLES_OK))
     {
       SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(status));
-      SetErrorMessage(ConvertFromUnicodeStream(PQresultErrorMessage(pResult)));
+      SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetPQresultErrorMessage()(pResult)));
     }
     else
     {
@@ -118,11 +119,11 @@ DatabaseResultSet* PostgresPreparedStatementWrapper::RunQueryWithResults()
       delete []paramLengths;
       delete []paramFormats;
 
-      PostgresResultSet* pResultSet = new PostgresResultSet(pResult);
+      PostgresResultSet* pResultSet = new PostgresResultSet(m_pInterface, pResult);
       pResultSet->SetEncoding(GetEncoding());
       return pResultSet;
     }
-    PQclear(pResult);
+    m_pInterface->GetPQclear()(pResult);
   }
   delete []paramValues;
   delete []paramLengths;
