@@ -1,36 +1,36 @@
 
 /*
  * lex.cpp
- * 
+ *
  * this file is licensed under the wxWindows licence
  * just a quick reminder of what that means:
- * 
+ *
  * This software is released under the GNU GPL licence
  * with a few exceptins applied, check the wxWindows licence
  * to see what those are
- * 
+ *
  * visit: http://opensource.org/ to see both
  * the GNU GPL and wxWindows licences.
- * 
+ *
  * this software has absolutely no warranty, express or implied
- * 
+ *
  * just so you know, i don't care if you change the code
  * don't email me if you did someting to it.
- * 
+ *
  * no need to mark changes, you obviously may want to change the color
  * settings, it would only be a real pain if you had to mark them.
- * 
+ *
  * if you edit a function to change its behavior, it would be courtious
  * to others to let them know that the file is not an official release,
  * but you don't have to do that either.
- * 
+ *
  * you must not misrepresent the origins of this software, if you distribute
- * it, let the user know where to get it and that you where not the original 
+ * it, let the user know where to get it and that you where not the original
  * creator. (except for any code you add obviously)
  *
  * this notice may not be changed in any way and must remain at the top of every
  * source file.
- * 
+ *
  * XSTC was developed by Nuklear Zelph
  * copyright (C) 2006
  */
@@ -59,49 +59,51 @@ void XSTC::LexABAQUS()
    this->StyleSetSpec(XSTC_DEF(ABAQUS_FUNCTION), XS_instruction);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/ABAQUS/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/COMMENTBLOCK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_COMMENTBLOCK),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/WORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_WORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/PROCESSOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_PROCESSOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/COMMAND"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_COMMAND),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/SLASHCOMMAND"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_SLASHCOMMAND),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/STARCOMMAND"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_STARCOMMAND),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/ARGUMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_ARGUMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ABAQUS/FUNCTION"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ABAQUS_FUNCTION),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ABAQUS
 
@@ -123,6 +125,7 @@ void XSTC::LexADA()
    this->StyleSetSpec(XSTC_DEF(ADA_ILLEGAL), XS_bad);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -163,6 +166,7 @@ void XSTC::LexADA()
     if(colorconf->Read(wxT("XSTColor/ADA/ILLEGAL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ADA_ILLEGAL),                colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ADA
 
@@ -183,6 +187,7 @@ void XSTC::LexAPDL()
 	this->StyleSetSpec(XSTC_DEF(APDL_FUNCTION), XS_lang);
 	this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -226,6 +231,7 @@ void XSTC::LexAPDL()
     if(colorconf->Read(wxT("XSTColor/APDL/FUNCTION"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(APDL_FUNCTION),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_APDL
 
@@ -249,6 +255,7 @@ void XSTC::LexASM()
 	this->StyleSetSpec(XSTC_DEF(ASM_EXTINSTRUCTION), XS_instruction);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -298,6 +305,7 @@ void XSTC::LexASM()
     if(colorconf->Read(wxT("XSTColor/ASM/EXTINSTRUCTION"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASM_EXTINSTRUCTION),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ASM
 
@@ -316,6 +324,8 @@ void XSTC::LexASN1()
 	this->StyleSetSpec(XSTC_DEF(ASN1_TYPE), XS_lang);
 	this->StyleSetSpec(XSTC_DEF(ASN1_OPERATOR), XS_symbol);
     this->SetStyleBits(GetStyleBitsNeeded());
+
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -353,6 +363,7 @@ void XSTC::LexASN1()
     if(colorconf->Read(wxT("XSTColor/ASN1/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASN1_OPERATOR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ASN1
 
@@ -373,46 +384,48 @@ void XSTC::LexASYMPTOTE()
    this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_WORD2), XS_key2);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/COMMENTLINE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_COMMENTLINE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/WORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_WORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/CHARACTER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_CHARACTER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_STRINGEOL),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/COMMENTLINEDOC"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_COMMENTLINEDOC),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/ASYMPTOTE/WORD2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ASYMPTOTE_WORD2),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ASYMPTOTE
 
@@ -439,6 +452,7 @@ void XSTC::LexAU3()
 #endif
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -493,6 +507,7 @@ void XSTC::LexAU3()
           this->StyleSetSpec(XSTC_DEF(AU3_UDF),            colorval);
 #endif
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_AU3
 
@@ -516,6 +531,7 @@ void XSTC::LexAVE()
 	this->StyleSetSpec(XSTC_DEF(AVE_WORD6), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -565,6 +581,7 @@ void XSTC::LexAVE()
     if(colorconf->Read(wxT("XSTColor/AVE/WORD6"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(AVE_WORD6),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_AVE
 
@@ -584,6 +601,7 @@ void XSTC::LexBAAN()
 	this->StyleSetSpec(XSTC_DEF(BAAN_WORD2), XS_key2);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -621,6 +639,7 @@ void XSTC::LexBAAN()
     if(colorconf->Read(wxT("XSTColor/BAAN/WORD2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(BAAN_WORD2),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_BAAN
 
@@ -648,6 +667,7 @@ void XSTC::LexBLBASIC()
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -709,6 +729,7 @@ void XSTC::LexBLBASIC()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_BLITZBASIC
 
@@ -735,6 +756,8 @@ void XSTC::LexFRBASIC()
 	this->StyleSetSpec(XSTC_DEF(B_HEXNUMBER), XS_number);
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
+
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -796,6 +819,7 @@ void XSTC::LexFRBASIC()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_FREEBASIC
 
@@ -823,6 +847,7 @@ void XSTC::LexPOBASIC()
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -884,6 +909,7 @@ void XSTC::LexPOBASIC()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_POWERBASIC
 
@@ -910,6 +936,8 @@ void XSTC::LexPUBASIC()
 	this->StyleSetSpec(XSTC_DEF(B_HEXNUMBER), XS_number);
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
+
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -971,6 +999,7 @@ void XSTC::LexPUBASIC()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PUREBASIC
 
@@ -993,6 +1022,7 @@ void XSTC::LexBASH()
 	this->StyleSetSpec(XSTC_DEF(SH_HERE_Q), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1039,6 +1069,7 @@ void XSTC::LexBASH()
     if(colorconf->Read(wxT("XSTColor/SH/HERE_Q"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(SH_HERE_Q),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_BASH
 
@@ -1055,6 +1086,7 @@ void XSTC::LexBATCH()
 	this->StyleSetSpec(XSTC_DEF(BAT_OPERATOR), XS_symbol);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1083,6 +1115,7 @@ void XSTC::LexBATCH()
     if(colorconf->Read(wxT("XSTColor/BAT/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(BAT_OPERATOR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_BATCH
 
@@ -1114,6 +1147,7 @@ void XSTC::LexCAML()
 	this->StyleSetSpec(XSTC_DEF(CAML_COMMENT3), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());SetStyleBits(5);
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1163,6 +1197,7 @@ void XSTC::LexCAML()
     if(colorconf->Read(wxT("XSTColor/CAML/COMMENT3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CAML_COMMENT3),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CAML
 
@@ -1188,6 +1223,7 @@ void XSTC::LexCLW()
 	this->StyleSetSpec(XSTC_DEF(CLW_DEPRECATED), XS_lang);
     this->SetStyleBits(GetStyleBitsNeeded());SetStyleBits(5);
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1243,6 +1279,7 @@ void XSTC::LexCLW()
     if(colorconf->Read(wxT("XSTColor/CLW/DEPRECATED"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CLW_DEPRECATED),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CLW
 
@@ -1266,55 +1303,57 @@ void XSTC::LexCMAKE()
    this->StyleSetSpec(XSTC_DEF(CMAKE_NUMBER), XS_number);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/CMAKE/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/STRINGDQ"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_STRINGDQ),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/STRINGLQ"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_STRINGLQ),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/STRINGRQ"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_STRINGRQ),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/COMMANDS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_COMMANDS),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/PARAMETERS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_PARAMETERS),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/VARIABLE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_VARIABLE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/USERDEFINED"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_USERDEFINED),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/WHILEDEF"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_WHILEDEF),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/FOREACHDEF"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_FOREACHDEF),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/IFDEFINEDEF"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_IFDEFINEDEF),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MCMAKE/MACRODEF"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_MACRODEF),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/STRINGVAR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_STRINGVAR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/CMAKE/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CMAKE_NUMBER),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CMAKE
 
@@ -1333,6 +1372,7 @@ void XSTC::LexCONF()
 	this->StyleSetSpec(XSTC_DEF(CONF_DIRECTIVE), XS_instruction);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1367,6 +1407,7 @@ void XSTC::LexCONF()
     if(colorconf->Read(wxT("XSTColor/CONF/DIRECTIVE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CONF_DIRECTIVE),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CONF
 
@@ -1395,6 +1436,7 @@ void XSTC::LexCPP()
    this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS), XS_global);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1459,6 +1501,7 @@ void XSTC::LexCPP()
     if(colorconf->Read(wxT("XSTColor/C/GLOBALCLASS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CPP
 
@@ -1483,6 +1526,7 @@ void XSTC::LexCSOUND()
 	this->StyleSetSpec(XSTC_DEF(CSOUND_STRINGEOL), XS_d_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1535,6 +1579,7 @@ void XSTC::LexCSOUND()
     if(colorconf->Read(wxT("XSTColor/CSOUND/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CSOUND_STRINGEOL),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CSOUND
 
@@ -1560,6 +1605,7 @@ void XSTC::LexCSS()
 	this->StyleSetSpec(XSTC_DEF(CSS_ATTRIBUTE), XS_lang);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1615,6 +1661,7 @@ void XSTC::LexCSS()
     if(colorconf->Read(wxT("XSTColor/CSS/ATTRIBUTE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(CSS_ATTRIBUTE),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_CSS
 
@@ -1641,64 +1688,66 @@ void XSTC::LexD()
    this->StyleSetSpec(XSTC_DEF(D_COMMENTDOCKEYWORDERROR), XS_comment3);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/D/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTLINE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTLINE),            colorval);
 
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTDOC"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTDOC),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTNESTED"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTNESTED),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/WORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_WORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/WORD2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_WORD2),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/WORD3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_WORD3),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/TYPEDEF"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_TYPEDEF),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_STRINGEOL),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/CHARACTER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_CHARACTER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTLINEDOC"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTLINEDOC),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTDOCKEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTDOCKEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/D/COMMENTDOCKEYWORDERROR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(D_COMMENTDOCKEYWORDERROR),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_D
 
@@ -1714,6 +1763,7 @@ void XSTC::LexDIFF()
 	this->StyleSetSpec(XSTC_DEF(DIFF_ADDED), XS_key4);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1739,6 +1789,7 @@ void XSTC::LexDIFF()
     if(colorconf->Read(wxT("XSTColor/DIFF/ADDED"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(DIFF_ADDED),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_DIFF
 
@@ -1756,6 +1807,7 @@ void XSTC::LexEIFFEL()
 	this->StyleSetSpec(XSTC_DEF(EIFFEL_STRINGEOL), XS_d_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1787,6 +1839,7 @@ void XSTC::LexEIFFEL()
     if(colorconf->Read(wxT("XSTColor/EIFFEL/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(EIFFEL_STRINGEOL),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_EIFFEL
 
@@ -1817,6 +1870,7 @@ void XSTC::LexERLANG()
 	this->StyleSetSpec(XSTC_DEF(ERLANG_UNKNOWN), XS_bad);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1867,6 +1921,7 @@ void XSTC::LexERLANG()
     if(colorconf->Read(wxT("XSTColor/ERLANG/UNKNOWN"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ERLANG_UNKNOWN),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ERLANG
 
@@ -1896,6 +1951,7 @@ void XSTC::LexERRORLIST()
 	this->StyleSetSpec(XSTC_DEF(ERR_JAVA_STACK), XS_dtype);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -1963,6 +2019,7 @@ void XSTC::LexERRORLIST()
     if(colorconf->Read(wxT("XSTColor/ERR/JAVA_STACK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ERR_JAVA_STACK),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ERRORLIST
 
@@ -1983,6 +2040,7 @@ void XSTC::LexESCRIPT()
 	this->StyleSetSpec(XSTC_DEF(ESCRIPT_WORD3), XS_key3);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2023,6 +2081,7 @@ void XSTC::LexESCRIPT()
     if(colorconf->Read(wxT("XSTColor/ESCRIPT/WORD3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ESCRIPT_WORD3),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_ESCRIPT
 
@@ -2046,6 +2105,7 @@ void XSTC::LexF77()
 	this->StyleSetSpec(XSTC_DEF(F_CONTINUATION), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2089,6 +2149,7 @@ void XSTC::LexF77()
     if(colorconf->Read(wxT("XSTColor/F/CONTINUATION"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(F_CONTINUATION),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_F77
 
@@ -2121,6 +2182,7 @@ void XSTC::LexFLAGSHIP()
 	this->StyleSetSpec(XSTC_DEF(FS_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2197,6 +2259,7 @@ void XSTC::LexFLAGSHIP()
     if(colorconf->Read(wxT("XSTColor/FS/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(FS_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_FLAGSHIP
 
@@ -2217,6 +2280,7 @@ void XSTC::LexFORTH()
 	this->StyleSetSpec(XSTC_DEF(FORTH_LOCALE), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2257,6 +2321,7 @@ void XSTC::LexFORTH()
     if(colorconf->Read(wxT("XSTColor/FORTH/LOCALE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(FORTH_LOCALE),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_FORTH
 
@@ -2281,6 +2346,7 @@ void XSTC::LexFORTRAN()
 	this->StyleSetSpec(XSTC_DEF(F_CONTINUATION), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2330,6 +2396,7 @@ void XSTC::LexFORTRAN()
     if(colorconf->Read(wxT("XSTColor/F/CONTINUATION"), &colorval) && colorval != wxT(""))
        this->StyleSetSpec(XSTC_DEF(F_CONTINUATION),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_FORTRAN
 
@@ -2350,46 +2417,48 @@ void XSTC::LexGAP()
    this->StyleSetSpec(XSTC_DEF(GAP_STRINGEOL), XS_s_string);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/GAP/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/KEYWORD2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_KEYWORD2),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/KEYWORD3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_KEYWORD3),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/KEYWORD4"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/CHAR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_CHAR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/GAP/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GAP_STRINGEOL),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_GAP
 
@@ -2408,6 +2477,7 @@ void XSTC::LexGUI4CLI()
 	this->StyleSetSpec(XSTC_DEF(GC_OPERATOR), XS_symbol);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2442,6 +2512,7 @@ void XSTC::LexGUI4CLI()
     if(colorconf->Read(wxT("XSTColor/GC/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(GC_OPERATOR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_GUI4CLI
 
@@ -2467,6 +2538,7 @@ void XSTC::LexHASKELL()
 	this->StyleSetSpec(XSTC_DEF(HA_COMMENTBLOCK3), XS_comment3);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2522,6 +2594,7 @@ void XSTC::LexHASKELL()
     if(colorconf->Read(wxT("XSTColor/HA/COMMENTBLOCK3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(HA_COMMENTBLOCK3),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_HASKELL
 
@@ -2638,6 +2711,7 @@ void XSTC::LexHTM()
 	this->StyleSetSpec(XSTC_DEF(HPHP_OPERATOR), XS_symbol);
 	this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -2967,6 +3041,7 @@ void XSTC::LexHTM()
           this->StyleSetSpec(XSTC_DEF(HPHP_OPERATOR),            colorval);
 
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_HTM
 
@@ -2988,6 +3063,7 @@ void XSTC::LexINNO()
 	this->StyleSetSpec(XSTC_DEF(INNO_IDENTIFIER), XS_default);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3031,6 +3107,7 @@ void XSTC::LexINNO()
     if(colorconf->Read(wxT("XSTColor/INNO/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(INNO_IDENTIFIER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_INNOSETUP
 
@@ -3059,6 +3136,7 @@ void XSTC::LexJS()
    this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS), XS_global);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3123,6 +3201,7 @@ void XSTC::LexJS()
     if(colorconf->Read(wxT("XSTColor/JS/GLOBALCLASS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_JS
 
@@ -3151,6 +3230,7 @@ void XSTC::LexJAVA()
    this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS), XS_global);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3215,6 +3295,7 @@ void XSTC::LexJAVA()
     if(colorconf->Read(wxT("XSTColor/JS/GLOBALCLASS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_JAVA
 
@@ -3234,6 +3315,7 @@ void XSTC::LexKIX()
 	this->StyleSetSpec(XSTC_DEF(KIX_IDENTIFIER), XS_default);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3271,6 +3353,7 @@ void XSTC::LexKIX()
     if(colorconf->Read(wxT("XSTColor/KIXIDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(KIX_IDENTIFIER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_KIX
 
@@ -3284,6 +3367,7 @@ void XSTC::LexLATEX()
 	this->StyleSetSpec(XSTC_DEF(L_COMMENT), XS_comment);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3303,6 +3387,7 @@ void XSTC::LexLATEX()
     if(colorconf->Read(wxT("XSTColor/L/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(L_COMMENT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_LATEX
 
@@ -3323,6 +3408,7 @@ void XSTC::LexLISP()
 	this->StyleSetSpec(XSTC_DEF(LISP_MULTI_COMMENT), XS_comment2);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3360,6 +3446,7 @@ void XSTC::LexLISP()
     if(colorconf->Read(wxT("XSTColor/LISP/MULTI_COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(LISP_MULTI_COMMENT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_LISP
 
@@ -3375,6 +3462,7 @@ void XSTC::LexLOT()
 	this->StyleSetSpec(XSTC_DEF(LOT_ABORT), XS_instruction);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3400,6 +3488,7 @@ void XSTC::LexLOT()
     if(colorconf->Read(wxT("XSTColor/LOT/ABORT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(LOT_ABORT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_LOT
 
@@ -3419,6 +3508,7 @@ void XSTC::LexLOUT()
 	this->StyleSetSpec(XSTC_DEF(LOUT_STRINGEOL), XS_d_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3456,13 +3546,14 @@ void XSTC::LexLOUT()
     if(colorconf->Read(wxT("XSTColor/LOUT/STRINGEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(LOUT_STRINGEOL),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_LOUT
 
 #ifndef XSTC_NO_LUA
 void XSTC::LexLUA()
 {
-   this->StyleSetSpec(XSTC_DEF(LUA_DEFAULT), XS_default);
+    this->StyleSetSpec(XSTC_DEF(LUA_DEFAULT), XS_default);
 	this->StyleSetSpec(XSTC_DEF(LUA_COMMENT), XS_comment);
 	this->StyleSetSpec(XSTC_DEF(LUA_COMMENTLINE), XS_comment);
 	this->StyleSetSpec(XSTC_DEF(LUA_COMMENTDOC), XS_comment2);
@@ -3484,6 +3575,7 @@ void XSTC::LexLUA()
 	this->StyleSetSpec(XSTC_DEF(LUA_WORD8), XS_global);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3548,6 +3640,7 @@ void XSTC::LexLUA()
     if(colorconf->Read(wxT("XSTColor/LUA/WORD8"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(LUA_WORD8),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_LUA
 
@@ -3563,6 +3656,7 @@ void XSTC::LexMAKEFILE()
 	this->StyleSetSpec(XSTC_DEF(MAKE_IDEOL), XS_d_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3588,6 +3682,7 @@ void XSTC::LexMAKEFILE()
     if(colorconf->Read(wxT("XSTColor/MAKE/IDEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAKE_IDEOL),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MAKEFILE
 
@@ -3613,61 +3708,63 @@ void XSTC::LexMAGIK()
    this->StyleSetSpec(XSTC_DEF(MAGIK_SYMBOL), XS_symbol);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/MAGIK/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/HYPER_COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_HYPER_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/CHARACTER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_CHARACTER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/FLOW"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_FLOW),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/CONTAINER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_CONTAINER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/BRACKET_BLOCK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_BRACKET_BLOCK),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/BRACE_BLOCK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_BRACE_BLOCK),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/SQBRACKET_BLOCK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_SQBRACKET_BLOCK),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/UNKNOWN_KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_UNKNOWN_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/PRAGMA"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_PRAGMA),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MAGIK/SYMBOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MAGIK_SYMBOL),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MAGIK
 
@@ -3685,6 +3782,7 @@ void XSTC::LexMATLAB()
 	this->StyleSetSpec(XSTC_DEF(MATLAB_DOUBLEQUOTESTRING), XS_d_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3716,6 +3814,7 @@ void XSTC::LexMATLAB()
     if(colorconf->Read(wxT("XSTColor/MATLAB/DOUBLEQUOTESTRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MATLAB_DOUBLEQUOTESTRING),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MATLAB
 
@@ -3731,6 +3830,7 @@ void XSTC::LexMETAPOST()
 	this->StyleSetSpec(XSTC_DEF(METAPOST_EXTRA), XS_tag);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3756,6 +3856,7 @@ void XSTC::LexMETAPOST()
     if(colorconf->Read(wxT("XSTColor/METAPOST/EXTRA"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(METAPOST_EXTRA),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_METAPOST
 
@@ -3782,6 +3883,7 @@ void XSTC::LexMMIXAL()
 	this->StyleSetSpec(XSTC_DEF(MMIXAL_INCLUDE), XS_preproc);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3840,6 +3942,7 @@ void XSTC::LexMMIXAL()
     if(colorconf->Read(wxT("XSTColor/MMIXAL/INCLUDE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MMIXAL_INCLUDE),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MMIXAL
 
@@ -3859,6 +3962,7 @@ void XSTC::LexNNCRONTAB()
 	this->StyleSetSpec(XSTC_DEF(NNCRONTAB_IDENTIFIER), XS_default);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3896,6 +4000,7 @@ void XSTC::LexNNCRONTAB()
     if(colorconf->Read(wxT("XSTColor/NNCRONTAB/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(NNCRONTAB_IDENTIFIER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_NNCRONTAB
 
@@ -3923,6 +4028,7 @@ void XSTC::LexNSIS()
 	this->StyleSetSpec(XSTC_DEF(NSIS_COMMENTBOX), XS_comment);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -3984,6 +4090,7 @@ void XSTC::LexNSIS()
     if(colorconf->Read(wxT("XSTColor/NSIS/COMMENTBOX"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(NSIS_COMMENTBOX),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_NSIS
 
@@ -3997,6 +4104,7 @@ void XSTC::LexOCTAVE()
 	this->StyleSetSpec(XSTC_DEF(MATLAB_KEYWORD), XS_key1);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4016,6 +4124,7 @@ void XSTC::LexOCTAVE()
     if(colorconf->Read(wxT("XSTColor/MATLAB/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MATLAB_KEYWORD),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_OCTAVE
 
@@ -4034,6 +4143,7 @@ void XSTC::LexOPAL()
 	this->StyleSetSpec(XSTC_DEF(OPAL_DEFAULT), XS_default);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4068,6 +4178,7 @@ void XSTC::LexOPAL()
     if(colorconf->Read(wxT("XSTColor/OPAL/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(OPAL_DEFAULT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_OPAL
 
@@ -4096,6 +4207,7 @@ void XSTC::LexPAS()
    this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS), XS_global);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4160,6 +4272,7 @@ void XSTC::LexPAS()
     if(colorconf->Read(wxT("XSTColor/C/GLOBALCLASS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(C_GLOBALCLASS),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PASCAL
 
@@ -4200,6 +4313,7 @@ void XSTC::LexPERL()
 	this->StyleSetSpec(XSTC_DEF(PL_POD_VERB), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4300,6 +4414,7 @@ void XSTC::LexPERL()
     if(colorconf->Read(wxT("XSTColor/PL/POD_VERB"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PL_POD_VERB),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PERL
 
@@ -4316,34 +4431,36 @@ void XSTC::LexPLM()
    this->StyleSetSpec(XSTC_DEF(PLM_KEYWORD), XS_key1);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/PLM/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/CONTROL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_CONTROL),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PLM/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PLM_KEYWORD),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PLM
 
@@ -4361,37 +4478,39 @@ void XSTC::LexPO()
    this->StyleSetSpec(XSTC_DEF(PO_FUZZY), XS_misic);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/PO/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGID"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGID),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGID_TEXT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGID_TEXT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGSTR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGSTR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGSTR_TEXT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGSTR_TEXT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGCTXT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGCTXT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/MSGCTXT_TEXT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_MSGCTXT_TEXT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PO/FUZZY"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PO_FUZZY),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PO
 
@@ -4417,6 +4536,7 @@ void XSTC::LexPOV()
 	this->StyleSetSpec(XSTC_DEF(POV_WORD8), XS_tag);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4472,6 +4592,7 @@ void XSTC::LexPOV()
     if(colorconf->Read(wxT("XSTColor/POV/WORD8"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POV_WORD8),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_POV
 
@@ -4491,43 +4612,45 @@ void XSTC::LexPOWERSHELL()
    this->StyleSetSpec(XSTC_DEF(POWERSHELL_ALIAS), XS_global);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/POWERSHELL/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELLSTRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/CHARACTER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_CHARACTER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/VARIABLE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_VARIABLE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/CMDLET"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_CMDLET),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/POWERSHELL/ALIAS"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(POWERSHELL_ALIAS),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_POWERSHELL
 
@@ -4570,106 +4693,108 @@ void XSTC::LexPROGRESS()
    //i had to get creative to support so many comment lines
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/PROGRESS/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/WORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_WORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/CHARACTER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_CHARACTER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/PREPROCESSOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_PREPROCESSOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/BLOCK"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_BLOCK),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/END"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_END),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT1"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT1),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT2),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT3),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT4"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT4),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT5"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT5),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT6"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT6),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/DEFAULT_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_DEFAULT_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/NUMBER_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_NUMBER_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/WORD_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_WORD_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/STRING_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_STRING_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/CHARACTER_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_CHARACTER_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/PREPROCESSOR_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_PREPROCESSOR_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/OPERATOR_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_OPERATOR_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/IDENTIFIER_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_IDENTIFIER_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/BLOCK_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_BLOCK_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/END_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_END_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT1_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT1_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT2_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT2_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT3_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT3_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT4_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT4_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT5_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT5_),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/PROGRESS/COMMENT6_"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PROGRESS_COMMENT6_),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PROGRESS
 
@@ -4683,6 +4808,7 @@ void XSTC::LexPROPERTIES()
 	this->StyleSetSpec(XSTC_DEF(PROPS_DEFVAL), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4707,6 +4833,7 @@ void XSTC::LexPROPERTIES()
           this->StyleSetSpec(XSTC_DEF(PROPS_KEY),            colorval);
 #endif
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PROPERTIES
 
@@ -4731,6 +4858,7 @@ void XSTC::LexPS()
 	this->StyleSetSpec(XSTC_DEF(PS_BADSTRINGCHAR), XS_bad);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4783,6 +4911,7 @@ void XSTC::LexPS()
     if(colorconf->Read(wxT("XSTColor/PS/BADSTRINGCHAR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(PS_BADSTRINGCHAR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PS
 
@@ -4807,6 +4936,7 @@ void XSTC::LexPYTHON()
 	this->StyleSetSpec(XSTC_DEF(P_DECORATOR), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -4859,6 +4989,7 @@ void XSTC::LexPYTHON()
     if(colorconf->Read(wxT("XSTColor/P/DECORATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(P_DECORATOR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_PYTHON
 
@@ -4879,46 +5010,48 @@ void XSTC::LexR()
    this->StyleSetSpec(XSTC_DEF(R_INFIXEOL), XS_misic);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/R/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/KWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_KWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/BASEKWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_BASEKWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/OTHERKWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_OTHERKWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/STRING2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_STRING2),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/INFIX"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_INFIX),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/R/INFIXEOL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(R_INFIXEOL),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_R
 
@@ -4956,6 +5089,7 @@ void XSTC::LexREBOL()
 	this->StyleSetSpec(XSTC_DEF(REBOL_WORD8), XS_global);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5047,6 +5181,7 @@ void XSTC::LexREBOL()
     if(colorconf->Read(wxT("XSTColor/REBOL/WORD8"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(REBOL_WORD8),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_REBOL
 
@@ -5089,6 +5224,7 @@ void XSTC::LexRUBY()
 	this->StyleSetSpec(XSTC_DEF(RB_UPPER_BOUND), XS_dtype);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5195,6 +5331,7 @@ void XSTC::LexRUBY()
     if(colorconf->Read(wxT("XSTColor/RB/UPPER_BOUND"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(RB_UPPER_BOUND),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_RUBY
 
@@ -5219,6 +5356,7 @@ void XSTC::LexSCRIPTOL()
 	this->StyleSetSpec(XSTC_DEF(SCRIPTOL_PREPROCESSOR), XS_preproc);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5268,6 +5406,7 @@ void XSTC::LexSCRIPTOL()
     if(colorconf->Read(wxT("XSTColor/SCRIPTOL/PREPROCESSOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(SCRIPTOL_PREPROCESSOR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_SCRIPTOL
 
@@ -5293,6 +5432,7 @@ void XSTC::LexSMALLTALK()
 	this->StyleSetSpec(XSTC_DEF(ST_SPEC_SEL), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5348,6 +5488,7 @@ void XSTC::LexSMALLTALK()
     if(colorconf->Read(wxT("XSTColor/ST/SPEC_SEL"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(ST_SPEC_SEL),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_SMALLTALK
 
@@ -5372,6 +5513,7 @@ void XSTC::LexSPECMAN()
 	this->StyleSetSpec(XSTC_DEF(SN_USER), XS_user);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5424,6 +5566,7 @@ void XSTC::LexSPECMAN()
     if(colorconf->Read(wxT("XSTColor/SN/USER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(SN_USER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_SPECMAN
 
@@ -5441,6 +5584,7 @@ void XSTC::LexSPICE()
 	this->StyleSetSpec(XSTC_DEF(SPICE_COMMENTLINE), XS_comment);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5472,6 +5616,7 @@ void XSTC::LexSPICE()
     if(colorconf->Read(wxT("XSTColor/SPICE/COMMENTLINE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(SPICE_COMMENTLINE),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_SPICE
 
@@ -5497,6 +5642,7 @@ void XSTC::LexMSSQL()
 	this->StyleSetSpec(XSTC_DEF(MSSQL_COLUMN_NAME_2), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5552,6 +5698,7 @@ void XSTC::LexMSSQL()
     if(colorconf->Read(wxT("XSTColor/MSSQL/COLUMN_NAME_2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MSSQL_COLUMN_NAME_2),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MSSQL
 
@@ -5581,73 +5728,75 @@ void XSTC::LexMYSQL()
    this->StyleSetSpec(XSTC_DEF(MYSQL_USER3), XS_misic);
    this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       wxString colorval;
 
       if(colorconf->Read(wxT("XSTColor/MYSQL/DEFAULT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_DEFAULT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_COMMENT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/COMMENTLINE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_COMMENTLINE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/VARIABLE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_VARIABLE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/SYSTEMVARIABLE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_SYSTEMVARIABLE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/KNOWNSYSTEMVARIABLE"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_KNOWNSYSTEMVARIABLE),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/NUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_NUMBER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/MAJORKEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_MAJORKEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/KEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_KEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/DATABASEOBJECT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_DATABASEOBJECT),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/PROCEDUREKEYWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_PROCEDUREKEYWORD),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/STRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_STRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/SQSTRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_SQSTRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/DQSTRING"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_DQSTRING),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/OPERATOR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_OPERATOR),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/FUNCTION"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_FUNCTION),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/IDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_IDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/QUOTEDIDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_QUOTEDIDENTIFIER),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/USER1"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_USER1),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/USER2"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_USER2),            colorval);
-	  
+
 	  if(colorconf->Read(wxT("XSTColor/MYSQL/USER3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(MYSQL_USER3),            colorval);
    }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_MYSQL
 
@@ -5678,6 +5827,7 @@ void XSTC::LexSQL()
 	this->StyleSetSpec(XSTC_DEF(SQL_QUOTEDIDENTIFIER), XS_s_string);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5748,6 +5898,7 @@ void XSTC::LexSQL()
     if(colorconf->Read(wxT("XSTColor/SQL/QUOTEDIDENTIFIER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(SQL_QUOTEDIDENTIFIER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_SQL
 
@@ -5776,6 +5927,7 @@ void XSTC::LexTADS3()
 	this->StyleSetSpec(XSTC_DEF(T3_USER3), XS_user);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5840,6 +5992,7 @@ void XSTC::LexTADS3()
     if(colorconf->Read(wxT("XSTColor/T3/USER3"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(T3_USER3),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_TADS3
 
@@ -5870,6 +6023,7 @@ void XSTC::LexTCL()
 	this->StyleSetSpec(XSTC_DEF(TCL_BLOCK_COMMENT), XS_comment);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5940,6 +6094,7 @@ void XSTC::LexTCL()
     if(colorconf->Read(wxT("XSTColor/TCL/BLOCK_COMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(TCL_BLOCK_COMMENT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_TCL
 
@@ -5954,6 +6109,7 @@ void XSTC::LexTEX()
 	this->StyleSetSpec(XSTC_DEF(TEX_TEXT), XS_default);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -5976,6 +6132,7 @@ void XSTC::LexTEX()
     if(colorconf->Read(wxT("XSTColor/TEX/TEXT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(TEX_TEXT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_TEX
 
@@ -6003,6 +6160,7 @@ void XSTC::LexVB()
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6064,6 +6222,7 @@ void XSTC::LexVB()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_VB
 
@@ -6091,6 +6250,7 @@ void XSTC::LexVBSCRIPT()
 	this->StyleSetSpec(XSTC_DEF(B_BINNUMBER), XS_number);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6152,6 +6312,7 @@ void XSTC::LexVBSCRIPT()
     if(colorconf->Read(wxT("XSTColor/B/BINNUMBER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(B_BINNUMBER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_VBSCRIPT
 
@@ -6174,6 +6335,7 @@ void XSTC::LexVERILOG()
 	this->StyleSetSpec(XSTC_DEF(V_USER), XS_user);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6220,6 +6382,7 @@ void XSTC::LexVERILOG()
     if(colorconf->Read(wxT("XSTColor/V/USER"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(V_USER),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_VERILOG
 
@@ -6243,6 +6406,7 @@ void XSTC::LexVHDL()
 	this->StyleSetSpec(XSTC_DEF(VHDL_USERWORD), XS_user);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6292,6 +6456,7 @@ void XSTC::LexVHDL()
     if(colorconf->Read(wxT("XSTColor/VHDL/USERWORD"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(VHDL_USERWORD),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_VHDL
 
@@ -6301,6 +6466,7 @@ void XSTC::LexXCODE()
 	this->StyleSetSpec(XSTC_DEF(H_XCCOMMENT), XS_comment);
 	this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6308,6 +6474,7 @@ void XSTC::LexXCODE()
     if(colorconf->Read(wxT("XSTColor/H/XCCOMMENT"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(H_XCCOMMENT),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_XCODE
 
@@ -6335,6 +6502,7 @@ void XSTC::LexXML()
 	this->StyleSetSpec(XSTC_DEF(H_ENTITY), XS_misic);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6396,6 +6564,7 @@ void XSTC::LexXML()
     if(colorconf->Read(wxT("XSTColor/H/ENTITY"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(H_ENTITY),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_XML
 
@@ -6413,6 +6582,7 @@ void XSTC::LexYAML()
 	this->StyleSetSpec(XSTC_DEF(YAML_ERROR), XS_bad);
     this->SetStyleBits(GetStyleBitsNeeded());
 
+#ifndef XSTC_NO_CONFIG
  if(usecolor)
  {
     wxString colorval;
@@ -6444,5 +6614,6 @@ void XSTC::LexYAML()
     if(colorconf->Read(wxT("XSTColor/YAML/ERROR"), &colorval) && colorval != wxT(""))
           this->StyleSetSpec(XSTC_DEF(YAML_ERROR),            colorval);
  }
+#endif //XSTC_NO_CONFIG
 }
 #endif //XSTC_NO_YAML

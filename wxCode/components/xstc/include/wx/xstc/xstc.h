@@ -42,24 +42,30 @@
  #include "xstc_conf.h"
 #endif
 
-#ifdef XSTC_USE_CONFIG
- #include <wx/fileconf.h>
- #include <wx/config.h>
- #ifdef _WXMSW_
-  #ifdef XSTC_USE_REG
-   #include <wx/msw/regconf.h>
-  #endif //XSTC_USE_REG
- #endif //_WXMSW_
-#endif //XSTC_USE_CONF
+#ifndef XSTC_NO_CONFIG
+ #ifdef XSTC_USE_CONFIG
+  #include <wx/fileconf.h>
+  #include <wx/config.h>
+  #ifdef _WXMSW_
+   #ifdef XSTC_USE_REG
+    #include <wx/msw/regconf.h>
+   #endif //XSTC_USE_REG
+  #endif //_WXMSW_
+ #endif //XSTC_USE_CONF
+#endif //XSTC_NO_CONFIG
 
 #include <wx/version.h>
 #include <wx/ffile.h>
 #include <wx/string.h>
+#include <wx/tokenzr.h>
 #include <wx/arrstr.h>
 #include <wx/filedlg.h>
 #include <wx/utils.h>
-#include <wx/gdicmn.h>
-#include <wx/colour.h>
+
+#ifndef XSTC_NO_CONFIG
+ #include <wx/gdicmn.h>
+ #include <wx/colour.h>
+#endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_KEYS
 /**
@@ -796,12 +802,28 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     */
     void ZenburnStyle();
 
-	   /**
+    /**
     \brief a style based on the matrix
 
     \detailed i saw a matrix based color scheme and decided to make one
     */
     void MatrixStyle();
+
+    /**
+    \brief loads a style from the configs
+
+    \detailed will load colorstyle settings from a config file. only needs the style name, will create all
+              default of black on white if no settings exsist. also uses styleconf(), but these settings take
+              priority.
+    */
+    void ConfigStyle(wxString style);
+
+    /**
+    \brief returns the names of availible config styles
+
+    \detailed returns a wxArrayString of all names that are in the config CStyles string.
+    */
+    wxString GetConfNames();
 
     /**
     \brief turns off enviornment colorstyles
@@ -813,6 +835,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     */
     void ResetStyle();
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief sets config based colors for colorstyle functions
 
@@ -828,6 +851,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               thing for each
     */
     void FoldConf();
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief sets a lexer and proretties
@@ -853,9 +877,9 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     /**
     \brief checks keyname for either being a filename or keyword set
 
-    \detailed checks keyname for a '.' dot (if it is a filename) and either
-              loads the file as the keyword set or returns its given value
-              which sould be a set of keywords
+    \detailed checks keyname for "^ISFILE^" (if it is a filename, or coma delimeted
+              set of filenames) and either loads the file(s) or
+              returns its given value which sould be a set of keywords
     */
     wxString KeyCheck(wxString keyname);
 #endif //XSTC_NO_KEYS
@@ -1461,7 +1485,8 @@ void LexXML();
 void LexYAML();
 #endif //XSTC_NO_YAML
 
-#ifdef XSTC_USE_CONFIG
+#ifndef XSTC_NO_CONFIG
+ #ifdef XSTC_USE_CONFIG
     /**
     \brief sets up coloring storage and usecolor to true
 
@@ -1491,17 +1516,22 @@ void LexYAML();
     */
     wxFileConfig* SetColorConf(wxInputStream& is);
 
- #ifdef _WXMSW_
- #ifdef XSTC_USE_REG
+  #ifdef _WXMSW_
+  #ifdef XSTC_USE_REG
 
 	     /**
     \brief overloaded version that supports registry rather than file
 
     */
 	 wxRegConfig* SetColorConf(wxString appName, wxString vendorName, wxString Filename);
- #endif //XSTC_USE_REG
- #endif //_WXMSW_
-#endif //XSTC_USE_CONFIG
+  #endif //XSTC_USE_REG
+  #endif //_WXMSW_
+ #endif //XSTC_USE_CONFIG
+
+ #ifdef XSTC_USE_XML
+  //wxXMLConfig* SetColorConf(wxString app, wxString vendor, wxString local);
+ #endif //XSTC_USE_XML
+#endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_TRIMTRAIL
     /**
@@ -1547,6 +1577,7 @@ void LexYAML();
     */
     void FoldColors();
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief sets up extention to lexer maps
 
@@ -1571,7 +1602,7 @@ void LexYAML();
               cppnocase clwnocase
     */
     void SetConfEXT(wxString extconf);
-
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief converts a string representing a lexer to an int
@@ -1596,6 +1627,7 @@ void LexYAML();
     */
     void ResetMarkers();
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief converts the input string to a color. this is used in the configuration code for loading in colors.
 
@@ -1627,6 +1659,17 @@ void LexYAML();
     */
     void SetColorDbase(wxColourDatabase& dbase);
 
+    /**
+    \brief can be used like the built in colorstyle functions. It loads the same settings from the config file.
+
+    \detailed the names of the config colorstyles are stored as a coma delimited string in "XSTColor/MISIC/CSTYLES"
+              these strings are used to get the solor settings from the config file. this way the styles don't need
+              to be searched for, which would be difficult.
+    */
+    void LoadConfStyle(wxString StyleName);
+
+#endif //XSTC_NO_CONFIG
+
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************
 ***********************************************************************************************************************/
@@ -1647,6 +1690,7 @@ void LexYAML();
     #define SAVE_AS_ON_FAIL 3
     int savemode;
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief for external extention conf
 
@@ -1665,6 +1709,7 @@ void LexYAML();
               for colorization or a string
     */
     bool usecolor;
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief for fold margin functions
@@ -1887,6 +1932,7 @@ void LexYAML();
     */
     int AutoEXT(wxString filename);//returns the lexer number
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief checks if entry (file extention) was loaded into extset (handled in conf file)
 
@@ -1894,6 +1940,7 @@ void LexYAML();
               if it returns false dest is emptied
     */
     bool IsConfEXT(wxString entry, wxArrayString& dest);//was the extention loaded from conf?
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief toggles the numbered bookmarks
@@ -1906,10 +1953,12 @@ void LexYAML();
 ***********************************************Variables here***********************************************************
 ***********************************************************************************************************************/
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief holds the valid entries from the extention conf file
     */
     wxArrayString extset;
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief properties for lexers
@@ -1931,6 +1980,7 @@ void LexYAML();
     */
     int linew, symw, fldw;
 
+#ifndef XSTC_NO_CONFIG
     /**
     \brief the color database that XSTC uses for name to color
 
@@ -1941,15 +1991,7 @@ void LexYAML();
               function call.
     */
     wxColourDatabase* XSTCcolorDbase;
-
-    /*
-    \brief stores the position of numbered bookmarks
-
-    \detailed each bookmark is uniqe, so it will only be set once. this stores the line where the bookmark is set.
-              if the bookmark is not found on the line, a search from that point to the top and then that point to the
-              bottom of the document so the location can be updated, or it will be set as off.
-    */
-    //int BmarkPos[10];
+#endif //XSTC_NO_CONFIG
 
     /**
     \brief stores the handle to numbered bookmarks
@@ -1957,6 +1999,15 @@ void LexYAML();
     \detailed stored bookmark handles for the numbered bookmarks so they can be found when the BmarkPos becomes invalid.
     */
     int BmarkHandles[10];
+
+    /**
+    \brief all of the names of the config based colorstyles
+
+    \detailed the strings are read from "XSTColor/MISIC/CSTYLES" a coma delimited list of names.
+              the names are used to utilize the config based colorstyle settings. since searching for the styles is not an effective
+              means of knowing what ones are present. any undefined settings will be set to the default color of black on white.
+    */
+    wxString CStyles;
 
     /**
     \brief c/c++ extention array
@@ -2018,7 +2069,7 @@ void LexYAML();
     wxWindowID WIN_ID; //this way we can use connect to dynamically connect events to our
 	                   //component and the user still has the option over what the id
 	                   //setting is.
-
+#ifndef XSTC_NO_CONFIG
 #ifdef XSTC_USE_CONFIG
     /**
     \brief pointer to the color config object
@@ -2035,6 +2086,10 @@ void LexYAML();
 	 wxFileConfig* fcconf;
 #endif //XSTC_USE_CONFIG
 
+#ifdef XSTC_USE_XML
+    wxXMLConfig* xmlconf;
+#endif //XSTC_USE_XML
+#endif //XSTC_NO_CONFIG
 };
 
 #endif // XSTC_H

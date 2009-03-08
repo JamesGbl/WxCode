@@ -43,7 +43,9 @@
   #include <wx/XSTC/xstc.h>
 #endif
 
+#endif //XSTC_NO_KEYS
 
+#ifndef XSTC_NO_KEYS
 void XSTC::PurgeKeys()
 {
 #ifndef XSTC_NO_ABAQUS
@@ -483,7 +485,9 @@ this->Keys_Set.vhdl6 = wxT("");
 this->Keys_Set.yaml = wxT("");
 #endif //XSTC_NO_YAML
 }
+#endif //XSTC_NO_KEYS
 
+#ifndef XSTC_NO_KEYS
 void XSTC::InitKeys()
 {
 #ifndef XSTC_NO_KEYS_DEFINED
@@ -2941,7 +2945,9 @@ this->Keys_Set.yaml = wxT("true false yes no");
 #endif //XSTC_NO_YAML
 #endif //XSTC_NO_KEYS_DEFINED
 }
+#endif //XSTC_NO_KEYS
 
+#ifndef XSTC_NO_KEYS
 wxString XSTC::KeyCheck(wxString keyname)
 {//check the contents of a Keyword_Sets object substring, is it a keywordset or filename
  //if "^ISFILE^" is at the beggining, it is assumed to be a file or set of coma delimited file names.
@@ -2968,7 +2974,9 @@ wxString XSTC::KeyCheck(wxString keyname)
    }
  return keyname;
 }
+#endif //XSTC_NO_KEYS
 
+#ifndef XSTC_NO_KEYS
 wxString XSTC::LoadKeyWords(wxString filename)
 {
    wxString keywords =wxT("");
@@ -2983,5 +2991,6 @@ wxString XSTC::LoadKeyWords(wxString filename)
 
    return keywords;
 }
-
 #endif //XSTC_NO_KEYS
+
+

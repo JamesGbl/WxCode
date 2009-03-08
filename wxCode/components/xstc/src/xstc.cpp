@@ -102,13 +102,17 @@ XSTC_CLASS(parent, id, pos, size, style, name)
         prop1[x] = wxT("");
     }
 
+#ifndef XSTC_NO_CONFIG
     extset.Empty();
+#endif //XSTC_NO_CONFIG
 
     cppcase = false;
     clwcase = false;
+#ifndef XSTC_NO_CONFIG
     useext  = false;
     usecolor  = false;
-#ifdef XSTC_NO_TRIMTRAIL
+#endif //XSTC_NO_CONFIG
+#ifndef XSTC_NO_TRIMTRAIL
     trimspaces = false;
 #endif //XSTC_NO_TRIMTRAIL
 #ifndef XSTC_NO_TABSPACE
@@ -122,12 +126,14 @@ XSTC_CLASS(parent, id, pos, size, style, name)
     colorstyle = wxT("null");
     XFilename = wxT("Untitled");
     SetMarginMask(fldmgn, XSTC_DEF(MASK_FOLDERS));
+#ifndef XSTC_NO_CONFIG
     XSTCcolorDbase = NULL;
-
+#endif //XSTC_NO_CONFIG
     for(x=0;x<10;x++)
     {
         BmarkHandles[x] = -1;
     }
+    CStyles= wxT("");
 }
 
 XSTC::~XSTC()
@@ -2054,6 +2060,7 @@ int XSTC::AutoEXT(wxString filename)
  {
     return thelexer;
  }
+ #ifndef XSTC_NO_CONFIG
  if(useext)
  {
     if(IsConfEXT(filext, hold))
@@ -2074,6 +2081,8 @@ int XSTC::AutoEXT(wxString filename)
        return thelexer;
     }
  }
+#endif //XSTC_NO_CONFIG
+
 #ifndef XSTC_NO_CPP
     for(x=0;x<=7;++x)
     {
@@ -2657,10 +2666,11 @@ int XSTC::AutoEXT(wxString filename)
    return thelexer;
 }
 
+#ifndef XSTC_NO_CONFIG
 void XSTC::FoldConf()
 {
-   wxString colorval;
-   wxColor color;
+   wxString colorval, colorstr;
+   wxColor color = wxNullColour;
    int r=0;
    long n=0;
 
@@ -2756,7 +2766,16 @@ void XSTC::FoldConf()
    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDERTAIL_B"), &colorval) && colorval != wxT(""))
         if(Ccolor(colorval, color))
             this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL), color);
+
+   if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDFG"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            foldfg = colorstr;
+
+   if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDBG"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            foldbg = colorstr;
 }
+#endif //XSTC_NO_CONFIG
 
 void XSTC::FoldBox()
 {
@@ -2924,16 +2943,19 @@ void XSTC::FoldColors()
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERSUB),     bg);
    this->MarkerSetBackground(XSTC_DEF(MARKNUM_FOLDERTAIL),    bg);
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       FoldConf();
    }
+#endif //XSTC_NO_CONFIG
 }
 
+#ifndef XSTC_NO_CONFIG
 void XSTC::StyleConf()
 {
    wxString colorval, colorstr, temp;
-   wxColour color;
+   wxColour color = wxNullColour;
    int r=0, g=0, b=0;
    long n;
 
@@ -3055,6 +3077,25 @@ void XSTC::StyleConf()
    if(colorconf->Read(wxT("XSTColor/MISIC/ERRORCOL"), &colorval) && colorval != wxT(""))
         if(CcolorS(colorval, colorstr))
             errorcol = colorstr;
+
+    if(colorconf->Read(wxT("XSTColor/MISIC/CSTYLES"), &colorval) && colorval != wxT(""))
+    {
+        colorval.Trim(true);
+        colorval.Trim(false);
+        colorval = colorval.Upper();
+        CStyles = wxT("");
+        wxStringTokenizer tkz(colorval, wxT(","));
+        while (tkz.HasMoreTokens())
+        {
+            temp = tkz.GetNextToken();
+            temp.Trim(true);
+            temp.Trim(false);
+            if(temp != wxT(""))
+                CStyles = CStyles + wxT(",") + temp;
+        }
+        if(CStyles != wxT(""))
+            CStyles.Remove(0, 1);
+    }
 
    if(colorconf->Read(wxT("XSTColor/WS/INVISIBLE"), &colorval) && colorval != wxT(""))
        this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE),                colorval);
@@ -3249,6 +3290,7 @@ void XSTC::StyleConf()
       if(colorconf->Read(wxT("XSTColor/XS/XS_DTYPE"), &colorval) && colorval != wxT(""))
          XS_dtype = colorval;
 }
+#endif //XSTC_NO_CONFIG
 
 void XSTC::DarkStyle()
 {
@@ -3315,7 +3357,7 @@ void XSTC::DarkStyle()
    this->SetSelAlpha(alphalvl);
    this->SetCaretALPHA(alphalvl);
 #endif //XSTC_NO_ALPHA
-    XS_comment = wxT("fore:#464646,back:#000000");
+     XS_comment = wxT("fore:#464646,back:#000000");
 	 XS_comment2 = wxT("fore:#FF4646,back:#000000");
 	 XS_comment3 = wxT("fore:#029c9bc,back:#000000");
 	 XS_s_string = wxT("fore:#E00000,back:#000000");
@@ -3340,12 +3382,14 @@ void XSTC::DarkStyle()
 
 	 foldfg = wxT("#000000");
 	 foldbg = wxT("#FFFFFF");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::VisualStudioStyle()
@@ -3440,12 +3484,14 @@ void XSTC::VisualStudioStyle()
 
 	 foldfg = wxT("#FFFFFF");
 	 foldbg = wxT("#000000");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::ClassicStyle()
@@ -3540,12 +3586,14 @@ void XSTC::ClassicStyle()
 
 	 foldfg = wxT("#E0DFE3");
 	 foldbg = wxT("#000000");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::BorlandStyle()
@@ -3639,12 +3687,14 @@ void XSTC::BorlandStyle()
 
 	 foldfg = wxT("#000080");
 	 foldbg = wxT("#FFFF00");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::JeffStyle()
@@ -3739,12 +3789,14 @@ void XSTC::JeffStyle()
 
 	 foldfg = wxT("#FFFFFF");
 	 foldbg = wxT("#808080");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::ZenburnStyle()
@@ -3839,12 +3891,14 @@ void XSTC::ZenburnStyle()
 
 	 foldfg = wxT("#3F3F3F");
 	 foldbg = wxT("#808080");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
 }
 
 void XSTC::MatrixStyle()
@@ -3939,12 +3993,1041 @@ void XSTC::MatrixStyle()
 
 	 foldfg = wxT("#282828");
 	 foldbg = wxT("#00FF00");
-	 this->FoldColors();
 
+#ifndef XSTC_NO_CONFIG
    if(usecolor)
    {
       StyleConf();
    }
+#endif //XSTC_NO_CONFIG
+this->FoldColors();
+}
+
+#ifndef XSTC_NO_CONFIG
+void XSTC::ConfigStyle(wxString style)
+{
+   wxString colorval, colorstr, temp, path = wxT("XSTColor/COLORSTYLE/");
+   wxColour color = wxNullColour, black = *wxBLACK, white = *wxWHITE;
+   int r=0, g=0, b=0;
+   long n;
+    path = path + style + wxT("/");
+
+    if(colorconf->Read(path + wxT("CLBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetCaretBk(color);
+    else
+    if(colorconf->Read(wxT("XSTColor/MISIC/CLBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetCaretBk(color);
+    else
+        this->SetCaretBk(wxColour(*wxCYAN));
+
+
+
+
+    if(colorconf->Read(path + wxT("FMC"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginColour(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/FMC"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginColour(true, color);
+    else
+        this->SetFoldMarginColour(true, wxColour(wxT("#FFFFFF")));
+
+
+
+
+    if(colorconf->Read(path + wxT("FMHI"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginHiColour(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/FMHI"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetFoldMarginHiColour(true, color);
+    else
+        this->SetFoldMarginHiColour(true, wxColour(wxT("#E0DFE3")));
+
+
+
+
+    if(colorconf->Read(path + wxT("WSFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/WSFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
+    else
+        this->SetWhitespaceForeground(true, black);
+
+
+
+
+    if(colorconf->Read(path + wxT("WSBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceBackground(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/WSBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceBackground(true, color);
+    else
+        this->SetWhitespaceBackground(true, white);
+
+
+
+
+    if(colorconf->Read(path + wxT("CFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetCaretForeground(color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/CFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetCaretForeground(color);
+    else
+        this->SetCaretForeground(black);
+
+
+
+
+    if(colorconf->Read(path + wxT("SELFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetSelForeground(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/SELFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetSelForeground(true, color);
+    else
+        this->SetSelForeground(true, white);
+
+
+
+
+    if(colorconf->Read(path + wxT("SELBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetSelBackground(true, color);
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/SELBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetSelBackground(true, color);
+    else
+        this->SetSelBackground(true, black);
+
+
+
+
+    if(colorconf->Read(path + wxT("BRKPTCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            brkptcol = colorstr;
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/BRKPTCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            brkptcol = colorstr;
+    else
+        brkptcol = wxT("#FF0000");
+
+
+
+
+    if(colorconf->Read(path + wxT("ACTBRKPTCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            actbrkptcol = colorstr;
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/ACTBRKPTCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            actbrkptcol = colorstr;
+    else
+        actbrkptcol = wxT("#0000FF");
+
+
+
+
+    if(colorconf->Read(path + wxT("ERRORCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            errorcol = colorstr;
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/ERRORCOL"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            errorcol = colorstr;
+    else
+        errorcol = wxT("#800000");
+
+
+
+    colorstyle = style.MakeLower();
+
+
+
+
+    if(colorconf->Read(path + wxT("EDGCOLR"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetEdgeColour(color);
+    else
+    if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLR"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetEdgeColour(color);
+    else
+        this->SetEdgeColour(black);
+
+
+
+
+    if(colorconf->Read(path + wxT("EDGCOLM"), &colorval) && colorval != wxT(""))
+    {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetEdgeColumn(r);
+      r=0;
+   }
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/EDGCOLM"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetEdgeColumn(r);
+      r=0;
+   }
+   else
+        this->SetEdgeColumn(50);
+
+
+
+
+    if(colorconf->Read(path + wxT("EDGMOD"), &colorval) && colorval != wxT(""))
+    {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetEdgeMode(r);
+      r=0;
+   }
+    else
+   if(colorconf->Read(wxT("XSTColor/MISIC/EDGMOD"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetEdgeMode(r);
+      r=0;
+   }
+    else
+        this->SetEdgeMode(XSTC_DEF(EDGE_LINE));
+
+
+
+
+   if(colorconf->Read(path + wxT("WRAPMOD"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetWrapMode(r);
+      r=0;
+   }
+   else
+   if(colorconf->Read(wxT("XSTColor/MISIC/WRAPMOD"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetWrapMode(r);
+      r=0;
+   }
+    else
+        this->SetWrapMode(XSTC_DEF(WRAP_WORD));
+
+
+
+
+   if(colorconf->Read(path + wxT("WRAPVF"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetWrapVisualFlags(r);
+      r=0;
+   }
+   else
+   if(colorconf->Read(wxT("XSTColor/MISIC/WRAPVF"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetWrapVisualFlags(r);
+      r=0;
+   }
+    else
+        this->SetWrapVisualFlags(XSTC_DEF(WRAPVISUALFLAG_END));
+
+
+
+
+    if(colorconf->Read(path + wxT("CACHEMOD"), &colorval) && colorval != wxT(""))
+    {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetLayoutCache(r);
+      r=0;
+   }
+   else
+   if(colorconf->Read(wxT("XSTColor/MISIC/CACHEMOD"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetLayoutCache(r);
+      r=0;
+   }
+    else
+        this->SetLayoutCache(XSTC_DEF(CACHE_CARET));
+
+
+
+
+    if(colorconf->Read(path + wxT("CARETLV"), &colorval) && colorval != wxT(""))
+    {
+      colorval.MakeLower();
+      bool caret = (colorval == wxT("true") || colorval == wxT("1"));
+
+      this->SetCaretLineVisible(caret);
+   }
+   else
+   if(colorconf->Read(wxT("XSTColor/MISIC/CARETLV"), &colorval) && colorval != wxT(""))
+   {
+      colorval.MakeLower();
+      bool caret = (colorval == wxT("true") || colorval == wxT("1"));
+
+      this->SetCaretLineVisible(caret);
+   }
+    else
+        this->SetCaretLineVisible(caretlv);
+
+
+
+
+#ifndef XSTC_NO_ALPHA
+    if(colorconf->Read(path + wxT("ALPHALVL"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      alphalvl = r;
+      r=0;
+   }
+   else
+    if(colorconf->Read(wxT("XSTColor/MISIC/ALPHALVL"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      alphalvl = r;
+      r=0;
+   }
+    else
+        alphalvl = XSTC_DEF(ALPHA_NOALPHA);
+
+
+
+
+    if(colorconf->Read(path + wxT("MARKALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->MarkerSetAlpha(0, r);
+      r=0;
+   }
+   else
+    if(colorconf->Read(wxT("XSTColor/MISIC/MARKALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->MarkerSetAlpha(0, r);
+      r=0;
+   }
+    else
+        this->MarkerSetAlpha(0, alphalvl);
+
+
+
+
+    if(colorconf->Read(path + wxT("SELALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetSelAlpha(r);
+      r=0;
+   }
+   else
+    if(colorconf->Read(wxT("XSTColor/MISIC/SELALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetSelAlpha(r);
+      r=0;
+   }
+    else
+        this->SetSelAlpha(alphalvl);
+
+
+
+
+    if(colorconf->Read(path + wxT("CARETALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetCaretALPHA(r);
+      r=0;
+   }
+   else
+    if(colorconf->Read(wxT("XSTColor/MISIC/CARETALPHA"), &colorval) && colorval != wxT(""))
+   {
+      colorval.ToLong(&n,10);
+      r=n;
+      this->SetCaretALPHA(r);
+      r=0;
+   }
+    else
+        this->SetCaretALPHA(alphalvl);
+#endif //XSTC_NO_ALPHA
+
+
+
+
+    if(colorconf->Read(path + wxT("WS_INVISIBLE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/WS/INVISIBLE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(WS_INVISIBLE), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("WS_VISIBLEALWAYS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_VISIBLEALWAYS), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/WS/VISIBLEALWAYS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_VISIBLEALWAYS), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(WS_VISIBLEALWAYS), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("WS_VISIBLEAFTERINDENT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_VISIBLEAFTERINDENT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/WS/VISIBLEAFTERINDENT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(WS_VISIBLEAFTERINDENT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(WS_VISIBLEAFTERINDENT), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("EOL_CRLF"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_CRLF), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/EOL/CRLF"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_CRLF), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(EOL_CRLF), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("EOL_CR"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_CR), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/EOL/CR"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_CR), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(EOL_CR), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("EOL_LF"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_LF), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/EOL/LF"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(EOL_LF), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(EOL_LF), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("CP_DBCS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(CP_DBCS), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/CP/DBCS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(CP_DBCS), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(CP_DBCS), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARKER_MAX"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARKER_MAX), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARKER/MAX"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARKER_MAX), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARKER_MAX), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_CIRCLE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_CIRCLE), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/CIRCLE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_CIRCLE), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_CIRCLE), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_ROUNDRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/ROUNDRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_ROUNDRECT), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_ARROW"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROW), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/ARROW"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROW), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_ARROW), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_SMALLRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_SMALLRECT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/SMALLRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_SMALLRECT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_SMALLRECT), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_SHORTARROW"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_SHORTARROW), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/SHORTARROW"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_SHORTARROW), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_SHORTARROW), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_EMPTY"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_EMPTY), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/EMPTY"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_EMPTY), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_EMPTY), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_ARROWDOWN"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/ARROWDOWN"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_ARROWDOWN), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_MINUS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_MINUS), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/MINUS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_MINUS), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_MINUS), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_PLUS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_PLUS), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/PLUS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_PLUS), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_PLUS), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_BACKGROUND"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/BACKGROUND"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_BACKGROUND), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_DOTDOTDOT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/DOTDOTDOT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_DOTDOTDOT), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_ARROWS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROWS), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/ARROWS"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_ARROWS), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_ARROWS), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_PIXMAP"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/PIXMAP"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_PIXMAP), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+#ifndef XSTC_NO_MARK_FULLRECT
+    if(colorconf->Read(path + wxT("MARK_FULLRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/FULLRECT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_FULLRECT), wxT("fore:#000000,back:#FFFFFF"));
+#endif //XSTC_NO_MARK_FULLRECT
+
+
+
+
+    if(colorconf->Read(path + wxT("MARK_CHARACTER"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/MARK/CHARACTER"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(MARK_CHARACTER), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_DEFAULT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/DEFAULT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_DEFAULT), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_LINENUMBER"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/LINENUMBER"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_LINENUMBER), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_BRACELIGHT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_BRACELIGHT), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/BRACELIGHT"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_BRACELIGHT), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_BRACELIGHT), wxT("fore:#0000FF,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_BRACEBAD"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_BRACEBAD), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/BRACEBAD"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_BRACEBAD), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_BRACEBAD), wxT("fore:#FF0000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_CONTROLCHAR"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_CONTROLCHAR), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/CONTROLCHAR"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_CONTROLCHAR), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_CONTROLCHAR), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_INDENTGUIDE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/INDENTGUIDE"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_INDENTGUIDE), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_LASTPREDEFINED"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/LASTPREDEFINED"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_LASTPREDEFINED), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("STYLE_MAX"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_MAX), colorval);
+    else
+    if(colorconf->Read(wxT("XSTColor/STYLE/MAX"), &colorval) && colorval != wxT(""))
+       this->StyleSetSpec(XSTC_DEF(STYLE_MAX), colorval);
+    else
+        this->StyleSetSpec(XSTC_DEF(STYLE_MAX), wxT("fore:#000000,back:#FFFFFF"));
+
+
+
+
+    if(colorconf->Read(path + wxT("FOLDFG"), &colorval) && colorval != wxT(""))
+       if(CcolorS(colorval, colorstr))
+            foldfg = colorstr;
+    else
+    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDFG"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            foldfg = colorstr;
+    else
+        foldfg = wxT("#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("FOLDBG"), &colorval) && colorval != wxT(""))
+       if(CcolorS(colorval, colorstr))
+            foldbg = colorstr;
+    else
+    if(colorconf->Read(wxT("XSTColor/MARKNUM/FOLDBG"), &colorval) && colorval != wxT(""))
+        if(CcolorS(colorval, colorstr))
+            foldbg = colorstr;
+    else
+        foldbg = wxT("#000000");
+
+
+
+
+   if(colorconf->Read(path + wxT("MISIC_WSFG"), &colorval) && colorval != wxT(""))
+       if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
+    else
+    if(colorconf->Read(wxT("XSTColor/MISIC/WSFG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
+    else
+        this->SetWhitespaceForeground(true, black);
+
+
+
+
+   if(colorconf->Read(path + wxT("MISIC_WSBG"), &colorval) && colorval != wxT(""))
+       if(Ccolor(colorval, color))
+            this->SetWhitespaceForeground(true, color);
+    else
+    if(colorconf->Read(wxT("XSTColor/MISIC/WSBG"), &colorval) && colorval != wxT(""))
+        if(Ccolor(colorval, color))
+            this->SetWhitespaceBackground(true, color);
+    else
+        this->SetWhitespaceBackground(true, white);
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_COMMENT"), &colorval) && colorval != wxT(""))
+       XS_comment = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_COMMENT"), &colorval) && colorval != wxT(""))
+      XS_comment = colorval;
+    else
+      XS_comment = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_COMMENT2"), &colorval) && colorval != wxT(""))
+       XS_comment2 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_COMMENT2"), &colorval) && colorval != wxT(""))
+      XS_comment2 = colorval;
+    else
+      XS_comment2 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_COMMENT3"), &colorval) && colorval != wxT(""))
+       XS_comment3 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_COMMENT3"), &colorval) && colorval != wxT(""))
+      XS_comment3 = colorval;
+    else
+      XS_comment3 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_S_STRING"), &colorval) && colorval != wxT(""))
+       XS_s_string = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_S_STRING"), &colorval) && colorval != wxT(""))
+      XS_s_string = colorval;
+    else
+      XS_s_string = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_D_STRING"), &colorval) && colorval != wxT(""))
+       XS_d_string = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_D_STRING"), &colorval) && colorval != wxT(""))
+      XS_d_string = colorval;
+    else
+      XS_d_string = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_NUMBER"), &colorval) && colorval != wxT(""))
+       XS_number = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_NUMBER"), &colorval) && colorval != wxT(""))
+      XS_number = colorval;
+    else
+      XS_number = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_CHAR"), &colorval) && colorval != wxT(""))
+       XS_char = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_CHAR"), &colorval) && colorval != wxT(""))
+      XS_char = colorval;
+    else
+      XS_char = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_DEFAULT"), &colorval) && colorval != wxT(""))
+       XS_default = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_DEFAULT"), &colorval) && colorval != wxT(""))
+      XS_default = colorval;
+    else
+      XS_default = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_KEY1"), &colorval) && colorval != wxT(""))
+       XS_key1 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_KEY1"), &colorval) && colorval != wxT(""))
+      XS_key1 = colorval;
+    else
+      XS_key1 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_KEY2"), &colorval) && colorval != wxT(""))
+       XS_key2 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_KEY2"), &colorval) && colorval != wxT(""))
+      XS_key2 = colorval;
+    else
+      XS_key2 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_KEY3"), &colorval) && colorval != wxT(""))
+       XS_key3 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_KEY3"), &colorval) && colorval != wxT(""))
+      XS_key3 = colorval;
+    else
+      XS_key3 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_KEY4"), &colorval) && colorval != wxT(""))
+       XS_key4 = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_KEY4"), &colorval) && colorval != wxT(""))
+      XS_key4 = colorval;
+    else
+      XS_key4 = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_PREPROC"), &colorval) && colorval != wxT(""))
+       XS_preproc = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_PREPROC"), &colorval) && colorval != wxT(""))
+      XS_preproc = colorval;
+    else
+      XS_preproc = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_SYMBOL"), &colorval) && colorval != wxT(""))
+       XS_symbol = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_SYMBOL"), &colorval) && colorval != wxT(""))
+      XS_symbol = colorval;
+    else
+      XS_symbol = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_TAG"), &colorval) && colorval != wxT(""))
+       XS_tag = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_TAG"), &colorval) && colorval != wxT(""))
+      XS_tag = colorval;
+    else
+      XS_tag = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_USER"), &colorval) && colorval != wxT(""))
+       XS_user = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_USER"), &colorval) && colorval != wxT(""))
+      XS_user = colorval;
+    else
+      XS_user = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_MISIC"), &colorval) && colorval != wxT(""))
+       XS_misic = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_MISIC"), &colorval) && colorval != wxT(""))
+      XS_misic = colorval;
+    else
+      XS_misic = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_LANG"), &colorval) && colorval != wxT(""))
+       XS_lang = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_LANG"), &colorval) && colorval != wxT(""))
+      XS_lang = colorval;
+    else
+      XS_lang = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_GLOBAL"), &colorval) && colorval != wxT(""))
+       XS_global = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_GLOBAL"), &colorval) && colorval != wxT(""))
+      XS_global = colorval;
+    else
+      XS_global = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_BAD"), &colorval) && colorval != wxT(""))
+       XS_bad = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_BAD"), &colorval) && colorval != wxT(""))
+      XS_bad = colorval;
+    else
+      XS_bad = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_INSTRUCTION"), &colorval) && colorval != wxT(""))
+       XS_instruction = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_INSTRUCTION"), &colorval) && colorval != wxT(""))
+      XS_instruction = colorval;
+    else
+      XS_instruction = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    if(colorconf->Read(path + wxT("XS_DTYPE"), &colorval) && colorval != wxT(""))
+       XS_dtype = colorval;
+    else
+    if(colorconf->Read(wxT("XSTColor/XS/XS_DTYPE"), &colorval) && colorval != wxT(""))
+      XS_dtype = colorval;
+    else
+      XS_dtype = wxT("fore:#000000,back:#FFFFFF");
+
+
+
+
+    this->FoldColors();
+}
+#endif //XSTC_NO_CONFIG
+
+wxString XSTC::GetConfNames()
+{
+return CStyles;
 }
 
 void XSTC::ResetStyle()
@@ -4072,6 +5155,7 @@ PropSTR XSTC::GetPropStr(wxString property)
  return result;
 }
 
+#ifndef XSTC_NO_CONFIG
 void XSTC::SetConfEXT(wxString extconf)
 {
 
@@ -4126,6 +5210,7 @@ void XSTC::SetConfEXT(wxString extconf)
    }
    extset.Shrink();
 }
+#endif //XSTC_NO_CONFIG
 
 int XSTC::GetEXTLexer(wxString extparam)
 {
@@ -4448,6 +5533,7 @@ bool XSTC::FilevalidCheck(wxString entry)
    return true;
 }
 
+#ifndef XSTC_NO_CONFIG
 bool XSTC::IsConfEXT(wxString entry, wxArrayString& dest)
 {
    entry.MakeLower();
@@ -4515,6 +5601,7 @@ bool XSTC::IsConfEXT(wxString entry, wxArrayString& dest)
    }
    return matched;
 }
+#endif //XSTC_NO_CONFIG
 
 void XSTC::MapMargins(int line, int symbol, int fold)
 {
@@ -4661,6 +5748,7 @@ void XSTC::ResetMarkers()
     }
 }
 
+#ifndef XSTC_NO_CONFIG
 bool XSTC::Ccolor(wxString configvalue, wxColour& color)
 {
     bool result = false;
@@ -4734,3 +5822,8 @@ void XSTC::SetColorDbase(wxColourDatabase& dbase)
     }
 }
 
+void XSTC::LoadConfStyle(wxString StyleName)
+{
+    //CStyles
+}
+#endif //XSTC_NO_CONFIG

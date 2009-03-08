@@ -1,40 +1,40 @@
 
 /*
  * xstc_conf.h
- * 
+ *
  * this file is licensed under the wxWindows licence
  * just a quick reminder of what that means:
- * 
+ *
  * This software is released under the GNU GPL licence
  * with a few exceptins applied, check the wxWindows licence
  * to see what those are
- * 
+ *
  * visit: http://opensource.org/ to see both
  * the GNU GPL and wxWindows licences.
- * 
+ *
  * this software has absolutely no warranty, express or implied
- * 
+ *
  * just so you know, i don't care if you change the code
  * don't email me if you did someting to it.
- * 
+ *
  * no need to mark changes, you obviously may want to change the color
  * settings, it would only be a real pain if you had to mark them.
- * 
+ *
  * if you edit a function to change its behavior, it would be courtious
  * to others to let them know that the file is not an official release,
  * but you don't have to do that either.
  *
  * you must not misrepresent the origins of this software, if you distribute
- * it, let the user know where to get it and that you where not the original 
+ * it, let the user know where to get it and that you where not the original
  * creator. (except for any code you add obviously)
  *
  * this notice may not be changed in any way and must remain at the top of every
  * source file.
- * 
+ *
  * XSTC was developed by Nuklear Zelph
  * copyright (C) 2006
  */
- 
+
 #ifndef XSTC_CONF_H
 #define XSTC_CONF_H
 
@@ -131,6 +131,8 @@
 //#define XSTC_USE_WXSTC       //define this if you are using wxStyledTextCtrl
 //define one or the other
 
+//#define XSTC_NO_ALPHA
+
 #ifdef XSTC_USE_WXSCINTILLA
  #define XSTC_CLASS wxScintilla
  #include <wx/wxscintilla.h>
@@ -139,7 +141,7 @@
  #define XSTC_DEF(Cy) wxSCI_ ## Cy
 
 //these macros define a neutral function that is both version and library independant. they do not
-//conform to the actual library function names, but using them will make sure you don't need to 
+//conform to the actual library function names, but using them will make sure you don't need to
 //worry about which version of library code you are using.
 
 #define SetCaretBk SetCaretLineBackground
@@ -176,7 +178,7 @@
  #define XSTC_NO_PO
 
 //these macros define a neutral function that is both version and library independant. they do not
-//conform to the actual library function names, but using them will make sure you don't need to 
+//conform to the actual library function names, but using them will make sure you don't need to
 //worry about which version of library code you are using.
 
 
@@ -199,10 +201,11 @@
 #endif //XSTC_LVL
 
 #undef XSTC_LVL
-	 
+
 #endif //XSTC_USE_WXSTC
 //above macros are for wxStyledTextCtrl, do not edit this section
 
+//#define XSTC_NO_CONFIG //turn off all configuration subsystems, ini and xml.
 #define XSTC_USE_CONFIG //use the wxWidgets configuration class
 
 #ifdef XSTC_USE_CONFIG
@@ -211,14 +214,11 @@
  #endif //_WXMSW_
 #endif //XSTC_USE_CONFIG
 
-#define XSTC_USE_XML //uses TinyXML for xml based configuration
+//#define XSTC_USE_XML //uses TinyXML for xml based configuration
 //note, the configureation systems are made availible, but the user must set one up or nothing will be used.
-//if both options are turned on, both subsystems will be used simultaniously
-//this may be useful since either file can have any number of uniqe settings and the user has access to the
-//config systems, so main application settings could be stored in a conf or reg and the coloring in an xml file.
 
 //#define XSTC_NO_KEYS //disables all automatic keyword functionality
-//#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
+#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
 
 //#define XSTC_NO_TABSPACE //disable the tabs/spaces conversion utility function
 //#define XSTC_NO_TRIMTRAIL //disables the trim trailing whitespace utility functin and all instances it is used in the code.
