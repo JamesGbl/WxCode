@@ -1,3 +1,12 @@
+CHANGES for version 6.1
+total revamp of preprocesor macros, added config.h
+added new languages to update to scintilla 1.77
+made the config color code more robust
+added a colordatabase option so color names can be used in the configs too
+rewrote the load and save functions so they are more flexible
+added matrixstyle()
+added numbered bookmarks
+
 CHANGES for version 6 final
 reworked TrimTrailing() to work with large files better
 changed the lexcolor functions to take class color variables. (strings)
