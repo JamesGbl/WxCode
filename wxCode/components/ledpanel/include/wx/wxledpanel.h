@@ -13,6 +13,7 @@
 #include "wx/wxledfont.h"
 //#include "wx/wxledpaneldef.h"
 #include <wx/wx.h>
+#include <wx/animate.h>
 
 enum wxLEDColour
 {
@@ -25,36 +26,13 @@ enum wxLEDColour
 	wxLED_COLOUR_GREY = 7
 };
 
-enum wxLEDScrollDirection
-{
-	wxLED_SCROLL_NONE = 0,
-	wxLED_SCROLL_UP = 1,
-	wxLED_SCROLL_DOWN = 2,
-	wxLED_SCROLL_LEFT = 3,
-	wxLED_SCROLL_RIGHT = 4
-};
-
-enum wxLEDTextAlign
-{
-	wxLED_TEXTALIGN_LEFT = 0,
-	wxLED_TEXTALIGN_RIGHT = 1,
-	wxLED_TEXTALIGN_CENTER = 2
-};
-
-enum wxLEDTextVAlign
-{
-	wxLED_TEXTVALIGN_TOP = 0,
-	wxLED_TEXTVALIGN_BOTTOM = 1,
-	wxLED_TEXTVALIGN_CENTER = 2
-};
-
 class wxLEDPanel : public wxControl
 {
 	public:
 		// Ctor
 		wxLEDPanel();
 		wxLEDPanel(wxWindow* parent, wxWindowID id,
-					const wxSize& pointsize, const wxSize& fieldsize, int padding=0,
+					const wxSize& ledsize, const wxSize& fieldsize, int padding=0,
 					const wxPoint& pos = wxDefaultPosition,
 					long style = wxNO_BORDER,
 					const wxValidator& validator = wxDefaultValidator);
@@ -64,7 +42,7 @@ class wxLEDPanel : public wxControl
 
 		// Create the Element
 		bool Create(wxWindow* parent, wxWindowID id,
-					const wxSize& pointsize, const wxSize& fieldsize, int padding=0,
+					const wxSize& ledsize, const wxSize& fieldsize, int padding=0,
 					const wxPoint& pos = wxDefaultPosition,
 					long style = wxNO_BORDER,
 					const wxValidator& validator = wxDefaultValidator);
@@ -80,19 +58,22 @@ class wxLEDPanel : public wxControl
 
 		// Größenangaben
 		wxSize GetFieldsize() const;
-		wxSize GetPointsize() const;
+		wxSize GetLEDSize() const;
 
 		// Set the Colour of the LEDs
 		void SetLEDColour(wxLEDColour colourID);
 		const wxColour& GetLEDColour() const;
+
+		// Set the Colour of the Background
+		virtual bool SetBackgroundColour(const wxColour& colour);
 
 		// ScrollSpeed
 		void SetScrollSpeed(int speed);
 		int GetScrollSpeed() const;
 
 		// Scrolldirection
-		void SetScrollDirection(wxLEDScrollDirection d);
-		wxLEDScrollDirection GetScrollDirection() const;
+		void SetScrollDirection(wxDirection d);
+		wxDirection GetScrollDirection() const;
 
 		// Draw Invertet (default behavior is false)
 		void ShowInvertet(bool invert=true);
@@ -101,31 +82,38 @@ class wxLEDPanel : public wxControl
 		void ShowInactivLEDs(bool show_inactivs=true);
 
 		// Text Alignment if wxLED_SCROLL_NONE
-		void SetTextAlign(int a);	// a -> wxAlignment e.g. wxALIGN_TOP|wxALIGN_RIGHT
-		int GetTextAlign() const;
+		void SetContentAlign(int a);	// a -> wxAlignment e.g. wxALIGN_TOP|wxALIGN_RIGHT
+		int GetContentAlign() const;
 
 		// Text to show
 		void SetText(const wxString& text, int align=-1);	// align e.g. "wxLEFT|wxTOP", align=-1 -> Use corrent align
-		const wxString& GetText() const;
+		wxString GetText() const;
+
+		// Bitmap to show
+		void SetImage(const wxImage img);
+		wxImage GetContentAsImage() const;
+
+		// Animation
+		void SetAnimation(const wxAnimation ani);
+		const wxAnimation GetAnimation() const;
 
 		// TextPadding (only used when wxALIGN_LEFT or wxALIGN_RIGHT)
-		void SetTextPaddingLeft(int padLeft);
-		void SetTextPaddingRight(int padRight);
-		int GetTextPaddingLeft() const;
-		int GetTextPaddingRight() const;
+		void SetContentPaddingLeft(int padLeft);
+		void SetContentPaddingRight(int padRight);
+		int GetContentPaddingLeft() const;
+		int GetContentPaddingRight() const;
 
 		// Space Between the Letters
 		void SetLetterSpace(int letterSpace);
 		int GetLetterSpace() const;
 
 		// FontType
-		void SetFontTypeWide();
-		void SetFontTypeSmall();
-		bool IsFontTypeSmall() const;
+		void SetFontType(wxLEDFontType t);
+		wxLEDFontType GetFontType() const;
 
     protected:
 		// Drawing
-		void DrawField(wxDC& dc);
+		void DrawField(wxDC& dc, bool backgroundMode=false);
 		void OnEraseBackground(wxEraseEvent& event);
 		void OnPaint(wxPaintEvent &event);
 
@@ -139,9 +127,9 @@ class wxLEDPanel : public wxControl
 		AdvancedMatrixObject m_field;
 
 		// Control-Properties
-		wxSize m_pointsize;
+		wxSize m_ledsize;
         int m_padding;
-        int m_textalign;
+        int m_align;
         int m_padLeft;
         int m_padRight;
         wxLEDColour m_activ_colour_id;
@@ -150,23 +138,29 @@ class wxLEDPanel : public wxControl
 
         // Scroll-Properties
         int m_scrollspeed;
-		wxLEDScrollDirection m_scrolldirection;
+		wxDirection m_scrolldirection;
         wxTimer m_scrollTimer;
 
         // Scroll-function
         void OnScrollTimer(wxTimerEvent& event);
 
-		// Bitmaps with "LED on" and "LED off"
-        wxBitmap m_bmp_led_on;
-        wxBitmap m_bmp_led_off;
+		// MemoryDCs with "LED on" and "LED off" and no LED
+        wxMemoryDC m_mdc_led_on;
+        wxMemoryDC m_mdc_led_off;
+        wxMemoryDC m_mdc_led_none;
+
+        wxMemoryDC m_mdc_background;
 
         // the text
         wxString m_text;
-        MatrixObject m_text_mo;
-        wxPoint m_text_pos;
+        MatrixObject m_content_mo;
+        wxPoint m_pos;
         wxLEDFont m_font;
+        wxAnimation m_ani;
+        int m_aniFrameNr;
 
-        void ResetTextPos();
+        void ResetPos();
+        void PrepareBackground();
 
         // Colours
         static const wxColour s_colour[7];

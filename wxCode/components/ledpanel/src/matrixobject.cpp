@@ -81,6 +81,34 @@ void MatrixObject::Init(const char* data, int width, int height)
 		memset(m_data,0,m_length*sizeof(char));
 }
 
+void MatrixObject::Init(const wxImage img)
+{
+    if(!img.IsOk()) return;
+
+    // wenn schon initialiesiert (wird erst alles freigegeben)
+    this->Destroy();
+
+    // Größe Speichern
+    m_width = img.GetWidth();
+    m_height = img.GetHeight();
+    m_length=m_width*m_height;
+
+    // space for data?
+    if(m_length==0) return; // nothing to do
+
+	// Array zum internen Speichern erzeugen
+    m_data=new char[m_length];
+    memset(m_data,0,m_length*sizeof(char)); // fill with nulls
+
+    // jeden Pixel durchgehen und setzten wenn ungleich schwarz
+    const unsigned char* idat = img.GetData();
+    for(int i=0;i<m_length;i++)
+    {
+        if(idat[i*3] || idat[i*3+1] || idat[i*3+2])
+            m_data[i] = 1;
+    }
+}
+
 char MatrixObject::GetDataFrom(int x, int y) const
 {
 	if(x<0 || x>=m_width) return -1;
@@ -146,8 +174,12 @@ bool MatrixObject::SetDatesAt(int x, int y, const MatrixObject &mo)
     int dx=0,dy=0;
     char data;
 
+    int l=mo.GetLength();
+    int w=mo.GetWidth();
+    const char* mod = mo.GetData();
+
 	// TODO optimze with memcpy, copy lines
-    for(int i=0;i<mo.GetLength();++i)
+    for(int i=0;i<l;++i)
     {
     	// test the left dst bound
     	if(x+dx<0)
@@ -161,7 +193,7 @@ bool MatrixObject::SetDatesAt(int x, int y, const MatrixObject &mo)
     	{
     		++dy;
     		dx=0;
-    		i=dy*mo.GetWidth()-1;
+    		i=dy*w-1;
     		continue;
     	}
 
@@ -169,17 +201,19 @@ bool MatrixObject::SetDatesAt(int x, int y, const MatrixObject &mo)
     	if(y+dy>=m_height) break;	// becaus the rest is also out of bound
 
 		// if we are inside the bound, get the data
-		data=mo.GetDataFrom(i);
+		data=mod[i];
 
         // 0 -> do nothing
         if(data>0)
-            SetDataAt(x+dx,y+dy,data); // copy data
+            m_data[(x+dx)+(y+dy)*m_width]=data;
+            //SetDataAt(x+dx,y+dy,data); // copy data
         else if(data<0)
-        	SetDataAt(x+dx,y+dy,0); // set 0
+            m_data[(x+dx)+(y+dy)*m_width]=0;
+        	//SetDataAt(x+dx,y+dy,0); // set 0
 
 		// count up
 		++dx;
-		if(dx==mo.GetWidth()) {++dy; dx=0;}
+		if(dx==w) {++dy; dx=0;}
     }
 
     return true;
@@ -191,4 +225,22 @@ bool MatrixObject::IsEmpty() const
 		if(m_data[i]!=0) return false;
 
 	return true;
+}
+
+wxImage MatrixObject::GetAsImage() const
+{
+    wxImage img;
+
+    if(!m_data) return img;
+
+    img.Create(m_width,m_height);
+    unsigned char* d = img.GetData();
+
+    for(int i=0;i<m_length;i++)
+    {
+        if(m_data[i])
+            memset(&d[i*3],-1,3);
+    }
+
+    return img;
 }

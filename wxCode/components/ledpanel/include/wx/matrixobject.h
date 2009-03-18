@@ -25,6 +25,7 @@ class MatrixObject
 
         void Init(const char* data, int width, int height=0);
         void Init(const MatrixObject& mo) {Init(mo.GetData(),mo.GetWidth(),mo.GetHeight());}
+        void Init(const wxImage img);
 
 		// Größe des Objektes ausgeben
         int GetWidth()  const {return m_width;}
@@ -54,6 +55,9 @@ class MatrixObject
 		bool SetDataAt(const wxPoint& punkt, char data) {return SetDataAt(punkt.x,punkt.y,data);}
 		bool SetDatesAt(int x, int y, const MatrixObject &mo);
 		bool SetDatesAt(const wxPoint& punkt, const MatrixObject &mo) {return SetDatesAt(punkt.x,punkt.y,mo);}
+
+        // Get as Monochrome image
+        wxImage GetAsImage() const;
 
     protected:
 		// Deinitialisieren
