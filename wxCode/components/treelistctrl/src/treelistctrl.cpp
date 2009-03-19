@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.106 2009-03-10 14:29:53 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.107 2009-03-19 07:51:49 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -2263,20 +2263,18 @@ wxTreeItemId wxTreeListMainWindow::GetNext (const wxTreeItemId& item, bool fullt
 wxTreeItemId wxTreeListMainWindow::GetPrev (const wxTreeItemId& item, bool fulltree) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
 
-    // if there are any children, return last child
-    if (fulltree || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
-        wxArrayTreeListItems& children = ((wxTreeListItem*)item.m_pItem)->GetChildren();
-        if (children.GetCount() > 0) return children.Item (children.GetCount()-1);
+    // if there are no previous sibling get parent
+    wxTreeItemId prev = GetPrevSibling (item);
+    if (! prev.IsOk()) return GetItemParent (item);
+
+    // while previous sibling has children, return last
+    while (fulltree || ((wxTreeListItem*)prev.m_pItem)->IsExpanded()) {
+        wxArrayTreeListItems& children = ((wxTreeListItem*)prev.m_pItem)->GetChildren();
+        if (children.GetCount() == 0) break;
+        prev = children.Item (children.GetCount() - 1);
     }
 
-    // get sibling of this item or of the ancestors instead
-    wxTreeItemId next;
-    wxTreeItemId parent = item;
-    do {
-        next = GetPrevSibling (parent);
-        parent = GetItemParent (parent);
-    } while (!next.IsOk() && parent.IsOk());
-    return next;
+    return prev;
 }
 
 wxTreeItemId wxTreeListMainWindow::GetFirstExpandedItem() const {
