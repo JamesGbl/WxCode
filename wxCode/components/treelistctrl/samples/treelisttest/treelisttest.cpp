@@ -3,7 +3,7 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.30 2009-03-10 14:29:32 pgriddev Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.31 2009-03-19 07:59:42 pgriddev Exp $
 // Copyright:   (c) 2004-2008 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -65,10 +65,10 @@
 
 const wxString APP_NAME = _T("wxTreeListCtrl");
 const wxString APP_VENDOR = _T("wxCode");
-const wxString APP_VERSION = _T("1.0.0");
+const wxString APP_VERSION = _T("2008_12_05");
 const wxString APP_MAINT = _T("Ronan Chartois");
 const wxString APP_LICENCE = _T("wxWindows");
-const wxString APP_COPYRIGTH = _T("(C) 2005-2008 Otto Wyss && others");
+const wxString APP_COPYRIGTH = _T("(C) 2005-2009 Otto Wyss && others");
 
 const wxString APP_DESCR = _("\
 A tree list control presents information as a hierarchy, with \n\
@@ -130,6 +130,8 @@ enum {
     myID_SETINDENT,
     myID_SETIMAGESIZE,
     myID_VETOEVENT,
+    myID_GETNEXT,
+    myID_GETPREV,
 };
 
 
@@ -261,6 +263,8 @@ public:
     void OnSetIndent (wxCommandEvent &event);
     void OnSetImageSize (wxCommandEvent &event);
     void OnVetoEvent (wxCommandEvent &event);
+    void OnGetNext (wxCommandEvent &event);
+    void OnGetPrev (wxCommandEvent &event);
     // tree events
     void OnVetoingEvent (wxTreeEvent &event);
     void OnTreeGeneric (wxTreeEvent &event);
@@ -475,6 +479,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_SETINDENT,          AppFrame::OnSetIndent)
     EVT_MENU (myID_SETIMAGESIZE,       AppFrame::OnSetImageSize)
     EVT_MENU (myID_VETOEVENT,          AppFrame::OnVetoEvent)
+    EVT_MENU (myID_GETNEXT,            AppFrame::OnGetNext)
+    EVT_MENU (myID_GETPREV,            AppFrame::OnGetPrev)
     // help events
     EVT_MENU (wxID_ABOUT,              AppFrame::OnAbout)
     // tree
@@ -863,6 +869,14 @@ void AppFrame::OnVetoingEvent (wxTreeEvent &event) {
     if (m_vetoEvent) event.Veto();
 }
 
+void AppFrame::OnGetNext (wxCommandEvent &event) {
+    m_treelist->SelectItem(m_treelist->GetNext(m_treelist->GetSelection()));
+}
+
+void AppFrame::OnGetPrev (wxCommandEvent &event) {
+    m_treelist->SelectItem(m_treelist->GetPrev(m_treelist->GetSelection()));
+}
+
 void AppFrame::OnTreeGeneric (wxTreeEvent &event) {
 const char *name;
 
@@ -1076,6 +1090,9 @@ void AppFrame::CreateMenu () {
     menuExtra->Append (myID_SETIMAGESIZE, _("Set image si&ze..."));
     menuExtra->AppendSeparator();
     menuExtra->AppendCheckItem (myID_VETOEVENT, _("&Veto event"));
+    menuExtra->AppendSeparator();
+    menuExtra->Append (myID_GETNEXT, _("Get &Next"));
+    menuExtra->Append (myID_GETPREV, _("Get &Prev"));
 
     // Help menu
     wxMenu *menuHelp = new wxMenu;
