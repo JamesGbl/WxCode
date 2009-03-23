@@ -16,33 +16,33 @@
 
 #include "libpq-fe.h"
 
-typedef ConnStatusType (wxSTDCALL *PQstatusType)(const PGconn*);
-typedef PGconn* (wxSTDCALL *PQsetdbLoginType)(const char*, const char*,
+typedef ConnStatusType (*PQstatusType)(const PGconn*);
+typedef PGconn* (*PQsetdbLoginType)(const char*, const char*,
   const char*, const char*, const char*, const char*, const char*);
-typedef char* (wxSTDCALL *PQerrorMessageType)(const PGconn*);
-typedef int (wxSTDCALL *PQclientEncodingType)(const PGconn*);
-typedef int (wxSTDCALL *PQsetClientEncodingType)(const PGconn*, const char*);
-typedef const char* (wxSTDCALL *PQencodingToCharType)(int);
-typedef void (wxSTDCALL *PQfinishType)(const PGconn*);
-typedef PGresult* (wxSTDCALL *PQexecType)(const PGconn*, const char*);
-typedef ExecStatusType (wxSTDCALL *PQresultStatusType)(const PGresult*);
-typedef void (wxSTDCALL *PQclearType)(PGresult*);
-typedef char* (wxSTDCALL *PQcmdTuplesType)(const PGresult*);
-typedef PGresult* (wxSTDCALL *PQprepareType)(PGconn*, const char*, const char*, int, const Oid*);
-typedef PGresult* (wxSTDCALL *PQexecPreparedType)(PGconn*, const char*, int, const char *const*,
+typedef char* (*PQerrorMessageType)(const PGconn*);
+typedef int (*PQclientEncodingType)(const PGconn*);
+typedef int (*PQsetClientEncodingType)(const PGconn*, const char*);
+typedef const char* (*PQencodingToCharType)(int);
+typedef void (*PQfinishType)(const PGconn*);
+typedef PGresult* (*PQexecType)(const PGconn*, const char*);
+typedef ExecStatusType (*PQresultStatusType)(const PGresult*);
+typedef void (*PQclearType)(PGresult*);
+typedef char* (*PQcmdTuplesType)(const PGresult*);
+typedef PGresult* (*PQprepareType)(PGconn*, const char*, const char*, int, const Oid*);
+typedef PGresult* (*PQexecPreparedType)(PGconn*, const char*, int, const char *const*,
   const int*, const int*, int resultFormat);
-typedef char* (wxSTDCALL *PQresultErrorMessageType)(const PGresult*);
-typedef int (wxSTDCALL *PQntuplesType)(const PGresult*);
-typedef int (wxSTDCALL *PQbinaryTuplesType)(const PGresult*);
-typedef char* (wxSTDCALL *PQfnameType)(const PGresult*, int);
-typedef int (wxSTDCALL *PQgetisnullType)(const PGresult*, int, int);
-typedef char* (wxSTDCALL *PQgetvalueType)(const PGresult*, int, int);
-typedef int (wxSTDCALL *PQgetlengthType)(const PGconn*);
-typedef unsigned char* (wxSTDCALL *PQunescapeByteaType)(const unsigned char*, size_t*);
-typedef void (wxSTDCALL *PQfreememType)(void*);
-typedef Oid (wxSTDCALL *PQftypeType)(const PGresult*, int);
-typedef int (wxSTDCALL *PQfsizeType)(const PGresult*, int);
-typedef int (wxSTDCALL *PQnfieldsType)(const PGresult*);
+typedef char* (*PQresultErrorMessageType)(const PGresult*);
+typedef int (*PQntuplesType)(const PGresult*);
+typedef int (*PQbinaryTuplesType)(const PGresult*);
+typedef char* (*PQfnameType)(const PGresult*, int);
+typedef int (*PQgetisnullType)(const PGresult*, int, int);
+typedef char* (*PQgetvalueType)(const PGresult*, int, int);
+typedef int (*PQgetlengthType)(const PGconn*);
+typedef unsigned char* (*PQunescapeByteaType)(const unsigned char*, size_t*);
+typedef void (*PQfreememType)(void*);
+typedef Oid (*PQftypeType)(const PGresult*, int);
+typedef int (*PQfsizeType)(const PGresult*, int);
+typedef int (*PQnfieldsType)(const PGresult*);
 
 
 class PostgresInterface

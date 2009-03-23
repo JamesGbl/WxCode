@@ -16,48 +16,48 @@
 
 #include "ibase.h"
 
-typedef ISC_STATUS (wxSTDCALL *fb_interpretType)(ISC_SCHAR*, unsigned int, const ISC_STATUS**);
-typedef void (wxSTDCALL *isc_expand_dpbType)(ISC_SCHAR**, short*, ...);
-typedef ISC_STATUS (wxSTDCALL *isc_attach_databaseType)(ISC_STATUS*, short, const ISC_SCHAR*,
+typedef ISC_STATUS (ISC_EXPORT *fb_interpretType)(ISC_SCHAR*, unsigned int, const ISC_STATUS**);
+typedef void (ISC_EXPORT *isc_expand_dpbType)(ISC_SCHAR**, short*, ...);
+typedef ISC_STATUS (ISC_EXPORT *isc_attach_databaseType)(ISC_STATUS*, short, const ISC_SCHAR*,
   isc_db_handle*, short, const ISC_SCHAR*);
-typedef ISC_STATUS (wxSTDCALL *isc_detach_databaseType)(ISC_STATUS*, isc_db_handle*);
-typedef ISC_STATUS (wxSTDCALL *isc_start_transactionType)(ISC_STATUS*, isc_tr_handle*, short, ...);
-typedef ISC_STATUS (wxSTDCALL *isc_commit_transactionType)(ISC_STATUS*, isc_tr_handle*);
-typedef ISC_STATUS (wxSTDCALL *isc_rollback_transactionType)(ISC_STATUS*, isc_tr_handle*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_execute_immediateType)(ISC_STATUS*, isc_db_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_detach_databaseType)(ISC_STATUS*, isc_db_handle*);
+typedef ISC_STATUS (ISC_EXPORT *isc_start_transactionType)(ISC_STATUS*, isc_tr_handle*, short, ...);
+typedef ISC_STATUS (ISC_EXPORT *isc_commit_transactionType)(ISC_STATUS*, isc_tr_handle*);
+typedef ISC_STATUS (ISC_EXPORT *isc_rollback_transactionType)(ISC_STATUS*, isc_tr_handle*);
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_execute_immediateType)(ISC_STATUS*, isc_db_handle*,
   isc_tr_handle*, unsigned short, const ISC_SCHAR*, unsigned short, XSQLDA*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_allocate_statementType)(ISC_STATUS*, isc_db_handle*, isc_stmt_handle*);
-typedef ISC_STATUS(wxSTDCALL *isc_dsql_prepareType)(ISC_STATUS*, isc_tr_handle*, isc_stmt_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_allocate_statementType)(ISC_STATUS*, isc_db_handle*, isc_stmt_handle*);
+typedef ISC_STATUS(ISC_EXPORT *isc_dsql_prepareType)(ISC_STATUS*, isc_tr_handle*, isc_stmt_handle*,
   unsigned short, const ISC_SCHAR*, unsigned short, XSQLDA*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_describeType)(ISC_STATUS*, isc_stmt_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_describeType)(ISC_STATUS*, isc_stmt_handle*,
   unsigned short, XSQLDA*);
-typedef void (wxSTDCALL *isc_sql_interpreteType)(short, ISC_SCHAR*, short);
-typedef ISC_LONG (wxSTDCALL *isc_sqlcodeType)(const ISC_STATUS*);
-typedef void (wxSTDCALL *isc_encode_timestampType)(const void*, ISC_TIMESTAMP*);
-typedef ISC_STATUS (wxSTDCALL *isc_create_blob2Type)(ISC_STATUS*, isc_db_handle*,
+typedef void (ISC_EXPORT *isc_sql_interpreteType)(short, ISC_SCHAR*, short);
+typedef ISC_LONG (ISC_EXPORT *isc_sqlcodeType)(const ISC_STATUS*);
+typedef void (ISC_EXPORT *isc_encode_timestampType)(const void*, ISC_TIMESTAMP*);
+typedef ISC_STATUS (ISC_EXPORT *isc_create_blob2Type)(ISC_STATUS*, isc_db_handle*,
   isc_tr_handle*, isc_blob_handle*, ISC_QUAD*, short, const ISC_SCHAR*);
-typedef ISC_STATUS (wxSTDCALL *isc_open_blob2Type)(ISC_STATUS*, isc_db_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_open_blob2Type)(ISC_STATUS*, isc_db_handle*,
   isc_tr_handle*, isc_blob_handle*, ISC_QUAD*, ISC_USHORT, const ISC_UCHAR*);
-typedef ISC_STATUS (wxSTDCALL *isc_put_segmentType)(ISC_STATUS*, isc_blob_handle*, 
+typedef ISC_STATUS (ISC_EXPORT *isc_put_segmentType)(ISC_STATUS*, isc_blob_handle*, 
   unsigned short, const ISC_SCHAR*);
-typedef ISC_STATUS (wxSTDCALL *isc_close_blobType)(ISC_STATUS*, isc_blob_handle*);
-typedef ISC_STATUS (wxSTDCALL *isc_commit_retainingType)(ISC_STATUS*, isc_tr_handle*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_free_statementType)(ISC_STATUS*, isc_stmt_handle*, unsigned short);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_describe_bindType)(ISC_STATUS*, isc_stmt_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_close_blobType)(ISC_STATUS*, isc_blob_handle*);
+typedef ISC_STATUS (ISC_EXPORT *isc_commit_retainingType)(ISC_STATUS*, isc_tr_handle*);
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_free_statementType)(ISC_STATUS*, isc_stmt_handle*, unsigned short);
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_describe_bindType)(ISC_STATUS*, isc_stmt_handle*,
   unsigned short, XSQLDA*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_executeType)(ISC_STATUS*, isc_tr_handle*, 
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_executeType)(ISC_STATUS*, isc_tr_handle*, 
   isc_stmt_handle*, unsigned short, XSQLDA*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_sql_infoType)(ISC_STATUS*, isc_stmt_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_sql_infoType)(ISC_STATUS*, isc_stmt_handle*,
   short, const ISC_SCHAR*, short, ISC_SCHAR*);
-typedef ISC_LONG (wxSTDCALL *isc_vax_integerType)(const ISC_SCHAR*, short);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_execute2Type)(ISC_STATUS*, isc_tr_handle*,
+typedef ISC_LONG (ISC_EXPORT *isc_vax_integerType)(const ISC_SCHAR*, short);
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_execute2Type)(ISC_STATUS*, isc_tr_handle*,
   isc_stmt_handle*, unsigned short, XSQLDA*, XSQLDA*);
-typedef ISC_STATUS (wxSTDCALL *isc_dsql_fetchType)(ISC_STATUS*, isc_stmt_handle*,
+typedef ISC_STATUS (ISC_EXPORT *isc_dsql_fetchType)(ISC_STATUS*, isc_stmt_handle*,
   unsigned short, XSQLDA*);
-typedef void (wxSTDCALL *isc_decode_timestampType)(const ISC_TIMESTAMP*, void*);
-typedef void (wxSTDCALL *isc_decode_sql_dateType)(const ISC_DATE*, void*);
-typedef void (wxSTDCALL *isc_decode_sql_timeType)(const ISC_TIME*, void*);
-typedef ISC_STATUS (wxSTDCALL *isc_get_segmentType)(ISC_STATUS*, isc_blob_handle*,
+typedef void (ISC_EXPORT *isc_decode_timestampType)(const ISC_TIMESTAMP*, void*);
+typedef void (ISC_EXPORT *isc_decode_sql_dateType)(const ISC_DATE*, void*);
+typedef void (ISC_EXPORT *isc_decode_sql_timeType)(const ISC_TIME*, void*);
+typedef ISC_STATUS (ISC_EXPORT *isc_get_segmentType)(ISC_STATUS*, isc_blob_handle*,
   unsigned short*, unsigned short, ISC_SCHAR*);
 
 class FirebirdInterface

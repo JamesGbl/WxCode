@@ -16,36 +16,36 @@
 
 #include "mysql.h"
 
-typedef void (wxSTDCALL *MysqlServerEndType)(void);
-typedef MYSQL* (wxSTDCALL *MysqlInitType)(MYSQL*);
-typedef MYSQL* (wxSTDCALL *MysqlRealConnectType)(MYSQL*, const char*, const char*,
+typedef void (STDCALL *MysqlServerEndType)(void);
+typedef MYSQL* (STDCALL *MysqlInitType)(MYSQL*);
+typedef MYSQL* (STDCALL *MysqlRealConnectType)(MYSQL*, const char*, const char*,
   const char*, const char*, unsigned int, const char*, unsigned long);
-typedef int (wxSTDCALL *MysqlRealQueryType)(MYSQL*, const char*, unsigned long);
-typedef const char* (wxSTDCALL *MysqlErrorType)(MYSQL*);
-typedef unsigned int (wxSTDCALL *MysqlErrnoType)(MYSQL*);
-typedef void (wxSTDCALL *MysqlCloseType)(MYSQL*);
-typedef my_bool (wxSTDCALL *MysqlAutoCommitType)(MYSQL*, my_bool);
-typedef my_bool (wxSTDCALL *MysqlCommitType)(MYSQL*);
-typedef my_bool (wxSTDCALL *MysqlRollbackType)(MYSQL*);
-typedef int (wxSTDCALL *MysqlQueryType)(MYSQL*, const char*);
-typedef my_ulonglong(wxSTDCALL *MysqlAffectedRowsType)(MYSQL*);
-typedef MYSQL_STMT* (wxSTDCALL *MysqlStmtInitType)(MYSQL*);
-typedef int (wxSTDCALL *MysqlStmtPrepareType)(MYSQL_STMT*, const char*, unsigned long);
-typedef int (wxSTDCALL *MysqlStmtExecuteType)(MYSQL_STMT*);
-typedef const char* (wxSTDCALL *MysqlStmtErrorType)(MYSQL_STMT*);
-typedef unsigned int (wxSTDCALL *MysqlStmtErrnoType)(MYSQL_STMT*);
-typedef my_bool (wxSTDCALL *MysqlStmtFreeResultType)(MYSQL_STMT*);
-typedef my_bool (wxSTDCALL *MysqlStmtCloseType)(MYSQL_STMT*);
-typedef MYSQL_RES* (wxSTDCALL *MysqlListTablesType)(MYSQL*, const char*);
-typedef MYSQL_ROW (wxSTDCALL *MysqlFetchRowType)(MYSQL_RES*);
-typedef void (wxSTDCALL *MysqlFreeResultType)(MYSQL_RES*);
-typedef unsigned long (wxSTDCALL *MysqlGetServerVersionType)(MYSQL*);
-typedef MYSQL_RES* (wxSTDCALL *MysqlStmtResultMetadataType)(MYSQL_STMT*);
-typedef unsigned int (wxSTDCALL *MysqlNumFieldsType)(MYSQL_RES*);
-typedef unsigned long (wxSTDCALL *MysqlStmtParamCountType)(MYSQL_STMT*);
-typedef my_bool (wxSTDCALL *MysqlStmtBindParamType)(MYSQL_STMT*, MYSQL_BIND*);
-typedef int (wxSTDCALL *MysqlStmtFetchType)(MYSQL_STMT*);
-typedef my_bool (wxSTDCALL *MysqlStmtBindResultType)(MYSQL_STMT*, MYSQL_BIND*);
+typedef int (STDCALL *MysqlRealQueryType)(MYSQL*, const char*, unsigned long);
+typedef const char* (STDCALL *MysqlErrorType)(MYSQL*);
+typedef unsigned int (STDCALL *MysqlErrnoType)(MYSQL*);
+typedef void (STDCALL *MysqlCloseType)(MYSQL*);
+typedef my_bool (STDCALL *MysqlAutoCommitType)(MYSQL*, my_bool);
+typedef my_bool (STDCALL *MysqlCommitType)(MYSQL*);
+typedef my_bool (STDCALL *MysqlRollbackType)(MYSQL*);
+typedef int (STDCALL *MysqlQueryType)(MYSQL*, const char*);
+typedef my_ulonglong(STDCALL *MysqlAffectedRowsType)(MYSQL*);
+typedef MYSQL_STMT* (STDCALL *MysqlStmtInitType)(MYSQL*);
+typedef int (STDCALL *MysqlStmtPrepareType)(MYSQL_STMT*, const char*, unsigned long);
+typedef int (STDCALL *MysqlStmtExecuteType)(MYSQL_STMT*);
+typedef const char* (STDCALL *MysqlStmtErrorType)(MYSQL_STMT*);
+typedef unsigned int (STDCALL *MysqlStmtErrnoType)(MYSQL_STMT*);
+typedef my_bool (STDCALL *MysqlStmtFreeResultType)(MYSQL_STMT*);
+typedef my_bool (STDCALL *MysqlStmtCloseType)(MYSQL_STMT*);
+typedef MYSQL_RES* (STDCALL *MysqlListTablesType)(MYSQL*, const char*);
+typedef MYSQL_ROW (STDCALL *MysqlFetchRowType)(MYSQL_RES*);
+typedef void (STDCALL *MysqlFreeResultType)(MYSQL_RES*);
+typedef unsigned long (STDCALL *MysqlGetServerVersionType)(MYSQL*);
+typedef MYSQL_RES* (STDCALL *MysqlStmtResultMetadataType)(MYSQL_STMT*);
+typedef unsigned int (STDCALL *MysqlNumFieldsType)(MYSQL_RES*);
+typedef unsigned long (STDCALL *MysqlStmtParamCountType)(MYSQL_STMT*);
+typedef my_bool (STDCALL *MysqlStmtBindParamType)(MYSQL_STMT*, MYSQL_BIND*);
+typedef int (STDCALL *MysqlStmtFetchType)(MYSQL_STMT*);
+typedef my_bool (STDCALL *MysqlStmtBindResultType)(MYSQL_STMT*, MYSQL_BIND*);
 
 
 class MysqlInterface

@@ -2,12 +2,10 @@
 #define __FIREBIRD_DATABASE_LAYER_H__
 
 #include "DatabaseLayer.h"
-#include "FirebirdPreparedStatement.h"
+
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
 #include "FirebirdInterface.h"
 #endif
-
-#include "ibase.h"
 
 class FirebirdDatabaseLayer : public DatabaseLayer
 {
