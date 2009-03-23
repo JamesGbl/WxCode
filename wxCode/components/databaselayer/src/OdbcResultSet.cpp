@@ -45,7 +45,11 @@ OdbcResultSet::OdbcResultSet(OdbcInterface* pInterface, OdbcPreparedStatement* p
             return;
         }
         
-        wxString strField((wxChar*)field_name);
+#if wxUSE_UNICODE
+		wxString strField = ConvertFromUnicodeStream((const char*)(wxChar*)field_name);
+#else
+		wxString strField((wxChar*)field_name);
+#endif
         m_FieldLookupMap[strField.Upper()] = i;
     }
 }
@@ -252,8 +256,8 @@ void OdbcResultSet::RetrieveFieldData(int nField)
 
         memset(buff, 0, 8192*sizeof(SQLTCHAR));
 
-        SQLLEN  col_size         = 8192;
-        SQLLEN  real_size        = 0;
+        SQLINTEGER  col_size         = 8192;
+        SQLINTEGER  real_size        = 0;
 
         if (m_pOdbcStatement == NULL)
             m_pOdbcStatement = m_pStatement->GetLastStatement();

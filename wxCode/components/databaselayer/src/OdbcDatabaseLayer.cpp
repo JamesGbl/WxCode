@@ -77,13 +77,16 @@ bool OdbcDatabaseLayer::Open( )
 
    if ( !m_strDSN.IsEmpty() )
    {
-     //wxCharBuffer dsnCharBuffer = ConvertToUnicodeStream(m_strDSN);
-     //wxCharBuffer userCharBuffer = ConvertToUnicodeStream(m_strUser);
-     //wxCharBuffer passwordCharBuffer = ConvertToUnicodeStream(m_strPassword);
+#ifdef wxUSE_UNICODE
+     wxCharBuffer dsnCharBuffer = ConvertToUnicodeStream(m_strDSN);
+     wxCharBuffer userCharBuffer = ConvertToUnicodeStream(m_strUser);
+     wxCharBuffer passwordCharBuffer = ConvertToUnicodeStream(m_strPassword);
+#else
      void* dsnCharBuffer = (void*)m_strDSN.c_str();
      void* userCharBuffer = (void*)m_strUser.c_str();
      void* passwordCharBuffer = (void*)m_strPassword.c_str();
-     
+#endif
+
      SQLRETURN nRet;
      nRet = m_Interface.GetSQLConnect()(m_sqlHDBC, (SQLTCHAR FAR*)(const char*)dsnCharBuffer,
                 SQL_NTS, (SQLTCHAR FAR*)(const char*)userCharBuffer, SQL_NTS,
@@ -263,7 +266,6 @@ int OdbcDatabaseLayer::RunQuery( const wxString& strQuery, bool bParseQuery )
      }
      catch (...)
      {
-   puts("5");
        SetErrorCode(pStatement->GetErrorCode());
        SetErrorMessage(pStatement->GetErrorMessage());
        wxDELETE( pStatement );
@@ -342,11 +344,11 @@ PreparedStatement* OdbcDatabaseLayer::PrepareStatement( const wxString& strQuery
 
     for (unsigned int i=0; i<(QueryArray.size()); i++)
     {
-#if wxUSE_UNICODE
-        void* sqlBuffer = (void*)(QueryArray[i].c_str());
-#else
+//#if wxUSE_UNICODE
+//        void* sqlBuffer = (void*)(QueryArray[i].c_str());
+//#else
         wxCharBuffer sqlBuffer = ConvertToUnicodeStream(QueryArray[i]);
-#endif
+//#endif
         //wxPrintf(_("Preparing statement: '%s'\n"), sqlBuffer);
 
         SQLHSTMT pSqlStatement = allocStmth();
@@ -556,7 +558,7 @@ wxArrayString OdbcDatabaseLayer::GetColumns(const wxString& table)
   nRet = m_Interface.GetSQLFetch()(pStatement);
   while (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
   {
-    SQLTCHAR buff[8192];
+    SQLPOINTER buff[8192];
 
     memset(buff, 0, 8192*sizeof(SQLTCHAR));
 
@@ -577,6 +579,8 @@ wxArrayString OdbcDatabaseLayer::GetColumns(const wxString& table)
     returnArray.Add(strColumn);
     nRet = m_Interface.GetSQLFetch()(pStatement);
   }
+
+  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
 
   return returnArray;
 }

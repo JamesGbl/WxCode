@@ -108,7 +108,10 @@ wxString OdbcResultSetMetaData::GetColumnName(int i)
       8192, &col_name_length, &col_data_type, &col_size, &col_decimal_digits, &col_nullable );
 
   if ( nRet == SQL_SUCCESS )
-      return wxString((wxChar*)col_name);
+  {
+      //return wxString((wxChar*)col_name);
+	  columnName = ConvertFromUnicodeStream((const char*)(wxChar*)col_name);
+  }
 
   return columnName;
 }
