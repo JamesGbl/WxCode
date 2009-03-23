@@ -1,7 +1,15 @@
 #include "../include/FirebirdDatabaseLayer.h"
-#include "../include/FirebirdResultSet.h"
 #include "../include/DatabaseErrorCodes.h"
 #include "../include/DatabaseLayerException.h"
+
+#include "ibase.h"
+
+#ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
+#include "../include/FirebirdInterface.h"
+#endif
+
+#include "../include/FirebirdPreparedStatement.h"
+#include "../include/FirebirdResultSet.h"
 
 #include "wx/tokenzr.h"
 #include "wx/regex.h"
