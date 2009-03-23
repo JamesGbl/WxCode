@@ -157,7 +157,8 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
       #define DROP_COMPLEX_ROLLBACK_TABLES 10
       #define INSERT_INTO_TABLE3 11
       #define CREATE_TABLE9 12
-      #define CREATE_VIEW1 13
+      #define INSERT_INTO_TABLE9 13
+      #define CREATE_VIEW1 14
 
       SQL_STATEMENT_ARRAY m_SqlMap; // Database specific SQL statements to be run on the tests
       wxArrayString m_DeleteStatements; // Statements such as "DROP TABLE tableX;" to be run during tearDown
@@ -197,7 +198,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         {
           // Don't stop on error here since this could be a "table already exists" error
           wxString errorMessage = wxString::Format(_("Error (%d): %s"), e.GetErrorCode(), e.GetErrorMessage().c_str());
-          puts(errorMessage.mb_str());
+          //puts(errorMessage.mb_str());
         }
 #endif
 
@@ -209,7 +210,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         catch (DatabaseLayerException& e)
         {
           wxString errorMessage = wxString::Format(_("Error (%d): %s"), e.GetErrorCode(), e.GetErrorMessage().c_str());
-          puts(errorMessage.mb_str());
+          //puts(errorMessage.mb_str());
           m_pDatabaseLayer = NULL;
           return;
         }
@@ -1119,7 +1120,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
               DatabaseErrorCheck(pResultSet);
               wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
               wxPrintf(_("TimeNow: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)TimeNow.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                    (const char*)TimeNow.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
               ASSERT(RetrievedTime.IsEqualTo(TimeNow));
             }
             else
@@ -1153,7 +1154,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
                 DatabaseErrorCheck(pResultSet);
                 wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
                 wxPrintf(_("TimeNow: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)TimeNow.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                    (const char*)TimeNow.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
                 ASSERT(RetrievedTime.IsEqualTo(TimeNow));
               }
               else
@@ -1259,7 +1260,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
               DatabaseErrorCheck(pResultSet);
               wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
               wxPrintf(_("TimeBefore1970: \"%s\" compared to \"%s\"\n"), 
-                  (const char*)TimeBefore1970.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                  (const char*)TimeBefore1970.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
               ASSERT(RetrievedTime.IsEqualTo(TimeBefore1970));
             }
             else
@@ -1288,7 +1289,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
                 DatabaseErrorCheck(pResultSet);
                 wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
                 wxPrintf(_("TimeBefore1970: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)TimeBefore1970.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                    (const char*)TimeBefore1970.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
                 ASSERT(RetrievedTime.IsEqualTo(TimeBefore1970));
               }
               else
@@ -1379,7 +1380,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
             {
               wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
               wxPrintf(_("ExpectedTime: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)ExpectedTime.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                    (const char*)ExpectedTime.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
               ASSERT(RetrievedTime.IsEqualTo(ExpectedTime));
             }
             else
@@ -3927,11 +3928,14 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           m_pDatabaseLayer->RunQuery(_("DELETE FROM table9;")); // Be extra sure the table is empty
           
           wxDateTime ExpectedTime(21 /*day of month*/, wxDateTime::Jan /*month*/, 2006 /*year*/, 0 /*hour*/, 0 /*minute*/, 0 /*second*/, 0 /*milliseconds*/);
-#ifdef USE_MYSQL          
-          m_pDatabaseLayer->RunQuery(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '2006/01/21');"));
-#else          
-          m_pDatabaseLayer->RunQuery(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
-#endif          
+          SQL_STATEMENT_ARRAY::iterator insertIntoTableSql = m_SqlMap.find(INSERT_INTO_TABLE9);
+          if (insertIntoTableSql != m_SqlMap.end())
+          {
+            for (unsigned int i=0; i<(*insertIntoTableSql).second.size(); i++)
+            {
+              m_pDatabaseLayer->RunQuery((*insertIntoTableSql).second.Item(i));
+            }
+          }
 
           DatabaseErrorCheck(m_pDatabaseLayer);
           DatabaseResultSet* pResultSet = m_pDatabaseLayer->RunQueryWithResults(_("SELECT * FROM table9;"));
@@ -3943,7 +3947,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
             {
               wxDateTime RetrievedTime = pResultSet->GetResultDate(_("DateCol"));
               wxPrintf(_("ExpectedTime: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)ExpectedTime.Format().mb_str(*wxConvCurrent), (const char*)RetrievedTime.Format().mb_str(*wxConvCurrent));
+                    (const char*)ExpectedTime.Format().c_str(), (const char*)RetrievedTime.Format().c_str());
               ASSERT(RetrievedTime.IsEqualTo(ExpectedTime));
             }
             else
@@ -4025,7 +4029,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
             {
               wxDateTime RetrievedDate = pResultSet->GetResultDate(_("DateCol"));
               wxPrintf(_("ExpectedDate: \"%s\" compared to \"%s\"\n"), 
-                    (const char*)ExpectedDate.Format().mb_str(*wxConvCurrent), (const char*)RetrievedDate.Format().mb_str(*wxConvCurrent));
+                    (const char*)ExpectedDate.Format().c_str(), (const char*)RetrievedDate.Format().c_str());
               ASSERT(RetrievedDate.IsSameDate(ExpectedDate));
             }
             else
@@ -5352,7 +5356,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
       void ProcessException(DatabaseLayerException& e, bool bFail = true)
       {
         wxString errorMessage = wxString::Format(_("Error (%d): %s"), e.GetErrorCode(), e.GetErrorMessage().c_str());
-        puts(errorMessage.mb_str());
+        //puts(errorMessage.mb_str());
         if (bFail)
         {
           ASSERT_MESSAGE(false, errorMessage.mb_str());
@@ -5790,6 +5794,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
 
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
+
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 (col1) AS SELECT table1.COLUMN1 FROM table1;"));
         m_SqlMap[CREATE_VIEW1] = createView1Scripts;
@@ -5847,6 +5855,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
 
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '2006/01/21');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
+
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 (col1) AS SELECT table1.COLUMN1 FROM table1;"));
         m_SqlMap[CREATE_VIEW1] = createView1Scripts;
@@ -5903,6 +5915,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
 
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
+
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 AS SELECT table1.COLUMN1 AS col1 FROM table1;"));
         m_SqlMap[CREATE_VIEW1] = createView1Scripts;
@@ -5958,6 +5974,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         wxArrayString createTable9Scripts;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
+
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
 
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 AS SELECT table1.COLUMN1 AS col1 FROM table1;"));
@@ -6019,6 +6039,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATE);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
 
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
+
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 AS SELECT table1.COLUMN1 AS col1 FROM table1;"));
         m_SqlMap[CREATE_VIEW1] = createView1Scripts;
@@ -6074,6 +6098,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         wxArrayString createTable9Scripts;
         createTable9Scripts.Add(_("CREATE TABLE table9 (IntCol int, DateCol DATETIME);"));
         m_SqlMap[CREATE_TABLE9] = createTable9Scripts;
+
+		wxArrayString insertIntoTable9Scripts;
+		insertIntoTable9Scripts.Add(_("INSERT INTO table9 (IntCol, DateCol) VALUES (1, '01/21/2006');"));
+		m_SqlMap[INSERT_INTO_TABLE9] = insertIntoTable9Scripts;
 
         wxArrayString createView1Scripts;
         createView1Scripts.Add(_("CREATE VIEW view1 AS SELECT table1.COLUMN1 AS col1 FROM table1;"));
