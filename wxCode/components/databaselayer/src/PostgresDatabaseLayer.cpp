@@ -313,7 +313,7 @@ DatabaseResultSet* PostgresDatabaseLayer::RunQueryWithResults(const wxString& st
 
   wxCharBuffer sqlBuffer = ConvertToUnicodeStream(strQuery);
   PGresult* pResultCode = m_Interface.GetPQexec()(m_pDatabase, sqlBuffer);
-  if ((pResultCode == NULL))
+  if ((pResultCode == NULL) || (m_Interface.GetPQresultStatus()(pResultCode) != PGRES_TUPLES_OK))
   {
     SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_Interface.GetPQstatus()(m_pDatabase)));
     SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetPQerrorMessage()(m_pDatabase)));
