@@ -311,7 +311,7 @@ bool FirebirdPreparedStatementWrapper::IsSelectQuery()
 
 void FirebirdPreparedStatementWrapper::InterpretErrorCodes()
 {
-  wxLogError(_("FirebirdPreparesStatementWrapper::InterpretErrorCodes()\n"));
+  wxLogDebug(_("FirebirdPreparesStatementWrapper::InterpretErrorCodes()\n"));
 
   long nSqlCode = m_pInterface->GetIscSqlcode()(m_Status);
   SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode));
