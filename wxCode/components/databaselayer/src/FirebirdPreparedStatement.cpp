@@ -113,7 +113,7 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(FirebirdIn
 
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
       // If we're using exceptions, then assume that the calling program won't
-      //  won't get the pStatement pointer back.  So delete is now before
+      //  won't get the pStatement pointer back.  So delete it now before
       //  throwing the exception
       try
       {
@@ -140,7 +140,28 @@ FirebirdPreparedStatement* FirebirdPreparedStatement::CreateStatement(FirebirdIn
 
   while (start != stop)
   {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+    try
+    {
+#endif
     pStatement->AddPreparedStatement((*start));
+    }
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+    catch (DatabaseLayerException& e)
+    {
+      try
+      {
+        delete pStatement; //It's probably better to manually iterate over the list and close the statements, but for now just let close do it
+      }
+      catch (DatabaseLayerException& e)
+      {
+      }
+
+      // Pass on the error
+      throw e;
+    }
+#endif
+
     if (pStatement->GetErrorCode() != DATABASE_LAYER_OK)
     {
       // If we're using exceptions, then assume that the calling program won't
