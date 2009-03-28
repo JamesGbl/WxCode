@@ -135,10 +135,13 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         TEST_CASE(testReusePreparedStatementWithResults)
         TEST_CASE(testRunQueryReturnValue)
         TEST_CASE(testPreparedStatementRunQueryReturnValue)
+        TEST_CASE(testBadPreparedStatement);
+        TEST_CASE(testResultSetNoRecords);
       }
 
     private:
       DatabaseLayer* m_pDatabaseLayer;
+	  wxString m_strPath;
 
       // The map will have a numeric key where #define's are used to make the
       //  code more readable.  The map's values will be wxArrayString instances
@@ -166,6 +169,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
   public:
       void setUp()
       {
+		  wxGetEnv(_("PATH"), &m_strPath);
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
         try
         {
@@ -219,6 +223,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
 
       void tearDown()
       {
+		  wxSetEnv(_("PATH"), m_strPath);
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
         try
         {
@@ -5308,6 +5313,103 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
       }
 
+      void testBadPreparedStatement( void )
+      {
+        puts("testBadPreparedStatement");
+        ASSERT( m_pDatabaseLayer != NULL );
+        
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif  
+            // Prepare a statement with intential typos
+          PreparedStatement* pStatement = NULL;
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+          pStatement = m_pDatabaseLayer->PrepareStatement(_("SELECT * FORM table1;"));
+#ifdef USE_ODBC // For some reason ODBC doesn't through the error until running the query
+          if (pStatement && (pStatement->GetErrorCode() == DATABASE_LAYER_OK))
+            pStatement->RunQuery();
+#endif
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          if (pStatement)
+          {
+            m_pDatabaseLayer->CloseStatement(pStatement);
+            pStatement = NULL;
+          }
+          FAIL("DatabaseLayer error should have been thrown");
+#else
+          ASSERT( DATABASE_LAYER_OK != m_pDatabaseLayer->GetErrorCode() );
+#endif
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            if (pStatement)
+            {
+              m_pDatabaseLayer->CloseStatement(pStatement);
+              pStatement = NULL;
+            }
+            ASSERT( DATABASE_LAYER_OK != e.GetErrorCode() );
+          }
+#endif
+
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
+
+      /* Test to make sure that DatabaseResultSet doesn't throw an 
+	    error if there are no records returned
+       */
+      void testResultSetNoRecords()
+      {
+        puts("testResultSetNext");
+        ASSERT( m_pDatabaseLayer != NULL );
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+          // Get the initial row count
+          int nCount = GetRowCount();
+          wxPrintf(_("Checking if row count = 0\n"));
+          ASSERT_EQUALS( 0, nCount );
+        
+          DatabaseResultSet* pResultSet = m_pDatabaseLayer->RunQueryWithResults(_("SELECT * FROM table1"));
+          DatabaseErrorCheck(m_pDatabaseLayer);
+
+          ASSERT(pResultSet != NULL);
+          if (pResultSet)
+          {
+            DatabaseErrorCheck(pResultSet);
+            while (pResultSet->Next())
+            {
+              FAIL("The result set should have no records");
+            }
+
+            m_pDatabaseLayer->CloseResultSet(pResultSet);
+          }
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
+
 
       
 // Helper function to reduce the redundancy in getting the row count which is a common action
@@ -5433,7 +5535,19 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
 #elif USE_FIREBIRD
         m_pDatabaseLayer = NULL;
-        if (!FirebirdDatabaseLayer::IsAvailable())
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/Firebird/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
+		if (!FirebirdDatabaseLayer::IsAvailable())
         {
           wxPrintf(_("Firebird database backend is not available"));
           FAIL("Firebird database backend is not available");
@@ -5491,6 +5605,18 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
   #endif
 #elif USE_POSTGRESQL
         m_pDatabaseLayer = NULL;
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/PostgreSQL/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
         if (!PostgresDatabaseLayer::IsAvailable())
         {
           wxPrintf(_("PostgreSQL database backend is not available"));
@@ -5535,6 +5661,18 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           m_pDatabaseLayer = new PostgresDatabaseLayer(strDatabase);
 #elif USE_MYSQL
         m_pDatabaseLayer = NULL;
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/MySQL/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
         if (!MysqlDatabaseLayer::IsAvailable())
         {
           wxPrintf(_("MySQL database backend is not available"));
@@ -5580,6 +5718,18 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         m_pDatabaseLayer = new MysqlDatabaseLayer(strServer, strDatabase, strUser, strPassword);
 #elif USE_ORACLE
         m_pDatabaseLayer = NULL;
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/Oracle/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
         wxString strUser;
         if (config.Read(_("/Oracle/user"), &strUser) == false)
         {
@@ -5617,6 +5767,18 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         
 #elif USE_ODBC
         m_pDatabaseLayer = NULL;
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/ODBC/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
         if (!OdbcDatabaseLayer::IsAvailable())
         {
           wxPrintf(_("ODBC database backend is not available"));
@@ -5661,6 +5823,18 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
           ((OdbcDatabaseLayer*)m_pDatabaseLayer)->Open(strDSN, wxEmptyString, wxEmptyString);
 #elif USE_TDS
         m_pDatabaseLayer = NULL;
+
+		wxString strLibraryLocation;
+        if (config.Read(_("/Tds/library_location"), &strLibraryLocation))
+        {
+#ifdef WIN32
+          wxString strSeparator = _(";");
+#else
+          wxString strSeparator = _(":");
+#endif
+          wxSetEnv(_("PATH"), strLibraryLocation + strSeparator + m_strPath);
+		}
+
         wxString strServer;
         if (config.Read(_("/Tds/server"), &strServer) == false)
         {
