@@ -92,6 +92,14 @@ STATSETTINGSSAMPLE_OBJECTS =  \
 	statsettingssample_StaticSettingsSample.o \
 	statsettingssample_wx_pch.o \
 	$(__statsettingssample___win32rc)
+SIMPLELISTSAMPLE_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
+SIMPLELISTSAMPLE_OBJECTS =  \
+	simplelistsample_main.o
+SIMPLETREESAMPLE_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
+SIMPLETREESAMPLE_OBJECTS =  \
+	simpletreesample_main.o
 
 ### Conditionally set variables: ###
 
@@ -210,11 +218,27 @@ COND_PLATFORM_OS2_1___statsettingssample___os2_emxbindcmd = $(NM) \
 @COND_PLATFORM_OS2_1@__statsettingssample___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___statsettingssample___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__statsettingssample___win32rc \
 @COND_PLATFORM_WIN32_1@	= statsettingssample_resources_rc.o
+@COND_PLATFORM_MAC_0@__simplelistsample___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__simplelistsample___mac_setfilecmd \
+@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL \
+@COND_PLATFORM_MAC_1@	$(srcdir)/samples/Sample5/simplelistsample$(EXEEXT)
+COND_PLATFORM_OS2_1___simplelistsample___os2_emxbindcmd = $(NM) \
+	simplelistsample$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	simplelistsample$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__simplelistsample___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___simplelistsample___os2_emxbindcmd)
+@COND_PLATFORM_MAC_0@__simpletreesample___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__simpletreesample___mac_setfilecmd \
+@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL \
+@COND_PLATFORM_MAC_1@	$(srcdir)/samples/Sample6/simpletreesample$(EXEEXT)
+COND_PLATFORM_OS2_1___simpletreesample___os2_emxbindcmd = $(NM) \
+	simpletreesample$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	simpletreesample$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__simpletreesample___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___simpletreesample___os2_emxbindcmd)
 @COND_SHARED_1@VAR = -Wl,-rpath,../../lib
 
 ### Targets: ###
 
-all: $(__wxxs_lib___depname) $(__wxxs_dll___depname) $(srcdir)/samples/Sample1/dynsettingssample$(EXEEXT) $(srcdir)/samples/Sample2/datatreesample$(EXEEXT) $(srcdir)/samples/Sample3/customdatasample$(EXEEXT) $(srcdir)/samples/Sample4/statsettingssample$(EXEEXT)
+all: $(__wxxs_lib___depname) $(__wxxs_dll___depname) $(srcdir)/samples/Sample1/dynsettingssample$(EXEEXT) $(srcdir)/samples/Sample2/datatreesample$(EXEEXT) $(srcdir)/samples/Sample3/customdatasample$(EXEEXT) $(srcdir)/samples/Sample4/statsettingssample$(EXEEXT) $(srcdir)/samples/Sample5/simplelistsample$(EXEEXT) $(srcdir)/samples/Sample6/simpletreesample$(EXEEXT)
 
 install: $(__install_wxxs_lib___depname) $(__install_wxxs_lib_headers___depname) $(__install_wxxs_dll___depname) $(__install_wxxs_dll_headers___depname)
 
@@ -234,6 +258,8 @@ clean:
 	rm -f $(srcdir)/samples/Sample2/datatreesample$(EXEEXT)
 	rm -f $(srcdir)/samples/Sample3/customdatasample$(EXEEXT)
 	rm -f $(srcdir)/samples/Sample4/statsettingssample$(EXEEXT)
+	rm -f $(srcdir)/samples/Sample5/simplelistsample$(EXEEXT)
+	rm -f $(srcdir)/samples/Sample6/simpletreesample$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -330,6 +356,24 @@ $(srcdir)/samples/Sample4/statsettingssample$(EXEEXT): $(STATSETTINGSSAMPLE_OBJE
 make_sample_dir_statsettingssample: 
 	@mkdir -p $(srcdir)/samples/Sample4
 
+$(srcdir)/samples/Sample5/simplelistsample$(EXEEXT): $(SIMPLELISTSAMPLE_OBJECTS) make_sample_dir_simplelistsample $(__wxxs_lib___depname)
+	$(CXX) -o $@ $(SIMPLELISTSAMPLE_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+	
+	$(__simplelistsample___mac_setfilecmd)
+	$(__simplelistsample___os2_emxbindcmd)
+
+make_sample_dir_simplelistsample: 
+	@mkdir -p $(srcdir)/samples/Sample5
+
+$(srcdir)/samples/Sample6/simpletreesample$(EXEEXT): $(SIMPLETREESAMPLE_OBJECTS) make_sample_dir_simpletreesample $(__wxxs_lib___depname)
+	$(CXX) -o $@ $(SIMPLETREESAMPLE_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+	
+	$(__simpletreesample___mac_setfilecmd)
+	$(__simpletreesample___os2_emxbindcmd)
+
+make_sample_dir_simpletreesample: 
+	@mkdir -p $(srcdir)/samples/Sample6
+
 wxxs_lib_PropertyIO.o: $(srcdir)/src/PropertyIO.cpp
 	$(CXXC) -c -o $@ $(WXXS_LIB_CXXFLAGS) $(srcdir)/src/PropertyIO.cpp
 
@@ -407,6 +451,12 @@ statsettingssample_wx_pch.o: $(srcdir)/samples/Sample4/wx_pch.cpp
 
 statsettingssample_resources_rc.o: $(srcdir)/samples/Sample4/resources.rc
 	$(WX_RESCOMP) -i$< -o$@  --include-dir $(srcdir)/include --include-dir $(srcdir)/samples/Sample4
+
+simplelistsample_main.o: $(srcdir)/samples/Sample5/main.cpp
+	$(CXXC) -c -o $@ $(SIMPLELISTSAMPLE_CXXFLAGS) $(srcdir)/samples/Sample5/main.cpp
+
+simpletreesample_main.o: $(srcdir)/samples/Sample6/main.cpp
+	$(CXXC) -c -o $@ $(SIMPLETREESAMPLE_CXXFLAGS) $(srcdir)/samples/Sample6/main.cpp
 
 
 # Include dependency info, if present:

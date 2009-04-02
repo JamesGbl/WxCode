@@ -75,46 +75,55 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXXS_LIB_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXXS_LIB_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXXS_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_lib_PropertyIO.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_lib_XmlSerializer.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_lib_wx_pch.o
-WXXS_DLL_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include -DWXMAKINGDLL_WXXS -fPIC \
-	-DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXXS_DLL_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include -DWXMAKINGDLL_WXXS \
+	-fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXXS_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_dll_PropertyIO.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_dll_XmlSerializer.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_dll_wx_pch.o
-DYNSETTINGSSAMPLE_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) \
+DYNSETTINGSSAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 DYNSETTINGSSAMPLE_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/dynsettingssample_GUI.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/dynsettingssample_MainFrame.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/dynsettingssample_SettingsSample.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/dynsettingssample_wx_pch.o
-DATATREESAMPLE_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) \
+DATATREESAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 DATATREESAMPLE_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/datatreesample_GUI.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/datatreesample_MainFrame.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/datatreesample_TreeSample.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/datatreesample_wx_pch.o
-CUSTOMDATASAMPLE_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) \
+CUSTOMDATASAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 CUSTOMDATASAMPLE_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/customdatasample_CustomDataSample.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/customdatasample_GUI.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/customdatasample_MainFrame.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/customdatasample_wx_pch.o
-STATSETTINGSSAMPLE_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) \
-	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+STATSETTINGSSAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 STATSETTINGSSAMPLE_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_GUI.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_MainFrame.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_StaticSettingsSample.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_wx_pch.o
+SIMPLELISTSAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+SIMPLELISTSAMPLE_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/simplelistsample_main.o
+SIMPLETREESAMPLE_CXXFLAGS = $(VAR) $(VAR_15) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+SIMPLETREESAMPLE_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/simpletreesample_main.o
 
 ### Conditionally set variables: ###
 
@@ -193,13 +202,13 @@ ifeq ($(WX_DEBUG),1)
 VAR = -O0
 endif
 ifeq ($(SHARED),1)
-VAR_8 = -Wl,-rpath,../../lib/gcc_dll
+VAR_14 = -Wl,-rpath,../../lib/gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-VAR_9 = 
+VAR_15 = 
 endif
 ifeq ($(WX_DEBUG),1)
-VAR_9 = -g
+VAR_15 = -g
 endif
 
 
@@ -209,7 +218,7 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ../samples/Sample1/dynsettingssample ../samples/Sample2/datatreesample ../samples/Sample3/customdatasample ../samples/Sample4/statsettingssample
+all: test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ../samples/Sample1/dynsettingssample ../samples/Sample2/datatreesample ../samples/Sample3/customdatasample ../samples/Sample4/statsettingssample ../samples/Sample5/simplelistsample ../samples/Sample6/simpletreesample
 
 install: $(__install_wxxs_lib___depname) $(__install_wxxs_lib_headers___depname) $(__install_wxxs_dll___depname) $(__install_wxxs_dll_headers___depname)
 
@@ -225,6 +234,8 @@ clean:
 	rm -f ../samples/Sample2/datatreesample
 	rm -f ../samples/Sample3/customdatasample
 	rm -f ../samples/Sample4/statsettingssample
+	rm -f ../samples/Sample5/simplelistsample
+	rm -f ../samples/Sample6/simpletreesample
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
@@ -270,7 +281,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxxs_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxxs_dll  $(WXXS_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXXS_DLL_OBJECTS)  $(VAR_9) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXXS_DLL_OBJECTS)  $(VAR_15) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -308,28 +319,40 @@ uninstall_wxxs_dll_headers:
 endif
 
 ../samples/Sample1/dynsettingssample: $(DYNSETTINGSSAMPLE_OBJECTS) make_sample_dir_dynsettingssample $(__wxxs_lib___depname)
-	$(CXX) -o $@ $(DYNSETTINGSSAMPLE_OBJECTS)  $(VAR_9) -L../lib  $(VAR_8) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) -o $@ $(DYNSETTINGSSAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 
 make_sample_dir_dynsettingssample: 
 	@mkdir -p ../samples/Sample1
 
 ../samples/Sample2/datatreesample: $(DATATREESAMPLE_OBJECTS) make_sample_dir_datatreesample $(__wxxs_lib___depname)
-	$(CXX) -o $@ $(DATATREESAMPLE_OBJECTS)  $(VAR_9) -L../lib  $(VAR_8) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) -o $@ $(DATATREESAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 
 make_sample_dir_datatreesample: 
 	@mkdir -p ../samples/Sample2
 
 ../samples/Sample3/customdatasample: $(CUSTOMDATASAMPLE_OBJECTS) make_sample_dir_customdatasample $(__wxxs_lib___depname)
-	$(CXX) -o $@ $(CUSTOMDATASAMPLE_OBJECTS)  $(VAR_9) -L../lib  $(VAR_8) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) -o $@ $(CUSTOMDATASAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 
 make_sample_dir_customdatasample: 
 	@mkdir -p ../samples/Sample3
 
 ../samples/Sample4/statsettingssample: $(STATSETTINGSSAMPLE_OBJECTS) make_sample_dir_statsettingssample $(__wxxs_lib___depname)
-	$(CXX) -o $@ $(STATSETTINGSSAMPLE_OBJECTS)  $(VAR_9) -L../lib  $(VAR_8) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) -o $@ $(STATSETTINGSSAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 
 make_sample_dir_statsettingssample: 
 	@mkdir -p ../samples/Sample4
+
+../samples/Sample5/simplelistsample: $(SIMPLELISTSAMPLE_OBJECTS) make_sample_dir_simplelistsample $(__wxxs_lib___depname)
+	$(CXX) -o $@ $(SIMPLELISTSAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+
+make_sample_dir_simplelistsample: 
+	@mkdir -p ../samples/Sample5
+
+../samples/Sample6/simpletreesample: $(SIMPLETREESAMPLE_OBJECTS) make_sample_dir_simpletreesample $(__wxxs_lib___depname)
+	$(CXX) -o $@ $(SIMPLETREESAMPLE_OBJECTS)  $(VAR_15) -L../lib  $(VAR_14) $(LDFLAGS)  ../lib/gcc_$(__wxxs_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxxs-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+
+make_sample_dir_simpletreesample: 
+	@mkdir -p ../samples/Sample6
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxs_lib_PropertyIO.o: ../src/PropertyIO.cpp
 	$(CXX) -c -o $@ $(WXXS_LIB_CXXFLAGS) $(CPPDEPS) $<
@@ -396,6 +419,12 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_StaticSettingsSample.
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/statsettingssample_wx_pch.o: ../samples/Sample4/wx_pch.cpp
 	$(CXX) -c -o $@ $(STATSETTINGSSAMPLE_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/simplelistsample_main.o: ../samples/Sample5/main.cpp
+	$(CXX) -c -o $@ $(SIMPLELISTSAMPLE_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/simpletreesample_main.o: ../samples/Sample6/main.cpp
+	$(CXX) -c -o $@ $(SIMPLETREESAMPLE_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all install uninstall clean install_wxxs_lib uninstall_wxxs_lib \
 	install_wxxs_lib_headers uninstall_wxxs_lib_headers install_wxxs_dll \

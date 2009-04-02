@@ -111,42 +111,6 @@ ____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 !ifeq WX_SHARED 1
 ____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 !endif
-VAR =
-!ifeq WX_DEBUG 0
-VAR = -ot -ox
-!endif
-!ifeq WX_DEBUG 1
-VAR = -od
-!endif
-VAR_6 =
-!ifeq WX_DEBUG 0
-VAR_6 = -d0
-!endif
-!ifeq WX_DEBUG 1
-VAR_6 = -d2
-!endif
-VAR_7 =
-!ifeq WX_DEBUG 0
-VAR_7 = 
-!endif
-!ifeq WX_DEBUG 1
-VAR_7 = debug all
-!endif
-__WXLIB_XML_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib
-!endif
-__WXLIB_CORE_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib
-!endif
-__WXLIB_BASE_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib
-!endif
-!ifeq WX_MONOLITHIC 1
-__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX).lib
-!endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0
 ____WX_SHARED = 
@@ -178,6 +142,42 @@ WXLIBPOSTFIX = d
 WXLIBPOSTFIX = ud
 !endif
 !endif
+VAR =
+!ifeq WX_DEBUG 0
+VAR = -ot -ox
+!endif
+!ifeq WX_DEBUG 1
+VAR = -od
+!endif
+VAR_10 =
+!ifeq WX_DEBUG 0
+VAR_10 = -d0
+!endif
+!ifeq WX_DEBUG 1
+VAR_10 = -d2
+!endif
+VAR_11 =
+!ifeq WX_DEBUG 0
+VAR_11 = 
+!endif
+!ifeq WX_DEBUG 1
+VAR_11 = debug all
+!endif
+__WXLIB_XML_NAME_p =
+!ifeq WX_MONOLITHIC 0
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib
+!endif
+__WXLIB_CORE_NAME_p =
+!ifeq WX_MONOLITHIC 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib
+!endif
+__WXLIB_BASE_NAME_p =
+!ifeq WX_MONOLITHIC 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib
+!endif
+!ifeq WX_MONOLITHIC 1
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX).lib
+!endif
 WXLIBPATH =
 !ifeq WX_SHARED 0
 WXLIBPATH = \lib\wat_lib
@@ -191,7 +191,7 @@ WXLIBPATH = \lib\wat_dll
 WXXS_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 WXXS_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_PropertyIO.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_XmlSerializer.obj &
@@ -199,7 +199,7 @@ WXXS_LIB_OBJECTS =  &
 WXXS_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include -dWXMAKINGDLL_WXXS $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include -dWXMAKINGDLL_WXXS $(CPPFLAGS) $(CXXFLAGS)
 WXXS_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll_PropertyIO.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll_XmlSerializer.obj &
@@ -207,7 +207,7 @@ WXXS_DLL_OBJECTS =  &
 DYNSETTINGSSAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 DYNSETTINGSSAMPLE_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_GUI.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_MainFrame.obj &
@@ -216,7 +216,7 @@ DYNSETTINGSSAMPLE_OBJECTS =  &
 DATATREESAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 DATATREESAMPLE_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_GUI.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_MainFrame.obj &
@@ -225,7 +225,7 @@ DATATREESAMPLE_OBJECTS =  &
 CUSTOMDATASAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 CUSTOMDATASAMPLE_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_CustomDataSample.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_GUI.obj &
@@ -234,12 +234,24 @@ CUSTOMDATASAMPLE_OBJECTS =  &
 STATSETTINGSSAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_6) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 STATSETTINGSSAMPLE_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_GUI.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_MainFrame.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_StaticSettingsSample.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_wx_pch.obj
+SIMPLELISTSAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
+	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
+	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+SIMPLELISTSAMPLE_OBJECTS =  &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample_main.obj
+SIMPLETREESAMPLE_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
+	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
+	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
+	$(VAR_10) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+SIMPLETREESAMPLE_OBJECTS =  &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample_main.obj
 
 
 all : watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)
@@ -248,7 +260,7 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX) :
 
 ### Targets: ###
 
-all : .SYMBOLIC test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ..\samples\Sample1\dynsettingssample.exe ..\samples\Sample2\datatreesample.exe ..\samples\Sample3\customdatasample.exe ..\samples\Sample4\statsettingssample.exe
+all : .SYMBOLIC test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ..\samples\Sample1\dynsettingssample.exe ..\samples\Sample2\datatreesample.exe ..\samples\Sample3\customdatasample.exe ..\samples\Sample4\statsettingssample.exe ..\samples\Sample5\simplelistsample.exe ..\samples\Sample6\simpletreesample.exe
 
 clean : .SYMBOLIC 
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -263,6 +275,8 @@ clean : .SYMBOLIC
 	-if exist ..\samples\Sample2\datatreesample.exe del ..\samples\Sample2\datatreesample.exe
 	-if exist ..\samples\Sample3\customdatasample.exe del ..\samples\Sample3\customdatasample.exe
 	-if exist ..\samples\Sample4\statsettingssample.exe del ..\samples\Sample4\statsettingssample.exe
+	-if exist ..\samples\Sample5\simplelistsample.exe del ..\samples\Sample5\simplelistsample.exe
+	-if exist ..\samples\Sample6\simpletreesample.exe del ..\samples\Sample6\simpletreesample.exe
 
 test_for_selected_wxbuild :  
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -292,7 +306,7 @@ make_dir_wxxs_lib :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_7) libpath ..$(WXLIBPATH) $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) $(LDFLAGS)
 	@for %i in ($(WXXS_DLL_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc file %i
 	@for %i in ( $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll.lbc
@@ -309,7 +323,7 @@ make_dir_wxxs_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_7) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(DYNSETTINGSSAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_resources.res
@@ -324,7 +338,7 @@ make_sample_dir_dynsettingssample :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_7) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(DATATREESAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_resources.res
@@ -339,7 +353,7 @@ make_sample_dir_datatreesample :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_7) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(CUSTOMDATASAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_resources.res
@@ -354,7 +368,7 @@ make_sample_dir_customdatasample :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_7) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(STATSETTINGSSAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_resources.res
@@ -363,6 +377,36 @@ make_sample_dir_customdatasample :
 
 make_sample_dir_statsettingssample :  
 	if not exist ..\samples\Sample4 mkdir ..\samples\Sample4
+
+..\samples\Sample5\simplelistsample.exe :  $(SIMPLELISTSAMPLE_OBJECTS) make_sample_dir_simplelistsample $(__wxxs_lib___depname)
+	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc option quiet
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc name $^@
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc option caseexact
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@for %i in ($(SIMPLELISTSAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc file %i
+	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc library %i
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc
+	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc option stack=%i
+	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample.lbc
+
+make_sample_dir_simplelistsample :  
+	if not exist ..\samples\Sample5 mkdir ..\samples\Sample5
+
+..\samples\Sample6\simpletreesample.exe :  $(SIMPLETREESAMPLE_OBJECTS) make_sample_dir_simpletreesample $(__wxxs_lib___depname)
+	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc option quiet
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc name $^@
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc option caseexact
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_11) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@for %i in ($(SIMPLETREESAMPLE_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc file %i
+	@for %i in ( ..\lib\wat_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc library %i
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc
+	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc option stack=%i
+	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample.lbc
+
+make_sample_dir_simpletreesample :  
+	if not exist ..\samples\Sample6 mkdir ..\samples\Sample6
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_PropertyIO.obj :  .AUTODEPEND ..\src\PropertyIO.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXXS_LIB_CXXFLAGS) $<
@@ -441,4 +485,10 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_wx_pch.obj : 
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_resources.res :  .AUTODEPEND ..\samples\Sample4\resources.rc
 	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\Sample4 $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample_main.obj :  .AUTODEPEND ..\samples\Sample5\main.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLELISTSAMPLE_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample_main.obj :  .AUTODEPEND ..\samples\Sample6\main.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLETREESAMPLE_CXXFLAGS) $<
 

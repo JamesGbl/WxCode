@@ -1,14 +1,22 @@
-Changes in version 1.1.10 beta (2009-03-02):
+Changes in version 1.1.10 beta (2009-03-11):
 -------------------------------------------
+- Added two new simple samples (console applications) for demonstration how to use wxXmlSerializer for serialization of user-defined class instances
+  using new defined operators.
 - Added function bool xsSerializable::HasChildren().
 - Added static function xsPropertyIO* wxXmlSerializer::GetPropertyIOHandler(const wxString& datatype) returning pointer to I/O handler suitable for given
   data type if exists, otherwise NULL.
 - Added new data type and I/O handler for string hash map ('StringMap' data type).
+- Defined operator "<<" in the wxXmlSerializer class which adds a serializable object on the right side to a static instance of wxXmlSerializer on the left
+  side of the operator as a child object of serializer's root.
+- Defined operator "<<" in the xsSerializable class which adds a serializable object on the right side to a static instace of xsSerializable on the left 
+  side of the operator as its child object.
 - Optimized xsPropertyIO::Write() function of array data types for speed.
 - Declaration of xsProperyIO::ToString(T value) changed to xsProperyIO::ToString(const T& value).
+- Functions wxXmlSerializer::AddItem() return pointer to added item.
 - If a font creation based on a native info stored in XML fails then a default (wxSWISS_FONT) font is used.
 - Improved "const correctness" of member functions.
 - Code clean-up.
+- Updated premake build scripts to support CodeLite IDE.
 
 Changes in version 1.1.9 beta (2009-01-01):
 ------------------------------------------

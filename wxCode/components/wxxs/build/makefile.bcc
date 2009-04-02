@@ -85,7 +85,7 @@ SHARED = 0
 WXXS_LIB_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
 WXXS_LIB_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_PropertyIO.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_XmlSerializer.obj \
@@ -93,7 +93,7 @@ WXXS_LIB_OBJECTS =  \
 WXXS_DLL_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include -DWXMAKINGDLL_WXXS $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include -DWXMAKINGDLL_WXXS $(CPPFLAGS) $(CXXFLAGS)
 WXXS_DLL_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll_PropertyIO.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_dll_XmlSerializer.obj \
@@ -101,7 +101,7 @@ WXXS_DLL_OBJECTS =  \
 DYNSETTINGSSAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
 DYNSETTINGSSAMPLE_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_GUI.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_MainFrame.obj \
@@ -110,7 +110,7 @@ DYNSETTINGSSAMPLE_OBJECTS =  \
 DATATREESAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
 DATATREESAMPLE_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_GUI.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_MainFrame.obj \
@@ -119,7 +119,7 @@ DATATREESAMPLE_OBJECTS =  \
 CUSTOMDATASAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
 CUSTOMDATASAMPLE_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_CustomDataSample.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_GUI.obj \
@@ -128,12 +128,24 @@ CUSTOMDATASAMPLE_OBJECTS =  \
 STATSETTINGSSAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_7) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
 STATSETTINGSSAMPLE_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_GUI.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_MainFrame.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_StaticSettingsSample.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_wx_pch.obj
+SIMPLELISTSAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+SIMPLELISTSAMPLE_OBJECTS =  \
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample_main.obj
+SIMPLETREESAMPLE_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_11) -I..\include $(CPPFLAGS) $(CXXFLAGS)
+SIMPLETREESAMPLE_OBJECTS =  \
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample_main.obj
 
 ### Conditionally set variables: ###
 
@@ -167,28 +179,37 @@ ____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 ____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 !endif
 !if "$(WX_SHARED)" == "0"
-____WX_SHARED = 
-!endif
-!if "$(WX_SHARED)" == "1"
-____WX_SHARED = -DWXUSINGDLL
-!endif
-!if "$(WX_SHARED)" == "0"
 ____WX_SHARED_2 = 
 !endif
 !if "$(WX_SHARED)" == "1"
 ____WX_SHARED_2 = -dWXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
-__WXUNICODE_DEFINE_p = -D_UNICODE
+__WXUNICODE_DEFINE_p_12 = -d_UNICODE
+!endif
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_12 = -d__WXDEBUG__
+!endif
+!if "$(WX_SHARED)" == "0"
+____WX_SHARED = 
+!endif
+!if "$(WX_SHARED)" == "1"
+____WX_SHARED = -DWXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
-__WXUNICODE_DEFINE_p_11 = -d_UNICODE
+__WXUNICODE_DEFINE_p = -D_UNICODE
 !endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = -D__WXDEBUG__
 !endif
-!if "$(WX_DEBUG)" == "1"
-__WXDEBUG_DEFINE_p_11 = -d__WXDEBUG__
+!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = u
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
+WXLIBPOSTFIX = d
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = ud
 !endif
 !if "$(WX_DEBUG)" == "0"
 VAR = -O2
@@ -208,15 +229,6 @@ __WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib
 !if "$(WX_MONOLITHIC)" == "1"
 __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX).lib
 !endif
-!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = u
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
-WXLIBPOSTFIX = d
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = ud
-!endif
 !if "$(WX_SHARED)" == "0"
 WXLIBPATH = \lib\bcc_lib
 !endif
@@ -224,10 +236,10 @@ WXLIBPATH = \lib\bcc_lib
 WXLIBPATH = \lib\bcc_dll
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR_7 = -v-
+VAR_11 = -v-
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR_7 = -v
+VAR_11 = -v
 !endif
 
 
@@ -237,7 +249,7 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ..\samples\Sample1\dynsettingssample.exe ..\samples\Sample2\datatreesample.exe ..\samples\Sample3\customdatasample.exe ..\samples\Sample4\statsettingssample.exe
+all: test_for_selected_wxbuild $(__wxxs_lib___depname) $(__wxxs_dll___depname) ..\samples\Sample1\dynsettingssample.exe ..\samples\Sample2\datatreesample.exe ..\samples\Sample3\customdatasample.exe ..\samples\Sample4\statsettingssample.exe ..\samples\Sample5\simplelistsample.exe ..\samples\Sample6\simpletreesample.exe
 
 clean: 
 	-if exist bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -275,6 +287,18 @@ clean:
 	-if exist ..\samples\Sample4\statsettingssample.ild del ..\samples\Sample4\statsettingssample.ild
 	-if exist ..\samples\Sample4\statsettingssample.ilf del ..\samples\Sample4\statsettingssample.ilf
 	-if exist ..\samples\Sample4\statsettingssample.ils del ..\samples\Sample4\statsettingssample.ils
+	-if exist ..\samples\Sample5\simplelistsample.exe del ..\samples\Sample5\simplelistsample.exe
+	-if exist ..\samples\Sample5\simplelistsample.tds del ..\samples\Sample5\simplelistsample.tds
+	-if exist ..\samples\Sample5\simplelistsample.ilc del ..\samples\Sample5\simplelistsample.ilc
+	-if exist ..\samples\Sample5\simplelistsample.ild del ..\samples\Sample5\simplelistsample.ild
+	-if exist ..\samples\Sample5\simplelistsample.ilf del ..\samples\Sample5\simplelistsample.ilf
+	-if exist ..\samples\Sample5\simplelistsample.ils del ..\samples\Sample5\simplelistsample.ils
+	-if exist ..\samples\Sample6\simpletreesample.exe del ..\samples\Sample6\simpletreesample.exe
+	-if exist ..\samples\Sample6\simpletreesample.tds del ..\samples\Sample6\simpletreesample.tds
+	-if exist ..\samples\Sample6\simpletreesample.ilc del ..\samples\Sample6\simpletreesample.ilc
+	-if exist ..\samples\Sample6\simpletreesample.ild del ..\samples\Sample6\simpletreesample.ild
+	-if exist ..\samples\Sample6\simpletreesample.ilf del ..\samples\Sample6\simpletreesample.ilf
+	-if exist ..\samples\Sample6\simpletreesample.ils del ..\samples\Sample6\simpletreesample.ils
 
 test_for_selected_wxbuild: 
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -301,7 +325,7 @@ make_dir_wxxs_lib:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\bcc_$(____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.dll: make_dir_wxxs_dll  $(WXXS_DLL_OBJECTS)
-	ilink32 -Tpd -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_7) -L..$(WXLIBPATH) $(LDFLAGS) @&&|
+	ilink32 -Tpd -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) $(LDFLAGS) @&&|
 	c0d32.obj $(WXXS_DLL_OBJECTS),$@,, $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
 	implib -f ..\lib\bcc_$(____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs $@
@@ -311,7 +335,7 @@ make_dir_wxxs_dll:
 	if not exist ..\lib\bcc_$(____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\bcc_$(____wxxs_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
 ..\samples\Sample1\dynsettingssample.exe: $(DYNSETTINGSSAMPLE_OBJECTS) make_sample_dir_dynsettingssample  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_resources.res $(__wxxs_lib___depname)
-	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_7) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
 	c0w32.obj $(DYNSETTINGSSAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_resources.res
 |
 
@@ -319,7 +343,7 @@ make_sample_dir_dynsettingssample:
 	if not exist ..\samples\Sample1 mkdir ..\samples\Sample1
 
 ..\samples\Sample2\datatreesample.exe: $(DATATREESAMPLE_OBJECTS) make_sample_dir_datatreesample  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_resources.res $(__wxxs_lib___depname)
-	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_7) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
 	c0w32.obj $(DATATREESAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_resources.res
 |
 
@@ -327,7 +351,7 @@ make_sample_dir_datatreesample:
 	if not exist ..\samples\Sample2 mkdir ..\samples\Sample2
 
 ..\samples\Sample3\customdatasample.exe: $(CUSTOMDATASAMPLE_OBJECTS) make_sample_dir_customdatasample  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_resources.res $(__wxxs_lib___depname)
-	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_7) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
 	c0w32.obj $(CUSTOMDATASAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_resources.res
 |
 
@@ -335,12 +359,28 @@ make_sample_dir_customdatasample:
 	if not exist ..\samples\Sample3 mkdir ..\samples\Sample3
 
 ..\samples\Sample4\statsettingssample.exe: $(STATSETTINGSSAMPLE_OBJECTS) make_sample_dir_statsettingssample  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_resources.res $(__wxxs_lib___depname)
-	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_7) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
 	c0w32.obj $(STATSETTINGSSAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_resources.res
 |
 
 make_sample_dir_statsettingssample: 
 	if not exist ..\samples\Sample4 mkdir ..\samples\Sample4
+
+..\samples\Sample5\simplelistsample.exe: $(SIMPLELISTSAMPLE_OBJECTS) make_sample_dir_simplelistsample $(__wxxs_lib___depname)
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	c0w32.obj $(SIMPLELISTSAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
+|
+
+make_sample_dir_simplelistsample: 
+	if not exist ..\samples\Sample5 mkdir ..\samples\Sample5
+
+..\samples\Sample6\simpletreesample.exe: $(SIMPLETREESAMPLE_OBJECTS) make_sample_dir_simpletreesample $(__wxxs_lib___depname)
+	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_11) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
+	c0w32.obj $(SIMPLETREESAMPLE_OBJECTS),$@,, ..\lib\bcc_$(____wxxs_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxs.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
+|
+
+make_sample_dir_simpletreesample: 
+	if not exist ..\samples\Sample6 mkdir ..\samples\Sample6
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxs_lib_PropertyIO.obj: ..\src\PropertyIO.cpp
 	$(CXX) -q -c -P -o$@ $(WXXS_LIB_CXXFLAGS) ..\src\PropertyIO.cpp
@@ -373,7 +413,7 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_wx_pch.obj: ..
 	$(CXX) -q -c -P -o$@ $(DYNSETTINGSSAMPLE_CXXFLAGS) ..\samples\Sample1\wx_pch.cpp
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dynsettingssample_resources.res: ..\samples\Sample1\resources.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample1 ..\samples\Sample1\resources.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample1 ..\samples\Sample1\resources.rc
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_GUI.obj: ..\samples\Sample2\GUI.cpp
 	$(CXX) -q -c -P -o$@ $(DATATREESAMPLE_CXXFLAGS) ..\samples\Sample2\GUI.cpp
@@ -388,7 +428,7 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_wx_pch.obj: ..\sa
 	$(CXX) -q -c -P -o$@ $(DATATREESAMPLE_CXXFLAGS) ..\samples\Sample2\wx_pch.cpp
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\datatreesample_resources.res: ..\samples\Sample2\resources.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample2 ..\samples\Sample2\resources.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample2 ..\samples\Sample2\resources.rc
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_CustomDataSample.obj: ..\samples\Sample3\CustomDataSample.cpp
 	$(CXX) -q -c -P -o$@ $(CUSTOMDATASAMPLE_CXXFLAGS) ..\samples\Sample3\CustomDataSample.cpp
@@ -403,7 +443,7 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_wx_pch.obj: ..\
 	$(CXX) -q -c -P -o$@ $(CUSTOMDATASAMPLE_CXXFLAGS) ..\samples\Sample3\wx_pch.cpp
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\customdatasample_resources.res: ..\samples\Sample3\resources.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample3 ..\samples\Sample3\resources.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample3 ..\samples\Sample3\resources.rc
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_GUI.obj: ..\samples\Sample4\GUI.cpp
 	$(CXX) -q -c -P -o$@ $(STATSETTINGSSAMPLE_CXXFLAGS) ..\samples\Sample4\GUI.cpp
@@ -418,5 +458,11 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_wx_pch.obj: .
 	$(CXX) -q -c -P -o$@ $(STATSETTINGSSAMPLE_CXXFLAGS) ..\samples\Sample4\wx_pch.cpp
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\statsettingssample_resources.res: ..\samples\Sample4\resources.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample4 ..\samples\Sample4\resources.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_2) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\Sample4 ..\samples\Sample4\resources.rc
+
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simplelistsample_main.obj: ..\samples\Sample5\main.cpp
+	$(CXX) -q -c -P -o$@ $(SIMPLELISTSAMPLE_CXXFLAGS) ..\samples\Sample5\main.cpp
+
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simpletreesample_main.obj: ..\samples\Sample6\main.cpp
+	$(CXX) -q -c -P -o$@ $(SIMPLETREESAMPLE_CXXFLAGS) ..\samples\Sample6\main.cpp
 
