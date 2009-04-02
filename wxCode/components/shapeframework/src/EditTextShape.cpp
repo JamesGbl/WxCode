@@ -25,7 +25,6 @@ XS_IMPLEMENT_CLONABLE_CLASS(wxSFEditTextShape, wxSFTextShape);
 BEGIN_EVENT_TABLE(wxSFContentCtrl, wxTextCtrl)
 	EVT_KILL_FOCUS(wxSFContentCtrl::OnKillFocus)
 	EVT_KEY_DOWN(wxSFContentCtrl::OnKeyDown)
-	EVT_TEXT_ENTER(textCtrlId, wxSFContentCtrl::OnEnterDown)
 END_EVENT_TABLE()
 
 //----------------------------------------------------------------------------------//
@@ -33,7 +32,7 @@ END_EVENT_TABLE()
 //----------------------------------------------------------------------------------//
 
 wxSFContentCtrl::wxSFContentCtrl(wxWindow* parent, wxWindowID id, wxSFEditTextShape* parentShape, const wxString& content, wxPoint pos, wxSize size, int style)
-: wxTextCtrl(parent, id, content, pos, size, wxTE_PROCESS_ENTER | wxNO_BORDER | style)
+: wxTextCtrl(parent, id, content, pos, size, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB | wxNO_BORDER | style)
 {
 	m_pParent = parent;
 	m_pParentShape = parentShape;
@@ -69,20 +68,18 @@ void wxSFContentCtrl::OnKeyDown(wxKeyEvent& event)
 	case WXK_TAB:
 		Quit( sfAPPLY_TEXT_CHANGES );
 		break;
+	case WXK_RETURN:
+		// enter new line if SHIFT key was pressed together with the ENTER key
+		if( wxGetKeyState( WXK_SHIFT ) )
+		{
+			event.Skip();
+		}
+		else
+			Quit( sfAPPLY_TEXT_CHANGES );
+		break;
 	default:
 		event.Skip();
 	}
-}
-
-void wxSFContentCtrl::OnEnterDown(wxCommandEvent& event)
-{
-	// enter new line if SHIFT key was pressed together with the ENTER key
-	if( wxGetKeyState( WXK_SHIFT ) )
-	{
-		event.Skip();
-	}
-	else
-		Quit( sfAPPLY_TEXT_CHANGES );
 }
 
 void wxSFContentCtrl::Quit(bool apply)
@@ -116,7 +113,7 @@ void wxSFContentCtrl::Quit(bool apply)
 
 wxSFDetachedContentCtrl::wxSFDetachedContentCtrl( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( -1,-1 ), wxDefaultSize );
 	
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
