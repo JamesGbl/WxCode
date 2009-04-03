@@ -21,8 +21,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer()
   m_pDatabase = NULL;
   m_pTransaction = NULL;
 
+  m_pStatus = new ISC_STATUS_ARRAY();
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new FirebirdInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading Firebird library"));
@@ -42,8 +44,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer(const wxString& strDatabase)
   m_pDatabase = NULL;
   m_pTransaction = NULL;
 
+  m_pStatus = new ISC_STATUS_ARRAY();
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new FirebirdInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading Firebird library"));
@@ -66,8 +70,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer(const wxString& strDatabase, const 
   m_pDatabase = NULL;
   m_pTransaction = NULL;
 
+  m_pStatus = new ISC_STATUS_ARRAY();
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new FirebirdInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading Firebird library"));
@@ -90,8 +96,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer(const wxString& strServer, const wx
   m_pDatabase = NULL;
   m_pTransaction = NULL;
 
+  m_pStatus = new ISC_STATUS_ARRAY();
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new FirebirdInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading Firebird library"));
@@ -114,8 +122,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer(const wxString& strServer, const wx
   m_pDatabase = NULL;
   m_pTransaction = NULL;
 
+  m_pStatus = new ISC_STATUS_ARRAY();
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new FirebirdInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading Firebird library"));
@@ -136,6 +146,10 @@ FirebirdDatabaseLayer::FirebirdDatabaseLayer(const wxString& strServer, const wx
 FirebirdDatabaseLayer::~FirebirdDatabaseLayer()
 {
   Close();
+  ISC_STATUS_ARRAY* pStatus = (ISC_STATUS_ARRAY*)m_pStatus;
+  wxDELETE(pStatus);
+  m_pStatus = NULL;
+  wxDELETE(m_pInterface);
 }
 
 // open database
@@ -195,12 +209,12 @@ bool FirebirdDatabaseLayer::Open()
   
   if (m_strRole == wxEmptyString)
   {
-    m_Interface.GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
+    m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
         isc_dpb_password, (const char*)passwordCharBuffer, isc_dpb_lc_ctype, (const char*)systemEncoding, NULL);
   }
   else
   {
-    m_Interface.GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
+    m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
         isc_dpb_password, (const char*)passwordCharBuffer, isc_dpb_lc_ctype, (const char*)systemEncoding, 
         isc_dpb_sql_role_name, (const char*)roleCharBuffer, NULL);
   }
@@ -216,8 +230,10 @@ bool FirebirdDatabaseLayer::Open()
   m_pTransaction = NULL;
 
   wxCharBuffer urlBuffer = ConvertToUnicodeStream(strDatabaseUrl);
-  //int nReturn = m_Interface.GetIscAttachDatabase()(m_Status, 0, urlBuffer, &m_pDatabase, nParameterStringLength, szParameterString);
-  int nReturn = m_Interface.GetIscAttachDatabase()(m_Status, 0, (char*)(const char*)urlBuffer, &m_pDatabase, nDpbLength, pDpb);
+  isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+  //int nReturn = m_pInterface->GetIscAttachDatabase()(*(ISC_STATUS_ARRAY*)m_pStatus, 0, urlBuffer, &((isc_db_handle)m_pDatabase), nParameterStringLength, szParameterString);
+  int nReturn = m_pInterface->GetIscAttachDatabase()(*(ISC_STATUS_ARRAY*)m_pStatus, 0, (char*)(const char*)urlBuffer, &pDatabase, nDpbLength, pDpb);
+  m_pDatabase = pDatabase;
   if (nReturn != 0)
   {
     InterpretErrorCodes();
@@ -238,11 +254,13 @@ bool FirebirdDatabaseLayer::Close()
   {
     if (m_pTransaction)
     {
-      m_Interface.GetIscRollbackTransaction()(m_Status, &m_pTransaction);
+      isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+      m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pTransaction);
       m_pTransaction = NULL;
     }
 
-    int nReturn = m_Interface.GetIscDetachDatabase()(m_Status, &m_pDatabase);
+    isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+    int nReturn = m_pInterface->GetIscDetachDatabase()(*(ISC_STATUS_ARRAY*)m_pStatus, &pDatabase);
     m_pDatabase = NULL;
     if (nReturn != 0)
     {
@@ -269,7 +287,11 @@ void FirebirdDatabaseLayer::BeginTransaction()
   if (m_pDatabase)
   {
     m_pTransaction = 0L;
-    int nReturn = m_Interface.GetIscStartTransaction()(m_Status, &m_pTransaction, 1, &m_pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+    isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+    isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+    int nReturn = m_pInterface->GetIscStartTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pTransaction, 1, &pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+    m_pDatabase = pDatabase;
+    m_pTransaction = pTransaction;
     if (nReturn != 0)
     {
       InterpretErrorCodes();
@@ -285,7 +307,9 @@ void FirebirdDatabaseLayer::Commit()
   //wxLogDebug(_("Committing transaction"));
   if (m_pDatabase && m_pTransaction)
   {
-    int nReturn = m_Interface.GetIscCommitTransaction()(m_Status, &m_pTransaction);
+    isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+    int nReturn = m_pInterface->GetIscCommitTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pTransaction);
+    m_pTransaction = pTransaction;
     if (nReturn != 0)
     {
       InterpretErrorCodes();
@@ -306,7 +330,9 @@ void FirebirdDatabaseLayer::RollBack()
   //wxLogDebug(_("Rolling back transaction"));
   if (m_pDatabase && m_pTransaction)
   {
-    int nReturn = m_Interface.GetIscRollbackTransaction()(m_Status, &m_pTransaction);
+    isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+    int nReturn = m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pTransaction);
+    m_pTransaction = pTransaction;
     if (nReturn != 0)
     {
       InterpretErrorCodes();
@@ -363,14 +389,19 @@ int FirebirdDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
       while (start != stop)
       {
         wxCharBuffer sqlBuffer = ConvertToUnicodeStream(*start);
-        //int nReturn = m_Interface.GetIscDsqlExecuteImmediate()(m_Status, &m_pDatabase, &m_pTransaction, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
-        int nReturn = m_Interface.GetIscDsqlExecuteImmediate()(m_Status, &m_pDatabase, &m_pTransaction, GetEncodedStreamLength(*start), (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
+        isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+        isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+        //int nReturn = m_pInterface->GetIscDsqlExecuteImmediate()(*(ISC_STATUS_ARRAY*)m_pStatus, &pDatabase, &pTransaction, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
+        int nReturn = m_pInterface->GetIscDsqlExecuteImmediate()(*(ISC_STATUS_ARRAY*)m_pStatus, &pDatabase, &pTransaction, GetEncodedStreamLength(*start), (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
+        m_pDatabase = pDatabase;
+        m_pTransaction = pTransaction;
         if (nReturn != 0)
         {
           InterpretErrorCodes();
           // Manually try to rollback the transaction rather than calling the member RollBack function
           //  so that we can ignore the error messages
-          m_Interface.GetIscRollbackTransaction()(m_Status, &m_pTransaction);
+          isc_tr_handle pTransaction = (isc_tr_handle)m_pTransaction;
+          m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pTransaction);
           m_pTransaction = NULL;
 
           ThrowDatabaseException();
@@ -460,7 +491,9 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
       if (bQuickieTransaction)
       {
         bManageTransaction = true;
-        int nReturn = m_Interface.GetIscStartTransaction()(m_Status, &pQueryTransaction, 1, &m_pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+        isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+        int nReturn = m_pInterface->GetIscStartTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction, 1, &pDatabase, 0 /*tpb_length*/, NULL/*tpb*/);
+        m_pDatabase = pDatabase;
         if (nReturn != 0)
         {
           InterpretErrorCodes();
@@ -473,28 +506,30 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
       }
       
       isc_stmt_handle pStatement = NULL;
-      int nReturn = m_Interface.GetIscDsqlAllocateStatement()(m_Status, &m_pDatabase, &pStatement);
+      isc_db_handle pDatabase = (isc_db_handle)m_pDatabase;
+      int nReturn = m_pInterface->GetIscDsqlAllocateStatement()(*(ISC_STATUS_ARRAY*)m_pStatus, &pDatabase, &pStatement);
+      m_pDatabase = pDatabase;
       if (nReturn != 0)
       {
         InterpretErrorCodes();
 
         // Manually try to rollback the transaction rather than calling the member RollBack function
         //  so that we can ignore the error messages
-        m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+        m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
         ThrowDatabaseException();
         return NULL;
       }
       
       wxCharBuffer sqlBuffer = ConvertToUnicodeStream(QueryArray[QueryArray.size()-1]);
-      nReturn = m_Interface.GetIscDsqlPrepare()(m_Status, &pQueryTransaction, &pStatement, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
+      nReturn = m_pInterface->GetIscDsqlPrepare()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction, &pStatement, 0, (char*)(const char*)sqlBuffer, SQL_DIALECT_CURRENT, NULL);
       if (nReturn != 0)
       {
         InterpretErrorCodes();
 
         // Manually try to rollback the transaction rather than calling the member RollBack function
         //  so that we can ignore the error messages
-        m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+        m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
         ThrowDatabaseException();
         return NULL;
@@ -507,7 +542,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
       pOutputSqlda->version = SQLDA_VERSION1;
 
       // Make sure that we have enough space allocated for the result set
-      nReturn = m_Interface.GetIscDsqlDescribe()(m_Status, &pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
+      nReturn = m_pInterface->GetIscDsqlDescribe()(*(ISC_STATUS_ARRAY*)m_pStatus, &pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
       if (nReturn != 0)
       {
         free(pOutputSqlda);
@@ -515,7 +550,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
 
         // Manually try to rollback the transaction rather than calling the member RollBack function
         //  so that we can ignore the error messages
-        m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+        m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
         ThrowDatabaseException();
         return NULL;
@@ -528,7 +563,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
         pOutputSqlda = (XSQLDA*)malloc(XSQLDA_LENGTH(nColumns));
         pOutputSqlda->sqln = nColumns;
         pOutputSqlda->version = SQLDA_VERSION1;
-        nReturn = m_Interface.GetIscDsqlDescribe()(m_Status, &pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
+        nReturn = m_pInterface->GetIscDsqlDescribe()(*(ISC_STATUS_ARRAY*)m_pStatus, &pStatement, SQL_DIALECT_CURRENT, pOutputSqlda);
         if (nReturn != 0)
         {
           free(pOutputSqlda);
@@ -536,7 +571,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
 
           // Manually try to rollback the transaction rather than calling the member RollBack function
           //  so that we can ignore the error messages
-          m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+          m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
           ThrowDatabaseException();
           return NULL;
@@ -544,7 +579,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
       }
 
       // Create the result set object
-      FirebirdResultSet* pResultSet = new FirebirdResultSet(&m_Interface, m_pDatabase, pQueryTransaction, pStatement, pOutputSqlda, true, bManageTransaction);
+      FirebirdResultSet* pResultSet = new FirebirdResultSet(m_pInterface, m_pDatabase, pQueryTransaction, pStatement, pOutputSqlda, true, bManageTransaction);
       pResultSet->SetEncoding(GetEncoding());
       if (pResultSet->GetErrorCode() != DATABASE_LAYER_OK)
       {
@@ -553,7 +588,7 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
     
         // Manually try to rollback the transaction rather than calling the member RollBack function
         //  so that we can ignore the error messages
-        m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+        m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
         // Wrap the result set deletion in try/catch block if using exceptions.
         //We want to make sure the original error gets to the user
@@ -573,14 +608,14 @@ DatabaseResultSet* FirebirdDatabaseLayer::RunQueryWithResults(const wxString& st
       }
   
       // Now execute the SQL
-      nReturn = m_Interface.GetIscDsqlExecute()(m_Status, &pQueryTransaction, &pStatement, SQL_DIALECT_CURRENT, NULL);
+      nReturn = m_pInterface->GetIscDsqlExecute()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction, &pStatement, SQL_DIALECT_CURRENT, NULL);
       if (nReturn != 0)
       {
         InterpretErrorCodes();
 
         // Manually try to rollback the transaction rather than calling the member RollBack function
         //  so that we can ignore the error messages
-        m_Interface.GetIscRollbackTransaction()(m_Status, &pQueryTransaction);
+        m_pInterface->GetIscRollbackTransaction()(*(ISC_STATUS_ARRAY*)m_pStatus, &pQueryTransaction);
 
         // Wrap the result set deletion in try/catch block if using exceptions.
         //  We want to make sure the isc_dsql_execute error gets to the user
@@ -619,7 +654,7 @@ PreparedStatement* FirebirdDatabaseLayer::PrepareStatement(const wxString& strQu
 {
   ResetErrorCodes();
   
-  FirebirdPreparedStatement* pStatement = FirebirdPreparedStatement::CreateStatement(&m_Interface, m_pDatabase, m_pTransaction, strQuery, GetEncoding());
+  FirebirdPreparedStatement* pStatement = FirebirdPreparedStatement::CreateStatement(m_pInterface, m_pDatabase, m_pTransaction, strQuery, GetEncoding());
   if (pStatement && (pStatement->GetErrorCode() != DATABASE_LAYER_OK))
   {
     SetErrorCode(pStatement->GetErrorCode());
@@ -914,7 +949,8 @@ int FirebirdDatabaseLayer::TranslateErrorCode(int nCode)
   return nCode;
 }
 
-wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, ISC_STATUS_ARRAY status)
+//wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, ISC_STATUS_ARRAY status)
+wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, void* status)
 {
   char szError[512];
   wxString strReturn;
@@ -944,11 +980,11 @@ void FirebirdDatabaseLayer::InterpretErrorCodes()
 {
   //wxLogDebug(_("FirebirdDatabaseLayer::InterpretErrorCodes()"));
 
-  long nSqlCode = m_Interface.GetIscSqlcode()(m_Status);
-  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(&m_Interface, nSqlCode, m_Status));
+  long nSqlCode = m_pInterface->GetIscSqlcode()(*(ISC_STATUS_ARRAY*)m_pStatus);
+  SetErrorMessage(FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, *(ISC_STATUS_ARRAY*)m_pStatus));
   if (nSqlCode < -900)  // Error codes less than -900 indicate that it wasn't a SQL error but an ibase system error
   {
-    SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(m_Status[1]));
+    SetErrorCode(FirebirdDatabaseLayer::TranslateErrorCode(*((ISC_STATUS_ARRAY*)m_pStatus)[1]));
   }
   else
   {

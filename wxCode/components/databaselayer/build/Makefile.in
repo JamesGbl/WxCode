@@ -44,7 +44,6 @@ WX_VERSION_MAJOR = @WX_VERSION_MAJOR@
 WX_VERSION_MINOR = @WX_VERSION_MINOR@
 WX_PORT = @WX_PORT@
 SQLITE_HEADER_LOCATION = @SQLITE_HEADER_LOCATION@
-SQLITE_LIB_LOCATION = @SQLITE_LIB_LOCATION@
 FIREBIRD_HEADER_LOCATION = @FIREBIRD_HEADER_LOCATION@
 FIREBIRD_LIB_LOCATION = @FIREBIRD_LIB_LOCATION@
 MYSQL_HEADER_LOCATION = @MYSQL_HEADER_LOCATION@
@@ -60,8 +59,7 @@ TDS_LIB_LOCATION = @TDS_LIB_LOCATION@
 
 DESTDIR = 
 DATABASELAYER_SQLITE_LIB_CXXFLAGS = -I$(SQLITE_HEADER_LOCATION) \
-	-I$(SQLITE_LIB_LOCATION)/include -I$(srcdir)/include $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_SQLITE_LIB_OBJECTS =  \
 	databaselayer_sqlite_lib_DatabaseLayer.o \
 	databaselayer_sqlite_lib_DatabaseResultSet.o \
@@ -78,11 +76,11 @@ DATABASELAYER_SQLITE_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_SQLITE_DLL_CXXFLAGS = -I$(SQLITE_HEADER_LOCATION) \
-	-I$(SQLITE_LIB_LOCATION)/include -I$(srcdir)/include \
-	-DWXMAKINGDLL_DATABASELAYER $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+	-I$(srcdir)/include -DWXMAKINGDLL_DATABASELAYER $(PIC_FLAG) $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_SQLITE_DLL_OBJECTS =  \
 	databaselayer_sqlite_dll_DatabaseLayer.o \
 	databaselayer_sqlite_dll_DatabaseResultSet.o \
@@ -99,7 +97,8 @@ DATABASELAYER_SQLITE_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_FIREBIRD_LIB_CXXFLAGS = -I$(srcdir)/include \
 	-I$(FIREBIRD_HEADER_LOCATION) -I$(FIREBIRD_LIB_LOCATION)/include \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
@@ -119,7 +118,8 @@ DATABASELAYER_FIREBIRD_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_FIREBIRD_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(FIREBIRD_HEADER_LOCATION) \
 	-I$(FIREBIRD_LIB_LOCATION)/include $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
@@ -140,7 +140,8 @@ DATABASELAYER_FIREBIRD_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_MYSQL_LIB_CXXFLAGS = -I$(srcdir)/include \
 	-I$(MYSQL_HEADER_LOCATION) -I$(MYSQL_LIB_LOCATION)/include $(WX_CXXFLAGS) \
 	`mysql_config --include` $(CPPFLAGS) $(CXXFLAGS)
@@ -160,7 +161,8 @@ DATABASELAYER_MYSQL_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_MYSQL_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(MYSQL_HEADER_LOCATION) \
 	-I$(MYSQL_LIB_LOCATION)/include $(PIC_FLAG) $(WX_CXXFLAGS) `mysql_config \
@@ -181,7 +183,8 @@ DATABASELAYER_MYSQL_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_POSTGRESQL_LIB_CXXFLAGS = -I$(srcdir)/include \
 	-I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config --includedir` \
 	-I$(POSTGRESQL_LIB_LOCATION)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
@@ -201,7 +204,8 @@ DATABASELAYER_POSTGRESQL_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_POSTGRESQL_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config \
 	--includedir` -I$(POSTGRESQL_LIB_LOCATION)/include $(PIC_FLAG) \
@@ -222,7 +226,8 @@ DATABASELAYER_POSTGRESQL_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_ORACLE_LIB_CXXFLAGS = -I$(srcdir)/include \
 	-I$(ORACLE_HEADER_LOCATION) -I$(ORACLE_LIB_LOCATION)/include \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
@@ -242,7 +247,8 @@ DATABASELAYER_ORACLE_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_ORACLE_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(ORACLE_HEADER_LOCATION) \
 	-I$(ORACLE_LIB_LOCATION)/include -I$(ORACLE_LIB_LOCATION)/include \
@@ -263,7 +269,8 @@ DATABASELAYER_ORACLE_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_ODBC_LIB_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_ODBC_LIB_OBJECTS =  \
@@ -282,7 +289,8 @@ DATABASELAYER_ODBC_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_ODBC_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
@@ -302,7 +310,8 @@ DATABASELAYER_ODBC_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_TDS_LIB_CXXFLAGS = -I$(srcdir)/include -I$(TDS_HEADER_LOCATION) \
 	-I$(TDS_LIB_LOCATION)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_TDS_LIB_OBJECTS =  \
@@ -321,7 +330,8 @@ DATABASELAYER_TDS_LIB_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 DATABASELAYER_TDS_DLL_CXXFLAGS = -I$(srcdir)/include \
 	-DWXMAKINGDLL_DATABASELAYER -I$(TDS_HEADER_LOCATION) \
 	-I$(TDS_LIB_LOCATION)/include $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
@@ -342,7 +352,102 @@ DATABASELAYER_TDS_DLL_HEADERS =  \
 	include/DatabaseErrorCodes.h \
 	include/DatabaseStringConverter.h \
 	include/ResultSetMetaData.h \
-	include/DatabaseQueryParser.h
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
+DATABASELAYER_LIB_CXXFLAGS = -I$(srcdir)/include -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config \
+	--includedir` -I$(FIREBIRD_LIB_LOCATION)/include \
+	-I$(POSTGRESQL_LIB_LOCATION)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_LIB_OBJECTS =  \
+	databaselayer_lib_DatabaseLayer.o \
+	databaselayer_lib_DatabaseResultSet.o \
+	databaselayer_lib_PreparedStatement.o \
+	databaselayer_lib_DatabaseErrorReporter.o \
+	databaselayer_lib_DatabaseStringConverter.o \
+	databaselayer_lib_DatabaseQueryParser.o
+DATABASELAYER_LIB_HEADERS =  \
+	include/DatabaseLayer.h \
+	include/DatabaseResultSet.h \
+	include/PreparedStatement.h \
+	include/DatabaseErrorReporter.h \
+	include/DatabaseLayerException.h \
+	include/DatabaseErrorCodes.h \
+	include/DatabaseStringConverter.h \
+	include/ResultSetMetaData.h \
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
+DATABASELAYER_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config --includedir` \
+	-I$(FIREBIRD_LIB_LOCATION)/include -I$(POSTGRESQL_LIB_LOCATION)/include \
+	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_DLL_OBJECTS =  \
+	databaselayer_dll_DatabaseLayer.o \
+	databaselayer_dll_DatabaseResultSet.o \
+	databaselayer_dll_PreparedStatement.o \
+	databaselayer_dll_DatabaseErrorReporter.o \
+	databaselayer_dll_DatabaseStringConverter.o \
+	databaselayer_dll_DatabaseQueryParser.o
+DATABASELAYER_DLL_HEADERS =  \
+	include/DatabaseLayer.h \
+	include/DatabaseResultSet.h \
+	include/PreparedStatement.h \
+	include/DatabaseErrorReporter.h \
+	include/DatabaseLayerException.h \
+	include/DatabaseErrorCodes.h \
+	include/DatabaseStringConverter.h \
+	include/ResultSetMetaData.h \
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
+DATABASELAYER_GPL_LIB_CXXFLAGS = -I$(srcdir)/include \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(MYSQL_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config \
+	--includedir` -I$(FIREBIRD_LIB_LOCATION)/include \
+	-I$(MYSQL_LIB_LOCATION)/include -I$(POSTGRESQL_LIB_LOCATION)/include \
+	$(WX_CXXFLAGS) `mysql_config --include` $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_GPL_LIB_OBJECTS =  \
+	databaselayer_gpl_lib_DatabaseLayer.o \
+	databaselayer_gpl_lib_DatabaseResultSet.o \
+	databaselayer_gpl_lib_PreparedStatement.o \
+	databaselayer_gpl_lib_DatabaseErrorReporter.o \
+	databaselayer_gpl_lib_DatabaseStringConverter.o \
+	databaselayer_gpl_lib_DatabaseQueryParser.o
+DATABASELAYER_GPL_LIB_HEADERS =  \
+	include/DatabaseLayer.h \
+	include/DatabaseResultSet.h \
+	include/PreparedStatement.h \
+	include/DatabaseErrorReporter.h \
+	include/DatabaseLayerException.h \
+	include/DatabaseErrorCodes.h \
+	include/DatabaseStringConverter.h \
+	include/ResultSetMetaData.h \
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
+DATABASELAYER_GPL_DLL_CXXFLAGS = -I$(srcdir)/include \
+	-DWXMAKINGDLL_DATABASELAYER -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(MYSQL_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -I`pg_config --includedir` \
+	-I$(FIREBIRD_LIB_LOCATION)/include -I$(MYSQL_LIB_LOCATION)/include \
+	-I$(POSTGRESQL_LIB_LOCATION)/include $(PIC_FLAG) $(WX_CXXFLAGS) \
+	`mysql_config --include` $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_GPL_DLL_OBJECTS =  \
+	databaselayer_gpl_dll_DatabaseLayer.o \
+	databaselayer_gpl_dll_DatabaseResultSet.o \
+	databaselayer_gpl_dll_PreparedStatement.o \
+	databaselayer_gpl_dll_DatabaseErrorReporter.o \
+	databaselayer_gpl_dll_DatabaseStringConverter.o \
+	databaselayer_gpl_dll_DatabaseQueryParser.o
+DATABASELAYER_GPL_DLL_HEADERS =  \
+	include/DatabaseLayer.h \
+	include/DatabaseResultSet.h \
+	include/PreparedStatement.h \
+	include/DatabaseErrorReporter.h \
+	include/DatabaseLayerException.h \
+	include/DatabaseErrorCodes.h \
+	include/DatabaseStringConverter.h \
+	include/ResultSetMetaData.h \
+	include/DatabaseQueryParser.h \
+	include/DatabaseLayerDef.h
 
 ### Conditionally set variables: ###
 
@@ -363,7 +468,7 @@ COND_WX_SHARED_0___databaselayer_sqlite_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_sqlite_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_sqlite_lib_headers
 COND_WX_SHARED_1___databaselayer_sqlite_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_sqlite_dll___depname = $(COND_WX_SHARED_1___databaselayer_sqlite_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_sqlite_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_sqlite_dll
@@ -377,14 +482,14 @@ COND_USE_SOVERLINUX_1___databaselayer_sqlite_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_sqlite_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_sqlite_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_sqlite_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_sqlite_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_sqlite_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_sqlite_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -395,7 +500,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_sqlite_dll___so_symlinks_inst_cmd = rm \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -428,7 +533,7 @@ COND_WX_SHARED_0___databaselayer_firebird_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_firebird_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_firebird_lib_headers
 COND_WX_SHARED_1___databaselayer_firebird_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_firebird_dll___depname = $(COND_WX_SHARED_1___databaselayer_firebird_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_firebird_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_firebird_dll
@@ -442,14 +547,14 @@ COND_USE_SOVERLINUX_1___databaselayer_firebird_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_firebird_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_firebird_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_firebird_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_firebird_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_firebird_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_firebird_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -460,7 +565,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_firebird_dll___so_symlinks_inst_cmd = \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -493,7 +598,7 @@ COND_WX_SHARED_0___databaselayer_mysql_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_mysql_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_mysql_lib_headers
 COND_WX_SHARED_1___databaselayer_mysql_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_mysql_dll___depname = $(COND_WX_SHARED_1___databaselayer_mysql_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_mysql_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_mysql_dll
@@ -507,14 +612,14 @@ COND_USE_SOVERLINUX_1___databaselayer_mysql_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_mysql_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_mysql_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_mysql_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_mysql_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_mysql_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_mysql_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -525,7 +630,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_mysql_dll___so_symlinks_inst_cmd = rm \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -558,7 +663,7 @@ COND_WX_SHARED_0___databaselayer_postgresql_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_postgresql_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_postgresql_lib_headers
 COND_WX_SHARED_1___databaselayer_postgresql_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_postgresql_dll___depname = $(COND_WX_SHARED_1___databaselayer_postgresql_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_postgresql_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_postgresql_dll
@@ -572,14 +677,14 @@ COND_USE_SOVERLINUX_1___databaselayer_postgresql_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_postgresql_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_postgresql_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_postgresql_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_postgresql_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_postgresql_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_postgresql_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -590,7 +695,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_postgresql_dll___so_symlinks_inst_cmd \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -623,7 +728,7 @@ COND_WX_SHARED_0___databaselayer_oracle_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_oracle_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_oracle_lib_headers
 COND_WX_SHARED_1___databaselayer_oracle_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_oracle_dll___depname = $(COND_WX_SHARED_1___databaselayer_oracle_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_oracle_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_oracle_dll
@@ -637,14 +742,14 @@ COND_USE_SOVERLINUX_1___databaselayer_oracle_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_oracle_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_oracle_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_oracle_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_oracle_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_oracle_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_oracle_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -655,7 +760,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_oracle_dll___so_symlinks_inst_cmd = rm \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -688,7 +793,7 @@ COND_WX_SHARED_0___databaselayer_odbc_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_odbc_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_odbc_lib_headers
 COND_WX_SHARED_1___databaselayer_odbc_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_odbc_dll___depname = $(COND_WX_SHARED_1___databaselayer_odbc_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_odbc_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_odbc_dll
@@ -702,14 +807,14 @@ COND_USE_SOVERLINUX_1___databaselayer_odbc_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_odbc_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_odbc_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_odbc_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_odbc_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_odbc_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_odbc_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -719,7 +824,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_odbc_dll___so_symlinks_inst_cmd = rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -752,7 +857,7 @@ COND_WX_SHARED_0___databaselayer_tds_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_databaselayer_tds_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_databaselayer_tds_lib_headers
 COND_WX_SHARED_1___databaselayer_tds_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@__databaselayer_tds_dll___depname = $(COND_WX_SHARED_1___databaselayer_tds_dll___depname)
 @COND_WX_SHARED_1@__install_databaselayer_tds_dll___depname \
 @COND_WX_SHARED_1@	= install_databaselayer_tds_dll
@@ -766,14 +871,14 @@ COND_USE_SOVERLINUX_1___databaselayer_tds_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 @COND_USE_SOVERLINUX_1@__databaselayer_tds_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_tds_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___databaselayer_tds_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_USE_SOVERSOLARIS_1@__databaselayer_tds_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_tds_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___databaselayer_tds_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -783,7 +888,7 @@ COND_USE_SOSYMLINKS_1___databaselayer_tds_dll___so_symlinks_inst_cmd = rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
@@ -804,6 +909,132 @@ COND_PLATFORM_OS2_1___databaselayer_tds_dll___importlib = -import \
 COND_WINDOWS_IMPLIB_1___databaselayer_tds_dll___importlib = \
 	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_WINDOWS_IMPLIB_1@__databaselayer_tds_dll___importlib = $(COND_WINDOWS_IMPLIB_1___databaselayer_tds_dll___importlib)
+COND_WX_SHARED_0___databaselayer_lib___depname = \
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+@COND_WX_SHARED_0@__databaselayer_lib___depname = $(COND_WX_SHARED_0___databaselayer_lib___depname)
+@COND_WX_SHARED_0@__install_databaselayer_lib___depname = \
+@COND_WX_SHARED_0@	install_databaselayer_lib
+@COND_WX_SHARED_0@__uninstall_databaselayer_lib___depname \
+@COND_WX_SHARED_0@	= uninstall_databaselayer_lib
+@COND_WX_SHARED_0@__install_databaselayer_lib_headers___depname \
+@COND_WX_SHARED_0@	= install_databaselayer_lib_headers
+@COND_WX_SHARED_0@__uninstall_databaselayer_lib_headers___depname \
+@COND_WX_SHARED_0@	= uninstall_databaselayer_lib_headers
+COND_WX_SHARED_1___databaselayer_dll___depname = \
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_WX_SHARED_1@__databaselayer_dll___depname = $(COND_WX_SHARED_1___databaselayer_dll___depname)
+@COND_WX_SHARED_1@__install_databaselayer_dll___depname = \
+@COND_WX_SHARED_1@	install_databaselayer_dll
+@COND_WX_SHARED_1@__uninstall_databaselayer_dll___depname \
+@COND_WX_SHARED_1@	= uninstall_databaselayer_dll
+COND_PLATFORM_MACOSX_1___databaselayer_dll___macinstnamecmd = -install_name \
+	$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+@COND_PLATFORM_MACOSX_1@__databaselayer_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___databaselayer_dll___macinstnamecmd)
+COND_USE_SOVERLINUX_1___databaselayer_dll___soname_flags = \
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+@COND_USE_SOVERLINUX_1@__databaselayer_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_dll___soname_flags)
+COND_USE_SOVERSOLARIS_1___databaselayer_dll___soname_flags = \
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_USE_SOVERSOLARIS_1@__databaselayer_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_dll___soname_flags)
+COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_cmd = (cd \
+	$(srcdir)/lib/; rm -f \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX))
+@COND_USE_SOSYMLINKS_1@__databaselayer_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_cmd)
+COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_inst_cmd = rm -f \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_USE_SOSYMLINKS_1@__databaselayer_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_inst_cmd)
+COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_uninst_cmd = rm -f \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_USE_SOSYMLINKS_1@__databaselayer_dll___so_symlinks_uninst_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_dll___so_symlinks_uninst_cmd)
+@COND_WX_SHARED_1@__install_databaselayer_dll_headers___depname \
+@COND_WX_SHARED_1@	= install_databaselayer_dll_headers
+@COND_WX_SHARED_1@__uninstall_databaselayer_dll_headers___depname \
+@COND_WX_SHARED_1@	= uninstall_databaselayer_dll_headers
+COND_PLATFORM_OS2_1___databaselayer_dll___importlib = -import \
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_PLATFORM_OS2_1@__databaselayer_dll___importlib = $(COND_PLATFORM_OS2_1___databaselayer_dll___importlib)
+COND_WINDOWS_IMPLIB_1___databaselayer_dll___importlib = \
+	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_WINDOWS_IMPLIB_1@__databaselayer_dll___importlib = $(COND_WINDOWS_IMPLIB_1___databaselayer_dll___importlib)
+COND_WX_SHARED_0___databaselayer_gpl_lib___depname = \
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+@COND_WX_SHARED_0@__databaselayer_gpl_lib___depname = $(COND_WX_SHARED_0___databaselayer_gpl_lib___depname)
+@COND_WX_SHARED_0@__install_databaselayer_gpl_lib___depname \
+@COND_WX_SHARED_0@	= install_databaselayer_gpl_lib
+@COND_WX_SHARED_0@__uninstall_databaselayer_gpl_lib___depname \
+@COND_WX_SHARED_0@	= uninstall_databaselayer_gpl_lib
+@COND_WX_SHARED_0@__install_databaselayer_gpl_lib_headers___depname \
+@COND_WX_SHARED_0@	= install_databaselayer_gpl_lib_headers
+@COND_WX_SHARED_0@__uninstall_databaselayer_gpl_lib_headers___depname \
+@COND_WX_SHARED_0@	= uninstall_databaselayer_gpl_lib_headers
+COND_WX_SHARED_1___databaselayer_gpl_dll___depname = \
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_WX_SHARED_1@__databaselayer_gpl_dll___depname = $(COND_WX_SHARED_1___databaselayer_gpl_dll___depname)
+@COND_WX_SHARED_1@__install_databaselayer_gpl_dll___depname \
+@COND_WX_SHARED_1@	= install_databaselayer_gpl_dll
+@COND_WX_SHARED_1@__uninstall_databaselayer_gpl_dll___depname \
+@COND_WX_SHARED_1@	= uninstall_databaselayer_gpl_dll
+COND_PLATFORM_MACOSX_1___databaselayer_gpl_dll___macinstnamecmd = \
+	-install_name \
+	$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+@COND_PLATFORM_MACOSX_1@__databaselayer_gpl_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___databaselayer_gpl_dll___macinstnamecmd)
+COND_USE_SOVERLINUX_1___databaselayer_gpl_dll___soname_flags = \
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+@COND_USE_SOVERLINUX_1@__databaselayer_gpl_dll___soname_flags = $(COND_USE_SOVERLINUX_1___databaselayer_gpl_dll___soname_flags)
+COND_USE_SOVERSOLARIS_1___databaselayer_gpl_dll___soname_flags = \
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_USE_SOVERSOLARIS_1@__databaselayer_gpl_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___databaselayer_gpl_dll___soname_flags)
+COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_cmd = (cd \
+	$(srcdir)/lib/; rm -f \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX))
+@COND_USE_SOSYMLINKS_1@__databaselayer_gpl_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_cmd)
+COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_inst_cmd = rm -f \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer); \
+	$(LN_S) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_USE_SOSYMLINKS_1@__databaselayer_gpl_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_inst_cmd)
+COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_uninst_cmd = rm \
+	-f \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_USE_SOSYMLINKS_1@__databaselayer_gpl_dll___so_symlinks_uninst_cmd = $(COND_USE_SOSYMLINKS_1___databaselayer_gpl_dll___so_symlinks_uninst_cmd)
+@COND_WX_SHARED_1@__install_databaselayer_gpl_dll_headers___depname \
+@COND_WX_SHARED_1@	= install_databaselayer_gpl_dll_headers
+@COND_WX_SHARED_1@__uninstall_databaselayer_gpl_dll_headers___depname \
+@COND_WX_SHARED_1@	= uninstall_databaselayer_gpl_dll_headers
+COND_PLATFORM_OS2_1___databaselayer_gpl_dll___importlib = -import \
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_PLATFORM_OS2_1@__databaselayer_gpl_dll___importlib = $(COND_PLATFORM_OS2_1___databaselayer_gpl_dll___importlib)
+COND_WINDOWS_IMPLIB_1___databaselayer_gpl_dll___importlib = \
+	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_WINDOWS_IMPLIB_1@__databaselayer_gpl_dll___importlib = $(COND_WINDOWS_IMPLIB_1___databaselayer_gpl_dll___importlib)
 @COND_PLATFORM_MAC_0@__test_sqlite___mac_setfilecmd = @true
 @COND_PLATFORM_MAC_1@__test_sqlite___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ../tests/runner_sqlite$(EXEEXT)
@@ -833,62 +1064,72 @@ COND_WINDOWS_IMPLIB_1___databaselayer_tds_dll___importlib = \
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__databaselayer = .$(SO_SUFFIX).0
 @COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__databaselayer = .0.$(SO_SUFFIX)
 @COND_USE_SOVERSION_0@__databaselayer = .$(SO_SUFFIX)
-@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@__databaselayer_5 \
+@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@__databaselayer_7 \
 @COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@	= \
 @COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@	.$(SO_SUFFIX).0.0.0
-@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__databaselayer_5 \
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__databaselayer_7 \
 @COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.0.0.$(SO_SUFFIX)
-@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@__databaselayer_5 = -0.$(SO_SUFFIX)
-@COND_USE_SOVERSION_0@__databaselayer_5 = .$(SO_SUFFIX)
+@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@__databaselayer_7 = -0.$(SO_SUFFIX)
+@COND_USE_SOVERSION_0@__databaselayer_7 = .$(SO_SUFFIX)
 
 ### Targets: ###
 
-all: $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname) $(__databaselayer_firebird_lib___depname) $(__databaselayer_firebird_dll___depname) $(__databaselayer_mysql_lib___depname) $(__databaselayer_mysql_dll___depname) $(__databaselayer_postgresql_lib___depname) $(__databaselayer_postgresql_dll___depname) $(__databaselayer_oracle_lib___depname) $(__databaselayer_oracle_dll___depname) $(__databaselayer_odbc_lib___depname) $(__databaselayer_odbc_dll___depname) $(__databaselayer_tds_lib___depname) $(__databaselayer_tds_dll___depname) ../tests/runner_sqlite$(EXEEXT) ../tests/runner_firebird$(EXEEXT) ../tests/runner_firebird_embedded$(EXEEXT) ../tests/runner_mysql$(EXEEXT) ../tests/runner_postgresql$(EXEEXT) ../tests/runner_oracle$(EXEEXT) ../tests/runner_odbc$(EXEEXT) ../tests/runner_tds$(EXEEXT)
+all: $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname) $(__databaselayer_firebird_lib___depname) $(__databaselayer_firebird_dll___depname) $(__databaselayer_mysql_lib___depname) $(__databaselayer_mysql_dll___depname) $(__databaselayer_postgresql_lib___depname) $(__databaselayer_postgresql_dll___depname) $(__databaselayer_oracle_lib___depname) $(__databaselayer_oracle_dll___depname) $(__databaselayer_odbc_lib___depname) $(__databaselayer_odbc_dll___depname) $(__databaselayer_tds_lib___depname) $(__databaselayer_tds_dll___depname) $(__databaselayer_lib___depname) $(__databaselayer_dll___depname) $(__databaselayer_gpl_lib___depname) $(__databaselayer_gpl_dll___depname) ../tests/runner_sqlite$(EXEEXT) ../tests/runner_firebird$(EXEEXT) ../tests/runner_firebird_embedded$(EXEEXT) ../tests/runner_mysql$(EXEEXT) ../tests/runner_postgresql$(EXEEXT) ../tests/runner_oracle$(EXEEXT) ../tests/runner_odbc$(EXEEXT) ../tests/runner_tds$(EXEEXT)
 
-install: $(__install_databaselayer_sqlite_lib___depname) $(__install_databaselayer_sqlite_lib_headers___depname) $(__install_databaselayer_sqlite_dll___depname) $(__install_databaselayer_sqlite_dll_headers___depname) $(__install_databaselayer_firebird_lib___depname) $(__install_databaselayer_firebird_lib_headers___depname) $(__install_databaselayer_firebird_dll___depname) $(__install_databaselayer_firebird_dll_headers___depname) $(__install_databaselayer_mysql_lib___depname) $(__install_databaselayer_mysql_lib_headers___depname) $(__install_databaselayer_mysql_dll___depname) $(__install_databaselayer_mysql_dll_headers___depname) $(__install_databaselayer_postgresql_lib___depname) $(__install_databaselayer_postgresql_lib_headers___depname) $(__install_databaselayer_postgresql_dll___depname) $(__install_databaselayer_postgresql_dll_headers___depname) $(__install_databaselayer_oracle_lib___depname) $(__install_databaselayer_oracle_lib_headers___depname) $(__install_databaselayer_oracle_dll___depname) $(__install_databaselayer_oracle_dll_headers___depname) $(__install_databaselayer_odbc_lib___depname) $(__install_databaselayer_odbc_lib_headers___depname) $(__install_databaselayer_odbc_dll___depname) $(__install_databaselayer_odbc_dll_headers___depname) $(__install_databaselayer_tds_lib___depname) $(__install_databaselayer_tds_lib_headers___depname) $(__install_databaselayer_tds_dll___depname) $(__install_databaselayer_tds_dll_headers___depname)
+install: $(__install_databaselayer_sqlite_lib___depname) $(__install_databaselayer_sqlite_lib_headers___depname) $(__install_databaselayer_sqlite_dll___depname) $(__install_databaselayer_sqlite_dll_headers___depname) $(__install_databaselayer_firebird_lib___depname) $(__install_databaselayer_firebird_lib_headers___depname) $(__install_databaselayer_firebird_dll___depname) $(__install_databaselayer_firebird_dll_headers___depname) $(__install_databaselayer_mysql_lib___depname) $(__install_databaselayer_mysql_lib_headers___depname) $(__install_databaselayer_mysql_dll___depname) $(__install_databaselayer_mysql_dll_headers___depname) $(__install_databaselayer_postgresql_lib___depname) $(__install_databaselayer_postgresql_lib_headers___depname) $(__install_databaselayer_postgresql_dll___depname) $(__install_databaselayer_postgresql_dll_headers___depname) $(__install_databaselayer_oracle_lib___depname) $(__install_databaselayer_oracle_lib_headers___depname) $(__install_databaselayer_oracle_dll___depname) $(__install_databaselayer_oracle_dll_headers___depname) $(__install_databaselayer_odbc_lib___depname) $(__install_databaselayer_odbc_lib_headers___depname) $(__install_databaselayer_odbc_dll___depname) $(__install_databaselayer_odbc_dll_headers___depname) $(__install_databaselayer_tds_lib___depname) $(__install_databaselayer_tds_lib_headers___depname) $(__install_databaselayer_tds_dll___depname) $(__install_databaselayer_tds_dll_headers___depname) $(__install_databaselayer_lib___depname) $(__install_databaselayer_lib_headers___depname) $(__install_databaselayer_dll___depname) $(__install_databaselayer_dll_headers___depname) $(__install_databaselayer_gpl_lib___depname) $(__install_databaselayer_gpl_lib_headers___depname) $(__install_databaselayer_gpl_dll___depname) $(__install_databaselayer_gpl_dll_headers___depname)
 
-uninstall: $(__uninstall_databaselayer_sqlite_lib___depname) $(__uninstall_databaselayer_sqlite_lib_headers___depname) $(__uninstall_databaselayer_sqlite_dll___depname) $(__uninstall_databaselayer_sqlite_dll_headers___depname) $(__uninstall_databaselayer_firebird_lib___depname) $(__uninstall_databaselayer_firebird_lib_headers___depname) $(__uninstall_databaselayer_firebird_dll___depname) $(__uninstall_databaselayer_firebird_dll_headers___depname) $(__uninstall_databaselayer_mysql_lib___depname) $(__uninstall_databaselayer_mysql_lib_headers___depname) $(__uninstall_databaselayer_mysql_dll___depname) $(__uninstall_databaselayer_mysql_dll_headers___depname) $(__uninstall_databaselayer_postgresql_lib___depname) $(__uninstall_databaselayer_postgresql_lib_headers___depname) $(__uninstall_databaselayer_postgresql_dll___depname) $(__uninstall_databaselayer_postgresql_dll_headers___depname) $(__uninstall_databaselayer_oracle_lib___depname) $(__uninstall_databaselayer_oracle_lib_headers___depname) $(__uninstall_databaselayer_oracle_dll___depname) $(__uninstall_databaselayer_oracle_dll_headers___depname) $(__uninstall_databaselayer_odbc_lib___depname) $(__uninstall_databaselayer_odbc_lib_headers___depname) $(__uninstall_databaselayer_odbc_dll___depname) $(__uninstall_databaselayer_odbc_dll_headers___depname) $(__uninstall_databaselayer_tds_lib___depname) $(__uninstall_databaselayer_tds_lib_headers___depname) $(__uninstall_databaselayer_tds_dll___depname) $(__uninstall_databaselayer_tds_dll_headers___depname)
+uninstall: $(__uninstall_databaselayer_sqlite_lib___depname) $(__uninstall_databaselayer_sqlite_lib_headers___depname) $(__uninstall_databaselayer_sqlite_dll___depname) $(__uninstall_databaselayer_sqlite_dll_headers___depname) $(__uninstall_databaselayer_firebird_lib___depname) $(__uninstall_databaselayer_firebird_lib_headers___depname) $(__uninstall_databaselayer_firebird_dll___depname) $(__uninstall_databaselayer_firebird_dll_headers___depname) $(__uninstall_databaselayer_mysql_lib___depname) $(__uninstall_databaselayer_mysql_lib_headers___depname) $(__uninstall_databaselayer_mysql_dll___depname) $(__uninstall_databaselayer_mysql_dll_headers___depname) $(__uninstall_databaselayer_postgresql_lib___depname) $(__uninstall_databaselayer_postgresql_lib_headers___depname) $(__uninstall_databaselayer_postgresql_dll___depname) $(__uninstall_databaselayer_postgresql_dll_headers___depname) $(__uninstall_databaselayer_oracle_lib___depname) $(__uninstall_databaselayer_oracle_lib_headers___depname) $(__uninstall_databaselayer_oracle_dll___depname) $(__uninstall_databaselayer_oracle_dll_headers___depname) $(__uninstall_databaselayer_odbc_lib___depname) $(__uninstall_databaselayer_odbc_lib_headers___depname) $(__uninstall_databaselayer_odbc_dll___depname) $(__uninstall_databaselayer_odbc_dll_headers___depname) $(__uninstall_databaselayer_tds_lib___depname) $(__uninstall_databaselayer_tds_lib_headers___depname) $(__uninstall_databaselayer_tds_dll___depname) $(__uninstall_databaselayer_tds_dll_headers___depname) $(__uninstall_databaselayer_lib___depname) $(__uninstall_databaselayer_lib_headers___depname) $(__uninstall_databaselayer_dll___depname) $(__uninstall_databaselayer_dll_headers___depname) $(__uninstall_databaselayer_gpl_lib___depname) $(__uninstall_databaselayer_gpl_lib_headers___depname) $(__uninstall_databaselayer_gpl_dll___depname) $(__uninstall_databaselayer_gpl_dll_headers___depname)
 
 install-strip: install
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer)
 	rm -f ../tests/runner_sqlite$(EXEEXT)
 	rm -f ../tests/runner_firebird$(EXEEXT)
 	rm -f ../tests/runner_firebird_embedded$(EXEEXT)
@@ -927,20 +1168,20 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_SQLITE_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_SQLITE_DLL_OBJECTS)  -L$(SQLITE_LIB_LOCATION)/lib -L$(srcdir)/lib $(__databaselayer_sqlite_dll___macinstnamecmd) $(__databaselayer_sqlite_dll___soname_flags) $(__databaselayer_sqlite_dll___importlib) $(LDFLAGS)  -lsqlite3 $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_SQLITE_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_SQLITE_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_sqlite_dll___macinstnamecmd) $(__databaselayer_sqlite_dll___soname_flags) $(__databaselayer_sqlite_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_sqlite_dll___so_symlinks_cmd)
 
 @COND_WX_SHARED_1@install_databaselayer_sqlite_dll: $(__databaselayer_sqlite_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_sqlite_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_sqlite_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_sqlite_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_sqlite_dll_headers: 
@@ -983,7 +1224,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_firebird_dll___macinstnamecmd) $(__databaselayer_firebird_dll___soname_flags) -L$(FIREBIRD_LIB_LOCATION)/lib $(__databaselayer_firebird_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_firebird_dll___so_symlinks_cmd)
@@ -991,12 +1232,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_firebird_dll: $(__databaselayer_firebird_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_firebird_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_firebird_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_firebird-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_firebird_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_firebird_dll_headers: 
@@ -1039,7 +1280,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_MYSQL_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_MYSQL_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_MYSQL_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_mysql_dll___macinstnamecmd) $(__databaselayer_mysql_dll___soname_flags) -L$(MYSQL_LIB_LOCATION)/lib $(__databaselayer_mysql_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_mysql_dll___so_symlinks_cmd)
@@ -1047,12 +1288,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_mysql_dll: $(__databaselayer_mysql_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_mysql_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_mysql_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_mysql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_mysql_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_mysql_dll_headers: 
@@ -1095,7 +1336,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_postgresql_dll___macinstnamecmd) $(__databaselayer_postgresql_dll___soname_flags) -L$(POSTGRESQL_LIB_LOCATION)/lib $(__databaselayer_postgresql_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_postgresql_dll___so_symlinks_cmd)
@@ -1103,12 +1344,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_postgresql_dll: $(__databaselayer_postgresql_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_postgresql_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_postgresql_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_postgresql-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_postgresql_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_postgresql_dll_headers: 
@@ -1151,7 +1392,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_ORACLE_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_ORACLE_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_ORACLE_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_oracle_dll___macinstnamecmd) $(__databaselayer_oracle_dll___soname_flags) -L$(ORACLE_LIB_LOCATION)/lib $(__databaselayer_oracle_dll___importlib) -L$(ORACLE_LIB_LOCATION)/lib $(LDFLAGS)  -lclntsh -lnnz10 $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_oracle_dll___so_symlinks_cmd)
@@ -1159,12 +1400,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_oracle_dll: $(__databaselayer_oracle_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_oracle_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_oracle_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_oracle-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_oracle_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_oracle_dll_headers: 
@@ -1207,7 +1448,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_ODBC_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_ODBC_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_ODBC_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_odbc_dll___macinstnamecmd) $(__databaselayer_odbc_dll___soname_flags) $(__databaselayer_odbc_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_odbc_dll___so_symlinks_cmd)
@@ -1215,12 +1456,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_odbc_dll: $(__databaselayer_odbc_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_odbc_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_odbc_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_odbc-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_odbc_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_odbc_dll_headers: 
@@ -1263,7 +1504,7 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5): $(DATABASELAYER_TDS_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_TDS_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_TDS_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_tds_dll___macinstnamecmd) $(__databaselayer_tds_dll___soname_flags) -L$(TDS_LIB_LOCATION)/lib $(__databaselayer_tds_dll___importlib) $(LDFLAGS)  -ltds $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__databaselayer_tds_dll___so_symlinks_cmd)
@@ -1271,12 +1512,12 @@ distclean: clean
 @COND_WX_SHARED_1@install_databaselayer_tds_dll: $(__databaselayer_tds_dll___depname)
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_tds_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_databaselayer_tds_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_5)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_tds_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_databaselayer_tds_dll_headers: 
@@ -1293,8 +1534,120 @@ distclean: clean
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
+@COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(DATABASELAYER_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) $(AROPTIONS) $@ $(DATABASELAYER_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
+
+@COND_WX_SHARED_0@install_databaselayer_lib: $(__databaselayer_lib___depname)
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
+
+@COND_WX_SHARED_0@uninstall_databaselayer_lib: 
+@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+
+@COND_WX_SHARED_0@install_databaselayer_lib_headers: 
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
+@COND_WX_SHARED_0@	for f in $(DATABASELAYER_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
+@COND_WX_SHARED_0@	fi; \
+@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_0@	done
+
+@COND_WX_SHARED_0@uninstall_databaselayer_lib_headers: 
+@COND_WX_SHARED_0@	for f in $(DATABASELAYER_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_0@	done
+
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_dll___macinstnamecmd) $(__databaselayer_dll___soname_flags) -L$(FIREBIRD_LIB_LOCATION)/lib -L$(POSTGRESQL_LIB_LOCATION)/lib $(__databaselayer_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_1@	
+@COND_WX_SHARED_1@	$(__databaselayer_dll___so_symlinks_cmd)
+
+@COND_WX_SHARED_1@install_databaselayer_dll: $(__databaselayer_dll___depname)
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_dll___so_symlinks_inst_cmd))
+
+@COND_WX_SHARED_1@uninstall_databaselayer_dll: 
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_dll___so_symlinks_uninst_cmd))
+
+@COND_WX_SHARED_1@install_databaselayer_dll_headers: 
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
+@COND_WX_SHARED_1@	for f in $(DATABASELAYER_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
+@COND_WX_SHARED_1@	fi; \
+@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_1@	done
+
+@COND_WX_SHARED_1@uninstall_databaselayer_dll_headers: 
+@COND_WX_SHARED_1@	for f in $(DATABASELAYER_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_1@	done
+
+@COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(DATABASELAYER_GPL_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) $(AROPTIONS) $@ $(DATABASELAYER_GPL_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
+
+@COND_WX_SHARED_0@install_databaselayer_gpl_lib: $(__databaselayer_gpl_lib___depname)
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
+
+@COND_WX_SHARED_0@uninstall_databaselayer_gpl_lib: 
+@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+
+@COND_WX_SHARED_0@install_databaselayer_gpl_lib_headers: 
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
+@COND_WX_SHARED_0@	for f in $(DATABASELAYER_GPL_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
+@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
+@COND_WX_SHARED_0@	fi; \
+@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_0@	done
+
+@COND_WX_SHARED_0@uninstall_databaselayer_gpl_lib_headers: 
+@COND_WX_SHARED_0@	for f in $(DATABASELAYER_GPL_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_0@	done
+
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7): $(DATABASELAYER_GPL_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(DATABASELAYER_GPL_DLL_OBJECTS)  -L$(srcdir)/lib $(__databaselayer_gpl_dll___macinstnamecmd) $(__databaselayer_gpl_dll___soname_flags) -L$(FIREBIRD_LIB_LOCATION)/lib -L$(MYSQL_LIB_LOCATION)/lib -L$(POSTGRESQL_LIB_LOCATION)/lib $(__databaselayer_gpl_dll___importlib) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_1@	
+@COND_WX_SHARED_1@	$(__databaselayer_gpl_dll___so_symlinks_cmd)
+
+@COND_WX_SHARED_1@install_databaselayer_gpl_dll: $(__databaselayer_gpl_dll___depname)
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_gpl_dll___so_symlinks_inst_cmd))
+
+@COND_WX_SHARED_1@uninstall_databaselayer_gpl_dll: 
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_gpl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__databaselayer_7)
+@COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__databaselayer_gpl_dll___so_symlinks_uninst_cmd))
+
+@COND_WX_SHARED_1@install_databaselayer_gpl_dll_headers: 
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
+@COND_WX_SHARED_1@	for f in $(DATABASELAYER_GPL_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
+@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
+@COND_WX_SHARED_1@	fi; \
+@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_1@	done
+
+@COND_WX_SHARED_1@uninstall_databaselayer_gpl_dll_headers: 
+@COND_WX_SHARED_1@	for f in $(DATABASELAYER_GPL_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
+@COND_WX_SHARED_1@	done
+
 ../tests/runner_sqlite$(EXEEXT): $(__databaselayer_sqlite_lib___depname)
-	$(CC) -o $@  -L$(srcdir)/lib  -L$(srcdir)/lib  -L$(SQLITE_LIB_LOCATION)/lib $(LDFLAGS)  $(WX_LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -lsqlite3 $(LIBS)
+	$(CC) -o $@  -L$(srcdir)/lib  -L$(srcdir)/lib  $(LDFLAGS)  $(WX_LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_sqlite-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(LIBS)
 	
 	$(__test_sqlite___mac_setfilecmd)
 
@@ -1332,6 +1685,10 @@ distclean: clean
 	$(CC) -o $@  -L$(srcdir)/lib  -L$(srcdir)/lib  -L$(TDS_LIB_LOCATION)/lib $(LDFLAGS)  $(WX_LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_databaselayer_tds-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -ltdssrv $(LIBS)
 	
 	$(__test_tds___mac_setfilecmd)
+
+databaselayer: $(__databaselayer_lib___depname) $(__databaselayer_dll___depname)
+
+databaselayer_gpl: $(__databaselayer_gpl_lib___depname) $(__databaselayer_gpl_dll___depname)
 
 sqlite: $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname)
 
@@ -1615,6 +1972,78 @@ databaselayer_tds_dll_DatabaseStringConverter.o: $(srcdir)/src/DatabaseStringCon
 databaselayer_tds_dll_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.cpp
 	$(CXXC) -c -o $@ $(DATABASELAYER_TDS_DLL_CXXFLAGS) $(srcdir)/src/DatabaseQueryParser.cpp
 
+databaselayer_lib_DatabaseLayer.o: $(srcdir)/src/DatabaseLayer.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/DatabaseLayer.cpp
+
+databaselayer_lib_DatabaseResultSet.o: $(srcdir)/src/DatabaseResultSet.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/DatabaseResultSet.cpp
+
+databaselayer_lib_PreparedStatement.o: $(srcdir)/src/PreparedStatement.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/PreparedStatement.cpp
+
+databaselayer_lib_DatabaseErrorReporter.o: $(srcdir)/src/DatabaseErrorReporter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/DatabaseErrorReporter.cpp
+
+databaselayer_lib_DatabaseStringConverter.o: $(srcdir)/src/DatabaseStringConverter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/DatabaseStringConverter.cpp
+
+databaselayer_lib_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(srcdir)/src/DatabaseQueryParser.cpp
+
+databaselayer_dll_DatabaseLayer.o: $(srcdir)/src/DatabaseLayer.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/DatabaseLayer.cpp
+
+databaselayer_dll_DatabaseResultSet.o: $(srcdir)/src/DatabaseResultSet.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/DatabaseResultSet.cpp
+
+databaselayer_dll_PreparedStatement.o: $(srcdir)/src/PreparedStatement.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/PreparedStatement.cpp
+
+databaselayer_dll_DatabaseErrorReporter.o: $(srcdir)/src/DatabaseErrorReporter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/DatabaseErrorReporter.cpp
+
+databaselayer_dll_DatabaseStringConverter.o: $(srcdir)/src/DatabaseStringConverter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/DatabaseStringConverter.cpp
+
+databaselayer_dll_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(srcdir)/src/DatabaseQueryParser.cpp
+
+databaselayer_gpl_lib_DatabaseLayer.o: $(srcdir)/src/DatabaseLayer.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/DatabaseLayer.cpp
+
+databaselayer_gpl_lib_DatabaseResultSet.o: $(srcdir)/src/DatabaseResultSet.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/DatabaseResultSet.cpp
+
+databaselayer_gpl_lib_PreparedStatement.o: $(srcdir)/src/PreparedStatement.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/PreparedStatement.cpp
+
+databaselayer_gpl_lib_DatabaseErrorReporter.o: $(srcdir)/src/DatabaseErrorReporter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/DatabaseErrorReporter.cpp
+
+databaselayer_gpl_lib_DatabaseStringConverter.o: $(srcdir)/src/DatabaseStringConverter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/DatabaseStringConverter.cpp
+
+databaselayer_gpl_lib_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(srcdir)/src/DatabaseQueryParser.cpp
+
+databaselayer_gpl_dll_DatabaseLayer.o: $(srcdir)/src/DatabaseLayer.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/DatabaseLayer.cpp
+
+databaselayer_gpl_dll_DatabaseResultSet.o: $(srcdir)/src/DatabaseResultSet.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/DatabaseResultSet.cpp
+
+databaselayer_gpl_dll_PreparedStatement.o: $(srcdir)/src/PreparedStatement.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/PreparedStatement.cpp
+
+databaselayer_gpl_dll_DatabaseErrorReporter.o: $(srcdir)/src/DatabaseErrorReporter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/DatabaseErrorReporter.cpp
+
+databaselayer_gpl_dll_DatabaseStringConverter.o: $(srcdir)/src/DatabaseStringConverter.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/DatabaseStringConverter.cpp
+
+databaselayer_gpl_dll_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.cpp
+	$(CXXC) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(srcdir)/src/DatabaseQueryParser.cpp
+
 
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include ./.deps/*.d
@@ -1658,6 +2087,15 @@ databaselayer_tds_dll_DatabaseQueryParser.o: $(srcdir)/src/DatabaseQueryParser.c
 	uninstall_databaselayer_tds_lib install_databaselayer_tds_lib_headers \
 	uninstall_databaselayer_tds_lib_headers install_databaselayer_tds_dll \
 	uninstall_databaselayer_tds_dll install_databaselayer_tds_dll_headers \
-	uninstall_databaselayer_tds_dll_headers sqlite sqlite_test firebird \
-	firebird_test firebird_embedded_test mysql mysql_test postgresql \
-	postgresql_test oracle oracle_test odbc odbc_test tds tds_test
+	uninstall_databaselayer_tds_dll_headers install_databaselayer_lib \
+	uninstall_databaselayer_lib install_databaselayer_lib_headers \
+	uninstall_databaselayer_lib_headers install_databaselayer_dll \
+	uninstall_databaselayer_dll install_databaselayer_dll_headers \
+	uninstall_databaselayer_dll_headers install_databaselayer_gpl_lib \
+	uninstall_databaselayer_gpl_lib install_databaselayer_gpl_lib_headers \
+	uninstall_databaselayer_gpl_lib_headers install_databaselayer_gpl_dll \
+	uninstall_databaselayer_gpl_dll install_databaselayer_gpl_dll_headers \
+	uninstall_databaselayer_gpl_dll_headers databaselayer databaselayer_gpl \
+	sqlite sqlite_test firebird firebird_test firebird_embedded_test mysql \
+	mysql_test postgresql postgresql_test oracle oracle_test odbc odbc_test tds \
+	tds_test

@@ -928,6 +928,10 @@ SOURCE=..\include\DatabaseLayer.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\include\DatabaseLayerDef.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\include\DatabaseLayerException.h
 # End Source File
 # Begin Source File

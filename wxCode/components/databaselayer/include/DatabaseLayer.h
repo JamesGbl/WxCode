@@ -16,6 +16,7 @@
 #include "wx/arrstr.h"
 #include "wx/variant.h"
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseErrorReporter.h"
 #include "DatabaseStringConverter.h"
 #include "DatabaseResultSet.h"
@@ -24,7 +25,7 @@
 WX_DECLARE_HASH_SET( DatabaseResultSet*, wxPointerHash, wxPointerEqual, DatabaseResultSetHashSet );
 WX_DECLARE_HASH_SET( PreparedStatement*, wxPointerHash, wxPointerEqual, DatabaseStatementHashSet );
 
-class DatabaseLayer : public DatabaseErrorReporter, public DatabaseStringConverter
+class WXDLLIMPEXP_DATABASELAYER DatabaseLayer : public DatabaseErrorReporter, public DatabaseStringConverter
 {
 public:
   /// Constructor

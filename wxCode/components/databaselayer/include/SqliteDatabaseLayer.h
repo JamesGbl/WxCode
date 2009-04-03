@@ -14,20 +14,19 @@
 
 #include "wx/arrstr.h"
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseLayer.h"
-
-#include "sqlite3.h"
 
 
 class PreparedStatement;
 
-class SqliteDatabaseLayer : public DatabaseLayer
+class WXDLLIMPEXP_DATABASELAYER SqliteDatabaseLayer : public DatabaseLayer
 {
 public:
   // ctor()
   SqliteDatabaseLayer();
   SqliteDatabaseLayer(const wxString& strDatabase, bool mustExist = false);
-  SqliteDatabaseLayer(sqlite3* pDatabase) { m_pDatabase = pDatabase; }
+  SqliteDatabaseLayer(void* pDatabase) { m_pDatabase = pDatabase; }
   
   // dtor()
   virtual ~SqliteDatabaseLayer();
@@ -66,7 +65,8 @@ public:
 
 private:
   
-  sqlite3* m_pDatabase;
+  //sqlite3* m_pDatabase;
+  void* m_pDatabase;
 };
 
 #endif // __SQLITE_DATABASE_LAYER_H__

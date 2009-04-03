@@ -14,14 +14,17 @@
 
 #include "wx/arrstr.h"
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseLayer.h"
-#include "OdbcInterface.h"
+
+
+class OdbcInterface;
 
 #define ERR_BUFFER_LEN 1024
 #define ERR_STATE_LEN 10
 
 
-class OdbcDatabaseLayer : public DatabaseLayer
+class WXDLLIMPEXP_DATABASELAYER OdbcDatabaseLayer : public DatabaseLayer
 {
 public:
   // ctor()
@@ -68,9 +71,10 @@ public:
 private:
   virtual PreparedStatement* PrepareStatement(const wxString& strQuery, bool bParseQuery);
   
-  SQLHENV m_sqlEnvHandle;
-  SQLHDBC m_sqlHDBC;
-  SQLHSTMT m_sqlStatementHandle;
+  //SQLHENV m_sqlEnvHandle;
+  void* m_sqlEnvHandle;
+  //SQLHDBC m_sqlHDBC;
+  void* m_sqlHDBC;
 
   wxString m_strDSN;
   wxString m_strUser;
@@ -83,14 +87,16 @@ private:
 #endif
 
   bool m_bIsConnected;
-  OdbcInterface m_Interface;
+  OdbcInterface* m_pInterface;
 
 public:
 
   // error handling
-  void InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr=NULL );
+  //void InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr = NULL );
+  void InterpretErrorCodes( long nCode, void* stmth_ptr = NULL );
 
-  SQLHANDLE allocStmth();
+  //SQLHANDLE allocStmth();
+  void* allocStmth();
 };
 
 #endif // __ODBC_DATABASE_LAYER_H__

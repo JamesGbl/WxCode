@@ -16,6 +16,7 @@
 #include "wx/hashset.h"
 #include "wx/datetime.h"
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseErrorReporter.h"
 #include "DatabaseStringConverter.h"
 #include "ResultSetMetaData.h"
@@ -23,7 +24,7 @@
 WX_DECLARE_STRING_HASH_MAP(int, StringToIntMap);
 WX_DECLARE_HASH_SET( ResultSetMetaData*, wxPointerHash, wxPointerEqual, MetaDataHashSet );
 
-class DatabaseResultSet : public DatabaseErrorReporter, public DatabaseStringConverter
+class WXDLLIMPEXP_DATABASELAYER DatabaseResultSet : public DatabaseErrorReporter, public DatabaseStringConverter
 {
 public:
   /// Constructor

@@ -4,12 +4,8 @@
   <include file="presets/wxcode.bkl"/>
   <!-- SQLite settings -->
   <option name="SQLITE_HEADER_LOCATION" category="path">
-    <default-value>.</default-value>
+    <default-value>../sqlite3</default-value>
     <description>Location of SQLite3 header files</description>
-  </option>
-  <option name="SQLITE_LIB_LOCATION" category="path">
-    <default-value>.</default-value>
-    <description>Location of SQLite3 libraries</description>
   </option>
 
   <!-- Firebird settings -->
@@ -72,14 +68,14 @@
 
   <set var="COMP_SRC">src/DatabaseLayer.cpp src/DatabaseResultSet.cpp src/PreparedStatement.cpp src/DatabaseErrorReporter.cpp src/DatabaseStringConverter.cpp src/DatabaseQueryParser.cpp</set>
 
-  <set var="COMP_HDR">include/DatabaseLayer.h include/DatabaseResultSet.h include/PreparedStatement.h include/DatabaseErrorReporter.h include/DatabaseLayerException.h include/DatabaseErrorCodes.h include/DatabaseStringConverter.h include/ResultSetMetaData.h include/DatabaseQueryParser.h</set>
+  <set var="COMP_HDR">include/DatabaseLayer.h include/DatabaseResultSet.h include/PreparedStatement.h include/DatabaseErrorReporter.h include/DatabaseLayerException.h include/DatabaseErrorCodes.h include/DatabaseStringConverter.h include/ResultSetMetaData.h include/DatabaseQueryParser.h include/DatabaseLayerDef.h</set>
 
 <!-- SQLite -->
   <template id="sqlite_template">
     <include>$(SQLITE_HEADER_LOCATION)</include>
     <sources>$(fileList('src/Sqlite*.cpp'))</sources>
+    <sources>$(fileList('sqlite3/sqlite3.c'))</sources>
     <headers>$(fileList('include/Sqlite*.h'))</headers>
-    <stdlib>$(SQLITE_LIB_LOCATION)</stdlib>
   </template>
 
   <lib id="databaselayer_sqlite_lib" template="sqlite_template,wxcode-lib" cond="WX_SHARED=='0'">
@@ -88,7 +84,6 @@
 
   <dll id="databaselayer_sqlite_dll" template="sqlite_template,wxcode-dll" cond="WX_SHARED=='1'">
    	<wxlike-dllname prefix="wxcode">databaselayer_sqlite</wxlike-dllname>	
-    <sys-lib>sqlite3</sys-lib>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>base</wx-lib>
@@ -115,10 +110,10 @@
 
 <!-- MySQL -->
   <template id="mysql_template">
+    <include>$(MYSQL_HEADER_LOCATION)</include>
     <if cond="TARGETING_WIN32!='1'">
       <cxxflags>`mysql_config --include`</cxxflags>
     </if>
-    <include>$(MYSQL_HEADER_LOCATION)</include>
    	<sources>$(fileList('src/Mysql*.cpp'))</sources>
     <headers>$(fileList('include/Mysql*.h'))</headers>
     <stdlib>$(MYSQL_LIB_LOCATION)</stdlib>
@@ -159,10 +154,10 @@
 
 <!-- Oracle -->
   <template id="oracle_template">
+    <include>$(ORACLE_HEADER_LOCATION)</include>
     <if cond="TARGETING_WIN32=='1'">
       <define>WIN32COMMON</define>
     </if>
-    <include>$(ORACLE_HEADER_LOCATION)</include>
 	  <sources>$(fileList('src/OTL*.cpp'))</sources>
     <headers>$(fileList('include/OTL*.h'))</headers>
     <stdlib>$(ORACLE_LIB_LOCATION)</stdlib>
@@ -229,6 +224,93 @@
     <wx-lib>base</wx-lib>
   </dll>
 
+<!-- DatabaseLayer -->
+  <template id="databaselayer_template">
+    <!-- Header file locations -->
+    <include>$(SQLITE_HEADER_LOCATION)</include>
+    <include>$(FIREBIRD_HEADER_LOCATION)</include>
+    <include>$(POSTGRESQL_HEADER_LOCATION)</include>
+    <if cond="TARGETING_WIN32!='1'">
+      <include>`pg_config --includedir`</include>
+    </if>
+    <if cond="TARGETING_WIN32=='1'">
+      <define>WIN32COMMON</define>
+    </if>
+
+    <!-- DatabaseLayer source code -->
+    <sources>$(fileList('src/Sqlite*.cpp'))</sources>
+    <sources>$(fileList('sqlite3/sqlite3.c'))</sources>
+    <headers>$(fileList('include/Sqlite*.h'))</headers>
+    <sources>$(fileList('src/Firebird*.cpp'))</sources>
+    <headers>$(fileList('include/Firebird*.h'))</headers>
+    <sources>$(fileList('src/Postgres*.cpp'))</sources>
+    <headers>$(fileList('include/Postgres*.h'))</headers>
+    <sources>$(fileList('src/Odbc*.cpp'))</sources>
+    <headers>$(fileList('include/Odbc*.h'))</headers>
+
+    <!-- Library locations -->
+    <stdlib>$(FIREBIRD_LIB_LOCATION)</stdlib>
+    <stdlib>$(POSTGRESQL_LIB_LOCATION)</stdlib>
+  </template>
+
+  <lib id="databaselayer_lib" template="wxcode-lib,databaselayer_template" cond="WX_SHARED=='0'">
+  	<wxlike-libname prefix="wxcode">databaselayer</wxlike-libname>
+  </lib>
+
+  <dll id="databaselayer_dll" template="wxcode-dll,databaselayer_template" cond="WX_SHARED=='1'">
+    <wxlike-dllname prefix="wxcode">databaselayer</wxlike-dllname>
+
+		<!-- remove the libraries which are not required by your project -->
+		<wx-lib>base</wx-lib>
+  </dll>
+
+<!-- GPL -->
+  <template id="databaselayer_gpl_template">
+    <!-- Header file locations -->
+    <include>$(SQLITE_HEADER_LOCATION)</include>
+    <include>$(FIREBIRD_HEADER_LOCATION)</include>
+    <include>$(MYSQL_HEADER_LOCATION)</include>
+    <if cond="TARGETING_WIN32!='1'">
+      <cxxflags>`mysql_config --include`</cxxflags>
+    </if>
+    <include>$(POSTGRESQL_HEADER_LOCATION)</include>
+    <if cond="TARGETING_WIN32!='1'">
+      <include>`pg_config --includedir`</include>
+    </if>
+    <if cond="TARGETING_WIN32=='1'">
+      <define>WIN32COMMON</define>
+    </if>
+
+    <!-- DatabaseLayer source code -->
+    <sources>$(fileList('src/Sqlite*.cpp'))</sources>
+    <sources>$(fileList('sqlite3/sqlite3.c'))</sources>
+    <headers>$(fileList('include/Sqlite*.h'))</headers>
+    <sources>$(fileList('src/Firebird*.cpp'))</sources>
+    <headers>$(fileList('include/Firebird*.h'))</headers>
+    <sources>$(fileList('src/Mysql*.cpp'))</sources>
+    <headers>$(fileList('include/Mysql*.h'))</headers>
+    <sources>$(fileList('src/Postgres*.cpp'))</sources>
+    <headers>$(fileList('include/Postgres*.h'))</headers>
+    <sources>$(fileList('src/Odbc*.cpp'))</sources>
+    <headers>$(fileList('include/Odbc*.h'))</headers>
+
+    <!-- Library locations -->
+    <stdlib>$(FIREBIRD_LIB_LOCATION)</stdlib>
+    <stdlib>$(MYSQL_LIB_LOCATION)</stdlib>
+    <stdlib>$(POSTGRESQL_LIB_LOCATION)</stdlib>
+  </template>
+
+  <lib id="databaselayer_gpl_lib" template="wxcode-lib,databaselayer_gpl_template" cond="WX_SHARED=='0'">
+  	<wxlike-libname prefix="wxcode">databaselayer_gpl</wxlike-libname>
+  </lib>
+
+  <dll id="databaselayer_gpl_dll" template="wxcode-dll,databaselayer_gpl_template" cond="WX_SHARED=='1'">
+    <wxlike-dllname prefix="wxcode">databaselayer_gpl</wxlike-dllname>
+
+		<!-- remove the libraries which are not required by your project -->
+		<wx-lib>base</wx-lib>
+  </dll>
+
 <!-- Combined -->
   <!-- this makes the MSVC6 project files much nicer... -->
   <set var="MSVC6PRJ_MERGED_TARGETS">
@@ -239,6 +321,8 @@
     databaselayer_sqlite=databaselayer_sqlite_lib+databaselayer_sqlite_dll
     databaselayer_odbc=databaselayer_odbc_lib+databaselayer_odbc_dll
     databaselayer_tds=databaselayer_tds_lib+databaselayer_tds_dll
+    databaselayer=databaselayer_lib+databaselayer_dll
+    databaselayer_gpl=databaselayer_gpl_lib+databaselayer_gpl_dll
   </set>
 
 <!-- Samples for this component -->
@@ -262,8 +346,6 @@
 
     <define>USE_SQLITE</define>
     <include>$(SQLITE_HEADER_LOCATION)</include>
-    <stdlib>$(SQLITE_LIB_LOCATION)</stdlib>
-    <sys-lib>sqlite3</sys-lib>
 	</wxcode-sample>
 
 <!-- Firebird -->
@@ -363,6 +445,16 @@
 	</wxcode-sample>
 
 <!-- Convenience targets -->
+  <phony id="databaselayer">
+    <depends>databaselayer_lib</depends>
+    <depends>databaselayer_dll</depends>
+  </phony>
+
+  <phony id="databaselayer_gpl">
+    <depends>databaselayer_gpl_lib</depends>
+    <depends>databaselayer_gpl_dll</depends>
+  </phony>
+
   <phony id="sqlite">
     <depends>databaselayer_sqlite_lib</depends>
     <depends>databaselayer_sqlite_dll</depends>

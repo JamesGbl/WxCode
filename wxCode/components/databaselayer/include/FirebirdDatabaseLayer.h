@@ -1,13 +1,14 @@
 #ifndef __FIREBIRD_DATABASE_LAYER_H__
 #define __FIREBIRD_DATABASE_LAYER_H__
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseLayer.h"
 
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-#include "FirebirdInterface.h"
+class FirebirdInterface;
 #endif
 
-class FirebirdDatabaseLayer : public DatabaseLayer
+class WXDLLIMPEXP_DATABASELAYER FirebirdDatabaseLayer : public DatabaseLayer
 {
 public:
   // ctor()
@@ -16,7 +17,8 @@ public:
   FirebirdDatabaseLayer(const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
   FirebirdDatabaseLayer(const wxString& strServer , const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
   FirebirdDatabaseLayer(const wxString& strServer , const wxString& strDatabase, const wxString& strUser, const wxString& strPassword, const wxString& strRole);
-  FirebirdDatabaseLayer(isc_tr_handle pDatabase) { m_pDatabase = pDatabase; }
+  //FirebirdDatabaseLayer(isc_db_handle pDatabase) { m_pDatabase = pDatabase; }
+  FirebirdDatabaseLayer(void* pDatabase) { m_pDatabase = pDatabase; }
   
   // dtor()
   virtual ~FirebirdDatabaseLayer();
@@ -46,7 +48,8 @@ public:
   virtual PreparedStatement* PrepareStatement(const wxString& strQuery);
   
   static int TranslateErrorCode(int nCode);
-  static wxString TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, ISC_STATUS_ARRAY status);
+  //static wxString TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, ISC_STATUS_ARRAY status);
+  static wxString TranslateErrorCodeToString(FirebirdInterface* pInterface, int nCode, void* status);
   static bool IsAvailable();
 
   void SetServer(const wxString& strServer) { m_strServer = strServer; }
@@ -67,7 +70,7 @@ private:
   void InterpretErrorCodes(); 
   
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  FirebirdInterface m_Interface;
+  FirebirdInterface* m_pInterface;
 #endif
   wxString m_strServer;
   wxString m_strDatabase;
@@ -75,9 +78,12 @@ private:
   wxString m_strPassword;
   wxString m_strRole;
 
-  isc_db_handle m_pDatabase;
-  isc_tr_handle m_pTransaction;
-  ISC_STATUS_ARRAY m_Status;
+  //isc_db_handle m_pDatabase;
+  void* m_pDatabase;
+  //isc_tr_handle m_pTransaction;
+  void* m_pTransaction;
+  //ISC_STATUS_ARRAY m_Status;
+  void* m_pStatus;
 };
 
 #endif // __FIREBIRD_DATABASE_LAYER_H__

@@ -14,17 +14,18 @@
 
 #include "wx/arrstr.h"
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseLayer.h"
 #include "PreparedStatement.h"
+
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-#include "MysqlInterface.h"
+class MysqlInterface;
 #endif
 
-#include "mysql.h"
 
 WX_DECLARE_VOIDPTR_HASH_MAP(void*, PointerLookupMap);
 
-class MysqlDatabaseLayer : public DatabaseLayer
+class WXDLLIMPEXP_DATABASELAYER MysqlDatabaseLayer : public DatabaseLayer
 {
 public:
   // Information that can be specified for a MySQL database
@@ -39,7 +40,7 @@ public:
   MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase);
   MysqlDatabaseLayer(const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
   MysqlDatabaseLayer(const wxString& strServer, const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
-  MysqlDatabaseLayer(MYSQL* pDatabase) { m_pDatabase = pDatabase; }
+  MysqlDatabaseLayer(void* pDatabase) { m_pDatabase = pDatabase; }
 
   // dtor
   virtual ~MysqlDatabaseLayer();
@@ -84,7 +85,7 @@ private:
   void ParseServerAndPort(const wxString& strServer);
 
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  MysqlInterface m_Interface;
+  MysqlInterface* m_pInterface;
 #endif
   wxString m_strServer;
   wxString m_strDatabase;
@@ -92,7 +93,7 @@ private:
   wxString m_strPassword;
   int m_iPort;
     
-  MYSQL* m_pDatabase;
+  void* m_pDatabase;
 
 #if wxUSE_UNICODE
   PointerLookupMap m_ResultSets;

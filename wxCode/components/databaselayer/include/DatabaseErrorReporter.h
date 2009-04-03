@@ -12,7 +12,9 @@
     #include "wx/wx.h"
 #endif
 
-class DatabaseErrorReporter
+#include "DatabaseLayerDef.h"
+
+class WXDLLIMPEXP_DATABASELAYER DatabaseErrorReporter
 {
 public:
   // ctor

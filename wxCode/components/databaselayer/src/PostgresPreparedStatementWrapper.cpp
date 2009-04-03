@@ -54,7 +54,23 @@ void PostgresPreparedStatementWrapper::SetParam(int nPosition, bool bValue)
 
 int PostgresPreparedStatementWrapper::GetParameterCount()
 {
-  return m_strSQL.Freq('?');
+  int nParameterCount = 0;
+  bool bInStringLiteral = false;
+  size_t len = m_strSQL.length();
+  for (size_t i = 0; i < len; i++)
+  {
+    wxChar character = m_strSQL[i];
+    if ('\'' == character)
+    {
+      // Signify that we are inside a string literal inside the SQL
+      bInStringLiteral = !bInStringLiteral;
+    }
+    else if (('?' == character) && !bInStringLiteral)
+    {
+      nParameterCount++;
+    }
+  }
+  return nParameterCount;
 }
 
 int PostgresPreparedStatementWrapper::RunQuery()

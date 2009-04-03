@@ -86,6 +86,30 @@ Package=<4>
 
 ###############################################################################
 
+Project: "databaselayer"=databaselayer_databaselayer.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_gpl"=databaselayer_databaselayer_gpl.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "test_sqlite"=databaselayer_test_sqlite.dsp - Package Owner=<4>
 
 Package=<5>

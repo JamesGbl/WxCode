@@ -12,7 +12,9 @@
     #include "wx/wx.h"
 #endif
 
-class DatabaseStringConverter
+#include "DatabaseLayerDef.h"
+
+class WXDLLIMPEXP_DATABASELAYER DatabaseStringConverter
 {
 public:
   // ctor

@@ -1,4 +1,5 @@
 #include "../include/PostgresDatabaseLayer.h"
+#include "../include/PostgresInterface.h"
 #include "../include/PostgresResultSet.h"
 #include "../include/PostgresPreparedStatement.h"
 #include "../include/DatabaseErrorCodes.h"
@@ -10,7 +11,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer()
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -29,7 +31,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strDatabase)
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -49,7 +52,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strServer, const wx
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -69,7 +73,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strDatabase, const 
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -89,7 +94,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strServer, const wx
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -109,7 +115,8 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strServer, int nPor
  : DatabaseLayer()
 {
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  if (!m_Interface.Init())
+  m_pInterface = new PostgresInterface();
+  if (!m_pInterface->Init())
   {
     SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
     SetErrorMessage(wxT("Error loading PostgreSQL library"));
@@ -129,6 +136,7 @@ PostgresDatabaseLayer::PostgresDatabaseLayer(const wxString& strServer, int nPor
 PostgresDatabaseLayer::~PostgresDatabaseLayer()
 {
   Close();
+  wxDELETE(m_pInterface);
 }
 
 // open database
@@ -173,17 +181,17 @@ bool PostgresDatabaseLayer::Open()
     pPort = portCharBuffer;
   }
 
-  m_pDatabase = m_Interface.GetPQsetdbLogin()(pHost, pPort, pOptions, pTty, pDatabase, pUser, pPassword);
-  if (m_Interface.GetPQstatus()(m_pDatabase) == CONNECTION_BAD)
+  m_pDatabase = m_pInterface->GetPQsetdbLogin()(pHost, pPort, pOptions, pTty, pDatabase, pUser, pPassword);
+  if (m_pInterface->GetPQstatus()((PGconn*)m_pDatabase) == CONNECTION_BAD)
   {
-    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_Interface.GetPQstatus()(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetPQerrorMessage()(m_pDatabase)));
+    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_pInterface->GetPQstatus()((PGconn*)m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetPQerrorMessage()((PGconn*)m_pDatabase)));
     ThrowDatabaseException();
     return false;
   }
 
-  m_Interface.GetPQsetClientEncoding()(m_pDatabase, "UTF-8");
-  wxCSConv conv((const wxChar*)(m_Interface.GetPQencodingToChar()(m_Interface.GetPQclientEncoding()(m_pDatabase))));
+  m_pInterface->GetPQsetClientEncoding()((PGconn*)m_pDatabase, "UTF-8");
+  wxCSConv conv((const wxChar*)(m_pInterface->GetPQencodingToChar()(m_pInterface->GetPQclientEncoding()((PGconn*)m_pDatabase))));
   SetEncoding(&conv);
   
   return true;
@@ -243,7 +251,7 @@ bool PostgresDatabaseLayer::Close()
   
   if (m_pDatabase)
   {
-    m_Interface.GetPQfinish()(m_pDatabase);
+    m_pInterface->GetPQfinish()((PGconn*)m_pDatabase);
     m_pDatabase = NULL;
   }
 
@@ -258,7 +266,7 @@ void PostgresDatabaseLayer::SetPort(int nPort)
 bool PostgresDatabaseLayer::IsOpen()
 {
   if (m_pDatabase)
-    return (m_Interface.GetPQstatus()(m_pDatabase) != CONNECTION_BAD);
+    return (m_pInterface->GetPQstatus()((PGconn*)m_pDatabase) != CONNECTION_BAD);
   else
     return false;
 }
@@ -288,21 +296,21 @@ int PostgresDatabaseLayer::RunQuery(const wxString& strQuery, bool WXUNUSED(bPar
   ResetErrorCodes();
 
   wxCharBuffer sqlBuffer = ConvertToUnicodeStream(strQuery);
-  PGresult* pResultCode = m_Interface.GetPQexec()(m_pDatabase, sqlBuffer);
-  if ((pResultCode == NULL) || (m_Interface.GetPQresultStatus()(pResultCode) != PGRES_COMMAND_OK))
+  PGresult* pResultCode = m_pInterface->GetPQexec()((PGconn*)m_pDatabase, sqlBuffer);
+  if ((pResultCode == NULL) || (m_pInterface->GetPQresultStatus()(pResultCode) != PGRES_COMMAND_OK))
   {
-    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_Interface.GetPQresultStatus()(pResultCode)));
-    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetPQerrorMessage()(m_pDatabase)));
-    m_Interface.GetPQclear()(pResultCode);
+    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_pInterface->GetPQresultStatus()(pResultCode)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetPQerrorMessage()((PGconn*)m_pDatabase)));
+    m_pInterface->GetPQclear()(pResultCode);
     ThrowDatabaseException();
     return DATABASE_LAYER_QUERY_RESULT_ERROR;
   }
   else
   {
-    wxString rowsAffected = ConvertFromUnicodeStream(m_Interface.GetPQcmdTuples()(pResultCode));
+    wxString rowsAffected = ConvertFromUnicodeStream(m_pInterface->GetPQcmdTuples()(pResultCode));
     long rows = -1;
     rowsAffected.ToLong(&rows);
-    m_Interface.GetPQclear()(pResultCode);
+    m_pInterface->GetPQclear()(pResultCode);
     return (int)rows;
   }
 }
@@ -312,18 +320,18 @@ DatabaseResultSet* PostgresDatabaseLayer::RunQueryWithResults(const wxString& st
   ResetErrorCodes();
 
   wxCharBuffer sqlBuffer = ConvertToUnicodeStream(strQuery);
-  PGresult* pResultCode = m_Interface.GetPQexec()(m_pDatabase, sqlBuffer);
-  if ((pResultCode == NULL) || (m_Interface.GetPQresultStatus()(pResultCode) != PGRES_TUPLES_OK))
+  PGresult* pResultCode = m_pInterface->GetPQexec()((PGconn*)m_pDatabase, sqlBuffer);
+  if ((pResultCode == NULL) || (m_pInterface->GetPQresultStatus()(pResultCode) != PGRES_TUPLES_OK))
   {
-    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_Interface.GetPQstatus()(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(m_Interface.GetPQerrorMessage()(m_pDatabase)));
-    m_Interface.GetPQclear()(pResultCode);
+    SetErrorCode(PostgresDatabaseLayer::TranslateErrorCode(m_pInterface->GetPQstatus()((PGconn*)m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(m_pInterface->GetPQerrorMessage()((PGconn*)m_pDatabase)));
+    m_pInterface->GetPQclear()(pResultCode);
     ThrowDatabaseException();
     return NULL;
   }
   else
   {
-    PostgresResultSet* pResultSet = new PostgresResultSet(&m_Interface, pResultCode);
+    PostgresResultSet* pResultSet = new PostgresResultSet(m_pInterface, pResultCode);
     pResultSet->SetEncoding(GetEncoding());
     LogResultSetForCleanup(pResultSet);
     return pResultSet;
@@ -335,7 +343,7 @@ PreparedStatement* PostgresDatabaseLayer::PrepareStatement(const wxString& strQu
 {
   ResetErrorCodes();
 
-  PostgresPreparedStatement* pStatement = PostgresPreparedStatement::CreateStatement(&m_Interface, m_pDatabase, strQuery);
+  PostgresPreparedStatement* pStatement = PostgresPreparedStatement::CreateStatement(m_pInterface, (PGconn*)m_pDatabase, strQuery);
   LogStatementForCleanup(pStatement);
   return pStatement;
 }

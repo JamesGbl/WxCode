@@ -135,13 +135,14 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         TEST_CASE(testReusePreparedStatementWithResults)
         TEST_CASE(testRunQueryReturnValue)
         TEST_CASE(testPreparedStatementRunQueryReturnValue)
-        TEST_CASE(testBadPreparedStatement);
-        TEST_CASE(testResultSetNoRecords);
+        TEST_CASE(testBadPreparedStatement)
+        TEST_CASE(testResultSetNoRecords)
+        TEST_CASE(testSpecialCharactersInPreparedStatement)
       }
 
     private:
       DatabaseLayer* m_pDatabaseLayer;
-	  wxString m_strPath;
+      wxString m_strPath;
 
       // The map will have a numeric key where #define's are used to make the
       //  code more readable.  The map's values will be wxArrayString instances
@@ -5410,6 +5411,110 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
       }
 
+      void testSpecialCharactersInPreparedStatement( void )
+      {
+        puts("testSpecialCharactersInPreparedStatement");
+        ASSERT( m_pDatabaseLayer != NULL );
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+          // Get the initial row count
+          wxPrintf(_("Checking if row count = 0\n"));
+          int nCount = GetRowCount();
+          ASSERT_EQUALS( 0, nCount );
+        
+          // Add a new row to the database table
+          wxString specialCharacterString = _("' '', \", ?'");
+          PreparedStatement* pStatement = m_pDatabaseLayer->PrepareStatement(_("INSERT INTO table1 (column1, column2) VALUES (") + specialCharacterString + _(", ?);"));
+          DatabaseErrorCheck(m_pDatabaseLayer);
+          ASSERT(pStatement != NULL);
+          if (pStatement)
+          {
+            ASSERT(m_pDatabaseLayer->GetErrorCode() == DATABASE_LAYER_OK);
+            if (m_pDatabaseLayer->GetErrorCode() != DATABASE_LAYER_OK)
+            {
+              puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+              FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+            }
+            else
+            {
+              DatabaseErrorCheck(pStatement);
+              ASSERT_EQUALS( 1, pStatement->GetParameterCount() );
+              pStatement->SetParamString(1, _("Test"));
+              DatabaseErrorCheck(pStatement);
+              pStatement->RunQuery();
+              DatabaseErrorCheck(pStatement);
+            }
+            m_pDatabaseLayer->CloseStatement(pStatement);
+          }
+          else
+          {
+            puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+            FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+          }
+
+          // Get the updated row count
+          wxPrintf(_("Checking if row count = 1\n"));
+          nCount = GetRowCount();
+          ASSERT_EQUALS( 1, nCount );
+
+          // Verify that the correct value was put in the database
+          pStatement = m_pDatabaseLayer->PrepareStatement(_("SELECT * FROM table1 WHERE column1 = ") + specialCharacterString + _(" and column2 = ?;"));
+          DatabaseErrorCheck(m_pDatabaseLayer);
+          ASSERT(pStatement != NULL);
+          if (pStatement)
+          {
+            ASSERT(m_pDatabaseLayer->GetErrorCode() == DATABASE_LAYER_OK);
+            if (m_pDatabaseLayer->GetErrorCode() != DATABASE_LAYER_OK)
+            {
+              puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+              FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+            }
+            else
+            {
+              DatabaseErrorCheck(pStatement);
+              ASSERT_EQUALS( 1, pStatement->GetParameterCount() );
+              pStatement->SetParamString(1, _("Test"));
+              DatabaseErrorCheck(pStatement);
+              DatabaseResultSet* pResultSet = pStatement->RunQueryWithResults();
+              DatabaseErrorCheck(pStatement);
+              ASSERT(pResultSet != NULL);
+              if (pResultSet)
+              {
+                DatabaseErrorCheck(pResultSet);
+                if (pResultSet->Next())
+                {
+                  DatabaseErrorCheck(pResultSet);
+                  ASSERT_EQUALS( _(" ', \", ?"), pResultSet->GetResultString(_("column1")) );
+                  ASSERT_EQUALS(_("Test"), pResultSet->GetResultString(_("column2")));
+                }
+                else
+                {
+                  FAIL("Empty ResultSet");
+                }
+                m_pDatabaseLayer->CloseResultSet(pResultSet);
+              }
+            }
+            m_pDatabaseLayer->CloseStatement(pStatement);
+          }
+          else
+          {
+            puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+            FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+          }
+
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
 
       
 // Helper function to reduce the redundancy in getting the row count which is a common action

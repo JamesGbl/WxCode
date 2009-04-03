@@ -1,4 +1,5 @@
 #include "../include/OdbcDatabaseLayer.h"
+#include "../include/OdbcInterface.h"
 #include "../include/OdbcPreparedStatement.h"
 #include "../include/OdbcResultSet.h"
 #include "../include/DatabaseErrorCodes.h"
@@ -11,7 +12,8 @@ OdbcDatabaseLayer::OdbcDatabaseLayer()
    m_bIsConnected = false;
    ResetErrorCodes();
 
-   if (!m_Interface.Init())
+   m_pInterface = new OdbcInterface();
+   if (!m_pInterface->Init())
    {
      SetErrorCode(DATABASE_LAYER_ERROR_LOADING_LIBRARY);
      SetErrorMessage(wxT("Error loading ODBC library"));
@@ -19,28 +21,30 @@ OdbcDatabaseLayer::OdbcDatabaseLayer()
      return;
    }
 
-   SQLRETURN nRet = m_Interface.GetSQLAllocHandle()(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &m_sqlEnvHandle);
+   SQLHENV sqlEnvHandle = (SQLHENV)m_sqlEnvHandle;
+   SQLRETURN nRet = m_pInterface->GetSQLAllocHandle()(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &sqlEnvHandle);
+   m_sqlEnvHandle = sqlEnvHandle;
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
 
-   nRet = m_Interface.GetSQLSetEnvAttr()(m_sqlEnvHandle, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
+   nRet = m_pInterface->GetSQLSetEnvAttr()((SQLHENV)m_sqlEnvHandle, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
 
-   nRet = m_Interface.GetSQLAllocHandle()(SQL_HANDLE_DBC, m_sqlEnvHandle, &m_sqlHDBC);
+   SQLHDBC sqlHDBC = (SQLHDBC)m_sqlHDBC;
+   nRet = m_pInterface->GetSQLAllocHandle()(SQL_HANDLE_DBC, (SQLHENV)m_sqlEnvHandle, &sqlHDBC);
+   m_sqlHDBC = sqlHDBC;
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
-
-   m_sqlStatementHandle = NULL;
 
    m_strDSN = wxEmptyString;
    m_strUser = wxEmptyString;
@@ -56,19 +60,21 @@ OdbcDatabaseLayer::~OdbcDatabaseLayer()
 {
    Close();
 
-   SQLRETURN nRet = m_Interface.GetSQLFreeHandle()(SQL_HANDLE_DBC, m_sqlHDBC);
+   SQLRETURN nRet = m_pInterface->GetSQLFreeHandle()(SQL_HANDLE_DBC, (SQLHDBC)m_sqlHDBC);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
 
-   nRet = m_Interface.GetSQLFreeHandle()(SQL_HANDLE_ENV, m_sqlEnvHandle);
+   nRet = m_pInterface->GetSQLFreeHandle()(SQL_HANDLE_ENV, (SQLHENV)m_sqlEnvHandle);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
+
+   wxDELETE(m_pInterface);
 }
 
 bool OdbcDatabaseLayer::Open( )
@@ -88,7 +94,7 @@ bool OdbcDatabaseLayer::Open( )
 #endif
 
      SQLRETURN nRet;
-     nRet = m_Interface.GetSQLConnect()(m_sqlHDBC, (SQLTCHAR FAR*)(const char*)dsnCharBuffer,
+     nRet = m_pInterface->GetSQLConnect()((SQLHDBC)m_sqlHDBC, (SQLTCHAR FAR*)(const char*)dsnCharBuffer,
                 SQL_NTS, (SQLTCHAR FAR*)(const char*)userCharBuffer, SQL_NTS,
                 (SQLTCHAR FAR*)(const char*)passwordCharBuffer, SQL_NTS);
      if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
@@ -107,10 +113,10 @@ bool OdbcDatabaseLayer::Open( )
      //wxCharBuffer connectionCharBuffer = ConvertToUnicodeStream(m_strConnection);
      void* connectionCharBuffer = (void*)m_strConnection.c_str();
 #if wxUSE_GUI
-     SQLRETURN nRet = m_Interface.GetSQLDriverConnect()(m_sqlHDBC, m_pParent ? (SQLHWND)m_pParent->GetHandle() : NULL, (SQLTCHAR*)(const char*)connectionCharBuffer,
+     SQLRETURN nRet = m_pInterface->GetSQLDriverConnect()((SQLHDBC)m_sqlHDBC, m_pParent ? (SQLHWND)m_pParent->GetHandle() : NULL, (SQLTCHAR*)(const char*)connectionCharBuffer,
          (SQLSMALLINT)m_strConnection.Length(), (SQLTCHAR*)buff, 8192, &iLen, m_bPrompt ? SQL_DRIVER_PROMPT : SQL_DRIVER_NOPROMPT);
 #else
-     SQLRETURN nRet = m_Interface.GetSQLDriverConnect()(m_sqlHDBC, NULL, (SQLTCHAR*)(const char*)connectionCharBuffer,
+     SQLRETURN nRet = m_pInterface->GetSQLDriverConnect()((SQLHDBC)m_sqlHDBC, NULL, (SQLTCHAR*)(const char*)connectionCharBuffer,
          (SQLSMALLINT)m_strConnection.Length(), (SQLTCHAR*)buff, 8192, &iLen, SQL_DRIVER_NOPROMPT);
 #endif
 
@@ -181,7 +187,7 @@ bool OdbcDatabaseLayer::Close()
 
    if (m_bIsConnected) 
    {
-      SQLRETURN nRet = m_Interface.GetSQLDisconnect()(m_sqlHDBC);
+      SQLRETURN nRet = m_pInterface->GetSQLDisconnect()((SQLHDBC)m_sqlHDBC);
       if ( nRet != SQL_SUCCESS )
       {
         InterpretErrorCodes( nRet );
@@ -203,7 +209,7 @@ void OdbcDatabaseLayer::BeginTransaction()
 {
    ResetErrorCodes();
 
-   SQLRETURN nRet = m_Interface.GetSQLSetConnectAttr()(m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_OFF, 0);
+   SQLRETURN nRet = m_pInterface->GetSQLSetConnectAttr()((SQLHDBC)m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_OFF, 0);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
@@ -215,14 +221,14 @@ void OdbcDatabaseLayer::Commit()
 {
    ResetErrorCodes();
 
-   SQLRETURN nRet = m_Interface.GetSQLEndTran()(SQL_HANDLE_DBC, m_sqlHDBC, SQL_COMMIT);
+   SQLRETURN nRet = m_pInterface->GetSQLEndTran()(SQL_HANDLE_DBC, (SQLHDBC)m_sqlHDBC, SQL_COMMIT);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
 
-   nRet = m_Interface.GetSQLSetConnectAttr()(m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_IS_INTEGER);
+   nRet = m_pInterface->GetSQLSetConnectAttr()((SQLHDBC)m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_IS_INTEGER);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
@@ -234,14 +240,14 @@ void OdbcDatabaseLayer::RollBack()
 {
    ResetErrorCodes();
 
-   SQLRETURN nRet = m_Interface.GetSQLEndTran()(SQL_HANDLE_DBC, m_sqlHDBC, SQL_ROLLBACK);
+   SQLRETURN nRet = m_pInterface->GetSQLEndTran()(SQL_HANDLE_DBC, (SQLHDBC)m_sqlHDBC, SQL_ROLLBACK);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
      ThrowDatabaseException();
    }
    
-   nRet = m_Interface.GetSQLSetConnectAttr()(m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_IS_INTEGER);
+   nRet = m_pInterface->GetSQLSetConnectAttr()((SQLHDBC)m_sqlHDBC, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_IS_INTEGER);
    if ( nRet != SQL_SUCCESS )
    {
      InterpretErrorCodes( nRet );
@@ -305,13 +311,13 @@ DatabaseResultSet* OdbcDatabaseLayer::RunQueryWithResults(const wxString& strQue
      return NULL;
 }
 
-SQLHANDLE OdbcDatabaseLayer::allocStmth()
+void* OdbcDatabaseLayer::allocStmth()
 {
     ResetErrorCodes();
 
     SQLHANDLE handle = NULL;
         
-    SQLRETURN nRet = m_Interface.GetSQLAllocHandle()(SQL_HANDLE_STMT, m_sqlHDBC, &handle);
+    SQLRETURN nRet = m_pInterface->GetSQLAllocHandle()(SQL_HANDLE_STMT, (SQLHDBC)m_sqlHDBC, &handle);
     if ( nRet != SQL_SUCCESS )
     {
         InterpretErrorCodes( nRet );
@@ -337,7 +343,7 @@ PreparedStatement* OdbcDatabaseLayer::PrepareStatement( const wxString& strQuery
     else
       QueryArray.push_back(strQuery);
 
-    OdbcPreparedStatement* pReturnStatement = new OdbcPreparedStatement(&m_Interface, m_sqlEnvHandle, m_sqlHDBC);
+    OdbcPreparedStatement* pReturnStatement = new OdbcPreparedStatement(m_pInterface, (SQLHENV)m_sqlEnvHandle, (SQLHDBC)m_sqlHDBC);
 
     if (pReturnStatement)
         pReturnStatement->SetEncoding(GetEncoding());
@@ -352,11 +358,11 @@ PreparedStatement* OdbcDatabaseLayer::PrepareStatement( const wxString& strQuery
         //wxPrintf(_("Preparing statement: '%s'\n"), sqlBuffer);
 
         SQLHSTMT pSqlStatement = allocStmth();
-        SQLRETURN nRet = m_Interface.GetSQLPrepare()(pSqlStatement, (SQLTCHAR*)(const char*)sqlBuffer, SQL_NTS);
+        SQLRETURN nRet = m_pInterface->GetSQLPrepare()(pSqlStatement, (SQLTCHAR*)(const char*)sqlBuffer, SQL_NTS);
         if ( nRet != SQL_SUCCESS && nRet != SQL_SUCCESS_WITH_INFO )
         {
             InterpretErrorCodes( nRet );
-            m_Interface.GetSQLFreeStmt()(pSqlStatement, SQL_CLOSE);
+            m_pInterface->GetSQLFreeStmt()(pSqlStatement, SQL_CLOSE);
             ThrowDatabaseException();
             return NULL;
         }
@@ -377,7 +383,7 @@ bool OdbcDatabaseLayer::TableExists(const wxString& table)
   wxString tableType = _("TABLE");
   wxCharBuffer tableTypeBuffer = ConvertToUnicodeStream(tableType);
   int tableTypeBufferLength = GetEncodedStreamLength(tableType);
-  SQLRETURN nRet = m_Interface.GetSQLTables()(pStatement,
+  SQLRETURN nRet = m_pInterface->GetSQLTables()(pStatement,
       NULL, 0,
       NULL, 0,
       (SQLTCHAR*)(const char*)tableBuffer, SQL_NTS,
@@ -386,16 +392,16 @@ bool OdbcDatabaseLayer::TableExists(const wxString& table)
   if (nRet != SQL_SUCCESS)
   {
     InterpretErrorCodes( nRet );
-    m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+    m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
     ThrowDatabaseException();
     return false;
   }
 
-  nRet = m_Interface.GetSQLFetch()(pStatement);
+  nRet = m_pInterface->GetSQLFetch()(pStatement);
   if (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
     bReturn = true;
 
-  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+  m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
   
   return bReturn;
 }
@@ -409,7 +415,7 @@ bool OdbcDatabaseLayer::ViewExists(const wxString& view)
   wxString tableType = _("VIEW");
   wxCharBuffer tableTypeBuffer = ConvertToUnicodeStream(tableType);
   int tableTypeBufferLength = GetEncodedStreamLength(tableType);
-  SQLRETURN nRet = m_Interface.GetSQLTables()(pStatement,
+  SQLRETURN nRet = m_pInterface->GetSQLTables()(pStatement,
       NULL, 0,
       NULL, 0,
       (SQLTCHAR*)(const char*)viewBuffer, SQL_NTS,
@@ -418,16 +424,16 @@ bool OdbcDatabaseLayer::ViewExists(const wxString& view)
   if (nRet != SQL_SUCCESS)
   {
     InterpretErrorCodes( nRet );
-    m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+    m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
     ThrowDatabaseException();
     return false;
   }
 
-  nRet = m_Interface.GetSQLFetch()(pStatement);
+  nRet = m_pInterface->GetSQLFetch()(pStatement);
   if (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
     bReturn = true;
 
-  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+  m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
   
   return bReturn;
 }
@@ -439,7 +445,7 @@ wxArrayString OdbcDatabaseLayer::GetTables()
   wxString tableType = _("TABLE");
   wxCharBuffer tableTypeBuffer = ConvertToUnicodeStream(tableType);
   int tableTypeBufferLength = GetEncodedStreamLength(tableType);
-  SQLRETURN nRet = m_Interface.GetSQLTables()(pStatement,
+  SQLRETURN nRet = m_pInterface->GetSQLTables()(pStatement,
       NULL, 0,
       NULL, 0,
       NULL, 0,
@@ -448,12 +454,12 @@ wxArrayString OdbcDatabaseLayer::GetTables()
   if (nRet != SQL_SUCCESS)
   {
     InterpretErrorCodes( nRet );
-    m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+    m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
     ThrowDatabaseException();
     return returnArray;
   }
 
-  nRet = m_Interface.GetSQLFetch()(pStatement);
+  nRet = m_pInterface->GetSQLFetch()(pStatement);
   while (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
   {
     SQLTCHAR buff[8192];
@@ -464,21 +470,21 @@ wxArrayString OdbcDatabaseLayer::GetTables()
     SQLINTEGER  real_size        = 0;
     int nField = 3;
 
-    SQLRETURN nGetDataReturn = m_Interface.GetSQLGetData()(pStatement, nField, SQL_C_CHAR, buff,
+    SQLRETURN nGetDataReturn = m_pInterface->GetSQLGetData()(pStatement, nField, SQL_C_CHAR, buff,
       col_size, &real_size);
     if ( nGetDataReturn != SQL_SUCCESS && nGetDataReturn != SQL_SUCCESS_WITH_INFO )
     {
       InterpretErrorCodes(nRet);
-      m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+      m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
       ThrowDatabaseException();
       return returnArray;
     }
     wxString strTable = ConvertFromUnicodeStream((const char*)buff);
     returnArray.Add(strTable);
-    nRet = m_Interface.GetSQLFetch()(pStatement);
+    nRet = m_pInterface->GetSQLFetch()(pStatement);
   }
 
-  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+  m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
   
   return returnArray;
 }
@@ -490,7 +496,7 @@ wxArrayString OdbcDatabaseLayer::GetViews()
   wxString tableType = _("VIEW");
   wxCharBuffer tableTypeBuffer = ConvertToUnicodeStream(tableType);
   int tableTypeBufferLength = GetEncodedStreamLength(tableType);
-  SQLRETURN nRet = m_Interface.GetSQLTables()(pStatement,
+  SQLRETURN nRet = m_pInterface->GetSQLTables()(pStatement,
       NULL, 0,
       NULL, 0,
       NULL, 0,
@@ -499,12 +505,12 @@ wxArrayString OdbcDatabaseLayer::GetViews()
   if (nRet != SQL_SUCCESS)
   {
     InterpretErrorCodes( nRet );
-    m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+    m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
     ThrowDatabaseException();
     return returnArray;
   }
 
-  nRet = m_Interface.GetSQLFetch()(pStatement);
+  nRet = m_pInterface->GetSQLFetch()(pStatement);
   while (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
   {
     SQLTCHAR buff[8192];
@@ -515,21 +521,21 @@ wxArrayString OdbcDatabaseLayer::GetViews()
     SQLINTEGER  real_size        = 0;
     int nField = 3;
 
-    SQLRETURN nGetDataReturn = m_Interface.GetSQLGetData()( pStatement, nField, SQL_C_CHAR, buff,
+    SQLRETURN nGetDataReturn = m_pInterface->GetSQLGetData()( pStatement, nField, SQL_C_CHAR, buff,
       col_size, &real_size );
     if ( nGetDataReturn != SQL_SUCCESS && nGetDataReturn != SQL_SUCCESS_WITH_INFO )
     {
       InterpretErrorCodes(nRet);
-      m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+      m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
       ThrowDatabaseException();
       return returnArray;
     }
     wxString strView = ConvertFromUnicodeStream((const char*)buff);
     returnArray.Add(strView);
-    nRet = m_Interface.GetSQLFetch()(pStatement);
+    nRet = m_pInterface->GetSQLFetch()(pStatement);
   }
 
-  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+  m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
   
   return returnArray;
 }
@@ -541,7 +547,7 @@ wxArrayString OdbcDatabaseLayer::GetColumns(const wxString& table)
   SQLHSTMT pStatement = allocStmth();
   wxCharBuffer tableBuffer = ConvertToUnicodeStream(table);
   int tableBufferLength = GetEncodedStreamLength(table);
-  SQLRETURN nRet = m_Interface.GetSQLColumns()(pStatement,
+  SQLRETURN nRet = m_pInterface->GetSQLColumns()(pStatement,
       NULL, 0,
       NULL, 0,
       (SQLTCHAR*)(const char*)tableBuffer, tableBufferLength,
@@ -550,12 +556,12 @@ wxArrayString OdbcDatabaseLayer::GetColumns(const wxString& table)
   if (nRet != SQL_SUCCESS)
   {
     InterpretErrorCodes( nRet );
-    m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+    m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
     ThrowDatabaseException();
     return returnArray;
   }
 
-  nRet = m_Interface.GetSQLFetch()(pStatement);
+  nRet = m_pInterface->GetSQLFetch()(pStatement);
   while (nRet == SQL_SUCCESS || nRet == SQL_SUCCESS_WITH_INFO)
   {
     SQLPOINTER buff[8192];
@@ -566,26 +572,27 @@ wxArrayString OdbcDatabaseLayer::GetColumns(const wxString& table)
     SQLINTEGER  real_size        = 0;
     int nField = 4;
 
-    SQLRETURN nGetDataReturn = m_Interface.GetSQLGetData()( pStatement, nField, SQL_C_CHAR, buff,
+    SQLRETURN nGetDataReturn = m_pInterface->GetSQLGetData()( pStatement, nField, SQL_C_CHAR, buff,
       col_size, &real_size );
     if ( nGetDataReturn != SQL_SUCCESS && nGetDataReturn != SQL_SUCCESS_WITH_INFO )
     {
       InterpretErrorCodes(nRet);
-      m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+      m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
       ThrowDatabaseException();
       return returnArray;
     }
     wxString strColumn = ConvertFromUnicodeStream((const char*)buff);
     returnArray.Add(strColumn);
-    nRet = m_Interface.GetSQLFetch()(pStatement);
+    nRet = m_pInterface->GetSQLFetch()(pStatement);
   }
 
-  m_Interface.GetSQLFreeStmt()(pStatement, SQL_CLOSE);
+  m_pInterface->GetSQLFreeStmt()(pStatement, SQL_CLOSE);
 
   return returnArray;
 }
 
-void OdbcDatabaseLayer::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
+//void OdbcDatabaseLayer::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
+void OdbcDatabaseLayer::InterpretErrorCodes( long nCode, void* stmth_ptr )
 {
   wxLogDebug(_("OdbcDatabaseLayer::InterpretErrorCodes()\n"));
 
@@ -600,10 +607,10 @@ void OdbcDatabaseLayer::InterpretErrorCodes( long nCode, SQLHSTMT stmth_ptr )
     memset(strBuffer, 0, ERR_BUFFER_LEN*sizeof(SQLTCHAR));
 
     if (stmth_ptr)
-      m_Interface.GetSQLGetDiagRec()(SQL_HANDLE_STMT, stmth_ptr, 1, strState, &iNativeCode, 
+      m_pInterface->GetSQLGetDiagRec()(SQL_HANDLE_STMT, (SQLHSTMT)stmth_ptr, 1, strState, &iNativeCode, 
         strBuffer, ERR_BUFFER_LEN, &iMsgLen);  
     else
-      m_Interface.GetSQLGetDiagRec()(SQL_HANDLE_DBC, m_sqlHDBC, 1, strState, &iNativeCode,
+      m_pInterface->GetSQLGetDiagRec()(SQL_HANDLE_DBC, (SQLHDBC)m_sqlHDBC, 1, strState, &iNativeCode,
         strBuffer, ERR_BUFFER_LEN, &iMsgLen);  
  
     SetErrorCode((int)iNativeCode);

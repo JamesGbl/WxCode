@@ -12,15 +12,16 @@
     #include "wx/wx.h"
 #endif
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseLayer.h"
 #include "PreparedStatement.h"
+
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-#include "PostgresInterface.h"
+class PostgresInterface;
 #endif
 
-#include "libpq-fe.h"
 
-class PostgresDatabaseLayer : public DatabaseLayer
+class WXDLLIMPEXP_DATABASELAYER PostgresDatabaseLayer : public DatabaseLayer
 {
 public:
   // Information that can be specified for a PostgreSQL database
@@ -36,7 +37,7 @@ public:
   PostgresDatabaseLayer(const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
   PostgresDatabaseLayer(const wxString& strServer, const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
   PostgresDatabaseLayer(const wxString& strServer, int nPort, const wxString& strDatabase, const wxString& strUser, const wxString& strPassword);
-  PostgresDatabaseLayer(PGconn* pDatabase) { m_pDatabase = pDatabase; }
+  PostgresDatabaseLayer(void* pDatabase) { m_pDatabase = pDatabase; }
 
   // dtor
   virtual ~PostgresDatabaseLayer();
@@ -81,7 +82,7 @@ public:
 
 private:
 #ifndef DONT_USE_DYNAMIC_DATABASE_LAYER_LINKING
-  PostgresInterface m_Interface;
+  PostgresInterface* m_pInterface;
 #endif
   wxString m_strServer;
   wxString m_strDatabase;
@@ -89,7 +90,7 @@ private:
   wxString m_strPassword;
   wxString m_strPort;
 
-  PGconn* m_pDatabase;
+  void* m_pDatabase;
 };
 
 #endif // __POSTGRESQL_DATABASE_LAYER_H__

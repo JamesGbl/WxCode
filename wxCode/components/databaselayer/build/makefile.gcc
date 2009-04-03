@@ -13,8 +13,14 @@
 # Compiler flags to link shared library 
 LINK_DLL_FLAGS ?= -shared
 
+# C compiler 
+CC = gcc
+
 # C++ compiler 
 CXX = g++
+
+# Standard flags for CC 
+CFLAGS ?= 
 
 # Standard flags for C++ 
 CXXFLAGS ?= 
@@ -47,10 +53,7 @@ WX_DIR ?= $(WXWIN)
 SHARED ?= 0
 
 # Location of SQLite3 header files 
-SQLITE_HEADER_LOCATION ?= .
-
-# Location of SQLite3 libraries 
-SQLITE_LIB_LOCATION ?= .
+SQLITE_HEADER_LOCATION ?= ../sqlite3
 
 # Location of Firebird header files 
 FIREBIRD_HEADER_LOCATION ?= .
@@ -91,9 +94,13 @@ TDS_LIB_LOCATION ?= .
 ### Variables: ###
 
 CPPDEPS = -MT$@ -MF$@.d -MD -MP
+DATABASELAYER_SQLITE_LIB_CFLAGS = -I$(SQLITE_HEADER_LOCATION) -DHAVE_W32API_H \
+	$(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include $(CPPFLAGS) $(CFLAGS)
 DATABASELAYER_SQLITE_LIB_CXXFLAGS = -I$(SQLITE_HEADER_LOCATION) \
-	-I$(SQLITE_LIB_LOCATION)\include -DHAVE_W32API_H $(____WX_SHARED) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
 	$(VAR_15) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_SQLITE_LIB_OBJECTS =  \
@@ -101,15 +108,21 @@ DATABASELAYER_SQLITE_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_SqlitePreparedStatement.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_SqliteResultSet.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_sqlite3.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseLayer.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseResultSet.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_PreparedStatement.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseErrorReporter.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseStringConverter.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseQueryParser.o
+DATABASELAYER_SQLITE_DLL_CFLAGS = -I$(SQLITE_HEADER_LOCATION) -DHAVE_W32API_H \
+	$(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER $(CPPFLAGS) \
+	$(CFLAGS)
 DATABASELAYER_SQLITE_DLL_CXXFLAGS = -I$(SQLITE_HEADER_LOCATION) \
-	-I$(SQLITE_LIB_LOCATION)\include -DHAVE_W32API_H $(____WX_SHARED) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
 	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER $(CPPFLAGS) \
 	$(CXXFLAGS)
@@ -118,6 +131,7 @@ DATABASELAYER_SQLITE_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_SqlitePreparedStatement.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_SqliteResultSet.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_sqlite3.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_DatabaseLayer.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_DatabaseResultSet.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_PreparedStatement.o \
@@ -252,7 +266,7 @@ DATABASELAYER_POSTGRESQL_DLL_OBJECTS =  \
 DATABASELAYER_ORACLE_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_15) -W -Wall -I..\include -DWIN32COMMON -I$(ORACLE_HEADER_LOCATION) \
+	$(VAR_15) -W -Wall -I..\include -I$(ORACLE_HEADER_LOCATION) -DWIN32COMMON \
 	-I$(ORACLE_LIB_LOCATION)\include $(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_ORACLE_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_oracle_lib_DatabaseLayer.o \
@@ -268,8 +282,8 @@ DATABASELAYER_ORACLE_LIB_OBJECTS =  \
 DATABASELAYER_ORACLE_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER -DWIN32COMMON \
-	-I$(ORACLE_HEADER_LOCATION) -I$(ORACLE_LIB_LOCATION)\include \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(ORACLE_HEADER_LOCATION) -DWIN32COMMON -I$(ORACLE_LIB_LOCATION)\include \
 	-I$(ORACLE_LIB_LOCATION)\include $(CPPFLAGS) $(CXXFLAGS)
 DATABASELAYER_ORACLE_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_oracle_dll_DatabaseLayer.o \
@@ -352,12 +366,227 @@ DATABASELAYER_TDS_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_tds_dll_TdsPreparedStatement.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_tds_dll_TdsResultSet.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_tds_dll_TdsResultSetMetaData.o
+DATABASELAYER_LIB_CFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) \
+	-DWIN32COMMON -I$(FIREBIRD_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CFLAGS)
+DATABASELAYER_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) \
+	-DWIN32COMMON -I$(FIREBIRD_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_LIB_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseErrorReporter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseStringConverter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseQueryParser.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqlitePreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_sqlite3.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcResultSetMetaData.o
+DATABASELAYER_DLL_CFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(POSTGRESQL_LIB_LOCATION)\include \
+	$(CPPFLAGS) $(CFLAGS)
+DATABASELAYER_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(POSTGRESQL_LIB_LOCATION)\include \
+	$(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_DLL_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseErrorReporter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseStringConverter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseQueryParser.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqlitePreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_sqlite3.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcResultSetMetaData.o
+DATABASELAYER_GPL_LIB_CFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(MYSQL_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(MYSQL_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CFLAGS)
+DATABASELAYER_GPL_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -I$(SQLITE_HEADER_LOCATION) \
+	-I$(FIREBIRD_HEADER_LOCATION) -I$(MYSQL_HEADER_LOCATION) \
+	-I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(MYSQL_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_GPL_LIB_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseErrorReporter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseStringConverter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseQueryParser.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqlitePreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_sqlite3.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcResultSetMetaData.o
+DATABASELAYER_GPL_DLL_CFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(MYSQL_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(MYSQL_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CFLAGS)
+DATABASELAYER_GPL_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
+	$(VAR_15) -W -Wall -I..\include -DWXMAKINGDLL_DATABASELAYER \
+	-I$(SQLITE_HEADER_LOCATION) -I$(FIREBIRD_HEADER_LOCATION) \
+	-I$(MYSQL_HEADER_LOCATION) -I$(POSTGRESQL_HEADER_LOCATION) -DWIN32COMMON \
+	-I$(FIREBIRD_LIB_LOCATION)\include -I$(MYSQL_LIB_LOCATION)\include \
+	-I$(POSTGRESQL_LIB_LOCATION)\include $(CPPFLAGS) $(CXXFLAGS)
+DATABASELAYER_GPL_DLL_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseErrorReporter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseStringConverter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseQueryParser.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqlitePreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_sqlite3.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatementParameterCollection.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatementWrapper.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresResultSetMetaData.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcDatabaseLayer.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcInterface.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcParameter.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcPreparedStatement.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcResultSet.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcResultSetMetaData.o
 TEST_SQLITE_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
 	$(VAR_15) -W -Wall -I..\include -I..\tests -DUSE_SQLITE \
-	-I$(SQLITE_HEADER_LOCATION) -I$(SQLITE_LIB_LOCATION)\include $(CPPFLAGS) \
-	$(CXXFLAGS)
+	-I$(SQLITE_HEADER_LOCATION) $(CPPFLAGS) $(CXXFLAGS)
 TEST_SQLITE_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\test_sqlite_databaselayer_tests.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\test_sqlite_MiniCppUnit.o \
@@ -446,7 +675,7 @@ __databaselayer_sqlite_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_sqlite_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_firebird_lib___depname = \
@@ -454,7 +683,7 @@ __databaselayer_firebird_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_firebird_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_mysql_lib___depname = \
@@ -462,7 +691,7 @@ __databaselayer_mysql_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_mysql_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_postgresql_lib___depname = \
@@ -470,7 +699,7 @@ __databaselayer_postgresql_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_postgresql_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_oracle_lib___depname = \
@@ -478,7 +707,7 @@ __databaselayer_oracle_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_oracle_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_odbc_lib___depname = \
@@ -486,7 +715,7 @@ __databaselayer_odbc_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_odbc_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll
 endif
 ifeq ($(WX_SHARED),0)
 __databaselayer_tds_lib___depname = \
@@ -494,7 +723,23 @@ __databaselayer_tds_lib___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __databaselayer_tds_dll___depname = \
-	..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll
+endif
+ifeq ($(WX_SHARED),0)
+__databaselayer_lib___depname = \
+	..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a
+endif
+ifeq ($(WX_SHARED),1)
+__databaselayer_dll___depname = \
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.dll
+endif
+ifeq ($(WX_SHARED),0)
+__databaselayer_gpl_lib___depname = \
+	..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a
+endif
+ifeq ($(WX_SHARED),1)
+__databaselayer_gpl_dll___depname = \
+	..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.dll
 endif
 ifeq ($(SHARED),0)
 ____databaselayer = lib
@@ -503,10 +748,10 @@ ifeq ($(SHARED),1)
 ____databaselayer = dll
 endif
 ifeq ($(WX_SHARED),0)
-____databaselayer_47 = lib
+____databaselayer_63 = lib
 endif
 ifeq ($(WX_SHARED),1)
-____databaselayer_47 = dll
+____databaselayer_63 = dll
 endif
 ifeq ($(WX_SHARED),0)
 ____WX_SHARED = 
@@ -567,32 +812,38 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname) $(__databaselayer_firebird_lib___depname) $(__databaselayer_firebird_dll___depname) $(__databaselayer_mysql_lib___depname) $(__databaselayer_mysql_dll___depname) $(__databaselayer_postgresql_lib___depname) $(__databaselayer_postgresql_dll___depname) $(__databaselayer_oracle_lib___depname) $(__databaselayer_oracle_dll___depname) $(__databaselayer_odbc_lib___depname) $(__databaselayer_odbc_dll___depname) $(__databaselayer_tds_lib___depname) $(__databaselayer_tds_dll___depname) ..\tests\runner_sqlite.exe ..\tests\runner_firebird.exe ..\tests\runner_firebird_embedded.exe ..\tests\runner_mysql.exe ..\tests\runner_postgresql.exe ..\tests\runner_oracle.exe ..\tests\runner_odbc.exe ..\tests\runner_tds.exe
+all: test_for_selected_wxbuild $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname) $(__databaselayer_firebird_lib___depname) $(__databaselayer_firebird_dll___depname) $(__databaselayer_mysql_lib___depname) $(__databaselayer_mysql_dll___depname) $(__databaselayer_postgresql_lib___depname) $(__databaselayer_postgresql_dll___depname) $(__databaselayer_oracle_lib___depname) $(__databaselayer_oracle_dll___depname) $(__databaselayer_odbc_lib___depname) $(__databaselayer_odbc_dll___depname) $(__databaselayer_tds_lib___depname) $(__databaselayer_tds_dll___depname) $(__databaselayer_lib___depname) $(__databaselayer_dll___depname) $(__databaselayer_gpl_lib___depname) $(__databaselayer_gpl_dll___depname) ..\tests\runner_sqlite.exe ..\tests\runner_firebird.exe ..\tests\runner_firebird_embedded.exe ..\tests\runner_mysql.exe ..\tests\runner_postgresql.exe ..\tests\runner_oracle.exe ..\tests\runner_odbc.exe ..\tests\runner_tds.exe
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a
 	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a
-	-if exist ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll del ..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll
-	-if exist ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a del ..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a
+	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a
+	-if exist ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a del ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a
+	-if exist ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.dll del ..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.dll
+	-if exist ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a del ..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a
 	-if exist ..\tests\runner_sqlite.exe del ..\tests\runner_sqlite.exe
 	-if exist ..\tests\runner_firebird.exe del ..\tests\runner_firebird.exe
 	-if exist ..\tests\runner_firebird_embedded.exe del ..\tests\runner_firebird_embedded.exe
@@ -625,12 +876,12 @@ make_dir_databaselayer_sqlite_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll: make_dir_databaselayer_sqlite_dll  $(DATABASELAYER_SQLITE_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_SQLITE_DLL_OBJECTS)  -L$(SQLITE_LIB_LOCATION)\lib -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a $(LDFLAGS)  -lsqlite3 $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.dll: make_dir_databaselayer_sqlite_dll  $(DATABASELAYER_SQLITE_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_SQLITE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_sqlite_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a: make_dir_databaselayer_firebird_lib  $(DATABASELAYER_FIREBIRD_LIB_OBJECTS)
@@ -643,12 +894,12 @@ make_dir_databaselayer_firebird_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll: make_dir_databaselayer_firebird_dll  $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(FIREBIRD_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.dll: make_dir_databaselayer_firebird_dll  $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_FIREBIRD_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(FIREBIRD_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_firebird_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a: make_dir_databaselayer_mysql_lib  $(DATABASELAYER_MYSQL_LIB_OBJECTS)
@@ -661,12 +912,12 @@ make_dir_databaselayer_mysql_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll: make_dir_databaselayer_mysql_dll  $(DATABASELAYER_MYSQL_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_MYSQL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(MYSQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.dll: make_dir_databaselayer_mysql_dll  $(DATABASELAYER_MYSQL_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_MYSQL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(MYSQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_mysql.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_mysql_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a: make_dir_databaselayer_postgresql_lib  $(DATABASELAYER_POSTGRESQL_LIB_OBJECTS)
@@ -679,12 +930,12 @@ make_dir_databaselayer_postgresql_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll: make_dir_databaselayer_postgresql_dll  $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(POSTGRESQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.dll: make_dir_databaselayer_postgresql_dll  $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_POSTGRESQL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(POSTGRESQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_postgresql.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_postgresql_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a: make_dir_databaselayer_oracle_lib  $(DATABASELAYER_ORACLE_LIB_OBJECTS)
@@ -697,12 +948,12 @@ make_dir_databaselayer_oracle_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll: make_dir_databaselayer_oracle_dll  $(DATABASELAYER_ORACLE_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_ORACLE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(ORACLE_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a -L$(ORACLE_LIB_LOCATION)\lib $(LDFLAGS)  -loci $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.dll: make_dir_databaselayer_oracle_dll  $(DATABASELAYER_ORACLE_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_ORACLE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(ORACLE_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_oracle.a -L$(ORACLE_LIB_LOCATION)\lib $(LDFLAGS)  -loci $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_oracle_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a: make_dir_databaselayer_odbc_lib  $(DATABASELAYER_ODBC_LIB_OBJECTS)
@@ -715,12 +966,12 @@ make_dir_databaselayer_odbc_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll: make_dir_databaselayer_odbc_dll  $(DATABASELAYER_ODBC_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_ODBC_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.dll: make_dir_databaselayer_odbc_dll  $(DATABASELAYER_ODBC_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_ODBC_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_odbc.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_odbc_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a: make_dir_databaselayer_tds_lib  $(DATABASELAYER_TDS_LIB_OBJECTS)
@@ -733,15 +984,51 @@ make_dir_databaselayer_tds_lib:
 	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____databaselayer_47)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll: make_dir_databaselayer_tds_dll  $(DATABASELAYER_TDS_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_TDS_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(TDS_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_47)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a $(LDFLAGS)  -ltds $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.dll: make_dir_databaselayer_tds_dll  $(DATABASELAYER_TDS_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_TDS_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(TDS_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a $(LDFLAGS)  -ltds $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_databaselayer_tds_dll: 
-	if not exist ..\lib\gcc_$(____databaselayer_47) mkdir ..\lib\gcc_$(____databaselayer_47)
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
+
+ifeq ($(WX_SHARED),0)
+..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a: make_dir_databaselayer_lib  $(DATABASELAYER_LIB_OBJECTS)
+	if exist $@ del $@
+	ar rcu $@ $(DATABASELAYER_LIB_OBJECTS)
+	ranlib $@
+endif
+
+make_dir_databaselayer_lib: 
+	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
+
+ifeq ($(WX_SHARED),1)
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.dll: make_dir_databaselayer_dll  $(DATABASELAYER_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(FIREBIRD_LIB_LOCATION)\lib -L$(POSTGRESQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+endif
+
+make_dir_databaselayer_dll: 
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
+
+ifeq ($(WX_SHARED),0)
+..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a: make_dir_databaselayer_gpl_lib  $(DATABASELAYER_GPL_LIB_OBJECTS)
+	if exist $@ del $@
+	ar rcu $@ $(DATABASELAYER_GPL_LIB_OBJECTS)
+	ranlib $@
+endif
+
+make_dir_databaselayer_gpl_lib: 
+	if not exist ..\lib\gcc_$(____databaselayer) mkdir ..\lib\gcc_$(____databaselayer)
+
+ifeq ($(WX_SHARED),1)
+..\lib\gcc_$(____databaselayer_63)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.dll: make_dir_databaselayer_gpl_dll  $(DATABASELAYER_GPL_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(DATABASELAYER_GPL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH) -L$(FIREBIRD_LIB_LOCATION)\lib -L$(MYSQL_LIB_LOCATION)\lib -L$(POSTGRESQL_LIB_LOCATION)\lib -Wl,--out-implib=..\lib\gcc_$(____databaselayer_63)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_gpl.a $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+endif
+
+make_dir_databaselayer_gpl_dll: 
+	if not exist ..\lib\gcc_$(____databaselayer_63) mkdir ..\lib\gcc_$(____databaselayer_63)
 
 ..\tests\runner_sqlite.exe: $(TEST_SQLITE_OBJECTS) $(__databaselayer_sqlite_lib___depname)
-	$(CXX) -o $@ $(TEST_SQLITE_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH)  -L$(SQLITE_LIB_LOCATION)\lib $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a -lsqlite3
+	$(CXX) -o $@ $(TEST_SQLITE_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH)  $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_sqlite.a
 
 ..\tests\runner_firebird.exe: $(TEST_FIREBIRD_OBJECTS) $(__databaselayer_firebird_lib___depname)
 	$(CXX) -o $@ $(TEST_FIREBIRD_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH)  -L$(FIREBIRD_LIB_LOCATION)\lib $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_firebird.a
@@ -763,6 +1050,10 @@ make_dir_databaselayer_tds_dll:
 
 ..\tests\runner_tds.exe: $(TEST_TDS_OBJECTS) $(__databaselayer_tds_lib___depname)
 	$(CXX) -o $@ $(TEST_TDS_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_15) -L..$(WXLIBPATH)  -L$(TDS_LIB_LOCATION)\lib $(LDFLAGS)  $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 ..\lib\gcc_$(____databaselayer)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_databaselayer_tds.a -ltdssrv
+
+databaselayer: $(__databaselayer_lib___depname) $(__databaselayer_dll___depname)
+
+databaselayer_gpl: $(__databaselayer_gpl_lib___depname) $(__databaselayer_gpl_dll___depname)
 
 sqlite: $(__databaselayer_sqlite_lib___depname) $(__databaselayer_sqlite_dll___depname)
 
@@ -806,6 +1097,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_SqliteR
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_SQLITE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_SQLITE_LIB_CFLAGS) $(CPPDEPS) $<
+
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_lib_DatabaseLayer.o: ../src/DatabaseLayer.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_SQLITE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -835,6 +1129,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_SqliteR
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_SQLITE_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_SQLITE_DLL_CFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_sqlite_dll_DatabaseLayer.o: ../src/DatabaseLayer.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_SQLITE_DLL_CXXFLAGS) $(CPPDEPS) $<
@@ -1310,6 +1607,456 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_tds_dll_TdsResultS
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_tds_dll_TdsResultSetMetaData.o: ../src/TdsResultSetMetaData.cpp
 	$(CXX) -c -o $@ $(DATABASELAYER_TDS_DLL_CXXFLAGS) $(CPPDEPS) $<
 
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseLayer.o: ../src/DatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseResultSet.o: ../src/DatabaseResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PreparedStatement.o: ../src/PreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseErrorReporter.o: ../src/DatabaseErrorReporter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseStringConverter.o: ../src/DatabaseStringConverter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_DatabaseQueryParser.o: ../src/DatabaseQueryParser.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteDatabaseLayer.o: ../src/SqliteDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqlitePreparedStatement.o: ../src/SqlitePreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteResultSet.o: ../src/SqliteResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_LIB_CFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdDatabaseLayer.o: ../src/FirebirdDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdInterface.o: ../src/FirebirdInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdParameter.o: ../src/FirebirdParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdParameterCollection.o: ../src/FirebirdParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdPreparedStatement.o: ../src/FirebirdPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdPreparedStatementWrapper.o: ../src/FirebirdPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdResultSet.o: ../src/FirebirdResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_FirebirdResultSetMetaData.o: ../src/FirebirdResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresDatabaseLayer.o: ../src/PostgresDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresInterface.o: ../src/PostgresInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresParameter.o: ../src/PostgresParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatement.o: ../src/PostgresPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatementParameterCollection.o: ../src/PostgresPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresPreparedStatementWrapper.o: ../src/PostgresPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresResultSet.o: ../src/PostgresResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_PostgresResultSetMetaData.o: ../src/PostgresResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcDatabaseLayer.o: ../src/OdbcDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcInterface.o: ../src/OdbcInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcParameter.o: ../src/OdbcParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcPreparedStatement.o: ../src/OdbcPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcResultSet.o: ../src/OdbcResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_lib_OdbcResultSetMetaData.o: ../src/OdbcResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseLayer.o: ../src/DatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseResultSet.o: ../src/DatabaseResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PreparedStatement.o: ../src/PreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseErrorReporter.o: ../src/DatabaseErrorReporter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseStringConverter.o: ../src/DatabaseStringConverter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_DatabaseQueryParser.o: ../src/DatabaseQueryParser.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteDatabaseLayer.o: ../src/SqliteDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqlitePreparedStatement.o: ../src/SqlitePreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteResultSet.o: ../src/SqliteResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_DLL_CFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdDatabaseLayer.o: ../src/FirebirdDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdInterface.o: ../src/FirebirdInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdParameter.o: ../src/FirebirdParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdParameterCollection.o: ../src/FirebirdParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdPreparedStatement.o: ../src/FirebirdPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdPreparedStatementWrapper.o: ../src/FirebirdPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdResultSet.o: ../src/FirebirdResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_FirebirdResultSetMetaData.o: ../src/FirebirdResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresDatabaseLayer.o: ../src/PostgresDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresInterface.o: ../src/PostgresInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresParameter.o: ../src/PostgresParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatement.o: ../src/PostgresPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatementParameterCollection.o: ../src/PostgresPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresPreparedStatementWrapper.o: ../src/PostgresPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresResultSet.o: ../src/PostgresResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_PostgresResultSetMetaData.o: ../src/PostgresResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcDatabaseLayer.o: ../src/OdbcDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcInterface.o: ../src/OdbcInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcParameter.o: ../src/OdbcParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcPreparedStatement.o: ../src/OdbcPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcResultSet.o: ../src/OdbcResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_dll_OdbcResultSetMetaData.o: ../src/OdbcResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseLayer.o: ../src/DatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseResultSet.o: ../src/DatabaseResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PreparedStatement.o: ../src/PreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseErrorReporter.o: ../src/DatabaseErrorReporter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseStringConverter.o: ../src/DatabaseStringConverter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_DatabaseQueryParser.o: ../src/DatabaseQueryParser.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteDatabaseLayer.o: ../src/SqliteDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqlitePreparedStatement.o: ../src/SqlitePreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteResultSet.o: ../src/SqliteResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_GPL_LIB_CFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdDatabaseLayer.o: ../src/FirebirdDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdInterface.o: ../src/FirebirdInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdParameter.o: ../src/FirebirdParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdParameterCollection.o: ../src/FirebirdParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdPreparedStatement.o: ../src/FirebirdPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdPreparedStatementWrapper.o: ../src/FirebirdPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdResultSet.o: ../src/FirebirdResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_FirebirdResultSetMetaData.o: ../src/FirebirdResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlDatabaseLayer.o: ../src/MysqlDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlInterface.o: ../src/MysqlInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlParameter.o: ../src/MysqlParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatement.o: ../src/MysqlPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementParameter.o: ../src/MysqlPreparedStatementParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementParameterCollection.o: ../src/MysqlPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementResultSet.o: ../src/MysqlPreparedStatementResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlPreparedStatementWrapper.o: ../src/MysqlPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_MysqlResultSetMetaData.o: ../src/MysqlResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresDatabaseLayer.o: ../src/PostgresDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresInterface.o: ../src/PostgresInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresParameter.o: ../src/PostgresParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatement.o: ../src/PostgresPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatementParameterCollection.o: ../src/PostgresPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresPreparedStatementWrapper.o: ../src/PostgresPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresResultSet.o: ../src/PostgresResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_PostgresResultSetMetaData.o: ../src/PostgresResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcDatabaseLayer.o: ../src/OdbcDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcInterface.o: ../src/OdbcInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcParameter.o: ../src/OdbcParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcPreparedStatement.o: ../src/OdbcPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcResultSet.o: ../src/OdbcResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_lib_OdbcResultSetMetaData.o: ../src/OdbcResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseLayer.o: ../src/DatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseResultSet.o: ../src/DatabaseResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PreparedStatement.o: ../src/PreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseErrorReporter.o: ../src/DatabaseErrorReporter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseStringConverter.o: ../src/DatabaseStringConverter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_DatabaseQueryParser.o: ../src/DatabaseQueryParser.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteDatabaseLayer.o: ../src/SqliteDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqlitePreparedStatement.o: ../src/SqlitePreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteResultSet.o: ../src/SqliteResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_SqliteResultSetMetaData.o: ../src/SqliteResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_sqlite3.o: ../sqlite3/sqlite3.c
+	$(CC) -c -o $@ $(DATABASELAYER_GPL_DLL_CFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdDatabaseLayer.o: ../src/FirebirdDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdInterface.o: ../src/FirebirdInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdParameter.o: ../src/FirebirdParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdParameterCollection.o: ../src/FirebirdParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdPreparedStatement.o: ../src/FirebirdPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdPreparedStatementWrapper.o: ../src/FirebirdPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdResultSet.o: ../src/FirebirdResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_FirebirdResultSetMetaData.o: ../src/FirebirdResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlDatabaseLayer.o: ../src/MysqlDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlInterface.o: ../src/MysqlInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlParameter.o: ../src/MysqlParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatement.o: ../src/MysqlPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementParameter.o: ../src/MysqlPreparedStatementParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementParameterCollection.o: ../src/MysqlPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementResultSet.o: ../src/MysqlPreparedStatementResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlPreparedStatementWrapper.o: ../src/MysqlPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_MysqlResultSetMetaData.o: ../src/MysqlResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresDatabaseLayer.o: ../src/PostgresDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresInterface.o: ../src/PostgresInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresParameter.o: ../src/PostgresParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatement.o: ../src/PostgresPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatementParameterCollection.o: ../src/PostgresPreparedStatementParameterCollection.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresPreparedStatementWrapper.o: ../src/PostgresPreparedStatementWrapper.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresResultSet.o: ../src/PostgresResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_PostgresResultSetMetaData.o: ../src/PostgresResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcDatabaseLayer.o: ../src/OdbcDatabaseLayer.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcInterface.o: ../src/OdbcInterface.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcParameter.o: ../src/OdbcParameter.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcPreparedStatement.o: ../src/OdbcPreparedStatement.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcResultSet.o: ../src/OdbcResultSet.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\databaselayer_gpl_dll_OdbcResultSetMetaData.o: ../src/OdbcResultSetMetaData.cpp
+	$(CXX) -c -o $@ $(DATABASELAYER_GPL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\test_sqlite_databaselayer_tests.o: ../tests/databaselayer_tests.cpp
 	$(CXX) -c -o $@ $(TEST_SQLITE_CXXFLAGS) $(CPPDEPS) $<
 
@@ -1382,9 +2129,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\test_tds_MiniCppUnit.o: ../tests
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\test_tds_TestsRunner.o: ../tests/TestsRunner.cxx
 	$(CXX) -c -o $@ $(TEST_TDS_CXXFLAGS) $(CPPDEPS) $<
 
-.PHONY: all clean sqlite sqlite_test firebird firebird_test \
-	firebird_embedded_test mysql mysql_test postgresql postgresql_test oracle \
-	oracle_test odbc odbc_test tds tds_test
+.PHONY: all clean databaselayer databaselayer_gpl sqlite sqlite_test firebird \
+	firebird_test firebird_embedded_test mysql mysql_test postgresql \
+	postgresql_test oracle oracle_test odbc odbc_test tds tds_test
 
 
 SHELL := $(COMSPEC)

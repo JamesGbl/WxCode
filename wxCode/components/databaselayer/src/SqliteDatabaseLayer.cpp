@@ -1,4 +1,7 @@
 #include "../include/SqliteDatabaseLayer.h"
+
+#include "sqlite3.h"
+
 #include "../include/SqliteResultSet.h"
 #include "../include/SqlitePreparedStatement.h"
 #include "../include/DatabaseErrorCodes.h"
@@ -55,11 +58,13 @@ bool SqliteDatabaseLayer::Open(const wxString& strDatabase)
   //  m_pDatabase = new sqlite3;
 
   wxCharBuffer databaseNameBuffer = ConvertToUnicodeStream(strDatabase);
-  int nReturn = sqlite3_open(databaseNameBuffer, &m_pDatabase);
+  sqlite3* pDbPtr = (sqlite3*)m_pDatabase;
+  int nReturn = sqlite3_open(databaseNameBuffer, &pDbPtr);
+  m_pDatabase = pDbPtr;
   if (nReturn != SQLITE_OK)
   {
-    SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
-    SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg(m_pDatabase)));
+    SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode((sqlite3*)m_pDatabase)));
+    SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg((sqlite3*)m_pDatabase)));
     ThrowDatabaseException();
     return false;
   }
@@ -76,11 +81,11 @@ bool SqliteDatabaseLayer::Close()
 
   if (m_pDatabase != NULL)
   {
-    int nReturn = sqlite3_close(m_pDatabase);
+    int nReturn = sqlite3_close((sqlite3*)m_pDatabase);
     if (nReturn != SQLITE_OK)
     {
-      SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
-      SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg(m_pDatabase)));
+      SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode((sqlite3*)m_pDatabase)));
+      SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg((sqlite3*)m_pDatabase)));
       ThrowDatabaseException();
       return false;
     }
@@ -135,7 +140,7 @@ int SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
     char* szErrorMessage = NULL;
     wxString strErrorMessage = _("");
     wxCharBuffer sqlBuffer = ConvertToUnicodeStream(*start);
-    int nReturn = sqlite3_exec(m_pDatabase, sqlBuffer, 0, 0, &szErrorMessage);
+    int nReturn = sqlite3_exec((sqlite3*)m_pDatabase, sqlBuffer, 0, 0, &szErrorMessage);
   
     if (szErrorMessage != NULL)
     {
@@ -145,7 +150,7 @@ int SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 
     if (nReturn != SQLITE_OK)
     {
-      SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
+      SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode((sqlite3*)m_pDatabase)));
       SetErrorMessage(strErrorMessage);
       ThrowDatabaseException();
       return DATABASE_LAYER_QUERY_RESULT_ERROR;
@@ -153,7 +158,7 @@ int SqliteDatabaseLayer::RunQuery(const wxString& strQuery, bool bParseQuery)
 
     start++;
   }
-  return (sqlite3_changes(m_pDatabase));
+  return (sqlite3_changes((sqlite3*)m_pDatabase));
 }
 
 DatabaseResultSet* SqliteDatabaseLayer::RunQueryWithResults(const wxString& strQuery)
@@ -169,11 +174,11 @@ DatabaseResultSet* SqliteDatabaseLayer::RunQueryWithResults(const wxString& strQ
       char* szErrorMessage = NULL;
       wxString strErrorMessage = _("");
       wxCharBuffer sqlBuffer = ConvertToUnicodeStream(QueryArray[i]);
-      int nReturn = sqlite3_exec(m_pDatabase, sqlBuffer, 0, 0, &szErrorMessage);
+      int nReturn = sqlite3_exec((sqlite3*)m_pDatabase, sqlBuffer, 0, 0, &szErrorMessage);
   
       if (szErrorMessage != NULL)
       {
-        SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
+        SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode((sqlite3*)m_pDatabase)));
         strErrorMessage = ConvertFromUnicodeStream(szErrorMessage);
         sqlite3_free(szErrorMessage);
         return NULL;
@@ -181,7 +186,7 @@ DatabaseResultSet* SqliteDatabaseLayer::RunQueryWithResults(const wxString& strQ
 
       if (nReturn != SQLITE_OK)
       {
-        SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode(m_pDatabase)));
+        SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(sqlite3_errcode((sqlite3*)m_pDatabase)));
         SetErrorMessage(strErrorMessage);
         ThrowDatabaseException();
         return NULL;
@@ -214,7 +219,7 @@ PreparedStatement* SqliteDatabaseLayer::PrepareStatement(const wxString& strQuer
 
   if (m_pDatabase != NULL)
   {
-    SqlitePreparedStatement* pReturnStatement = new SqlitePreparedStatement(m_pDatabase);
+    SqlitePreparedStatement* pReturnStatement = new SqlitePreparedStatement((sqlite3*)m_pDatabase);
     if (pReturnStatement)
       pReturnStatement->SetEncoding(GetEncoding());
     
@@ -241,15 +246,15 @@ PreparedStatement* SqliteDatabaseLayer::PrepareStatement(const wxString& strQuer
         }
         sqlBuffer = ConvertToUnicodeStream(strSQL);
 #if SQLITE_VERSION_NUMBER>=3003009
-        int nReturn = sqlite3_prepare_v2(m_pDatabase, sqlBuffer, -1, &pStatement, &szTail);
+        int nReturn = sqlite3_prepare_v2((sqlite3*)m_pDatabase, sqlBuffer, -1, &pStatement, &szTail);
 #else
-        int nReturn = sqlite3_prepare(m_pDatabase, sqlBuffer, -1, &pStatement, &szTail);
+        int nReturn = sqlite3_prepare((sqlite3*)m_pDatabase, sqlBuffer, -1, &pStatement, &szTail);
 #endif
    
         if (nReturn != SQLITE_OK)
         {
           SetErrorCode(SqliteDatabaseLayer::TranslateErrorCode(nReturn));
-          SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg(m_pDatabase)));
+          SetErrorMessage(ConvertFromUnicodeStream(sqlite3_errmsg((sqlite3*)m_pDatabase)));
           wxDELETE(pReturnStatement);
           ThrowDatabaseException();
           return NULL;

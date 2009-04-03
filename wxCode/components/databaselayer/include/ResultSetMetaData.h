@@ -12,9 +12,10 @@
     #include "wx/wx.h"
 #endif
 
+#include "DatabaseLayerDef.h"
 #include "DatabaseStringConverter.h"
 
-class ResultSetMetaData : public DatabaseStringConverter
+class WXDLLIMPEXP_DATABASELAYER ResultSetMetaData : public DatabaseStringConverter
 {
 public:
   /// Retrieve a column's type
