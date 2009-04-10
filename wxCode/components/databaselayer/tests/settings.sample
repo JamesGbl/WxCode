@@ -2,12 +2,14 @@
 database=:memory:
 
 [Firebird]
+library_location=C:\\Program Files\\Firebird\\Firebird_2_0\\bin
 server=localhost
 database=C:\\Program Files\\Firebird\\Firebird_1_5\\examples\\test.fdb
 user=SYSDBA
 password=masterkey
 
 [PostgreSQL]
+library_location=C:\\Program Files\\PostgreSQL\\8.3\\bin
 server=127.0.0.1
 database=test_databaselayer
 user=user
@@ -15,6 +17,7 @@ password=password
 port=5432
 
 [MySQL]
+library_location=C:\\Program Files\\MySQL\\MySQL Server 5.1\\bin
 server=127.0.0.1
 database=test_databaselayer
 user=test
