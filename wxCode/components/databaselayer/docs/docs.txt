@@ -10,12 +10,12 @@
 <center><em>JDBC-like database access for wxWidgets</em></center>
 
 This is the reference guide for DatabaseLayer component.
-The DatabaseLayer classes provide a database independent interface similar to JDBC (but only VERY basic functionality). So far, the only database backends supported are SQLite3, Firebird, MySQL, and Postgresql. Although the C++ interface can be common between database, it should be noted that the SQL understood by the different database backends may vary.
+The DatabaseLayer classes provide a database independent interface similar to JDBC (but only VERY basic functionality). So far, the only database backends supported are SQLite3, Firebird, MySQL, PostgreSQL, and ODBC.  Although the C++ interface can be common between database, it should be noted that the SQL understood by the different database backends may vary.
 
 Currently there is not a full tutorial but the usage of DatabaseLayer classes is pretty easy; just take a look
 at the \ref sample page to get an idea.  A summary of the DatabaseLayer functionality can be found on the \ref summary page.
 
-To build DatabaseLayer and integrate it in your program, look at the \ref compiling page.
+To build DatabaseLayer and integrate it in your program, look at the \ref compiling page.  Integrating the MySQL backend into your application may require licensing your application under the GPL license (or a separate MySQL commercial license).  All other DatabaseLayer backend code is licensed under the wxWidgets license.
 
 */
 
@@ -70,6 +70,7 @@ if (pResults)<br>
   &nbsp;{<br>
     &nbsp;&nbsp;wxString strOne = pResults-&gt;GetResultString(_("column1"));<br>
     &nbsp;&nbsp;wxString strTwo = pResults-&gt;GetResultString(_("column2"));<br>
+    &nbsp;&nbsp;wxString strTwo = pResults-&gt;GetResultString(1);<br>
   &nbsp;}<br>
   &nbsp;pDatabase-&gt;CloseResultSet(pResults);<br>
 }<br>
@@ -152,36 +153,29 @@ and databaselayer_firebird.lib as the static libraries generated for the firebir
 Using third party wrapper was avoided so you should only need to link to the native database
 libraries provided with your selected database (see list below)
 The "databaselayer/include" directory must be in your project's include 
-path as well as the path.
+path.
 
-DatabaseLayer needs the path to the following database-specific header files for each backend that you'd like to compile:
+\section headers DatabaseLayer needs the path to the following database-specific header files for each backend that you'd like to compile:
 <dl>
-  <dt>SQLite</dt>
-  <dd>sqlite3.h</dd>
   <dt>PostgreSQL</dt>
   <dd>libpq-fe.h</dd>
   <dt>Firebird</dt>
   <dd>ibase.h</dd>
   <dt>MySQL</dt>
   <dd>mysql.h</dd>
-  <dt>Oracle <i>(alpha quality support)</i></dt>
-  <dd>occi.h</dd>
+  <dt>ODBC</dt>
+  <dd>sql.h</dd>
 </dl>
 
-You'r project will need to link with the following database-specific library files for each backend that you'd like to compile:
-<dl>
-  <dt>SQLite</dt>
-  <dd>sqlite3.lib / sqlite3</dd>
-  <dt>PostgreSQL</dt>
-  <dd>libpq.lib / pq</dd>
-  <dt>Firebird</dt>
-  <dd>fbclient.lib / fbclient</dd>
-  <dt>MySQL</dt>
-  <dd>libmysql.lib / mysqlclient (or the output of `mysql_config --libs` on Linux)</dd>
-  <dt>Oracle <i>(alpha quality support)</i></dt>
-  <dd>oraocci10.lib / ? (Not sure on Linux)</dd>
-</dl>
-
+\section targets DatabaseLayer contains the following compile targets:
+<ul>
+  <li>PostgreSQL</li>
+  <li>Firebird</li>
+  <li>MySQL</li>
+  <li>ODBC</li>
+  <li>databaselayer - includes SQLite, PostgreSQL, Firebird, and ODBC</li>
+  <li>databaselayer_gpl - includes SQLite, PostgreSQL, MySQL, Firebird, and ODBC</li>
+</ul>
 
 
 \section win32 How to compile DatabaseLayer on win32
@@ -210,12 +204,12 @@ To build a library from DatabaseLayer sources, you can use the makefiles or proj
 
 \section unix How to compile DatabaseLayer on Unix-based OS
 
-So, <b>on Unix-based operating systems</b>, unzip the tar.gz archive and type:
+On Unix-based operating systems, explode the tar.gz archive and type:
 
 <tt>
-cd build
+cd databaselayer/build
             
-make -f GNUmakefile (sqlite|postgresql|mysql|firebird|all)
+make -f GNUmakefile (sqlite|postgresql|mysql|firebird|odbc|databaselayer|databaselayer_gpl)
                     
 </tt>
 
