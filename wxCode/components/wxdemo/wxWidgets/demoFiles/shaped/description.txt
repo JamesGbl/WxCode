@@ -1,0 +1,1 @@
+This sample demonstrates how to implement a shaped or transparent window, and a window showing/hiding with effect.

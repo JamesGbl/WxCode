@@ -1,0 +1,1 @@
+The not very clearly named internat sample demonstrates the wxWidgets internationalization (i18n for short from now on) features. To be more precise, it only shows localization support, i.e. support for translating the program messages into another language while true i18n would also involve changing the other aspects of the programs behaviour.

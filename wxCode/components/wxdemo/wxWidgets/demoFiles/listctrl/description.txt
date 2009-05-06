@@ -1,0 +1,1 @@
+This sample shows the wxListCtrl control. Different modes supported by the control (list, icons, small icons, report) may be chosen from the menu.&lt;br&gt;&lt;br&gt;The sample also provides some timings for adding/deleting/sorting a lot of (several thousands) items into the control.

@@ -1,0 +1,1 @@
+Shows how you can embed ordinary controls or windows within an HTML page. It also nicely explains how to write new tag handlers and extend the library to work with unsupported tags.

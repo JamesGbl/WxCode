@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wxDemoViewer>
+
+  <imageList>
+    <image file="skinFiles/wxWidgetsIcon.png" />
+    <image file="skinFiles/cppfile.png" />
+    <image file="skinFiles/hfile.png" />
+    <image file="skinFiles/keyword.png" />
+    <image file="skinFiles/sampleIcon.png" />
+  </imageList>
+
+  <lexerList>
+    <lexer file="skinFiles/lexerCPP.xml" />
+  </lexerList>
+
+  <windowStyles>
+    <background name="mainTree" colorA="#DAE5F4" />
+    <background name="mainLogo" colorA="#D3E1F1" />
+    <background name="mainSearch" colorA="#C3D7EF" colorB="#D0E5FF" />
+    <background name="sourceTab" colorA="#C3D7EF" colorB="#D0E5FF" />
+    <background name="tabsPanel" colorA="#dae6f4" colorB="#ceddef" borderColor="#99bbe8" borders="B" />
+
+    <control name="mainTree" backColor="#FFFFFF" borderColor="#99BBE8" hasBorder="true" rounded="false" />
+    <control name="mainSearch" backColor="#FFFFFF" borderColor="#A6B7CB" hasBorder="true" rounded="false" />
+    <control name="sourceFiles" backColor="#FFFFFF" borderColor="#99BBE8" hasBorder="true" rounded="false" />
+    <control name="sourceKeywords" backColor="#FFFFFF" borderColor="#99BBE8" hasBorder="true" rounded="false" />
+    <control name="sourceCodeViewer" backColor="#FFFFFF" borderColor="#99bbe8" hasBorder="true" rounded="false" />
+    <control name="sourceSearch" backColor="#FFFFFF" borderColor="#A6B7CB" hasBorder="true" rounded="false" />
+
+    <static name="mainTitle" colorA="#D5E4F5" colorB="#CDDEF3" colorC="#B8CFEE" colorD="#CDDEF3" title="wxWidgets" textColor="#15428B" fontSize="10" textAlign="left" height="26" bold="true" />
+    <static name="mainSearchTitle" colorA="#D5E4F5" colorB="#CDDEF3" colorC="#B8CFEE" colorD="#CDDEF3" title="Search" textColor="#000000" fontSize="10" textAlign="left" height="26" bold="true" borderColor="#FFFFFF" borders="T" />
+    <static name="sourceFilesTitle" colorA="#D5E4F5" colorB="#CDDEF3" colorC="#B8CFEE" colorD="#CDDEF3" title="Source files" textColor="#000000" fontSize="9" textAlign="center" height="20" bold="true" borderColor="#FFFFFF" borders="T" />
+    <static name="keywordsTitle" colorA="#D5E4F5" colorB="#CDDEF3" colorC="#B8CFEE" colorD="#CDDEF3" title="Keywords" textColor="#000000" fontSize="9" textAlign="center" height="20" bold="true" borderColor="#FFFFFF" borders="T" />
+
+    <button name="tabDescription" title="Description" icon="skinFiles/info.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#dae6f4" colorB="#ceddef" textColor="#000000" borderColor="#99bbe8" bold="false" borders="B" />
+      <stateHover colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="false" />
+      <stateSelected colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="true" />
+    </button>
+
+    <button name="tabSource" title="Source code" icon="skinFiles/source.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#dae6f4" colorB="#ceddef" textColor="#000000" borderColor="#99bbe8" bold="false" borders="B" />
+      <stateHover colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="false" />
+      <stateSelected colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="true" />
+    </button>
+
+    <button name="tabDoc" title="Documentation" icon="skinFiles/doc.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#dae6f4" colorB="#ceddef" textColor="#000000" borderColor="#99bbe8" bold="false" borders="B" />
+      <stateHover colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="false" />
+      <stateSelected colorA="#b6cbe4" colorB="#c9ddf6" colorC="#8dc0f5" colorD="#c9ddf6" textColor="#000000" borderColor="#9ebae1" borders="LTR" bold="true" />
+    </button>
+
+    <button name="keywordsSearchCode" title="Code" fontSize="8" textAlign="center" iconPosition="right" >
+      <stateNormal colorA="#ebf3fd" colorB="#ebf3fd" colorC="#d9e8fb" colorD="#d9e8fb" textColor="#000000" borderColor="#aaccf6" borders="TRLB" />
+      <stateHover colorA="#bedafd" colorB="#bedafd" colorC="#aacdfa" colorD="#aacdfa" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+      <stateSelected colorA="#99bbe8" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+    </button>
+
+    <button name="keywordsSearchDocs" title="Docs" fontSize="8" textAlign="center" iconPosition="right" >
+      <stateNormal colorA="#ebf3fd" colorB="#ebf3fd" colorC="#d9e8fb" colorD="#d9e8fb" textColor="#000000" borderColor="#aaccf6" borders="TRLB" />
+      <stateHover colorA="#bedafd" colorB="#bedafd" colorC="#aacdfa" colorD="#aacdfa" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+      <stateSelected colorA="#99bbe8" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+    </button>
+
+    <button name="launchButton" title="Launch demo" icon="skinFiles/launch.png" fontSize="8" textAlign="left" iconPosition="top" >
+      <stateNormal colorA="#ebf3fd" textColor="#000000" borderColor="#aaccf6" borders="TRLB" />
+      <stateHover colorA="#d9e8fb" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+      <stateSelected colorA="#99bbe8" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+    </button>
+
+    <button name="sourceSearchNext" title="Next" icon="skinFiles/arrow_right.png" fontSize="8" textAlign="left" iconPosition="right" >
+      <stateNormal colorA="#ebf3fd" colorB="#ebf3fd" colorC="#d9e8fb" colorD="#d9e8fb" textColor="#000000" borderColor="#aaccf6" borders="TRLB" />
+      <stateHover colorA="#bedafd" colorB="#bedafd" colorC="#aacdfa" colorD="#aacdfa" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+      <stateSelected colorA="#99bbe8" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+    </button>
+
+    <button name="sourceSearchPrev" title="Prev" icon="skinFiles/arrow_left.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#ebf3fd" colorB="#ebf3fd" colorC="#d9e8fb" colorD="#d9e8fb" textColor="#000000" borderColor="#aaccf6" borders="TRLB" />
+      <stateHover colorA="#bedafd" colorB="#bedafd" colorC="#aacdfa" colorD="#aacdfa" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+      <stateSelected colorA="#99bbe8" textColor="#233d7b" borderColor="#99bbe8" borders="TRLB" bold="false" />
+    </button>
+
+    <other name="logoFile" file="skinFiles/wxWidgetsLogo.png" />
+    <other name="sourceCodeViewerMore" lineNumberBackColor="#99bbe8" lineNumberTextColor="#FFFFFF" selectionTextColor="#000000" selectionBackColor="#7eb1eb" fontSize="8" />
+    <other name="searchIcon" file="skinFiles/search.png" />
+    <other name="splitterBackColor" backColor="#99bbe8" />
+    <other name="descriptionColors" backColor="#FFFFFF" />
+    <other name="docToolbarBackColor" backColor="#ceddef" />
+  </windowStyles>
+
+  <documentation file="docFiles/wxWidgets.zip" />
+
+  <demos extWin="exe" extUnix="" extMac="" extOther="" openWithWin="" openWithUnix="" openWithMac="" openWithOther="" title="wxWidgets" description="wxWidgets lets developers create applications for Win32, Mac OS X, GTK+, X11, Motif, WinCE, and more  using one codebase. It can be used from languages such as C++, Python, Perl, and C#/.NET. Unlike other cross-platform toolkits, wxWidgets applications look and feel native. This is because wxWidgets uses the platform's own native controls rather than emulating them. It's also extensive, free, open-source, and mature.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;skinFiles/wxWidgets.png&quot;&gt;" imageIndex="0" >
+  
+    <demoGroup title="Samples" imageIndex="4">
+    
+      <demo title="Animation" imageIndex="4" description="This sample shows how you can use wxAnimationCtrl control and shows concept of a platform-dependent animation encapsulated in wxAnimation.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/animate/animate.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/animate/anitest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/animate/anitest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxAnimationCtrl" imageIndex="3" />
+  	      <keyword title="wxAnimation" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/animate/animate" />
+      </demo>
+
+      <demo title="Art Provider" imageIndex="4" description="This sample shows how you can customize the look of standard wxWidgets dialogs by replacing default bitmaps/icons with your own versions. It also shows how you can use wxArtProvider to get stock bitmaps for use in your application.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/artprov/artprov.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/artprov/artbrows.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/artprov/artbrows.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/artprov/arttest.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxArtProvider" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/artprov/artprov" />
+      </demo>
+
+      <demo title="Advanced User Interface" imageIndex="4" description="wxAUI stands for Advanced User Interface. It aims to give the user a cutting edge interface with floatable windows, and a user-customizable layout.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/aui/aui.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/aui/auidemo.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxAuiManager" imageIndex="3" />
+  	      <keyword title="wxAuiPaneInfo" imageIndex="3" />
+  	      <keyword title="wxAuiNotebook" imageIndex="3" />
+  	      <keyword title="wxAuiDockArt" imageIndex="3" />
+  	      <keyword title="wxAuiTabArt" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/aui/aui" />
+      </demo>
+
+      <demo title="Calendar" imageIndex="4" description="This sample shows the calendar control in action. It shows how to configure the control (see the different options in the calendar menu) and also how to process the notifications from it.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/calendar/calendar.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/calendar/calendar.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/calendar/calendar" />
+      </demo>
+
+      <demo title="Caret" imageIndex="4" description="This sample demonstrates wxCaret.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/caret/caret.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/caret/caret.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxCaret" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/caret/caret" />
+      </demo>
+
+      <demo title="Checklistbox" imageIndex="4" description="This sample demonstrates use of the wxCheckListBox class intercepting check, select and double click events. It also tests use of various methods modifying the control, such as by deleting items from it or inserting new ones (these functions are actually implemented in the parent class wxListBox so the sample tests that class as well). The layout of the dialog is created using a wxBoxSizer demonstrating a simple dynamic layout.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/checklst/checklst.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/checklst/checklst.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxCheckListBox" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/checklst/checklst" />
+      </demo>
+
+      <demo title="Collapsible Pane" imageIndex="4" description="This sample demonstrates wxCollapsiblePane.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/collpane/collpane.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/collpane/collpane.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxCollapsiblePane" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/collpane/collpane" />
+      </demo>
+
+      <demo title="Combo" imageIndex="4" description="This sample demonstrates wxComboBox, wxComboCtrl and wxOwnerDrawnComboBox etc.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/combo/combo.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/combo/combo.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+  	    <keywords>
+  	      <keyword title="wxComboBox" imageIndex="3" />
+  	      <keyword title="wxComboCtrl" imageIndex="3" />
+  	      <keyword title="wxOwnerDrawnComboBox" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/combo/combo" />
+      </demo>
+
+      <demo title="Configuration" imageIndex="4" description="This sample demonstrates the wxConfig classes in a platform independent way, i.e. it uses text based files to store a given configuration under Unix and uses the Registry under Windows.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/config/config.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/config/conftest.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxConfig" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/config/config" />
+      </demo>
+
+      <demo title="Console Program" imageIndex="4" description="This sample demonstrates a console program.">
+        <sourceFiles>
+          <sourceFile file="demoFiles/console/console.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/console/console" />
+      </demo>
+
+      <demo title="Controls" imageIndex="4" description="The controls sample is the main test program for most simple controls used in wxWidgets. The sample tests their basic functionality, events, placement, modification in terms of colour and font as well as the possibility to change the controls programmatically, such as adding an item to a list box etc. Apart from that, the sample uses a wxNotebook and tests most features of this special control (using bitmap in the tabs, using wxSizers and constraints within notebook pages, advancing pages programmatically and vetoing a page change by intercepting the wxNotebookEvent.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/controls/controls.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/controls/controls.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxButton" imageIndex="3" />
+  	      <keyword title="wxBitmapButton" imageIndex="3" />
+  	      <keyword title="wxCheckBox" imageIndex="3" />
+  	      <keyword title="wxChoice" imageIndex="3" />
+  	      <keyword title="wxComboBox" imageIndex="3" />
+  	      <keyword title="wxGauge" imageIndex="3" />
+  	      <keyword title="wxStaticBox" imageIndex="3" />
+  	      <keyword title="wxListBox" imageIndex="3" />
+  	      <keyword title="wxSpinCtrl" imageIndex="3" />
+  	      <keyword title="wxSpinButton" imageIndex="3" />
+  	      <keyword title="wxStaticText" imageIndex="3" />
+  	      <keyword title="wxStaticBitmap" imageIndex="3" />
+  	      <keyword title="wxRadioBox" imageIndex="3" />
+  	      <keyword title="wxRadioButton" imageIndex="3" />
+  	      <keyword title="wxSlider" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/controls/controls" />
+      </demo>
+
+      <demo title="wxDataViewCtrl" imageIndex="4" description="This sample demonstrates wxDataViewCtrl.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/dataview/dataview.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/dataview/dataview.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDataViewCtrl" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/dataview/dataview" />
+      </demo>
+
+      <demo title="Database" imageIndex="4" description="The database sample is a small test program showing how to use the ODBC classes written by Remstar Intl. Obviously, this sample requires a database with ODBC support to be correctly installed on your system.">
+        <sourceFiles>
+          <sourceFile file="demoFiles/db/dbtest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/db/dbtest.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/db/listdb.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/db/listdb.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/db/db" />
+      </demo>
+
+      <demo title="Dialup" imageIndex="4" description="This sample shows the wxDialUpManager class. In the status bar, it displays the information gathered through its interface: in particular, the current connection status (online or offline) and whether the connection is permanent (in which case a string 'LAN' appears in the third status bar field - but note that you may be on a LAN not connected to the Internet, in which case you will not see this) or not.&lt;br&gt;&lt;br&gt;Using the menu entries, you may also dial or hang up the line if you have a modem attached and (this only makes sense for Windows) list the available connections.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/dialup/dialup.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/dialup/nettest.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDialUpManager" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/dialup/dialup" />
+      </demo>
+
+      <demo title="Display" imageIndex="4" description="This sample demonstrates wxDisplay.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/display/display.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/display/display.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDisplay" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/display/display" />
+      </demo>
+
+      <demo title="Drag &amp; Drop Sample" imageIndex="4" description="This sample shows both clipboard and drag and drop in action. It is quite non trivial and may be safely used as a basis for implementing the clipboard and drag and drop operations in a real-life program.&lt;br&gt;&lt;br&gt;When you run the sample, its screen is split in several parts. On the top, there are two listboxes which show the standard derivations of wxDropTarget: wxTextDropTarget and wxFileDropTarget.&lt;br&gt;&lt;br&gt;The middle of the sample window is taken by the log window which shows what is going on (of course, this only works in debug builds) and may be helpful to see the sequence of steps of data transfer.&lt;br&gt;&lt;br&gt;Finally, the last part is used for dragging text from it to either one of the listboxes (only one will accept it) or another application. The last functionality available from the main frame is to paste a bitmap from the clipboard (or, in the case of the Windows version, also a metafile) - it will be shown in a new frame.&lt;br&gt;&lt;br&gt;So far, everything we mentioned was implemented with minimal amount of code using standard wxWidgets classes. The more advanced features are demonstrated if you create a shape frame from the main frame menu. A shape is a geometric object which has a position, size and color. It models some application-specific data in this sample. A shape object supports its own private wxDataFormat which means that you may cut and paste it or drag and drop (between one and the same or different shapes) from one sample instance to another (or the same). However, chances are that no other program supports this format and so shapes can also be rendered as bitmaps which allows them to be pasted/dropped in many other applications (and, under Windows, also as metafiles which are supported by most of Windows programs as well - try Write/Wordpad, for example).&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/dnd/dnd.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/dnd/dnd.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDropTarget" imageIndex="3" />
+  	      <keyword title="wxTextDropTarget" imageIndex="3" />
+  	      <keyword title="wxFileDropTarget" imageIndex="3" />
+  	      <keyword title="wxDataFormat" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/dnd/dnd" />
+      </demo>
+
+      <demo title="Document/View Sample" imageIndex="4" description="This sample demonstrates Document/View Framework.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/docview/docview.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/docview/doc.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docview/doc.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docview/docview.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docview/docview.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docview/view.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docview/view.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/docview/docview" />
+      </demo>
+
+      <demo title="Document/View Sample MDI" imageIndex="4" description="This sample demonstrates Document/View Framework.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/docvwmdi/docvwmdi.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/docvwmdi/doc.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/doc.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/docview.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/docview.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/view.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/view.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/docvwmdi/docvwmdi" />
+      </demo>
+
+      <demo title="Drag Image" imageIndex="4" description="This sample demonstrates wxDragImage.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/dragimag/dragimag.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/dragimag/dragimag.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/dragimag/dragimag.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDragImage" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/dragimag/dragimag" />
+      </demo>
+
+      <demo title="Drawing" imageIndex="4" description="This sample demonstrates the drawing ability of wxDC.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/drawing/drawing.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/drawing/drawing.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDC" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/drawing/drawing" />
+      </demo>
+
+      <demo title="Dynamic" imageIndex="4" description="This sample is a very small sample that demonstrates use of the wxEvtHandler::Connect method. This method should be used whenever it is not known at compile time which control will receive which event or which controls are actually going to be in a dialog or frame. This is most typically the case for any scripting language that would work as a wrapper for wxWidgets or programs where forms or similar datagrams can be created by the users.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/dynamic/dynamic.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/dynamic/dynamic.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxEvtHandler" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/dynamic/dynamic" />
+      </demo>
+
+      <demo title="Erase Event" imageIndex="4" description="This sample demonstrates wxEraseEvent.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/erase/erase.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/erase/erase.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxEraseEvent" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/erase/erase" />
+      </demo>
+
+      <demo title="Event" imageIndex="4" description="The event sample demonstrates various features of the wxWidgets events. It shows using dynamic events and connecting/disconnecting the event handlers during run time and also using PushEventHandler() and PopEventHandler().&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/event/event.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/event/event.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxEvtHandler" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/event/event" />
+      </demo>
+
+      <demo title="Exception" imageIndex="4" description="This very simple sample shows how to use C++ exceptions in wxWidgets programs, i.e. where to catch the exception which may be thrown by the program code. It doesn't do anything very exciting by itself, you need to study its code to understand what goes on.&lt;br&gt;&lt;br&gt;You need to build the library with wxUSE_EXCEPTIONS being set to 1 and compile your code with C++ exceptions support to be able to build this sample.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/except/except.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/except/except.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/except/except" />
+      </demo>
+
+      <demo title="External Program Execution" imageIndex="4" description="The exec sample demonstrates the wxExecute and wxShell functions. Both of them are used to execute the external programs and the sample shows how to do this synchronously (waiting until the program terminates) or asynchronously (notification will come later).&lt;br&gt;&lt;br&gt;It also shows how to capture the output of the child process in both synchronous and asynchronous cases and how to kill the processes with wxProcess::Kill and test for their existence with wxProcess::Exists.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/exec/exec.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/exec/exec.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxProcess" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/exec/exec" />
+      </demo>
+
+      <demo title="Font" imageIndex="4" description="The font sample demonstrates wxFont, wxFontEnumerator and wxFontMapper classes. It allows you to see the fonts available (to wxWidgets) on the computer and shows all characters of the chosen font as well.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/font/font.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/font/font.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxFont" imageIndex="3" />
+  	      <keyword title="wxFontEnumerator" imageIndex="3" />
+  	      <keyword title="wxFontMapper" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/font/font" />
+      </demo>
+
+      <demo title="Grid" imageIndex="4" description="This sample demonstrates wxGrid.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/grid/grid.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/grid/griddemo.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/grid/griddemo.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxGrid" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/grid/grid" />
+      </demo>
+
+      <demo title="Help" imageIndex="4" description="This sample demonstrates wxHelpController.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/help/help.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/help/demo.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/help/doc.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHelpController" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/help/help" />
+      </demo>
+
+      <demo title="Html List Box" imageIndex="4" description="This sample demonstrates wxHtmlListBox.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/htlbox/htlbox.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/htlbox/htlbox.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHtmlListBox" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/htlbox/htlbox" />
+      </demo>
+
+      <demo title="Html - About" imageIndex="4" description="May give you an idea how to write good-looking About boxes.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/about/html_about.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/about/about.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/html/about/html_about" />
+      </demo>
+
+      <demo title="Html - Help" imageIndex="4" description="Help and Helpview are variations on displaying HTML help (compatible with MS HTML Help Workshop). Help shows how to embed wxHtmlHelpController in your application while Helpview is a simple tool that only pops up the help window and displays help books given at command line.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/help/html_help.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/help/help.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHtmlHelpController" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/html/help/html_help" />
+      </demo>
+
+      <demo title="Html - Helpview" imageIndex="4" description="Help and Helpview are variations on displaying HTML help (compatible with MS HTML Help Workshop). Help shows how to embed wxHtmlHelpController in your application while Helpview is a simple tool that only pops up the help window and displays help books given at command line.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/helpview/html_helpview.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/helpview/helpview.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHtmlHelpController" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/html/helpview/html_helpview" />
+      </demo>
+
+      <demo title="Html - Printing" imageIndex="4" description="Explains use of wxHtmlEasyPrinting class which serves as as-simple-as-possible interface for printing HTML documents without much work. In fact, only few function calls are sufficient.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/printing/html_printing.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/printing/printing.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHtmlEasyPrinting" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/html/printing/html_printing" />
+      </demo>
+
+      <demo title="Html - Test" imageIndex="4" description="Demonstrates how to create wxHtmlWindow and also shows most supported HTML tags.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/test/html_test.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/test/test.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxHtmlWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/html/test/html_test" />
+      </demo>
+
+      <demo title="Html - Virtual" imageIndex="4" description="Is yet another virtual file systems demo. This one generates pages at run-time. You may find it useful if you need to display some reports in your application.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/virtual/html_virtual.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/virtual/virtual.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/html/virtual/html_virtual" />
+      </demo>
+
+      <demo title="Html - Widget" imageIndex="4" description="Shows how you can embed ordinary controls or windows within an HTML page. It also nicely explains how to write new tag handlers and extend the library to work with unsupported tags.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/widget/html_widget.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/widget/widget.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/html/widget/html_widget" />
+      </demo>
+
+      <demo title="Html - Zip" imageIndex="4" description="Demonstrates use of virtual file systems in wxHTML. The zip archives handler (ships with wxWidgets) allows you to access HTML pages stored in a compressed archive as if they were ordinary files.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/html/zip/html_zip.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/html/zip/zip.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/html/zip/html_zip" />
+      </demo>
+
+      <demo title="Image" imageIndex="4" description="The image sample demonstrates use of the wxImage class and shows how to download images in a variety of formats, currently PNG, GIF, TIFF, JPEG, BMP, PNM and PCX. The top of the sample shows two rectangles, one of which is drawn directly in the window, the other one is drawn into a wxBitmap, converted to a wxImage, saved as a PNG image and then reloaded from the PNG file again so that conversions between wxImage and wxBitmap as well as loading and saving PNG files are tested.&lt;br&gt;&lt;br&gt;At the bottom of the main frame there is a test for using a monochrome bitmap by drawing into a wxMemoryDC. The bitmap is then drawn specifying the foreground and background colours with wxDC::SetTextForeground() and wxDC::SetTextBackground() (on the left). The bitmap is then converted to a wxImage and the foreground colour (black) is replaced with red using wxImage::Replace().&lt;br&gt;&lt;br&gt;This sample also contains the code for testing the image rotation and resizing and using raw bitmap access, see the corresponding menu commands.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/image/image.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/image/image.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxImage" imageIndex="3" />
+  	      <keyword title="wxBitmap" imageIndex="3" />
+  	      <keyword title="wxMemoryDC" imageIndex="3" />
+  	      <keyword title="wxDC" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/image/image" />
+      </demo>
+
+      <demo title="Internationalization" imageIndex="4" description="The not very clearly named internat sample demonstrates the wxWidgets internationalization (i18n for short from now on) features. To be more precise, it only shows localization support, i.e. support for translating the program messages into another language while true i18n would also involve changing the other aspects of the programs behaviour.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/internat/internat.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/internat/internat.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/internat/internat" />
+      </demo>
+
+      <demo title="Connection - Client" imageIndex="4" description="This sample demonstrates wxConnection.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/ipc/client/ipc_client.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/ipc/client/client.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/ipc/client/client.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/ipc/client/ipcsetup.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxConnection" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/ipc/client/ipc_client" />
+      </demo>
+
+      <demo title="Connection - Server" imageIndex="4" description="This sample demonstrates wxConnection.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/ipc/server/ipc_server.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/ipc/server/ipcsetup.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/ipc/server/server.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/ipc/server/server.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxConnection" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/ipc/server/ipc_server" />
+      </demo>
+
+      <demo title="Key Event" imageIndex="4" description="This sample demonstrates wxKeyEvent.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/keyboard/keyboard.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/keyboard/keyboard.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxKeyEvent" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/keyboard/keyboard" />
+      </demo>
+
+      <demo title="Layout" imageIndex="4" description="The layout sample demonstrates the two different layout systems offered by wxWidgets. When starting the program, you will see a frame with some controls and some graphics. The controls will change their size whenever you resize the entire frame and the exact behaviour of the size changes is determined using the wxLayoutConstraints class. See also the overview and the wxIndividualLayoutConstraint class for further information.&lt;br&gt;&lt;br&gt;The menu in this sample offers two more tests, one showing how to use a wxBoxSizer in a simple dialog and the other one showing how to use sizers in connection with a wxNotebook class. See also wxSizer.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/layout/layout.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/layout/layout.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/layout/layout.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxNotebook" imageIndex="3" />
+  	      <keyword title="wxBoxSizer" imageIndex="3" />
+  	      <keyword title="wxSizer" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/layout/layout" />
+      </demo>
+
+      <demo title="Listbox" imageIndex="4" description="This sample demonstrates wxListbox.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/listbox/listbox.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/listbox/lboxtest.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxListbox" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/listbox/listbox" />
+      </demo>
+
+      <demo title="List Control" imageIndex="4" description="This sample shows the wxListCtrl control. Different modes supported by the control (list, icons, small icons, report) may be chosen from the menu.&lt;br&gt;&lt;br&gt;The sample also provides some timings for adding/deleting/sorting a lot of (several thousands) items into the control.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/listctrl/listctrl.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/listctrl/listtest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/listctrl/listtest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxListCtrl" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/listctrl/listctrl" />
+      </demo>
+
+      <demo title="MDI" imageIndex="4" description="This sample demonstrates MDI.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/mdi/mdi.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/mdi/mdi.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/mdi/mdi.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+          <sourceFile file="demoFiles/docvwmdi/doc.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/doc.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/docview.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/docview.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/view.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/docvwmdi/view.h" imageIndex="2" lexer="0" />
+        <executable file="demoFiles/mdi/mdi" />
+      </demo>
+
+      <demo title="Mediaplayer" imageIndex="4" description="This sample demonstrates how to use all the features of wxMediaCtrl and play various types of sound, video, and other files.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/mediaplayer/mediaplayer.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/mediaplayer/mediaplayer.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxMediaCtrl" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/mediaplayer/mediaplayer" />
+      </demo>
+
+      <demo title="Menu" imageIndex="4" description="This sample demonstrates wxMenu classes.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/menu/menu.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/menu/menu.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxMenu" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/menu/menu" />
+      </demo>
+
+      <demo title="Miniframe" imageIndex="4" description="This sample demonstrates wxMiniFrame.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/minifram/minifram.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/minifram/minifram.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/minifram/minifram.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxMiniframe" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/minifram/minifram" />
+      </demo>
+
+      <demo title="Minimal" imageIndex="4" description="The minimal sample is what most people will know under the term Hello World, i.e. a minimal program that doesn't demonstrate anything apart from what is needed to write a program that will display a 'hello' dialog. This is usually a good starting point for learning how to use wxWidgets.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/minimal/minimal.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/minimal/minimal.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/minimal/minimal" />
+      </demo>
+
+      <demo title="Multimonitor" imageIndex="4" description="Tests wxDisplay class">
+        <sourceFiles>
+          <sourceFile file="demoFiles/multimon/multimon_test.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxDisplay" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/multimon/multimon" />
+      </demo>
+
+      <demo title="Notebook" imageIndex="4" description="This samples shows wxBookCtrl family of controls. Although initially it was written to demonstrate wxNotebook only, it can now be also used to see wxListbook, wxChoicebook and wxTreebook in action. Test each of the controls, their orientation, images and pages using commands through menu.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/notebook/notebook.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/notebook/notebook.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/notebook/notebook.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxNotebook" imageIndex="3" />
+  	      <keyword title="wxListbook" imageIndex="3" />
+  	      <keyword title="wxChoicebook" imageIndex="3" />
+  	      <keyword title="wxTreebook" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/notebook/notebook" />
+      </demo>
+
+      <demo title="OpenGL - Cube" imageIndex="4" description="Draws only a cube to demonstrate how to write a basic wxWidgets OpenGL program.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/opengl/cube/opengl_cube.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/opengl/cube/cube.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/opengl/cube/cube.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxGLCanvas" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/opengl/cube/opengl_cube" />
+      </demo>
+
+      <demo title="OpenGL - Isosurf" imageIndex="4" description="Draws a surface by reading coordinates from a dat file.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/opengl/isosurf/opengl_isosurf.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/opengl/isosurf/isosurf.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/opengl/isosurf/isosurf.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxGLCanvas" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/opengl/isosurf/opengl_isosurf" />
+      </demo>
+
+      <demo title="PNG" imageIndex="4" description="This sample demonstrates how to load and draw PNG images.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/png/png.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/png/pngdemo.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/png/pngdemo.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxEvtHandler" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/png/png" />
+      </demo>
+
+      <demo title="Popup Transient Window" imageIndex="4" description="This sample demonstrates wxPopupTransientWindow.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/popup/popup.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/popup/popup.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/popup/popup" />
+      </demo>
+
+      <demo title="Power Management" imageIndex="4" description="This sample demonstrates wxWidgets power management.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/power/power.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/power/power.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxPowerEvent" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/power/power" />
+      </demo>
+
+      <demo title="Printing" imageIndex="4" description="This sample demonstrates printing.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/printing/printing.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/printing/printing.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/printing/printing.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxPrintout" imageIndex="3" />
+  	      <keyword title="wxPrinter" imageIndex="3" />
+  	      <keyword title="wxPrinterDC" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/printing/printing" />
+      </demo>
+
+      <demo title="Proportional Sizer" imageIndex="4" description="This sample demonstrates proportional sizer classes.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/propsize/propsize.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/propsize/propsize.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+          <keyword title="wxSizer" imageIndex="3" />
+          <keyword title="wxBoxSizer" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/propsize/propsize" />
+      </demo>
+
+      <demo title="Render" imageIndex="4" description="This sample shows how to replace the default wxWidgets renderer and also how to write a shared library (DLL) implementing a renderer and load and unload it during the run-time.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/render/render.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/render/renddll.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/render/render.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/render/render" />
+      </demo>
+
+      <demo title="wxRichTextCtrl" imageIndex="4" description="This sample demonstrates wxRichTextCtrl.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/richtext/richtext.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/richtext/richtext.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxRichTextCtrl" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/richtext/richtext" />
+      </demo>
+
+      <demo title="Rotate image" imageIndex="4" description="This is a simple example which demonstrates how to rotate an image with the wxImage::Rotate method. The rotation can be done without interpolation (left mouse button) which will be faster, or with interpolation (right mouse button) which is slower but gives better results.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/rotate/rotate.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/rotate/rotate.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxImage" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/rotate/rotate" />
+      </demo>
+
+      <demo title="Sash" imageIndex="4" description="This sample demonstrates wxSashWindow classes.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/sashtest/sashtest.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/sashtest/sashtest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/sashtest/sashtest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSashWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/sashtest/sashtest" />
+      </demo>
+
+      <demo title="Scroll Window" imageIndex="4" description="This sample demonstrates use of the wxScrolledWindow class including placing subwindows into it and drawing simple graphics. It uses the SetTargetWindow method and thus the effect of scrolling does not show in the scrolled window itself, but in one of its subwindows.&lt;br&gt;&lt;br&gt;Additionally, this samples demonstrates how to optimize drawing operations in wxWidgets, in particular using the wxWindow::IsExposed method with the aim to prevent unnecessary drawing in the window and thus reducing or removing flicker on screen.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/scroll/scroll.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/scroll/scroll.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxScrolledWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/scroll/scroll" />
+      </demo>
+
+      <demo title="Scrolled Sub Window" imageIndex="4" description="This sample demonstrates use of the wxScrolledWindow class including placing subwindows into it and drawing simple graphics. It uses the SetTargetWindow method and thus the effect of scrolling does not show in the scrolled window itself, but in one of its subwindows.&lt;br&gt;&lt;br&gt;Additionally, this samples demonstrates how to optimize drawing operations in wxWidgets, in particular using the wxWindow::IsExposed method with the aim to prevent unnecessary drawing in the window and thus reducing or removing flicker on screen.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/scrollsub/scrollsub.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/scrollsub/scrollsub.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxScrolledWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/scrollsub/scrollsub" />
+      </demo>
+
+      <demo title="Shaped Window" imageIndex="4" description="This sample demonstrates how to implement a shaped or transparent window, and a window showing/hiding with effect.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/shaped/shaped.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/shaped/shaped.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/shaped/shaped" />
+      </demo>
+
+      <demo title="Sockets - Client" imageIndex="4" description="The sockets sample demonstrates how to use the communication facilities provided by wxSocket. There are two different applications in this sample: a server, which is implemented using a wxSocketServer object, and a client, which is implemented as a wxSocketClient.&lt;br&gt;&lt;br&gt;The server binds to the local address, using TCP port number 3000, sets up an event handler to be notified of incoming connection requests (wxSOCKET_CONNECTION events), and sits there, waiting for clients (listening, in socket parlance). For each accepted connection, a new wxSocketBase object is created. These socket objects are independent from the server that created them, so they set up their own event handler, and then request to be notified of wxSOCKET_INPUT (incoming data) or wxSOCKET_LOST (connection closed at the remote end) events. In the sample, the event handler is the same for all connections; to find out which socket the event is addressed to, the GetSocket function is used.&lt;br&gt;&lt;br&gt;Although it might take some time to get used to the event-oriented system upon which wxSocket is built, the benefits are many. See, for example, that the server application, while being single-threaded (and of course without using fork() or ugly select() loops) can handle an arbitrary number of connections.&lt;br&gt;&lt;br&gt;The client starts up unconnected, so you can use the Connect... option to specify the address of the server you are going to connect to (the TCP port number is hard-coded as 3000). Once connected, a number of tests are possible. Currently, three tests are implemented. They show how to use the basic IO calls in wxSocketBase, such as Read, Write, ReadMsg and WriteMsg, and how to set up the correct IO flags depending on what you are going to do. See the comments in the code for more information. Note that because both clients and connection objects in the server set up an event handler to catch wxSOCKET_LOST events, each one is immediately notified if the other end closes the connection.&lt;br&gt;&lt;br&gt;There is also a URL test which shows how to use the wxURL class to fetch data from a given URL.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/sockets/client/sockets_client.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/sockets/client/client.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSocketClient" imageIndex="3" />
+  	      <keyword title="wxSocketBase" imageIndex="3" />
+  	      <keyword title="wxURL" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/sockets/client/sockets_client" />
+      </demo>
+
+      <demo title="Sockets - Server" imageIndex="4" description="The sockets sample demonstrates how to use the communication facilities provided by wxSocket. There are two different applications in this sample: a server, which is implemented using a wxSocketServer object, and a client, which is implemented as a wxSocketClient.&lt;br&gt;&lt;br&gt;The server binds to the local address, using TCP port number 3000, sets up an event handler to be notified of incoming connection requests (wxSOCKET_CONNECTION events), and sits there, waiting for clients (listening, in socket parlance). For each accepted connection, a new wxSocketBase object is created. These socket objects are independent from the server that created them, so they set up their own event handler, and then request to be notified of wxSOCKET_INPUT (incoming data) or wxSOCKET_LOST (connection closed at the remote end) events. In the sample, the event handler is the same for all connections; to find out which socket the event is addressed to, the GetSocket function is used.&lt;br&gt;&lt;br&gt;Although it might take some time to get used to the event-oriented system upon which wxSocket is built, the benefits are many. See, for example, that the server application, while being single-threaded (and of course without using fork() or ugly select() loops) can handle an arbitrary number of connections.&lt;br&gt;&lt;br&gt;The client starts up unconnected, so you can use the Connect... option to specify the address of the server you are going to connect to (the TCP port number is hard-coded as 3000). Once connected, a number of tests are possible. Currently, three tests are implemented. They show how to use the basic IO calls in wxSocketBase, such as Read, Write, ReadMsg and WriteMsg, and how to set up the correct IO flags depending on what you are going to do. See the comments in the code for more information. Note that because both clients and connection objects in the server set up an event handler to catch wxSOCKET_LOST events, each one is immediately notified if the other end closes the connection.&lt;br&gt;&lt;br&gt;There is also a URL test which shows how to use the wxURL class to fetch data from a given URL.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/sockets/server/sockets_server.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/sockets/server/server.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSocketServer" imageIndex="3" />
+  	      <keyword title="wxSocketBase" imageIndex="3" />
+  	      <keyword title="wxURL" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/sockets/server/sockets_server" />
+      </demo>
+
+      <demo title="Sound" imageIndex="4" description="The sound sample shows how to use wxSound for simple audio output (e.g. notifications).&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/sound/sound.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/sound/sound.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSound" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/sound/sound" />
+      </demo>
+
+      <demo title="Splash Screen" imageIndex="4" description="This sample demonstrates wxSplashScreen.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/splash/splash.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/splash/splash.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSplashScreen" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/splash/splash" />
+      </demo>
+
+      <demo title="Splitter Window" imageIndex="4" description="This sample demonstrates wxSplitterWindow.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/splitter/splitter.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/splitter/splitter.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxSplitterWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/splitter/splitter" />
+      </demo>
+
+      <demo title="Status Bar" imageIndex="4" description="This sample shows how to create and use wxStatusBar. Although most of the samples have a statusbar, they usually only create a default one and only do it once.&lt;br&gt;&lt;br&gt;Here you can see how to recreate the statusbar (with possibly different number of fields) and how to use it to show icons/bitmaps and/or put arbitrary controls into it.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/statbar/statbar.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/statbar/statbar.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxStatusBar" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/statbar/statbar" />
+      </demo>
+
+      <demo title="Task Bar Icon" imageIndex="4" description="This sample demonstrates wxTaskBarIcon.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/taskbar/taskbar.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/taskbar/tbtest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/taskbar/tbtest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxTaskBarIcon" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/taskbar/taskbar" />
+      </demo>
+
+      <demo title="Text" imageIndex="4" description="This sample demonstrates four features: firstly the use and many variants of the wxTextCtrl class (single line, multi line, read only, password, ignoring TAB, ignoring ENTER).&lt;br&gt;&lt;br&gt;Secondly it shows how to intercept a wxKeyEvent in both the raw form using the EVT_KEY_UP and EVT_KEY_DOWN macros and the higher level from using the EVT_CHAR macro. All characters will be logged in a log window at the bottom of the main window. By pressing some of the function keys, you can test some actions in the text ctrl as well as get statistics on the text ctrls, which is useful for testing if these statistics actually are correct.&lt;br&gt;&lt;br&gt;Thirdly, on platforms which support it, the sample will offer to copy text to the wxClipboard and to paste text from it. The GTK version will use the so called PRIMARY SELECTION, which is the pseudo clipboard under X and best known from pasting text to the XTerm program.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/text/text.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/text/text.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxTextCtrl" imageIndex="3" />
+  	      <keyword title="wxKeyEvent" imageIndex="3" />
+  	      <keyword title="wxClipboard" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/text/text" />
+      </demo>
+
+      <demo title="Thread" imageIndex="4" description="This sample demonstrates use of threads in connection with GUI programs. There are two fundamentally different ways to use threads in GUI programs and either way has to take care of the fact that the GUI library itself usually is not multi-threading safe, i.e. that it might crash if two threads try to access the GUI class simultaneously. One way to prevent that is have a normal GUI program in the main thread and some worker threads which work in the background. In order to make communication between the main thread and the worker threads possible, wxWidgets offers the wxPostEvent function and this sample makes use of this function.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/thread/thread.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/thread/thread.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+          <keyword title="wxThread" imageIndex="3" />
+          <keyword title="wxQueueEvent" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/thread/thread" />
+      </demo>
+
+      <demo title="Tool Bar" imageIndex="4" description="The toolbar sample shows the wxToolBar class in action.&lt;br&gt;&lt;br&gt;The following things are demonstrated:&lt;br&gt;Creating the toolbar using wxToolBar::AddTool and wxToolBar::AddControl: see MyApp::InitToolbar in the sample.&lt;br&gt;&lt;br&gt;Using EVT_UPDATE_UI handler for automatically enabling/disabling toolbar buttons without having to explicitly call EnableTool. This is done in MyFrame::OnUpdateCopyAndCut.&lt;br&gt;&lt;br&gt;Using wxToolBar::DeleteTool and wxToolBar::InsertTool to dynamically update the toolbar.&lt;br&gt;&lt;br&gt;Some buttons in the main toolbar are check buttons, i.e. they stay checked when pressed. On the platforms which support it, the sample also adds a combobox to the toolbar showing how you can use arbitrary controls and not only buttons in it.&lt;br&gt;&lt;br&gt;If you toggle another toolbar in the sample (using Ctrl-A) you will also see the radio toolbar buttons in action: the first three buttons form a radio group, i.e. checking any of them automatically unchecks the previously checked one.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/toolbar/toolbar.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/toolbar/toolbar.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxToolBar" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/toolbar/toolbar" />
+      </demo>
+
+      <demo title="wxTreeCtrl" imageIndex="4" description="This sample demonstrates using the wxTreeCtrl class. Here you may see how to process various notification messages sent by this control and also when they occur (by looking at the messages in the text control in the bottom part of the frame).&lt;br&gt;&lt;br&gt;Adding, inserting and deleting items and branches from the tree as well as sorting (in default alphabetical order as well as in custom one) is demonstrated here as well - try the corresponding menu entries.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/treectrl/treectrl.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/treectrl/treetest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/treectrl/treetest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxTreeCtrl" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/treectrl/treectrl" />
+      </demo>
+
+      <demo title="Types" imageIndex="4" description="This sample demonstrates wxWidgets types.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/typetest/typetest.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/typetest/typetest.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/typetest/typetest.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <executable file="demoFiles/typetest/typetest" />
+      </demo>
+
+      <demo title="Validator" imageIndex="4" description="This sample demonstrates wxValidator.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/validate/validate.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/validate/validate.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/validate/validate.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxValidator" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/validate/validate" />
+      </demo>
+
+      <demo title="VScrolled Window" imageIndex="4" description="This sample demonstrates wxVScrolledWindow.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/vscroll/vscroll.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/vscroll/vstest.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxVScrolledWindow" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/vscroll/vscroll" />
+      </demo>
+
+      <demo title="Widgets" imageIndex="4" description="The widgets sample is the main presentation program for most simple and advanced native controls and complex generic widgets provided by wxWidgets. The sample tests their basic functionality, events, placement, modification in terms of colour and font as well as the possibility to change the controls programmatically, such as adding an item to a list box etc. All widgets are categorized for easy browsing.&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/widgets/widgets.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/widgets/bmpcombobox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/button.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/checkbox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/clrpicker.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/combobox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/datepick.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/dirctrl.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/dirpicker.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/filepicker.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/fontpicker.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/gauge.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/hyperlnk.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/listbox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/notebook.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/odcombobox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/radiobox.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/searchctrl.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/slider.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/spinbtn.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/static.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/textctrl.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/toggle.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/widgets.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/widgets/widgets.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxButton" imageIndex="3" />
+  	      <keyword title="wxBitmapButton" imageIndex="3" />
+  	      <keyword title="wxCheckBox" imageIndex="3" />
+  	      <keyword title="wxChoice" imageIndex="3" />
+  	      <keyword title="wxComboBox" imageIndex="3" />
+  	      <keyword title="wxGauge" imageIndex="3" />
+  	      <keyword title="wxStaticBox" imageIndex="3" />
+  	      <keyword title="wxListBox" imageIndex="3" />
+  	      <keyword title="wxSpinCtrl" imageIndex="3" />
+  	      <keyword title="wxSpinButton" imageIndex="3" />
+  	      <keyword title="wxStaticText" imageIndex="3" />
+  	      <keyword title="wxStaticBitmap" imageIndex="3" />
+  	      <keyword title="wxRadioBox" imageIndex="3" />
+  	      <keyword title="wxRadioButton" imageIndex="3" />
+  	      <keyword title="wxSlider" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/widgets/widgets" />
+      </demo>
+
+      <demo title="Wizard" imageIndex="4" description="This sample shows the so-called wizard dialog (implemented using wxWizard and related classes). It shows almost all features supported:&lt;br&gt;&lt;br&gt;&lt;br&gt;- Using bitmaps with the wizard and changing them depending on the page shown (notice that wxValidationPage in the sample has a different image from the other ones)&lt;br&gt;- Using TransferDataFromWindow to verify that the data entered is correct before passing to the next page (done in wxValidationPage which forces the user to check a checkbox before continuing).&lt;br&gt;- Using more elaborated techniques to allow returning to the previous page, but not continuing to the next one or vice versa (in wxRadioboxPage)&lt;br&gt;- This (wxRadioboxPage) page also shows how the page may process the Cancel button itself instead of relying on the wizard parent to do it.&lt;br&gt;- Normally, the order of the pages in the wizard is known at compile-time, but sometimes it depends on the user choices: wxCheckboxPage shows how to dynamically decide which page to display next (see also wxWizardPage)&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/wizard/wizard.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/wizard/wizard.cpp" imageIndex="1" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxWizard" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/wizard/wizard" />
+      </demo>
+
+      <demo title="XRC" imageIndex="4" description="This sample demonstrates XML Based Resource System (XRC).&lt;br&gt;&lt;br&gt;&lt;img src=&quot;demoFiles/xrc/xrc.jpg&quot;&gt;">
+        <sourceFiles>
+          <sourceFile file="demoFiles/xrc/custclas.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/xrc/custclas.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/xrc/derivdlg.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/xrc/derivdlg.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/xrc/myframe.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/xrc/myframe.h" imageIndex="2" lexer="0" />
+          <sourceFile file="demoFiles/xrc/xrcdemo.cpp" imageIndex="1" lexer="0" />
+          <sourceFile file="demoFiles/xrc/xrcdemo.h" imageIndex="2" lexer="0" />
+        </sourceFiles>
+        <keywords>
+  	      <keyword title="wxXmlResource" imageIndex="3" />
+  	      <keyword title="wxXmlResourceHandler" imageIndex="3" />
+  	    </keywords>
+        <executable file="demoFiles/xrc/xrc" />
+      </demo>
+
+    </demoGroup>
+ 
+  </demos>
+
+</wxDemoViewer>

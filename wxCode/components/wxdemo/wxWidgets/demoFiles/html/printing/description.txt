@@ -1,0 +1,1 @@
+Explains use of wxHtmlEasyPrinting class which serves as as-simple-as-possible interface for printing HTML documents without much work. In fact, only few function calls are sufficient.

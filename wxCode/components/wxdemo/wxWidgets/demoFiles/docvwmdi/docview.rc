@@ -1,0 +1,4 @@
+sample             ICON    "../sample.ico"
+doc                 ICON    "doc.ico"
+chart               ICON    "chart.ico"
+notepad             ICON    "notepad.ico"

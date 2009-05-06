@@ -1,0 +1,1 @@
+This sample shows the calendar control in action. It shows how to configure the control (see the different options in the calendar menu) and also how to process the notifications from it.

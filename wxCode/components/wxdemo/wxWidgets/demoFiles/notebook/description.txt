@@ -1,0 +1,1 @@
+This samples shows wxBookCtrl family of controls. Although initially it was written to demonstrate wxNotebook only, it can now be also used to see wxListbook, wxChoicebook and wxTreebook in action. Test each of the controls, their orientation, images and pages using commands through menu.

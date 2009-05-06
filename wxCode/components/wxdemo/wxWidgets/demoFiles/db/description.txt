@@ -1,0 +1,1 @@
+The database sample is a small test program showing how to use the ODBC classes written by Remstar Intl. Obviously, this sample requires a database with ODBC support to be correctly installed on your system.

@@ -1,0 +1,1 @@
+Help and Helpview are variations on displaying HTML help (compatible with MS HTML Help Workshop). Help shows how to embed wxHtmlHelpController in your application while Helpview is a simple tool that only pops up the help window and displays help books given at command line.

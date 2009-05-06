@@ -1,0 +1,1 @@
+The minimal sample is what most people will know under the term Hello World, i.e. a minimal program that doesn't demonstrate anything apart from what is needed to write a program that will display a 'hello' dialog. This is usually a good starting point for learning how to use wxWidgets.

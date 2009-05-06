@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<styleLexer lexerName="C++" lexerID="3" defaultTextColor="#000000" defaultBackColor="#FFFFFF">
+  <style />
+  <style textColor="#A0A0A0" />
+  <style textColor="#A0A0A0" />
+  <style textColor="#8080FF" bold="1" />
+  <style textColor="#0000FF" />
+  <style bold="1"  keywords="asm auto bool break case catch char class const const_cast continue default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new operator private protected public register reinterpret_cast return short signed sizeof static static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while"/>
+  <style textColor="#FF0000" />
+  <style textColor="#FF0000" />
+  <style />
+  <style textColor="#00A000" />
+  <style />
+  <style />
+  <style textColor="#FF0000" />
+  <style />
+  <style />
+  <style textColor="#8080FF" bold="1" />
+</styleLexer>

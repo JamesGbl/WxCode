@@ -1,0 +1,1 @@
+Demonstrates use of virtual file systems in wxHTML. The zip archives handler (ships with wxWidgets) allows you to access HTML pages stored in a compressed archive as if they were ordinary files.

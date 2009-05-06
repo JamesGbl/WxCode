@@ -1,0 +1,1 @@
+This sample shows how you can use wxAnimationCtrl control and shows concept of a platform-dependent animation encapsulated in wxAnimation.

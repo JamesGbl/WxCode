@@ -1,0 +1,1 @@
+This sample demonstrates the drawing ability of wxDC.

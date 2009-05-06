@@ -1,0 +1,1 @@
+This sample shows how to create and use wxStatusBar. Although most of the samples have a statusbar, they usually only create a default one and only do it once.&lt;br&gt;&lt;br&gt;Here you can see how to recreate the statusbar (with possibly different number of fields) and how to use it to show icons/bitmaps and/or put arbitrary controls into it.

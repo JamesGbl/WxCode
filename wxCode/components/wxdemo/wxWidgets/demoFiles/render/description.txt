@@ -1,0 +1,1 @@
+This sample shows how to replace the default wxWidgets renderer and also how to write a shared library (DLL) implementing a renderer and load and unload it during the run-time.

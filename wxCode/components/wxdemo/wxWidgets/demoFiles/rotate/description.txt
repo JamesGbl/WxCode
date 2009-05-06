@@ -1,0 +1,1 @@
+This is a simple example which demonstrates how to rotate an image with the wxImage::Rotate method. The rotation can be done without interpolation (left mouse button) which will be faster, or with interpolation (right mouse button) which is slower but gives better results.

@@ -1,0 +1,1 @@
+This sample demonstrates how to use all the features of wxMediaCtrl and play various types of sound, video, and other files.

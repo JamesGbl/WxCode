@@ -1,0 +1,1 @@
+The font sample demonstrates wxFont, wxFontEnumerator and wxFontMapper classes. It allows you to see the fonts available (to wxWidgets) on the computer and shows all characters of the chosen font as well.

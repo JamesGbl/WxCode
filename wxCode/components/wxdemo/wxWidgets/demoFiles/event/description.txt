@@ -1,0 +1,1 @@
+The event sample demonstrates various features of the wxWidgets events. It shows using dynamic events and connecting/disconnecting the event handlers during run time and also using PushEventHandler() and PopEventHandler().

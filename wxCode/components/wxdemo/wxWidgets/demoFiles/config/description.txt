@@ -1,0 +1,1 @@
+This sample demonstrates the wxConfig classes in a platform independent way, i.e. it uses text based files to store a given configuration under Unix and uses the Registry under Windows.
