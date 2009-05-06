@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wxDemoViewer>
+
+  <imageList>
+    <image file="skin/pythonIcon.png" />
+    <image file="skin/keyword.png" />
+  </imageList>
+
+  <lexerList>
+    <lexer file="skin/lexerPython.xml" />
+  </lexerList>
+
+  <windowStyles>
+    <background name="mainTree" colorA="#ffeaa3" />
+    <background name="mainLogo" colorA="#ffeaa3" colorB="#94cfff" colorC="#94cfff" colorD="#94cfff" />
+    <background name="mainSearch" colorA="#94cfff" />
+    <background name="sourceTab" colorA="#94cfff" />
+    <background name="tabsPanel" colorA="#94cfff"  borderColor="#ffd647" borders="B" />
+
+    <control name="mainTree" backColor="#ffeaa3" textColor="#366f9e" hasBorder="false" rounded="false" />
+    <control name="mainSearch" backColor="#ffeaa3" borderColor="#366f9e" textColor="#366f9e" hasBorder="true" rounded="false" />
+    <control name="sourceFiles" backColor="#ffeaa3" borderColor="#366f9e" textColor="#3670a0" hasBorder="true" rounded="false" />
+    <control name="sourceKeywords" backColor="#ffeaa3" borderColor="#366f9e" textColor="#3670a0" hasBorder="true" rounded="false" />
+    <control name="sourceCodeViewer" backColor="#FFFFFF" borderColor="#366f9e" hasBorder="true" rounded="false" />
+    <control name="sourceSearch" backColor="#ffeaa3" borderColor="#366f9e" textColor="#3670a0" hasBorder="true" rounded="false" />
+
+    <static name="mainTitle" colorA="#ffeaa3" title="Python - vzorové príklady" textColor="#366f9e" fontSize="10" textAlign="left" height="26" bold="true" />
+    <static name="mainSearchTitle" colorA="#94cfff" title="Vyhľadávanie" textColor="#366f9e" fontSize="10" textAlign="left" height="15" bold="true" />
+    <static name="sourceFilesTitle" colorA="#ffeaa3" colorB="#94cfff" title="Zdrojové súbory" textColor="#3670a0" fontSize="9" textAlign="left" height="18" bold="true" />
+    <static name="keywordsTitle" colorA="#ffeaa3" title="Kľúčové slová" textColor="#3670a0" fontSize="9" textAlign="left" height="18" bold="true" />
+
+    <button name="tabDescription" title="Popis" icon="skin/info.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="LTRB" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="false" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="true" />
+    </button>
+
+    <button name="tabSource" title="Zdrojový kód" icon="skin/source.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="LTRB" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="false" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="true" />
+    </button>
+
+    <button name="tabDoc" title="Dokumentácia" icon="skin/doc.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="LTRB" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="false" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" borders="LTRB" bold="true" />
+    </button>
+
+    <button name="keywordsSearchCode" title="V kóde" fontSize="8" textAlign="center" iconPosition="right" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="true" borders="TRBL" />
+    </button>
+
+    <button name="keywordsSearchDocs" title="V dokumentácii" fontSize="8" textAlign="center" iconPosition="right" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="true" borders="TRBL" />
+    </button>
+
+    <button name="launchButton" title="Spustiť ukážku" icon="skin/launch.png" fontSize="8" textAlign="left" iconPosition="top" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="true" borders="TRBL" />
+    </button>
+
+    <button name="sourceSearchNext" title="Ďalší" icon="skin/arrow_right.png" fontSize="8" textAlign="left" iconPosition="right" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="true" borders="TRBL" />
+    </button>
+
+    <button name="sourceSearchPrev" title="Predchádzajúci" icon="skin/arrow_left.png" fontSize="8" textAlign="left" iconPosition="left" >
+      <stateNormal colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateHover colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="false" borders="TRBL" />
+      <stateSelected colorA="#3670a0" textColor="#ffd647" borderColor="#ffd647" bold="true" borders="TRBL" />
+    </button>
+
+    <other name="logoFile" file="skin/pythonLogo.png" />
+    <other name="sourceCodeViewerMore" lineNumberBackColor="#3670a0" lineNumberTextColor="#ffd647" selectionTextColor="#ffeaa3" selectionBackColor="#366d9c" fontSize="8" />
+    <other name="searchIcon" file="skin/search.png" />
+    <other name="splitterBackColor" backColor="#366d9b" />
+    <other name="descriptionBackColor" backColor="#a3d6ff" />
+    <other name="docToolbarBackColor" backColor="#a3d6ff" />
+
+  </windowStyles>
+
+  <documentation file="doc/pythonDoc.zip" />
+
+  <demos openWithWin="python" openWithUnix="python" openWithMac="python" openWithOther="python" title="Python" description="Python is a dynamic object-oriented programming language that can be used for many kinds of software development. It offers strong support for integration with other languages and tools, comes with extensive standard libraries, and can be learned in a few days. Many Python programmers report substantial productivity gains and feel the language encourages the development of higher quality, more maintainable code." imageIndex="0" >
+  
+    <demoGroup title="Príklady" imageIndex="0">
+
+      <demo title="Hello World" imageIndex="0">
+        <description value="A very simple Python script for beginners." />
+        <sourceFiles>
+          <sourceFile file="samples/hello_world.py" imageIndex="0" lexer="0" />
+        </sourceFiles>
+        <executable file="samples/hello_world.py" />
+      </demo>
+    
+      <demo title="Create directory" imageIndex="0">
+        <description value="This Python script demonstrates how to create a single new directory as well as delete a directory and everything it contains. The script will fail if encountewrs a read-only file." />
+        <sourceFiles>
+          <sourceFile file="samples/create_directory.py" imageIndex="0" lexer="0" />
+        </sourceFiles>
+        <executable file="samples/create_directory.py" />
+      </demo>
+
+      <demo title="Enviroment variables" imageIndex="0">
+        <description value="This Python script demonstrates how to acces enviroment variables." />
+        <sourceFiles>
+          <sourceFile file="samples/enviroment_variables.py" imageIndex="0" lexer="0" />
+        </sourceFiles>
+        <executable file="samples/enviroment_variables.py" />
+      </demo>
+      
+      <demo title="For loop" imageIndex="0">
+        <description value="This Python script demonstrates how to use for loops." />
+        <sourceFiles>
+          <sourceFile file="samples/for_loop.py" imageIndex="0" lexer="0" />
+        </sourceFiles>
+        <executable file="samples/for_loop.py" />
+      </demo>
+      
+    </demoGroup>
+ 
+  </demos>
+
+</wxDemoViewer>
