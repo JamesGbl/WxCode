@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: wxjson.bkl,v 1.5 2008/03/03 19:05:45 luccat Exp $ -->
+<!-- RCS-ID: $Id: mycomp.bkl 550 2007-04-22 13:14:49Z frm $ -->
 
 <!--
     =========================================================================
@@ -51,24 +51,15 @@
 
 <makefile>
 
-    <set var="WX_VERSION_DEFAULT">
-        28
-    </set>
-
-    <!-- disable / enable other formats
-                 <disable-formats>autoconf</disable-formats>
-                 <add-formats>gnu,msvs2005prj</add-formats>
-    -->
-
     <!-- the following line tells Bakefile that this component uses the wxCode presets
          (internally wxCode presets use in turn the wxWidgets presets)
     -->
-    <include file="../../../build/bakefiles/presets/wxcode.bkl"/>
+    <include file="presets/wxcode.bkl"/>
 
     <!-- sets the name of the folder which contains this component and thus
          should always be in lowercase, wxCode/component/MYCOMPONENT_NAME 
     -->
-    <set-comp-name>wxjson</set-comp-name>
+    <set-comp-name>wxjsone</set-comp-name>
 
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

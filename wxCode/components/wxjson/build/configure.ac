@@ -15,12 +15,14 @@
 # NOTE: you'll want to replace the first string in [] brackets with the name of your
 #       component, the second string with its version and third one with your mail
 #       (so that users will be able to contact you in case they have problems)
-AC_INIT([MYCOMP], [1.0], [mymail@myserver.com])
+AC_INIT([wxjson], [1.0], [mymail@myserver.com])
 AC_CONFIG_AUX_DIR(build)        # this is needed, don't touch it
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 # (you won't need it unless you get in troubles)
 #WX_DEBUG_CONFIGURE=1
+
+m4_pattern_allow
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
@@ -77,7 +79,7 @@ WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 #             NOTE: the libraries should be listed in the correct order: from
 #                   the most-advanced to the basic ones (e.g. 'base' _must_
 #                   always be the last listed library).
-WXCODE_CHECKS([2.8.5], [core,base])      # e.g. we need at least wxWidgets 2.8 to work and
+WXCODE_CHECKS([2.8.0], [core,base])      # e.g. we need at least wxWidgets 2.8 to work and
                                          # we want to link against wxCore and wxBase libs
 
 # Other things which can be useful to add here can be:

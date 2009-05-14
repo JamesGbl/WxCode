@@ -18,6 +18,37 @@
 #
 #   make -f makefile.unx
 #
+# If you do not specify any target, this makefile makes the wxJSON
+# library AND the test application in both Unicode AND ANSI mode
+# You have to have both builds of wxWidgets installed on your
+# system otherwise you will get compiler's errors when building
+# ANSI or Unicode mode.
+#
+# If you do not want to build all that stuff (okay, I undestand..)
+# just specify a target to this makefile.
+# For example, if you only want to make the library and the test
+# application in ANSI mode type:
+#
+#   make -f makefile.unx testansi.bin
+#
+# The available targets are:
+#
+# 	$(LIB_LIBUNI)		// makes the library in Unicode mode
+#	$(LIB_LIBANSI)		// makes the library in ANSI mode
+#	testuni.bin		// makes the test application and the library in Unicode
+#	testansi.bin		// makes the test application and the library in ANSI
+#
+# Note that the target names of the library depends on some variables. The actual name is
+# made of:
+#	LIB_LIBUNI = libwxjson-$(VERSION)uni.$(LIB_EXT)
+#
+# Example: the 1.0.1 version of the library that has a '.a' estension will be:
+#
+#	libwxjson-1.0.0uni.a
+#
+# Also note that this makefile only builds a static version od the library and copies
+# it in the '/lib' subfolder
+
 
 #
 # C++ compiler and linker
