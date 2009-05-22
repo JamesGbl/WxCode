@@ -151,6 +151,13 @@ extern int Test71();   // checking the wxJSONWRITER_SPLIT_STRING
 extern int Test72();   // checking the wxJSONWRITER_SPLIT_STRING
 extern int Test73();   // checking the wxJSONWRITER_TAB_INDENT
 
+//
+// in test15.cpp: test the speed of wxJSON reader and writer
+extern int Test74();   // writes 1000 and 10000 values to a wxString object 
+extern int Test75();   // 
+extern int Test76();   // 
+extern int Test77();   // 
+
 
 // global variables in 'main.cpp'
 extern int gs_tolerant;

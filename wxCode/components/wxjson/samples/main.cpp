@@ -264,12 +264,13 @@ int main( int argc, char* argv[] )
 	Test47, Test48, Test49, Test50, Test51,
 	Test52, Test53,
 	Test54, Test55, Test56, Test57, Test58, Test59, Test60, Test61, Test62,
-		Test63, Test64,
+	Test63, Test64,
 	Test65, Test66, Test67, Test68, Test69, Test70, Test71, Test72, Test73,
+	Test74, Test75, Test76, Test77,
 	0
   };
 
-#define TOTAL_TESTS 73
+#define TOTAL_TESTS 77
 
   int numParams = cmdLine.GetParamCount();
   if ( numParams == 0 )  {
