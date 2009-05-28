@@ -63,7 +63,7 @@ protected:
 															const char *hosttarget, 
 															uint16_t port, 
 															uint16_t txtLen, 
-															const char *txtRecord, 
+															const unsigned char *txtRecord, 
 															void *context ); 
 	
 	virtual void						DoHandleResolveCallback(	DNSServiceRef sdRef, 
@@ -74,7 +74,7 @@ protected:
 																	const char *hosttarget, 
 																	uint16_t port, 
 																	uint16_t txtLen, 
-																	const char *txtRecord ); 
+																	const unsigned char *txtRecord ); 
 	
 	
 protected:

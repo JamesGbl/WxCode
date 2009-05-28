@@ -78,8 +78,9 @@ public:
 	virtual void				SetTarget			( wxString iTarget );
 	virtual void				SetTarget			( const char * iTarget );
 	
-	virtual	const wxString &	TextRecord			( void ) const			{ return m_TxtRecord; }
-	virtual void				SetTextRecord		( wxString iTxtRecord )	{ m_TxtRecord = iTxtRecord; }
+//	virtual	const wxString &	TextRecord			( void ) const			{ return m_TxtRecord; }
+//	virtual void				SetTextRecord		( wxString iTxtRecord )	{ m_TxtRecord = iTxtRecord; }
+	virtual void				SetTextRecord		( const unsigned char * WXUNUSED(txtRecord) ) {}
 	
 	virtual const wxIPV4address	GetAddress			( void ) const			{ return m_Address; }
 	

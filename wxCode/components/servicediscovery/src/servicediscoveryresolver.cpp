@@ -57,7 +57,7 @@ bool wxServiceDiscoveryResolver::DoStart( void )
 					   m_Result.ServiceName().mb_str( wxConvUTF8 ),
 					   m_Result.RegType().mb_str( wxConvUTF8 ), 
 					   m_Result.Domain().mb_str( wxConvUTF8 ), 
-					   ResolveCallback, 
+					   (DNSServiceResolveReply)wxServiceDiscoveryResolver::ResolveCallback, 
 					   this ); 
 	
 	return m_rServiceRef != NULL;
@@ -77,7 +77,7 @@ void wxServiceDiscoveryResolver::ResolveCallback(	DNSServiceRef sdRef,
 													const char *hosttarget, 
 													uint16_t port, 
 													uint16_t txtLen, 
-													const char *txtRecord, 
+													const unsigned char *txtRecord, 
 													void *context )
 {
 	static_cast<wxServiceDiscoveryResolver *>( context )->DoHandleResolveCallback( sdRef, flags, interfaceIndex, errorCode, 
@@ -94,7 +94,7 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef WXUNUSED
 															const char *hosttarget, 
 															uint16_t port, 
 															uint16_t WXUNUSED( txtLen ), 
-															const char *txtRecord )
+															const unsigned char *txtRecord )
 {
 	wxASSERT( m_pListener != NULL );
 	wxASSERT( m_rServiceRef == sdRef );
@@ -122,7 +122,7 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef WXUNUSED
 			m_Result.SetFullName( wxString( fullname, wxConvUTF8 ) );
 			m_Result.SetPort( wxUINT16_SWAP_ON_BE( port ) );
 			m_Result.SetTarget( hosttarget );
-			m_Result.SetTextRecord( wxString( txtRecord, wxConvUTF8 ) );
+			m_Result.SetTextRecord( txtRecord );
 		}
 		
 		if ( m_pListener != NULL )

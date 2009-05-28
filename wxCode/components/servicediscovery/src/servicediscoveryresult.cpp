@@ -170,7 +170,7 @@ void wxServiceDiscoveryResult::SetTarget ( wxString iTarget )
 //					host_ip.c_str() );
 //#endif
 		
-		wxUint32 address = wxINT32_SWAP_ON_LE( * reinterpret_cast<wxUint32 *>( pHost->h_addr ) );
+		wxUint32 address = wxUINT32_SWAP_ON_LE( * reinterpret_cast<wxUint32 *>( pHost->h_addr ) );
 
 		m_Address.Hostname( address );
 		
