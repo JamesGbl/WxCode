@@ -40,7 +40,7 @@ FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVa
   m_pParameter = pVar;
   m_nParameterType = FirebirdParameter::PARAM_INT;
   m_nValue = nValue;
-  
+
   m_pParameter->sqldata = (char*)&m_nValue;
 
   m_nNullFlag = 0;
@@ -63,6 +63,12 @@ FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVa
     m_dblValue = dblValue;
     m_pParameter->sqldata = (char*)&m_dblValue;
   }
+  else if(nType == SQL_LONG || nType == SQL_INT64 || nType == SQL_SHORT)
+  {
+    for(int i = 0; i < -pVar->sqlscale; dblValue *= 10, i++);
+    m_nValue = dblValue;
+    m_pParameter->sqldata = (char*)&m_nValue;
+  }
   else
   {
     // Error?
@@ -79,7 +85,7 @@ FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVa
   m_nParameterType = FirebirdParameter::PARAM_BOOL;
   m_bValue = bValue;
   m_nValue = (m_bValue) ? 1 : 0;
-  
+
   m_pParameter->sqldata = (char*)&m_nValue;
 
   m_nNullFlag = 0;
@@ -103,7 +109,7 @@ FirebirdParameter::FirebirdParameter(FirebirdInterface* pInterface, XSQLVAR* pVa
   m_pInterface->GetIscEncodeTimestamp()(&dateAsTm, &m_Date);
 
   m_nBufferLength = sizeof(ISC_TIMESTAMP);
-  
+
   m_pParameter->sqldata = (char*)&m_Date;
 
   m_nNullFlag = 0;
@@ -134,14 +140,14 @@ void FirebirdParameter::ResetBlob()
   ISC_STATUS_ARRAY    status;              /* status vector */
   void* pData = m_BufferValue.GetData();
   int nDataLength = m_nBufferLength;//m_BufferValue.GetDataLen();
-  
+
   memset(&m_BlobId, 0, sizeof(m_BlobId));
   int nReturn = m_pInterface->GetIscCreateBlob2()(status, &m_pDatabase, &m_pTransaction, &m_pBlob, &m_BlobId, 0, NULL);
   if (nReturn != 0)
   {
 #ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
     long nSqlCode = m_pInterface->GetIscSqlcode()(status);
-    DatabaseLayerException error(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode), 
+    DatabaseLayerException error(FirebirdDatabaseLayer::TranslateErrorCode(nSqlCode),
         FirebirdDatabaseLayer::TranslateErrorCodeToString(m_pInterface, nSqlCode, status));
 
     throw error;
@@ -174,7 +180,7 @@ void FirebirdParameter::ResetBlob()
     dataFetched += segLen;
     dataPtr += segLen;
   }
-  
+
   nReturn = m_pInterface->GetIscCloseBlob()(status, &m_pBlob);
   if (nReturn != 0)
   {
