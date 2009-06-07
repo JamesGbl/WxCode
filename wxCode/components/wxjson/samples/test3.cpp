@@ -77,23 +77,84 @@ int Test2()
 }
 
 // test escaped chars
+// using some writer flags on strings
 int Test3()
 {
-  wxJSONValue root;
-  root[_T("backslash")]    = _T("string with \\ (backslash)");
-  root[_T("linefeed")]     = _T("string with \n (linefeed)");
-  root[_T("slash")]        = _T("string with / (slash)");
-  root[_T("carriage-ret")] = _T("string with \r (CR)");
-  root[_T("tab")]          = _T("string with \t (tab)");
-  root[_T("backspace")]    = _T("string with \b (backspace)");
-  root[_T("quotes")]       = _T("string with \" (quotes)");
-  root[_T("3 CR string")]  = _T("string with 3 CR\r1-\r 2-\r");
+	wxJSONValue root;
+	root.Append( _T("string with \\ (backslash)"));
+	root.Append( _T("string with \n (linefeed)"));
+	root.Append( _T("string with / (slash)"));
+	root.Append( _T("string with \r (CR)"));
+	root.Append( _T("string with \t (tab)"));
+	root.Append( _T("string with \b (backspace)"));
+	root.Append( _T("string with \" (quotes)"));
+	root.Append( _T("string with 3 CR\r1-\r 2-\r"));
+	root.Append( _T("This is line number 1\nThis is line number 2\nThis is line number 3"));
+	root.Append( _T("This is a very long string that cause the user"
+					" to scroll orizontally in order to view the whole string"));
+	wxString s( _T("string that contains 3 control characters (0x00, 0x03, 0x05):")); 
+	s.Append( (wxChar) 0 );
+	s.Append( (wxChar) 3 );
+	s.Append( (wxChar) 5 );
+	root.Append( s );
 
-  wxString str;
-  wxJSONWriter wrt(  gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
+	// default ctor
+	TestCout( _T( "Using default ctor----------------->\n"));
+	wxString str;
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	// the expected result
+	wxString r1( _T("[\n"
+			"   \"string with \\\\ (backslash)\",\n"
+			"   \"string with \\n (linefeed)\",\n"
+			"   \"string with / (slash)\",\n"
+			"   \"string with \\r (CR)\",\n"
+			"   \"string with \\t (tab)\",\n"
+			"   \"string with \\b (backspace)\",\n"
+			"   \"string with \\\" (quotes)\",\n"
+			"   \"string with 3 CR\\r1-\\r 2-\\r\",\n"
+			"   \"This is line number 1\\nThis is line number 2\\nThis is line number 3\",\n"
+			"   \"This is a very long string that cause the user to scroll "
+				"orizontally in order to view the whole string\",\n"
+			"   \"string that contains 3 control characters (0x00, 0x03, 0x05):"
+				"\\u0000\\u0003\\u0005\"\n"
+			"]\n"));
+	ASSERT( str == r1 );
+
+
+	// strict JSON
+	str.Clear();
+	TestCout( _T( "Using wxJSONWRITER_NONE----------------->\n"));
+	wxJSONWriter wrt2( wxJSONWRITER_NONE );
+	wrt2.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	// expected result
+	wxString r2( _T(	
+"[\"string with \\\\ (backslash)\",\"string with \\n (linefeed)\",\"string with / (slash)\",\"string with \\r (CR)\",\"string with \\t (tab)\",\"string with \\b (backspace)\",\"string with \\\" (quotes)\",\"string with 3 CR\\r1-\\r 2-\\r\",\"This is line number 1\\nThis is line number 2\\nThis is line number 3\",\"This is a very long string that cause the user to scroll orizontally in order to view the whole string\",\"string that contains 3 control characters (0x00, 0x03, 0x05):\\u0000\\u0003\\u0005\"]"));
+	ASSERT( str == r2 );
+
+
+	// split strings
+	str.Clear();
+	TestCout( _T( "Using wxJSONWRITER_SPLIT_STRING----------------->\n"));
+	wxJSONWriter wrt3( wxJSONWRITER_STYLED | wxJSONWRITER_SPLIT_STRING );
+	wrt3.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	// multiline strings
+	str.Clear();
+	TestCout( _T( "Using wxJSONWRITER_MULTILINE_STRING----------------->\n"));
+	wxJSONWriter wrt4( wxJSONWRITER_STYLED | wxJSONWRITER_MULTILINE_STRING );
+	wrt4.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
   return 0;
 }
 

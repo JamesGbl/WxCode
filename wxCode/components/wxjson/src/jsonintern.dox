@@ -900,15 +900,22 @@ In this way the function correctly handles this situation:
 
 \section json_multiline_string The multiline string 
 
-\b WARNING: this feature in old 0.x versions is a conseguence of an error
-in the implementation or the wxJSONWriter's flags.
-The feature is still usefull but its implementation had changed in the
-writer class: no change is needed in the parser.
-
-\par The old 0.x documentation
+\b WARNING: this feature in versions 0.x and 1.0.0 is useless if the string value
+contains a LF character due to an error in the implementation of the JSON syntax
+related to escaped characters. 
+To know more about this read the  http://sourceforge.net/tracker/?func=detail&aid=2720660&group_id=51305&atid=462816.
 
 This feature allows a JSON string to be splitted in two or more lines
-in the input JSON test:
+when a string value is written to JSON text. Consider the following
+example:
+
+\code
+ {
+    "copyright" : "This library is distributed\nunder the GNU Public License\n(C) 2007 XYZ Software"
+ }
+\endcode
+
+It would be by far more human readable if it would be written in the following way:
 
 \code
  {
@@ -918,17 +925,19 @@ in the input JSON test:
  }
 \endcode
 
-It is much more readable by humans because the \e new-line characters
-contained in the value string are enforced by splitting the string into three lines.
-The wxJSONReader allows this but reports a \e warning if the parser
-was not constructed usign the wxJSONREADER_STRICT flag.
-If \b strict is used, strings cannot be splitted.
+Note that the escaped LF characters at the end of a line is enforced by splitting
+the string value into two or more indented lines of text as we would normally do in C/C++ sources.
+The wxJSONReader is capable to read such strings but you have to be aware that this
+is not valid JSON text and other parser may report an error.
 
-In order to get this feature, the parser concatenates strings if a comma
-character is not found between them. 
+In order to get this feature you have to construct the JSON writer class using the
+\c wxJSONWRITER_SPLIT_STRING flag. Also, the reader has to be constructed with the
+\c wxJSONREADER_MULTISTRING flag otherwise it would report an error.
+
+In order to recognize such strings, the reader concatenates string values (that is
+values enclosed in double quotes) if a comma separator is not present.
 Note that only strings can be splitted into more than one line: numbers
 and literals cannot be splitted.
-
 The drawback is that this feature is error-prone. Consider the following
 example:
 \code
@@ -950,109 +959,27 @@ what I wanted.
 Worse, the parser does not consider this an error: only a warning is
 reported.
 
-For this reason, I am not sure that this feature is really a feature:
-maybe it will be dropped in next versions of the wxJSON library.
 
-\par The actual documentation
+\par Very long lines
 
+The \c wxJSONWRITER_SPLIT_STRING flag also splits very long lines in addtion
+to enforcing LF characters.
+To know more about this read \ref wxjson_tutorial_style
 
-I wrote the old documentation just for historycal purposes and for clarity:
-it helps to understand why the feature was changed in 1.0 version.
-First of all if you run the test #24 in the test application (see the \c
-Test24() function in the \c samples/test6.cpp source file) you got
-the following output:
+\par The wxJSONWRITER_MULTILINE_STRING writer's flag
 
-\code
-   "This is a multiline string\n"
-      "this is line #2\n"
-      "this is line #3"
-\endcode
-
-which is just as explained before and it seems good but it isn't.
-The problem is that the LF character \b contained in the three strings
-would have to break the line just before the close-quote characters
-but this does not happen. The reason is that the LF character was not
-acually a LF (0x0D) but the lowercase letter 'n'.
-This is due to a implementation error in the \c wxJSONWriter::WriteStringValue()
-function which contains a table of characters that have to be escaped and the
-corresponding table of escape sequences.
-Here is the old code:
+This is a multiline string mode where newlines and tabs are not escaped.
+This is not valid JSON text but it helps immensely when manually editing
+JSON files that contains multiline strings.
+In the example above the JSON text output will be as follows:
 
 \code
-  // the characters that have to be escaped
-  static const wxChar escapedChars[] = { 
-	_T( '\"' ), // quotes 
-	_T( '\\' ), // reverse solidus
-	_T( '/' ),  // solidus
-	_T( '\b' ), // backspace
-	_T( '\f' ), // formfeed
-	_T( '\n' ), // newline
-	_T( '\r' ), // carriage-return
-	_T( '\t' )  // horizontal tab
-  };
-
-  // the escape sequences that has to be written instead of the characters
-  const wxString replaceChars[] = { 
-	_T("\\\""),		// OK
-	_T("\\\\"),		// OK
-	_T("\\/"),		// OK
-	_T("\\b"),		// should be "\\\b"
-	_T("\\f"),		// should be "\\\f"
-	_T("\\n"),		// should be "\\\n"
-	_T("\\r"),		// should be "\\\r"
-	_T("\\t")		// should be "\\\t"
-  };
+ {
+    "copyright" : "This library is distributed
+under the GNU Public License
+(C) 2007 XYZ Software"
+ }
 \endcode
-
-As you can see, I forgot one ESC character so the escape sequence for a LF
-character results in a ESCAPE character followed by a lowercase letter 'n'.
-
-The conseguence is that the \e multiline string feature is good for the
-parser but it is useless for the writer: there is no need to enforce a line-feed
-character by adding another line-feed character: the string already results splitted.
-If we add the line-feed after the close-quote character, the readibility
-of the JSON text will be made worse.
-
-
-\code
-// the output without the MULTILINE string feature is more readable
-// than using it: LF character are escaped.
-
-"This is a multiline string\
-this is line #2\
-this is line #3"
-\endcode
-
-
-Nevertheless, the flag is still usefull in the JSON writer.
-If a string value is very long, it would be nice to split it into two or
-more lines provided that the string itself does not contain LF characters.
-Consider the following example:
-
-\code
-  {
-  	"key" : "A very long string value that cause the user to scroll horizontally in order to actually read the whole line"
-  }
-\endcode
-
-It would be more readable if it was written as:
-
-\code
-  {
-  	"key" : "A very long string value that cause the user to scroll"
-		" horizontally in order to actually read the whole line"
-  }
-\endcode
-
-The reader is already capable of reading multiline strings such as the one
-seen above regardless they contain LF characters (escaped or not) just
-specify the wxJSONREADER_MULTISTRING flag in its constructor.
-
-For the writer, the wxJSONWRITER_SPLIT_STRING flag has changed its implementation:
-strings are not splitted when a LF character is encontered but only if
-the 75th column has reached in the output JSON text.
-Note that the writer will split the string when a space character is encontered
-so that a single word is not splitted in two lines.
 
 
 

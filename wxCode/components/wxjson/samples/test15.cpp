@@ -54,7 +54,7 @@
 
  may xx, 2009
  ------------
- I run the test with the new organization of the library in version 1.0.2
+ I run the test with the new organization of the library in version 1.1.0
  which does not convert each character but only string values.
  The conversion is done by converting the whole string value and not
  char-by-char.

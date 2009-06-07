@@ -110,6 +110,15 @@
 		for escaped characters)
 
 
+ 1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
+
+
+ 1.1   the new feature is the internal reorganization of the writer and reader class which
+	now do not convert to / from UTF-8 stream char-by-char but only a whole string value
+	(r 944)	added the speed test functions (see 'samples/test15.cpp')
+
+
+
 BUGS
 ----
 Please, send bugs to luciano@mauriziovettorato.it or open a bug report
