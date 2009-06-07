@@ -242,6 +242,9 @@ clean:
 	rm -f samples/*.oa
 	rm -f src/*.o
 	rm -f src/*.oa
+	rm -f src/*~
+	rm -f samples/*~
+	rm -f ./*~
 
 
 #
