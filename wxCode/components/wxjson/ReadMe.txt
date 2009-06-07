@@ -106,11 +106,12 @@
                - wxJSONWRITER_RECOGNIZE_UNSIGNED: force the reader to recognize unsigned
                - wxJSONWRITER_TAB_INDENT: use TABs instead of spaces for indentation
 
- 1.0.1 a bug-fix release: fixed bug #2735592 (wxJSONwriter writes the wrong character
+ 1.0.1 a bug-fix release: fixed bug #2720660 (wxJSONwriter writes the wrong character
 		for escaped characters)
 
 
  1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
+ 	(r 948)	fixed the bug - see the Bug Tracker on sf.net
 
 
  1.1   the new feature is the internal reorganization of the writer and reader class which
