@@ -4,7 +4,7 @@
  
  Website: http://lnx.mauriziovettorato.it/public/json/home.html
  Author: Luciano Cattani
- Version: 1.0.0
+ Version: 1.0.2
  Description:
  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
  It is easy for humans to read and write. It is easy for machines to parse
@@ -122,7 +122,7 @@
 
 BUGS
 ----
-Please, send bugs to luciano@mauriziovettorato.it or open a bug report
+Please, send bugs to luciano@mauriziovettorato.it or, better, open a bug report
 on SF.net for the 'wxCode' project ( wxcode.sf.net)
 
 
