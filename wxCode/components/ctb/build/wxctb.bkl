@@ -14,6 +14,7 @@
 
   <!-- the actual ctb library version -->
   <set var="VERSION">0.13</set>
+  <set var="NAME">libwxctb</set>
 
   <!-- The directory where wxWidgets is installed: -->
   <set var="ENV_VAR">
@@ -91,33 +92,35 @@
 
   <define-tag name="run-tarball" rules="action">
     <command>
-	 (cd ..; tar -cvzf $(value) \
-	 --exclude=ctbtest \
-	 --exclude=ctbtest.exe \
-	 --exclude=*.a \
-	 --exclude=*.d \
+	 (cd ../..; tar -cvzf $(value) \
+	 $(NAME)-$(VERSION)/build/ \
+	 $(NAME)-$(VERSION)/docs/ \
+	 $(NAME)-$(VERSION)/include \
+	 $(NAME)-$(VERSION)/python \
+	 $(NAME)-$(VERSION)/samples \
+	 $(NAME)-$(VERSION)/src \
+	 $(NAME)-$(VERSION)/lib/*.a \
+	 $(NAME)-$(VERSION)/lib/*.lib \
+	 --exclude=release \
 	 --exclude=debug \
-	 --exclude=*.dll \
-	 --exclude=docs \
+	 --exclude=website \
+	 --exclude=*~ \
+	 --exclude=buildall* \
+	 --exclude=make.sh \
+	 --exclude=make.bat \
+	 --exclude=$(value) \
 	 --exclude=*.ilk \
 	 --exclude=*.log \
 	 --exclude=*.o* \
 	 --exclude=*.pdb \
 	 --exclude=*.pyc \
-	 --exclude=release \
-	 --exclude=*.so \
-	 --exclude=SVN* \
-	 --exclude=.svn \
-	 --exclude=*.gz \
-	 --exclude=*~ \
-	 --exclude=*.___\
-	 --exclude=*.o* ./)
+	 --exclude=.svn; mv $(value) $(NAME)-$(VERSION)/build )
     </command>
   </define-tag>
 
   <if cond="PLATFORM_UNIX=='1'">
     <action id="tarball">
-	 <run-tarball>wxctb-$(VERSION).tar.gz</run-tarball>
+	 <run-tarball>$(NAME)-$(VERSION).tar.gz</run-tarball>
     </action>
   </if>
 

@@ -163,27 +163,29 @@ clean:
 	rm -f $(OUTPUT)/ctbtest
 
 tarball: 
-	(cd ..; tar -cvzf wxctb-0.13.tar.gz \
-	--exclude=ctbtest \
-	--exclude=ctbtest.exe \
-	--exclude=*.a \
-	--exclude=*.d \
+	(cd ../..; tar -cvzf libwxctb-0.13.tar.gz \
+	libwxctb-0.13/build/ \
+	libwxctb-0.13/docs/ \
+	libwxctb-0.13/include \
+	libwxctb-0.13/python \
+	libwxctb-0.13/samples \
+	libwxctb-0.13/src \
+	libwxctb-0.13/lib/*.a \
+	libwxctb-0.13/lib/*.lib \
+	--exclude=release \
 	--exclude=debug \
-	--exclude=*.dll \
-	--exclude=docs \
+	--exclude=website \
+	--exclude=*~ \
+	--exclude=buildall* \
+	--exclude=make.sh \
+	--exclude=make.bat \
+	--exclude=libwxctb-0.13.tar.gz \
 	--exclude=*.ilk \
 	--exclude=*.log \
 	--exclude=*.o* \
 	--exclude=*.pdb \
 	--exclude=*.pyc \
-	--exclude=release \
-	--exclude=*.so \
-	--exclude=SVN* \
-	--exclude=.svn \
-	--exclude=*.gz \
-	--exclude=*~ \
-	--exclude=*.___\
-	--exclude=*.o* ./)
+	--exclude=.svn; mv libwxctb-0.13.tar.gz libwxctb-0.13/build )
 
 ../lib/libwxctb$(LIBFLAG)$(GPIBFLAG)-0.13.a: $(WXCTB_LIB_OBJECTS)
 	rm -f $@
