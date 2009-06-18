@@ -188,14 +188,6 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
 			pShape = GetDiagramManager()->AddShape(CLASSINFO(wxSFRoundRectShape), event.GetPosition(), sfDONT_SAVE_STATE);
 			if(pShape)
 			{
-			    // set alignment
-                /*pShape->SetVAlign(wxSFShapeBase::valignEXPAND);
-                pShape->SetHAlign(wxSFShapeBase::halignEXPAND);
-                pShape->SetVBorder(10);
-                pShape->SetHBorder(10);
-
-                pShape->Update();*/
-
 			    // set shape policy
 				pShape->AcceptChild(wxT("wxSFTextShape"));
 				pShape->AcceptChild(wxT("wxSFEditTextShape"));
@@ -263,6 +255,16 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
 			    // ... or can replace previously assigned shape at the position specified by row and column indexes
 			    // (note that the previous shape at the given position (if exists) will be moved to the grid's last lexicographic position).
 			    pGrid->InsertToGrid(1, 0, GetDiagramManager()->AddShape(CLASSINFO(wxSFCircleShape), sfDONT_SAVE_STATE));
+				
+				// also control shapes can be managed by the grid shape.
+				//wxSFControlShape* pCtrl = (wxSFControlShape*)GetDiagramManager()->AddShape(CLASSINFO(wxSFControlShape), event.GetPosition(), sfDONT_SAVE_STATE);
+				//if( pCtrl )
+				//{
+				//	pCtrl->SetVAlign( wxSFShapeBase::valignEXPAND );
+				//	pCtrl->SetHAlign( wxSFShapeBase::halignEXPAND );
+				//	pCtrl->SetControl( new wxButton( this, wxID_ANY, wxT("Test")) );
+				//	pGrid->AppendToGrid( pCtrl );
+				//}
 
                 // update the grid
 			    pGrid->Update();
@@ -320,6 +322,17 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
             if(GetMode() == modeREADY)
             {
                 StartInteractiveConnection(CLASSINFO(wxSFCurveShape), event.GetPosition());
+            }
+            else
+                wxSFShapeCanvas::OnLeftDown(event);
+        }
+        break;
+		
+     case MainFrm::modeORTHOLINE:
+        {
+            if(GetMode() == modeREADY)
+            {
+                StartInteractiveConnection(CLASSINFO(wxSFOrthoLineShape), event.GetPosition());
             }
             else
                 wxSFShapeCanvas::OnLeftDown(event);
@@ -428,9 +441,11 @@ void FrameCanvas::OnConnectionFinished(wxSFLineShape* connection)
 {
     if(connection)
     {
-        //connection->SetSrcArrow(CLASSINFO(wxSFOpenArrow));
+		// the line's ending style can be set like this:
         connection->SetTrgArrow(CLASSINFO(wxSFSolidArrow));
-
+        // also wxSFOpenArrow, wxSFDiamondArrow and wxSFCircleArrow styles are available.
+		connection->SetSrcArrow(CLASSINFO(wxSFCircleArrow));
+		
         connection->AcceptChild(wxT("wxSFTextShape"));
         connection->AcceptChild(wxT("wxSFEditTextShape"));
 

@@ -6,6 +6,22 @@
 #include "GUI.h"
 #include "FrameCanvas.h"
 
+// thumbnail frame
+class ThumbFrm : public _ThumbFrm
+{
+public:
+	ThumbFrm(wxWindow *parent);
+	virtual ~ThumbFrm();
+	
+	// public member data accessors
+	wxSFThumbnail* GetThumbnail() {	return m_pThumbnail; }
+	
+protected:
+	// protected data members
+	wxSFThumbnail *m_pThumbnail;
+};
+
+// main application frame
 class MainFrm: public _MainFrm {
 public:
 
@@ -23,6 +39,7 @@ public:
 		modeBITMAP,
 		modeLINE,
 		modeCURVE,
+		modeORTHOLINE,
 		modeGRID,
 		modeFLEXGRID
 	};
@@ -38,6 +55,7 @@ public:
 
 protected:
     FrameCanvas* m_pShapeCanvas;
+	ThumbFrm *m_pThumbFrm;
 
 	wxColourPickerCtrl* cpicker;
 
@@ -45,6 +63,9 @@ protected:
 
 	bool m_fShowGrid;
 	MODE m_nToolMode;
+	
+	// protected function
+	void CleanUp();
 
 	// common events
 	void OnClose(wxCloseEvent& event);

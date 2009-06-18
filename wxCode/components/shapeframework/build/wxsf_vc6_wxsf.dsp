@@ -888,6 +888,10 @@ SOURCE=..\src\CanvasState.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\CircleArrow.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\CircleShape.cpp
 # End Source File
 # Begin Source File
@@ -905,6 +909,10 @@ SOURCE=..\src\CurveShape.cpp
 # Begin Source File
 
 SOURCE=..\src\DiagramManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DiamondArrow.cpp
 # End Source File
 # Begin Source File
 
@@ -941,6 +949,10 @@ SOURCE=..\src\MultiSelRect.cpp
 # Begin Source File
 
 SOURCE=..\src\OpenArrow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\OrthoShape.cpp
 # End Source File
 # Begin Source File
 
@@ -1005,6 +1017,10 @@ SOURCE=..\src\TextShape.cpp
 # Begin Source File
 
 SOURCE=..\src\TextShapeXml.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Thumbnail.cpp
 # End Source File
 # Begin Source File
 

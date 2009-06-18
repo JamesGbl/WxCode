@@ -1,3 +1,41 @@
+Changes in version 1.8.0 beta (2009-06-10):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.2.0:
+  - Added functions void xsProperty::ToString() which returns textual representation of current property value and
+    xsProperty::FromString(const wxString& val) which sets the property value from its textual representation. The functions
+    can be used for indirect manipulating with serialized data members encapsulated by properties (see xsSerializable::GetProperty()).
+  - Added set of type cast functions with data type assertion for indirect manipulation with serialized data members encapsulated
+    by properties. See functions xsProperty::AsInt(), xsProperty::AsDouble(), etc.
+  - Function xsSerializable::AddChild(xsSerializable* child) correctly initializes all children recursively.
+  - Function wxXmlSerializer::SetRootItem(xsSerializable* root) correctly initializes all root's children recursively.
+  - Renamed function xsSerializable::IsCloned() to xsSerializable::IsCloningEnabled().
+  - Declaration of function void wxXmlSerializer::CopyItems(const wxXmlSerializer *src) changed to void wxXmlSerializer::CopyItems(const wxXmlSerializer &src).
+  - Copy contructor of xsSerializable class now clones serialized child items as well recursively.
+
+- Implemented diagram thumbnail (wxSFThumbnail) usefull for previewing and navigating of associated shape canvas.
+- Added orthogonal line shape (wxSFOrthoLineShape). This line consists of subsegments orthogonal to base axis.
+- Added new arrow styles "diamond arrow" (wxSFDiamondArrow) and "circle arrow" (wxSFCircleArrow).
+- Added abbility to set arrows' fill and border style.
+- Added abbility to set line's docking point to its starting (value 'sfdvLINESHAPE_DOCKPOINT_START') or ending
+  (value 'sfdvLINESHAPE_DOCKPOINT_END') point.
+- Added abbility to define custom dock point for each shape used if the shape is assigned as a child to a line shape.
+  See wxSFShapeBase::SetCustomDockPoint(int dp) and wxSFShapeBase::GetCustomDockPoint() fucntions.
+- Added new alignment styles valignLINE_START, valignLINE_END, halignLINE_START and halignLINE_END.
+- Added function void wxSFShapeBase::GetAssignedConnections(wxClassInfo* shapeInfo, wxSFShapeBase::CONNECTMODE mode, ShapeList& lines).
+- Added function void wxSFShapeCanvas::ScrollToShape(wxSFshapeBase *shape) which scrolls the shape canvas so the given
+  shape will be located in its center.
+  calling its equivalent in a diagram manager class.
+- Renamed function wxSFShapeBase::IsInside(const wxPoint& pos) to wxSFShapeBase::Contains(const wxPoint& pos) due to
+  its previous misleading name.
+- Renamed function wxSFShapeHandle::IsInside(const wxPoint& pos) to wxSFShapeHandle::Contains(const wxPoint& pos) due to
+  its previous misleading name.
+- Scale factor of shape canvas containing control shapes can be only "1".
+- Fixed positioning of control shapes (wxSFControlShape) during dragging of their parent shapes.
+- Fixed crash occured when undo/redo operations were used on a shape canvas containing control shapes (wxSFControlShape).
+- Fixed crash occured when NULL pointer was passed to "shapeInfo" parameter of wxSFDiagramManager::AddShape(wxClassInfo* shapeInfo,
+  const wxPoint& pos, bool saveState) function.
+- Fixed scaling of multiple shapes using multi-edit mode.
+
 Changes in version 1.7.2 beta (2009-03-16):
 --------------------------------------------
 - Switched to use wxXmlSerializer 1.1.10:
