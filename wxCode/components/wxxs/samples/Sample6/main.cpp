@@ -24,11 +24,13 @@
 
 class SerializableObject : public xsSerializable
 {
-	// RTTI must be provided
-	DECLARE_DYNAMIC_CLASS(SerializableObject);
+	// RTTI and Clone() function must be provided
+	XS_DECLARE_CLONABLE_CLASS(SerializableObject);
 
 	// constructor
 	SerializableObject();
+	// copy contructor must be provided for cloneability
+	SerializableObject(const SerializableObject& obj);
 	// destructor
 	virtual ~SerializableObject() {;}
 	
@@ -48,11 +50,19 @@ SerializableObject::SerializableObject()
 	XS_SERIALIZE( m_sTextData, wxT("text") );
 }
 
+SerializableObject::SerializableObject(const SerializableObject& obj) : xsSerializable( obj )
+{
+	// initialize member data
+	m_sTextData = obj.m_sTextData;
+	// mark the data members which should be serialized
+	XS_SERIALIZE( m_sTextData, wxT("text") );
+}
+
 // static data member
 int SerializableObject::m_nCounter = 0;
 
-// implementation of RTTI for serializable class
-IMPLEMENT_DYNAMIC_CLASS( SerializableObject, xsSerializable );
+// implementation of RTTI and Clone() function for serializable class
+XS_IMPLEMENT_CLONABLE_CLASS( SerializableObject, xsSerializable );
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Application entry point //////////////////////////////////////////////////////////
@@ -120,8 +130,12 @@ int main( int argc, char ** argv )
 	// now, re-create list of stored class instances from XML file (data.xml)
 	Serializer.DeserializeFromXml( wxT("data.xml") );
 	
+	// if you declare serializable classes as clonable ones (using XS_DECLARE_CLONABLE_CLASS, etc), then you can
+	// simply copy whole serializer's content in this way (or using its copy contructor or wxXmlSerializer::CopyItems() function):
+	wxXmlSerializer Serializer2 = Serializer;
+	
 	// print out info about loaded class instances
-	PrintTree( Serializer.GetRootItem(), 0 );
+	PrintTree( Serializer2.GetRootItem(), 0 );
 	
 	// wait at application's termination
 	pause;

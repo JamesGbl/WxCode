@@ -213,6 +213,13 @@ bool SettingsSampleApp::OnInit()
 	{		// load settings from configuration file
 		m_XmlIO.DeserializeFromXml(wxT("settings.xml"));
 	}
+	
+	// data stored in serializable classes can be also accessed in a standard way via class data members like this:
+	// m_Settings.m_nIntData = 100;
+	// or via properties encapsulating the class members, for example in this way:
+	// m_Settings.GetProperty(wxT("integer_data"))->FromString(wxT("100"));
+	// m_Settings.GetProperty(wxT("integer_data"))->AsInt() = 1024;
+	// wxPrintf( wxT("Value %d\n"), m_Settings.GetProperty(wxT("integer_data"))->AsInt() );
 
     // create and show main application frame
     MainFrame *frame = new MainFrame(NULL);

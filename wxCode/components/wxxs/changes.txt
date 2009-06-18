@@ -1,3 +1,17 @@
+Changes in version 1.2.0 beta (2009-06-11):
+-------------------------------------------
+- Added functions void xsProperty::ToString() which returns textual representation of current property value and
+  xsProperty::FromString(const wxString& val) which sets the property value from its textual representation. The functions
+  can be used for indirect manipulating with serialized data members encapsulated by properties (see xsSerializable::GetProperty()).
+- Added set of type cast functions with data type assertion for indirect manipulation with serialized data members encapsulated
+  by properties. See functions xsProperty::AsInt(), xsProperty::AsDouble(), etc.
+- Function xsSerializable::AddChild(xsSerializable* child) correctly initializes all children recursively.
+- Function wxXmlSerializer::SetRootItem(xsSerializable* root) correctly initializes all root's children recursively.
+- Renamed function xsSerializable::IsCloned() to xsSerializable::IsCloningEnabled().
+- Declaration of function void wxXmlSerializer::CopyItems(const wxXmlSerializer *src) changed to void wxXmlSerializer::CopyItems(const wxXmlSerializer &src).
+- Copy contructor of xsSerializable class now clones serialized child items as well recursively.
+- Updated sample projects.
+
 Changes in version 1.1.10 beta (2009-03-11):
 -------------------------------------------
 - Added two new simple samples (console applications) for demonstration how to use wxXmlSerializer for serialization of user-defined class instances

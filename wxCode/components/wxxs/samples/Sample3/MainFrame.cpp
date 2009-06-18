@@ -47,19 +47,14 @@ void MainFrame::DumpSerializableObject(xsSerializable *obj, wxTextCtrl *memo)
 
 	// get serialized properties maintained by the Setting class
 	xsProperty *prop;
-	xsPropertyIO* ioHandler;
-
 	PropertyList::compatibility_iterator node = obj->GetProperties().GetFirst();
 	while( node )
 	{
 		prop = node->GetData();
-		// get suitable I/O handler for current property (depends on its data type)
-		ioHandler = wxXmlSerializer::GetPropertyIOHandler(prop->m_sDataType);
-		if( ioHandler )
-		{
-			memo->AppendText(wxString::Format(wxT("Property name: %s, Type: %s, Value: %s\n"), prop->m_sFieldName.c_str(), prop->m_sDataType.c_str(), ioHandler->GetValueStr(prop).c_str()));
-		}
-
+		memo->AppendText( wxString::Format( wxT("Property name: %s, Type: %s, Value: %s\n"),
+										    prop->m_sFieldName.c_str(),
+											prop->m_sDataType.c_str(),
+											prop->ToString().c_str() ) );
 		node = node->GetNext();
 	}
 

@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = wxXmlSerializer
-PROJECT_NUMBER         = "1.1.10 beta"
+PROJECT_NUMBER         = "1.2.0 beta"
 OUTPUT_DIRECTORY       = .
 CREATE_SUBDIRS         = YES
 OUTPUT_LANGUAGE        = English
@@ -165,7 +165,7 @@ DOCSET_BUNDLE_ID       = org.doxygen.Project
 HTML_DYNAMIC_SECTIONS  = NO
 CHM_FILE               = wxXmlSerializer.chm
 HHC_LOCATION           = "C:/Program Files/HTML Help Workshop/hhc.exe"
-GENERATE_CHI           = YES
+GENERATE_CHI           = NO
 BINARY_TOC             = NO
 TOC_EXPAND             = NO
 DISABLE_INDEX          = NO
