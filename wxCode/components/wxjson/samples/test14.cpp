@@ -125,6 +125,7 @@ CheckResult( const wxString& jsonText, const wxChar* result )
 //
 // style wxJSONWRITER_NONE (strict JSON)
 // aug 2008: test is succesfull in both ANSI and Unicode 
+// jun 2009: test is succesfull in both ANSI and Unicode 
 //
 int Test65()
 {
@@ -145,7 +146,7 @@ int Test65()
 		"true,"          // boolean value=TRUE
 		"false,"         // boolean value=FALSE
 		"null,"          // null value=NULL
-		"\"A\\\n\\\tmultiline\\\n\\\tstring\""
+		"\"A\\n\\tmultiline\\n\\tstring\""
 					// multiline string LF and TAB
 		"]");
 
@@ -167,6 +168,7 @@ int Test65()
 //
 // style wxJSONWRITER_STYLED (strict JSON using indentation and LF between values)
 // aug 2008: test is succesfull in both ANSI and Unicode 
+// jun 2009: test is succesfull in both ANSI and Unicode 
 //
 int Test66()
 {
@@ -187,7 +189,7 @@ int Test66()
 		"   true,\n"		// boolean value=TRUE
 		"   false,\n"		// boolean value=FALSE
 		"   null,\n"		// null value=NULL
-		"   \"A\\\n\\\tmultiline\\\n\\\tstring\"\n"
+		"   \"A\\n\\tmultiline\\n\\tstring\"\n"
 					// multiline string LF and TAB
 		"]\n");
 
@@ -210,6 +212,7 @@ int Test66()
 // style wxJSONWRITER_WRITE_COMMENTS (not strict JSON)
 // comment are written in the position they apear (INLINE)
 // aug 2008: test is succesfull in both ANSI and Unicode 
+// jun 2009: test is succesfull in both ANSI and Unicode 
 //
 int Test67()
 {
@@ -230,7 +233,7 @@ int Test67()
 		"   true, // boolean value=TRUE\n"
 		"   false, // boolean value=FALSE\n"
 		"   null, // null value=NULL\n"
-		"   \"A\\\n\\\tmultiline\\\n\\\tstring\""
+		"   \"A\\n\\tmultiline\\n\\tstring\""
 				" // multiline string LF and TAB\n"
 		"]\n");
 
@@ -253,29 +256,30 @@ int Test67()
 
 //
 // style wxJSONWRITER_NO_LINEFEEDS (strict JSON)
-// this is the same as wxJSONWRITER_NONE
+// note that the wxJSONWIRTER_STYLED flag must also be set
 // aug 2008: test sucessfull 
+// jun 2009: test sucessfull 
 //
 int Test68()
 {
-  // expected result
+  // expected result: LF are suppressed between values but the indentation remains
   static const wxChar* result = _T( "["
-		"\"a string\","  // a string object
-		"\"C string\","  /* a pointer to static string (C-style)*/
-		"100,"           // short integer value=100
-		"-100,"          /* negative short value=-100 (C-style) */
-		"110,"           // unsigned short value=110
-		"100000,"        // long integer value=100.000
-		"-100000,"       // negative long value=-100.000
-		"110000,"        // unsigned long value=110.000
-		"2147483657,"    // wxInt64 value=2147483657
-		"-2147483658,"   // wxInt64 value=-2147483658
-		"4294967405,"    // wxUint64 value=42944867405
-		"90.300000,"     // double value=90.30
-		"true,"          // boolean value=TRUE
-		"false,"         // boolean value=FALSE
-		"null,"          // null value=NULL
-		"\"A\\\n\\\tmultiline\\\n\\\tstring\""
+		"   \"a string\","  // a string object
+		"   \"C string\","  /* a pointer to static string (C-style)*/
+		"   100,"           // short integer value=100
+		"   -100,"          /* negative short value=-100 (C-style) */
+		"   110,"           // unsigned short value=110
+		"   100000,"        // long integer value=100.000
+		"   -100000,"       // negative long value=-100.000
+		"   110000,"        // unsigned long value=110.000
+		"   2147483657,"    // wxInt64 value=2147483657
+		"   -2147483658,"   // wxInt64 value=-2147483658
+		"   4294967405,"    // wxUint64 value=42944867405
+		"   90.300000,"     // double value=90.30
+		"   true,"          // boolean value=TRUE
+		"   false,"         // boolean value=FALSE
+		"   null,"          // null value=NULL
+		"   \"A\\n\\tmultiline\\n\\tstring\""
 					// multiline string LF and TAB
 		"]");
 
@@ -284,7 +288,11 @@ int Test68()
   StoreValue1( v );
 
   wxString jsonText;
-  wxJSONWriter writer( wxJSONWRITER_NO_LINEFEEDS );
+
+  // if you do not specify wxJSONWRITER_STYLED the flag has no effect
+  // wxJSONWriter writer( wxJSONWRITER_NO_LINEFEEDS );
+
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_LINEFEEDS );
   writer.Write( v, jsonText );
 
   // now check the difference between the JSON text output and the
@@ -296,8 +304,9 @@ int Test68()
 
 //
 // style wxJSONWRITER_SPLIT_STRING (not strict JSON)
-// strings that exceed column 75 are splitted into two or more lines
+// strings that contains LF are splitted into two or more lines
 // aug 2008: test successfull in both ANSI and Unicode
+// jun 2009: test successfull in both ANSI and Unicode
 int Test69()
 {
   // expected result
@@ -317,8 +326,9 @@ int Test69()
 		"   true,\n"		// boolean value=TRUE
 		"   false,\n"		// boolean value=FALSE
 		"   null,\n"		// null value=NULL
-		"   \"A\\\n\\\tmultiline\\\n\\\tstring\"\n"
-			      // multiline string LF and TAB
+		"   \"A\\n\"\n"
+		"         \"\\tmultiline\\n\"\n"
+		"         \"\\tstring\"\n"		// multiline string LF and TAB
 		"]\n");
 
   int r;
@@ -341,6 +351,7 @@ int Test69()
 // style wxJSONWRITER_MULTILINE_STRING (not strict JSON)
 // LFs and TABs are not escaped in string values
 // aug 2008: test is succesfull in both ANSI and Unicode 
+// jun 2009: test is succesfull in both ANSI and Unicode 
 int Test70()
 {
   // expected result

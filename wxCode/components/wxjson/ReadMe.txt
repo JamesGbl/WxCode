@@ -111,7 +111,7 @@
 
 
  1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
- 	(r 948)	fixed the bug - see the Bug Tracker on sf.net
+ 	(r 951)	fixed the bug - see the Bug Tracker on sf.net
 
 
  1.1   the new feature is the internal reorganization of the writer and reader class which
