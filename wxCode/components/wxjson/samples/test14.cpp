@@ -402,12 +402,12 @@ int Test71()
 	"   \"A very long string that cause the wxJSONWriter to split it into several \"\n"
 		"         \"lines if wxJSONWRITER_SPLIT_STRING flag is set\",\n"
 
- 	"   \"A very long string that contains LF\\\n"
-		"so that it will not be splitted because column 75\\\n"
-		"is not exceeded\",\n"
-
-  	"   \"A very long string that cause the wxJSONWriter to split it into "
-		"several lines\",\n"
+ 	"   \"A very long string that contains LF\\n\"\n"
+		"         \"so that it will not be splitted because column 75\\n\"\n"
+		"         \"is not exceeded\",\n"
+//	           1         2         3         4         5         6         7
+//	 1234 56789.123456789.123456789.123456789.123456789.123456789.123456789.12345
+  	"   \"A very long string that cause the wxJSONWriter to split it into several lines\",\n"
 
 	"   \"A very long string that cause the wxJSONWriter to split at column 79 where \"\n"
 		"         \"a space character is encontered\"\n"
@@ -516,7 +516,7 @@ int Test73()
 		"\ttrue,\n"		// boolean value=TRUE
 		"\tfalse,\n"		// boolean value=FALSE
 		"\tnull,\n"		// null value=NULL
-		"\t\"A\\\n\\\tmultiline\\\n\\\tstring\"\n"
+		"\t\"A\\n\\tmultiline\\n\\tstring\"\n"
 					// multiline string LF and TAB
 		"]\n");
 
