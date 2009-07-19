@@ -1,6 +1,7 @@
 Latest information:
 ===================
 
+* 2009-07-19 : new release (maintenance release)
 * 2008-12-05 : new release (fixed several crashes --upgrade recommended)
 * 2008-07-21 : new release (important fixes & enhancements to: events, selection, delete --upgrade recommended)
 * 2008-06-18 : new release (minor changes only)
@@ -10,6 +11,10 @@ Latest information:
 
 Release History:
 ================
+
+* treelistctrl_2009-07-19.tar.gz
+  - Fixed: GetPrev() not working at all [#2691182]
+  - Changed: reduced flickering [feature #2460180]
 
 * treelistctrl_2008-12-05.tar.gz
   - Fixed: non-compliant declarations in class wxTreeListMainWindow [#2051640]
@@ -57,4 +62,4 @@ Release History:
 Known problems:
 ===============
 
-Possibly (not reviewed / confirmed): old bugs #1811335, #1583135, #1488235
+- Bug #2815443 : Edit control does not move with columns
