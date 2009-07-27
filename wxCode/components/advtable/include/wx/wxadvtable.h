@@ -66,6 +66,8 @@ WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual
 WX_DECLARE_HASH_MAP(int, wxAdvTableCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellEditorMap);
 
 
+#define UNDEF_SIZE (size_t) -1
+
 /**
  * Table cell coordinate.
  */
@@ -95,7 +97,7 @@ public:
 
 	bool IsSet()
 	{
-		return (m_row != (size_t) -1) && (m_col != (size_t) -1);
+		return (m_row != UNDEF_SIZE) && (m_col != UNDEF_SIZE);
 	}
 
 	void Unset()
@@ -168,7 +170,7 @@ public:
 
 	void Unset()
 	{
-		Set((size_t) -1, (size_t) -1, (size_t) -1, (size_t) -1);
+		Set(UNDEF_SIZE, UNDEF_SIZE, UNDEF_SIZE, UNDEF_SIZE);
 	}
 
 	/**
@@ -194,12 +196,12 @@ public:
 private:
 	size_t min(size_t a, size_t b)
 	{
-		size_t m = MIN(a, b);
-		if (m == (size_t) -1) {
-			if (a != (size_t) -1) {
+		size_t m = wxMin(a, b);
+		if (m == UNDEF_SIZE) {
+			if (a != UNDEF_SIZE) {
 				m = a;
 			}
-			else if (b != (size_t) -1) {
+			else if (b != UNDEF_SIZE) {
 				m = b;
 			}
 		}
@@ -208,12 +210,12 @@ private:
 
 	size_t max(size_t a, size_t b)
 	{
-		size_t m = MAX(a, b);
-		if (m == (size_t) -1) {
-			if (a != (size_t) -1) {
+		size_t m = wxMax(a, b);
+		if (m == UNDEF_SIZE) {
+			if (a != UNDEF_SIZE) {
 				m = a;
 			}
-			else if (b != (size_t) -1) {
+			else if (b != UNDEF_SIZE) {
 				m = b;
 			}
 		}
@@ -298,6 +300,10 @@ public:
 	virtual void TableChanged() = 0;
 };
 
+//
+// Table data models.
+//
+
 /**
  * Model for wxAdvTable data, such as cell values, formats.
  */
@@ -325,7 +331,7 @@ protected:
 };
 
 /**
- * Simpliest table model for wxAdvTable.
+ * Simplest table model for wxAdvTable.
  * Stores data as strings, all cells have string format.
  */
 class WXDLLEXPORT wxAdvStringTableDataModel : public wxAdvTableDataModel
@@ -397,9 +403,41 @@ private:
 	bool m_needUpdate;
 };
 
+
 //
 // Renderers
 //
+
+/**
+ * Draws header cell content.
+ */
+class WXDLLEXPORT wxAdvHdrTableCellRenderer
+{
+public:
+	wxAdvHdrTableCellRenderer();
+	virtual ~wxAdvHdrTableCellRenderer();
+
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection) = 0;
+
+	/**
+	 * Returns copy of this renderer.
+	 */
+	virtual wxAdvHdrTableCellRenderer *Clone() = 0;
+};
+
+/**
+ * Standard header cell renderer.
+ */
+class WXDLLEXPORT wxAdvDefaultHdrTableCellRenderer : public wxAdvHdrTableCellRenderer
+{
+public:
+	wxAdvDefaultHdrTableCellRenderer();
+	virtual ~wxAdvDefaultHdrTableCellRenderer();
+
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection);
+
+	virtual wxAdvHdrTableCellRenderer *Clone();
+};
 
 /**
  * Draws cell content.
@@ -450,7 +488,7 @@ public:
 };
 
 //
-// Editors
+// Table data editors.
 //
 
 /**
@@ -553,6 +591,9 @@ protected:
 	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
 };
 
+/**
+ * Editor for interval numeric data. Uses wxSpinCtrl for editing.
+ */
 class WXDLLEXPORT wxAdvIntervalTableCellEditor : public wxAdvTableCellEditor
 {
 public:
@@ -627,6 +668,7 @@ const int undefinedSize = 0;
 class WXDLLEXPORT wxAdvHdrCell
 {
 	friend class wxAdvTable;
+	friend class wxAdvDefaultHdrTableCellRenderer;
 public:
 
 	wxAdvHdrCell(const wxAdvHdrCell &o)
@@ -641,6 +683,13 @@ public:
 		m_verticalText = o.m_verticalText;
 		m_sortable = o.m_sortable;
 
+		if (o.m_renderer != NULL) {
+			m_renderer = o.m_renderer->Clone();
+		}
+		else {
+			m_renderer = NULL;
+		}
+
 		// copy internals
 		m_rc = o.m_rc;
 		m_index = o.m_index;
@@ -651,29 +700,18 @@ public:
 	wxAdvHdrCell(const wxChar *label = wxT(""))
 	{
 		m_label = label;
-		m_size = undefinedSize;
-		m_alignVertical = wxALIGN_TOP;
-		m_alignHorizontal = wxALIGN_CENTER;
-		m_spacing = 5;
-		m_verticalText = false;
-		m_sortable = false;
-		m_isDecomp = false;
+		SetDefaults();
 	}
 
 	wxAdvHdrCell(wxString &label)
 	{
 		m_label = label;
-		m_size = undefinedSize;
-		m_alignVertical = wxALIGN_TOP;
-		m_alignHorizontal = wxALIGN_CENTER;
-		m_spacing = 5;
-		m_verticalText = false;
-		m_sortable = false;
-		m_isDecomp = false;
+		SetDefaults();
 	}
 
 	virtual ~wxAdvHdrCell()
 	{
+		SAFE_DELETE(m_renderer);
 	}
 
 	/**
@@ -743,6 +781,11 @@ public:
 		return *this;
 	}
 
+	void Renderer(wxAdvHdrTableCellRenderer *renderer)
+	{
+		SAFE_REPLACE(m_renderer, renderer);
+	}
+
 	wxAdvHdrCell &Spacing(wxCoord spacing)
 	{
 		m_spacing = spacing;
@@ -751,8 +794,7 @@ public:
 
 	wxSize CalcExtent(wxDC &dc)
 	{
-		// TODO add support for multiline text
-		wxSize extent = dc.GetTextExtent(m_label);
+		wxSize extent = dc.GetMultiLineTextExtent(m_label);
 
 		extent.IncBy(2 * m_spacing);
 
@@ -871,6 +913,19 @@ private:
 		}
 	}
 
+	void SetDefaults()
+	{
+		m_size = undefinedSize;
+		m_alignVertical = wxALIGN_TOP;
+		m_alignHorizontal = wxALIGN_CENTER;
+		m_spacing = 5;
+		m_verticalText = false;
+		m_sortable = false;
+		m_isDecomp = false;
+
+		m_renderer = NULL;
+	}
+
 	wxAdvHdrCellArray m_subCells;
 	wxString m_label;
 	wxCoord m_size;
@@ -883,6 +938,8 @@ private:
 	bool m_verticalText;
 
 	bool m_sortable;
+
+	wxAdvHdrTableCellRenderer *m_renderer;
 
 	//
 	// used internally by wxAdvTable
@@ -900,7 +957,6 @@ private:
  *
  * Features:
  * - composite rows/columns.
- * - cell concatenations.
  * - sorting and filtering.
  * - MCV design (designed after Java(tm) JTable classes).
  *   Data accesed through wxAdvTableModel, renderered by wxAdvTableCellRenderer, edited by wxAdvTableCellEditor
@@ -931,7 +987,7 @@ public:
 	};
 
 	enum SortDirection {
-		Ascending, Descending,
+		Ascending, Descending, NoSorting
 	};
 
 	wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
@@ -1005,33 +1061,63 @@ public:
 	void RemoveCols(size_t from, size_t to);
 */
 
+	/**
+	 * Sets headers (row, column, corner header) show params.
+	 * @param showRows true if you wish to rows header to be shown
+	 * @param showCols true if you wish to cols header to be shown
+	 * @param showCorner true if you wish to corner header to be shown
+	 */
 	void SetShowHeaders(bool showRows, bool showCols, bool showCorner);
 
+	/**
+	 * Sets whether to show rows header.
+	 * @param showRows true if you wish to rows header to be shown
+	 */
 	void SetShowRows(bool showRows)
 	{
 		SetShowHeaders(showRows, m_showCols, m_showCorner);
 	}
 
+	/**
+	 * Returns true, if rows header is shown.
+	 * @return true, if rows header is shown.
+	 */
 	bool GetShowRows()
 	{
 		return m_showRows;
 	}
 
+	/**
+	 * Sets whether to show columns header.
+	 * @param showCols true if you wish to columns header to be shown
+	 */
 	void SetShowCols(bool showCols)
 	{
 		SetShowHeaders(m_showRows, showCols, m_showCorner);
 	}
 
+	/**
+	 * Returns true, if columns header is shown.
+	 * @return true, if columns header is shown.
+	 */
 	bool GetShowCols()
 	{
 		return m_showCols;
 	}
 
+	/**
+	 * Sets whether to show table corner.
+	 * @param showCorner true if you wish to corner to be shown
+	 */
 	void SetShowCorner(bool showCorner)
 	{
 		SetShowHeaders(m_showRows, m_showCols, showCorner);
 	}
 
+	/**
+	 * Returns true, if table corner is shown.
+	 * @return true, if table corner is shown.
+	 */
 	bool GetShowCorner()
 	{
 		return m_showCorner;
@@ -1147,6 +1233,13 @@ public:
 	 * @param renderer new default renderer
 	 */
 	void SetDefaultRenderer(wxAdvTableCellRenderer *renderer);
+
+	/**
+	 * Sets default renderer to draw cell values.
+	 * wxAdvTable takes ownership over renderer.
+	 * @param renderer new default renderer
+	 */
+	void SetDefaultHdrRenderer(wxAdvHdrTableCellRenderer *renderer);
 
 	/**
 	 * Returns table cell value.
@@ -1344,11 +1437,6 @@ public:
 
 	void GetRangeRect(wxRect &rc, size_t row1, size_t col1, size_t row2, size_t col2);
 
-	/**
-	 * wxWindow override.
-	 */
-	virtual void Update();
-
 	//
 	// wxAdvTableDataModelObserver
 	//
@@ -1365,6 +1453,7 @@ private:
 	void OnKeyDown(wxKeyEvent &ev);
 	void OnKillFocus(wxFocusEvent &ev);
 	void OnSize(wxSizeEvent &ev);
+	void OnScrollWin(wxScrollWinEvent &ev);
 
 	void HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell);
 	void HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col);
@@ -1496,7 +1585,10 @@ private:
 	wxBrush m_focusedBgBrush;
 	wxBrush m_highlightedBgBrush;
 
+	// table data model
 	wxAdvTableDataModel *m_model;
+
+	wxAdvHdrTableCellRenderer *m_defaultHdrRenderer;
 
 	wxAdvTableCellRenderer *m_defaultRenderer;
 	wxAdvTableCellRendererMap m_renderers;
@@ -1518,11 +1610,10 @@ private:
 	wxAdvHdrCell *m_pressedHdrCell;
 	wxAdvHdrCell *m_currentHdrCell;
 
+	// backbuffers for rows, columns header parts, and for table content
 	wxBitmap m_backBitmap;
 	wxBitmap m_backBitmapRows;
 	wxBitmap m_backBitmapCols;
-
-	bool m_needRedraw;
 
 	DECLARE_EVENT_TABLE()
 	DECLARE_CLASS(wxAdvTable)

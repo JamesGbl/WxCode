@@ -296,11 +296,11 @@ make_sample_dir_wxadvtable_sample:
 	@mkdir -p ../samples
 
 tarball: 
-	make distclean
+	make clean
 	( cd ../.. && tar -cvzf advtable.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" advtable/* )
 
 zip: clean
-	del ../../advtable.zip
+	rm ../../advtable.zip
 	( cd ../.. && zip -r9 advtable.zip advtable -x "*.pdb" -x "*.log" -x "*.o*" )
 
 docs: 

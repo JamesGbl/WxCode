@@ -16,18 +16,6 @@
 #define NULL 0
 #endif /* NULL */
 
-#ifndef ABS
-#define ABS(a) ((a) < 0) ? (-1*(a)) : (a)
-#endif
-
-#ifndef MAX
-#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef MIN
-#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
-
 #ifndef N
 #define N(arr) (sizeof(arr) / sizeof(*arr))
 #endif /* N */

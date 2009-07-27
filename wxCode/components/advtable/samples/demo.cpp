@@ -32,7 +32,7 @@ IMPLEMENT_APP(DemoApp);
 
 //
 // ControlPanel
-// Is control to set various properties to wxAdvTable
+// GUI to set various properties to wxAdvTable
 //
 
 #define ADD_FIELD(parent, sizer, label, ctrl) do {			\
@@ -72,9 +72,13 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	choicesSelectMode.Add(wxT("SelectRows"));
 	choicesSelectMode.Add(wxT("SelectCols"));
 	choicesSelectMode.Add(wxT("SelectBlock"));
-	ADD_FIELD(this, choiceSizer, wxT("Select mode"),
-			new wxChoice(this, CHOICE_SELECT_MODE, wxDefaultPosition, wxDefaultSize,
-					choicesSelectMode));
+
+	wxChoice *choiceSelectMode = new wxChoice(this, CHOICE_SELECT_MODE, wxDefaultPosition, wxDefaultSize,
+			choicesSelectMode);
+	ADD_FIELD(this, choiceSizer, wxT("Select mode"), choiceSelectMode);
+
+	advTable->SetSelectMode(wxAdvTable::SelectCell);
+	choiceSelectMode->SetSelection(0);
 
 	// highlight mode choices
 	wxArrayString choicesHighlightMode;
@@ -82,24 +86,31 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	choicesHighlightMode.Add(wxT("HighlightRows"));
 	choicesHighlightMode.Add(wxT("HighlightCols"));
 	choicesHighlightMode.Add(wxT("HighlightBoth"));
-	ADD_FIELD(this, choiceSizer, wxT("Highlight mode"),
-			new wxChoice(this, CHOICE_HIGHLIGHT_MODE, wxDefaultPosition, wxDefaultSize,
-					choicesHighlightMode));
+
+	wxChoice *choiceHighlightMode = new wxChoice(this, CHOICE_HIGHLIGHT_MODE, wxDefaultPosition, wxDefaultSize,
+			choicesHighlightMode);
+	ADD_FIELD(this, choiceSizer, wxT("Highlight mode"), choiceHighlightMode);
+
+	advTable->SetHighlightMode(wxAdvTable::HighlightNone);
+	choiceHighlightMode->SetSelection(0);
 
 	sizer->Add(choiceSizer,
 			0, wxEXPAND);
 
+	// create "show rows" checkbox
 	wxCheckBox *checkBox;
 	checkBox = new wxCheckBox(this, CHECK_SHOW_ROWS, wxT("Show rows"), wxDefaultPosition, wxDefaultSize);
 	checkBox->SetValue(m_advTable->GetShowRows());
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
+	// create "show columns" checkbox
 	checkBox = new wxCheckBox(this, CHECK_SHOW_COLS, wxT("Show columns"), wxDefaultPosition, wxDefaultSize);
 	checkBox->SetValue(m_advTable->GetShowCols());
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
+	// create "show corner" checkbox
 	checkBox = new wxCheckBox(this, CHECK_SHOW_CORNER, wxT("Show corner"), wxDefaultPosition, wxDefaultSize);
 	checkBox->SetValue(m_advTable->GetShowCorner());
 	sizer->Add(checkBox,
@@ -197,12 +208,15 @@ MainFrame::MainFrame()
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
+	// create wxAdvTable
 	m_advTable = new wxAdvTable(this, wxID_ANY);
 	auiManager->AddPane(m_advTable, wxAuiPaneInfo().Center().Caption(wxT("wxAdvTable")).CloseButton(false));
 
+	// create control panel, used to set table properties
 	m_controlPanel = new ControlPanel(this, m_advTable);
 	auiManager->AddPane(m_controlPanel, wxAuiPaneInfo().Left().Caption(wxT("Control")).CloseButton(false));
 
+	// create log window
 	wxTextCtrl *logCtrl = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize,
 			wxTE_MULTILINE | wxTE_READONLY);
 	auiManager->AddPane(logCtrl, wxAuiPaneInfo().Bottom().Caption(wxT("Messages")).CloseButton(false).MinSize(500, 200));
@@ -239,7 +253,7 @@ void MainFrame::OnAbout(wxCommandEvent &ev)
 	about.SetName(wxT("wxAdvTable demo"));
 	about.SetVersion(wxT("1.0"));
 	about.SetDescription(wxT("This demo shows wxAdvTable features"));
-	about.SetCopyright(wxT("(C) 2008 Moskvichev Andrey V."));
+	about.SetCopyright(wxT("(C) 2008-2009 Moskvichev Andrey V."));
 
 	wxAboutBox(about);
 }
@@ -302,7 +316,8 @@ void MainFrame::CreateTableStructure()
 			wxAdvHdrCell::GetDecompCellCount(cols, N(cols)),
 			false);
 
-	//
+	// create table
+	// we pass our rows and columns definition and table data model to it
 	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
 
 	m_advTable->SetSelectMode(wxAdvTable::SelectCell);
