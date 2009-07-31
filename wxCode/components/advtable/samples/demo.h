@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
-// Copyright:   (c) 2008 Moskvichev A.V.
+// Copyright:   (c) 2008-2009 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +36,9 @@ private:
 	void OnCheckShowRows(wxCommandEvent &ev);
 	void OnCheckShowCols(wxCommandEvent &ev);
 	void OnCheckShowCorner(wxCommandEvent &ev);
+
+	void OnSpinCtrlGridWidth(wxSpinEvent &ev);
+	void OnSpinCtrlFocusedWidth(wxSpinEvent &ev);
 
 	wxAdvTable *m_advTable;
 

@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
-// Copyright:   (c) 2008 Moskvichev A.V.
+// Copyright:   (c) 2008-2009 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,7 @@
 #include "observable.h"
 #include "wxadvtabledefs.h"
 
+// iterate through all hdrCell in array
 #define FOREACH_HDRCELL(n, hdrCells) for (size_t n = 0; n < hdrCells.GetCount(); n++)
 
 //
@@ -52,8 +53,8 @@ class wxAdvHdrCell;
 class wxAdvCoord;
 class wxAdvRange;
 class wxAdvCellAttribute;
-class wxAdvTableCellRenderer;
-class wxAdvTableCellEditor;
+class wxAdvCellRenderer;
+class wxAdvCellEditor;
 
 // arrays/maps declarations
 WX_DECLARE_EXPORTED_OBJARRAY(wxArrayString, wxArrayArrayString);
@@ -62,8 +63,8 @@ WX_DECLARE_EXPORTED_OBJARRAY(wxAdvHdrCell *, wxAdvHdrCellPtrArray);
 WX_DECLARE_EXPORTED_OBJARRAY(wxAdvRange, wxAdvRangeArray);
 WX_DECLARE_EXPORTED_OBJARRAY(wxCoord, wxCoordArray);
 WX_DECLARE_EXPORTED_OBJARRAY(size_t, wxIndexArray);
-WX_DECLARE_HASH_MAP(int, wxAdvTableCellRenderer *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellRendererMap);
-WX_DECLARE_HASH_MAP(int, wxAdvTableCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvTableCellEditorMap);
+WX_DECLARE_HASH_MAP(int, wxAdvCellRenderer *, wxIntegerHash, wxIntegerEqual, wxAdvCellRendererMap);
+WX_DECLARE_HASH_MAP(int, wxAdvCellEditor *, wxIntegerHash, wxIntegerEqual, wxAdvCellEditorMap);
 
 
 #define UNDEF_SIZE (size_t) -1
@@ -83,6 +84,9 @@ public:
 	{
 	}
 
+	/**
+	 * Sets coordinate.
+	 */
 	void Set(size_t row, size_t col)
 	{
 		m_row = row;
@@ -102,8 +106,8 @@ public:
 
 	void Unset()
 	{
-		m_row = (size_t) -1;
-		m_col = (size_t) -1;
+		m_row = UNDEF_SIZE;
+		m_col = UNDEF_SIZE;
 	}
 
 	bool Equal(size_t row, size_t col)
@@ -111,11 +115,19 @@ public:
 		return (m_row == row) && (m_col == col);
 	}
 
+	/**
+	 * Returns row index.
+	 * @return row index
+	 */
 	size_t Row()
 	{
 		return m_row;
 	}
 
+	/**
+	 * Returns column index.
+	 * @return column index
+	 */
 	size_t Col()
 	{
 		return m_col;
@@ -130,8 +142,6 @@ private:
  */
 class WXDLLEXPORT wxAdvRange
 {
-	friend class wxAdvTable;
-
 public:
 	wxAdvRange()
 	{
@@ -162,15 +172,25 @@ public:
 
 	void Set(size_t row1, size_t col1, size_t row2, size_t col2)
 	{
-		m_row1 = min(row1, row2);
-		m_col1 = min(col1, col2);
-		m_row2 = max(row1, row2);
-		m_col2 = max(col1, col2);
+		m_row1 = row1;
+		m_col1 = col1;
+		m_row2 = row2;
+		m_col2 = col2;
 	}
 
 	void Unset()
 	{
 		Set(UNDEF_SIZE, UNDEF_SIZE, UNDEF_SIZE, UNDEF_SIZE);
+	}
+
+	/**
+	 * Checks whether range coordinates is set
+	 * @return true if range coordinates is set
+	 */
+	bool IsSet()
+	{
+		return (m_row1 != UNDEF_SIZE) && (m_col1 != UNDEF_SIZE) &&
+				(m_row2 != UNDEF_SIZE) && (m_col2 != UNDEF_SIZE);
 	}
 
 	/**
@@ -181,8 +201,22 @@ public:
 	 */
 	bool Contains(size_t row, size_t col)
 	{
-		return (row >= m_row1 && row <= m_row2) &&
-				(col >= m_col1 && col <= m_col2);
+		return (row >= TopRow() && row <= BottomRow()) &&
+				(col >= LeftCol() && col <= RightCol());
+	}
+
+	/**
+	 * Checks whether this range is equals to other range.
+	 * @param row1 first row index
+	 * @param col1 first column index
+	 * @param row2 second row index
+	 * @param col2 second column index
+	 * @return true if this range is equals to other range
+	 */
+	bool Equals(size_t row1, size_t col1, size_t row2, size_t col2)
+	{
+		return (m_row1 == row1) && (m_col1 == col1)
+				&& (m_row2 == row2) && (m_col2 == col2);
 	}
 
 	void operator = (const wxAdvRange &o)
@@ -191,6 +225,46 @@ public:
 		m_col1 = o.m_col1;
 		m_row2 = o.m_row2;
 		m_col2 = o.m_col2;
+	}
+
+	size_t Row1()
+	{
+		return m_row1;
+	}
+
+	size_t Row2()
+	{
+		return m_row2;
+	}
+
+	size_t Col1()
+	{
+		return m_col1;
+	}
+
+	size_t Col2()
+	{
+		return m_col2;
+	}
+
+	size_t TopRow()
+	{
+		return min(m_row1, m_row2);
+	}
+
+	size_t BottomRow()
+	{
+		return max(m_row1, m_row2);
+	}
+
+	size_t LeftCol()
+	{
+		return min(m_col1, m_col2);
+	}
+
+	size_t RightCol()
+	{
+		return max(m_col1, m_col2);
 	}
 
 private:
@@ -313,16 +387,56 @@ public:
 	wxAdvTableDataModel();
 	virtual ~wxAdvTableDataModel();
 
+	/**
+	 * Returns cell value in string representation.
+	 * @param row row index
+	 * @param col column index
+	 * @return cell value
+	 */
 	virtual wxString GetCellValue(size_t row, size_t col) = 0;
 
+	/**
+	 * Sets new cell value.
+	 * @param row row index
+	 * @param col column index
+	 * @param cell value in string representation
+	 * @return true if cell value is set
+	 */
 	virtual bool SetCellValue(size_t row, size_t col, wxString value) = 0;
 
+	/**
+	 * Returns cell value format.
+	 * @param row row index
+	 * @param col column index
+	 * @return cell value format
+	 */
 	virtual int GetCellFormat(size_t row, size_t col) = 0;
 
+	/**
+	 * Check whether cell is editable.
+	 * @param row row index
+	 * @param col column index
+	 * @return true if cell is editable
+	 */
 	virtual bool IsCellEditable(size_t row, size_t col) = 0;
 
+	/**
+	 * Returns cell attribute.
+	 * Cell attribute is graphical properties such as
+	 * font, text color, alignment, etc.
+	 * @param row row index
+	 * @param col column index
+	 * @return true if cell is editable
+	 */
 	virtual wxAdvCellAttribute *GetCellAttribute(size_t row, size_t col) = 0;
 
+	/**
+	 * Returns cell value as double.
+	 * NOTE: not all values can be accessed this way.
+	 * @param row row index
+	 * @param col column index
+	 * @return cell value
+	 */
 	virtual double GetCellValueDouble(size_t row, size_t col);
 
 protected:
@@ -337,7 +451,14 @@ protected:
 class WXDLLEXPORT wxAdvStringTableDataModel : public wxAdvTableDataModel
 {
 public:
-	wxAdvStringTableDataModel(size_t _numRows, size_t _numCols, bool _readOnly);
+	/**
+	 * Constructs new wxAdvStringTableDataModel.
+	 * @param numRows number of rows
+	 * @param numCols number of column
+	 * @param readOnly if true - all cell will read-only,
+	 * 				   false - all cells editable
+	 */
+	wxAdvStringTableDataModel(size_t numRows, size_t numCols, bool readOnly);
 	virtual ~wxAdvStringTableDataModel();
 
 	virtual wxString GetCellValue(size_t row, size_t col);
@@ -356,12 +477,14 @@ private:
 	bool m_readOnly;
 
 	wxArrayArrayString m_data;
-	wxAdvCellAttribute m_defaultCellAttribute;
 };
 
 /**
+ * Filter table model.
  * Stores data in double array of strings, and updates it when underlaying model
  * data has been changed.
+ * This type of model can be used as cache, for example to cache data accessed from
+ * database, or another storage with long access time.
  */
 class WXDLLEXPORT wxAdvFilterTableDataModel : public wxAdvTableDataModel, public wxAdvTableDataModelObserver
 {
@@ -405,56 +528,75 @@ private:
 
 
 //
-// Renderers
+// Renderers.
 //
 
 /**
  * Draws header cell content.
  */
-class WXDLLEXPORT wxAdvHdrTableCellRenderer
+class WXDLLEXPORT wxAdvHdrCellRenderer
 {
 public:
-	wxAdvHdrTableCellRenderer();
-	virtual ~wxAdvHdrTableCellRenderer();
+	wxAdvHdrCellRenderer();
+	virtual ~wxAdvHdrCellRenderer();
 
+	/**
+	 * Called to draw header cell.
+	 * @param table wxAdvTable
+	 * @param dc device context
+	 * @param hdrCell header cell to draw
+	 * @param selected true if header cell is selected
+	 * @param pressed true if header cell is pressed
+	 * @param sortDirection sort direction
+	 */
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection) = 0;
 
 	/**
 	 * Returns copy of this renderer.
 	 */
-	virtual wxAdvHdrTableCellRenderer *Clone() = 0;
+	virtual wxAdvHdrCellRenderer *Clone() = 0;
 };
 
 /**
  * Standard header cell renderer.
  */
-class WXDLLEXPORT wxAdvDefaultHdrTableCellRenderer : public wxAdvHdrTableCellRenderer
+class WXDLLEXPORT wxAdvDefaultHdrCellRenderer : public wxAdvHdrCellRenderer
 {
 public:
-	wxAdvDefaultHdrTableCellRenderer();
-	virtual ~wxAdvDefaultHdrTableCellRenderer();
+	wxAdvDefaultHdrCellRenderer();
+	virtual ~wxAdvDefaultHdrCellRenderer();
 
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection);
 
-	virtual wxAdvHdrTableCellRenderer *Clone();
+	virtual wxAdvHdrCellRenderer *Clone();
 };
 
 /**
  * Draws cell content.
  */
-class WXDLLEXPORT wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvCellRenderer
 {
 public:
-	wxAdvTableCellRenderer();
-	virtual ~wxAdvTableCellRenderer();
+	wxAdvCellRenderer();
+	virtual ~wxAdvCellRenderer();
 
+	/**
+	 * Called to draw header cell.
+	 * @param table wxAdvTable
+	 * @param dc device context
+	 * @param rc cell rectangle
+	 * @param value cell value
+	 * @param selected true if cell is selected
+	 * @param pressed true if cell is pressed
+	 * @param attr cell attribute
+	 */
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr) = 0;
 };
 
 /**
  * Draws cell content as text.
  */
-class WXDLLEXPORT wxAdvStringCellRenderer : public wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvStringCellRenderer : public wxAdvCellRenderer
 {
 public:
 	wxAdvStringCellRenderer();
@@ -466,23 +608,23 @@ public:
 /**
  * Renderer to draw boolean cell values (draws checkmarks).
  */
-class WXDLLEXPORT wxAdvBoolTableCellRenderer : public wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvBoolCellRenderer : public wxAdvCellRenderer
 {
 public:
-	wxAdvBoolTableCellRenderer();
-	virtual ~wxAdvBoolTableCellRenderer();
+	wxAdvBoolCellRenderer();
+	virtual ~wxAdvBoolCellRenderer();
 
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
 };
 
 /**
- * Renderer to draw colour cell values (draws coloured rectangles).
+ * Renderer to draw color cell values (draws colored rectangles).
  */
-class WXDLLEXPORT wxAdvColourTableCellRenderer : public wxAdvTableCellRenderer
+class WXDLLEXPORT wxAdvColourCellRenderer : public wxAdvCellRenderer
 {
 public:
-	wxAdvColourTableCellRenderer();
-	virtual ~wxAdvColourTableCellRenderer();
+	wxAdvColourCellRenderer();
+	virtual ~wxAdvColourCellRenderer();
 
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
 };
@@ -493,25 +635,60 @@ public:
 
 /**
  * Table cell editors base class.
+ * Editor is an object, that perform cell values editing,
+ * it activated from wxAdvTable on mouse click or keypress,
+ * and deactivated when user wants to edit another cell or
+ * when wxAdvTable losses keyboard focus.
  */
-class WXDLLEXPORT wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvCellEditor
 {
 public:
-	wxAdvTableCellEditor();
-	virtual ~wxAdvTableCellEditor();
+	wxAdvCellEditor(wxAdvTable *table);
+	virtual ~wxAdvCellEditor();
 
 	/**
 	 * Return true, if editor activated with one click (such as boolean cells editor).
 	 */
 	virtual bool OneClickActivate();
 
-	void Activate(wxAdvTable *table, size_t row, size_t col);
+	/**
+	 * Called to activate cell editor.
+	 * @param row row index
+	 * @param col column index
+	 */
+	void Activate(size_t row, size_t col);
 
-	virtual void Deactivate(wxAdvTable *table) = 0;
+	/**
+	 * Called to deactivate cell editor.
+	 * @param table wxAdvTable
+	 */
+	void Deactivate();
+
+	/**
+	 * Checks whether editor is active.
+	 * @return true if editor is active
+	 */
+	bool IsActive();
+
+	/**
+	 * Called to handle key event, that triggers editor activation.
+	 * Called by wxAdvTable if cell editing activated by key press.
+	 */
+	virtual void HandleKeyEvent(wxKeyEvent &ev);
 
 protected:
-	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col) = 0;
 
+	virtual void DoActivate() = 0;
+	virtual void DoDeactivate() = 0;
+
+	wxAdvTable *GetTable();
+
+	size_t GetRow();
+	size_t GetCol();
+
+	wxRect GetCellRect();
+
+	wxString GetValue();
 	void SetNewValue(wxString newValue);
 
 	/**
@@ -519,25 +696,29 @@ protected:
 	 */
 	void EndEditing();
 
+private:
 	wxAdvTable *m_table;
 	wxAdvCoord m_cell;
+
+	bool m_active;
 };
 
 /**
  * Editor for string cell values. Uses wxTextCtrl for text input.
  */
-class WXDLLEXPORT wxAdvStringTableCellEditor : public wxEvtHandler, public wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvStringCellEditor : public wxEvtHandler, public wxAdvCellEditor
 {
 public:
-	wxAdvStringTableCellEditor(wxAdvTable *table);
-	virtual ~wxAdvStringTableCellEditor();
+	wxAdvStringCellEditor(wxAdvTable *table);
+	virtual ~wxAdvStringCellEditor();
 
 	virtual bool OneClickActivate();
 
-	virtual void Deactivate(wxAdvTable *table);
+	virtual void HandleKeyEvent(wxKeyEvent &ev);
 
 protected:
-	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+	virtual void DoActivate();
+	virtual void DoDeactivate();
 
 private:
 	void OnTextEnter(wxCommandEvent &ev);
@@ -545,6 +726,7 @@ private:
 	void OnTextKeydown(wxKeyEvent &ev);
 
 	wxTextCtrl *m_textCtrl;
+	bool m_escPressed;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -552,18 +734,17 @@ private:
 /**
  * Editor for boolean cell values. Uses wxCheckBox for editing.
  */
-class WXDLLEXPORT wxAdvBoolTableCellEditor : public wxEvtHandler, public wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvBoolCellEditor : public wxEvtHandler, public wxAdvCellEditor
 {
 public:
-	wxAdvBoolTableCellEditor(wxAdvTable *table);
-	virtual ~wxAdvBoolTableCellEditor();
+	wxAdvBoolCellEditor(wxAdvTable *table);
+	virtual ~wxAdvBoolCellEditor();
 
 	virtual bool OneClickActivate();
 
-	virtual void Deactivate(wxAdvTable *table);
-
 protected:
-	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+	virtual void DoActivate();
+	virtual void DoDeactivate();
 
 private:
 	void OnKillFocus(wxFocusEvent &ev);
@@ -575,46 +756,44 @@ private:
 };
 
 /**
- * Editor for colour cell values. Uses wxColourDialog for editing.
+ * Editor for color cell values. Uses wxColourDialog for editing.
  */
-class WXDLLEXPORT wxAdvColourTableCellEditor : public wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvColourCellEditor : public wxAdvCellEditor
 {
 public:
-	wxAdvColourTableCellEditor();
-	virtual ~wxAdvColourTableCellEditor();
+	wxAdvColourCellEditor(wxAdvTable *table);
+	virtual ~wxAdvColourCellEditor();
 
 	virtual bool OneClickActivate();
 
-	virtual void Deactivate(wxAdvTable *table);
-
 protected:
-	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+	virtual void DoActivate();
+	virtual void DoDeactivate();
 };
 
 /**
  * Editor for interval numeric data. Uses wxSpinCtrl for editing.
  */
-class WXDLLEXPORT wxAdvIntervalTableCellEditor : public wxAdvTableCellEditor
+class WXDLLEXPORT wxAdvIntervalCellEditor : public wxAdvCellEditor
 {
 public:
-	wxAdvIntervalTableCellEditor(wxAdvTable *table);
-	virtual ~wxAdvIntervalTableCellEditor();
+	wxAdvIntervalCellEditor(wxAdvTable *table);
+	virtual ~wxAdvIntervalCellEditor();
 
 	virtual bool OneClickActivate();
-
-	virtual void Deactivate(wxAdvTable *table);
 
 	void SetRange(int minValue, int maxValue);
 
 protected:
-	virtual void DoActivate(wxAdvTable *table, size_t row, size_t col);
+	virtual void DoActivate();
+	virtual void DoDeactivate();
 
 private:
 	wxSpinCtrl *m_spinCtrl;
 };
 
 //
-// Sorters
+// Sorters.
 //
 
 /**
@@ -659,18 +838,27 @@ private:
 	int Compare(double value1, double value2);
 };
 
-const int undefinedSize = 0;
 
 /**
  * Row/column description.
+ * Contains attributes to draw and arrange header cell, such as:
+ * - cell label
+ * - size (if not set it will be calculated automatically)
+ * - label horizontal/vertical alignment
+ * - spacing - distance between label and cell edges
  *
+ * Header cell can be simple or composite.
+ * Composite cells contains one or more subcells.
  */
 class WXDLLEXPORT wxAdvHdrCell
 {
 	friend class wxAdvTable;
-	friend class wxAdvDefaultHdrTableCellRenderer;
+	friend class wxAdvDefaultHdrCellRenderer;
 public:
 
+	/**
+	 * Copy constructor.
+	 */
 	wxAdvHdrCell(const wxAdvHdrCell &o)
 	{
 		// copy attributes
@@ -697,13 +885,21 @@ public:
 		m_isDecomp = o.m_isDecomp;
 	}
 
+	/**
+	 * Construct new header cell.
+	 * @param label header cell label
+	 */
 	wxAdvHdrCell(const wxChar *label = wxT(""))
 	{
 		m_label = label;
 		SetDefaults();
 	}
 
-	wxAdvHdrCell(wxString &label)
+	/**
+	 * Construct new header cell.
+	 * @param label header cell label
+	 */
+	wxAdvHdrCell(const wxString &label)
 	{
 		m_label = label;
 		SetDefaults();
@@ -717,6 +913,7 @@ public:
 	/**
 	 * Adds sub row/column.
 	 * @param subHdrCell sub row/column
+	 * @return reference to itself
 	 */
 	wxAdvHdrCell &Sub(wxAdvHdrCell subHdrCell)
 	{
@@ -727,6 +924,7 @@ public:
 	/**
 	 * Adds sub row/column.
 	 * @param label label for sub row/column
+	 * @return reference to itself
 	 */
 	wxAdvHdrCell &Sub(const wxChar *label)
 	{
@@ -734,14 +932,21 @@ public:
 		return *this;
 	}
 
+	/**
+	 * Check if cell is composite.
+	 * Composite cell contains one or more subcells.
+	 * @return true if cell is composite
+	 */
 	bool IsComposite()
 	{
 		return m_subCells.Count() != 0;
 	}
 
 	/**
-	 * Sets vertical text alignment for header cell (not table values).
-	 * @param alignVertical vertical alignment
+	 * Sets vertical text alignment for header cell.
+	 * @param alignVertical vertical alignment, possible values are:
+	 * 			wxALIGN_TOP, wxALIGN_CENTER_VERTICAL, wxALIGN_BOTTOM
+	 * @return reference to itself
 	 */
 	wxAdvHdrCell &AlignVertical(int alignVertical)
 	{
@@ -749,14 +954,20 @@ public:
 		return *this;
 	}
 
+	/**
+	 * Returns vertical text alignment.
+	 * @return vertical text alignment
+	 */
 	int AlignVertical()
 	{
 		return m_alignVertical;
 	}
 
 	/**
-	 * Sets horizontal text alignment for header cell (not table values).
-	 * @param alignHorizontal horizontal alignment
+	 * Sets horizontal text alignment for header cell.
+	 * @param alignHorizontal horizontal alignment, possible values are:
+	 * 			wxALIGN_LEFT, wxALIGN_CENTER_HORIZONTAL, wxALIGN_RIGHT
+	 * @return reference to itself
 	 */
 	wxAdvHdrCell &AlignHorizontal(int alignHorizontal)
 	{
@@ -764,34 +975,129 @@ public:
 		return *this;
 	}
 
+	/**
+	 * Returns horizontal text alignment.
+	 * @return horizontal text alignment
+	 */
 	int AlignHorizontal()
 	{
 		return m_alignHorizontal;
 	}
 
+	/**
+	 * Marks cell to draw label vertical.
+	 * @return reference to itself
+	 */
 	wxAdvHdrCell &VerticalText()
 	{
 		m_verticalText = true;
 		return *this;
 	}
 
+	/**
+	 * Checks whether label text is vertical.
+	 * @return true if label text is vertical
+	 */
+	bool IsVerticalText()
+	{
+		return m_verticalText;
+	}
+
+	/**
+	 * Marks cell as sortable.
+	 * @return reference to itself
+	 */
 	wxAdvHdrCell &Sortable()
 	{
 		m_sortable = true;
 		return *this;
 	}
 
-	void Renderer(wxAdvHdrTableCellRenderer *renderer)
+	/**
+	 * Sets renderer to draw cell content.
+	 * @param renderer new renderer
+	 * @return reference to itself
+	 */
+	wxAdvHdrCell &Renderer(wxAdvHdrCellRenderer *renderer)
 	{
 		SAFE_REPLACE(m_renderer, renderer);
+		return *this;
 	}
 
+	/**
+	 * Returns renderer to draw cell content.
+	 * @return renderer
+	 */
+	wxAdvHdrCellRenderer *Renderer()
+	{
+		return m_renderer;
+	}
+
+	/**
+	 * Sets distance between edges and cell content.
+	 * @param spacing distance between edges and cell content.
+	 * @return reference to itself
+	 */
 	wxAdvHdrCell &Spacing(wxCoord spacing)
 	{
 		m_spacing = spacing;
 		return *this;
 	}
 
+	/**
+	 * Returns spacing - distance between edges and cell content.
+	 * @return spacing
+	 */
+	wxCoord Spacing()
+	{
+		return m_spacing;
+	}
+
+	/**
+	 * Set header cell label.
+	 * @param label label
+	 * @return reference to itself
+	 */
+	wxAdvHdrCell &Label(const wxString &label)
+	{
+		m_label = label;
+		return *this;
+	}
+
+	/**
+	 * Returns header cell label.
+	 * @return label
+	 */
+	const wxString &Label()
+	{
+		return m_label;
+	}
+
+	/**
+	 * Sets size (width for column, height for row) for header cell.
+	 * If size is not set, it will be calculated from label width/height
+	 * @param size new size
+	 * @return reference to itself
+	 */
+	wxAdvHdrCell &Size(wxCoord size)
+	{
+		m_size = size;
+		return *this;
+	}
+
+	/**
+	 * Returns size.
+	 * @return size
+	 */
+	wxCoord Size()
+	{
+		return m_size;
+	}
+
+	/**
+	 * Returns size, needed for cell.
+	 * @param dc device context
+	 */
 	wxSize CalcExtent(wxDC &dc)
 	{
 		wxSize extent = dc.GetMultiLineTextExtent(m_label);
@@ -805,7 +1111,7 @@ public:
 			extent.y = tmp;
 		}
 
-		if (m_size != undefinedSize) {
+		if (m_size != 0) {
 			if (m_isRow) {
 				extent.SetHeight(m_size);
 			}
@@ -817,8 +1123,9 @@ public:
 	}
 
 	/**
-	 * Returns maximal sub layers count.
+	 * Returns maximal sublayer count.
 	 * 1 - for not composite header cell.
+	 * @return sublayer count
 	 */
 	size_t Layers()
 	{
@@ -836,40 +1143,9 @@ public:
 	}
 
 	/**
-	 * Set header cell label.
-	 * @param label label
-	 */
-	wxAdvHdrCell &Label(const wxString &label)
-	{
-		m_label = label;
-		return *this;
-	}
-
-	/**
-	 * Returns header cell label.
-	 */
-	wxString Label()
-	{
-		return m_label;
-	}
-
-	/**
-	 * Sets size (width for column, height for row) for header cell.
-	 */
-	wxAdvHdrCell &Size(wxCoord size)
-	{
-		m_size = size;
-		return *this;
-	}
-
-	wxCoord Size()
-	{
-		return m_size;
-	}
-
-	/**
 	 * Returns hdrCell layer header cell count.
 	 * e.g. real row/column count.
+	 * @return
 	 */
 	size_t GetDecompCellCount()
 	{
@@ -887,12 +1163,15 @@ public:
 
 	/**
 	 * Returns summary hdrCell layer cell count.
+	 * @param cells hdrCell array
+	 * @param numCells number of elements in cells array
+	 * @return summary hdrCell layer cell count
 	 */
 	static size_t GetDecompCellCount(wxAdvHdrCell *cells, size_t numCells);
 
 private:
 	//
-	// Internal routines
+	// Internal functions.
 	//
 	void MarkAsRow()
 	{
@@ -915,9 +1194,9 @@ private:
 
 	void SetDefaults()
 	{
-		m_size = undefinedSize;
-		m_alignVertical = wxALIGN_TOP;
-		m_alignHorizontal = wxALIGN_CENTER;
+		m_size = 0;
+		m_alignVertical = wxALIGN_CENTRE_VERTICAL;
+		m_alignHorizontal = wxALIGN_CENTRE_HORIZONTAL;
 		m_spacing = 5;
 		m_verticalText = false;
 		m_sortable = false;
@@ -926,7 +1205,11 @@ private:
 		m_renderer = NULL;
 	}
 
+	//
+	// Variables.
+	//
 	wxAdvHdrCellArray m_subCells;
+
 	wxString m_label;
 	wxCoord m_size;
 
@@ -939,7 +1222,7 @@ private:
 
 	bool m_sortable;
 
-	wxAdvHdrTableCellRenderer *m_renderer;
+	wxAdvHdrCellRenderer *m_renderer;
 
 	//
 	// used internally by wxAdvTable
@@ -959,11 +1242,11 @@ private:
  * - composite rows/columns.
  * - sorting and filtering.
  * - MCV design (designed after Java(tm) JTable classes).
- *   Data accesed through wxAdvTableModel, renderered by wxAdvTableCellRenderer, edited by wxAdvTableCellEditor
+ *   Data accesed through wxAdvTableModel, renderered by wxAdvCellRenderer, edited by wxAdvCellEditor
  * - rows/columns dynamic add/remove support
- * - TODO: make drawing code optimizations (it is too slow now)
  * - TODO: add printing support
  * - TODO: add filters support
+ * - TODO: rows/columns drag resize/move
  *
  *   NOTES:
  *	There are two types of cell coordinates: table and model.
@@ -975,7 +1258,7 @@ class WXDLLEXPORT wxAdvTable : public wxScrolledWindow, public wxAdvTableDataMod
 {
 public:
 	enum SortMode {
-		Rows, Cols,
+		SortRows, SortCols,
 	};
 
 	enum SelectMode {
@@ -987,7 +1270,7 @@ public:
 	};
 
 	enum SortDirection {
-		Ascending, Descending, NoSorting
+		SortDirAscending, SortDirDescending, SortDirNoSorting
 	};
 
 	wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
@@ -1044,6 +1327,9 @@ public:
 	 */
 	void Create(size_t numRows, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
+	/**
+	 * Destroy table, free data model.
+	 */
 	void DestroyTable();
 
 	//
@@ -1060,6 +1346,10 @@ public:
 
 	void RemoveCols(size_t from, size_t to);
 */
+
+	//
+	// Show headers functions.
+	//
 
 	/**
 	 * Sets headers (row, column, corner header) show params.
@@ -1141,12 +1431,26 @@ public:
 	 */
 	void SetSortMode(SortMode sortMode);
 
-	void SetSortingIndex(size_t sortingIndex);
+	/**
+	 * Sets row/column index for sorting.
+	 * @param sortingIndex index for sorting
+	 * @param invert if true and sortingIndex is same as before call,
+	 * sorting direction will be inverted
+	 */
+	void SetSortingIndex(size_t sortingIndex, bool invert = true);
 
-	//void SetFilter(wxAdvTableFilter *_filter);
+	//void SetFilter(wxAdvTableFilter *filter);
 
+	/**
+	 * Sets new highlight mode.
+	 * @param highlightMode new highlight mode
+	 */
 	void SetHighlightMode(HighlightMode highlightMode);
 
+	/**
+	 * Returns current highlight mode
+	 * @return current highlight mode
+	 */
 	HighlightMode GetHighlightMode()
 	{
 		return m_highlightMode;
@@ -1156,19 +1460,28 @@ public:
 	// Row/column access functions.
 	//
 
-    size_t GetRowCount()
+    /**
+     * Returns row count.
+     * @return row count
+     */
+	size_t GetRowCount()
 	{
 		return m_rows.GetCount();
 	}
 
     /**
      * Returns decomposed row count.
+     * @return decomposed row count
      */
 	size_t GetDecompRowCount()
 	{
 		return m_decompRows.Count();
 	}
 
+    /**
+     * Returns column count.
+     * @return column count
+     */
 	size_t GetColCount()
 	{
 		return m_cols.GetCount();
@@ -1176,6 +1489,7 @@ public:
 
     /**
      * Returns decomposed column count.
+     * @return decomposed column count
      */
 	size_t GetDecompColCount()
 	{
@@ -1186,7 +1500,6 @@ public:
 	{
 		return m_rows[index];
 	}
-
 	wxAdvHdrCell *GetDecompRow(size_t index)
 	{
 		return m_decompRows[index];
@@ -1197,12 +1510,42 @@ public:
 		return m_decompCols[index];
 	}
 
+	/**
+	 * Returns maximal row index.
+	 * @return maximal row index
+	 */
+	size_t MaxRow()
+	{
+		size_t maxRow = GetDecompRowCount();
+		if (maxRow == 0) {
+			return 0;
+		}
+		return maxRow - 1;
+	}
+
+	/**
+	 * Returns maximal column index.
+	 * @return maximal column index
+	 */
+	size_t MaxCol()
+	{
+		size_t maxCol = GetDecompColCount();
+		if (maxCol == 0) {
+			return 0;
+		}
+		return maxCol - 1;
+	}
+
+	/**
+	 * Returns table data model.
+	 * @return table data model
+	 */
 	wxAdvTableDataModel *GetModel()
 	{
 		return m_model;
 	}
 
-	wxAdvTableCellEditor *GetEditorForCell(size_t row, size_t col);
+	wxAdvCellEditor *GetEditorForCell(size_t row, size_t col);
 
 	/**
 	 * Set cell editor for specified cell format.
@@ -1210,14 +1553,20 @@ public:
 	 * @param format cell format
 	 * @param editor cell editor for format
 	 */
-	void SetEditorForFormat(int format, wxAdvTableCellEditor *editor);
+	void SetEditorForFormat(int format, wxAdvCellEditor *editor);
 
 	/**
 	 * Deactivate editor if active, and commit changes.
 	 */
 	void StopEditing();
 
-	wxAdvTableCellRenderer *GetRendererForCell(size_t row, size_t col);
+	/**
+	 * Returns renderer for cell content.
+	 * @param row row index of cell
+	 * @param col col index of cell
+	 * @return renderer for cell content
+	 */
+	wxAdvCellRenderer *GetRendererForCell(size_t row, size_t col);
 
 	/**
 	 * Sets table cell renderer for specified cell format.
@@ -1225,29 +1574,35 @@ public:
 	 * @param format cell format
 	 * @param renderer renderer for cell format
 	 */
-	void SetRendererForFormat(int format, wxAdvTableCellRenderer *renderer);
+	void SetRendererForFormat(int format, wxAdvCellRenderer *renderer);
 
 	/**
 	 * Sets default renderer to draw cell values.
 	 * wxAdvTable takes ownership over renderer.
 	 * @param renderer new default renderer
 	 */
-	void SetDefaultRenderer(wxAdvTableCellRenderer *renderer);
+	void SetDefaultRenderer(wxAdvCellRenderer *renderer);
 
 	/**
 	 * Sets default renderer to draw cell values.
 	 * wxAdvTable takes ownership over renderer.
 	 * @param renderer new default renderer
 	 */
-	void SetDefaultHdrRenderer(wxAdvHdrTableCellRenderer *renderer);
+	void SetDefaultHdrRenderer(wxAdvHdrCellRenderer *renderer);
 
 	/**
 	 * Returns table cell value.
-	 * @param row row number
-	 * @param col column number
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	wxString GetCellValue(size_t row, size_t col);
 
+	/**
+	 * Checks whether cell is editable.
+	 * @param row cell row index
+	 * @param col cell column index
+	 * @return true if cell is editable, false - overwise
+	 */
 	bool IsCellEditable(size_t row, size_t col);
 
 	/**
@@ -1266,7 +1621,7 @@ public:
 	 * @param tableRow unsorted row index
 	 * @param tableCol unsorted column index
 	 */
-	void ToTableCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol);
+	void ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol);
 
 	/**
 	 * Returns table cell rectangle.
@@ -1275,6 +1630,12 @@ public:
 	 */
 	wxRect GetCellRect(size_t row, size_t col);
 
+	/**
+	 * Returns table cell rectangle.
+	 * @param rc reference to rectangle
+	 * @param row row number
+	 * @param col column number
+	 */
 	bool GetCellRect(wxRect &rc, size_t row, size_t col);
 
 	/**
@@ -1313,12 +1674,35 @@ public:
 	// Selection functions
 	// They are don't trigger selection events
 	//
+
+	/**
+	 * Sets selection range.
+	 * @param range new selected range
+	 */
 	void SetSelection(wxAdvRange &range);
 
+	/**
+	 * Sets selection to single cell in SelectCell mode,
+	 * row - in SelectRows mode, column - in SelectCols mode.
+	 * @param row row index of cell
+	 * @param col column index of cell
+	 */
 	void SetSelection(size_t row, size_t col);
 
+	/**
+	 * Sets selection range.
+	 * @param row1 first row index
+	 * @param col1 first column index
+	 * @param row2 second row index
+	 * @param col2 second column index
+	 */
 	void SetSelection(size_t row1, size_t col1, size_t row2, size_t col2);
 
+	/**
+	 * Returns cells range currently visible.
+	 * @param range output visible range
+	 * @return true if range filled is visible range, false - if nothing is visible
+	 */
 	bool GetVisibleRange(wxAdvRange &range);
 
 	/**
@@ -1338,7 +1722,8 @@ public:
 	void SetSelectMode(SelectMode selectMode);
 
 	/**
-	 * Returns select mode.
+	 * Returns current select mode.
+	 * @return select mode
 	 */
 	int GetSelectMode();
 
@@ -1359,21 +1744,37 @@ public:
 	 */
 	void SetFocusedCell(size_t row, size_t col);
 
+	/**
+	 * Returns sum width of all columns.
+	 * @return sum width of all columns
+	 */
 	wxCoord CalcTotalColsWidth()
 	{
 		return SumDimensions(m_decompCols, true);
 	}
 
+	/**
+	 * Returns sum height of all rows.
+	 * @return sum height of all rows
+	 */
 	wxCoord CalcTotalRowsHeight()
 	{
 		return SumDimensions(m_decompRows, false);
 	}
 
+	/**
+	 * Returns sum width of all rows layers.
+	 * @return sum width of all rows layers
+	 */
 	wxCoord CalcTotalRowLayersWidth()
 	{
 		return SumLayerSizes(m_rowLayerWidths);
 	}
 
+	/**
+	 * Returns sum height of all column layers.
+	 * @return sum height of all column layers
+	 */
 	wxCoord CalcTotalColLayersHeight()
 	{
 		return SumLayerSizes(m_colLayerHeights);
@@ -1385,57 +1786,96 @@ public:
 
 	/**
 	 * Returns table area rectangle.
+	 * @return table area rectangle
 	 */
-	wxRect CalcTableRect()
-	{
-		wxCoord x = 0;
-		wxCoord y = 0;
-
-		if (m_showCorner || m_showRows) {
-			x = CalcTotalRowLayersWidth();
-		}
-		if (m_showCorner || m_showCols) {
-			y = CalcTotalColLayersHeight();
-		}
-
-		return wxRect(x, y,
-				CalcTotalColsWidth(), CalcTotalRowsHeight());
-	}
+	wxRect CalcTableRect();
 
 	/**
 	 * Returns rows area rectangle.
+	 * @returns rows area rectangle
 	 */
-	wxRect CalcRowsRect()
-	{
-		if (m_showRows) {
-			wxCoord y = (m_showCols || m_showCorner) ? CalcTotalColLayersHeight() : 0;
-			return wxRect(0, y,
-					CalcTotalRowLayersWidth(), CalcTotalRowsHeight());
-		}
-		else {
-			return wxRect(0, 0, 0, 0);
-		}
-	}
+	wxRect CalcRowsAreaRect();
 
 	/**
 	 * Returns columns area rectangle.
+	 * @returns columns area rectangle
 	 */
-	wxRect CalcColsRect()
-	{
-		if (m_showCols) {
-			wxCoord x = (m_showRows || m_showCorner) ? SumLayerSizes(m_rowLayerWidths) : 0;
-			return wxRect(x, 0,
-					CalcTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
-		}
-		else {
-			return wxRect(0, 0, 0, 0);
-		}
-	}
+	wxRect CalcColsAreaRect();
 
-	wxRect CalcEntireRowRect(size_t row, size_t col);
-	wxRect CalcEntireColRect(size_t row, size_t col);
+	wxRect CalcRowRect(size_t row, size_t col);
+	wxRect CalcColRect(size_t row, size_t col);
 
 	void GetRangeRect(wxRect &rc, size_t row1, size_t col1, size_t row2, size_t col2);
+
+	//
+	// Graphical objects functions.
+	//
+
+	/**
+	 * Sets brush to draw selected cells background.
+	 * @param selectedBgBrush new brush
+	 */
+	void SetSelectedBgBrush(const wxBrush &selectedBgBrush);
+
+	/**
+	 * Returns selected cells background brush.
+	 * @return selected cells background brush
+	 */
+	const wxBrush &GetSelectedBgBrush();
+
+	/**
+	 * Sets pen to draw grid lines.
+	 * @param gridPen new grid pen
+	 */
+	void SetGridPen(const wxPen &gridPen);
+
+	/**
+	 * Returns grid lines pen.
+	 * @return grid lines pen
+	 */
+	const wxPen &GetGridPen();
+
+	/**
+	 * Sets pen to draw focused cell edges.
+	 * @param focusedPen new grid pen
+	 */
+	void SetFocusedPen(const wxPen &focusedPen);
+
+	/**
+	 * Returns focused cell edges pen.
+	 * @return focused cell edges pen
+	 */
+	const wxPen &GetFocusedPen();
+
+	/**
+	 * Sets brush to draw focused cells background.
+	 * @param focusedBgBrush new brush
+	 */
+	void SetFocusedBgBrush(const wxBrush &focusedBgBrush);
+
+	/**
+	 * Returns focused cells background brush.
+	 * @return focused cells background brush
+	 */
+	const wxBrush &GetFocusedBgBrush();
+
+	/**
+	 * Sets brush to draw highlighed cells background.
+	 * @param highlightedBgBrush new brush
+	 */
+	void SetHighlightedBgBrush(const wxBrush &highlightedBgBrush);
+
+	/**
+	 * Returns highlighed cells background brush.
+	 * @return highlighed cells background brush
+	 */
+	const wxBrush &GetHighlightedBgBrush();
+
+	/**
+	 * wxWindow override
+	 * To turn off physical scrolling, for smooth scroll.
+	 */
+	virtual void ScrollWindow(int dx, int dy, const wxRect* rect);
 
 	//
 	// wxAdvTableDataModelObserver
@@ -1446,11 +1886,12 @@ public:
 
 private:
 	//
-	// event handlers
+	// Event handlers.
 	//
 	void OnPaint(wxPaintEvent &ev);
 	void OnMouseEvents(wxMouseEvent &ev);
 	void OnKeyDown(wxKeyEvent &ev);
+	void OnChar(wxKeyEvent &ev);
 	void OnKillFocus(wxFocusEvent &ev);
 	void OnSize(wxSizeEvent &ev);
 	void OnScrollWin(wxScrollWinEvent &ev);
@@ -1458,15 +1899,17 @@ private:
 	void HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell);
 	void HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col);
 
-	/**
-	 * Update selection, called from mouse and key event handlers.
-	 */
-	void SelectCells(wxMouseEvent &ev, size_t row, size_t col);
+	//
+	// Update selection, called from mouse and key event handlers.
+	//
+	void SelectCells(wxMouseEvent &ev, size_t row1, size_t col1, size_t row2, size_t col2);
+	void SelectCells(wxKeyEvent &ev, size_t row1, size_t col1, size_t row2, size_t col2);
+	void SelectCells(size_t row1, size_t col1, size_t row2, size_t col2, bool controlDown, bool shiftDown, bool altDown, bool metaDown);
 
 	//
 	// Editing internal functions.
 	//
-	void EditCell(wxAdvTableCellEditor *editor, size_t row, size_t col);
+	void EditCell(wxAdvCellEditor *editor, size_t row, size_t col);
 
 	void SetPressedHdrCell(wxAdvHdrCell *cell);
 	void SetCurrentHdrCell(wxAdvHdrCell *cell);
@@ -1475,7 +1918,7 @@ private:
 	// Drawing functions.
 	//
 	void DrawTable(wxDC &dc);
-	void DrawTableCell(wxDC &dc, size_t row, size_t col);
+	void DrawCell(wxDC &dc, size_t row, size_t col);
 
 	void DrawHdrCells(wxDC &dc, wxAdvHdrCellArray &hdrCells);
 	void DrawHdrCell(wxDC &dc, wxAdvHdrCell *hdrCell);
@@ -1543,14 +1986,33 @@ private:
 
 	void AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, size_t numCells, bool isRows);
 
+	size_t IncrRow(size_t row, int incr)
+	{
+		return (size_t) wxClip((int) row + incr, 0, (int) MaxRow());
+	}
+
+	size_t IncrCol(size_t col, int incr)
+	{
+		return (size_t) wxClip((int) col + incr, 0, (int) MaxCol());
+	}
+
 	/**
 	 * Translate point from window to viewport coordinates.
 	 * @param pt point in window coordinates
 	 */
 	wxPoint ToViewportPosition(wxPoint &pt, bool transVert = true, bool transHoriz = true);
 
+	//
+	// Event functions.
+	//
 	void SendEvent(const wxEventType type, size_t row, size_t col, wxMouseEvent &ev);
 	void SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2, wxMouseEvent &ev);
+	void SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2,
+				bool controlDown, bool shiftDown, bool altDown,	bool metaDown);
+
+	//
+	// Variables.
+	//
 
 	bool m_tableCreated;
 
@@ -1561,19 +2023,22 @@ private:
 	wxAdvCellAttribute m_defaultCellAttribute;
 	wxAdvHdrCell m_defaultRow, m_defaultCol;
 
+	// rows/columns definitions
 	wxAdvHdrCellArray m_rows;
 	wxAdvHdrCellArray m_cols;
 	wxAdvHdrCell m_cornerCell;
-	wxAdvTableSorter *m_sorter;
-	SortMode m_sortMode;
 
-	wxIndexArray m_sortOrder;
-
+	// decomposed rows/columns
 	wxAdvHdrCellPtrArray m_decompRows;
 	wxAdvHdrCellPtrArray m_decompCols;
 
 	wxCoordArray m_rowLayerWidths;
 	wxCoordArray m_colLayerHeights;
+
+	// sorting variables
+	wxAdvTableSorter *m_sorter;
+	SortMode m_sortMode;
+	wxIndexArray m_sortOrder;
 
 	HighlightMode m_highlightMode;
 
@@ -1588,11 +2053,11 @@ private:
 	// table data model
 	wxAdvTableDataModel *m_model;
 
-	wxAdvHdrTableCellRenderer *m_defaultHdrRenderer;
-
-	wxAdvTableCellRenderer *m_defaultRenderer;
-	wxAdvTableCellRendererMap m_renderers;
-	wxAdvTableCellEditorMap m_editors;
+	// rendering/editing variables
+	wxAdvHdrCellRenderer *m_defaultHdrRenderer;
+	wxAdvCellRenderer *m_defaultRenderer;
+	wxAdvCellRendererMap m_renderers;
+	wxAdvCellEditorMap m_editors;
 
 	// selection variables
 	SelectMode m_selectMode;
@@ -1603,9 +2068,11 @@ private:
 	size_t m_sortingIndex;
 	int m_sortDirection;
 
+	// focused cell coordinate
 	wxAdvCoord m_focused;
 
-	wxAdvTableCellEditor *m_currentEditor;
+	// active cell editor
+	wxAdvCellEditor *m_activeEditor;
 
 	wxAdvHdrCell *m_pressedHdrCell;
 	wxAdvHdrCell *m_currentHdrCell;

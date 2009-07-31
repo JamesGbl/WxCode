@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     29/10/2008
 // RCS-ID:      $Id: wxAdvTable.cpp,v 1.4 2008/10/29 16:42:58 frm Exp $
-// Copyright:   (c) 2008 Moskvichev A.V.
+// Copyright:   (c) 2008-2009 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 

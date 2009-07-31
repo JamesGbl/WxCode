@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     29/10/2008
 // RCS-ID:      $Id: wxAdvTable.cpp,v 1.4 2008/10/29 16:42:58 frm Exp $
-// Copyright:   (c) 2008 Moskvichev A.V.
+// Copyright:   (c) 2008-2009 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +33,20 @@ size_t wxAdvHdrCell::GetDecompCellCount(wxAdvHdrCell *cells, size_t numCells)
 	return count;
 }
 
-void DrawBevel(wxDC &dc, wxRect rc, wxColour bgColour, wxColour colour1, wxColour colour2, int width)
+//
+// Drawing helper functions.
+//
+
+/**
+ * Draws bevel.
+ * @param dc device context
+ * @param rc rectangle where to draw
+ * @param bgColour bevel background colour
+ * @param colour1 colour of left and top edges
+ * @param colour2 colour of right and bottom edges
+ * @param edgeWidth edgeWidth
+ */
+void DrawBevel(wxDC &dc, const wxRect &rc, wxColour bgColour, wxColour colour1, wxColour colour2, int edgeWidth)
 {
 	// draw background
 	dc.SetBrush(*wxTheBrushList->FindOrCreateBrush(bgColour));
@@ -41,18 +54,136 @@ void DrawBevel(wxDC &dc, wxRect rc, wxColour bgColour, wxColour colour1, wxColou
 	dc.DrawRectangle(rc);
 
 	// draw light edge
-	dc.SetPen(*wxThePenList->FindOrCreatePen(colour1, width, wxSOLID));
+	dc.SetPen(*wxThePenList->FindOrCreatePen(colour1, edgeWidth, wxSOLID));
 	dc.DrawLine(rc.x, rc.y,
 			rc.x, rc.y + rc.height);
 	dc.DrawLine(rc.x, rc.y,
 			rc.x + rc.width, rc.y);
 
 	// draw shadow
-	dc.SetPen(*wxThePenList->FindOrCreatePen(colour2, width, wxSOLID));
+	dc.SetPen(*wxThePenList->FindOrCreatePen(colour2, edgeWidth, wxSOLID));
 	dc.DrawLine(rc.x + rc.width, rc.y,
 			rc.x + rc.width, rc.y + rc.height);
 	dc.DrawLine(rc.x, rc.y + rc.height,
 			rc.x + rc.width, rc.y + rc.height);
+}
+
+void AlignAdjust(const wxRect &rc, wxCoord *x, wxCoord *y, wxCoord widthText, wxCoord heightText, int align, bool vertical)
+{
+	wxCoord wT, hT;
+
+	if (vertical) {
+		wT = heightText;
+		hT = widthText;
+	}
+	else {
+		wT = widthText;
+		hT = heightText;
+	}
+
+	wxCoord dx, dy;
+
+	if (align & wxALIGN_RIGHT) {
+		dx = rc.width - wT;
+	}
+	else if (align & wxALIGN_CENTRE_HORIZONTAL) {
+		dx = (rc.width - wT) / 2;
+	}
+	else { // wxALIGN_LEFT
+		dx = 0;
+	}
+
+	if (align & wxALIGN_BOTTOM) {
+		dy = rc.height - hT;
+	}
+	else if (align & wxALIGN_CENTRE_VERTICAL) {
+		dy = (rc.height - hT) / 2;
+	}
+	else { // wxALIGN_TOP
+		dy = 0;
+	}
+
+	*x = rc.x + dx;
+	*y = rc.y + dy;
+}
+
+/**
+ * Draws multiline text, using current font and text colour.
+ * @param dc device context
+ * @param text text to draw
+ * @param rc rectangle where to draw text
+ * @param align horizontal and vertical alignment
+ * @param vertical true if you want draw draw vertical text
+ */
+void DrawMultilineText(wxDC &dc, const wxString &text, const wxRect &rc, int align, bool vertical)
+{
+	wxCoord textWidth, textHeight, lineHeight;
+	dc.GetMultiLineTextExtent(text, &textWidth, &textHeight, &lineHeight);
+
+	wxCoord x, y;
+
+	AlignAdjust(rc, &x, &y, textWidth, textHeight, align, vertical);
+
+	wxString curLine;
+	for (const wxChar *pc = text; ; pc++) {
+		if (*pc == wxT('\n') || *pc == wxT('\0')) { // end of line
+			if (vertical) {
+				wxCoord lineWidth;
+				dc.GetTextExtent(curLine, &lineWidth, NULL);
+
+				wxCoord yLine = y;
+
+				if (align & wxALIGN_BOTTOM) {
+					yLine = y + textWidth;
+				}
+				else if (align & wxALIGN_CENTRE_VERTICAL) {
+					yLine = y + lineWidth / 2 + textWidth / 2;
+				}
+				else {// wxALIGN_TOP
+					yLine = y + lineWidth;
+				}
+
+				if (!curLine.empty()) {
+					dc.DrawRotatedText(curLine, x, yLine, 90);
+				}
+
+				x += lineHeight;
+			}
+			else {
+				wxCoord xLine = x;
+
+				if (align & (wxALIGN_RIGHT | wxALIGN_CENTRE_HORIZONTAL)) {
+					wxCoord lineWidth;
+					dc.GetTextExtent(curLine, &lineWidth, NULL);
+
+					if (align & wxALIGN_RIGHT) {
+						xLine = x + textWidth - lineWidth;
+					}
+					else if (align & wxALIGN_CENTRE_HORIZONTAL) {
+						xLine = x + (textWidth - lineWidth) / 2;
+					}
+				}
+				else { // wxALIGN_LEFT
+					xLine = x;
+				}
+
+				if (!curLine.empty()) {
+					dc.DrawText(curLine, xLine, y);
+				}
+
+				y += lineHeight;
+			}
+
+			if (*pc == wxT('\0')) {
+				break;
+			}
+
+			curLine.clear();
+		}
+		else {
+			curLine += *pc;
+		}
+	}
 }
 
 //
@@ -136,7 +267,7 @@ bool wxAdvStringTableDataModel::SetCellValue(size_t row, size_t col, wxString va
 
 wxAdvCellAttribute *wxAdvStringTableDataModel::GetCellAttribute(size_t WXUNUSED(row), size_t WXUNUSED(col))
 {
-	return &m_defaultCellAttribute;
+	return NULL;
 }
 
 double wxAdvStringTableDataModel::GetCellValueDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
@@ -229,85 +360,91 @@ void wxAdvFilterTableDataModel::UpdateValues()
 
 
 //
-// wxAdvHdrTableCellRenderer
+// wxAdvHdrCellRenderer
 //
-wxAdvHdrTableCellRenderer::wxAdvHdrTableCellRenderer()
+wxAdvHdrCellRenderer::wxAdvHdrCellRenderer()
 {
 }
 
-wxAdvHdrTableCellRenderer::~wxAdvHdrTableCellRenderer()
+wxAdvHdrCellRenderer::~wxAdvHdrCellRenderer()
 {
 }
 
 //
-// wxAdvDefaultHdrTableCellRenderer
+// wxAdvDefaultHdrCellRenderer
 //
-wxAdvDefaultHdrTableCellRenderer::wxAdvDefaultHdrTableCellRenderer()
+wxAdvDefaultHdrCellRenderer::wxAdvDefaultHdrCellRenderer()
 {
 }
 
-wxAdvDefaultHdrTableCellRenderer::~wxAdvDefaultHdrTableCellRenderer()
+wxAdvDefaultHdrCellRenderer::~wxAdvDefaultHdrCellRenderer()
 {
 }
 
-void wxAdvDefaultHdrTableCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection)
+void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection)
 {
 	wxColour colour1, colour2, bgColour, textColour;
+	textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
+	bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
+
 	if (pressed) {
-		bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
 		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
-		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DLIGHT);
-		textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
+		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
 	}
-	else if (selected) {
-		bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
+	/*else if (selected) {
 		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
 		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
-		textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
-	}
+	}*/
 	else {
-		bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
-		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DLIGHT);
+		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
 		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
-		textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
 	}
 
-	DrawBevel(dc, hdrCell->m_rc, bgColour, colour1, colour2, 4);
+	const int edgeWidth = 4;
 
-	// TODO draw vertical text
+	DrawBevel(dc, hdrCell->m_rc, bgColour, colour1, colour2, edgeWidth);
+
 	dc.SetFont(*wxNORMAL_FONT);
 	dc.SetTextForeground(textColour);
-	dc.DrawLabel(hdrCell->m_label, hdrCell->m_rc, hdrCell->m_alignHorizontal | hdrCell->m_alignVertical);
+
+	wxRect rc = hdrCell->m_rc;
+	rc.Deflate(edgeWidth, edgeWidth);
+
+	DrawMultilineText(dc, hdrCell->m_label, rc,
+			hdrCell->m_alignHorizontal | hdrCell->m_alignVertical,
+			hdrCell->IsVerticalText());
+
+	// TODO draw sort arrow
 }
 
-wxAdvHdrTableCellRenderer *wxAdvDefaultHdrTableCellRenderer::Clone()
+wxAdvHdrCellRenderer *wxAdvDefaultHdrCellRenderer::Clone()
 {
-	return new wxAdvDefaultHdrTableCellRenderer();
+	return new wxAdvDefaultHdrCellRenderer();
 }
 
 //
-// wxAdvTableCellRenderer
+// wxAdvCellRenderer
 //
-wxAdvTableCellRenderer::wxAdvTableCellRenderer()
+wxAdvCellRenderer::wxAdvCellRenderer()
 {
 }
 
-wxAdvTableCellRenderer::~wxAdvTableCellRenderer()
+wxAdvCellRenderer::~wxAdvCellRenderer()
 {
 }
 
 //
-// wxAdvBoolTableCellRenderer
+// wxAdvBoolCellRenderer
 //
-wxAdvBoolTableCellRenderer::wxAdvBoolTableCellRenderer()
+wxAdvBoolCellRenderer::wxAdvBoolCellRenderer()
 {
 }
 
-wxAdvBoolTableCellRenderer::~wxAdvBoolTableCellRenderer()
+wxAdvBoolCellRenderer::~wxAdvBoolCellRenderer()
 {
 }
 
-void wxAdvBoolTableCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
+void wxAdvBoolCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
 {
 	int flags = 0;
 	if (value.Cmp(boolTrue) == 0) {
@@ -348,15 +485,15 @@ void wxAdvStringCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect
 	dc.DrawLabel(value, rc, attr->Alignment());
 }
 
-wxAdvColourTableCellRenderer::wxAdvColourTableCellRenderer()
+wxAdvColourCellRenderer::wxAdvColourCellRenderer()
 {
 }
 
-wxAdvColourTableCellRenderer::~wxAdvColourTableCellRenderer()
+wxAdvColourCellRenderer::~wxAdvColourCellRenderer()
 {
 }
 
-void wxAdvColourTableCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
+void wxAdvColourCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
 {
 	wxColour colour(value);
 
@@ -366,53 +503,114 @@ void wxAdvColourTableCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, 
 
 
 //
-// editors
+// Editors
 //
-wxAdvTableCellEditor::wxAdvTableCellEditor()
+
+wxAdvCellEditor::wxAdvCellEditor(wxAdvTable *table)
+{
+	m_table = table;
+	m_active = false;
+}
+
+wxAdvCellEditor::~wxAdvCellEditor()
 {
 }
 
-wxAdvTableCellEditor::~wxAdvTableCellEditor()
-{
-}
-
-bool wxAdvTableCellEditor::OneClickActivate()
+bool wxAdvCellEditor::OneClickActivate()
 {
 	return false;
 }
 
-void wxAdvTableCellEditor::Activate(wxAdvTable *table, size_t row, size_t col)
+void wxAdvCellEditor::HandleKeyEvent(wxKeyEvent &ev)
 {
-	m_cell.Set(row, col);
-	m_table = table;
-
-	DoActivate(table, row, col);
+	// do nothing by default - method is for override.
 }
 
-void wxAdvTableCellEditor::SetNewValue(wxString newValue)
+void wxAdvCellEditor::Activate(size_t row, size_t col)
 {
-	wxCHECK_RET(m_cell.IsSet(), wxT("wxAdvTableCellEditor::SetNewValue: m_cell.IsSet()"));
-	wxCHECK_RET(m_table != NULL, wxT("wxAdvTableCellEditor::SetNewValue: m_table != NULL"));
+	m_cell.Set(row, col);
+	m_active = true;
+
+	DoActivate();
+}
+
+void wxAdvCellEditor::Deactivate()
+{
+	if (m_active) {
+		m_active = false;
+
+		DoDeactivate();
+
+		m_cell.Unset();
+	}
+}
+
+bool wxAdvCellEditor::IsActive()
+{
+	return m_active;
+}
+
+wxAdvTable *wxAdvCellEditor::GetTable()
+{
+	return m_table;
+}
+
+size_t wxAdvCellEditor::GetRow()
+{
+	wxCHECK_MSG(m_cell.IsSet(), UNDEF_SIZE, wxT("wxAdvCellEditor::GetValue: m_cell.GetRow()"));
+
+	return m_cell.Row();
+}
+
+size_t wxAdvCellEditor::GetCol()
+{
+	wxCHECK_MSG(m_cell.IsSet(), UNDEF_SIZE, wxT("wxAdvCellEditor::GetValue: m_cell.GetCol()"));
+
+	return m_cell.Col();
+}
+
+wxRect wxAdvCellEditor::GetCellRect()
+{
+	wxCHECK_MSG(m_cell.IsSet(), wxRect(0, 0, 0, 0), wxT("wxAdvCellEditor::GetValue: m_cell.GetCol()"));
+
+	return m_table->GetCellRect(m_cell.Row(), m_cell.Col());
+}
+
+wxString wxAdvCellEditor::GetValue()
+{
+	wxCHECK_MSG(m_cell.IsSet(), wxEmptyString, wxT("wxAdvCellEditor::GetValue: m_cell.IsSet()"));
+
+	return m_table->GetModel()->GetCellValue(m_cell.Row(), m_cell.Col());
+}
+
+void wxAdvCellEditor::SetNewValue(wxString newValue)
+{
+	wxCHECK_RET(m_cell.IsSet(), wxT("wxAdvCellEditor::SetNewValue: m_cell.IsSet()"));
+	wxCHECK_RET(m_table != NULL, wxT("wxAdvCellEditor::SetNewValue: m_table != NULL"));
 
 	m_table->GetModel()->SetCellValue(m_cell.Row(), m_cell.Col(), newValue);
 }
 
-void wxAdvTableCellEditor::EndEditing()
+void wxAdvCellEditor::EndEditing()
 {
-	wxCHECK_RET(m_table != NULL, wxT("wxAdvTableCellEditor::EndEditing"));
-	m_table->StopEditing();
+	if (m_active) {
+		wxCHECK_RET(m_table != NULL, wxT("wxAdvCellEditor::EndEditing"));
+		m_table->StopEditing();
+		m_active = false;
+	}
 }
 
 //
-// wxAdvStringTableCellEditor
+// wxAdvStringCellEditor
 //
-BEGIN_EVENT_TABLE(wxAdvStringTableCellEditor, wxEvtHandler)
-	EVT_TEXT_ENTER(wxID_ANY, wxAdvStringTableCellEditor::OnTextEnter)
-	EVT_KILL_FOCUS(wxAdvStringTableCellEditor::OnKillFocus)
-	EVT_KEY_DOWN(wxAdvStringTableCellEditor::OnTextKeydown)
+BEGIN_EVENT_TABLE(wxAdvStringCellEditor, wxEvtHandler)
+	EVT_TEXT_ENTER(wxID_ANY, wxAdvStringCellEditor::OnTextEnter)
+	EVT_KILL_FOCUS(wxAdvStringCellEditor::OnKillFocus)
+	//EVT_KEY_DOWN(wxAdvStringCellEditor::OnTextKeydown)
 END_EVENT_TABLE()
 
-wxAdvStringTableCellEditor::wxAdvStringTableCellEditor(wxAdvTable *table)
+wxAdvStringCellEditor::wxAdvStringCellEditor(wxAdvTable *table)
+ : wxAdvCellEditor(table)
 {
 	m_textCtrl = new wxTextCtrl(table, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 			wxTE_PROCESS_ENTER | wxBORDER_NONE);
@@ -420,99 +618,121 @@ wxAdvStringTableCellEditor::wxAdvStringTableCellEditor(wxAdvTable *table)
 	m_textCtrl->SetNextHandler(this);
 }
 
-wxAdvStringTableCellEditor::~wxAdvStringTableCellEditor()
+wxAdvStringCellEditor::~wxAdvStringCellEditor()
 {
 	m_textCtrl->Close();
 }
 
-bool wxAdvStringTableCellEditor::OneClickActivate()
+bool wxAdvStringCellEditor::OneClickActivate()
 {
 	return false;
 }
 
-void wxAdvStringTableCellEditor::DoActivate(wxAdvTable *table, size_t row, size_t col)
+void wxAdvStringCellEditor::HandleKeyEvent(wxKeyEvent &ev)
 {
-	wxRect rc = table->GetCellRect(row, col);
-	rc.Deflate(1, 1);
-	table->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
+	int keyCode = ev.GetKeyCode();
 
-	m_textCtrl->ChangeValue(table->GetCellValue(row, col));
+	if (wxIsalnum(keyCode)) {
+		m_textCtrl->EmulateKeyPress(ev);
+	}
+}
+
+void wxAdvStringCellEditor::DoActivate()
+{
+	wxRect rc = GetCellRect();
+	rc.Deflate(1, 1);
+	GetTable()->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
+
+	m_textCtrl->ChangeValue(GetValue());
+	m_textCtrl->SetInsertionPointEnd();
 
 	m_textCtrl->SetSize(rc.x, rc.y, rc.width, rc.height);
 	m_textCtrl->Show();
 
 	m_textCtrl->SetFocus();
+
+	m_escPressed = false;
 }
 
-void wxAdvStringTableCellEditor::Deactivate(wxAdvTable *table)
+void wxAdvStringCellEditor::DoDeactivate()
 {
 	m_textCtrl->Show(false);
 
-	SetNewValue(m_textCtrl->GetValue());
+	if (!m_escPressed) {
+		SetNewValue(m_textCtrl->GetValue());
+	}
 }
 
-void wxAdvStringTableCellEditor::OnTextEnter(wxCommandEvent &ev)
+void wxAdvStringCellEditor::OnTextEnter(wxCommandEvent &ev)
 {
 	EndEditing();
 }
 
-void wxAdvStringTableCellEditor::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
+void wxAdvStringCellEditor::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
 {
 	EndEditing();
 }
 
-void wxAdvStringTableCellEditor::OnTextKeydown(wxKeyEvent &ev)
+void wxAdvStringCellEditor::OnTextKeydown(wxKeyEvent &ev)
 {
+	if (!IsActive()) {
+		// bugfix: editor is not active, but keydown events
+		// go here, so we forward them to table
+		GetTable()->ProcessEvent(ev);
+		return ;
+	}
+
 	if (ev.GetKeyCode() == WXK_ESCAPE) {
+		m_escPressed = true;
 		EndEditing();
 		return ;
 	}
 	ev.Skip();
 }
 
-
 //
-// wxAdvBoolTableCellEditor
+// wxAdvBoolCellEditor
 //
-BEGIN_EVENT_TABLE(wxAdvBoolTableCellEditor, wxEvtHandler)
-	EVT_CHECKBOX(wxID_ANY, wxAdvBoolTableCellEditor::OnCheckbox)
-	//	EVT_KILL_FOCUS(wxAdvBoolTableCellEditor::OnKillFocus)
+BEGIN_EVENT_TABLE(wxAdvBoolCellEditor, wxEvtHandler)
+	EVT_CHECKBOX(wxID_ANY, wxAdvBoolCellEditor::OnCheckbox)
+	//	EVT_KILL_FOCUS(wxAdvBoolCellEditor::OnKillFocus)
 END_EVENT_TABLE()
 
-wxAdvBoolTableCellEditor::wxAdvBoolTableCellEditor(wxAdvTable *table)
+wxAdvBoolCellEditor::wxAdvBoolCellEditor(wxAdvTable *table)
+: wxAdvCellEditor(table)
 {
 	m_checkBox = new wxCheckBox(table, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	m_checkBox->Show(false);
 	m_checkBox->SetNextHandler(this);
 }
 
-wxAdvBoolTableCellEditor::~wxAdvBoolTableCellEditor()
+wxAdvBoolCellEditor::~wxAdvBoolCellEditor()
 {
 	m_checkBox->Close();
 }
 
-bool wxAdvBoolTableCellEditor::OneClickActivate()
+bool wxAdvBoolCellEditor::OneClickActivate()
 {
 	return true;
 }
 
-void wxAdvBoolTableCellEditor::DoActivate(wxAdvTable *table, size_t row, size_t col)
+void wxAdvBoolCellEditor::DoActivate()
 {
-	wxRect rc = table->GetCellRect(row, col);
-	//rc.Deflate(1, 1);
-	table->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
+	wxRect rc = GetCellRect();
+	GetTable()->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
 
-	bool checked = ! (table->GetCellValue(row, col).Cmp(boolTrue) == 0);
+	bool checked = ! (GetValue().Cmp(boolTrue) == 0); // invert value on activation
 	m_checkBox->SetValue(checked);
 	SetNewValue((checked) ? boolTrue : boolFalse);
 
+	// rearrange checkbox to cell
 	m_checkBox->SetSize(rc.x, rc.y, rc.width, rc.height);
 	m_checkBox->Show();
 
 	m_checkBox->SetFocus();
 }
 
-void wxAdvBoolTableCellEditor::Deactivate(wxAdvTable *table)
+void wxAdvBoolCellEditor::DoDeactivate()
 {
 	m_checkBox->Show(false);
 
@@ -520,83 +740,85 @@ void wxAdvBoolTableCellEditor::Deactivate(wxAdvTable *table)
 	SetNewValue((checked) ? boolTrue : boolFalse);
 }
 
-void wxAdvBoolTableCellEditor::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
+void wxAdvBoolCellEditor::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
 {
 	EndEditing();
 }
 
-void wxAdvBoolTableCellEditor::OnCheckbox(wxCommandEvent &WXUNUSED(ev))
+void wxAdvBoolCellEditor::OnCheckbox(wxCommandEvent &WXUNUSED(ev))
 {
 	bool checked = m_checkBox->IsChecked();
 	SetNewValue((checked) ? boolTrue : boolFalse);
 }
 
-wxAdvColourTableCellEditor::wxAdvColourTableCellEditor()
+//
+// wxAdvColourCellEditor
+//
+wxAdvColourCellEditor::wxAdvColourCellEditor(wxAdvTable *table)
+: wxAdvCellEditor(table)
 {
 }
 
-wxAdvColourTableCellEditor::~wxAdvColourTableCellEditor()
+wxAdvColourCellEditor::~wxAdvColourCellEditor()
 {
 }
 
-bool wxAdvColourTableCellEditor::OneClickActivate()
+bool wxAdvColourCellEditor::OneClickActivate()
 {
 	return true;
 }
 
-void wxAdvColourTableCellEditor::DoActivate(wxAdvTable *table, size_t row, size_t col)
+void wxAdvColourCellEditor::DoActivate()
 {
-	wxColourData clrData;
-	clrData.SetColour(wxColour(table->GetCellValue(row, col)));
+	wxString strColor = GetValue();
 
-	wxColourDialog dlg(table, &clrData);
+	wxColourData clrData;
+	clrData.SetColour(wxColour(strColor));
+
+	wxColourDialog dlg(GetTable(), &clrData);
 	if (dlg.ShowModal() == wxID_OK) {
 		wxString newColourValue = dlg.GetColourData().GetColour().GetAsString();
+
 		SetNewValue(newColourValue);
+		EndEditing();
 	}
 }
 
-void wxAdvColourTableCellEditor::Deactivate(wxAdvTable *table)
+void wxAdvColourCellEditor::DoDeactivate()
 {
 }
 
 //
-// wxAdvIntervalTableCellEditor
+// wxAdvIntervalCellEditor
 //
-wxAdvIntervalTableCellEditor::wxAdvIntervalTableCellEditor(wxAdvTable *table)
+wxAdvIntervalCellEditor::wxAdvIntervalCellEditor(wxAdvTable *table)
+: wxAdvCellEditor(table)
 {
 	m_spinCtrl = new wxSpinCtrl(table, wxID_ANY);
 	m_spinCtrl->Show(false);
 }
 
-wxAdvIntervalTableCellEditor::~wxAdvIntervalTableCellEditor()
+wxAdvIntervalCellEditor::~wxAdvIntervalCellEditor()
 {
 	m_spinCtrl->Close();
 }
 
-bool wxAdvIntervalTableCellEditor::OneClickActivate()
+bool wxAdvIntervalCellEditor::OneClickActivate()
 {
 	return false;
 }
 
-void wxAdvIntervalTableCellEditor::SetRange(int minValue, int maxValue)
+void wxAdvIntervalCellEditor::SetRange(int minValue, int maxValue)
 {
 	m_spinCtrl->SetRange(minValue, maxValue);
 }
 
-void wxAdvIntervalTableCellEditor::Deactivate(wxAdvTable *table)
+void wxAdvIntervalCellEditor::DoActivate()
 {
-	m_spinCtrl->Show(false);
+	wxRect rc = GetCellRect();
+	GetTable()->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
 
-	SetNewValue(wxString::Format(wxT("%i"), m_spinCtrl->GetValue()));
-}
-
-void wxAdvIntervalTableCellEditor::DoActivate(wxAdvTable *table, size_t row, size_t col)
-{
-	wxRect rc = table->GetCellRect(row, col);
-	table->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
-
-	wxString value =  table->GetCellValue(row, col);
+	wxString value = GetValue();
 
 	m_spinCtrl->SetValue(value);
 
@@ -604,11 +826,19 @@ void wxAdvIntervalTableCellEditor::DoActivate(wxAdvTable *table, size_t row, siz
 	m_spinCtrl->Show();
 }
 
+void wxAdvIntervalCellEditor::DoDeactivate()
+{
+	m_spinCtrl->Show(false);
+
+	SetNewValue(wxString::Format(wxT("%i"), m_spinCtrl->GetValue()));
+}
+
 //
 // wxAdvCellAttribute
 //
 wxAdvCellAttribute::wxAdvCellAttribute()
 {
+	// default values
 	m_font = *wxNORMAL_FONT;
 	m_alignment = wxALIGN_CENTER | wxALIGN_RIGHT;
 	m_brush = *wxTheBrushList->FindOrCreateBrush(*wxBLACK, wxTRANSPARENT);
@@ -671,11 +901,16 @@ int SorterFunc(SortHelper *first, SortHelper *second)
 {
 	wxAdvTableSorter *sorter = first->m_sorter;
 	int res = sorter->Compare(first->m_table, first->m_row, first->m_col, second->m_row, second->m_col);
-	if (first->m_sortDirection == wxAdvTable::Descending) {
+	if (first->m_sortDirection == wxAdvTable::SortDirDescending) {
 		return -1 * res;
 	}
 	return res;
 }
+
+
+//
+// Sorters.
+//
 
 wxAdvTableSorter::wxAdvTableSorter()
 {
@@ -698,8 +933,10 @@ wxAdvTableStringSorter::~wxAdvTableStringSorter()
 
 int wxAdvTableStringSorter::Compare(wxAdvTable *table, size_t row1, size_t col1, size_t row2, size_t col2)
 {
-	wxString value1 = table->GetModel()->GetCellValue(row1, col1);
-	wxString value2 = table->GetModel()->GetCellValue(row2, col2);
+	wxAdvTableDataModel *dataModel = table->GetModel();
+
+	wxString value1 = dataModel->GetCellValue(row1, col1);
+	wxString value2 = dataModel->GetCellValue(row2, col2);
 
 	return Compare(value1, value2);
 }
@@ -722,11 +959,12 @@ wxAdvTableDoubleSorter::~wxAdvTableDoubleSorter()
 
 int wxAdvTableDoubleSorter::Compare(wxAdvTable *table, size_t row1, size_t col1, size_t row2, size_t col2)
 {
-	//double value1 = table->GetCellValueDouble(row1, col1);
-	//double value2 = table->GetCellValueDouble(row2, col2);
+	wxAdvTableDataModel *dataModel = table->GetModel();
 
-	//return Compare(value1, value2);
-	return 0;
+	double value1 = dataModel->GetCellValueDouble(row1, col1);
+	double value2 = dataModel->GetCellValueDouble(row2, col2);
+
+	return Compare(value1, value2);
 }
 
 int wxAdvTableDoubleSorter::Compare(double value1, double value2)
@@ -745,10 +983,12 @@ int wxAdvTableDoubleSorter::Compare(double value1, double value2)
 //
 // wxAdvTable
 //
+
 BEGIN_EVENT_TABLE(wxAdvTable, wxScrolledWindow)
 	EVT_PAINT(wxAdvTable::OnPaint)
 	EVT_MOUSE_EVENTS(wxAdvTable::OnMouseEvents)
 	EVT_KEY_DOWN(wxAdvTable::OnKeyDown)
+	EVT_CHAR(wxAdvTable::OnChar)
 	EVT_KILL_FOCUS(wxAdvTable::OnKillFocus)
 	EVT_SIZE(wxAdvTable::OnSize)
 	EVT_SCROLLWIN(wxAdvTable::OnScrollWin)
@@ -757,21 +997,21 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(wxAdvTable, wxScrolledWindow)
 
 wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &m_size)
-: wxScrolledWindow(parent, id, pos, m_size, wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE)
+: wxScrolledWindow(parent, id, pos, m_size, wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE | wxWANTS_CHARS)
 {
 	m_tableCreated = false;
 	m_model = NULL;
 	m_defaultRenderer = new wxAdvStringCellRenderer();
-	m_defaultHdrRenderer = new wxAdvDefaultHdrTableCellRenderer();
+	m_defaultHdrRenderer = new wxAdvDefaultHdrCellRenderer();
 
 	m_sorter = NULL;
-	m_sortMode = Rows;
+	m_sortMode = SortRows;
 	m_highlightMode = HighlightNone;
 	m_pressedHdrCell = NULL;
 	m_currentHdrCell = NULL;
-	m_sortDirection = Ascending;
+	m_sortDirection = SortDirAscending;
 
-	m_currentEditor = NULL;
+	m_activeEditor = NULL;
 
 	m_selectMode = SelectBlock;
 
@@ -781,11 +1021,12 @@ wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, cons
 
 	// Graphic objects initialization
 	m_bgBrush = *wxWHITE_BRUSH;
-	m_selectedBgBrush = *wxTheBrushList->FindOrCreateBrush(wxColour(200, 200, 250));
+	m_selectedBgBrush = *wxTheBrushList->FindOrCreateBrush(wxColour(220, 220, 220));
 	m_gridPen = *wxThePenList->FindOrCreatePen(wxColour(200, 200, 200), 1, wxSOLID);
 	m_focusedPen = *wxThePenList->FindOrCreatePen(wxColour(80, 80, 250), 1, wxSOLID);
 	m_focusedBgBrush = *wxTheBrushList->FindOrCreateBrush(wxColour(180, 180, 250));
 	m_highlightedBgBrush = *wxTheBrushList->FindOrCreateBrush(wxColour(225, 225, 250));
+
 	ClearSelection();
 
 	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
@@ -795,7 +1036,7 @@ wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, cons
 
 wxAdvTable::~wxAdvTable()
 {
-	wxAdvTableCellRendererMap::iterator it;
+	wxAdvCellRendererMap::iterator it;
 
 	for (it = m_renderers.begin(); it != m_renderers.end(); it++) {
 		delete it->second;
@@ -1193,9 +1434,11 @@ void wxAdvTable::UpdateSortOrder()
 
 	wxSortHelperArray helpers(SorterFunc);
 
+	m_sortOrder.Empty();
+
 	// XXX need normal sorting method, this code is very ugly.
-	if (m_sortMode == Rows) {
-		if (m_sortingIndex >= m_decompCols.Count()) {
+	if (m_sortMode == SortRows) {
+		if (m_sortingIndex > MaxCol()) {
 			return ;
 		}
 
@@ -1206,8 +1449,8 @@ void wxAdvTable::UpdateSortOrder()
 			helpers.Add(new SortHelper(this, m_sorter, row, m_sortingIndex, true, m_sortDirection));
 		}
 	}
-	else if (m_sortMode == Cols) {
-		if (m_sortingIndex >= m_decompRows.Count()) {
+	else if (m_sortMode == SortCols) {
+		if (m_sortingIndex >= MaxRow()) {
 			return ;
 		}
 
@@ -1222,7 +1465,6 @@ void wxAdvTable::UpdateSortOrder()
 		return ;
 	}
 
-	m_sortOrder.Empty();
 	m_sortOrder.Alloc(helpers.Count());
 
 	for (size_t n = 0; n < helpers.Count(); n++) {
@@ -1237,13 +1479,19 @@ void wxAdvTable::UpdateSortOrder()
 	RedrawAll();
 }
 
-void wxAdvTable::SetSortingIndex(size_t sortingIndex)
+void wxAdvTable::SetSortingIndex(size_t sortingIndex, bool invert)
 {
-	if (m_sortingIndex == sortingIndex) {
-		m_sortDirection = (m_sortDirection == Ascending) ? Descending : Ascending;
+	if (sortingIndex != UNDEF_SIZE) {
+		if (m_sortingIndex == sortingIndex && invert) {
+			m_sortDirection = (m_sortDirection == SortDirAscending) ?
+					SortDirDescending : SortDirAscending;
+		}
+		else {
+			m_sortDirection = SortDirAscending;
+		}
 	}
 	else {
-		m_sortDirection = Ascending;
+		m_sortDirection = SortDirNoSorting;
 	}
 
 	m_sortingIndex = sortingIndex;
@@ -1317,7 +1565,7 @@ void wxAdvTable::DrawHdrCellSelf(wxDC &dc, wxAdvHdrCell *hdrCell)
 {
 	wxDCClipper clip(dc, hdrCell->m_rc);
 
-	int sortDirection = NoSorting;
+	int sortDirection = SortDirNoSorting;
 	bool pressed = false;
 	bool selected = false;
 
@@ -1335,7 +1583,7 @@ void wxAdvTable::DrawHdrCellSelf(wxDC &dc, wxAdvHdrCell *hdrCell)
 		selected = true;
 	}
 
-	wxAdvHdrTableCellRenderer *renderer = NULL;
+	wxAdvHdrCellRenderer *renderer = NULL;
 	if (hdrCell->m_renderer != NULL) {
 		renderer = hdrCell->m_renderer;
 	}
@@ -1349,12 +1597,12 @@ void wxAdvTable::DrawTable(wxDC &dc)
 {
 	FOREACH_HDRCELL(row, m_decompRows) {
 		FOREACH_HDRCELL(col, m_decompCols) {
-			DrawTableCell(dc, row, col);
+			DrawCell(dc, row, col);
 		}
 	}
 }
 
-void wxAdvTable::DrawTableCell(wxDC &dc, size_t row, size_t col)
+void wxAdvTable::DrawCell(wxDC &dc, size_t row, size_t col)
 {
 	bool highlighed = IsCellHighlighted(row, col);
 	bool selected = IsCellSelected(row, col);
@@ -1483,62 +1731,18 @@ bool wxAdvTable::IsCellEditable(size_t row, size_t col)
 	return m_model->IsCellEditable(row, col);
 }
 
-wxAdvTableCellEditor *wxAdvTable::GetEditorForCell(size_t row, size_t col)
-{
-	ToModelCellCoord(row, col, row, col);
-	int format = m_model->GetCellFormat(row, col);
-
-	if (m_editors.find(format) == m_editors.end()) {
-		return NULL;
-	}
-	return m_editors[format];
-}
-
-void wxAdvTable::SetEditorForFormat(int format, wxAdvTableCellEditor *editor)
-{
-	if (m_editors.find(format) != m_editors.end()) {
-		delete m_editors[format];
-	}
-	m_editors[format] = editor;
-}
-
-wxAdvTableCellRenderer *wxAdvTable::GetRendererForCell(size_t row, size_t col)
-{
-	ToModelCellCoord(row, col, row, col);
-	int format = m_model->GetCellFormat(row, col);
-
-	if (m_renderers.find(format) == m_renderers.end()) {
-		return m_defaultRenderer;
-	}
-	return m_renderers[format];
-}
-
-void wxAdvTable::SetRendererForFormat(int format, wxAdvTableCellRenderer *renderer)
-{
-	if (m_renderers.find(format) != m_renderers.end()) {
-		delete m_renderers[format];
-	}
-	m_renderers[format] = renderer;
-	RedrawAll();
-}
-
-void wxAdvTable::SetDefaultRenderer(wxAdvTableCellRenderer *renderer)
-{
-	SAFE_REPLACE(m_defaultRenderer, renderer);
-	RedrawAll();
-}
 
 void wxAdvTable::ToModelCellCoord(size_t row, size_t col, size_t &modelRow, size_t &modelCol)
 {
-	if (m_sorter == NULL) {
+	if (m_sorter == NULL || m_sortingIndex == UNDEF_SIZE) {
 		modelRow = row;
 		modelCol = col;
 	}
-	else if (m_sortMode == Rows) {
+	else if (m_sortMode == SortRows) {
 		modelRow = m_sortOrder[row];
 		modelCol = col;
 	}
-	else if (m_sortMode == Cols) {
+	else if (m_sortMode == SortCols) {
 		modelRow = row;
 		modelCol = m_sortOrder[col];
 	}
@@ -1548,13 +1752,13 @@ void wxAdvTable::ToModelCellCoord(size_t row, size_t col, size_t &modelRow, size
 	}
 }
 
-void wxAdvTable::ToTableCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol)
+void wxAdvTable::ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol)
 {
-	if (m_sorter == NULL) {
+	if (m_sorter == NULL || m_sortingIndex == UNDEF_SIZE) {
 		tableRow = row;
 		tableCol = col;
 	}
-	else if (m_sortMode == Rows && m_sortingIndex < m_sortOrder.Count()) {
+	else if (m_sortMode == SortRows && m_sortingIndex < m_sortOrder.Count()) {
 		for (size_t n = 0; n < m_sortOrder.Count(); n++) {
 			if (m_sortOrder[n] == row) {
 				tableRow = n;
@@ -1564,7 +1768,7 @@ void wxAdvTable::ToTableCellCoord(size_t row, size_t col, size_t &tableRow, size
 
 		tableCol = col;
 	}
-	else if (m_sortMode == Cols && m_sortingIndex < m_sortOrder.Count()) {
+	else if (m_sortMode == SortCols && m_sortingIndex < m_sortOrder.Count()) {
 		tableRow = row;
 
 		for (size_t n = 0; n < m_sortOrder.Count(); n++) {
@@ -1578,6 +1782,51 @@ void wxAdvTable::ToTableCellCoord(size_t row, size_t col, size_t &tableRow, size
 		tableRow = row;
 		tableCol = col;
 	}
+}
+
+wxAdvCellEditor *wxAdvTable::GetEditorForCell(size_t row, size_t col)
+{
+	ToModelCellCoord(row, col, row, col);
+	int format = m_model->GetCellFormat(row, col);
+
+	if (m_editors.find(format) == m_editors.end()) {
+		return NULL;
+	}
+	return m_editors[format];
+}
+
+void wxAdvTable::SetEditorForFormat(int format, wxAdvCellEditor *editor)
+{
+	if (m_editors.find(format) != m_editors.end()) {
+		delete m_editors[format];
+	}
+	m_editors[format] = editor;
+}
+
+wxAdvCellRenderer *wxAdvTable::GetRendererForCell(size_t row, size_t col)
+{
+	ToModelCellCoord(row, col, row, col);
+	int format = m_model->GetCellFormat(row, col);
+
+	if (m_renderers.find(format) == m_renderers.end()) {
+		return m_defaultRenderer;
+	}
+	return m_renderers[format];
+}
+
+void wxAdvTable::SetRendererForFormat(int format, wxAdvCellRenderer *renderer)
+{
+	if (m_renderers.find(format) != m_renderers.end()) {
+		delete m_renderers[format];
+	}
+	m_renderers[format] = renderer;
+	RedrawAll();
+}
+
+void wxAdvTable::SetDefaultRenderer(wxAdvCellRenderer *renderer)
+{
+	SAFE_REPLACE(m_defaultRenderer, renderer);
+	RedrawAll();
 }
 
 bool wxAdvTable::GetCellRect(wxRect &rc, size_t row, size_t col)
@@ -1615,11 +1864,76 @@ void wxAdvTable::GetRangeRect(wxRect &rc, size_t row1, size_t col1, size_t row2,
 }
 
 //
+// Graphical objects functions.
+//
+
+void wxAdvTable::SetSelectedBgBrush(const wxBrush &selectedBgBrush)
+{
+	m_selectedBgBrush = selectedBgBrush;
+	RedrawRange(&m_selected);
+}
+
+const wxBrush &wxAdvTable::GetSelectedBgBrush()
+{
+	return m_selectedBgBrush;
+}
+
+void wxAdvTable::SetGridPen(const wxPen &gridPen)
+{
+	m_gridPen = gridPen;
+	RedrawAll();
+}
+
+const wxPen &wxAdvTable::GetGridPen()
+{
+	return m_gridPen;
+}
+
+void wxAdvTable::SetFocusedPen(const wxPen &focusedPen)
+{
+	m_focusedPen = focusedPen;
+
+	if (m_focused.IsSet()) {
+		RedrawRange(m_focused.Row(), m_focused.Col(), m_focused.Row(), m_focused.Col());
+	}
+}
+
+const wxPen &wxAdvTable::GetFocusedPen()
+{
+	return m_focusedPen;
+}
+
+void wxAdvTable::SetFocusedBgBrush(const wxBrush &focusedBgBrush)
+{
+	m_focusedBgBrush = focusedBgBrush;
+
+	if (m_focused.IsSet()) {
+		RedrawRange(m_focused.Row(), m_focused.Col(), m_focused.Row(), m_focused.Col());
+	}
+}
+
+const wxBrush &wxAdvTable::GetFocusedBgBrush()
+{
+	return m_focusedBgBrush;
+}
+
+void wxAdvTable::SetHighlightedBgBrush(const wxBrush &highlightedBgBrush)
+{
+	m_highlightedBgBrush = highlightedBgBrush;
+	RedrawAll();
+}
+
+const wxBrush &wxAdvTable::GetHighlightedBgBrush()
+{
+	return m_highlightedBgBrush;
+}
+
+//
 // Selection functions
 //
 void wxAdvTable::SetSelection(wxAdvRange &range)
 {
-	SetSelection(range.m_row1, range.m_col1, range.m_row2, range.m_col2);
+	SetSelection(range.Row1(), range.Col1(), range.Row2(), range.Col2());
 }
 
 void wxAdvTable::SetSelection(size_t row, size_t col)
@@ -1637,29 +1951,57 @@ void wxAdvTable::SetSelection(size_t row1, size_t col1, size_t row2, size_t col2
 	RedrawRange(&m_selected);
 }
 
-void wxAdvTable::SelectCells(wxMouseEvent &ev, size_t row, size_t col)
+
+//
+// Selection internal functions.
+//
+
+void wxAdvTable::SelectCells(wxMouseEvent &ev, size_t row1, size_t col1, size_t row2, size_t col2)
 {
+	SelectCells(row1, col1, row2, col2,
+			ev.ControlDown(),
+			ev.ShiftDown(),
+			ev.AltDown(),
+			ev.MetaDown());
+}
+
+void wxAdvTable::SelectCells(wxKeyEvent &ev, size_t row1, size_t col1, size_t row2, size_t col2)
+{
+	SelectCells(row1, col1, row2, col2,
+			ev.ControlDown(),
+			ev.ShiftDown(),
+			ev.AltDown(),
+			ev.MetaDown());
+}
+
+void wxAdvTable::SelectCells(size_t row1, size_t col1, size_t row2, size_t col2, bool controlDown, bool shiftDown, bool altDown, bool metaDown)
+{
+	if (m_selected.Equals(row1, col1, row2, col2)) {
+		// selection not changed
+		return ;
+	}
+
 	wxAdvRange oldSelected = m_selected; // save old selection to redraw
 
 	switch (m_selectMode) {
 	case SelectCell:
-		m_selected.Set(row, col);
+		m_selected.Set(row2, col2);
 		break;
 	case SelectRows:
-		m_selected.Set(m_pressedCell.Row(), 0, row, GetDecompColCount() - 1);
+		m_selected.Set(row1, 0, row2, MaxCol());
 		break;
 	case SelectCols:
-		m_selected.Set(0, m_pressedCell.Col(), GetDecompRowCount() - 1, col);
+		m_selected.Set(0, col1, MaxRow(), col2);
 		break;
 	case SelectBlock:
-		m_selected.Set(m_pressedCell.Row(), m_pressedCell.Col(), row, col);
+		m_selected.Set(row1, col1, row2, col2);
 		break;
 	}
 
 	SendRangeEvent(wxEVT_GRID_RANGE_SELECT,
-			m_selected.m_row1, m_selected.m_col1,
-			m_selected.m_row2, m_selected.m_col2,
-			ev);
+			m_selected.TopRow(), m_selected.LeftCol(),
+			m_selected.BottomRow(), m_selected.RightCol(),
+			controlDown, shiftDown, altDown, metaDown);
 
 	// redraw old selection
 	RedrawRange(&oldSelected);
@@ -1669,7 +2011,7 @@ void wxAdvTable::SelectCells(wxMouseEvent &ev, size_t row, size_t col)
 
 void wxAdvTable::SetFocusedCell(size_t row, size_t col)
 {
-	if (row >= GetDecompRowCount() || col >= GetDecompColCount()) {
+	if (row > MaxRow() || col > MaxCol()) {
 		return ;
 	}
 
@@ -1728,11 +2070,14 @@ void wxAdvTable::SetCurrentHdrCell(wxAdvHdrCell *cell)
 
 void wxAdvTable::StopEditing()
 {
-	if (m_currentEditor != NULL) {
-		m_currentEditor->Deactivate(this);
-		m_currentEditor = NULL;
+	if (m_activeEditor != NULL) {
+		m_activeEditor->Deactivate();
+		m_activeEditor = NULL;
+
+		SetFocus();
 	}
 }
+
 
 //
 // Redraw functions
@@ -1809,7 +2154,7 @@ void wxAdvTable::ResizeBackBitmaps()
 
 void wxAdvTable::RedrawRange(wxAdvRange *range)
 {
-	RedrawRange(range->m_row1, range->m_col1, range->m_row2, range->m_col2);
+	RedrawRange(range->TopRow(), range->LeftCol(), range->BottomRow(), range->RightCol());
 }
 
 void wxAdvTable::RedrawRange(size_t row1, size_t col1, size_t row2, size_t col2)
@@ -1826,10 +2171,10 @@ void wxAdvTable::RedrawRange(size_t row1, size_t col1, size_t row2, size_t col2)
 	int xViewStart, yViewStart;
 	CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
 
-	row1 = wxMax(row1, visibleRange.m_row1);
-	col1 = wxMax(col1, visibleRange.m_col1);
-	row2 = wxMin(row2, visibleRange.m_row2);
-	col2 = wxMin(col2, visibleRange.m_col2);
+	row1 = wxMax(row1, visibleRange.TopRow());
+	col1 = wxMax(col1, visibleRange.LeftCol());
+	row2 = wxMin(row2, visibleRange.BottomRow());
+	col2 = wxMin(col2, visibleRange.RightCol());
 
 	wxMemoryDC dc(m_backBitmap);
 
@@ -1838,7 +2183,7 @@ void wxAdvTable::RedrawRange(size_t row1, size_t col1, size_t row2, size_t col2)
 
 	for (size_t row = row1; row <= row2; row++) {
 		for (size_t col = col1; col <= col2; col++) {
-			DrawTableCell(dc, row, col);
+			DrawCell(dc, row, col);
 		}
 	}
 
@@ -1923,14 +2268,14 @@ void wxAdvTable::RedrawHighlighted(wxAdvCoord *coord)
 			RedrawRange(coord->Row(), coord->Col(), coord->Row(), coord->Col());
 			break;
 		case HighlightRows:
-			RedrawRange(coord->Row(), 0, coord->Row(), GetDecompColCount() - 1);
+			RedrawRange(coord->Row(), 0, coord->Row(), MaxCol());
 			break;
 		case HighlightCols:
-			RedrawRange(0, coord->Col(), GetDecompRowCount() - 1, coord->Col());
+			RedrawRange(0, coord->Col(), MaxRow(), coord->Col());
 			break;
 		case HighlightBoth:
-			RedrawRange(coord->Row(), 0, coord->Row(), GetDecompColCount() - 1);
-			RedrawRange(0, coord->Col(), GetDecompRowCount() - 1, coord->Col());
+			RedrawRange(coord->Row(), 0, coord->Row(), MaxCol());
+			RedrawRange(0, coord->Col(), MaxRow(), coord->Col());
 			break;
 	}
 }
@@ -1998,7 +2343,52 @@ bool wxAdvTable::GetVisibleRange(wxAdvRange &range)
 	return true;
 }
 
-wxRect wxAdvTable::CalcEntireRowRect(size_t row, size_t col)
+
+//
+// Table area calculation functions.
+//
+
+wxRect wxAdvTable::CalcTableRect()
+{
+	wxCoord x = 0;
+	wxCoord y = 0;
+
+	if (m_showCorner || m_showRows) {
+		x = CalcTotalRowLayersWidth();
+	}
+	if (m_showCorner || m_showCols) {
+		y = CalcTotalColLayersHeight();
+	}
+
+	return wxRect(x, y,
+			CalcTotalColsWidth(), CalcTotalRowsHeight());
+}
+
+wxRect wxAdvTable::CalcRowsAreaRect()
+{
+	if (m_showRows) {
+		wxCoord y = (m_showCols || m_showCorner) ? CalcTotalColLayersHeight() : 0;
+		return wxRect(0, y,
+				CalcTotalRowLayersWidth(), CalcTotalRowsHeight());
+	}
+	else {
+		return wxRect(0, 0, 0, 0);
+	}
+}
+
+wxRect wxAdvTable::CalcColsAreaRect()
+{
+	if (m_showCols) {
+		wxCoord x = (m_showRows || m_showCorner) ? SumLayerSizes(m_rowLayerWidths) : 0;
+		return wxRect(x, 0,
+				CalcTotalColsWidth(), SumLayerSizes(m_colLayerHeights));
+	}
+	else {
+		return wxRect(0, 0, 0, 0);
+	}
+}
+
+wxRect wxAdvTable::CalcRowRect(size_t row, size_t col)
 {
 	wxRect rcTable = CalcTableRect();
 	wxRect rc;
@@ -2009,7 +2399,7 @@ wxRect wxAdvTable::CalcEntireRowRect(size_t row, size_t col)
 	return rc;
 }
 
-wxRect wxAdvTable::CalcEntireColRect(size_t row, size_t col)
+wxRect wxAdvTable::CalcColRect(size_t row, size_t col)
 {
 	wxRect rcTable = CalcTableRect();
 	wxRect rc;
@@ -2057,26 +2447,37 @@ void wxAdvTable::SendEvent(const wxEventType type, size_t row, size_t col, wxMou
 
 void wxAdvTable::SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2, wxMouseEvent &mouseEv)
 {
-	wxGridRangeSelectEvent ev(GetId(), type, this,
-               wxGridCellCoords((int) row1, (int) col1),
-               wxGridCellCoords((int) row2, (int) col2),
-               false/*XXX FIXME*/,
+	SendRangeEvent(type, row1, col1, row2, col2,
                mouseEv.ControlDown(),
                mouseEv.ShiftDown(),
                mouseEv.AltDown(),
                mouseEv.MetaDown());
+}
+
+void wxAdvTable::SendRangeEvent(const wxEventType type, size_t row1, size_t col1, size_t row2, size_t col2,
+		bool controlDown, bool shiftDown, bool altDown,	bool metaDown)
+{
+	wxGridRangeSelectEvent ev(GetId(), type, this,
+			wxGridCellCoords((int) row1, (int) col1),
+			wxGridCellCoords((int) row2, (int) col2),
+			false/*XXX FIXME*/,
+			controlDown,
+			shiftDown,
+			altDown,
+			metaDown);
 
 	GetEventHandler()->ProcessEvent(ev);
 }
 
-void wxAdvTable::EditCell(wxAdvTableCellEditor *editor, size_t row, size_t col)
+void wxAdvTable::EditCell(wxAdvCellEditor *editor, size_t row, size_t col)
 {
-	if (m_currentEditor != NULL) {
-		m_currentEditor->Deactivate(this);
+	// TODO send editor shown/hidden events
+	if (m_activeEditor != NULL) {
+		m_activeEditor->Deactivate();
 	}
 
-	editor->Activate(this, row, col);
-	m_currentEditor = editor;
+	editor->Activate(row, col);
+	m_activeEditor = editor;
 }
 
 //
@@ -2086,6 +2487,7 @@ void wxAdvTable::OnPaint(wxPaintEvent &WXUNUSED(ev))
 {
 	wxAutoBufferedPaintDC dc(this);
 
+	// draw window background
 	dc.SetBrush(*wxTheBrushList->FindOrCreateBrush(GetBackgroundColour()));
 	dc.SetPen(*wxThePenList->FindOrCreatePen(GetBackgroundColour(), 1, wxSOLID));
 	dc.DrawRectangle(GetClientRect());
@@ -2095,12 +2497,12 @@ void wxAdvTable::OnPaint(wxPaintEvent &WXUNUSED(ev))
 	}
 
 	if (m_showRows) {
-		wxRect rcRows = CalcRowsRect();
+		wxRect rcRows = CalcRowsAreaRect();
 		dc.DrawBitmap(m_backBitmapRows, rcRows.x, rcRows.y);
 	}
 
 	if (m_showCols) {
-		wxRect rcCols = CalcColsRect();
+		wxRect rcCols = CalcColsAreaRect();
 		dc.DrawBitmap(m_backBitmapCols, rcCols.x, rcCols.y);
 	}
 
@@ -2109,8 +2511,8 @@ void wxAdvTable::OnPaint(wxPaintEvent &WXUNUSED(ev))
 	}
 
 	// draw data
-	wxRect rcData = CalcTableRect();
-	dc.DrawBitmap(m_backBitmap, rcData.x, rcData.y);
+	wxRect rcTable = CalcTableRect();
+	dc.DrawBitmap(m_backBitmap, rcTable.x, rcTable.y);
 }
 
 void wxAdvTable::OnMouseEvents(wxMouseEvent &ev)
@@ -2155,8 +2557,8 @@ void wxAdvTable::HandleHdrCellMouseEvent(wxMouseEvent &ev, wxAdvHdrCell *cell)
 	else if (ev.LeftUp()) {
 		if (cell == m_pressedHdrCell && m_pressedHdrCell != NULL) {
 			if ((m_sorter != NULL && m_pressedHdrCell->m_sortable && m_pressedHdrCell->m_isDecomp) &&
-				((!m_pressedHdrCell->m_isRow && m_sortMode == Rows) ||
-				(m_pressedHdrCell->m_isRow && m_sortMode == Cols))) {
+				((!m_pressedHdrCell->m_isRow && m_sortMode == SortRows) ||
+				(m_pressedHdrCell->m_isRow && m_sortMode == SortCols))) {
 				SetSortingIndex(m_pressedHdrCell->m_index);
 			}
 		}
@@ -2175,20 +2577,20 @@ void wxAdvTable::HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col)
 		m_pressedCell.Set(row, col);
 
 		SetFocusedCell(row, col);
-		SelectCells(ev, row, col);
+		SelectCells(ev, m_pressedCell.Row(), m_pressedCell.Col(), row, col);
 
 		//Refresh();
 	}
 	else if (ev.Dragging() && ev.m_leftDown) {
 		SetFocusedCell(row, col);
-		SelectCells(ev, row, col);
+		SelectCells(ev, m_pressedCell.Row(), m_pressedCell.Col(), row, col);
 
 		//Refresh();
 	}
 	else if (ev.LeftUp()) {
 		if (m_pressedCell.Equal(row, col)) {
 			if (IsCellEditable(row, col)) {
-				wxAdvTableCellEditor *editor = GetEditorForCell(row, col);
+				wxAdvCellEditor *editor = GetEditorForCell(row, col);
 
 				if (editor != NULL && editor->OneClickActivate()) {
 					EditCell(editor, row, col);
@@ -2200,7 +2602,7 @@ void wxAdvTable::HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col)
 	}
 	else if (ev.LeftDClick()) {
 		if (IsCellEditable(row, col)) {
-			wxAdvTableCellEditor *editor = GetEditorForCell(row, col);
+			wxAdvCellEditor *editor = GetEditorForCell(row, col);
 			if (editor != NULL) {
 				EditCell(editor, row, col);
 			}
@@ -2215,9 +2617,120 @@ void wxAdvTable::HandleCellMouseEvent(wxMouseEvent &ev, size_t row, size_t col)
 
 void wxAdvTable::OnKeyDown(wxKeyEvent &ev)
 {
-	// TODO handle alphanumber keycodes to activate editor
-	// TODO add selection by arrow keys
-	ev.Skip();
+	int keyCode = ev.GetKeyCode();
+
+	// cell select/focus shift
+	int colShift = 0;
+	int rowShift = 0;
+
+	switch (keyCode) {
+	case WXK_LEFT:
+	case WXK_NUMPAD_LEFT:
+		colShift = -1;
+		break;
+	case WXK_RIGHT:
+	case WXK_NUMPAD_RIGHT:
+		colShift = 1;
+		break;
+	case WXK_UP:
+	case WXK_NUMPAD_UP:
+		rowShift = -1;
+		break;
+	case WXK_DOWN:
+	case WXK_NUMPAD_DOWN:
+		rowShift = 1;
+		break;
+	default:
+		ev.Skip();
+		return ;
+#if 0
+		if (wxIsalnum(keyCode) || keyCode == WXK_RETURN || keyCode == WXK_SPACE) {
+			if (m_focused.IsSet()) {
+				size_t row = m_focused.Row();
+				size_t col = m_focused.Col();
+
+				if (IsCellEditable(row, col)) {
+					wxAdvCellEditor *editor = GetEditorForCell(row, col);
+					if (editor != NULL) {
+						EditCell(editor, row, col);
+
+						editor->HandleKeyEvent(ev);
+					}
+				}
+			}
+		}
+		else {
+			ev.Skip();
+		}
+#endif
+	}
+
+	if (colShift != 0 || rowShift != 0) {
+		// selected range
+		size_t row1, col1;
+		size_t row2, col2;
+
+		// new selected row/column coordinate
+		size_t newRow, newCol;
+
+		if (m_selected.IsSet()) {
+			row1 = m_selected.Row1();
+			col1 = m_selected.Col1();
+			row2 = m_selected.Row2();
+			col2 = m_selected.Col2();
+
+			if (!m_focused.IsSet()) {
+				newRow = IncrRow(row2, rowShift);
+				newCol = IncrCol(col2, colShift);
+			}
+			else {
+				newRow = IncrRow(m_focused.Row(), rowShift);
+				newCol = IncrCol(m_focused.Col(), colShift);
+			}
+		}
+		else {
+			// if no cell selected, start selection from first cell
+			row1 = row2 = 0;
+			col1 = col2 = 0;
+			newRow = 0;
+			newCol = 0;
+		}
+
+		// update focused cell
+		SetFocusedCell(newRow, newCol);
+
+		// update selection
+		if (ev.ShiftDown()) {
+			SelectCells(ev, row1, col1, newRow, newCol);
+		}
+		else {
+			SelectCells(ev, newRow, newCol, newRow, newCol);
+		}
+	}
+}
+
+void wxAdvTable::OnChar(wxKeyEvent &ev)
+{
+	int keyCode = ev.GetKeyCode();
+
+	if (wxIsalnum(keyCode) || keyCode == WXK_RETURN || keyCode == WXK_SPACE) {
+		if (m_focused.IsSet()) {
+			size_t row = m_focused.Row();
+			size_t col = m_focused.Col();
+
+			if (IsCellEditable(row, col)) {
+				wxAdvCellEditor *editor = GetEditorForCell(row, col);
+				if (editor != NULL) {
+					EditCell(editor, row, col);
+
+					editor->HandleKeyEvent(ev);
+				}
+			}
+		}
+	}
+	else {
+		ev.Skip();
+	}
 }
 
 void wxAdvTable::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
@@ -2230,23 +2743,36 @@ void wxAdvTable::OnSize(wxSizeEvent &WXUNUSED(ev))
 	ResizeBackBitmaps();
 }
 
-//void wxAdvTable::OnScrollWin(wxScrollWinEvent &WXUNUSED(ev))
 void wxAdvTable::OnScrollWin(wxScrollWinEvent &ev)
 {
-	int xScroll = -1;
-	int yScroll = -1;
+	int inc = CalcScrollInc(ev);
+	if (inc == 0) {
+		ev.Skip();
+		return ;
+	}
+
+	int x, y;
+	GetViewStart(&x, &y);
+
 	switch (ev.GetOrientation()) {
 	case wxHORIZONTAL:
-		xScroll = ev.GetPosition();
+		x += inc;
+		y = -1;
 		break;
 	case wxVERTICAL:
-		yScroll = ev.GetPosition();
+		x = -1;
+		y += inc;
 		break;
 	}
 
-	Scroll(xScroll, yScroll);
+	Scroll(x, y);
 
 	RedrawAll();
+}
+
+void wxAdvTable::ScrollWindow(int dx, int dy, const wxRect* rect)
+{
+	// do nothing. Turn off physical scrolling, for smooth scroll.
 }
 
 void wxAdvTable::CellChanged(size_t row, size_t col)
@@ -2259,4 +2785,3 @@ void wxAdvTable::TableChanged()
 {
 	RedrawAll();
 }
-

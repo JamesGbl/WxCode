@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
-// Copyright:   (c) 2008 Moskvichev A.V.
+// Copyright:   (c) 2008-2009 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +48,8 @@ enum CONTROL_IDS {
 	CHECK_SHOW_ROWS,
 	CHECK_SHOW_COLS,
 	CHECK_SHOW_CORNER,
+	SPINCTRL_GRID_WIDTH,
+	SPINCTRL_FOCUSED_WIDTH,
 };
 
 BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
@@ -56,6 +58,8 @@ BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
 	EVT_CHECKBOX(CHECK_SHOW_ROWS, ControlPanel::OnCheckShowRows)
 	EVT_CHECKBOX(CHECK_SHOW_COLS, ControlPanel::OnCheckShowCols)
 	EVT_CHECKBOX(CHECK_SHOW_CORNER, ControlPanel::OnCheckShowCorner)
+	EVT_SPINCTRL(SPINCTRL_GRID_WIDTH, ControlPanel::OnSpinCtrlGridWidth)
+	EVT_SPINCTRL(SPINCTRL_FOCUSED_WIDTH, ControlPanel::OnSpinCtrlFocusedWidth)
 END_EVENT_TABLE()
 
 ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
@@ -116,6 +120,21 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
+
+	// create graphics object, grid pen, focused pen, etc.
+	wxSizer *graphicsSizer = new wxFlexGridSizer(0, 2, 5, 5);
+
+	ADD_FIELD(this, graphicsSizer, wxT("Grid lines width"),
+			new wxSpinCtrl(this, SPINCTRL_GRID_WIDTH, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+					wxSP_ARROW_KEYS, 1, 100, 1));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Focused lines width"),
+			new wxSpinCtrl(this, SPINCTRL_FOCUSED_WIDTH, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+					wxSP_ARROW_KEYS, 1, 100, 1));
+
+	sizer->Add(graphicsSizer,
+			0, wxEXPAND);
+
 	sizer->SetSizeHints(this);
 	SetSizer(sizer);
 }
@@ -124,6 +143,9 @@ ControlPanel::~ControlPanel()
 {
 }
 
+//
+// ControlPanel event handlers.
+//
 void ControlPanel::OnChoiceSelectMode(wxCommandEvent &ev)
 {
 	int mode;
@@ -189,6 +211,22 @@ void ControlPanel::OnCheckShowCorner(wxCommandEvent &ev)
 	m_advTable->SetShowCorner(ev.IsChecked());
 }
 
+void ControlPanel::OnSpinCtrlGridWidth(wxSpinEvent &ev)
+{
+	wxPen pen = m_advTable->GetGridPen();
+	pen.SetWidth(ev.GetPosition());
+
+	m_advTable->SetGridPen(pen);
+}
+
+void ControlPanel::OnSpinCtrlFocusedWidth(wxSpinEvent &ev)
+{
+	wxPen pen = m_advTable->GetFocusedPen();
+	pen.SetWidth(ev.GetPosition());
+
+	m_advTable->SetFocusedPen(pen);
+}
+
 //
 // MainFrame
 //
@@ -204,7 +242,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo 1.0"), wxDefaultPosition, wxSize(900, 600))
+: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo 1.1"), wxDefaultPosition, wxSize(900, 600))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -251,9 +289,9 @@ void MainFrame::OnAbout(wxCommandEvent &ev)
 {
 	wxAboutDialogInfo about;
 	about.SetName(wxT("wxAdvTable demo"));
-	about.SetVersion(wxT("1.0"));
+	about.SetVersion(wxT("1.1"));
 	about.SetDescription(wxT("This demo shows wxAdvTable features"));
-	about.SetCopyright(wxT("(C) 2008-2009 Moskvichev Andrey V."));
+	about.SetCopyright(wxT("Copyright (C) 2008-2009 Moskvichev Andrey V."));
 
 	wxAboutBox(about);
 }
@@ -293,35 +331,52 @@ void MainFrame::OnGridRangeSelect(wxGridRangeSelectEvent &ev)
 			ev.GetBottomRow(), ev.GetRightCol());
 }
 
+//
+// Most interesting function - this creates table structure.
+//
 void MainFrame::CreateTableStructure()
 {
-	// rows definition
+	// row definitions
 	wxAdvHdrCell rows[] = {
-		wxAdvHdrCell(wxT("Row I")),
-		wxAdvHdrCell(wxT("Row II")).Sub(wxAdvHdrCell(wxT("Row II-I")).Sub(wxT("Row II-I-I")).Sub(wxT("Row II-I-II"))).Sub(wxT("Row II-II")).Sub(wxT("Row II-III")),
+		wxAdvHdrCell(wxT("Row\nI")), // make first row sortable
+		wxAdvHdrCell(wxT("Row\nII")).VerticalText() // we need to draw row name vertical
+			.Sub(wxAdvHdrCell(wxT("Row II-I")) // first subrow, it also contains two subrows
+					.Sub(wxT("Row II-I-I"))
+					.Sub(wxT("Row II-I-II")))
+			.Sub(wxT("Row II-II")) // second subrow
+			.Sub(wxT("Row II-III")), // third subrow
 	};
 
-	// columns definition
+	// column definitions
 	wxAdvHdrCell cols[] = {
-		wxAdvHdrCell(wxT("Col I")).Size(100),
-		wxAdvHdrCell(wxT("Col II")).Sub(wxT("Col II-I")).Sub(wxT("Col II-II")).Sub(wxT("Col\nII-III")),
+		wxAdvHdrCell(wxT("Col I")).Size(150), // we can explicitly define size of column
+		wxAdvHdrCell(wxT("Col II")) // second column containing three subcolumns
+			.Sub(wxT("Col II-I"))
+			.Sub(wxT("Col II-II"))
+			.Sub(wxT("Col\nII-III")),
 		wxAdvHdrCell(wxT("Col III")),
 		wxAdvHdrCell(wxT("Col IV")),
 	};
 
+	// we also need table corner
 	wxString cornerLabel = wxT("Table corner");
 
+	// create table model
+	// take attention on wxAdvHdrCell::GetDecompCellCount call
+	// table row count can be _not_ equal to row count in definitions array.
 	wxAdvStringTableDataModel *model = new wxAdvStringTableDataModel(
 			wxAdvHdrCell::GetDecompCellCount(rows, N(rows)),
 			wxAdvHdrCell::GetDecompCellCount(cols, N(cols)),
 			false);
 
+	// and set some values to it
+	model->SetCellValue(0, 0, wxT("value"));
+	model->SetCellValue(2, 0, wxT("another value"));
+
 	// create table
-	// we pass our rows and columns definition and table data model to it
+	// we pass our row and column definitions and table data model to it
 	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
 
-	m_advTable->SetSelectMode(wxAdvTable::SelectCell);
-	m_advTable->SetHighlightMode(wxAdvTable::HighlightNone);
-
-	m_advTable->SetEditorForFormat(wxStringFormat, new wxAdvStringTableCellEditor(m_advTable));
+	// set editor so editing will be possible
+	m_advTable->SetEditorForFormat(wxStringFormat, new wxAdvStringCellEditor(m_advTable));
 }

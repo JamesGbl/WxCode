@@ -4,9 +4,10 @@
  
  Website: http://wxcode.sourceforge.net/components/advtable
  Author: Moskvichev Andrey V.
- Version: 1.0 
+ Version: 1.1 
  Description:
- wxAdvTable is table component (like wxGrid) designed with simplicity and flexibility in mind.
+ wxAdvTable is table component (like wxGrid) designed with 
+ simplicity and flexibility in mind.
  It has many advanced features like: 
   - composite rows/columns
   - built-in sorting and filtering support
@@ -15,7 +16,72 @@
   - and visual features like: highlight modes, cell attributes, etc
   - MCV (Model-Controller-View) design
  
+ 	Composite row/columns.
+ wxAdvTable uses composite rows and columns. Composite means one row/column
+ contains one of more subrows/columns, like this:
+	 _____________________________
+	|           Column            |
+	|-------------+-------+-------|
+	| Sub 1       | Sub 2 | Sub 3 |
+	|------+------|       |       |
+	| SS 1 | SS 2 |       |       |
+	|______|______|_______|_______|
+ Where "Sub 1", "Sub 2" and "Sub 3" are subcolumns.
+ Every subcolumn can also contain subcolumns ("SS 1", "SS 2" on picture), 
+ and so on.
+ 
+ All rows/columns are arranged in layers.
+	____________ _____________________________
+	 Layer 1    |           Column            |
+	------------|-------------+-------+-------|
+	 Layer 2    | Sub 1       | Sub 2 | Sub 3 |
+	------------|------+------|       |       |
+	 Layer 3    | SS 1 | SS 2 |       |       |
+	____________|______|______|_______|_______|
+ 
+ There are three layers in our example. 
+ Layer 1 contains "Column", 
+ Layer 2 - "Sub 1", "Sub 2" and "Sub 3", 
+ Layer 3 - "SS 1", "SS 2", "Sub 2" and "Sub 3"
+ Note that "Sub 2" and "Sub 3" occupies two layers, "Layer 2" and "Layer 3".
+ 
+ 	Decomposition. 
+ To determine table cell count, wxAdvTable performs rows/columns decomposition.
+ Decomposed row/column count is number of cells on lowest layer, 
+ in example above it's "Layer 3", and number of column will be 4. 
+ When accessing data from model, it indexed by decomposed count, 
+ _not_ by count of row/column definitions.
 
+	Data model.
+ wxAdvTable not stores data by itself, it delegate data access to 
+ data model. Data model is abstract, so you can use it to access data 
+ from various data sources, such as files, database tables, etc.
+ Data model defines content, data format, editable/readonly and 
+ graphical representation attributes for each cell.
+ There are wxAdvStringTableDataModel for string tables, it stores 
+ data like strings and all cells has string data format, and
+ wxFilterTableDataModel that acts as filter for underlaying model, 
+ it stores data in internal storage and updates it when underlaying 
+ model data is changed. It can be used as cache for data sources like 
+ databases, or data which calculation takes long time.
+ 
+ 	Renderers.
+ Data in cells rendered by objects called "Renderers", they are 
+ derivates of wxAdvTableCellRenderer class. Renderers associates with
+ data formats. There are wxAdvStringCellRender for string data,
+ wxAdvBoolCellRenderer for boolean data, 
+ wxAdvColourCellRenderer for color data. 
+
+	Editors.
+ Editors are objects that performs data editing. They are activated on 
+ user input (keypress on left mouse click) on cell, and deactivated when 
+ editing is done or cancelled.
+ Editors are associated with data formats. 
+
+	Sorting.
+ TODO: sorting is not implemented yet
+
+	
  Installation - win32
  --------------------
  
@@ -45,13 +111,24 @@
  ChangeLog
  ---------
  
+ 1.1: second version of wxAdvTable at wxCode
+      What's new:
+       - major redesign
+       - headers drawing bugfixes
+       - editors bugfixes
+       - updated documentation
+       - sorting bugfixes 
+       - scrolling bugs fixed
+       - many refactoring changes
+	
  1.0 - first version of wxAdvTable at wxCode
  
  Known issues:
  - lack of Perl and Python bindings.
- - some selection bugs.
  - paint system must be cleaned up and optimized.
  - lack of filtering.
  - many sorting bugs.
  - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64), 
    if someone can test on other wxWidgets ports, please let me know.
+ - bugs with keydown handling on wxGTK.
+ 
