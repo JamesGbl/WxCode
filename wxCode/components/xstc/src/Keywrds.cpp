@@ -40,7 +40,7 @@
 #ifdef XSTC_H_FLAT
   #include "xstc.h"
 #else
-  #include <wx/XSTC/xstc.h>
+  #include <wx/xstc/xstc.h>
 #endif
 
 #endif //XSTC_NO_KEYS
@@ -163,6 +163,11 @@ this->Keys_Set.cmake = wxT("");
 this->Keys_Set.cmake1 = wxT("");
 this->Keys_Set.cmake2 = wxT("");
 #endif //XSTC_NO_CMAKE
+#ifndef XSTC_NO_COBOL
+this->Keys_Set.cobol = wxT("");
+this->Keys_Set.cobol1 = wxT("");
+this->Keys_Set.cobol2 = wxT("");
+#endif //XSTC_NO_COBOL
 #ifndef XSTC_NO_CONF
 this->Keys_Set.conf = wxT("");
 this->Keys_Set.conf1 = wxT("");
@@ -315,6 +320,9 @@ this->Keys_Set.mmixal = wxT("");
 this->Keys_Set.mmixal1 = wxT("");
 this->Keys_Set.mmixal2 = wxT("");
 #endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NIMROD
+this->Keys_Set.nimrod = wxT("");
+#endif //XSTC_NO_NIMROD
 #ifndef XSTC_NO_NNCRONTAB
 this->Keys_Set.nncrontab = wxT("");
 this->Keys_Set.nncrontab1 = wxT("");
@@ -353,6 +361,12 @@ this->Keys_Set.pov5 = wxT("");
 this->Keys_Set.pov6 = wxT("");
 this->Keys_Set.pov7 = wxT("");
 #endif //XSTC_NO_POV
+#ifndef XSTC_NO_POWERPRO
+this->Keys_Set.powerpro = wxT("");
+this->Keys_Set.powerpro1 = wxT("");
+this->Keys_Set.powerpro2 = wxT("");
+this->Keys_Set.powerpro3 = wxT("");
+#endif //XSTC_NO_POWERPRO
 #ifndef XSTC_NO_POWERSHELL
 this->Keys_Set.powershell = wxT("");
 this->Keys_Set.powershell1 = wxT("");
@@ -393,6 +407,16 @@ this->Keys_Set.scriptol = wxT("");
 #ifndef XSTC_NO_SMALLTALK
 this->Keys_Set.smalltalk = wxT("");
 #endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SML
+this->Keys_Set.sml = wxT("");
+this->Keys_Set.sml1 = wxT("");
+this->Keys_Set.sml2 = wxT("");
+#endif //XSTC_NO_SML
+#ifndef XSTC_NO_SORCUS
+this->Keys_Set.sorcus = wxT("");
+this->Keys_Set.sorcus1 = wxT("");
+this->Keys_Set.sorcus2 = wxT("");
+#endif //XSTC_NO_SORCUS
 #ifndef XSTC_NO_SPECMAN
 this->Keys_Set.specman = wxT("");
 this->Keys_Set.specman1 = wxT("");
@@ -434,12 +458,21 @@ this->Keys_Set.sql5 = wxT("");
 this->Keys_Set.sql6 = wxT("");
 this->Keys_Set.sql7 = wxT("");
 #endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TACL
+this->Keys_Set.tacl = wxT("");
+this->Keys_Set.tacl1 = wxT("");
+this->Keys_Set.tacl2 = wxT("");
+#endif //XSTC_NO_TACL
 #ifndef XSTC_NO_TADS3
 this->Keys_Set.tads3_0 = wxT("");
 this->Keys_Set.tads3_1 = wxT("");
 this->Keys_Set.tads3_2 = wxT("");
 this->Keys_Set.tads3_3 = wxT("");
 #endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TAL
+this->Keys_Set.tal = wxT("");
+this->Keys_Set.tal1 = wxT("");
+#endif //XSTC_NO_TAL
 #ifndef XSTC_NO_TCL
 this->Keys_Set.tcl = wxT("");
 this->Keys_Set.tcl1 = wxT("");
@@ -950,6 +983,14 @@ this->Keys_Set.cmake1 =  wxT("");
 
 this->Keys_Set.cmake2 =  wxT("");
 #endif //XSTC_NO_CMAKE
+
+#ifndef XSTC_NO_COBOL
+this->Keys_Set.cobol =  wxT("");
+
+this->Keys_Set.cobol1 =  wxT("");
+
+this->Keys_Set.cobol2 =  wxT("");
+#endif //XSTC_NO_COBOL
 
 #ifndef XSTC_NO_CONF
 this->Keys_Set.conf =  wxT("acceptmutex acceptpathinfo accessconfig accessfilename "
@@ -1989,6 +2030,10 @@ this->Keys_Set.mmixal2 = wxT("@ Text_Segment Data_Segment Pool_Segment Stack_Seg
 	                      "TextRead TextWrite BinaryRead BinaryWrite BinaryReadWrite ");
 #endif //XSTC_NO_MMIXAL
 
+#ifndef XSTC_NO_NIMROD
+this->Keys_Set.nimrod = wxT("");
+#endif //XSTC_NO_NIMROD
+
 #ifndef XSTC_NO_NNCRONTAB
 this->Keys_Set.nncrontab = wxT("AGAIN ALLOT AND Action BEGIN CASE COMPARE CONSTANT CREATE DO Days ELSE "
                          "ENDCASE ENDOF EVAL-SUBST EVALUATE FALSE Hours I IF LEAVE LOOP Minutes "
@@ -2253,6 +2298,16 @@ this->Keys_Set.pov6 = wxT("");
 
 this->Keys_Set.pov7 = wxT("");
 #endif //XSTC_NO_POV
+
+#ifndef XSTC_NO_POWERPRO
+this->Keys_Set.powerpro = wxT("");
+
+this->Keys_Set.powerpro1 = wxT("");
+
+this->Keys_Set.powerpro2 = wxT("");
+
+this->Keys_Set.powerpro3 = wxT("");
+#endif //XSTC_NO_POWERPRO
 
 #ifndef XSTC_NO_POWERSHELL
 this->Keys_Set.powershell = wxT("");
@@ -2553,6 +2608,22 @@ this->Keys_Set.specman2 = wxT("any_sequence_item sequence any_sequence_driver dr
 this->Keys_Set.specman3 = wxT("");
 #endif //XSTC_NO_SPECMAN
 
+#ifndef XSTC_NO_SML
+this->Keys_Set.sml = wxT("");
+
+this->Keys_Set.sml1 = wxT("");
+
+this->Keys_Set.sml2 = wxT("");
+#endif //XSTC_NO_SML
+
+#ifndef XSTC_NO_SORCUS
+this->Keys_Set.sorcus = wxT("");
+
+this->Keys_Set.sorcus1 = wxT("");
+
+this->Keys_Set.sorcus2 = wxT("");
+#endif //XSTC_NO_SORCUS
+
 #ifndef XSTC_NO_SPICE
 this->Keys_Set.spice = wxT("ac  alias  alter  alterparam append askvalues assertvalid autoscale "
                        "break compose copy copytodoc dc  delete  destroy  destroyvec diff  display "
@@ -2723,6 +2794,14 @@ this->Keys_Set.sql6 = wxT("");
 this->Keys_Set.sql7 = wxT("");
 #endif //XSTC_NO_SQL
 
+#ifndef XSTC_NO_TACL
+this->Keys_Set.tacl = wxT("");
+
+this->Keys_Set.tacl1 = wxT("");
+
+this->Keys_Set.tacl2 = wxT("");
+#endif //XSTC_NO_TACL
+
 #ifndef XSTC_NO_TADS3
 this->Keys_Set.tads3_0 = wxT("");
 
@@ -2732,6 +2811,12 @@ this->Keys_Set.tads3_2 = wxT("");
 
 this->Keys_Set.tads3_3 = wxT("");
 #endif //XSTC_NO_TADS3
+
+#ifndef XSTC_NO_TAL
+this->Keys_Set.tal = wxT("");
+
+this->Keys_Set.tal1 = wxT("");
+#endif //XSTC_NO_TAL
 
 #ifndef XSTC_NO_TCL
 this->Keys_Set.tcl = wxT("after append array auto_execok "
@@ -2992,5 +3077,3 @@ wxString XSTC::LoadKeyWords(wxString filename)
    return keywords;
 }
 #endif //XSTC_NO_KEYS
-
-

@@ -1,31 +1,25 @@
-First commandline macros:
+this file is depriciated, it has some useful information still though.
 
-XSTC_CLASS value 0 tells XSTC that wxStyledTextCtrl is being used
-           Value 1 is wxScintilla, nothing else should work
+For command line macros see XSTC_Config.h
 
-XSTC_NO_KEYS if this is defined, then all keyword functionality and the structure for 
-             keywords will not compile in.
+Extentions:
+[this section is going to be depriciated, the extension config stuff is beig ported to the wxConfig system.]
 
-XSTC_USELVL not normally a commandline macro, it is defined internally, but should you be using 
-            a version wxSTC newer than the wx2.6.x release in 2.6.x or older you can define
-            it and get the newer functionality
+.extention_lexer|property1|property2|property3|property4|property5|property6|property7|property8|property9|property10|comment
 
-Now Extentions:
+the first [dot] in the extention will be removed if present that way a multiple [dot]type[dot] extension can be supported, no dot is neccessary though.
+lexer is the name of the lexer definition without the prefix stuff
+wxSTC_LEX_ASM would be asm. the case does not matter, internally it is changed to lower.
+properties are used verbatim in GetPropStr so the correct format should be used
+Scintilla property_value, the property is whatever the respective string might be "fold" for example. 
+the value is a bool number 0 or 1 so to turn off folding is: "fold_0". yes case does matter, because scintilla cares.
+
+the extension settings are used in a seperate config file than coloring. that makes it much easier to build the parser. 
 
 
-    .extention_lexer|property1|property2|property3|property4|property5|comment
-    
-    the first [dot] in the extention will be removed if present
-    lexer is the name of the lexer define without the prefix stuff
-      wxSTC_LEX_ASM would be asm. the case does not matter, internally
-      it is changed to lower.
-    properties are used verbatim in GetPropStr so the correct format should be used
-      Scintilla property_value, the property is whatever the respective string might
-      be "fold" for example. the value is a bool number 0 or 1 so the property to 
-      turn off folding is: "fold_0". yes case does matter.
-
-Now coloring:
-
+coloring:
+[the basics here are still correct, however changes where made to the color setting code. now either rgb() or #RRGGBB will work by default
+ and with a color database, so will string names.]
 
     most of the colors are easy, all of the definitions just use the definition name
     to define the string value for finding in wxFileConfig. the prepix for all color

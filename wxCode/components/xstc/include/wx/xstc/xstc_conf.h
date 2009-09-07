@@ -59,6 +59,8 @@
  *                                                                                                  *
  *  XSTC_EVENT this macro defines the event type, thus wxStyledTextEvent                            *
  *                                                                                                  *
+ *  XSTC_EVENT_FUNCT this macro defies the event_function for connect()                             *
+ *                                                                                                  *
  *  XSTC_EVENT_DEF() this macro concatonates the correct event prefix wxEVT_STC_ or wxEVT_SCI_      *
  *                   this way the library and anyone who uses these macros are library independant  *
  *                                                                                                  *
@@ -119,10 +121,14 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
-#define WXMAKINGDLL //define this if you are building the library
+
+//#define WXMAKINGDLL //define this if you are building the library
 
 #ifdef WXMAKINGDLL
  #define WXDLLIMPEXP_XSTC WXEXPORT
+ #define WXMAKINGDLL_SCI //this if for wxScintilla
+ #define WXMAKINGDLL_STC //this is for wxstyledtextctrl
+ #define SCI_LEXER //need this for scintilla when building
 #else
  #define WXDLLIMPEXP_XSTC
 #endif
@@ -133,96 +139,27 @@
 
 //#define XSTC_NO_ALPHA
 
-#ifdef XSTC_USE_WXSCINTILLA
- #define XSTC_CLASS wxScintilla
- #include <wx/wxscintilla.h>
- #define XSTC_EVENT wxScintillaEvent
- #define XSTC_EVENT_DEF(Cx)  wxEVT_SCI_ ## Cx
- #define XSTC_DEF(Cy) wxSCI_ ## Cy
-
-//these macros define a neutral function that is both version and library independant. they do not
-//conform to the actual library function names, but using them will make sure you don't need to
-//worry about which version of library code you are using.
-
-#define SetCaretBk SetCaretLineBackground
-#define GetCaretBk GetCaretLineBackground
-
-#ifndef XSTC_NO_ALPHA
- #define GetCaretALPHA GetCaretLineBackgroundAlpha
- #define SetCaretALPHA SetCaretLineBackgroundAlpha
-#endif
-
-#endif //XSTC_USE_WXSCINTILLA
-//above macros are for wxScintilla, do not edit this section
-
-#ifdef XSTC_USE_WXSTC
- #define XSTC_CLASS wxStyledTextCtrl
- #include <wx/stc/stc.h>
- #define XSTC_EVENT wxStyledTextEvent
- #define XSTC_EVENT_DEF(Cx) wxEVT_STC_ ## Cx
- #define XSTC_DEF(Cy) wxSTC_ ## Cy
-
-//wxStyledTextCtrl does not support these languages
-
- #define XSTC_NO_D
- #define XSTC_NO_CMAKE
- #define XSTC_NO_GAP
- #define XSTC_NO_PLM
- #define XSTC_NO_PROGRESS
- #define XSTC_NO_ABAQUS
- #define XSTC_NO_ASYMPTOTE
- #define XSTC_NO_R
- #define XSTC_NO_MAGIK
- #define XSTC_NO_POWERSHELL
- #define XSTC_NO_MYSQL
- #define XSTC_NO_PO
-
-//these macros define a neutral function that is both version and library independant. they do not
-//conform to the actual library function names, but using them will make sure you don't need to
-//worry about which version of library code you are using.
-
-
-#if wxMAJOR_VERSION <= 2
-#if wxMINOR_VERSION > 6
- #define XSTC_LVL
-#endif
-#endif
-
-#ifdef XSTC_LVL
- #define SetCaretBk SetCaretLineBackground
- #define GetCaretBk GetCaretLineBackground
-#ifndef XSTC_NO_ALPHA
- #define GetCaretALPHA GetCaretLineBackAlpha
- #define SetCaretALPHA SetCaretLineBackAlpha
-#endif //XSTC_NO_ALPHA
-#else
- #define SetCaretBk SetCaretLineBack
- #define GetCaretBk GetCaretLineBack
-#endif //XSTC_LVL
-
-#undef XSTC_LVL
-
-#endif //XSTC_USE_WXSTC
-//above macros are for wxStyledTextCtrl, do not edit this section
-
 //#define XSTC_NO_CONFIG //turn off all configuration subsystems, ini and xml.
 #define XSTC_USE_CONFIG //use the wxWidgets configuration class
-
-#ifdef XSTC_USE_CONFIG
- #ifdef _WXMSW_
-  #define XSTC_USE_REG //if we are under windows the registry configuration system is also availible
- #endif //_WXMSW_
-#endif //XSTC_USE_CONFIG
-
 //#define XSTC_USE_XML //uses TinyXML for xml based configuration
+
+#ifndef XSTC_NO_CONFIG
+ #ifdef XSTC_USE_CONFIG
+  #ifdef _WXMSW_
+   #define XSTC_USE_REG //if we are under windows the registry configuration system is also availible
+  #endif //_WXMSW_
+ #endif //XSTC_USE_CONFIG
+#endif //XSTC_NO_CONFIG
 //note, the configureation systems are made availible, but the user must set one up or nothing will be used.
 
 //#define XSTC_NO_KEYS //disables all automatic keyword functionality
-#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
+//#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
 
 //#define XSTC_NO_TABSPACE //disable the tabs/spaces conversion utility function
 //#define XSTC_NO_TRIMTRAIL //disables the trim trailing whitespace utility functin and all instances it is used in the code.
 //#define XSTC_NO_MARK_FULLRECT //some older versions of scintilla don't support this marker
+//#define XSTC_NO_MARK_LEFTRECT //same as above
+//#define XSTC_NO_MARK_AVAILABLE //same as above
 //#define XSTC_NO_AUTOSAVEAS //disables the auto saveas functionality in savefilex
                              //the saveas variable will be ignored
 

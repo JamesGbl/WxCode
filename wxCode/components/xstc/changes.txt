@@ -1,3 +1,19 @@
+CHANGES for version 6.2
+added missing language macros in GetEXTLexer so that languagees can be fully disabled
+added new languages for scintilla 1.78
+added MARK_LEFTRECT and MARK_AVAILABLE markers to the coloring system
+fixed config system crash because variable initialization was after function call
+moved the wraper macros to utils.h
+changed XSTColor/ to XSTC/COLOR/ so that XSTC/EXT/ can be added to the config files
+rewrote the extension config code to use the config class now
+	removed: Prop1 setextconf() extset
+	changed the code that used prop1 in SetLexerX() to check the extension of XFilename instead
+changed the configuration database code to take a user created config instance instead of creating one for them.
+added configuration based theme style functionality.
+added bool argument to FoldSimple and FoldArrow so connection lines can be turned on/off
+
+
+
 CHANGES for version 6.1
 total revamp of preprocesor macros, added config.h
 added new languages to update to scintilla 1.77

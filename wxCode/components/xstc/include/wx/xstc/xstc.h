@@ -38,9 +38,7 @@
 #ifndef XSTC_H
 #define XSTC_H
 
-#ifndef XSTC_NO_CONF
- #include "xstc_conf.h"
-#endif
+#include "util.h"
 
 #ifndef XSTC_NO_CONFIG
  #ifdef XSTC_USE_CONFIG
@@ -219,6 +217,12 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
 		 wxString cmake1;//Parameters
 		 wxString cmake2;//UserDefined
 #endif //XSTC_NO_CMAKE
+#ifndef XSTC_NO_COBOL
+//1.78
+         wxString cobol;//A keywords
+         wxString cobol1;//B keywords
+         wxString cobol2;//extended
+#endif //XSTC_NO_COBOL
 #ifndef XSTC_NO_CONF
 //V1.33
          wxString conf;//directives
@@ -403,6 +407,10 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
          wxString mmixal1;//special registers
          wxString mmixal2;//predefined symbols
 #endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NIMROD
+//1.78
+         wxString nimrod;
+#endif //XSTC_NO_NIMROD
 #ifndef XSTC_NO_NNCRONTAB
 //V1.40
          wxString nncrontab;//section forth keywords
@@ -450,6 +458,13 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
          wxString pov6;
          wxString pov7;
 #endif //XSTC_NO_POV
+#ifndef XSTC_NO_POWERPRO
+//1.78
+         wxString powerpro;
+         wxString powerpro1;
+         wxString powerpro2;
+         wxString powerpro3;
+#endif //XSTC_NO_POWERPRO
 #ifndef XSTC_NO_POWERSHELL
 //V1.76
 		 wxString powershell;
@@ -500,6 +515,18 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
 //V1.64
          wxString smalltalk;//special selectors
 #endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SML
+//1.78
+         wxString sml;
+         wxString sml1;
+         wxString sml2;
+#endif //XSTC_NO_SML
+#ifndef XSTC_NO_SORCUS
+//1.78
+         wxString sorcus;//command
+         wxString sorcus1;//parameter
+         wxString sorcus2;//constants
+#endif //XSTC_NO_SORCUS
 #ifndef XSTC_NO_SPECMAN
 //V1.60
          wxString specman;
@@ -546,6 +573,12 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
          wxString sql6;
          wxString sql7;
 #endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TACL
+//1.78
+         wxString tacl;//builtin
+         wxString tacl1;//labels
+         wxString tacl2;//commands
+#endif //XSTC_NO_TACL
 #ifndef XSTC_NO_TADS3
 //V1.64
          wxString tads3_0;
@@ -553,6 +586,11 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
          wxString tads3_2;
          wxString tads3_3;
 #endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TAL
+//1.78
+         wxString tal;//keywords
+         wxString tal1;//builtin
+#endif //XSTC_NO_TAL
 #ifndef XSTC_NO_TCL
 //V1.39
          wxString tcl;
@@ -684,7 +722,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               color the document and the fold margin will stay as
               it was toggled already. also returns a status message.
     */
-    int LoadFileX(wxString filename, bool setlexer = false);
+    long LoadFileX(wxString filename, bool setlexer = false);
 
     /**
     \brief save file
@@ -699,7 +737,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               if no filename is passed then the internal "XFilename" copy is used
               if one is passed that variable is ignored
     */
-     int SaveFileX(const wxString filename = wxT(""), int saveas = 0/*SAVE_AS_NEVER*/);
+     long SaveFileX(const wxString filename = wxT(""), long saveas = SAVE_AS_NEVER);
 
     /**
     \brief clears the editor
@@ -854,15 +892,14 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 #endif //XSTC_NO_CONFIG
 
     /**
-    \brief sets a lexer and proretties
+    \brief sets a lexer
 
-    \detailed internaly this function uses prop1 as the properties settings
-              that should have been set in AutoEXT() for manual loading
-              useprop should be true and a properties array given
-              alternatly you can use the extention subsytem to deal with the
-              properties for you
+    \detailed the lang string is optional. if config is turned on and the language was set in the
+			  config database then properties will be automatically loaded. otherwise it is ignored. 
+			  properties will only be loaded if lang is set. that is the language being used for the
+			  document, not the lexer.
     */
-    void SetLexerX(int lexer, bool useprop, wxString properties[5]);
+    void SetLexerX(int lexer);
 
     /**
     \brief gets property and value from a string
@@ -1015,6 +1052,13 @@ void LexCLW();
     */
 void LexCMAKE();
 #endif //XSTC_NO_CMAKE
+
+#ifndef XSTC_NO_COBOL
+    /**
+    \brief cobol lexcolor setup
+    */
+void LexCOBOL();
+#endif //XSTC_NO_COBOL
 
 #ifndef XSTC_NO_CONF
     /**
@@ -1247,6 +1291,13 @@ void LexMETAPOST();
 void LexMMIXAL();
 #endif //XSTC_NO_MMIXAL
 
+#ifndef XSTC_NO_NIMROD
+    /**
+    \brief nimrod lexcolor setup
+    */
+void LexNIMROD();
+#endif //XSTC_NO_NIMROD
+
 #ifndef XSTC_NO_NNCRONTAB
     /**
     \brief nncrontab lexcolor setup
@@ -1309,6 +1360,13 @@ void LexPO();
     */
 void LexPOV();
 #endif //XSTC_NO_POV
+
+#ifndef XSTC_NO_POWERPRO
+    /**
+    \brief powerpro lexcolor setup
+    */
+void LexPOWERPRO();
+#endif //XSTC_NO_POWERPRO
 
 #ifndef XSTC_NO_POWERSHELL
     /**
@@ -1380,6 +1438,20 @@ void LexSCRIPTOL();
 void LexSMALLTALK();
 #endif //XSTC_NO_SMALLTALK
 
+#ifndef XSTC_NO_SML
+    /**
+    \brief sml lexcolor setup
+    */
+void LexSML();
+#endif //XSTC_NO_SML
+
+#ifndef XSTC_NO_SORCUS
+    /**
+    \brief sorcus lexcolor setup
+    */
+void LexSORCUS();
+#endif //XSTC_NO_SORCUS
+
 #ifndef XSTC_NO_SPECMAN
     /**
     \brief specman lexcolor setup
@@ -1415,12 +1487,26 @@ void LexMYSQL();
 void LexSQL();
 #endif //XSTC_NO_SQL
 
+#ifndef XSTC_NO_TACL
+    /**
+    \brief tacl lexcolor setup
+    */
+void LexTACL();
+#endif //XSTC_NO_TACL
+
 #ifndef XSTC_NO_TADS3
     /**
     \brief tads3 lexcolor setup
     */
 void LexTADS3();
 #endif //XSTC_NO_TADS3
+
+#ifndef XSTC_NO_TAL
+    /**
+    \brief tal lexcolor setup
+    */
+void LexTAL();
+#endif //XSTC_NO_TAL
 
 #ifndef XSTC_NO_TCL
     /**
@@ -1488,49 +1574,19 @@ void LexYAML();
 #ifndef XSTC_NO_CONFIG
  #ifdef XSTC_USE_CONFIG
     /**
-    \brief sets up coloring storage and usecolor to true
-
-    \detailed this sets up the coloring config for the application
-              local use local file, if false it will use a global file under the
-                 users profile directory
-              the rest are for wxConfigBase constructor
-              this is deleted by XSTC in the destructor
-	      if you opt to use the local option it is set to reletive paths
-              how does xstc look for each color entry?
-              wxSTC_C_DEFAULT
-              in each #define for the lexer colors there is a common
-                 pattern for its structure, the second place is used as the
-                 group and the third for the specific color setting example
-                 on the shown define: group C contains color setting DEFAULT
-                 each of these color groups are located under the root
-                 XSTColor so in order to write the shown value use this string:
-                 XSTColor\C\DEFAULT and set it to whatever you wish.
-              the string value in the conf file will be used verbatim in StyleSetSpec
+    \brief pass a configuration object so that XSTC can load external settings
+    
+    \detailed the XSTC namespace is used in the configuration files.
+              XSTC/COLOR/ is used for all coloring/styling options
+              XSTC/EXT/ is used for the extension and property options
     */
-    wxFileConfig* SetColorConf(bool localf, wxString app, wxString vendor, wxString local, wxString global);
-
-    /**
-    \brief overloaded version of above that supports wxInputStream rather than
-           dealing with files, save must be called by you.
-
-    */
-    wxFileConfig* SetColorConf(wxInputStream& is);
-
-  #ifdef _WXMSW_
-  #ifdef XSTC_USE_REG
-
-	     /**
-    \brief overloaded version that supports registry rather than file
-
-    */
-	 wxRegConfig* SetColorConf(wxString appName, wxString vendorName, wxString Filename);
-  #endif //XSTC_USE_REG
-  #endif //_WXMSW_
+    void SetColorConf(wxConfigBase* clrconf);
  #endif //XSTC_USE_CONFIG
-
+/*
  #ifdef XSTC_USE_XML
   //wxXMLConfig* SetColorConf(wxString app, wxString vendor, wxString local);
  #endif //XSTC_USE_XML
+*/
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_TRIMTRAIL
@@ -1565,44 +1621,17 @@ void LexYAML();
     /**
     \brief sets the folding margin mask for arrow markers
     */
-    void FoldArrow();
+    void FoldArrow(bool lines = true);
 
     /**
     \brief sets the foldimg margin mask for +- markers
     */
-    void FoldSimple();
+    void FoldSimple(bool lines = true);
 
     /**
     \brief sets the foldimg marker colors
     */
     void FoldColors();
-
-#ifndef XSTC_NO_CONFIG
-    /**
-    \brief sets up extention to lexer maps
-
-    \detailed the argument can be the conf file 'preloaded' or it can
-              take a filename to load the conf file. the difference is decided
-              by the presence of a '.' dot, extset is loaded with
-              all valid extention to lexer maps as well as the properties
-              5 properties are supported. this is the convention:
-              ext_lexer (either a number or keyword)|prop1|2|3|4|5|comments after this bar
-              cpp_3|fold_1|fold.compact_0|fold.preproccessor_1|styling.within.preproccessor_1|fold.comment_1|turn it all on
-              if a property is present it is a property string to define if it is on or not
-              anything not present is ignored and might cause a problem later.
-              also you donn't need all of the pars to be present and they can be void space too
-              htm_16|||||||||||
-              or
-              php_null
-              no bars at all
-
-              check the sources for the correct string to use.
-
-              and use these to toggle case sensitivity:
-              cppnocase clwnocase
-    */
-    void SetConfEXT(wxString extconf);
-#endif //XSTC_NO_CONFIG
 
     /**
     \brief converts a string representing a lexer to an int
@@ -1659,15 +1688,6 @@ void LexYAML();
     */
     void SetColorDbase(wxColourDatabase& dbase);
 
-    /**
-    \brief can be used like the built in colorstyle functions. It loads the same settings from the config file.
-
-    \detailed the names of the config colorstyles are stored as a coma delimited string in "XSTColor/MISIC/CSTYLES"
-              these strings are used to get the solor settings from the config file. this way the styles don't need
-              to be searched for, which would be difficult.
-    */
-    void LoadConfStyle(wxString StyleName);
-
 #endif //XSTC_NO_CONFIG
 
 /**********************************************************************************************************************
@@ -1677,18 +1697,22 @@ void LexYAML();
     /**
     \brief a status result for file load and save functions
     */
-    #define FILE_OK 0
-    #define FILE_NOT_FOUND 1
-    #define FILE_SAVE_ERROR 2
-    int filestatus;
+    enum //filestatus
+	{
+	FILE_OK = 0,
+	FILE_NOT_FOUND = 1,
+	FILE_SAVE_ERROR = 2
+	};
 
     /**
     \brief a status result for file load and save functions
     */
-    #define SAVE_AS_NEVER 0
-    #define SAVE_AS_ALWAYS 1
-    #define SAVE_AS_ON_FAIL 3
-    int savemode;
+    enum //savemode
+	{
+	SAVE_AS_NEVER = 0,
+	SAVE_AS_ALWAYS = 1,
+	SAVE_AS_ON_FAIL = 3
+	};
 
 #ifndef XSTC_NO_CONFIG
     /**
@@ -1709,6 +1733,11 @@ void LexYAML();
               for colorization or a string
     */
     bool usecolor;
+	
+	/**
+	\brief whether to set properties from config file
+	*/
+	bool useprops;
 #endif //XSTC_NO_CONFIG
 
     /**
@@ -1939,7 +1968,12 @@ void LexYAML();
     \detailed returns true if it was and sets dest to the handled properties
               if it returns false dest is emptied
     */
-    bool IsConfEXT(wxString entry, wxArrayString& dest);//was the extention loaded from conf?
+    bool IsConfEXT(wxString extension, int &lexer);//was the extention loaded from conf?
+
+	/**
+	\brief set properties from config database
+	*/
+	bool SetProperties(wxString extension);
 #endif //XSTC_NO_CONFIG
 
     /**
@@ -1952,21 +1986,6 @@ void LexYAML();
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************
 ***********************************************************************************************************************/
-
-#ifndef XSTC_NO_CONFIG
-    /**
-    \brief holds the valid entries from the extention conf file
-    */
-    wxArrayString extset;
-#endif //XSTC_NO_CONFIG
-
-    /**
-    \brief properties for lexers
-
-    \detailed holds the properties needed by a lexer for default behavior
-              used in SetLexerX()
-    */
-    wxString prop1[10];
 
     /**
     \brief holds the width for the internally mapped margins
@@ -2003,7 +2022,7 @@ void LexYAML();
     /**
     \brief all of the names of the config based colorstyles
 
-    \detailed the strings are read from "XSTColor/MISIC/CSTYLES" a coma delimited list of names.
+    \detailed the strings are read from "XSTC/COLOR/MISIC/CSTYLES" a coma delimited list of names.
               the names are used to utilize the config based colorstyle settings. since searching for the styles is not an effective
               means of knowing what ones are present. any undefined settings will be set to the default color of black on white.
     */
@@ -2078,17 +2097,7 @@ void LexYAML();
               define color structure!!
     */
      wxConfigBase* colorconf;
-#ifdef _WXMSW_
- #ifdef XSTC_USE_REG
-	 wxRegConfig* rcconf;
- #endif //XSTC_USE_REG
-#endif //_WXMSW_
-	 wxFileConfig* fcconf;
 #endif //XSTC_USE_CONFIG
-
-#ifdef XSTC_USE_XML
-    wxXMLConfig* xmlconf;
-#endif //XSTC_USE_XML
 #endif //XSTC_NO_CONFIG
 };
 
