@@ -325,7 +325,7 @@ void XSTC::MarkerToggle(wxKeyEvent& event)
             }
             else
             {
-                BmarkHandles[x] = MarkerAdd(GetCurrentPos(), x + 1);
+                BmarkHandles[x] = MarkerAdd(LineFromPosition(GetCurrentPos()), x + 1);
             }
         }
     }
