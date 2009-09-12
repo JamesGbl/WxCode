@@ -11,6 +11,7 @@ rewrote the extension config code to use the config class now
 changed the configuration database code to take a user created config instance instead of creating one for them.
 added configuration based theme style functionality.
 added bool argument to FoldSimple and FoldArrow so connection lines can be turned on/off
+fixed the numbered bokmarks, now bokmarks show up on the correct line
 
 
 
