@@ -1982,6 +1982,11 @@ void LexYAML();
     \detailed checks the keys and toggles or goto the appropriate bookmark.
     */
     void MarkerToggle(wxKeyEvent& event);
+	
+	/**
+    \brief handles other keypress events than numbered bookmarks
+    */
+	void KeyParse(wxKeyEvent& event);
 
 /**********************************************************************************************************************
 ***********************************************Variables here***********************************************************

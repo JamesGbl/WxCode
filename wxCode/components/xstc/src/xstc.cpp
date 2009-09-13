@@ -47,6 +47,7 @@
   #include <wx/xstc/xstc.h>
 #endif
 #include <wx/msgdlg.h>
+#include <wx/clipbrd.h>
 
 XSTC::XSTC(wxWindow *parent, wxWindowID id,
            const wxPoint& pos,
@@ -57,20 +58,25 @@ XSTC_CLASS(parent, id, pos, size, style, name)
 {//sets up default behavior, links events and calls default coloring
     WIN_ID = this->GetId();
 
-    Connect(WIN_ID, XSTC_EVENT_DEF(MARGINCLICK),
-                (wxObjectEventFunction)
-                (wxEventFunction)
-                (wxCommandEventFunction)&XSTC::MarginClicked);
+	Connect(WIN_ID, XSTC_EVENT_DEF(MARGINCLICK),
+			(wxObjectEventFunction)
+			(wxEventFunction)
+			(wxCommandEventFunction)&XSTC::MarginClicked);
 
-    Connect(WIN_ID, XSTC_EVENT_DEF(UPDATEUI),
-                (wxObjectEventFunction)
-                (wxEventFunction)
-                (wxCommandEventFunction)&XSTC::Bmatch);
+	Connect(WIN_ID, XSTC_EVENT_DEF(UPDATEUI),
+			(wxObjectEventFunction)
+			(wxEventFunction)
+			(wxCommandEventFunction)&XSTC::Bmatch);
 
-    Connect(WIN_ID, wxEVT_KEY_DOWN,
-                (wxObjectEventFunction)
-                (wxEventFunction)
-                (wxCommandEventFunction)&XSTC::MarkerToggle);
+	Connect(WIN_ID, wxEVT_KEY_DOWN,
+			(wxObjectEventFunction)
+			(wxEventFunction)
+			(wxCommandEventFunction)&XSTC::MarkerToggle);
+
+	Connect(WIN_ID, wxEVT_KEY_DOWN,
+			(wxObjectEventFunction)
+			(wxEventFunction)
+			(wxCommandEventFunction)&XSTC::KeyParse);
 
     linemgn = 0; //mapped to the margin number
     symmgn = 1;
@@ -284,52 +290,59 @@ void XSTC::ToggleBookMark(int line)
 
 void XSTC::MarkerToggle(wxKeyEvent& event)
 {//numbered bookmarks
-    int x = event.GetKeyCode();
-    int mod = event.GetModifiers();
-    if(event.ShiftDown())
-        mod = wxMOD_ALTGR; //fail it
-    switch(x)
-    {
-        case 48: { x = 0; break;}
-        case 49: { x = 1; break;}
-        case 50: { x = 2; break;}
-        case 51: { x = 3; break;}
-        case 52: { x = 4; break;}
-        case 53: { x = 5; break;}
-        case 54: { x = 6; break;}
-        case 55: { x = 7; break;}
-        case 56: { x = 8; break;}
-        case 57: { x = 9; break;}
-        default: x = 10;
-    }
-    if(mod == wxMOD_ALT)
-    {
-        if(x != 10)
-        {
-            if(BmarkHandles[x] != -1)
-            {
-                if(MarkerLineFromHandle(BmarkHandles[x]) >= 0)
-                    GotoLine(MarkerLineFromHandle(BmarkHandles[x]));
-            }
-        }
-    }
-    else
-    if(mod == wxMOD_CONTROL)
-    {
-        if(x != 10)
-        {
-            if(BmarkHandles[x] != -1)
-            {
-                    MarkerDeleteHandle(BmarkHandles[x]);
-                    BmarkHandles[x] = -1;
-            }
-            else
-            {
-                BmarkHandles[x] = MarkerAdd(LineFromPosition(GetCurrentPos()), x + 1);
-            }
-        }
-    }
-    event.Skip();
+	int x = event.GetKeyCode();
+	int mod = event.GetModifiers();
+	if(event.ShiftDown())
+		mod = wxMOD_ALTGR; //fail it
+	switch(x)
+	{
+		case 48: { x = 0; break;}
+		case 49: { x = 1; break;}
+		case 50: { x = 2; break;}
+		case 51: { x = 3; break;}
+		case 52: { x = 4; break;}
+		case 53: { x = 5; break;}
+		case 54: { x = 6; break;}
+		case 55: { x = 7; break;}
+		case 56: { x = 8; break;}
+		case 57: { x = 9; break;}
+		default: x = 10;
+	}
+	if(mod == wxMOD_ALT)
+	{
+		if(x != 10)
+		{
+			if(BmarkHandles[x] != -1)
+			{
+			if(MarkerLineFromHandle(BmarkHandles[x]) >= 0)
+				GotoLine(MarkerLineFromHandle(BmarkHandles[x]));
+			}
+		}
+	}
+	else
+	if(mod == wxMOD_CONTROL)
+	{
+		if(x != 10)
+		{
+			if(BmarkHandles[x] != -1)
+			{
+				MarkerDeleteHandle(BmarkHandles[x]);
+				BmarkHandles[x] = -1;
+			}
+			else
+			{
+				BmarkHandles[x] = MarkerAdd(LineFromPosition(GetCurrentPos()), x + 1);
+			}
+		}
+	}
+	event.Skip();
+}
+
+void XSTC::KeyParse(wxKeyEvent& event)
+{
+	int x = event.GetKeyCode();
+	int mod = event.GetModifiers();
+	event.Skip();
 }
 
 void XSTC::SetLexerX(int lexer)

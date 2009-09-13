@@ -67,17 +67,6 @@
  *  XSTC_DEF() same as the above, but this is for everything else, so use it for style definitions  *
  *             to make your code library independant. (that is why these macros where created.      *
  *                                                                                                  *
- *  XSTC_USE_CONFIG define this macro if you want XSTC to utilize an X.conf style                   *
- *                  auto-configuration method. otherwise you will have to decide and impliment the  *
- *                  lexers and color settings per document type.                                    *
- *                                                                                                  *
- *  XSTC_USE_REG this is only availible on windows. is is set automatically, but comment the line   *
- *               if you don't want to use it.                                                       *
- *                                                                                                  *
- *  XSTC_USE_XML this is an alternative to the configuration method if you prefer xml this is the   *
- *               way to go. it can be used in conjunction with the other, but is treaded as 2nd     *
- *               priority. it is based on TinyXML and you will need to supply the library yourself  *
- *                                                                                                  *
  *  XSTC_NO_KEYS if defined this will remove all automatic keyword initialization functionality     *
  *               from XSTC. you will have to deal with all keywords code yourself. utilizing this   *
  *               does not limit you from reinitializing the keyword arrays to something you need    *
@@ -97,6 +86,10 @@
  *                    files and all instances in the code. also removes trimspaces varible.         *
  *                                                                                                  *
  *  XSTC_NO_MARK_FULLRECT scintilla 1.69 added this style.                                          *
+ *                                                                                                  *
+ *  XSTC_NO_MARK_LEFTRECT another later added style. 1.78?                                          *
+ *                                                                                                  *
+ *  XSTC_NO_MARK_AVAILABLE another later added style. 1.78?                                         *
  *                                                                                                  *
  *  XSTC_NO_[LEX]NAME this allows lexer setup functions to be removed and not utilized in the       *
  *                       codebase. that way the code can support current scintilla and still work   *
