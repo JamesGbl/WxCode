@@ -954,7 +954,8 @@ wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(FirebirdInterface* pI
 {
   char szError[512];
   wxString strReturn;
-  if (nCode < -900)  // Error codes less than -900 indicate that it wasn't a SQL error but an ibase system error
+  // ?? Error code on user exception have to be -901, but realy it is -836. ??
+  if (nCode < -900 || nCode == -836)  // Error codes less than -900 indicate that it wasn't a SQL error but an ibase system error
   {
     long* pVector = (long*)status;
     pInterface->GetFbInterpret()(szError, 512, (const ISC_STATUS**)&pVector);
