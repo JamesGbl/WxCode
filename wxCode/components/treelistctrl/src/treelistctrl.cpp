@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.107 2009-03-19 07:51:49 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.108 2009-09-20 19:23:20 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -30,6 +30,7 @@
 #endif
 
 
+#include <wx/app.h>
 #include <wx/treebase.h>
 #include <wx/timer.h>
 #include <wx/textctrl.h>
