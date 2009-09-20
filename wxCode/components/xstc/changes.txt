@@ -1,3 +1,6 @@
+CHANGES for version 6.3
+added exports for dll version, they where not all present.
+
 CHANGES for version 6.2
 added missing language macros in GetEXTLexer so that languagees can be fully disabled
 added new languages for scintilla 1.78

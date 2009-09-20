@@ -138,6 +138,7 @@ XSTC_CLASS(parent, id, pos, size, style, name)
 
 	ResetStyle();
 	SetProperty(wxT("fold"), wxT("1"));
+	SetPasteConvertEndings(true);
 }
 
 XSTC::~XSTC()
@@ -179,6 +180,7 @@ void XSTC::Bmatch(XSTC_EVENT& event)
     else
     {
        BraceHighlight(sp, q);
+       SetHighlightGuide((GetColumn(sp) < GetColumn(q))?GetColumn(sp):GetColumn(q));
     }
  }
  else
@@ -201,6 +203,8 @@ void XSTC::Bmatch(XSTC_EVENT& event)
        else
        {
           BraceHighlight(sp, q);
+          SetHighlightGuide((GetColumn(sp) < GetColumn(q))?GetColumn(sp):GetColumn(q));
+          
        }
     }
     else
@@ -223,6 +227,7 @@ void XSTC::Bmatch(XSTC_EVENT& event)
           else
           {
              BraceHighlight(sp, q);
+             SetHighlightGuide((GetColumn(sp) < GetColumn(q))?GetColumn(sp):GetColumn(q));
           }
        }
        else
@@ -245,6 +250,7 @@ void XSTC::Bmatch(XSTC_EVENT& event)
              else
              {
                 BraceHighlight(sp, q);
+                SetHighlightGuide((GetColumn(sp) < GetColumn(q))?GetColumn(sp):GetColumn(q));
              }
           }
           else
@@ -1994,7 +2000,8 @@ long XSTC::SaveFileX(const wxString filename, long saveas)
     }
 #endif //XSTC_NO_AUTOSAVEAS in use
 
-   return status;
+	this->EmptyUndoBuffer();
+	return status;
 }
 
 void XSTC::CloseFile()

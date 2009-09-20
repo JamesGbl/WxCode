@@ -41,15 +41,7 @@
 #include "util.h"
 
 #ifndef XSTC_NO_CONFIG
- #ifdef XSTC_USE_CONFIG
-  #include <wx/fileconf.h>
   #include <wx/config.h>
-  #ifdef _WXMSW_
-   #ifdef XSTC_USE_REG
-    #include <wx/msw/regconf.h>
-   #endif //XSTC_USE_REG
-  #endif //_WXMSW_
- #endif //XSTC_USE_CONF
 #endif //XSTC_NO_CONFIG
 
 #include <wx/version.h>
@@ -699,7 +691,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 
     \detailed does what a constructor should
     */
-    XSTC(wxWindow *parent, wxWindowID id=wxID_ANY,
+WXDLLIMPEXP_XSTC XSTC(wxWindow *parent, wxWindowID id=wxID_ANY,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
          long style = 0,
@@ -710,7 +702,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 
     \detailed probably will always remain empty
     */
-    virtual ~XSTC();
+WXDLLIMPEXP_XSTC virtual ~XSTC();
 
 //the load and save functions here wrap the scintilla functins and allow for other
 //actions to take place when it happens. (so lexers and coloring can be set up via extension.)
@@ -722,7 +714,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               color the document and the fold margin will stay as
               it was toggled already. also returns a status message.
     */
-    long LoadFileX(wxString filename, bool setlexer = false);
+WXDLLIMPEXP_XSTC long LoadFileX(wxString filename, bool setlexer = false);
 
     /**
     \brief save file
@@ -737,7 +729,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               if no filename is passed then the internal "XFilename" copy is used
               if one is passed that variable is ignored
     */
-     long SaveFileX(const wxString filename = wxT(""), long saveas = SAVE_AS_NEVER);
+WXDLLIMPEXP_XSTC long SaveFileX(const wxString filename = wxT(""), long saveas = SAVE_AS_NEVER);
 
     /**
     \brief clears the editor
@@ -745,18 +737,18 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed clears the editor sets lexer to NULL and Filename to 'Untitled'
               also returns a status message.
     */
-    void CloseFile(); //kindof an extended Clear() function for the same purpose as the file wrappers.
+WXDLLIMPEXP_XSTC void CloseFile(); //kindof an extended Clear() function for the same purpose as the file wrappers.
 
 #ifndef XSTC_NO_KEYS
     /**
     \brief sets all keywords to ""
     */
-    void PurgeKeys();
+WXDLLIMPEXP_XSTC void PurgeKeys();
 
     /**
     \brief simply it resets ALL of the keys_set strings to default
     */
-    void InitKeys();
+WXDLLIMPEXP_XSTC void InitKeys();
 #endif //XSTC_NO_KEYS
 
     /**
@@ -765,14 +757,14 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed toggles a bookamrk at the specified line, internaly this is the
               line where the margin was clicked
     */
-    void ToggleBookMark(int line);
+WXDLLIMPEXP_XSTC void ToggleBookMark(int line);
 
     /**
     \brief sets margin number for each margin type
 
     \detailed sets the margins and sets the withs to those set with SetMgnWidth
     */
-    void MapMargins(int line, int symbol, int fold);
+WXDLLIMPEXP_XSTC void MapMargins(int line, int symbol, int fold);
 
     /**
     \brief sets widths of the mapped margins
@@ -780,7 +772,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed sets the margin widths and stores them so that
               when mapping margins the same settings will be used
     */
-    void SetMgnsWidth(int line, int symbol, int fold);
+WXDLLIMPEXP_XSTC void SetMgnsWidth(int line, int symbol, int fold);
 
 #ifndef XSTC_NO_KEYS
     /**
@@ -790,7 +782,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               as space delimited or a space delimited should just pass as is.
               use: KeyCheck() instead if you might support keywords too.
     */
-    wxString LoadKeyWords(wxString filename);
+WXDLLIMPEXP_XSTC wxString LoadKeyWords(wxString filename);
 #endif //XSTC_NO_KEYS
 
     /**
@@ -799,7 +791,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed sets up scintilla for color over black, all lexers adjust
               accordingly if this is used to set up the general colors
     */
-    void DarkStyle();
+WXDLLIMPEXP_XSTC void DarkStyle();
 
     /**
     \brief attempts to emulate visual studio coloring
@@ -807,7 +799,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed i don't use VS too often and i copied these settings
               with some creativity for readability from Dev-C++
     */
-    void VisualStudioStyle();
+WXDLLIMPEXP_XSTC void VisualStudioStyle();
 
     /**
     \brief attempts to emulate classic colors (whatever that means)
@@ -815,7 +807,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed dunno i copied these settings with some
               creativity for readability from Dev-C++
     */
-    void ClassicStyle();
+WXDLLIMPEXP_XSTC void ClassicStyle();
 
     /**
     \brief attempts to emulate the old borland TUI ide
@@ -824,28 +816,28 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               i learned c++ on, if i can figure out how to set up the
               default colors again i definatly can get this one right.
     */
-    void BorlandStyle();
+WXDLLIMPEXP_XSTC void BorlandStyle();
 
 	   /**
     \brief a style i found on the internet
 
     \detailed i found it on codinghorror in is you're ide hot or not as i recall
     */
-    void JeffStyle();
+WXDLLIMPEXP_XSTC void JeffStyle();
 
 	   /**
     \brief a style i found on the internet
 
     \detailed i found it on codinghorror in is you're ide hot or not as i recall
     */
-    void ZenburnStyle();
+WXDLLIMPEXP_XSTC void ZenburnStyle();
 
     /**
     \brief a style based on the matrix
 
     \detailed i saw a matrix based color scheme and decided to make one
     */
-    void MatrixStyle();
+WXDLLIMPEXP_XSTC void MatrixStyle();
 
     /**
     \brief loads a style from the configs
@@ -854,14 +846,14 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               default of black on white if no settings exsist. also uses styleconf(), but these settings take
               priority.
     */
-    void ConfigStyle(wxString style);
+WXDLLIMPEXP_XSTC void ConfigStyle(wxString style);
 
     /**
     \brief returns the names of availible config styles
 
     \detailed returns a wxArrayString of all names that are in the config CStyles string.
     */
-    wxString GetConfNames();
+WXDLLIMPEXP_XSTC wxString GetConfNames();
 
     /**
     \brief turns off enviornment colorstyles
@@ -871,7 +863,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               other settings will keep, so you could call DarkStyle()
               then this and the lexers will ignore the black bg
     */
-    void ResetStyle();
+WXDLLIMPEXP_XSTC void ResetStyle();
 
 #ifndef XSTC_NO_CONFIG
     /**
@@ -880,7 +872,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed called by all colorstyle functions since it does the same
               thing for each
     */
-    void StyleConf();
+WXDLLIMPEXP_XSTC void StyleConf();
 
     /**
     \brief sets config based colors for foldstyle functions
@@ -888,7 +880,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
     \detailed called by all foldstyle functions since it does the same
               thing for each
     */
-    void FoldConf();
+WXDLLIMPEXP_XSTC void FoldConf();
 #endif //XSTC_NO_CONFIG
 
     /**
@@ -899,7 +891,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 			  properties will only be loaded if lang is set. that is the language being used for the
 			  document, not the lexer.
     */
-    void SetLexerX(int lexer);
+WXDLLIMPEXP_XSTC void SetLexerX(int lexer);
 
     /**
     \brief gets property and value from a string
@@ -908,7 +900,7 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               delimiter between them. property is a lexer property
               string value is the setting to use with that property
     */
-    PropSTR GetPropStr(wxString property);
+WXDLLIMPEXP_XSTC PropSTR GetPropStr(wxString property);
 
 #ifndef XSTC_NO_KEYS
     /**
@@ -918,112 +910,112 @@ class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
               set of filenames) and either loads the file(s) or
               returns its given value which sould be a set of keywords
     */
-    wxString KeyCheck(wxString keyname);
+WXDLLIMPEXP_XSTC wxString KeyCheck(wxString keyname);
 #endif //XSTC_NO_KEYS
 
 #ifndef XSTC_NO_ABAQUS
     /**
     \brief abaqus lexcolor setup
     */
-void LexABAQUS();
+WXDLLIMPEXP_XSTC void LexABAQUS();
 #endif //XSTC_NO_ABAQUS
 
 #ifndef XSTC_NO_ADA
     /**
     \brief ada lexcolor setup
     */
-void LexADA();
+WXDLLIMPEXP_XSTC void LexADA();
 #endif //XSTC_NO_ADA
 
 #ifndef XSTC_NO_APDL
     /**
     \brief apdl lexcolor setup
     */
-void LexAPDL();
+WXDLLIMPEXP_XSTC void LexAPDL();
 #endif //XSTC_NO_APDL
 
 #ifndef XSTC_NO_ASM
     /**
     \brief assembly lexcolor setup
     */
-void LexASM();
+WXDLLIMPEXP_XSTC void LexASM();
 #endif //XSTC_NO_ASM
 
 #ifndef XSTC_NO_ASN1
     /**
     \brief asn1 lexcolor setup
     */
-void LexASN1();
+WXDLLIMPEXP_XSTC void LexASN1();
 #endif //XSTC_NO_ASN1
 
 #ifndef XSTC_NO_ASYMPTOTE
     /**
     \brief asymptote lexcolor setup
     */
-void LexASYMPTOTE();
+WXDLLIMPEXP_XSTC void LexASYMPTOTE();
 #endif //XSTC_NO_ASYMPTOTE
 
 #ifndef XSTC_NO_AU3
     /**
     \brief au3 lexcolor setup
     */
-void LexAU3();
+WXDLLIMPEXP_XSTC void LexAU3();
 #endif //XSTC_NO_AU3
 
 #ifndef XSTC_NO_AVE
     /**
     \brief avenuelexcolor setup
     */
-void LexAVE();
+WXDLLIMPEXP_XSTC void LexAVE();
 #endif //XSTC_NO_AVE
 
 #ifndef XSTC_NO_BAAN
     /**
     \brief baan lexcolor setup
     */
-void LexBAAN();
+WXDLLIMPEXP_XSTC void LexBAAN();
 #endif //XSTC_NO_BAAN
 
 #ifndef XSTC_NO_BLITZBASIC
     /**
     \brief blitzbasic lexcolor setup
     */
-void LexBLBASIC();//all four use the same color defs, but doing this makes it easier to customize the coloring
+WXDLLIMPEXP_XSTC void LexBLBASIC();//all four use the same color defs, but doing this makes it easier to customize the coloring
 #endif //XSTC_NO_BLITZBASIC
 
 #ifndef XSTC_NO_FREEBASIC
     /**
     \brief freebasic lexcolor setup
     */
-void LexFRBASIC();
+WXDLLIMPEXP_XSTC void LexFRBASIC();
 #endif //XSTC_NO_FREEBASIC
 
 #ifndef XSTC_NO_POWERBASIC
     /**
     \brief powerbasic lexcolor setup
     */
-void LexPOBASIC();
+WXDLLIMPEXP_XSTC void LexPOBASIC();
 #endif //XSTC_NO_POWERBASIC
 
 #ifndef XSTC_NO_PUREBASIC
     /**
     \brief purebasic lexcolor setup
     */
-void LexPUBASIC();
+WXDLLIMPEXP_XSTC void LexPUBASIC();
 #endif //XSTC_NO_PUREBASIC
 
 #ifndef XSTC_NO_BASH
     /**
     \brief bash lexcolor setup
     */
-void LexBASH();
+WXDLLIMPEXP_XSTC void LexBASH();
 #endif //XSTC_NO_BASH
 
 #ifndef XSTC_NO_BATCH
     /**
     \brief batch lexcolor setup
     */
-void LexBATCH();
+WXDLLIMPEXP_XSTC void LexBATCH();
 #endif //XSTC_NO_BATCH
 
 #ifndef XSTC_NO_BULLANT
@@ -1036,252 +1028,252 @@ void LexBULLANT();
     /**
     \brief caml lexcolor setup
     */
-void LexCAML();
+WXDLLIMPEXP_XSTC void LexCAML();
 #endif //XSTC_NO_CAML
 
 #ifndef XSTC_NO_CLW
     /**
     \brief clw lexcolor setup
     */
-void LexCLW();
+WXDLLIMPEXP_XSTC void LexCLW();
 #endif //XSTC_NO_CLW
 
 #ifndef XSTC_NO_CMAKE
     /**
     \brief cmake lexcolor setup
     */
-void LexCMAKE();
+WXDLLIMPEXP_XSTC void LexCMAKE();
 #endif //XSTC_NO_CMAKE
 
 #ifndef XSTC_NO_COBOL
     /**
     \brief cobol lexcolor setup
     */
-void LexCOBOL();
+WXDLLIMPEXP_XSTC void LexCOBOL();
 #endif //XSTC_NO_COBOL
 
 #ifndef XSTC_NO_CONF
     /**
     \brief apache conf lexcolor setup
     */
-void LexCONF();
+WXDLLIMPEXP_XSTC void LexCONF();
 #endif //XSTC_NO_CONF
 
 #ifndef XSTC_NO_CPP
     /**
     \brief c/c++ lexcolor setup
     */
-void LexCPP();
+WXDLLIMPEXP_XSTC void LexCPP();
 #endif //XSTC_NO_CPP
 
 #ifndef XSTC_NO_CSOUND
     /**
     \brief csound lexcolor setup
     */
-void LexCSOUND();
+WXDLLIMPEXP_XSTC void LexCSOUND();
 #endif //XSTC_NO_CSOUND
 
 #ifndef XSTC_NO_CSS
     /**
     \brief css lexcolor setup
     */
-void LexCSS();
+WXDLLIMPEXP_XSTC void LexCSS();
 #endif //XSTC_NO_CSS
 
 #ifndef XSTC_NO_D
     /**
     \brief d lexcolor setup
     */
-void LexD();
+WXDLLIMPEXP_XSTC void LexD();
 #endif //XSTC_NO_D
 
 #ifndef XSTC_NO_DIFF
     /**
     \brief diff lexcolor setup
     */
-void LexDIFF();
+WXDLLIMPEXP_XSTC void LexDIFF();
 #endif //XSTC_NO_DIFF
 
 #ifndef XSTC_NO_EIFFEL
     /**
     \brief eiffel lexcolor setup
     */
-void LexEIFFEL();
+WXDLLIMPEXP_XSTC void LexEIFFEL();
 #endif //XSTC_NO_EIFFEL
 
 #ifndef XSTC_NO_EIFFELKW
     /**
     \brief eiffelkw lexcolor setup
     */
-void LexEIFFELKW();
+WXDLLIMPEXP_XSTC void LexEIFFELKW();
 #endif //XSTC_NO_EIFFELKW
 
 #ifndef XSTC_NO_ERLANG
     /**
     \brief erlang lexcolor setup
     */
-void LexERLANG();
+WXDLLIMPEXP_XSTC void LexERLANG();
 #endif //XSTC_NO_ERLANG
 
 #ifndef XSTC_NO_ERRORLIST
     /**
     \brief errorlist lexcolor setup
     */
-void LexERRORLIST();
+WXDLLIMPEXP_XSTC void LexERRORLIST();
 #endif //XSTC_NO_ERRORLIST
 
 #ifndef XSTC_NO_ESCRIPT
     /**
     \brief escript lexcolor setup
     */
-void LexESCRIPT();
+WXDLLIMPEXP_XSTC void LexESCRIPT();
 #endif //XSTC_NO_ESCRIPT
 
 #ifndef XSTC_NO_F77
     /**
     \brief f77 lexcolor setup
     */
-void LexF77();
+WXDLLIMPEXP_XSTC void LexF77();
 #endif //XSTC_NO_F77
 
 #ifndef XSTC_NO_FLAGSHIP
     /**
     \brief flagship (clipper) lexcolor setup
     */
-void LexFLAGSHIP();
+WXDLLIMPEXP_XSTC void LexFLAGSHIP();
 #endif //XSTC_NO_FLAGSHIP
 
 #ifndef XSTC_NO_FORTH
     /**
     \brief forth lexcolor setup
     */
-void LexFORTH();
+WXDLLIMPEXP_XSTC void LexFORTH();
 #endif //XSTC_NO_FORTH
 
 #ifndef XSTC_NO_FORTRAN
     /**
     \brief fortran lexcolor setup
     */
-void LexFORTRAN();
+WXDLLIMPEXP_XSTC void LexFORTRAN();
 #endif //XSTC_NO_FORTRAN
 
 #ifndef XSTC_NO_GAP
     /**
     \brief gap lexcolor setup
     */
-void LexGAP();
+WXDLLIMPEXP_XSTC void LexGAP();
 #endif //XSTC_NO_GAP
 
 #ifndef XSTC_NO_GUI4CLI
     /**
     \brief agui4cli lexcolor setup
     */
-void LexGUI4CLI();
+WXDLLIMPEXP_XSTC void LexGUI4CLI();
 #endif //XSTC_NO_GUI4CLI
 
 #ifndef XSTC_NO_HASKELL
     /**
     \brief haskel lexcolor setup
     */
-void LexHASKELL();
+WXDLLIMPEXP_XSTC void LexHASKELL();
 #endif //XSTC_NO_HASKELL
 
 #ifndef XSTC_NO_HTM
     /**
     \brief html php asp embeded javascript lexcolor setup
     */
-void LexHTM();
+WXDLLIMPEXP_XSTC void LexHTM();
 #endif //XSTC_NO_HTM
 
 #ifndef XSTC_NO_INNOSETUP
     /**
     \brief inno installer lexcolor setup
     */
-void LexINNO();
+WXDLLIMPEXP_XSTC void LexINNO();
 #endif //XSTC_NO_INNOSETUP
 
 #ifndef XSTC_NO_JS
     /**
     \brief javascript file (cpp lexer) lexcolor setup
     */
-void LexJS();
+WXDLLIMPEXP_XSTC void LexJS();
 #endif //XSTC_NO_JS
 
 #ifndef XSTC_NO_JAVA
     /**
     \brief java file (cpp lexer) lexcolor setup
     */
-void LexJAVA();
+WXDLLIMPEXP_XSTC void LexJAVA();
 #endif //XSTC_NO_JAVA
 
 #ifndef XSTC_NO_KIX
     /**
     \brief kix lexcolor setup
     */
-void LexKIX();
+WXDLLIMPEXP_XSTC void LexKIX();
 #endif //XSTC_NO_KIX
 
 #ifndef XSTC_NO_LATEX
     /**
     \brief latexlexcolor setup
     */
-void LexLATEX();
+WXDLLIMPEXP_XSTC void LexLATEX();
 #endif //XSTC_NO_LATEX
 
 #ifndef XSTC_NO_LISP
     /**
     \brief lisp lexcolor setup
     */
-void LexLISP();
+WXDLLIMPEXP_XSTC void LexLISP();
 #endif //XSTC_NO_LISP
 
 #ifndef XSTC_NO_LOT
     /**
     \brief lot lexcolor setup
     */
-void LexLOT();
+WXDLLIMPEXP_XSTC void LexLOT();
 #endif //XSTC_NO_LOT
 
 #ifndef XSTC_NO_LOUT
     /**
     \brief lout lexcolor setup
     */
-void LexLOUT();
+WXDLLIMPEXP_XSTC void LexLOUT();
 #endif //XSTC_NO_LOUT
 
 #ifndef XSTC_NO_LUA
     /**
     \brief lua lexcolor setup
     */
-void LexLUA();
+WXDLLIMPEXP_XSTC void LexLUA();
 #endif //XSTC_NO_LUA
 
 #ifndef XSTC_NO_MAKEFILE
     /**
     \brief makefile lexcolor setup
     */
-void LexMAKEFILE();
+WXDLLIMPEXP_XSTC void LexMAKEFILE();
 #endif //XSTC_NO_MAKEFILE
 
 #ifndef XSTC_NO_MAGIK
     /**
     \brief magik lexcolor setup
     */
-void LexMAGIK();
+WXDLLIMPEXP_XSTC void LexMAGIK();
 #endif //XSTC_NO_MAGIK
 
 #ifndef XSTC_NO_MATLAB
     /**
     \brief matlab lexcolor setup
     */
-void LexMATLAB();
+WXDLLIMPEXP_XSTC void LexMATLAB();
 #endif //XSTC_NO_MATLAB
 
 #ifndef XSTC_NO_METAPOST
     /**
     \brief metapost lexcolor setup
     */
-void LexMETAPOST();
+WXDLLIMPEXP_XSTC void LexMETAPOST();
 #endif //XSTC_NO_METAPOST
 
 #ifndef XSTC_NO_MMIXAL
@@ -1295,284 +1287,283 @@ void LexMMIXAL();
     /**
     \brief nimrod lexcolor setup
     */
-void LexNIMROD();
+WXDLLIMPEXP_XSTC void LexNIMROD();
 #endif //XSTC_NO_NIMROD
 
 #ifndef XSTC_NO_NNCRONTAB
     /**
     \brief nncrontab lexcolor setup
     */
-void LexNNCRONTAB();
+WXDLLIMPEXP_XSTC void LexNNCRONTAB();
 #endif //XSTC_NO_NNCRONTAB
 
 #ifndef XSTC_NO_NSIS
     /**
     \brief nsis lexcolor setup
     */
-void LexNSIS();
+WXDLLIMPEXP_XSTC void LexNSIS();
 #endif //XSTC_NO_NSIS
 
 #ifndef XSTC_NO_OCTAVE
     /**
     \brief octave lexcolor setup
     */
-void LexOCTAVE();
+WXDLLIMPEXP_XSTC void LexOCTAVE();
 #endif //XSTC_NO_OCTAVE
 
 #ifndef XSTC_NO_OPAL
     /**
     \brief opal lexcolor setup
     */
-void LexOPAL();
+WXDLLIMPEXP_XSTC void LexOPAL();
 #endif //XSTC_NO_OPAL
 
 #ifndef XSTC_NO_PAS
     /**
     \brief pascal/delphi lexcolor setup
     */
-void LexPAS();
+WXDLLIMPEXP_XSTC void LexPAS();
 #endif //XSTC_NO_PAS
 
 #ifndef XSTC_NO_PERL
     /**
     \brief perl lexcolor setup
     */
-void LexPERL();
+WXDLLIMPEXP_XSTC void LexPERL();
 #endif //XSTC_NO_PERL
 
 #ifndef XSTC_NO_PLM
     /**
     \brief plm lexcolor setup
     */
-void LexPLM();
+WXDLLIMPEXP_XSTC void LexPLM();
 #endif //XSTC_NO_PLM
 
 #ifndef XSTC_NO_PO
     /**
     \brief po lexcolor setup
     */
-void LexPO();
+WXDLLIMPEXP_XSTC void LexPO();
 #endif //XSTC_NO_PO
 
 #ifndef XSTC_NO_POV
     /**
     \brief pov lexcolor setup
     */
-void LexPOV();
+WXDLLIMPEXP_XSTC void LexPOV();
 #endif //XSTC_NO_POV
 
 #ifndef XSTC_NO_POWERPRO
     /**
     \brief powerpro lexcolor setup
     */
-void LexPOWERPRO();
+WXDLLIMPEXP_XSTC void LexPOWERPRO();
 #endif //XSTC_NO_POWERPRO
 
 #ifndef XSTC_NO_POWERSHELL
     /**
     \brief powershell lexcolor setup
     */
-void LexPOWERSHELL();
+WXDLLIMPEXP_XSTC void LexPOWERSHELL();
 #endif //XSTC_NO_POWERSHELL
 
 #ifndef XSTC_NO_PROGRESS
     /**
     \brief progress lexcolor setup
     */
-void LexPROGRESS();
+WXDLLIMPEXP_XSTC void LexPROGRESS();
 #endif //XSTC_NO_PROGRESS
 
 #ifndef XSTC_NO_PROPERTIES
     /**
     \brief properties lexcolor setup
     */
-void LexPROPERTIES();
+WXDLLIMPEXP_XSTC void LexPROPERTIES();
 #endif //XSTC_NO_PROPERTIES
 
 #ifndef XSTC_NO_PS
     /**
     \brief ps lexcolor setup
     */
-void LexPS();
+WXDLLIMPEXP_XSTC void LexPS();
 #endif //XSTC_NO_PS
 
 #ifndef XSTC_NO_PYTHON
     /**
     \brief python lexcolor setup
     */
-void LexPYTHON();
+WXDLLIMPEXP_XSTC void LexPYTHON();
 #endif //XSTC_NO_PYTHON
 
 #ifndef XSTC_NO_R
     /**
     \brief r lexcolor setup
     */
-void LexR();
+WXDLLIMPEXP_XSTC void LexR();
 #endif //XSTC_NO_R
 
 #ifndef XSTC_NO_REBOL
     /**
     \brief rebol lexcolor setup
     */
-void LexREBOL();
+WXDLLIMPEXP_XSTC void LexREBOL();
 #endif //XSTC_NO_REBOL
 
 #ifndef XSTC_NO_RUBY
     /**
     \brief ruby lexcolor setup
     */
-void LexRUBY();
+WXDLLIMPEXP_XSTC void LexRUBY();
 #endif //XSTC_NO_RUBY
 
 #ifndef XSTC_NO_SCRIPTOL
     /**
     \brief scriptol lexcolor setup
     */
-void LexSCRIPTOL();
+WXDLLIMPEXP_XSTC void LexSCRIPTOL();
 #endif //XSTC_NO_SCRIPTOL
 
 #ifndef XSTC_NO_SMALLTALK
     /**
     \brief smalltalk lexcolor setup
     */
-void LexSMALLTALK();
+WXDLLIMPEXP_XSTC void LexSMALLTALK();
 #endif //XSTC_NO_SMALLTALK
 
 #ifndef XSTC_NO_SML
     /**
     \brief sml lexcolor setup
     */
-void LexSML();
+WXDLLIMPEXP_XSTC void LexSML();
 #endif //XSTC_NO_SML
 
 #ifndef XSTC_NO_SORCUS
     /**
     \brief sorcus lexcolor setup
     */
-void LexSORCUS();
+WXDLLIMPEXP_XSTC void LexSORCUS();
 #endif //XSTC_NO_SORCUS
 
 #ifndef XSTC_NO_SPECMAN
     /**
     \brief specman lexcolor setup
     */
-void LexSPECMAN();
+WXDLLIMPEXP_XSTC void LexSPECMAN();
 #endif //XSTC_NO_SPECMAN
 
 #ifndef XSTC_NO_SPICE
     /**
     \brief spice lexcolor setup
     */
-void LexSPICE();
+WXDLLIMPEXP_XSTC void LexSPICE();
 #endif //XSTC_NO_SPICE
 
 #ifndef XSTC_NO_MSSQL
     /**
     \brief Microsoft sql lexcolor setup
     */
-void LexMSSQL();
+WXDLLIMPEXP_XSTC void LexMSSQL();
 #endif //XSTC_NO_MSSQL
 
 #ifndef XSTC_NO_MYSQL
     /**
     \brief Mysql lexcolor setup
     */
-void LexMYSQL();
+WXDLLIMPEXP_XSTC void LexMYSQL();
 #endif //XSTC_NO_MYSQL
 
 #ifndef XSTC_NO_SQL
     /**
     \brief sql lexcolor setup
     */
-void LexSQL();
+WXDLLIMPEXP_XSTC void LexSQL();
 #endif //XSTC_NO_SQL
 
 #ifndef XSTC_NO_TACL
     /**
     \brief tacl lexcolor setup
     */
-void LexTACL();
+WXDLLIMPEXP_XSTC void LexTACL();
 #endif //XSTC_NO_TACL
 
 #ifndef XSTC_NO_TADS3
     /**
     \brief tads3 lexcolor setup
     */
-void LexTADS3();
+WXDLLIMPEXP_XSTC void LexTADS3();
 #endif //XSTC_NO_TADS3
 
 #ifndef XSTC_NO_TAL
     /**
     \brief tal lexcolor setup
     */
-void LexTAL();
+WXDLLIMPEXP_XSTC void LexTAL();
 #endif //XSTC_NO_TAL
 
 #ifndef XSTC_NO_TCL
     /**
     \brief tcl lexcolor setup
     */
-void LexTCL();
+WXDLLIMPEXP_XSTC void LexTCL();
 #endif //XSTC_NO_TCL
 
 #ifndef XSTC_NO_TEX
     /**
     \brief tex lexcolor setup
     */
-void LexTEX();
+WXDLLIMPEXP_XSTC void LexTEX();
 #endif //XSTC_NO_TEX
 
 #ifndef XSTC_NO_VB
     /**
     \brief Visual Basic lexcolor setup
     */
-void LexVB();
+WXDLLIMPEXP_XSTC void LexVB();
 #endif //XSTC_NO_VB
 
 #ifndef XSTC_NO_VBSCRIPT
     /**
     \brief vb script lexcolor setup
     */
-void LexVBSCRIPT();
+WXDLLIMPEXP_XSTC void LexVBSCRIPT();
 #endif //XSTC_NO_VBSCRIPT
 
 #ifndef XSTC_NO_VERILOG
     /**
     \brief verilong lexcolor setup
     */
-void LexVERILOG();
+WXDLLIMPEXP_XSTC void LexVERILOG();
 #endif //XSTC_NO_VERILOG
 
 #ifndef XSTC_NO_VHDL
     /**
     \brief vhdl lexcolor setup
     */
-void LexVHDL();
+WXDLLIMPEXP_XSTC void LexVHDL();
 #endif //XSTC_NO_VHDL
 
 #ifndef XSTC_NO_XCODE
     /**
     \brief xcode lexcolor setup
     */
-void LexXCODE();
+WXDLLIMPEXP_XSTC void LexXCODE();
 #endif //XSTC_NO_XCODE
 
 #ifndef XSTC_NO_XML
     /**
     \brief xml lexcolor setup
     */
-void LexXML();
+WXDLLIMPEXP_XSTC void LexXML();
 #endif //XSTC_NO_XML
 
 #ifndef XSTC_NO_YAML
     /**
     \brief yaml lexcolor setup
     */
-void LexYAML();
+WXDLLIMPEXP_XSTC void LexYAML();
 #endif //XSTC_NO_YAML
 
 #ifndef XSTC_NO_CONFIG
- #ifdef XSTC_USE_CONFIG
     /**
     \brief pass a configuration object so that XSTC can load external settings
     
@@ -1580,13 +1571,7 @@ void LexYAML();
               XSTC/COLOR/ is used for all coloring/styling options
               XSTC/EXT/ is used for the extension and property options
     */
-    void SetColorConf(wxConfigBase* clrconf);
- #endif //XSTC_USE_CONFIG
-/*
- #ifdef XSTC_USE_XML
-  //wxXMLConfig* SetColorConf(wxString app, wxString vendor, wxString local);
- #endif //XSTC_USE_XML
-*/
+WXDLLIMPEXP_XSTC void SetColorConf(wxConfigBase* clrconf);
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_TRIMTRAIL
@@ -1595,7 +1580,7 @@ void LexYAML();
 
     \detailed if trimspaces is set to true, then this will be called in savefileX.
     */
-    void TrimTrailing();
+WXDLLIMPEXP_XSTC void TrimTrailing();
 #endif //XSTC_NO_TRIMTRAIL
 
 #ifndef XSTC_NO_TABSPACE
@@ -1605,33 +1590,33 @@ void LexYAML();
     \detailed tabs=true tabs to spaces else spaces to tabs
               int spaces, is the number of spaces to equal one tab
     */
-    void TabSpace(bool tabs, int spaces);
+WXDLLIMPEXP_XSTC void TabSpace(bool tabs, int spaces);
 #endif //XSTC_NO_TABSPACE
 
     /**
     \brief sets up the folding matgin mask for square markers
     */
-    void FoldBox();
+WXDLLIMPEXP_XSTC void FoldBox();
 
     /**
     \brief sets up the folding margin mask for circle markers
     */
-    void FoldCircle();
+WXDLLIMPEXP_XSTC void FoldCircle();
 
     /**
     \brief sets the folding margin mask for arrow markers
     */
-    void FoldArrow(bool lines = true);
+WXDLLIMPEXP_XSTC void FoldArrow(bool lines = true);
 
     /**
     \brief sets the foldimg margin mask for +- markers
     */
-    void FoldSimple(bool lines = true);
+WXDLLIMPEXP_XSTC void FoldSimple(bool lines = true);
 
     /**
     \brief sets the foldimg marker colors
     */
-    void FoldColors();
+WXDLLIMPEXP_XSTC void FoldColors();
 
     /**
     \brief converts a string representing a lexer to an int
@@ -1639,7 +1624,7 @@ void LexYAML();
     \detailed the string can represent a number or lexer keyword, numbers are converted
            and passed verbatim, the keyword is converted to its respective lexer
     */
-    int GetEXTLexer(wxString extparam);
+WXDLLIMPEXP_XSTC int GetEXTLexer(wxString extparam);
 
 
     /**
@@ -1647,14 +1632,14 @@ void LexYAML();
 
     \detailed doens't do any well formed checks, just looks for characters
     */
-    bool FilevalidCheck(wxString entry);
+WXDLLIMPEXP_XSTC bool FilevalidCheck(wxString entry);
 
     /**
     \brief resets all markers to default
 
     \detailed this is an easy way to clear the slate, it only resets markers managed my XSTC
     */
-    void ResetMarkers();
+WXDLLIMPEXP_XSTC void ResetMarkers();
 
 #ifndef XSTC_NO_CONFIG
     /**
@@ -1664,7 +1649,7 @@ void LexYAML();
               be used if it is in the database. otherwize an html or rgb string can be used #RRGGBB or rgb(r, g, b)
               the rgb string can be used with or without the rgb prefix, but that is how the wxColour class takes it.
     */
-    bool Ccolor(wxString configvalue, wxColour& color);
+WXDLLIMPEXP_XSTC bool Ccolor(wxString configvalue, wxColour& color);
 
     /**
     \brief checks the value of a config color setting and converts it to a string defaults to #RRGGBB
@@ -1676,7 +1661,7 @@ void LexYAML();
               wxC2S_CSS_SYNTAX    rgb(255, 0, 0)
               wxC2S_HTML_SYNTAX   #FF0000
     */
-    bool CcolorS(wxString configvalue, wxString& color, long type = wxC2S_HTML_SYNTAX);
+WXDLLIMPEXP_XSTC bool CcolorS(wxString configvalue, wxString& color, long type = wxC2S_HTML_SYNTAX);
 
     /**
     \brief gives the user a pointer to the color database, XSTC still destroys it internally.
@@ -1686,7 +1671,7 @@ void LexYAML();
               (this function was already called) the database agrument may be NULL if pass is false. this lets
               you just create and get the pointer later if you need it.
     */
-    void SetColorDbase(wxColourDatabase& dbase);
+WXDLLIMPEXP_XSTC void SetColorDbase(wxColourDatabase& dbase);
 
 #endif //XSTC_NO_CONFIG
 
@@ -1697,7 +1682,7 @@ void LexYAML();
     /**
     \brief a status result for file load and save functions
     */
-    enum //filestatus
+WXDLLIMPEXP_XSTC enum //filestatus
 	{
 	FILE_OK = 0,
 	FILE_NOT_FOUND = 1,
@@ -1707,7 +1692,7 @@ void LexYAML();
     /**
     \brief a status result for file load and save functions
     */
-    enum //savemode
+WXDLLIMPEXP_XSTC enum //savemode
 	{
 	SAVE_AS_NEVER = 0,
 	SAVE_AS_ALWAYS = 1,
@@ -1724,7 +1709,7 @@ void LexYAML();
               or null_lexer when there is no assignment also you can use a strings
               rather than a file should that be nessicary
     */
-    bool useext;
+WXDLLIMPEXP_XSTC bool useext;
 
     /**
     \brief for external coloring conf
@@ -1732,12 +1717,12 @@ void LexYAML();
     \detailed this when set to true tells the class to use an external conf
               for colorization or a string
     */
-    bool usecolor;
+WXDLLIMPEXP_XSTC bool usecolor;
 	
 	/**
 	\brief whether to set properties from config file
 	*/
-	bool useprops;
+WXDLLIMPEXP_XSTC bool useprops;
 #endif //XSTC_NO_CONFIG
 
     /**
@@ -1747,7 +1732,7 @@ void LexYAML();
               use a config color setting to overwrite the colors, this may
               have no effect. (the foreground color makes the outline)
     */
-    bool markoutline;
+WXDLLIMPEXP_XSTC bool markoutline;
 
     /**
     \brief for fold margin functions
@@ -1757,14 +1742,14 @@ void LexYAML();
               if using char, you must add the char value to the marker
               1000+(ascii)char value defaults to circle
     */
-    int markshape;
+WXDLLIMPEXP_XSTC int markshape;
 
     /**
     \brief sets the fold line after/before contracted/expanded
 
     \detailed defaults to line after contracted
     */
-    int foldline;
+WXDLLIMPEXP_XSTC int foldline;
 
 #ifndef XSTC_NO_TRIMTRAIL
     /**
@@ -1774,7 +1759,7 @@ void LexYAML();
               called. for resources and effectiveness this seems to be the
               best approach to trim the end spaces.
     */
-    bool trimspaces;
+WXDLLIMPEXP_XSTC bool trimspaces;
 #endif //XSTC_NO_TRIMTRAIL
 
 #ifndef XSTC_NO_TABSPACE
@@ -1784,12 +1769,12 @@ void LexYAML();
     \detailed when calling saveX and this is set to an active mode the whitespace
 	          will be converted accordingly.
     */
-    int spaceconv; //0 off, 1 space to tab, 2 tab to space, >2 off
+WXDLLIMPEXP_XSTC int spaceconv; //0 off, 1 space to tab, 2 tab to space, >2 off
 
     /**
     \brief this is the # of spaces in a tab for TabSpace()
     */
-    int spaces;
+WXDLLIMPEXP_XSTC int spaces;
 #endif //XSTC_NO_TABSPACE
 
 #ifndef XSTC_NO_KEYS
@@ -1802,7 +1787,7 @@ void LexYAML();
               KNOW that a file will alwayse be used. internally keycheck calls
               loadkeywords if a '.' dot is present in the string
     */
-    bool usekeys;
+WXDLLIMPEXP_XSTC bool usekeys;
 #endif
 
     /**
@@ -1819,70 +1804,70 @@ void LexYAML();
               this won't work too well cus the program doesn't have eyes, but
               its workth a try.
     */
-    wxString colorstyle; //this is for the fold marker coloring and to programmically determing
+WXDLLIMPEXP_XSTC wxString colorstyle; //this is for the fold marker coloring and to programmically determing
                          //if/what the setting is
     /**
     \brief color of the edge column
 
     \detailed used in the colorstyle functions
     */
-    wxColour edgcolr;
+WXDLLIMPEXP_XSTC wxColour edgcolr;
 
     /**
     \brief column number for the edge column
 
     \detailed used in the colorstyle functions
     */
-    int edgcolm;
+WXDLLIMPEXP_XSTC int edgcolm;
 
     /**
     \brief mode of the edge column
 
     \detailed used in the colorstyle functions
     */
-    int edgmod;
+WXDLLIMPEXP_XSTC int edgmod;
 
     /**
     \brief mode for text wrap
 
     \detailed used in the colorstyle functions
     */
-    int wrapmod;
+WXDLLIMPEXP_XSTC int wrapmod;
 
     /**
     \brief visual flags for text wrap
 
     \detailed used in the colorstyle functions
     */
-    int wrapvf;
+WXDLLIMPEXP_XSTC int wrapvf;
 
     /**
     \brief cache mode for the document
 
     \detailed used in the colorstyle functions
     */
-    int cachemod;
+WXDLLIMPEXP_XSTC int cachemod;
 
     /**
     \brief visibility fot the cater background highlight
 
     \detailed used in the colorstyle functions
     */
-    bool caretlv;
+WXDLLIMPEXP_XSTC bool caretlv;
 
     /**
     \brief case sensitive cpp lexer
 
     \detailed used in extention to lexer setting, defaults true
     */
-    bool cppcase;
+WXDLLIMPEXP_XSTC bool cppcase;
 
     /**
     \brief case sensitive clw lexer
 
     \detailed used in extention to lexer setting, defaults true
     */
-    bool clwcase;
+WXDLLIMPEXP_XSTC bool clwcase;
 
 #ifndef XSTC_NO_ALPHA
 //this macro is needed since scintilla didn't support alpha blending till version 1.68
@@ -1892,7 +1877,7 @@ void LexYAML();
     \detailed this value sets all three to the same alpha setting, use 256 to turn
               blending off (full visible), the config settings set them individually
     */
-    int alphalvl;
+WXDLLIMPEXP_XSTC int alphalvl;
 #endif //XSTC_NO_ALPHA
 
     /**
@@ -1903,7 +1888,7 @@ void LexYAML();
               used, that will contain the full path as passed to it, otherwize you
               set it and it is whatever you make it out to be
     */
-    wxString XFilename;
+WXDLLIMPEXP_XSTC wxString XFilename;
 
 #ifndef XSTC_NO_KEYS
     /**
@@ -1912,7 +1897,7 @@ void LexYAML();
     \detailed this also supports overwriting the keywords using spaces as a delimiter
               or a filename, a '.' dot is used to determine if it is a filename
     */
-    Keyword_Sets Keys_Set;
+WXDLLIMPEXP_XSTC Keyword_Sets Keys_Set;
 #endif
 
     /**
@@ -1927,7 +1912,7 @@ void LexYAML();
               errorcol      error
               more may come, i haven't thought too much of it yet. any suggestions?
     */
-    wxString brkptcol, actbrkptcol, errorcol;
+WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
 
  private:
     /**
@@ -2094,7 +2079,6 @@ void LexYAML();
 	                   //component and the user still has the option over what the id
 	                   //setting is.
 #ifndef XSTC_NO_CONFIG
-#ifdef XSTC_USE_CONFIG
     /**
     \brief pointer to the color config object
 
@@ -2102,7 +2086,6 @@ void LexYAML();
               define color structure!!
     */
      wxConfigBase* colorconf;
-#endif //XSTC_USE_CONFIG
 #endif //XSTC_NO_CONFIG
 };
 

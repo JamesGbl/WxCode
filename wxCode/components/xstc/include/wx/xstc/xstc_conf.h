@@ -131,23 +131,9 @@
 //define one or the other
 
 //#define XSTC_NO_ALPHA
-
 //#define XSTC_NO_CONFIG //turn off all configuration subsystems, ini and xml.
-#define XSTC_USE_CONFIG //use the wxWidgets configuration class
-//#define XSTC_USE_XML //uses TinyXML for xml based configuration
-
-#ifndef XSTC_NO_CONFIG
- #ifdef XSTC_USE_CONFIG
-  #ifdef _WXMSW_
-   #define XSTC_USE_REG //if we are under windows the registry configuration system is also availible
-  #endif //_WXMSW_
- #endif //XSTC_USE_CONFIG
-#endif //XSTC_NO_CONFIG
-//note, the configureation systems are made availible, but the user must set one up or nothing will be used.
-
 //#define XSTC_NO_KEYS //disables all automatic keyword functionality
 //#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
-
 //#define XSTC_NO_TABSPACE //disable the tabs/spaces conversion utility function
 //#define XSTC_NO_TRIMTRAIL //disables the trim trailing whitespace utility functin and all instances it is used in the code.
 //#define XSTC_NO_MARK_FULLRECT //some older versions of scintilla don't support this marker
