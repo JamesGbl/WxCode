@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.108 2009-09-20 19:23:20 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.109 2009-09-20 19:33:55 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -1865,9 +1865,6 @@ void wxTreeListMainWindow::Init() {
                          m_normalFont.GetUnderlined(),
                          m_normalFont.GetFaceName(),
                          m_normalFont.GetEncoding());
-
-    // prevent any background repaint in order to reducing flicker
-    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 
 bool wxTreeListMainWindow::Create (wxTreeListCtrl *parent,
@@ -1900,6 +1897,8 @@ bool wxTreeListMainWindow::Create (wxTreeListCtrl *parent,
 #else
     SetBackgroundColour (wxSystemSettings::GetColour (wxSYS_COLOUR_LISTBOX));
 #endif
+    // prevent any background repaint in order to reducing flicker
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
 #ifdef __WXMSW__
     {
