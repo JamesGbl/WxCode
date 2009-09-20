@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.109 2009-09-20 19:33:55 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.110 2009-09-20 20:08:38 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -2506,7 +2506,7 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     // don't stay with invalid m_selectItem: default to current item
     if (item == m_selectItem) {
         m_selectItem = m_curItem;
-        SelectItem(m_selectItem, NULL, true);  // unselect others
+        SelectItem(m_selectItem, (wxTreeItemId*)NULL, true);  // unselect others
     }
 
     // recurse children, starting from the right to prevent multiple selection
@@ -3489,7 +3489,7 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 #endif
             m_curItem = (wxTreeListItem*)GetFirstChild (m_curItem, cookie).m_pItem;
         }
-        SelectItem(m_curItem, NULL, true);  // unselect others
+        SelectItem(m_curItem, (wxTreeItemId*)NULL, true);  // unselect others
         curItemSet = true;
     }
 
@@ -3935,7 +3935,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
         m_lastOnSame = false;
 
         // selection reset to that single item which was double-clicked
-        if (SelectItem(item, NULL, true)) {  // unselect others --return false if vetoed
+        if (SelectItem(item, (wxTreeItemId*)NULL, true)) {  // unselect others --return false if vetoed
 
             // selection change not vetoed, send activate event
             if (! SendEvent(wxEVT_COMMAND_TREE_ITEM_ACTIVATED, item)) {
