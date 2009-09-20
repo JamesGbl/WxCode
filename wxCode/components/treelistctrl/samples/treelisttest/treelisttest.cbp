@@ -4,91 +4,123 @@
 	<Project>
 		<Option title="treelisttest" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="doc\;" />
+		<Option virtualFolders="doc/;" />
 		<Build>
-			<Target title="debug">
-				<Option output=".\treelisttest" prefix_auto="1" extension_auto="1" />
-				<Option object_output=".\obj_debug\" />
+			<Target title="debug - win32">
+				<Option platforms="Windows;" />
+				<Option output="./treelisttest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./obj_debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-mthreads" />
 					<Add option="-D__DEBUG__" />
+					<Add directory="$(#wx)/lib/wx/include/msw-ansi-release-static-2.8" />
 				</Compiler>
+				<Linker>
+					<Add option="-mthreads" />
+					<Add library="libwx_msw_core-2.8.a" />
+					<Add library="libwx_base-2.8.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libole32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+				</Linker>
 			</Target>
-			<Target title="Release">
-				<Option output=".\treelisttestr" prefix_auto="1" extension_auto="1" />
-				<Option object_output=".\obj_release\" />
+			<Target title="Release - win32">
+				<Option platforms="Windows;" />
+				<Option output="./treelisttestr" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./obj_release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-mthreads" />
+					<Add directory="$(#wx)/lib/wx/include/msw-ansi-release-static-2.8" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-mthreads" />
+					<Add library="libwx_msw_core-2.8.a" />
+					<Add library="libwx_base-2.8.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libole32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+				</Linker>
+			</Target>
+			<Target title="debug - linux">
+				<Option platforms="Unix;Mac;" />
+				<Option output="./treelisttest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./obj_debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-pthread" />
+					<Add option="-D_FILE_OFFSET_BITS=64" />
+					<Add option="-D_LARGE_FILES" />
+					<Add option="-D__WXGTK__" />
+					<Add option="-D__DEBUG__" />
+				</Compiler>
+				<Linker>
+					<Add library="libwx_gtk2u_core-2.8" />
+					<Add library="libwx_baseu-2.8" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-mthreads" />
-			<Add option="-DWX_PRECOMP" />
-			<Add directory="..\..\include" />
-			<Add directory="$(#wx)\include\wx-2.8" />
-			<Add directory="$(#wx)\lib\wx\include\msw-ansi-release-static-2.8" />
+			<Add directory="../../include" />
+			<Add directory="$(#wx)/include/wx-2.8" />
 		</Compiler>
 		<ResourceCompiler>
-			<Add directory="$(#wx)\include\wx-2.8" />
+			<Add directory="$(#wx)/include/wx-2.8" />
 		</ResourceCompiler>
 		<Linker>
-			<Add option="-mthreads" />
-			<Add library="libwx_msw_core-2.8.a" />
-			<Add library="libwx_base-2.8.a" />
-			<Add library="liboleaut32.a" />
-			<Add library="libole32.a" />
-			<Add library="libuuid.a" />
-			<Add library="libcomctl32.a" />
-			<Add directory="$(#wx)\lib" />
+			<Add directory="$(#wx)/lib" />
 		</Linker>
-		<Unit filename="..\..\Readme">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../Readme">
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="..\..\docs\latex\treelistctrl.tex">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../docs/latex/treelistctrl.tex">
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="..\..\include\wx\treelistctrl.h" />
+		<Unit filename="../../include/wx/treelistctrl.h" />
 		<Unit filename="BuildInfo.txt">
-			<Option virtualFolder="doc\" />
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="bitmaps\dirclosed.bmp" />
-		<Unit filename="bitmaps\dirclosed.xpm" />
-		<Unit filename="bitmaps\diropened.bmp" />
-		<Unit filename="bitmaps\diropened.xpm" />
-		<Unit filename="bitmaps\file.bmp" />
-		<Unit filename="bitmaps\file.xpm" />
+		<Unit filename="bitmaps/dirclosed.bmp" />
+		<Unit filename="bitmaps/dirclosed.xpm" />
+		<Unit filename="bitmaps/diropened.bmp" />
+		<Unit filename="bitmaps/diropened.xpm" />
+		<Unit filename="bitmaps/file.bmp" />
+		<Unit filename="bitmaps/file.xpm" />
 		<Unit filename="treelisttest.cpp" />
 		<Unit filename="treelisttest.ico" />
 		<Unit filename="treelisttest.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="treelisttest.xpm" />
-		<Unit filename="..\..\src\treelistctrl.cpp" />
-		<Unit filename="..\..\website\Readme.txt">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../src/treelistctrl.cpp" />
+		<Unit filename="../../website/Readme.txt">
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="..\..\website\ToDo.txt">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../website/ToDo.txt">
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="..\..\website\image.png" />
-		<Unit filename="..\..\website\index.html">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../website/image.png" />
+		<Unit filename="../../website/index.html">
+			<Option virtualFolder="doc/" />
 		</Unit>
-		<Unit filename="..\..\website\reference.html">
-			<Option virtualFolder="doc\" />
+		<Unit filename="../../website/reference.html">
+			<Option virtualFolder="doc/" />
 		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

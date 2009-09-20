@@ -6,15 +6,17 @@ Requirements:
 Generel building rules:
 =======================
 - First build or get the wxWidgets libraries however this is done on your platform.
-- If the libraries don't use the standard development paths you might have to set
-  the $WXWIN environment variable to point to the base directory of wxWidgets (i.e.
-  "/usr/src/wxWidgets" then "WXWIN=/usr/src/wxWidgets").
+- you can simply run 'make' (wxWidgets should be properly installed, i.e.
+  'wx-config' should be in the path)
+  Use "make" for the release version, "make debug" for the debug version,
+  "make univdebug" for the univ debug version.
+- There is also a CodeBlock project file, requiring the global variable 'wx' to
+  be set (Menu "Settings / Global Variables", 'base' is enough)
 
 
 Building on Unix (wxGTK, wxUniv)
 ================================
-- wxGTK: Use "make" for the release version, "make debug" for the debug version,
-  "make univdebug" for the univ debug version.
+- no specific instructions
 
 
 Building on Windows (wxMSW, wxUniv)
@@ -22,10 +24,7 @@ Building on Windows (wxMSW, wxUniv)
 - There is a VC++ project file which requires the environment variable WXWIN
   pointing to the correct locations (i.e. "C:\Devel\wxWidgets" then
   "WXWIN=C:\Devel\wxWidgets").
-- Or if you have MSYS+MINGW installed you can simply run 'make' (wxWidgets should
-  be properly installed, i.e. 'wx-config' should be in the path)
-- There is also a CodeBlock project file, requiring the global variable 'wx' to
-  be set (Menu "Settings / Global Variables", 'base' is enough)
+- Or if you have MSYS+MINGW installed you can simply run 'make'
 
 
 Building on other ports

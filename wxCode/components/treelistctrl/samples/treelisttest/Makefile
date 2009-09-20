@@ -3,7 +3,7 @@
 ## Purpose:     treelisttest
 ## Maintainer:  $Author: pgriddev $
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.11 2008-06-18 07:07:50 pgriddev Exp $
+## RCS-ID:      $Id: Makefile,v 1.12 2009-09-20 19:29:46 pgriddev Exp $
 ## Copyright:   (c) 2004-2008 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -25,6 +25,8 @@ INC = -I../../include
 
 ##############################################################################
 # implementation, change only if other settings or other targets are needed
+
+UNAME := $(shell uname)
 
 ifneq ($(WXDEVEL),)
   WXDEVEL_Debug = $(WXDEVEL)/Debug/
@@ -49,7 +51,12 @@ ifeq ($(MAKECMDGOALS),univdebug)
 endif
 
 
-OBJ = $(SRC:.cpp=.o) treelisttest.res
+OBJ = $(SRC:.cpp=.o) 
+ifneq ($(UNAME), Linux)
+  ifneq ($(UNAME), Darwin)
+  OBJ += treelisttest.res
+  endif
+endif
 
 
 %.o : %.cpp
