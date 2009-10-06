@@ -287,7 +287,7 @@ static void ExpectedValue28( wxJSONValue& val, bool comments )
 
 
 // first test without comments 6 dec 2007: OK, successfull
-int Test25()
+int Test6_1()
 {
   wxString s25( test25Text );    // the JSON document
   wxJSONValue root;
@@ -313,7 +313,7 @@ int Test25()
 }
 
 // second test storing comments (COMMENTS_BEFORE) 
-int Test26()
+int Test6_2()
 {
   wxString s26( test25Text );    // the JSON document
   wxJSONValue root;
@@ -490,7 +490,7 @@ static const wxChar* test27Text = _T("// comment for root (1)\n"
 /* 63 */ " it apears after the top-level close-object character\n"
 /* 64 */ "\n");
 
-int Test27()
+int Test6_3()
 {
   wxString s27( test27Text );    // the JSON document
   wxJSONValue root;
@@ -680,7 +680,7 @@ static const wxChar* test28Text = _T("// this comment does not refer to any valu
 
 
 // first test without storing comments (COMMENTS_AFTER)
-int Test28()
+int Test6_4()
 {
   wxString s28( test28Text );    // the JSON document
   wxJSONValue root;
@@ -710,7 +710,7 @@ int Test28()
 // BUG: the comment after the top level close-object
 // character are not stored because the DoRead()
 // function returns
-int Test29()
+int Test6_5()
 {
   wxString s29( test28Text );    // the JSON document
   wxJSONValue root;

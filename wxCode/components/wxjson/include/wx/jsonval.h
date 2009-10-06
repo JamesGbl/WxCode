@@ -317,6 +317,7 @@ class WXDLLIMPEXP_JSON wxJSONRefData
 {
   // friend class wxJSONReader;
   friend class wxJSONValue;
+  friend class wxJSONWriter;
 
 public:
 

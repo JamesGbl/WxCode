@@ -17,8 +17,8 @@
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
 #define wxJSON_MAJOR          1
-#define wxJSON_MINOR          0
-#define wxJSON_RELEASE        2
+#define wxJSON_MINOR          1
+#define wxJSON_RELEASE        0
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -139,13 +139,13 @@
   #define UINT_MAX       65535
 #endif
 #if !defined( LONG_MIN )
-  #define LONG_MIN       -2.147.483.648
+  #define LONG_MIN       -2147483648
 #endif
 #if !defined( LONG_MAX )
-  #define LONG_MAX       2.147.483.647
+  #define LONG_MAX       2147483647
 #endif
 #if !defined( ULONG_MAX )
-  #define ULONG_MAX       4.294.967.295
+  #define ULONG_MAX       4294967295
 #endif
 #if !defined( SHORT_MAX )
   #define SHORT_MAX	32767

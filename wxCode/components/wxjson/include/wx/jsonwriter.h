@@ -48,18 +48,18 @@
 //       |  -------------------> 1=use tabs for indentation
 //        ---------------------> 1= do not add indentation (STYLED only)
 enum {
-  wxJSONWRITER_NONE            = 0,
-  wxJSONWRITER_STYLED          = 1,
-  wxJSONWRITER_WRITE_COMMENTS  = 2,
-  wxJSONWRITER_COMMENTS_BEFORE = 4,
-  wxJSONWRITER_COMMENTS_AFTER  = 8,
-  wxJSONWRITER_SPLIT_STRING    = 16,
-  wxJSONWRITER_NO_LINEFEEDS    = 32,
-  wxJSONWRITER_ESCAPE_SOLIDUS	  = 64,
-  wxJSONWRITER_MULTILINE_STRING   = 128,
-  wxJSONWRITER_RECOGNIZE_UNSIGNED = 256,
-  wxJSONWRITER_TAB_INDENT         = 512,
-  wxJSONWRITER_NO_INDENTATION     = 1024
+	wxJSONWRITER_NONE            = 0,
+	wxJSONWRITER_STYLED          = 1,
+	wxJSONWRITER_WRITE_COMMENTS  = 2,
+	wxJSONWRITER_COMMENTS_BEFORE = 4,
+	wxJSONWRITER_COMMENTS_AFTER  = 8,
+	wxJSONWRITER_SPLIT_STRING    = 16,
+	wxJSONWRITER_NO_LINEFEEDS    = 32,
+	wxJSONWRITER_ESCAPE_SOLIDUS	  = 64,
+	wxJSONWRITER_MULTILINE_STRING   = 128,
+	wxJSONWRITER_RECOGNIZE_UNSIGNED = 256,
+	wxJSONWRITER_TAB_INDENT         = 512,
+	wxJSONWRITER_NO_INDENTATION     = 1024
 };
 
 // class declaration
@@ -67,75 +67,59 @@ enum {
 class WXDLLIMPEXP_JSON wxJSONWriter
 {
 public:
-  wxJSONWriter( int style = wxJSONWRITER_STYLED, int indent = 0, int step = 3 );
-  ~wxJSONWriter();
+	wxJSONWriter( int style = wxJSONWRITER_STYLED, int indent = 0, int step = 3 );
+	~wxJSONWriter();
 
-  void Write( const wxJSONValue& value, wxString& str );
-  void Write( const wxJSONValue& value, wxOutputStream& os );
+	void Write( const wxJSONValue& value, wxString& str );
+	void Write( const wxJSONValue& value, wxOutputStream& os );
 
 protected:
 
-  int  DoWrite( const wxJSONValue& value, const wxString* key,
-				bool comma );
-  int  WriteIndent();
-  int  WriteIndent( int num );
-  bool IsSpace( wxChar ch );
-  bool IsPunctuation( wxChar ch );
+	//int  DoWrite( const wxJSONValue& value, const wxString* key, bool comma );
+	int  DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxString* key, bool comma );
+	int  WriteIndent( wxOutputStream& os );
+	int  WriteIndent( wxOutputStream& os, int num );
+	bool IsSpace( wxChar ch );
+	bool IsPunctuation( wxChar ch );
 
-  int  WriteString( const wxString& str );
-  int  WriteStringValue( const wxString& str );
-  int  WritePrimitiveValue( const wxJSONValue& value );
-  int  WriteInvalid();
-  int  WriteSeparator();
+	int  WriteString( wxOutputStream& os, const wxString& str );
+	int  WriteStringValue( wxOutputStream& os, const wxString& str );
+	int  WriteNullValue( wxOutputStream& os );
+	int  WriteIntValue( wxOutputStream& os, const wxJSONValue& v );
+	int  WriteUIntValue( wxOutputStream& os, const wxJSONValue& v );
+	int  WriteBoolValue( wxOutputStream& os, const wxJSONValue& v );
+	int  WriteDoubleValue( wxOutputStream& os, const wxJSONValue& v );
 
-  // the following functions are no more used: replaced by 'WritePrimitiveValue'
-  // int  WriteInt( int i );
-  // int  WriteUInt( unsigned int ui );
-  // int  WriteBool( bool b );
-  // int  WriteDouble( double d );
-  // int  WriteNull();
-  // int  WriteEmpty();
+	// int  WritePrimitiveValue( wxOutputStream& os, const wxJSONValue& value );
+	int  WriteInvalid( wxOutputStream& os );
+	int  WriteSeparator( wxOutputStream& os );
 
-  int  WriteKey( const wxString& key );
-  int  WriteComment( const wxJSONValue& value, bool indent );
-  int  WriteChar( wxChar ch );
+	int  WriteKey( wxOutputStream& os, const wxString& key );
+	int  WriteComment( wxOutputStream& os, const wxJSONValue& value );
 
-  int  WriteError( const wxString& err );
+	// int  WriteComment( const wxJSONValue& value, bool indent );
+	// int  WriteChar( wxOutputStream& os, wxChar ch );
+
+	int  WriteError( const wxString& err );
 
 private:
-  //! The style flag is a combination of wxJSONWRITER_(something) constants.
-  int   m_style;
+	//! The style flag is a combination of wxJSONWRITER_(something) constants.
+	int   m_style;
 
-  //! The initial indentation value, in number of spaces.
-  int   m_indent;
+	//! The initial indentation value, in number of spaces.
+	int   m_indent;
 
-  //! The indentation increment, in number of spaces.
-  int   m_step;
+	//! The indentation increment, in number of spaces.
+	int   m_step;
 
-  //! JSON value objects can be nested; this is the level of annidation (used internally).
-  int   m_level;
+	//! JSON value objects can be nested; this is the level of annidation (used internally).
+	int   m_level;
 
-  //! The pointer to the actual output object (a stream or a wxString)
-  void* m_outObject;
+	// The line number when printing JSON text output (not yet used)
+	int   m_lineNo;
 
-  //! The type of the output object (0=wxString, 1=wxOutputStream)
-  int   m_outType;
-
-  //! The charset conversion object.
-  /*!
-   This data member contains a pointer to a UTF-8 converter if the output
-   type object is a stream.
-   If the output object is a string, the pointer is NULL.
-  */
-  wxMBConv*  m_conv; 
-
-  // The line number when printing JSON text output (not yet used)
-  int   m_lineNo;
-
-  // The column number when printing JSON text output
-  int   m_colNo;
-
-
+	// The column number when printing JSON text output
+	int   m_colNo;
 };
 
 

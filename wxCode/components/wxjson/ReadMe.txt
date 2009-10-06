@@ -2,9 +2,9 @@
  wxJSON ReadMe
  -------------
  
- Website: http://lnx.mauriziovettorato.it/public/json/home.html
+ Website: http://luccat.users.sf.net/wxjson/
  Author: Luciano Cattani
- Version: 1.0.2
+ Version: 1.1.0
  Description:
  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
  It is easy for humans to read and write. It is easy for machines to parse
@@ -111,19 +111,21 @@
 
 
  1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
- 	(r 951)	fixed the bug - see the Bug Tracker on sf.net
-
-
- 1.1   the new feature is the internal reorganization of the writer and reader class which
-	now do not convert to / from UTF-8 stream char-by-char but only a whole string value
-	(r 944)	added the speed test functions (see 'samples/test15.cpp')
+ 	(r 960)	fixed the bug - see the Bug Tracker on sf.net
+ 	
+ 1.1 this release is a rewriting of the wxJSONReader and wxJSONWriter class which now 
+ 	process JSON text input / output only in UTF-8 format. If I/O is from / to
+ 	wxString objects, the reader and the writer convert the string object to a
+ 	temporary UTF-8 memory-input/output-stream for processing
+ 	   
+ 
 
 
 
 BUGS
 ----
 Please, send bugs to luciano@mauriziovettorato.it or, better, open a bug report
-on SF.net for the 'wxCode' project ( wxcode.sf.net)
+on SF.net for the 'wxCode' project ( http://wxcode.sourceforge.net/links.php )
 
 
 LICENSE

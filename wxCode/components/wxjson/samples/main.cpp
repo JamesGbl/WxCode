@@ -31,16 +31,15 @@
 
  Syntax:
 
-   test.bin [OPTIONS] NUMTEST
+   test.bin [OPTIONS] [NUMTEST] [NUMSUBTEST]
 
- where NUMTEST is the test number that has to be perfomed (ZERO=all)
 
  OPTIONS:
-
-   -t     the wxJSONReader is not tolerant
-   -s     suppress indentation for wxJSONWriter
-   -f FILENAME the filename to read by the wxJSONReader (only test #15)
-
+	-s		do not stop execution on test's failure
+	-l		list test's descriptions
+	-f FILENAME	JSON text output will be also written to FILENAME and displayed
+	-x FLAG,FLAG..	use the specified flags for the reader and writer
+			(not yet implemented)
 
  Please note that some compilers may fail to compile and link this test
  application, especially on Windows. The test app was written for unix-like
@@ -78,14 +77,321 @@
 // includes some defines and macros
 #include "test.h"
 
+static bool	gs_nostop = false;
+wxString	gs_fileName;
+int		gs_flags;
+int		gs_list  = false;
 
-int      gs_tolerant = wxJSONREADER_TOLERANT;
-int      gs_indentation = wxJSONWRITER_STYLED;
-wxString gs_fileName;
 
 static wxFFile* gs_cout = 0;
 
 typedef int (*TestFunc)();
+
+// max 10 tests for each family
+#define NUM_SUBTESTS	10
+#define NUM_TESTS	3
+
+
+// the test function's structure
+// each test family has MAX_FAMILY_TEST entries of this structure
+// if the structure has a NULL pointer has the 'functPtr' member than that
+// test's number is not defined
+// the FIRST entry of the family has a PTR = ZERO and the 'testDesc' is the
+// description of the family.
+// This is TEST #0 of the family which does not exist
+struct TestStruc
+{
+	TestFunc	m_funcPtr;	// the pointer to the test function
+	bool		m_auto;		// TRUE is the test has to be perfomed automatically
+	const wxChar*	m_testDesc;	// description of the test
+};
+
+
+
+int main( int argc, char* argv[] ) 
+{
+	// the following is mandatory for a console app.
+	bool r = ::wxInitialize();
+	if ( !r )   {
+		printf( "FATAL ERROR: cannot init wxBase library\n");
+	return 1;
+	}
+
+	// write output to STDOUT
+	gs_cout = new wxFFile( stdout );
+
+	wxCmdLineEntryDesc cmdLineDesc[] =  {
+		{ wxCMD_LINE_SWITCH, _T("s"), _T("nostop"), _T("do not stop on test\'s failure") },
+		{ wxCMD_LINE_SWITCH, _T("l"), _T("list"), _T("list test\'s descriptions") },
+		{ wxCMD_LINE_OPTION, _T("r"), _T("reader"), 
+			_T("use the specified flags for the reader"), wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_OPTION, _T("w"), _T("writer"), 
+			_T("use the specified flags for the writer"), wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_OPTION, _T("f"), _T("file"), _T("the filename to be read (test #15)"),
+						wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_PARAM, NULL, NULL, _T("test [sub-test]"), wxCMD_LINE_VAL_NUMBER,
+				wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE },
+		{ wxCMD_LINE_NONE },
+	};
+	wxCmdLineParser cmdLine( cmdLineDesc, argc, argv );
+	int result = cmdLine.Parse();
+	if ( result > 0 )  {
+		return 1;        // error
+	}
+	else if ( result < 0 )  {
+		return 1;        // '-h'
+	}
+	if ( cmdLine.Found( _T("nostop" )))  {
+		gs_nostop = true;
+	}
+	if ( cmdLine.Found( _T("list" )))  {
+		gs_list = true;
+	}
+
+	wxString flags;
+	
+	// get a option's argument and store in static variables. This arguments are only usefull for test
+	// nr. 2.7 (write to the specified file) and 4.7 (read from the specified file)
+	cmdLine.Found( _T("file"), &gs_fileName );
+	cmdLine.Found( _T("reader"), &flags );
+	cmdLine.Found( _T("writer"), &flags );
+
+	TestStruc testArray[] =  {
+		// family #0 does not exist
+		{
+			0,	// m_funcPtr
+			false,	// m_auto
+			_T( "family #0 does not exist" )	// m_testDesc
+		},
+		{ 0 },{ 0 },{ 0	},{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+
+		// family #1		(test1.cpp)
+		{
+			0,		// test #0: description of the family
+			true,		// m_auto
+			_T( "test ctors, dtor and member functions" )
+		},
+		{
+			Test1_1, true, _T( "test if 64-bits INTs is supported" )
+		},
+		{
+			Test1_2, true, _T( "test wxJSONValue ctors and JSON value's types" )
+		},
+		{
+			Test1_3, true, _T( "test the wxJSONValue::AsString() function" )
+		},
+		{
+			Test1_4, true, _T( "test wxJSONValue::GetInfo() and ::Dump() functions" )
+		},
+		{
+			Test1_5, true, _T( "test access methods and other functions" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },
+		
+		// family #2		(test1.cpp)
+		{
+			0,		// test #0: description of the family
+			true,		// m_auto
+			_T( "test the wxJSONValue::ISSameAs() function" )
+		},
+		{
+			Test2_1, true, _T( "comparing fundamental types" )
+		},
+		{
+			Test2_2, true, _T( "comparing short, long and long-long" )
+		},
+		{
+			Test2_3, true, _T( "comparing ints and doubles" )
+		},
+		{
+			Test2_4, true, _T( "comparing objects" )
+		},
+		{
+			Test2_5, true, _T( "comparing arrays" )
+		},
+		{
+			Test2_6, true, _T( "comparing objects: special case of NULL values" )
+		},
+		{
+			Test2_7, true, _T( "comparing incompatible types" )
+		},
+		{ 0 },{ 0 },
+		
+		// family #3		(test3.cpp)
+		{
+			0,		// test #0: description of the family
+			true,		// m_auto
+			_T( "testing wxString::ToUTF8() and wxString::FromUTF8()" )
+		},
+		{
+			Test3_1, true, _T( "converting a US-ASCII UTF-8 buffer to wxString" )
+		},
+		{
+			Test3_2, true, _T( "converting a latin,greek,cyrillic UTF-8 buffer to wxString" )
+		},
+		{
+			Test3_3, true, _T( "converting a US-ASCII wxString to UTF-8" )
+		},
+		{
+			Test3_4, true, _T( "converting a latin1.greek,cyrillic wxString to UTF-8" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+
+		// family #4		(test3.cpp)
+		{
+			0,		// test #0: description of the family
+			true,		// m_auto
+			_T( "testing the wxJSONWriter class" )
+		},
+		{
+			Test4_1, true, _T( "wxJSONWriter: a simple write test" )
+		},
+		{
+			Test4_2, true, _T( "wxJSONWriter: test escaped characters" )
+		},
+		{
+			Test4_3, true, _T( "wxJSONWriter: writes empty, invalid and null objects" )
+		},
+		{
+			Test4_4, true, _T( "wxJSONWriter: an array of objects as root" )
+		},
+		{
+			Test4_5, true, _T( "wxJSONWriter: how much simple is wxJSON" )
+		},
+		{
+			Test4_6, true, _T( "wxJSONWriter: test control characters" )
+		},
+		{ 0 },{ 0 },{ 0 },
+		
+		
+		
+		// END OF TABLE
+		{0}
+		
+	};
+
+	int numParams = cmdLine.GetParamCount();
+	int numTestStart    = 1;
+	int numTestEnd      = NUM_TESTS;
+	int numSubTestStart = 1;
+	int numSubTestEnd   = NUM_SUBTESTS - 1;
+	
+	// sets the starting test and sub-test numbers for every parameter
+	// parameters are in the form X[.YY]
+	wxString p1, p2;
+	if ( numParams > 0 )	{
+		p1 = cmdLine.GetParam( 0 );
+		long l;
+		bool r = p1.ToLong( &l );
+		if ( r )	{
+			numTestStart = numTestEnd = (int) l;
+		}
+	}
+	if ( numParams > 1 )	{
+		p2 = cmdLine.GetParam( 1 );
+		long l;
+		bool r = p2.ToLong( &l );
+		if ( r )	{
+			numSubTestStart = numSubTestEnd = (int) l;
+		}
+	}
+	
+	for ( int x = numTestStart; x <= numTestEnd; x++ )  {
+		// compute the family index
+		int idx = x * NUM_SUBTESTS;
+		if ( gs_list )	{
+			TestCout( _T("Test number: " ));
+		}
+		else	{
+			TestCout( _T("\nPerforming test number: " ));
+		}
+		TestCout( x );
+		// print the description of the TEST
+		TestCout( _T( " - "));
+		TestCout( testArray[idx].m_testDesc );
+		TestCout( (wxChar) '\n', false );
+
+		// subtests	
+		for ( int y = numSubTestStart; y <= numSubTestEnd; y++ )  {
+			int idx = ( x * NUM_SUBTESTS ) + y;
+			TestFunc funcPtr = testArray[idx].m_funcPtr; 
+			if ( funcPtr )	{
+				if ( gs_list )	{
+					TestCout( _T("Subtest number: " ));
+					TestCout( y );
+					// print the description of the TEST
+					TestCout( _T( " - "));
+					TestCout( testArray[idx].m_testDesc );
+					TestCout( _T( " AUTO=" ));
+					TestCout( ( testArray[idx].m_auto ? _T( "YES" ) : _T( "NO" )));
+					TestCout( (wxChar) '\n', false );
+					continue;
+				}
+				else	{
+					TestCout( _T("\nPerforming Subtest number: " ));
+				}
+				TestCout( y );
+				// print the description of the TEST
+				TestCout( _T( " - "));
+				TestCout( testArray[idx].m_testDesc );
+				TestCout( (wxChar) '\n', false );
+
+			
+				// the test is actually done if m_auto is TRUE or if 'p2' is not empty
+				if ( testArray[idx].m_auto == true || !p2.empty() )	{
+					result = funcPtr();
+					TestCout( _T("----------------------------\nEND TEST: result=" ));
+					TestCout( result );
+					TestCout( _T("\n----------------------------\n" ));
+				}
+				// if the test fails, stop the program
+				if ( result > 0 && !gs_nostop )  {
+					return result;
+				}
+			}
+		}
+	}
+	
+	TestCout( _T( "\nTEST application successfully completed\n\n" ));
+	::wxUninitialize();
+	return 0;
+}
+
+
+// prints the errors and warnings array of the 
+void PrintErrors( wxJSONReader& reader )
+{
+	wxString s;
+	int numErrors = reader.GetErrorCount();
+	s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
+	TestCout( s );
+	const wxArrayString& errors = reader.GetErrors();
+	for ( int i = 0; i < errors.size(); i++ )  {
+		TestCout( errors[i] );
+		TestCout( _T( "\n" ));
+	}
+	 int numWarn   = reader.GetWarningCount();
+	const wxArrayString& warnings = reader.GetWarnings();
+	s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
+	TestCout( s );
+	for ( int i = 0; i < warnings.size(); i++ )  {
+		TestCout( warnings[i] );
+		TestCout( _T( "\n" ));
+	}
+}
+
+// prints a JSON value object and the reader's errors
+void PrintValue( wxJSONValue& val, wxJSONReader* reader )
+{
+	wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
+	wxString s;
+	writer.Write( val, s );
+	TestCout( s );
+	if ( reader )  {
+		PrintErrors( *reader );
+	}
+}
+
 
 void TestCout( wxChar ch, bool lf )
 {
@@ -205,159 +511,6 @@ void TestCout( wxUint64 ui64, bool lf )
   TestCout( s );
 }
 #endif            // defined( wxJSON_64BIT_INT)
-
-
-int main( int argc, char* argv[] ) 
-{
-  // the following is mandatory for a console app.
-  bool r = ::wxInitialize();
-  if ( !r )   {
-    printf( "FATAL ERROR: cannot init wxBase library\n");
-    return 1;
-  }
-
-  // write output to STDOUT
-  gs_cout = new wxFFile( stdout );
-
-  wxCmdLineEntryDesc cmdLineDesc[] =  {
-	{ wxCMD_LINE_SWITCH, _T("t"), _T("not-tolerant"), _T("the parser is not tolerant") },
-	{ wxCMD_LINE_SWITCH, _T("s"), _T("no-indentation"), 
-					_T("suppress indentation when writing") },
-	{ wxCMD_LINE_OPTION, _T("f"), _T("file"), _T("the filename to be read (test #15)"),
-						wxCMD_LINE_VAL_STRING },
-	
-	{ wxCMD_LINE_PARAM, NULL, NULL, _T("test number (1-xx)"), wxCMD_LINE_VAL_NUMBER,
-				wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE },
-
-	{ wxCMD_LINE_NONE },
-  };
-
-  wxCmdLineParser cmdLine( cmdLineDesc, argc, argv );
-  int result = cmdLine.Parse();
-  if ( result > 0 )  {
-    return 1;        // error
-  }
-  else if ( result < 0 )  {
-    return 1;        // '-h'
-  }
-
-  if ( cmdLine.Found( _T("not-tolerant" )))  {
-    gs_tolerant = wxJSONREADER_STRICT;
-  }
-  if ( cmdLine.Found( _T("no-indentation" )))  {
-    gs_indentation = wxJSONWRITER_NONE;
-  }
-
-  // get the filename is -f is specified
-  cmdLine.Found( _T("file"), &gs_fileName );
-
-  TestFunc testFunc[] =  {
-	Test1,
-	Test2, Test3, Test4, Test5, Test6, Test7, 
-	Test8,
-	Test9, Test10, Test11, Test12, Test13, Test14, Test15, Test16, Test17,
-	Test18, Test19, Test20, Test21, Test22, Test23, Test24,
-	Test25, Test26, Test27, Test28, Test29,
-	Test30, Test31, Test32, Test33, Test34, Test35, 
-	Test36, Test37, Test38, Test39, Test40, Test41, Test42, Test43, Test44,
-	Test45, Test46,
-	Test47, Test48, Test49, Test50, Test51,
-	Test52, Test53,
-	Test54, Test55, Test56, Test57, Test58, Test59, Test60, Test61, Test62,
-	Test63, Test64,
-	Test65, Test66, Test67, Test68, Test69, Test70, Test71, Test72, Test73,
-	Test74, Test75, Test76, Test77,
-	0
-  };
-
-#define TOTAL_TESTS 77
-
-  int numParams = cmdLine.GetParamCount();
-  if ( numParams == 0 )  {
-    for ( int i = 0; i < TOTAL_TESTS; i++ )  {
-      // test #15 is not performed because it needs the -f option
-      if ( i == 14 && gs_fileName.empty() )  {
-        continue;
-      }
-      TestCout( _T("----------------------------\nPerforming test number: " ));
-      TestCout( (int) i + 1 );
-      TestCout( _T("\n----------------------------\n" ));
-      result = testFunc[i]();
-      TestCout( _T("----------------------------\nEND TEST number: " ));
-      TestCout( (int) i + 1 );
-      TestCout( _T("\n----------------------------\n" ));
-      if ( result > 0 )  {
-        return result;
-      }
-    }
-  }
-
-  else {
-    for ( int i = 0; i < numParams; i++ )  {
-      wxString numTestStr = cmdLine.GetParam( i );
-      long int numTest;
-      r = numTestStr.ToLong( &numTest );
-      if ( !r )  {
-        TestCout( _T("Invalid test number: " ));
-        TestCout( numTestStr );
-        TestCout( _T("\n" ));
-      }
-      else if ( numTest <= 0 || numTest > TOTAL_TESTS ) {
-        TestCout( _T("Invalid test number: " ));
-        TestCout( numTestStr );
-        TestCout( _T("\n" ));
-      }
-      else {
-        TestCout( _T("Performing test number: " ));
-        TestCout( (int) numTest, true );
-        result = testFunc[numTest - 1]();
-        if ( result > 0 )  {
-          TestCout( _T( "\nTEST application failed\n\n" ));
-          return result;
-        }
-      }
-    }
-  }
-
-  TestCout( _T( "\nTEST application successfully completed\n\n" ));
-  ::wxUninitialize();
-  return 0;
-}
-
-
-// prints the errors and warnings array of the 
-void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-// prints a JSON value object and the reader's errors
-void PrintValue( wxJSONValue& val, wxJSONReader* reader )
-{
-  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-  if ( reader )  {
-    PrintErrors( *reader );
-  }
-}
 
 
 /*

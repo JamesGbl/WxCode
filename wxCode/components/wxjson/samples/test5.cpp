@@ -66,7 +66,7 @@
 
 
 // test an array of values: text is well-formed with comments
-int Test9()
+int Test4_1()
 {
   static const wxChar* text = 
     _T( "[\n"
@@ -96,7 +96,7 @@ int Test9()
 // test a map of values
 // 24/7/2008 failed to read the integer!!!
 // Warning: lne 2 col: 3 comment is not on col 3 but col. 1
-int Test10()
+int Test4_2()
 {
   static const wxChar* text = 
     _T( "\n"
@@ -128,7 +128,7 @@ int Test10()
 }
 
 // an array of escaped strings and objects with escaped strings
-int Test11()
+int Test4_3()
 {
   static const wxChar* text = 
 	_T("[\n"
@@ -160,7 +160,7 @@ int Test11()
 
 
 // nested objects / arrays 
-int Test12()
+int Test4_4()
 {
   static const wxChar* text = 
    _T("{"
@@ -193,7 +193,7 @@ int Test12()
 }
 
 // many errors and warnings
-int Test13()
+int Test4_5()
 {
   static const wxChar* text = 
     // column
@@ -244,10 +244,10 @@ int Test13()
 // 1 mar 2008: this test always fails if the JSON text file is
 // not in UTF-8 format. The test is deleted because UTF-8
 // encoded streams are tested in the 'test10.cpp' file
-int Test14()
+#if defined( NOT_DEFINED )
+int Test4_6()
 {
   TestCout( _T( "\nTest #14 was deleted: UTF-8 streams are tested in \'test10.cpp\'\n" ));
-#if defined( NOT_DEFINED )
   wxString fileName = _T("samples/test5.json");
   wxFileInputStream is( fileName );
   if ( !is.IsOk() )  {
@@ -267,13 +267,14 @@ int Test14()
   // a comment line immediatly follows another comment line
   int numWarn = reader.GetWarningCount();
   ASSERT( numWarn == 17 )
-#endif
   return 0;
 }
+#endif
+
 
 // read a JSON text file from the specified file
 // 1 mar 2008: note that the file must be in UTF-8 format
-int Test15()
+int Test4_6()
 {
   if ( gs_fileName.empty() )  {
    TestCout( _T("\nERROR: you have to specify a JSON input file after the test number\n" ));
@@ -297,7 +298,7 @@ int Test15()
 }
 
 // missing closing object/array on EOF
-int Test16()
+int Test4_7()
 {
   static const wxChar* text = 
    _T("{\n"
@@ -332,7 +333,7 @@ int Test16()
 }
 
 // non-JSON text before and after the top-level start/end object
-int Test17()
+int Test4_8()
 {
   static const wxChar* text = 
    _T("non-JSON text before top-level start object\n"

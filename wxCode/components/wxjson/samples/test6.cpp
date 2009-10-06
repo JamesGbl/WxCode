@@ -19,21 +19,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- Test18(): calls the AddComment() function in various form and ASSERTs
-           the results
- Test19(): use TestValue() to fill a JSON object with values and comments
-           then writes to a string using style wxJSONWRITER_STYLED
- Test20(): use TestValue() to fill a JSON object with values and comments
-           then writes to a string using style wxJSONWRITER_NONE
- Test21(): use TestValue() to fill a JSON object with values and comments
-           then writes to a string using style wxJSONWRITER_WRITE_COMMENTS
- Test22(): use TestValue() to fill a JSON object with values and comments
-           then writes to a string using style wxJSONWRITER_COMMENTS_BEFORE
- Test23(): use TestValue() to fill a JSON object with values and comments
-           then writes to a string using style wxJSONWRITER_COMMENTS_AFTER
- Test24(): test the wxJSONWRITER_MULTISTRING style: writing multiple-line
-           strings
-
  jul 2008 (vers. 1.0.0)
  --------
  Tests were successfull
@@ -54,7 +39,7 @@
 
 
 // test the wxJSONValue's memberfunctions
-int Test18()
+int Test5_1()
 {
   // two comment lines
   static const wxChar* cp1 = _T("// C++ comment: one line LF terminated\n");
@@ -340,7 +325,7 @@ void TestValue( wxJSONValue& root )
 // write the root JSON value to a string using style wxJSONWRITER_STYLED
 // which will write indentation but no comments
 // 23/11/2007 OK, seems all right
-int Test19()
+int Test5_2()
 {
   TestCout( _T("Testing STYLE=STYLED\n"));
   wxJSONValue root;
@@ -356,7 +341,7 @@ int Test19()
 
 // write the root JSON value to a string using style wxJSONWRITER_NONE
 // which will write without indentation and without comments
-int Test20()
+int Test5_3()
 {
   TestCout( _T("\n\nTesting STYLE=NONE\n"));
   wxJSONValue root;
@@ -373,7 +358,7 @@ int Test20()
 // write the root JSON value to a string using style wxJSONWRITER_WRITE_COMMENTS
 // which will write indentation and comments. Comments are written in the
 // position they were added to the value they refer to.
-int Test21()
+int Test5_4()
 {
   TestCout( _T("\n\nTesting STYLE=WRITE_COMMENT\n"));
   wxJSONValue root;
@@ -388,7 +373,7 @@ int Test21()
 
 
 // write the root JSON value to a string using style wxJSONWRITER_COMMENTS_BEFORE
-int Test22()
+int Test5_5()
 {
   TestCout( _T("\n\nTesting STYLE=WRITE_COMMENT COMMENT_BEFORE\n"));
   wxJSONValue root;
@@ -404,7 +389,7 @@ int Test22()
   return 0;
 }
 
-int Test23()
+int Test5_6()
 {
   TestCout( _T("\n\nTesting STYLE=WRITE_COMMENT COMMENT_AFTER\n"));
   wxJSONValue root;
@@ -421,7 +406,7 @@ int Test23()
 }
 
 // testing the MULTISTRING style
-int Test24()
+int Test5_7()
 {
   wxJSONValue v = _T("This is a multiline string\nthis is line #2\nthis is line #3");
   wxJSONValue root;

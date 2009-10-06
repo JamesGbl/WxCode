@@ -31,54 +31,249 @@
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/debug.h>
-#include <wx/wfstream.h>
+#include <wx/mstream.h>
 
 #include <wx/jsonval.h>
 #include <wx/jsonwriter.h>
 #include "test.h"
 
-// a simple write test
-int Test2()
+//
+// The function prints the jsonText output and checks if it is
+// equal to the expected result: if not it prints the expected
+// result and a message.
+// Returns ZERO if successfull, 1 otherwaise.
+static int
+CheckResult( const wxString& jsonText, const wxString& result )
 {
-  wxJSONValue root;
-  root[_T("integer")]      = 20;
-  root[_T("unsigned int")] = (unsigned int) 30;
-  root[_T("bool")]         = true;
-  root[_T("double")]       = 20.30;
-  root[_T("C string")]     = _T("static string 3");
-  root[_T("wxString")]     = _T("wxString 3");
+	TestCout( _T( "The JSON text output:\n"));
+	TestCout( jsonText );
+	TestCout( _T( "\nThe expected result:\n"));
+	TestCout( result );
 
-  root[_T("font")][_T("face")] = _T("Arial");
-  root[_T("font")][_T("size")] = 12;
-  root[_T("font")][_T("bold")] = true;
-  root[_T("font")][_T("double")] = 90.67;
-  root[_T("font")][_T("encoding")] = wxJSONValue( wxJSONTYPE_NULL);
-
-  wxJSONValue lang;
-  lang.Append( _T("it") );
-  lang.Append( _T("en") );
-  lang.Append( _T("de") );
-  lang.Append( _T("is") );
-  root[_T("font")][_T("locale")] = lang;
-
-  // this is the same as above
-  //root[_T("font")][_T("locale")].Append( "it" );
-  //root[_T("font")][_T("locale")].Append( "en" );
-  //root[_T("font")][_T("locale")].Append( "de" );
-  //root[_T("font")][_T("locale")].Append( "is" );
-
-  // now write the JSON object to a string object
-  wxString str;
-  wxJSONWriter wrt( gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
-  return 0;
+	TestCout( _T( "\nChecking the result:\n"));
+	size_t len = jsonText.length();
+	for ( size_t i = 0; i < len; i++ )  {
+		wxChar ch = jsonText.at( i );
+		wxChar ex = result.at( i );
+		TestCout( ch, false );
+		if ( ch != ex)  {
+			TestCout( _T( "\n<---- Unexpected character! Should be: "));
+			TestCout( ex, true );
+		return 1;
+		}
+	}
+	return 0;
 }
 
-// test escaped chars
-// using some writer flags on strings
-int Test3()
+/************************************************************************
+
+			FAMILY #3: test conversion wxString <-> UTF-8
+
+************************************************************************/
+
+
+// write to a memory stream some US-ASCII chars and convert to wxString
+int Test3_1()
+{
+	wxMemoryOutputStream os;
+	os.Write( "ABCDEFGabcdefg1234567,[]{}", 26 );	// 26 chars
+	
+	wxFileOffset len = os.GetLength();
+	TestCout( _T("buffer length (26): " ));
+	TestCout( len, true );
+	
+	// get the address of the buffer
+	wxStreamBuffer* osBuff = os.GetOutputStreamBuffer();
+	void* buffStart = osBuff->GetBufferStart();
+	
+	// convert the UTF-8 buffer into a string
+	wxString s;
+	s = wxString::FromUTF8( (const char*) buffStart, len );
+	
+	TestCout( _T("The converted string: "));
+	TestCout( s );
+	TestCout( _T("\n" ));
+	
+	wxString expected( _T("ABCDEFGabcdefg1234567,[]{}" ));
+	ASSERT( s == expected );
+	return 0;
+}
+
+static const char utf8Buff[] = {
+		// basic latin
+		0x61, 0x62, 0x63,		// ABC
+		0x41, 0x42, 0x43,		// abc
+		0x31, 0x32, 0x33,		// 123
+		
+		// latin-1 
+		0xc3, 0xa0,		// 0xE0 a-grave
+		0xc3, 0xa8,		// 0xE8 e-grave
+		0xc3, 0xac,		// 0xEC i-grave
+		0xc2, 0xa9,		// 0xA9 copyright
+		0xc2, 0xae,		// 0xAE registered
+		
+		// greek and coptic
+		0xce, 0xb1,		// 0x3B1 alfa
+		0xce, 0xb2,		// 0x3B2 beta
+		0xce, 0xb3,		// 0x3B3 gamma
+		0xce, 0xb4,		// 0x3B4 delta
+
+		// cyrillic
+		0xd0, 0xa4,		// 0x424 capital letter EF
+		0xd0, 0xa5,		// 0x425 capital letter HA
+		0xd0, 0xa6,		// 0x426 capital letter TSE
+		0xd0, 0xa7,		// 0x427 capital letter CHE
+		};
+		
+static const wchar_t uniBuff[] = {
+
+	// basic latin
+	0x61, 0x62, 0x63,           // 'abc'   pos  0
+	0x41, 0x42, 0x43,           // 'ABC'   pos 12
+	0x31, 0x32, 0x33,           // '123'   pos 24
+
+	// Latin-1 supplement
+	0xE0,     // a grave         pos 36
+	0xE8,     // e grave         pos 40
+	0xEC,     // i grave         pos 44
+	0xA9,     // copyright sign  pos 48
+	0XAE,     // registered sign pos 52
+
+	// Greek and Coptic
+	0x3B1,    // alfa            pos 56
+	0x3B2,    // beta            pos 60
+	0x3B3,    // gamma           pos 64
+	0x3B4,    // delta           pos 68
+
+	// Cyrillic
+	0x424,    // capital letter EF
+	0x425,    // capital letter HA
+	0x426,    // capital letter TSE
+	0x427,    // capital letter CHE
+	0
+	};
+
+
+// write to a memory stream some US-ASCII, latin, greek and cyrillic
+// chars and convert to wxString
+int Test3_2()
+{
+	wxMemoryOutputStream os;
+	os.Write( utf8Buff, 35 );
+	
+	wxFileOffset len = os.GetLength();
+	TestCout( _T("buffer length (35): " ));
+	TestCout( len, true );
+	
+	// get the address of the buffer
+	wxStreamBuffer* osBuff = os.GetOutputStreamBuffer();
+	void* buffStart = osBuff->GetBufferStart();
+	
+	// convert the UTF-8 buffer into a string
+	wxString s;
+	s = wxString::FromUTF8( (const char*) buffStart, len );
+	
+	TestCout( _T("The converted string: "));
+	TestCout( s );
+	TestCout( _T("\n" ));
+	
+	// wxString expected( _T("abcABC123àèì©®αβγδФХЦЧ" ));
+	// ASSERT( s == expected );	// always fails in ANSI builds
+	return 0;
+}
+
+// convert a string to UTF-8
+int Test3_3()
+{
+	wxString s1( _T("ABCDEFGabcdefg1234567,[]{}"));
+	
+	// now convert the string to UTF8 NOTE: a wxCharBuffer is returned
+	wxCharBuffer cb = s1.ToUTF8();
+	const char* s1Buff = cb.data();	// get the char data. release() can be used to get ownership
+	
+	// check the length of the buffer
+	size_t len = strlen( s1Buff );
+	TestCout( _T("Buffer length is (26): " ));
+	TestCout( len, true );
+	ASSERT( len == 26 );
+		
+	const char* expected = "ABCDEFGabcdefg1234567,[]{}";
+	int r = memcmp( s1Buff, expected, len );
+	ASSERT( r == 0 );
+	return 0;
+}
+
+// convert a latin-1 greek, cyrillic wxString to UTF-8
+int Test3_4()
+{
+	// 's1' is constructed using Unicode UCS-2/4 code units (wchar_t)
+	// does not work in ANSI builds
+	wxString s1( uniBuff );
+
+	
+	// now convert the string to UTF8 NOTE: a wxCharBuffer is returned
+	wxCharBuffer cb = s1.ToUTF8();
+	const char* s1Buff = cb.data();	// get the char data. release() can be used to get ownership
+	
+	// check the length of the buffer
+	size_t len = strlen( s1Buff );
+	TestCout( _T("Buffer length is (35): " ));
+	TestCout( len, true );
+	ASSERT( len == 35 );
+		
+	int r = memcmp( s1Buff, utf8Buff, len );
+	ASSERT( r == 0 );
+	return 0;
+}
+
+
+/************************************************************************
+
+			FAMILY #4: test the wxJSONWriter
+
+************************************************************************/
+
+// a simple write test
+int Test4_1()
+{
+	wxJSONValue root;
+	root[_T("integer")]      = 20;
+	root[_T("unsigned int")] = (unsigned int) 30;
+	root[_T("bool")]         = true;
+	root[_T("double")]       = 20.30;
+	root[_T("C string")]     = _T("static string 3");
+	root[_T("wxString")]     = _T("wxString 3");
+
+	root[_T("font")][_T("face")] = _T("Arial");
+	root[_T("font")][_T("size")] = 12;
+	root[_T("font")][_T("bold")] = true;
+	root[_T("font")][_T("double")] = 90.67;
+	root[_T("font")][_T("encoding")] = wxJSONValue( wxJSONTYPE_NULL);
+
+	wxJSONValue lang;
+	lang.Append( _T("it") );
+	lang.Append( _T("en") );
+	lang.Append( _T("de") );
+	lang.Append( _T("is") );
+	root[_T("font")][_T("locale")] = lang;
+
+	// this is the same as above
+	//root[_T("font")][_T("locale")].Append( "it" );
+	//root[_T("font")][_T("locale")].Append( "en" );
+	//root[_T("font")][_T("locale")].Append( "de" );
+	//root[_T("font")][_T("locale")].Append( "is" );
+
+	// now write the JSON object to a string object
+	wxString str;
+	wxJSONWriter writer;
+	writer.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+	return 0;
+}
+
+// test escaped chars and  some writer flags on strings
+int Test4_2()
 {
 	wxJSONValue root;
 	root.Append( _T("string with \\ (backslash)"));
@@ -92,19 +287,17 @@ int Test3()
 	root.Append( _T("This is line number 1\nThis is line number 2\nThis is line number 3"));
 	root.Append( _T("This is a very long string that cause the user"
 					" to scroll orizontally in order to view the whole string"));
-	wxString s( _T("string that contains 3 control characters (0x00, 0x03, 0x05):")); 
-	s.Append( (wxChar) 0 );
+	wxString s( _T("string that contains 3 control characters (0x01, 0x03, 0x05):")); 
+	s.Append( (wxChar) 1 );
 	s.Append( (wxChar) 3 );
 	s.Append( (wxChar) 5 );
 	root.Append( s );
 
-	// default ctor
+	// default ctor for the writer
 	TestCout( _T( "Using default ctor----------------->\n"));
 	wxString str;
 	wxJSONWriter wrt;
 	wrt.Write( root, str );
-	TestCout( str );
-	TestCout( _T( "<-----------------\n"));
 
 	// the expected result
 	wxString r1( _T("[\n"
@@ -119,11 +312,14 @@ int Test3()
 			"   \"This is line number 1\\nThis is line number 2\\nThis is line number 3\",\n"
 			"   \"This is a very long string that cause the user to scroll "
 				"orizontally in order to view the whole string\",\n"
-			"   \"string that contains 3 control characters (0x00, 0x03, 0x05):"
-				"\\u0000\\u0003\\u0005\"\n"
+			"   \"string that contains 3 control characters (0x01, 0x03, 0x05):"
+				"\\u0001\\u0003\\u0005\"\n"
 			"]\n"));
-	ASSERT( str == r1 );
-
+			
+	int r = CheckResult( str, r1 );
+	if ( r != 0 )	{
+		return r;
+	}
 
 	// strict JSON
 	str.Clear();
@@ -135,11 +331,27 @@ int Test3()
 
 	// expected result
 	wxString r2( _T(	
-"[\"string with \\\\ (backslash)\",\"string with \\n (linefeed)\",\"string with / (slash)\",\"string with \\r (CR)\",\"string with \\t (tab)\",\"string with \\b (backspace)\",\"string with \\\" (quotes)\",\"string with 3 CR\\r1-\\r 2-\\r\",\"This is line number 1\\nThis is line number 2\\nThis is line number 3\",\"This is a very long string that cause the user to scroll orizontally in order to view the whole string\",\"string that contains 3 control characters (0x00, 0x03, 0x05):\\u0000\\u0003\\u0005\"]"));
-	ASSERT( str == r2 );
+		"["
+		"\"string with \\\\ (backslash)\""
+		",\"string with \\n (linefeed)\""
+		",\"string with / (slash)\""
+		",\"string with \\r (CR)\""
+		",\"string with \\t (tab)\""
+		",\"string with \\b (backspace)\""
+		",\"string with \\\" (quotes)\""
+		",\"string with 3 CR\\r1-\\r 2-\\r\""
+		",\"This is line number 1\\nThis is line number 2\\nThis is line number 3\""
+		",\"This is a very long string that cause the user to scroll orizontally in"
+			" order to view the whole string\""
+		",\"string that contains 3 control characters (0x01, 0x03, 0x05):\\u0001\\u0003\\u0005\""
+			"]"));
+	
+	r = CheckResult( str, r2 );
+	if ( r != 0 )	{
+		return r;
+	}
 
-
-	// split strings
+	// split strings: NOTE: very long strings are no more splitted as in 1.0
 	str.Clear();
 	TestCout( _T( "Using wxJSONWRITER_SPLIT_STRING----------------->\n"));
 	wxJSONWriter wrt3( wxJSONWRITER_STYLED | wxJSONWRITER_SPLIT_STRING );
@@ -155,148 +367,98 @@ int Test3()
 	TestCout( str );
 	TestCout( _T( "<-----------------\n"));
 
-  return 0;
+	return 0;
 }
 
-// prints the 'null', 'empty' and 'empty map' empty array' objects
-int Test4()
+// prints the 'null', 'invalid', 'empty map' and 'empty array' objects
+int Test4_3()
 {
-  wxJSONValue valueNull;
-  wxJSONValue valueEmpty( wxJSONTYPE_INVALID );
-  wxJSONValue valueEmptyMap( wxJSONTYPE_OBJECT );
-  wxJSONValue valueEmptyArray( wxJSONTYPE_ARRAY );
+	wxJSONValue valueNull;
+	wxJSONValue valueIvalid( wxJSONTYPE_INVALID );
+	wxJSONValue valueEmptyMap( wxJSONTYPE_OBJECT );
+	wxJSONValue valueEmptyArray( wxJSONTYPE_ARRAY );
 
-  wxJSONValue root;
-  root.Append( valueNull );
+	wxJSONValue root;
+	root.Append( valueNull );
 
-  // root.Append( valueEmpty );   // 24/7/08 ASSERTION failure in debug builds
-  root.Append( valueEmptyMap );
-  root.Append( valueEmptyArray );
+	// root.Append( valueInvalid );		// 6/10/2009 ASSERTION failure in debug builds cannot write
+	root.Append( valueEmptyMap );		// an invalid JSON object
+	root.Append( valueEmptyArray );
 
-  wxString str;
-  wxJSONWriter wrt( gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
-  return 0;
+	wxString str;
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+	
+	return 0;
 }
 
 // an array of objects as root
-int Test5()
+int Test4_4()
 {
-  wxJSONValue root;
-  root.Append( _T("a string") );
-  root.Append( 12 );
-  root.Append( true );
-  root.Append( wxJSONValue());   // this is a 'null' value
+	wxJSONValue root;
+	root.Append( _T("a string") );
+	root.Append( 12 );
+	root.Append( true );
+	root.Append( wxJSONValue());   // this is a 'null' value
 
-  root.Append( 90e+12 );
+	root.Append( 90e+12 );
 
-  wxString str;
-  wxJSONWriter wrt( gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
-  return 0;
+	wxString str;
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	wxString expectedResult = _T("[\n")
+		_T("   \"a string\",\n")
+		"   12,\n"
+		"   true,\n"
+		"   null,\n"
+		"   90000000000000.000000\n"
+		"]\n";
+
+	int r = CheckResult( str, expectedResult );
+	if ( r != 0 )	{
+		return r;
+	}
+	return 0;
 }
 
-// a complex JSON object which will be used to
-// test the JSON reader (this output lacks comments
-// which will be added by hand)
-int Test6()
+// test how much simple is wxJSON
+int Test4_5()
 {
-  wxJSONValue root;
+	wxJSONValue root;
+	root[_T("key-1")][_T("key-2")][_T("key-3")][4] = 12;
+	wxString str;
 
-  // the 'object' object contains all primitive types
-  root[_T("object")][_T("integer")]      = 20;
-  root[_T("object")][_T("unsigned int")] = (unsigned int) 30;
-  root[_T("object")][_T("bool-t")]       = true;
-  root[_T("object")][_T("bool-f")]       = false;
-  root[_T("object")][_T("double")]       = 20.30;
-  root[_T("object")][_T("C string")]     = _T("static string 1");
-  root[_T("object")][_T("wxString")]     = _T("wxString 1");
-  root[_T("object")][_T("null")]         = wxJSONValue( wxJSONTYPE_NULL);
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
 
-
-  // the 'array' object contains an array of primitive types
-  root[_T("array")].Append( 30 );
-  root[_T("array")].Append( (unsigned int ) 40);
-  root[_T("array")].Append( true );
-  root[_T("array")].Append( false );
-  root[_T("array")].Append( 30.40 );
-  root[_T("array")].Append( _T("static string 2") );
-  root[_T("array")].Append( wxString( _T("wxString 2")));
-  wxJSONValue obj;
-  obj[_T("key")] = _T("value");
-  root[_T("array")].Append( obj );
-
-  // the void-object' object contains an empty object
-  root[_T("void-object")] = wxJSONValue( wxJSONTYPE_OBJECT );
-
-  // the 'void-array' array contains an empty array
-  root[_T("void-array")] = wxJSONValue( wxJSONTYPE_ARRAY );
-
-  // an array of objects
-  root[_T("array2")][0][_T("item")] = 1;
-  root[_T("array2")][1][_T("item")] = 2;
-  root[_T("array2")][2][_T("item")] = 3;
-  root[_T("array2")][3][_T("item")] = 4;
-  root[_T("array2")][4][_T("item")] = 5;
-
-  // an object that contains escaped chars strings
-  root[_T("escaped")][_T("backslash")]    = _T("string with \\ (backslash)");
-  root[_T("escaped")][_T("linefeed")]     = _T("string with \n (linefeed)");
-  root[_T("escaped")][_T("slash")]        = _T("string with / (slash)");
-  root[_T("escaped")][_T("carriage-ret")] = _T("string with \r (CR)");
-  root[_T("escaped")][_T("tab")]          = _T("string with \t (tab)");
-  root[_T("escaped")][_T("backspace")]    = _T("string with \b (backspace)");
-  root[_T("escaped")][_T("quotes")]       = _T("string with \" (quotes)");
-  root[_T("escaped")][_T("3 CR string")]  = _T("string with 3 CR\r1-\r 2-\r");
-
-  // and finally an array that contains escaped chars strings
-  root[_T("escaped-array")].Append( _T("string with \\ (backslash)"));
-  root[_T("escaped-array")].Append( _T("string with \n (linefeed)"));
-  root[_T("escaped-array")].Append( _T("string with / (slash)"));
-  root[_T("escaped-array")].Append( _T("string with \r (CR)"));
-  root[_T("escaped-array")].Append( _T("string with \t (tab)"));
-  root[_T("escaped-array")].Append( _T("string with \b (backspace)"));
-  root[_T("escaped-array")].Append( _T("string with \" (quotes)"));
-  root[_T("escaped-array")].Append( _T("string with 3 CR\r1-\r 2-\r"));
-
-  wxString str;
-  wxJSONWriter wrt( gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
-  return 0;
+	return 0;
 }
 
-// check that what I wrote in the docs in really true...
-// the output should be:
-//  {
-//    "key-1" :  {
-//       "key-2" :  {
-//          "key-3" : [
-//             null,
-//             null,
-//             null,
-//             null,
-//             12
-//          ]
-//        }
-//     }
-//  }
-int Test7()
+// test control characters
+int Test4_6()
 {
-  wxJSONValue root;
-  root[_T("key-1")][_T("key-2")][_T("key-3")][4] = 12;
-  wxString str;
+	wxJSONValue root;
+	wxString s;
+	s.Append( (wxChar) 0 );
+	s.Append( (wxChar) 3 );
+	s.Append( (wxChar) 5 );
+	root.Append( s );
+	
+	wxString str;
 
-  wxJSONWriter wrt( gs_indentation );
-  wrt.Write( root, str );
-  TestCout( str );
-  TestCout( _T( "<-----------------\n"));
-  return 0;
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	return 0;
 }
 
 

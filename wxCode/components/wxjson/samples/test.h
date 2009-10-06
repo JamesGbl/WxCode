@@ -35,65 +35,99 @@
 // the following is a list of the performed tests:
 
 //
-// in test1.cpp: test the wxJSONValue class
-extern int Test1();  // test ctors and member functions of wxJSONValue
+//		*********** test1.cpp ****************
+//
+// family 1: test the wxJSONValue class, ctors,dtor and memberfunctions
+extern int Test1_1();	// test 64-bits support in wxWidgets
+extern int Test1_2();	// test wxJSONValue ctors and IsXxxxxx() function
+extern int Test1_3();	// test wxJSONValue::AsString()
+extern int Test1_4();	// test wxJSONValue::GetInfo() and ::Dump() functions
+extern int Test1_5();	// test access methods and other functions
+
+// family 2: test the wxJSONValue::IsSameAs() function
+extern int Test2_1();  // comparing fundamental types
+extern int Test2_2();  // comparing short and long and Int64
+extern int Test2_3();  // comparing INTs and DOUBLEs
+extern int Test2_4();  // comparing objects
+extern int Test2_5();  // comparing arrays
+extern int Test2_6();  // comparing maps, special case: the NULL value
+extern int Test2_7();  // comparing incompatible types
+extern int Test2_7();  // comparing arrays
 
 //
-// in test2.cpp:
-// this file was deleted
-
+//		*********** test3.cpp ****************
 //
-// in test3.cpp: test the wxJSONWriter class
-extern int Test2();  // a simple write test
-extern int Test3();  // test escaped sequences
-extern int Test4();  // print "null", "empty", "empty map" and "empty array"
-extern int Test5();  // test an array of values
-extern int Test6();  // a complex JSON value 
-extern int Test7();  // test the simplicity of JSON format (see docs)
+// family #3: test the UTF-8 conversion from / to wxString
+extern int Test3_1();  // converting US-ASCII UTF-8 buffer to wxString
+extern int Test3_2();  // converting latin, greek and cyrillic UTF-8 to wxString
+extern int Test3_3();  // converting a US-ASCII wxString to UTF-8
+extern int Test3_4();  // converting a latin-1, greek, cyrillic wxString to UTF-8
+
+// family #4: test the wxJSONWriter class
 
 
-//
-// in test4.cpp: test the wxJSONValue::IsSameAs() function
-extern int Test8();  // test various JSON objects that look like the same
+extern int Test4_1();  // wxJSONWriter: a simple write test
+extern int Test4_2();  // wxJSONWriter: test escaped characters
+extern int Test4_3();  // wxJSONWriter: writes empty, invalid and null objects
+extern int Test4_4();  // wxJSONWriter: an array of objects as root
+extern int Test4_5();  // wxJSONWriter: how much simple is wxJSON
+extern int Test4_6();  // wxJSONWriter: test control characters
+
+
+
+// family #4: test the wxJSONWriter class
+extern int Test5_1();  // writing an array of values using wxJSONWRITER_NONEextern int Test5_2();  // writing an array of values using wxJSONWRITER_STYLED
+extern int Test5_3();  // writing an array of values using wxJSONWRITER_WRITE_COMMENTS
+extern int Test5_4();  // writing an array of values using wxJSONWRITER_NO_LINEFEEDSextern int Test5_5();  // writing an array of values using wxJSONWRITER_SPLIT_STRING
+extern int Test5_6();  // writing an array of values using wxJSONWRITER_MULTILINE_STRING
+extern int Test5_7();  // checking the wxJSONWRITER_SPLIT_STRING
+extern int Test5_8();  // checking the wxJSONWRITER_SPLIT_STRINGextern int Test5_9();   // checking the wxJSONWRITER_TAB_INDENT
+
+
+
+
+
+
+/*
 
 //
 // in test5.cpp: test the wxJSONReader class (input from string)
-extern int Test9();   // a well-formed array of values without comments
-extern int Test10();  // a well-formed simple array of values
-extern int Test11();  // an array of escaped string values
-extern int Test12();  // nested objects and arrays
-extern int Test13();  // many errors and warnings
-extern int Test14();  // a complex JSON structure read from test5.json
-extern int Test15();  // read the specified JSON text file
-extern int Test16();  // missing close object/array on EOF
-extern int Test17();  // non-JSON text before and after top-level start/end chars
+extern int Test4_1();   // a well-formed array of values without comments
+extern int Test4_2();  // a well-formed simple array of values
+extern int Test4_3();  // an array of escaped string values
+extern int Test4_4();  // nested objects and arrays
+extern int Test4_5();  // many errors and warnings
+extern int Test4_6();  // a complex JSON structure read from test5.json
+extern int Test4_7();  // read the specified JSON text file
+extern int Test4_8();  // missing close object/array on EOF
+extern int Test4_9();  // non-JSON text before and after top-level start/end chars
 
 //
 // in test6.cpp: test the comment related functions (writer)
-extern int Test18();  // test wxJSONValue::AddComment() function
-extern int Test19();  // write comments using style= STYLED
-extern int Test20();  // write comments using style= NONE
-extern int Test21();  // write comments using style= WRITE_COMMENTS
-extern int Test22();  // write comments using style= WRITE_COMMENTS, COMMENT_BEFORE
-extern int Test23();  // write comments using style= WRITE_COMMENTS, COMMENT_AFTER
-extern int Test24();  // test the MULTISTRING feature
+extern int Test5_1();
+extern int Test5_2();
+extern int Test5_3();
+extern int Test5_4();
+extern int Test5_5();
+extern int Test5_6();
+extern int Test5_7();
 
 //
 // in test7.cpp: test the comment related functions (reader)
-extern int Test25();  // read a JSON text with comments style=TOLERANT
-extern int Test26();  // read a JSON text with comments style=TOLERANT, STORE_COMMENTS
-extern int Test27();  // same as 25 but without syntax error
-extern int Test28();  // read a JSON text with comments COMMENT_AFTER (not store)
-extern int Test29();  // same as 28 but storing comments
+extern int Test6_1();
+extern int Test6_2();
+extern int Test6_3();
+extern int Test6_4();
+extern int Test6_5();
 
 //
 // in test8.cpp: test the unicode stuff
-extern int Test30();  // test the installed encodings in the wxCSConv classes
-extern int Test31();  // test the wxJSON_USE_UNICODE macro definition
-extern int Test32();  // convert wide char string to other encodings (all)
-extern int Test33();  // convert wide char string to other encodings (latin-1)
-extern int Test34();  // convert wide char string to other encodings (greek)
-extern int Test35();  // convert wide char string to other encodings (cyrillic)
+extern int Test7_1();
+extern int Test7_2();
+extern int Test7_3();
+extern int Test7_4();
+extern int Test7_5();
+extern int Test7_6();
 
 //
 // in test9.cpp: the JSON writer in unicode mode
@@ -158,6 +192,7 @@ extern int Test75();   // writes 10000 values to a stream
 extern int Test76();   // read 10000 values from a wxString object
 extern int Test77();   // read 10000 values from a stream
 
+*/
 
 // global variables in 'main.cpp'
 extern int gs_tolerant;
