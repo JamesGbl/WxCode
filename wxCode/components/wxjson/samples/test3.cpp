@@ -123,6 +123,7 @@ static const char utf8Buff[] = {
 		0xd0, 0xa5,		// 0x425 capital letter HA
 		0xd0, 0xa6,		// 0x426 capital letter TSE
 		0xd0, 0xa7,		// 0x427 capital letter CHE
+		0			// total length (included NULL) = 36
 		};
 		
 static const wchar_t uniBuff[] = {
@@ -150,7 +151,7 @@ static const wchar_t uniBuff[] = {
 	0x425,    // capital letter HA
 	0x426,    // capital letter TSE
 	0x427,    // capital letter CHE
-	0
+	0	  // total length, NULL included = 23
 	};
 
 
@@ -177,8 +178,8 @@ int Test3_2()
 	TestCout( s );
 	TestCout( _T("\n" ));
 	
-	// wxString expected( _T("abcABC123àèì©®αβγδФХЦЧ" ));
-	// ASSERT( s == expected );	// always fails in ANSI builds
+	wxString expected( _T("abcABC123àèì©®αβγδФХЦЧ" ));
+	ASSERT( s == expected );	// always fails in ANSI builds
 	return 0;
 }
 
@@ -226,10 +227,45 @@ int Test3_4()
 	return 0;
 }
 
+// convert a UTF-8 buffer to wchar_t and then to a wxString
+// oct 2009: the test can be run in either ANSI and Unicode.
+// In both modes, the conversion to wchar_t succeeds but the
+// conversion to wxString is successfull in Unicode and in
+// ANSI an empty string is returned because the presence of
+// unrepresentable chars
+int Test3_5()
+{
+
+	wchar_t destBuffer[42];
+	
+	size_t convLen = wxConvUTF8.ToWChar( destBuffer,	// wchar_t destination
+						42,		// size_t  destLenght 
+						utf8Buff,	// char_t  source
+						36 );		// size_t  sourceLenght
+						
+	// convLen should be 23, NULL included 
+	TestCout( _T("Conv length: " ));
+	TestCout( convLen, true );
+	ASSERT( convLen == 23 );
+	
+	// now convert to a wxString
+	wxString s;
+	s = wxString::FromUTF8( utf8Buff, 36 );
+	TestCout( _T("String length: " ));
+	int strLen = s.Len();
+	TestCout( strLen, true );
+	TestCout( _T("The converted string: " ));
+	TestCout( s );
+
+	return 0;
+
+
+}
+
 
 /************************************************************************
 
-			FAMILY #4: test the wxJSONWriter
+			FAMILY #3: test the wxJSONWriter
 
 ************************************************************************/
 

@@ -279,10 +279,10 @@ $(LIB_LIBANSI) : $(OBJECTS_A)
 # list of objects for Unicode build for the test application
 TEST_OBJECTS = samples/main.o		\
 		samples/test1.o		\
-		samples/test3.o
+		samples/test3.o		\
+		samples/test4.o
 		
 		
-#		samples/test4.o		\
 #		samples/test5.o 	\
 #		samples/test6.o 	\
 #		samples/test7.o		\
@@ -300,10 +300,10 @@ TEST_OBJECTS = samples/main.o		\
 # list of objects for ANSI build for the test application
 TEST_OBJECTS_A = samples/main.oa	\
 		samples/test1.oa	\
-		samples/test3.oa
-
-#		samples/test3.oa	\
-#		samples/test4.oa	\
+		samples/test3.oa	\
+		samples/test4.oa
+		
+		
 #		samples/test5.oa 	\
 #		samples/test6.oa 	\
 #		samples/test7.oa	\
@@ -337,7 +337,7 @@ testansi.bin: $(TEST_OBJECTS_A) $(LIB_LIBANSI)
 # which is used to get C sources that define a buffer equal to
 # a file on disk - this is only usefull for the author
 hexd.bin : hexd.o
-	$(LINKER) -o hexd.bin hexd.o
+	$(LINKER) -o hexd.bin hexd.o -lstdc++
 
 hexd.o : samples/hexd.cpp
 	$(CC) -c -g -Wall -o hexd.o samples/hexd.cpp

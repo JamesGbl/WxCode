@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	3
+#define NUM_TESTS	6
 
 
 // the test function's structure
@@ -102,7 +102,7 @@ typedef int (*TestFunc)();
 struct TestStruc
 {
 	TestFunc	m_funcPtr;	// the pointer to the test function
-	bool		m_auto;		// TRUE is the test has to be perfomed automatically
+	int		m_auto;		// 0=no, 1=unicode, 2=ansi, 3=both
 	const wxChar*	m_testDesc;	// description of the test
 };
 
@@ -168,101 +168,152 @@ int main( int argc, char* argv[] )
 		// family #1		(test1.cpp)
 		{
 			0,		// test #0: description of the family
-			true,		// m_auto
+			3,		// m_auto
 			_T( "test ctors, dtor and member functions" )
 		},
 		{
-			Test1_1, true, _T( "test if 64-bits INTs is supported" )
+			Test1_1, 3, _T( "test if 64-bits INTs is supported" )
 		},
 		{
-			Test1_2, true, _T( "test wxJSONValue ctors and JSON value's types" )
+			Test1_2, 3, _T( "test wxJSONValue ctors and JSON value's types" )
 		},
 		{
-			Test1_3, true, _T( "test the wxJSONValue::AsString() function" )
+			Test1_3, 3, _T( "test the wxJSONValue::AsString() function" )
 		},
 		{
-			Test1_4, true, _T( "test wxJSONValue::GetInfo() and ::Dump() functions" )
+			Test1_4, 3, _T( "test wxJSONValue::GetInfo() and ::Dump() functions" )
 		},
 		{
-			Test1_5, true, _T( "test access methods and other functions" )
+			Test1_5, 3, _T( "test access methods and other functions" )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },
 		
 		// family #2		(test1.cpp)
 		{
 			0,		// test #0: description of the family
-			true,		// m_auto
+			3,		// m_auto
 			_T( "test the wxJSONValue::ISSameAs() function" )
 		},
 		{
-			Test2_1, true, _T( "comparing fundamental types" )
+			Test2_1, 3, _T( "comparing fundamental types" )
 		},
 		{
-			Test2_2, true, _T( "comparing short, long and long-long" )
+			Test2_2, 3, _T( "comparing short, long and long-long" )
 		},
 		{
-			Test2_3, true, _T( "comparing ints and doubles" )
+			Test2_3, 3, _T( "comparing ints and doubles" )
 		},
 		{
-			Test2_4, true, _T( "comparing objects" )
+			Test2_4, 3, _T( "comparing objects" )
 		},
 		{
-			Test2_5, true, _T( "comparing arrays" )
+			Test2_5, 3, _T( "comparing arrays" )
 		},
 		{
-			Test2_6, true, _T( "comparing objects: special case of NULL values" )
+			Test2_6, 3, _T( "comparing objects: special case of NULL values" )
 		},
 		{
-			Test2_7, true, _T( "comparing incompatible types" )
+			Test2_7, 3, _T( "comparing incompatible types" )
 		},
 		{ 0 },{ 0 },
 		
 		// family #3		(test3.cpp)
 		{
 			0,		// test #0: description of the family
-			true,		// m_auto
+			1,		// Unicode
 			_T( "testing wxString::ToUTF8() and wxString::FromUTF8()" )
 		},
 		{
-			Test3_1, true, _T( "converting a US-ASCII UTF-8 buffer to wxString" )
+			Test3_1, 1, _T( "converting a US-ASCII UTF-8 buffer to wxString" )
 		},
 		{
-			Test3_2, true, _T( "converting a latin,greek,cyrillic UTF-8 buffer to wxString" )
+			Test3_2, 1, _T( "converting a latin,greek,cyrillic UTF-8 buffer to wxString" )
 		},
 		{
-			Test3_3, true, _T( "converting a US-ASCII wxString to UTF-8" )
+			Test3_3, 1, _T( "converting a US-ASCII wxString to UTF-8" )
 		},
 		{
-			Test3_4, true, _T( "converting a latin1.greek,cyrillic wxString to UTF-8" )
+			Test3_4, 1, _T( "converting a latin1.greek,cyrillic wxString to UTF-8" )
+		},
+		{
+			Test3_5, 3, _T( "converting UTF-8 buffer to wchar_t and wxString" )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// family #4		(test3.cpp)
 		{
 			0,		// test #0: description of the family
-			true,		// m_auto
+			3,		// m_auto
 			_T( "testing the wxJSONWriter class" )
 		},
 		{
-			Test4_1, true, _T( "wxJSONWriter: a simple write test" )
+			Test4_1, 3, _T( "wxJSONWriter: a simple write test" )
 		},
 		{
-			Test4_2, true, _T( "wxJSONWriter: test escaped characters" )
+			Test4_2, 3, _T( "wxJSONWriter: test escaped characters" )
 		},
 		{
-			Test4_3, true, _T( "wxJSONWriter: writes empty, invalid and null objects" )
+			Test4_3, 3, _T( "wxJSONWriter: writes empty, invalid and null objects" )
 		},
 		{
-			Test4_4, true, _T( "wxJSONWriter: an array of objects as root" )
+			Test4_4, 3, _T( "wxJSONWriter: an array of objects as root" )
 		},
 		{
-			Test4_5, true, _T( "wxJSONWriter: how much simple is wxJSON" )
+			Test4_5, 3, _T( "wxJSONWriter: how much simple is wxJSON" )
 		},
 		{
-			Test4_6, true, _T( "wxJSONWriter: test control characters" )
+			Test4_6, 3, _T( "wxJSONWriter: test control characters" )
 		},
 		{ 0 },{ 0 },{ 0 },
 		
+		// family #5		(test4.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto
+			_T( "testing the wxJSONWriter class with various flags" )
+		},
+		{
+			Test5_1, 3, _T( "writing an array of values using wxJSONWRITER_NONE" )
+		},
+		{
+			Test5_2, 3, _T( "writing an array of values using wxJSONWRITER_STYLED" )
+		},
+		{
+			Test5_3, 3, _T( "writing an array of values using wxJSONWRITER_WRITE_COMMENTS" )
+		},
+		{
+			Test5_4, 3, _T( "writing an array of values using wxJSONWRITER_NO_LINEFEEDS" )
+		},
+		{
+			Test5_5, 3, _T( "writing an array of values using wxJSONWRITER_SPLIT_STRING" )
+		},
+		{
+			Test5_6, 3, _T( "writing an array of values using wxJSONWRITER_MULTILINE_STRING" )
+		},
+		{
+			// this test fails: see the source code for details
+			Test5_7, 0, _T( "checking the wxJSONWRITER_SPLIT_STRING (long strings)" )
+		},
+		{
+			Test5_8, 3, _T( "checking the wxJSONWRITER_SPLIT_STRING (value > column 50" )
+		},
+		{
+			Test5_9, 3, _T( "checking the wxJSONWRITER_TAB_INDENT" )
+		},
+
+		// family #6		(test4.cpp)
+		{
+			0,		// test #0: description of the family
+			1,		// m_auto 1=unicode, not applicable in ANSI builds
+			_T( "testing the wxJSONWriter class with Unicode" )
+		},
+		{
+			Test6_1, 3, _T( "write to wxString an array of strings from different charsets" )
+		},
+		{
+			Test6_2, 3, _T( "writing to stream an array of strings from different charsets" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		
 		
 		// END OF TABLE
@@ -280,7 +331,7 @@ int main( int argc, char* argv[] )
 	// parameters are in the form X[.YY]
 	wxString p1, p2;
 	if ( numParams > 0 )	{
-		p1 = cmdLine.GetParam( 0 );
+		p1 = cmdLine.GetParam( 0 );	// p1 = test number (the family)
 		long l;
 		bool r = p1.ToLong( &l );
 		if ( r )	{
@@ -288,7 +339,7 @@ int main( int argc, char* argv[] )
 		}
 	}
 	if ( numParams > 1 )	{
-		p2 = cmdLine.GetParam( 1 );
+		p2 = cmdLine.GetParam( 1 );	// p2 = subtest numero
 		long l;
 		bool r = p2.ToLong( &l );
 		if ( r )	{
@@ -310,7 +361,22 @@ int main( int argc, char* argv[] )
 		TestCout( _T( " - "));
 		TestCout( testArray[idx].m_testDesc );
 		TestCout( (wxChar) '\n', false );
+		
+		
+		bool runFamily = false;
+		#if defined( wxJSON_USE_UNICODE )
+				if ( ( testArray[idx].m_auto & 1 ) || !p1.empty() )	{
+					runFamily = true;
+				}
+		#else
+				if ( ( testArray[idx].m_auto & 2 ) || !p1.empty() )	{
+					runFamily = true;
+				}
+		#endif
 
+		if ( !runFamily )	{
+			continue;
+		}
 		// subtests	
 		for ( int y = numSubTestStart; y <= numSubTestEnd; y++ )  {
 			int idx = ( x * NUM_SUBTESTS ) + y;
@@ -338,7 +404,18 @@ int main( int argc, char* argv[] )
 
 			
 				// the test is actually done if m_auto is TRUE or if 'p2' is not empty
-				if ( testArray[idx].m_auto == true || !p2.empty() )	{
+				// depending the m_auto value and the build mode (Unicode,ANSI)
+				bool runTest = false;
+		#if defined( wxJSON_USE_UNICODE )
+				if ( ( testArray[idx].m_auto & 1 ) || !p2.empty() )	{
+					runTest = true;
+				}
+		#else
+				if ( ( testArray[idx].m_auto & 2 ) || !p2.empty() )	{
+					runTest = true;
+				}
+		#endif
+				if ( runTest )	{
 					result = funcPtr();
 					TestCout( _T("----------------------------\nEND TEST: result=" ));
 					TestCout( result );

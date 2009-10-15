@@ -62,10 +62,9 @@ extern int Test3_1();  // converting US-ASCII UTF-8 buffer to wxString
 extern int Test3_2();  // converting latin, greek and cyrillic UTF-8 to wxString
 extern int Test3_3();  // converting a US-ASCII wxString to UTF-8
 extern int Test3_4();  // converting a latin-1, greek, cyrillic wxString to UTF-8
+extern int Test3_5();  // converting from UTF-8 to wchar_t and to wxString
 
 // family #4: test the wxJSONWriter class
-
-
 extern int Test4_1();  // wxJSONWriter: a simple write test
 extern int Test4_2();  // wxJSONWriter: test escaped characters
 extern int Test4_3();  // wxJSONWriter: writes empty, invalid and null objects
@@ -73,17 +72,25 @@ extern int Test4_4();  // wxJSONWriter: an array of objects as root
 extern int Test4_5();  // wxJSONWriter: how much simple is wxJSON
 extern int Test4_6();  // wxJSONWriter: test control characters
 
-
-
-// family #4: test the wxJSONWriter class
+//
+//		*********** test4.cpp ****************
+//
+// family #5: test the wxJSONWriter class test various writer's flags
 extern int Test5_1();  // writing an array of values using wxJSONWRITER_NONEextern int Test5_2();  // writing an array of values using wxJSONWRITER_STYLED
 extern int Test5_3();  // writing an array of values using wxJSONWRITER_WRITE_COMMENTS
 extern int Test5_4();  // writing an array of values using wxJSONWRITER_NO_LINEFEEDSextern int Test5_5();  // writing an array of values using wxJSONWRITER_SPLIT_STRING
 extern int Test5_6();  // writing an array of values using wxJSONWRITER_MULTILINE_STRING
-extern int Test5_7();  // checking the wxJSONWRITER_SPLIT_STRING
-extern int Test5_8();  // checking the wxJSONWRITER_SPLIT_STRINGextern int Test5_9();   // checking the wxJSONWRITER_TAB_INDENT
+extern int Test5_7();  // checking the wxJSONWRITER_SPLIT_STRING (very long string)
+extern int Test5_8();  // checking the wxJSONWRITER_SPLIT_STRING (value > column 50)extern int Test5_9();   // checking the wxJSONWRITER_TAB_INDENT
 
-
+// family #6: test the wxJSONWriter class: unicode strings
+extern int Test6_1();  // write to wxString  a JSON array using various european charsets
+extern int Test6_2();  // write to stream a JSON array using various european charsets
+
+//
+//		*********** test5.cpp ****************
+//
+// family #7: test the wxJSONReader class
 
 
 

@@ -604,7 +604,7 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 	size_t i;
 	for ( i = 0; i < len; i++ ) {
 		bool shouldEscape = false;
-		char ch = *utf8Buff;
+		unsigned char ch = *utf8Buff;
 		++utf8Buff;		// point to the next byte
 		
 		// the escaped character
