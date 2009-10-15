@@ -280,10 +280,10 @@ $(LIB_LIBANSI) : $(OBJECTS_A)
 TEST_OBJECTS = samples/main.o		\
 		samples/test1.o		\
 		samples/test3.o		\
-		samples/test4.o
+		samples/test4.o		\
+		samples/test5.o
 		
 		
-#		samples/test5.o 	\
 #		samples/test6.o 	\
 #		samples/test7.o		\
 #		samples/test8.o		\
@@ -301,10 +301,10 @@ TEST_OBJECTS = samples/main.o		\
 TEST_OBJECTS_A = samples/main.oa	\
 		samples/test1.oa	\
 		samples/test3.oa	\
-		samples/test4.oa
+		samples/test4.oa	\
+		samples/test5.oa
 		
 		
-#		samples/test5.oa 	\
 #		samples/test6.oa 	\
 #		samples/test7.oa	\
 #		samples/test8.oa	\

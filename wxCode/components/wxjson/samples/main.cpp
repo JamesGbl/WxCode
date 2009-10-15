@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	6
+#define NUM_TESTS	7
 
 
 // the test function's structure
@@ -238,7 +238,7 @@ int main( int argc, char* argv[] )
 		{
 			Test3_5, 3, _T( "converting UTF-8 buffer to wchar_t and wxString" )
 		},
-		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+		{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// family #4		(test3.cpp)
 		{
@@ -315,7 +315,40 @@ int main( int argc, char* argv[] )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		
+
+		// family #7		(test5.cpp)
+		{
+			0,		// test #0: description of the family
+			1,		// m_auto 1=unicode, not applicable in ANSI builds
+			_T( "testing the wxJSONReader class (only US-ASCII input)" )
+		},
+		{
+			Test7_1, 3, _T( "a well-formed array of values without comments" )
+		},
+		{
+			Test7_2, 3, _T( "a well-formed simple key/value pairs of values" )
+		},
+		{
+			Test7_3, 3, _T( "an array of escaped string values" )
+		},
+		{
+			Test7_4, 3, _T( "nested objects and arrays" )
+		},
+		{
+			Test7_5, 3, _T( "many errors and warnings" )
+		},
+		{
+			Test7_6, 0, _T( "read the specified JSON text file (need -f option)" )
+		},
+		{
+			Test7_7, 3, _T( "missing close object/array on EOF" )
+		},
+		{
+			Test7_8, 3, _T( "non-JSON text before and after top-level start/end chars" )
+		},
+		{ 0 },
 		
+
 		// END OF TABLE
 		{0}
 		

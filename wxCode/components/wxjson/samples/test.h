@@ -91,23 +91,21 @@ extern int Test6_2();  // write to stream a JSON array using various european ch
 //		*********** test5.cpp ****************
 //
 // family #7: test the wxJSONReader class
+extern int Test7_1();  // a well-formed array of values without comments
+extern int Test7_2();  // a well-formed simple array of values
+extern int Test7_3();  // an array of escaped string values
+extern int Test7_4();  // nested objects and arrays
+extern int Test7_5();  // many errors and warnings
+extern int Test7_6();  // read the specified JSON text file
+extern int Test7_7();  // missing close object/array on EOF
+extern int Test7_8();  // non-JSON text before and after top-level start/end chars
+
+
 
 
 
 
 /*
-
-//
-// in test5.cpp: test the wxJSONReader class (input from string)
-extern int Test4_1();   // a well-formed array of values without comments
-extern int Test4_2();  // a well-formed simple array of values
-extern int Test4_3();  // an array of escaped string values
-extern int Test4_4();  // nested objects and arrays
-extern int Test4_5();  // many errors and warnings
-extern int Test4_6();  // a complex JSON structure read from test5.json
-extern int Test4_7();  // read the specified JSON text file
-extern int Test4_8();  // missing close object/array on EOF
-extern int Test4_9();  // non-JSON text before and after top-level start/end chars
 
 //
 // in test6.cpp: test the comment related functions (writer)
@@ -135,6 +133,8 @@ extern int Test7_3();
 extern int Test7_4();
 extern int Test7_5();
 extern int Test7_6();
+
+
 
 //
 // in test9.cpp: the JSON writer in unicode mode
