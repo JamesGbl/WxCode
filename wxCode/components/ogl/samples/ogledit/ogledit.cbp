@@ -79,13 +79,7 @@
 					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)\mswd" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory=".\..\..\..\..\lib\gcc_dll\mswd" />
-					<Add directory=".\..\..\..\..\include" />
-					<Add directory="." />
-					<Add directory=".\..\..\..\..\samples" />
-					<Add directory=".\..\..\..\include" />
-					<Add directory="$(WXWIN)\lib\vc_dll\mswd" />
-					<Add directory="$(WXWIN)\include" />
+					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="libwxmsw28d_ogl_gcc_custom.dll.a" />
@@ -212,6 +206,9 @@
 			<Add directory="$(#WX.include)" />
 			<Add directory="..\..\include" />
 		</Compiler>
+		<ResourceCompiler>
+			<Add directory="$(#WX.include)" />
+		</ResourceCompiler>
 		<Linker>
 			<Add directory="$(#WX.lib)" />
 		</Linker>
