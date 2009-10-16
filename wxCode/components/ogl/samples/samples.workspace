@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="ogl">
+		<Project filename="ogledit\ogledit.cbp">
+			<Depends filename="..\build\ogl.cbp" />
+		</Project>
+		<Project filename="studio\studio.cbp" active="1">
+			<Depends filename="..\build\ogl.cbp" />
+		</Project>
+		<Project filename="..\build\ogl.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
