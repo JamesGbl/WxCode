@@ -18,14 +18,10 @@ CFG=ogl - Win32 Debug
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "ogl - Win32 DLL Unicode Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "ogl - Win32 DLL Unicode Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "ogl - Win32 DLL Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "ogl - Win32 DLL Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "ogl - Win32 Unicode Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "ogl - Win32 Unicode Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "ogl - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "ogl - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -33,39 +29,7 @@ CFG=ogl - Win32 Debug
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 
-!IF  "$(CFG)" == "ogl - Win32 DLL Unicode Release"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP BASE Intermediate_Dir "vc_mswudll\ogl"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP Intermediate_Dir "vc_mswudll\ogl"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-CPP=cl.exe
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswu" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc_mswudll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl_vc_custom.pdb" /FD /EHsc /c
-# ADD CPP /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswu" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl_vc_custom.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
-MTL=midl.exe
-# ADD BASE MTL /nologo /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /mktyplib203 /win32
-# ADD MTL /nologo /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /mktyplib203 /win32
-RSC=rc.exe
-# ADD BASE RSC /l 0x409 /i "..\..\src\ogl\..\..\..\lib\vc_dll\mswu" /i "..\..\src\ogl\..\..\..\include" /i "..\..\src\ogl\..\..\include" /d "_UNICODE" /d WXDLLNAME=wxmsw28u_ogl_vc_custom /d "WXUSINGDLL" /d "WXMAKINGDLL_OGL"
-# ADD RSC /l 0x409 /i "..\..\src\ogl\..\..\..\lib\vc_dll\mswu" /i "..\..\src\ogl\..\..\..\include" /i "..\..\src\ogl\..\..\include" /d "_UNICODE" /d WXDLLNAME=wxmsw28u_ogl_vc_custom /d "WXUSINGDLL" /d "WXMAKINGDLL_OGL"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib wxmsw28u_core.lib wxbase28u.lib /nologo /dll /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
-# SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib wxmsw28u_core.lib wxbase28u.lib /nologo /dll /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28u_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
-# SUBTRACT LINK32 /pdb:none
-
-!ELSEIF  "$(CFG)" == "ogl - Win32 DLL Unicode Debug"
+!IF  "$(CFG)" == "ogl - Win32 DLL Unicode Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -94,38 +58,6 @@ LINK32=link.exe
 # ADD BASE LINK32 wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib wxmsw28ud_core.lib wxbase28ud.lib /nologo /dll /debug /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
 # SUBTRACT BASE LINK32 /pdb:none
 # ADD LINK32 /nologo /dll /debug /machine:I386 /out:"..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl.lib" /libpath:"$(WXWIN)\lib\vc_dll"
-# SUBTRACT LINK32 /pdb:none
-
-!ELSEIF  "$(CFG)" == "ogl - Win32 DLL Release"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP BASE Intermediate_Dir "vc_mswdll\ogl"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP Intermediate_Dir "vc_mswdll\ogl"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-CPP=cl.exe
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_dll\msw" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc_mswdll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl_vc_custom.pdb" /FD /EHsc /c
-# ADD CPP /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_dll\msw" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl_vc_custom.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
-MTL=midl.exe
-# ADD BASE MTL /nologo /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /mktyplib203 /win32
-# ADD MTL /nologo /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /mktyplib203 /win32
-RSC=rc.exe
-# ADD BASE RSC /l 0x409 /i "..\..\src\ogl\..\..\..\lib\vc_dll\msw" /i "..\..\src\ogl\..\..\..\include" /i "..\..\src\ogl\..\..\include" /d WXDLLNAME=wxmsw28_ogl_vc_custom /d "WXUSINGDLL" /d "WXMAKINGDLL_OGL"
-# ADD RSC /l 0x409 /i "..\..\src\ogl\..\..\..\lib\vc_dll\msw" /i "..\..\src\ogl\..\..\..\include" /i "..\..\src\ogl\..\..\include" /d WXDLLNAME=wxmsw28_ogl_vc_custom /d "WXUSINGDLL" /d "WXMAKINGDLL_OGL"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib wxmsw28_core.lib wxbase28.lib /nologo /dll /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
-# SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib /nologo /dll /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "ogl - Win32 DLL Debug"
@@ -186,32 +118,6 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28u_ogl.lib"
 # ADD LIB32 /nologo /out:"..\lib\vc_lib\wxmsw28u_ogl.lib"
 
-!ELSEIF  "$(CFG)" == "ogl - Win32 Unicode Debug"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP BASE Intermediate_Dir "vc_mswud\ogl"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP Intermediate_Dir "vc_mswud\ogl"
-# PROP Target_Dir ""
-CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswud" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /Fp"vc_mswud\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28ud_ogl.pdb" /FD /EHsc /c
-# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswud" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28ud_ogl.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28ud_ogl.lib"
-# ADD LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28ud_ogl.lib"
-
 !ELSEIF  "$(CFG)" == "ogl - Win32 Release"
 
 # PROP BASE Use_MFC 0
@@ -238,44 +144,14 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28_ogl.lib"
 # ADD LIB32 /nologo /out:"..\lib\vc_lib\wxmsw28_ogl.lib"
 
-!ELSEIF  "$(CFG)" == "ogl - Win32 Debug"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP BASE Intermediate_Dir "vc_mswd\ogl"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP Intermediate_Dir "vc_mswd\ogl"
-# PROP Target_Dir ""
-CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswd" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /Fp"vc_mswd\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28d_ogl.pdb" /FD /EHsc /c
-# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswd" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28d_ogl.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28d_ogl.lib"
-# ADD LIB32 /nologo /out:"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28d_ogl.lib"
-
 !ENDIF 
 
 # Begin Target
 
-# Name "ogl - Win32 DLL Unicode Release"
 # Name "ogl - Win32 DLL Unicode Debug"
-# Name "ogl - Win32 DLL Release"
 # Name "ogl - Win32 DLL Debug"
 # Name "ogl - Win32 Unicode Release"
-# Name "ogl - Win32 Unicode Debug"
 # Name "ogl - Win32 Release"
-# Name "ogl - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""
