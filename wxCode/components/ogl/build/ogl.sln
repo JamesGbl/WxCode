@@ -1,13 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl_ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl_ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7} = {9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl2", "ogl_ogl2.vcproj", "{2434C5BE-C18E-50A9-AF58-999445D368C6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7} = {9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}
 	EndProjectSection
