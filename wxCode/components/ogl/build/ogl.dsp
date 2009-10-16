@@ -5,7 +5,7 @@
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=ogl - Win32 Debug
+CFG=ogl - Win32 DLL Unicode Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -14,7 +14,7 @@ CFG=ogl - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "ogl.mak" CFG="ogl - Win32 Debug"
+!MESSAGE NMAKE /f "ogl.mak" CFG="ogl - Win32 DLL Unicode Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -57,7 +57,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib wxmsw28ud_core.lib wxbase28ud.lib /nologo /dll /debug /machine:I386 /out:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl.lib" /libpath:"..\..\src\ogl\..\..\..\lib\vc_dll"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 /nologo /dll /debug /machine:I386 /out:"..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.dll" /implib:"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl.lib" /libpath:"$(WXWIN)\lib\vc_dll"
+# ADD LINK32 /nologo /dll /debug /machine:I386 /out:"..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.dll" /implib:"..\lib\vc_dll\wxmsw28ud_ogl.lib" /libpath:"$(WXWIN)\lib\vc_dll"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "ogl - Win32 DLL Debug"
@@ -101,13 +101,12 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
+# PROP Output_Dir "..\lib\vc_lib"
 # PROP Intermediate_Dir "vc_mswu\ogl"
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswu" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_UNICODE" /Fp"vc_mswu\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
-# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /D "_UNICODE" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
+# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /D "_UNICODE" /Yu"precomp.h" /Fd"..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -132,8 +131,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\msw" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /Fp"vc_msw\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
-# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /Yu"precomp.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
-# SUBTRACT CPP /nologo
+# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /Yu"precomp.h" /Fd"..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
