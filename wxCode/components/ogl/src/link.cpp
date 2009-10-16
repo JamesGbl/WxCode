@@ -2,7 +2,7 @@
 // Copyright (c) 2009 by Troels K. All rights reserved.
 // License: wxWindows
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && defined(WXMAKINGDLL_OGL)
 
 #include <wx/wx.h>
 
@@ -16,9 +16,6 @@
          #pragma comment(lib, "wxbase29u_xml.lib")
          #pragma comment(lib, "wxmsw29u_core.lib")
          #pragma comment(lib, "wxmsw29u_adv.lib")
-         #pragma comment(lib, "wxmsw29u_xrc.lib")
-         #pragma comment(lib, "wxmsw29u_html.lib")
-         #pragma comment(lib, "wxmsw29u_aui.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
@@ -32,9 +29,6 @@
          #pragma comment(lib, "wxbase29_xml.lib")
          #pragma comment(lib, "wxmsw29_core.lib")
          #pragma comment(lib, "wxmsw29_adv.lib")
-         #pragma comment(lib, "wxmsw29_xrc.lib")
-         #pragma comment(lib, "wxmsw29_html.lib")
-         #pragma comment(lib, "wxmsw29_aui.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
@@ -50,9 +44,6 @@
          #pragma comment(lib, "wxbase28u_xml.lib")
          #pragma comment(lib, "wxmsw28u_core.lib")
          #pragma comment(lib, "wxmsw28u_adv.lib")
-         #pragma comment(lib, "wxmsw28u_xrc.lib")
-         #pragma comment(lib, "wxmsw28u_html.lib")
-         #pragma comment(lib, "wxmsw28u_aui.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
@@ -63,15 +54,17 @@
          #pragma comment(lib, "wxmsw28d_core.lib")
       #else
          #pragma comment(lib, "wxbase28.lib")
-         #pragma comment(lib, "wxbase28_xml.lib")
          #pragma comment(lib, "wxmsw28_core.lib")
          #pragma comment(lib, "wxmsw28_adv.lib")
-         #pragma comment(lib, "wxmsw28_xrc.lib")
-         #pragma comment(lib, "wxmsw28_html.lib")
-         #pragma comment(lib, "wxmsw28_aui.lib")
+/*
+         #pragma comment(lib, "wxbase28.lib")
+         #pragma comment(lib, "wxmsw28_core.lib")
+         #pragma comment(lib, "wxbase28_xml.lib")
+         #pragma comment(lib, "wxmsw28_adv.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
+*/
       #endif
    #endif
 #endif
