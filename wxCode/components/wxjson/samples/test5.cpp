@@ -66,9 +66,13 @@ int Test7_1()
 	wxJSONValue root;
 	wxJSONReader reader;
 
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 	int numErrors = reader.Parse( text, &root );
+
 	// now print the JSON value that we have read
 	// note the lack of comments
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 0 )
@@ -95,9 +99,11 @@ int Test7_2()
 	);
 
 	wxString s( text );
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
+
 	wxJSONValue root;
 	wxJSONReader reader;
-
 	int numErrors = reader.Parse( text, &root );
 
 	wxInt64 i = root[_T("integer")].AsInt64();
@@ -105,6 +111,7 @@ int Test7_2()
 
 	// now print the JSON value that we have read
 	// note the lack of comments
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 	ASSERT( numErrors == 0 )
 	int numWarn = reader.GetWarningCount();
@@ -112,7 +119,7 @@ int Test7_2()
 	return 0;
 }
 
-// an array of escaped strings and objects with escaped strings
+// an array of string values that contains escaped characters
 int Test7_3()
 {
 	static const wxChar* text = 
@@ -127,15 +134,23 @@ int Test7_3()
 		"  \"string with \\b (backspace)\",\n"
 		"  {"
 		"  \"quotes\" : \"string with \\\" (quotes)\"\n"
-		"  }\n"
+		"  },\n"
+		"  \"control char (0001): \\u0001\",\n"		
+		"  \"control char (0011): \\u0011\",\n"		
+		"  \"control char (invalid): \\u0hg1\",\n"
+		"  \"control char (alpha): \\u03B1\"\n"
 		"]\n"
 	);
 
 	wxString s( text );
-	wxJSONValue root;
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 
+	wxJSONValue root;
 	wxJSONReader reader;
 	int numErrors = reader.Parse( text, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 0 )
@@ -167,10 +182,14 @@ int Test7_4()
 	);
 
 	wxString s( text );
-	wxJSONValue root;
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 
+	wxJSONValue root;
 	wxJSONReader reader;
 	int numErrors = reader.Parse( text, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 0 )
@@ -184,7 +203,7 @@ int Test7_5()
 {
 	static const wxChar* text = 
     // column
-    // 0123456789.
+    // 0123456789.123456789.123456789.12345678
    _T("{\n"                                       // (1)
       "   \"book\" :\n"                           // (2)
       "   / seems a C++ comment (forgot slash)\n" // (3) ERR: a comment?
@@ -215,10 +234,14 @@ int Test7_5()
       "\n");                                      // (20) WARN: final '}' is missing
 
 	wxString s( text );
-	wxJSONValue root;
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 
+	wxJSONValue root;
 	wxJSONReader reader;
 	int numErrors = reader.Parse( text, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 13 )
@@ -279,10 +302,14 @@ int Test7_7()
 	);
 
 	wxString s( text );
-	wxJSONValue root;
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 
+	wxJSONValue root;
 	wxJSONReader reader;
 	int numErrors = reader.Parse( s, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 0 )
@@ -315,18 +342,47 @@ int Test7_8()
 	);
 
 	wxString s( text );
-	wxJSONValue root;
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
 
+	wxJSONValue root;
 	wxJSONReader reader;
 	int numErrors = reader.Parse( s, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
 	ASSERT( numErrors == 0 )
 	int numWarn = reader.GetWarningCount();
-	ASSERT( numWarn == 0 )
+	ASSERT( numWarn == 0 );
 	return 0;
 }
 
+
+int Test7_9()
+{
+	// missing close array char
+	static const wxChar* text = 
+		_T("[\n"
+		"   \"book\"\n"
+		);
+	
+	wxString s( text );
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
+
+	wxJSONValue root;
+	wxJSONReader reader;
+	int numErrors = reader.Parse( s, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
+
+	ASSERT( numErrors == 0 )
+	int numWarn = reader.GetWarningCount();
+	ASSERT( numWarn == 1 )
+	return 0;
+}
 
 
 /*

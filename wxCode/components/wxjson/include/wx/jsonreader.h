@@ -89,8 +89,8 @@ protected:
 	int  ReadString(  wxInputStream& is, wxJSONValue& val );
 	int  ReadToken(  wxInputStream& is, int ch, wxString& s );
 	int  ReadValue(  wxInputStream& is, int ch, wxJSONValue& val );
-	int  ReadUnicode(  wxInputStream& is, long int& hex );
-	int  AppendUnicodeSequence( wxMemoryBuffer& s, int hex );
+	int  ReadUES(  wxInputStream& is, char* uesBuffer );
+	int  AppendUES( wxMemoryBuffer& utf8Buff, const char* uesBuffer );
 	int  NumBytes( char ch );
 
 	//! Flag that control the parser behaviour,

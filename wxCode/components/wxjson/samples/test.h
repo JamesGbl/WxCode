@@ -99,6 +99,7 @@ extern int Test7_5();  // many errors and warnings
 extern int Test7_6();  // read the specified JSON text file
 extern int Test7_7();  // missing close object/array on EOF
 extern int Test7_8();  // non-JSON text before and after top-level start/end chars
+extern int Test7_9();  // missing close array on EOF
 
 
 

@@ -444,6 +444,10 @@ wxJSONReader::ReadChar( wxInputStream& is )
 	}
 	
 	unsigned char ch = is.GetC();
+	size_t last = is.LastRead();	// returns ZERO if EOF
+	if ( last == 0 )	{
+		return -1;
+	}
 
 	// the function also converts CR in LF. only LF is returned
 	// in the case of CR+LF
@@ -478,11 +482,12 @@ wxJSONReader::ReadChar( wxInputStream& is )
 int
 wxJSONReader::PeekChar( wxInputStream& is )
 {
-	unsigned char ch = -1;	// EOF condituin
+	int ch = -1; unsigned char c;
 	if ( !is.Eof())	{
-		ch = is.Peek();
+		c = is.Peek();
+		ch = c;
 	}
-	return (int) ch;
+	return ch;
 }
 
 
@@ -1044,13 +1049,13 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 {
 	// the char last read is the opening qoutes (")
 
-	long int hex;
-	int ch = ReadChar( is );
-	unsigned char c;
 	wxMemoryBuffer utf8Buff;
+	char ues[8];		// stores a Unicode Escaped Esquence: \uXXXX
 	
-	while ( ch > 0 ) {
-		c = (unsigned char) ch;
+	int ch = 0;
+	while ( ch >= 0 ) {
+		ch = ReadChar( is );
+		unsigned char c = (unsigned char) ch;
 		if ( ch == '\\' )  {    // an escape sequence
 			ch = ReadChar( is );
 			switch ( ch )  {
@@ -1081,14 +1086,12 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 					utf8Buff.AppendByte( '\f' );
 					break;
 				case 'u' :
-					ch = ReadUnicode( is, hex );
-					if ( hex < 0 ) {
-						AddError( _T( "unicode sequence must contain 4 hex digits"));
+					ch = ReadUES( is, ues );
+					if ( ch < 0 ) {		// if EOF, returns
+						return ch;
 					}
-					else  {
-						// append the escaped character to the UTF8 buffer
-						AppendUnicodeSequence( utf8Buff, hex );
-					}
+					// append the escaped character to the UTF8 buffer
+					AppendUES( utf8Buff, ues );
 					// many thanks to Bryan Ashby who discovered this bug
 					continue;
 					// break;
@@ -1104,49 +1107,41 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 			}
 			utf8Buff.AppendByte( c );
 		}
-		// read the next char
-		ch = ReadChar( is );
 	}
 
-
-	// now convert the temporary UTF-8 buffer to a wxString object.
-	// note that in ANSI builds the UTF8 buffer may be inconvertible to the
-	// current locale due to the presence of unrepresentable characters.
-	// in this case, the UTF-8 buffer is copied to the string object
-  	// This is incompatible with the old 1.0 behaviour which, instead,
-  	// stored the unicode escape sequence of unrepresentable chars.
-  	// This old behaviour is incorrect because it uses only 4 hex digits
-  	// for representing unicode code-points thus only characters in the
-  	// first plane (the BMP) were represented.
-	wxString s;
-	
-	// we check if the buffer is convertible.
-	// This is because wxString::FromUTF8() does not check validity of the
-	// UTF-8 buffer in release mode
-	
-	size_t convLen = wxConvUTF8.ToWChar( 0,	// wchar_t destination
+	// now convert the temporary UTF-8 buffer to a wxString object in one step.
+	// first we check that the UTF-8 buffer is correct, i.e. it contains valid
+	// UTF-8 code points.
+	// this works in both ANSI and Unicode builds.
+	size_t convLen = wxConvUTF8.ToWChar( 0,		// wchar_t destination
 						0,	// size_t  destLenght 
 			(const char*) utf8Buff.GetData(),	// char_t  source
-				utf8Buff.GetDataLen());	// size_t  sourceLenght
-	// check convLen
-#if defined( wxJSON_USE_UNICODE )
-	// in unicode, a failed conversion means an error in the UTF-8 stream
-	// the string is set to "<UTF-8 stream not valid>" and an error is
-	// reported
+				utf8Buff.GetDataLen());		// size_t  sourceLenght
+
+	wxString s;
 	if ( convLen == wxCONV_FAILED )	{
 		AddError( _T( "String value: the UTF-8 stream is invalid"));
 		s.append( _T( "<UTF-8 stream not valid>"));
 	}
 	else	{
+#if defined( wxJSON_USE_UNICODE )
+		// in Unicode just convert to wxString
 		s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
-	}
 #else
-	// in ANSI builds, a CONV_FAILED error means either that the UTF-8 is not
-	// valid or that it contains characters not representable in the current
-	// locale
-
+		// in ANSI, the conversion may fail: an empty string is returned
+		// in this case, the UTF-8 buffer is copied to the wxString object
+	  	// This is incompatible with the old 1.0 behaviour which, instead,
+	  	// stored the unicode escape sequence of unrepresentable chars.
+	  	// This old behaviour is incorrect because it uses only 4 hex digits
+	  	// for representing unicode code-points thus only characters in the
+	  	// first plane (the BMP) were represented.
+		s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
+		if ( s.IsEmpty() )	{
+			s = wxString::From8BitData( (const char*) utf8Buff.GetData(),
+								utf8Buff.GetDataLen());
+		}		
 #endif
-  
+ 	}
 	::wxLogTrace( traceMask, _T("(%s) line=%d col=%d"),
 			 __PRETTY_FUNCTION__, m_lineNo, m_colNo );
 	::wxLogTrace( traceMask, _T("(%s) string read=%s"),
@@ -1176,7 +1171,7 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 	val.SetLineNo( m_lineNo );
 
 	// read the next char after the closing quotes and returns it
-	if ( ch > 0 )  {
+	if ( ch >= 0 )  {
 		ch = ReadChar( is );
 	}
 	return ch;
@@ -1406,18 +1401,15 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
 //! Read a 4-hex-digit unicode character.
 /*!
  The function is called by ReadString() when the \b \\u sequence is
- encontered; the sequence introduces a control character in thr form:
+ encontered; the sequence introduces a control character in the form:
  \code
  	\uXXXX
  \endcode
  where XXXX is a four-digit hex code..
- The function reads four chars from the input text by calling ReadChar()
+ The function reads four chars from the input UTF8 stream by calling ReadChar()
  four times: if -1( EOF) is encontered before reading four chars, -1 is
- also returned and no conversion takes place.
- The function tries to convert the 4-hex-digit sequence in an integer which
- is returned in the \c hex parameter.
- If the string cannot be converted, the function stores -1 in \c hex
- and reports an error.
+ also returned.
+ The function stores the 4 hexadecimal digits in the \c uesBuffer parameter.
 
  Returns the character after the hex sequence or -1 if EOF or if the
  four characters cannot be converted to a hex number.
@@ -1427,27 +1419,68 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
  unicode characters in the BMP stored in such a way.
 */
 int
-wxJSONReader::ReadUnicode( wxInputStream& is, long int& hex )
+wxJSONReader::ReadUES( wxInputStream& is, char* uesBuffer )
 {
-	char buff[8];
 	int ch;
 	for ( int i = 0; i < 4; i++ )  {
 		ch = ReadChar( is );
 		if ( ch < 0 )  {
 			return ch;
 		}
-		buff[i] = (unsigned char) ch;
+		uesBuffer[i] = (unsigned char) ch;
 	}
-	buff[4] = 0;
+	uesBuffer[4] = 0;	// makes a ASCIIZ string
 
-	int r = sscanf( buff, "%lx", &hex );	// r is the assigned items
-	if ( r == EOF  )  {	
-		hex = -1;
+	return 0;
+}
+
+
+//! The function appends a Unice Escaped Sequence to the temporary UTF8 buffer
+/*!
+ This function is called by \c ReadString() when a \e unicode \e escaped
+ \e sequence is read from the input text as for example:
+
+ \code
+  \u0001
+ \endcode
+
+ that represent a control character.
+ The \c uesBuffer parameter contains the 4 hexadecimal digits that are
+ converted to a wchar_t character which is then converted to UTF-8.
+ 
+ If the conversion from hexadecimal fails, the function does not
+ store the character in the UTF-8 buffer and an error is reported.
+ The function is the same in ANSI and Unicode.
+ Returns -1 if the buffer does not contain valid hex digits.
+ sequence.
+ On success returns ZERO.
+*/
+int
+wxJSONReader::AppendUES( wxMemoryBuffer& utf8Buff, const char* uesBuffer )
+{
+	unsigned long l;
+	int r = sscanf( uesBuffer, "%lx", &l );	// r is the assigned items
+	if ( r != 1  )  {
+		AddError( _T( "Invalid Unicode Escaped Sequence"));
+		return -1;
 	}
-	::wxLogTrace( traceMask, _T("(%s) unicode sequence=%s code=%d"),
-			  __PRETTY_FUNCTION__, buff, (int) hex );
-	ch = ReadChar( is );
-	return ch;
+	::wxLogTrace( traceMask, _T("(%s) unicode sequence=%s code=%ld"),
+			  __PRETTY_FUNCTION__, uesBuffer, l );
+
+	wchar_t ch = (wchar_t) l;
+	char buffer[16];
+	size_t len = wxConvUTF8.FromWChar( buffer, 10, &ch, 1 ); 
+	
+	// seems that the wxMBConv classes always appends a NULL byte to
+	// the converted buffer
+	if ( len > 1 )	{
+		len = len - 1;
+	}
+	utf8Buff.AppendData( buffer, len );
+
+	// sould never fail
+	wxASSERT( len != wxCONV_FAILED );
+	return 0;
 }
 
 //! Store the comment string in the value it refers to.
@@ -1632,48 +1665,6 @@ wxJSONReader::UTF8NumBytes( char ch )
 }
 
 
-//! The function appends the wide character to the UTF8 buffer
-/*!
- This function is called by \c ReadString() when a \e unicode \e escaped
- \e sequence is read from the input text as for example:
-
- \code
-  \u0001
- \endcode
-
- that represent a control character.
- 
- In unicode mode, the function converts the wide character to UTF-8
- and appends it to the buffer.
- In ANSI mode, the function trie to convert the wide character code to the
- corresponding character using the locale character set.
- If the wide char cannot be converted, the function appends the
- \e unicode \e escape \e sequence to the string \c s. 
- Returns ZERO if the character was not converted to a unicode escape
- sequence.
-*/
-int
-wxJSONReader::AppendUnicodeSequence( wxMemoryBuffer& utf8Buff, int hex )
-{
-	int r = 0;
-
-#if defined( wxJSON_USE_UNICODE )
-	// s.append( 1, (wxChar) hex );
- #else
-	wchar_t ch = hex;
-	char buffer[10];
-	size_t len = wxConvLibc.FromWChar( buffer, 10, &ch, 1 ); 
-	if ( len != wxCONV_FAILED )  {
-		//s.append( 1, buffer[0] );
-	}
-	else  {
-		::wxSnprintf( buffer, 10, _T("\\u%04X"), hex );
-		//s.append( buffer );
-		r = 1;
-	}
-#endif
-	return r;
-}
 
 #if defined( wxJSON_64BIT_INT )
 //! Converts a decimal string to a 64-bit signed integer

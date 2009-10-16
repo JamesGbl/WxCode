@@ -346,7 +346,9 @@ int main( int argc, char* argv[] )
 		{
 			Test7_8, 3, _T( "non-JSON text before and after top-level start/end chars" )
 		},
-		{ 0 },
+		{
+			Test7_9, 3, _T( "missing close array character" )
+		},
 		
 
 		// END OF TABLE

@@ -590,6 +590,15 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 	// get the UTF-8 buffer and its length
 	wxCharBuffer cb = str.ToUTF8();
 	const char* utf8Buff = cb.data();
+	
+	// NOTE: in ANSI builds this conversion mai fail (see samples/test5.cpp,
+	// test 7.3) although I do not know why
+	if ( utf8Buff == 0 )	{
+		const char* err = "<wxJSONWriter::WriteStringValue(): error converting the "
+					"string to a UTF8 buffer>";
+		os.Write( err, strlen( err ));
+		return 0;
+	}
 
 	size_t len = strlen( utf8Buff );
 	int lastChar = 0;
