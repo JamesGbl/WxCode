@@ -289,7 +289,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_USRDLL,DLL_EXPORTS,_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_USRDLL,DLL_EXPORTS,_DEBUG,__WXDEBUG__,WXUSINGDLL,WXMAKINGDLL_OGL"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
@@ -319,7 +319,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXDLLNAME=wxmsw28ud_ogl_vc_custom,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXDLLNAME=wxmsw28ud_ogl_vc_custom,WXUSINGDLL,WXMAKINGDLL_OGL"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include"
 			/>

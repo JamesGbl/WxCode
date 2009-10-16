@@ -38,7 +38,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_UNICODE,_WINDOWS,NOPCH"
+				PreprocessorDefinitions="_UNICODE"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_WINDOWS,NOPCH"
+				PreprocessorDefinitions=""
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
@@ -232,7 +232,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL,_WINDOWS,NOPCH"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
@@ -332,7 +332,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL,_WINDOWS,NOPCH"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
@@ -363,7 +363,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include"
 			/>

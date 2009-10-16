@@ -44,11 +44,11 @@ RSC=rc.exe
 # PROP Intermediate_Dir "vc6_mswuddll\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc6_dll\mswud" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswuddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc6_dll\mswud" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "NOPCH" /Fd"vc6_mswuddll\studio.pdb" /FD /GZ /EHsc /c
 # ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc6_mswuddll\studio.pdb" /FD /GZ /EHsc /c
 # SUBTRACT CPP /nologo
-# ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
+# ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "NOPCH" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "NOPCH" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i ".\..\..\..\..\lib\vc6_dll\mswud" /i ".\..\..\..\..\include" /i "." /i ".\..\..\..\..\samples" /i ".\..\..\..\include" /d "_DEBUG" /d "__WXMSW__" /d "__WXDEBUG__" /d "_UNICODE" /d "WXUSINGDLL" /d "_WINDOWS" /d "NOPCH"
 # ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /d "_DEBUG" /d "__WXDEBUG__" /d "_UNICODE" /d "WXUSINGDLL"
 BSC32=bscmake.exe
@@ -71,11 +71,11 @@ LINK32=link.exe
 # PROP Intermediate_Dir "vc6_mswddll\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc6_dll\mswd" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc6_dll\mswd" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "NOPCH" /Fd"vc6_mswddll\studio.pdb" /FD /GZ /EHsc /c
 # ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc6_mswddll\studio.pdb" /FD /GZ /EHsc /c
 # SUBTRACT CPP /nologo
-# ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
+# ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "NOPCH" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "NOPCH" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i ".\..\..\..\..\lib\vc6_dll\mswd" /i ".\..\..\..\..\include" /i "." /i ".\..\..\..\..\samples" /i ".\..\..\..\include" /d "_DEBUG" /d "__WXMSW__" /d "__WXDEBUG__" /d "WXUSINGDLL" /d "_WINDOWS" /d "NOPCH"
 # ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /d "_DEBUG" /d "__WXDEBUG__" /d "WXUSINGDLL"
 BSC32=bscmake.exe
@@ -98,11 +98,11 @@ LINK32=link.exe
 # PROP Intermediate_Dir "vc6_mswu\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc6_lib\mswu" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswu\studio.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc6_lib\mswu" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_UNICODE" /D "NOPCH" /Fd"vc6_mswu\studio.pdb" /FD /EHsc /c
 # ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\..\include" /D "_UNICODE" /Yu"precomp.h" /Fd"vc6_mswu\studio.pdb" /FD /EHsc /c
 # SUBTRACT CPP /nologo
-# ADD BASE MTL /nologo /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
-# ADD MTL /nologo /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
+# ADD BASE MTL /nologo /D "_UNICODE" /D "NOPCH" /mktyplib203 /win32
+# ADD MTL /nologo /D "_UNICODE" /D "NOPCH" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i ".\..\..\..\..\lib\vc6_lib\mswu" /i ".\..\..\..\..\include" /i "." /i ".\..\..\..\..\samples" /i ".\..\..\..\include" /d "__WXMSW__" /d "_UNICODE" /d "_WINDOWS" /d "NOPCH"
 # ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswu" /i "$(WXWIN)\include" /d "_UNICODE"
 BSC32=bscmake.exe
@@ -125,11 +125,11 @@ LINK32=link.exe
 # PROP Intermediate_Dir "vc6_msw\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc6_lib\msw" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_msw\studio.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc6_lib\msw" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "NOPCH" /Fd"vc6_msw\studio.pdb" /FD /EHsc /c
 # ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\..\include" /Yu"precomp.h" /Fd"vc6_msw\studio.pdb" /FD /EHsc /c
 # SUBTRACT CPP /nologo
-# ADD BASE MTL /nologo /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
-# ADD MTL /nologo /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
+# ADD BASE MTL /nologo /D "NOPCH" /mktyplib203 /win32
+# ADD MTL /nologo /D "NOPCH" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i ".\..\..\..\..\lib\vc6_lib\msw" /i ".\..\..\..\..\include" /i "." /i ".\..\..\..\..\samples" /i ".\..\..\..\include" /d "__WXMSW__" /d "_WINDOWS" /d "NOPCH"
 # ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\msw" /i "$(WXWIN)\include"
 BSC32=bscmake.exe
