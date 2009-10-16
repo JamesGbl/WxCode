@@ -9,19 +9,8 @@
 // Licence:
 /////////////////////////////////////////////////////////////////////////////
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include "precomp.h"
 
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#include "wx/mdi.h"
-#endif
-
-#include "wx/laywin.h"
 #include "studio.h"
 #include "project.h"
 
@@ -85,4 +74,3 @@ void csApp::FillProjectTreeCtrl()
     tree.InsertItem(level1, "project2", 1, 1);
 #endif
 }
-

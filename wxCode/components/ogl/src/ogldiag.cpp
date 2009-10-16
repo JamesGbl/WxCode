@@ -9,28 +9,11 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-// For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
+#include "precomp.h"
 
 #if wxUSE_PROLOGIO
 #include "wx/deprecated/wxexpr.h"
 #endif
-
-#ifdef new
-#undef new
-#endif
-
-#include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
 
 #include "wx/ogl/ogl.h"
 

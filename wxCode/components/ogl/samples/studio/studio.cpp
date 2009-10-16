@@ -9,23 +9,9 @@
 // Licence:
 /////////////////////////////////////////////////////////////////////////////
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#include "wx/mdi.h"
-#endif
+#include "precomp.h"
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
-
-#include "wx/config.h"
-#include "wx/laywin.h"
-#include "wx/helpwin.h"
 
 #include "studio.h"
 #include "view.h"
@@ -499,4 +485,3 @@ bool csApp::WriteOptions()
 
     return true;
 }
-
