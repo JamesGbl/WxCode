@@ -253,7 +253,7 @@ csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame
 
 void csMDIChildFrame::OnActivate(wxActivateEvent& event)
 {
-    wxDocMDIChildFrame::OnActivate(event);
+    event.Skip();
 /*
     wxSashLayoutWindow* win = wxGetApp().GetDiagramPaletteSashWindow();
     if (!win)
