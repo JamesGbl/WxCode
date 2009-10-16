@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="ogl"
-	ProjectGUID="{E9A96419-DED5-4460-ABC2-889EF2266F8B}"
+	Name="studio"
+	ProjectGUID="{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -15,10 +15,110 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
+			Name="DLL Unicode Debug|Win32"
+			OutputDirectory=".\vc9_mswuddll"
+			IntermediateDirectory=".\vc9_mswuddll\studio"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL,_WINDOWS,NOPCH"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\vc9_mswuddll/studio.tlb"
+				HeaderFileName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/EHsc "
+				Optimization="0"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud,$(WXWIN)\include,..\..\include"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile=".\vc9_mswuddll\studio/studio.pch"
+				AssemblerListingLocation=".\vc9_mswuddll\studio/"
+				ObjectFile=".\vc9_mswuddll\studio/"
+				ProgramDataBaseFileName="vc9_mswuddll\studio.pdb"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				OutputFile=".\vc9_mswuddll/studio.exe"
+				LinkIncremental="2"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile=".\vc9_mswuddll/studio.pdb"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile=".\vc9_mswuddll/studio.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="DLL Debug|Win32"
-			OutputDirectory=".\..\lib\vc9_dll"
-			IntermediateDirectory=".\vc9_mswddll\ogl"
-			ConfigurationType="2"
+			OutputDirectory=".\vc9_mswddll"
+			IntermediateDirectory=".\vc9_mswddll\studio"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -37,28 +137,29 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_USRDLL,DLL_EXPORTS,_DEBUG,__WXDEBUG__,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL,_WINDOWS,NOPCH"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\lib\vc9_dll/ogl.tlb"
+				TypeLibraryName=".\vc9_mswddll/studio.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd,$(WXWIN)\include,..\include"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;_DEBUG;__WXDEBUG__;WXUSINGDLL;WXMAKINGDLL_OGL"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd,$(WXWIN)\include,..\include,..\..\include"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_mswddll\ogl/ogl.pch"
-				AssemblerListingLocation=".\vc9_mswddll\ogl/"
-				ObjectFile=".\vc9_mswddll\ogl/"
-				ProgramDataBaseFileName="..\lib\vc9_dll\wxmsw28d_ogl_vc_custom.pdb"
+				PrecompiledHeaderFile=".\vc9_mswddll\studio/studio.pch"
+				AssemblerListingLocation=".\vc9_mswddll\studio/"
+				ObjectFile=".\vc9_mswddll\studio/"
+				ProgramDataBaseFileName="vc9_mswddll\studio.pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -67,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXDLLNAME=wxmsw28d_ogl_vc_custom,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include"
 			/>
@@ -77,15 +178,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="..\lib\vc9_dll\wxmsw28d_ogl_vc_custom.dll"
+				OutputFile=".\vc9_mswddll/studio.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\..\lib\vc9_dll"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\..\lib\vc9_dll/wxmsw28d_ogl_vc_custom.pdb"
+				ProgramDatabaseFile=".\vc9_mswddll/studio.pdb"
+				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\lib\vc9_dll\wxmsw28d_ogl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -100,7 +201,103 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\..\lib\vc9_dll/ogl.bsc"
+				OutputFile=".\vc9_mswddll/studio.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\vc9_msw"
+			IntermediateDirectory=".\vc9_msw\studio"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_WINDOWS,NOPCH"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\vc9_msw/studio.tlb"
+				HeaderFileName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/EHsc "
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\..\include"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile=".\vc9_msw\studio/studio.pch"
+				AssemblerListingLocation=".\vc9_msw\studio/"
+				ObjectFile=".\vc9_msw\studio/"
+				ProgramDataBaseFileName="vc9_msw\studio.pdb"
+				WarningLevel="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
+				OutputFile=".\vc9_msw/studio.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
+				ProgramDatabaseFile=".\vc9_msw/studio.pdb"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile=".\vc9_msw/studio.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -114,9 +311,9 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory=".\..\lib\vc9_lib"
-			IntermediateDirectory=".\vc9_mswu\ogl"
-			ConfigurationType="4"
+			OutputDirectory=".\vc9_mswu"
+			IntermediateDirectory=".\vc9_mswu\studio"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -136,208 +333,55 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/EHsc "
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include"
-				PreprocessorDefinitions="_LIB"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_mswu\ogl/ogl.pch"
-				AssemblerListingLocation=".\vc9_mswu\ogl/"
-				ObjectFile=".\vc9_mswu\ogl/"
-				ProgramDataBaseFileName="..\lib\vc9_lib\wxmsw28u_ogl.pdb"
-				WarningLevel="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc9_lib\wxmsw28u_ogl.lib"
-				SuppressStartupBanner="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\..\lib\vc9_lib/ogl.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory=".\..\lib\vc9_lib"
-			IntermediateDirectory=".\vc9_msw\ogl"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/EHsc "
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\include"
-				PreprocessorDefinitions="_LIB"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_msw\ogl/ogl.pch"
-				AssemblerListingLocation=".\vc9_msw\ogl/"
-				ObjectFile=".\vc9_msw\ogl/"
-				ProgramDataBaseFileName="..\lib\vc9_lib\wxmsw28_ogl.pdb"
-				WarningLevel="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc9_lib\wxmsw28_ogl.lib"
-				SuppressStartupBanner="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\..\lib\vc9_lib/ogl.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DLL Unicode Debug|Win32"
-			OutputDirectory=".\..\lib\vc9_dll"
-			IntermediateDirectory=".\vc9_mswuddll\ogl"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_USRDLL,DLL_EXPORTS,_DEBUG,__WXDEBUG__,_UNICODE,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_UNICODE,_WINDOWS,NOPCH"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\lib\vc9_dll/ogl.tlb"
+				TypeLibraryName=".\vc9_mswu/studio.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
-				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud,$(WXWIN)\include,..\include"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;_DEBUG;__WXDEBUG__;WXUSINGDLL;WXMAKINGDLL_OGL"
-				MinimalRebuild="true"
-				RuntimeLibrary="3"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\..\include"
+				PreprocessorDefinitions="_UNICODE;UNICODE"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_mswuddll\ogl/ogl.pch"
-				AssemblerListingLocation=".\vc9_mswuddll\ogl/"
-				ObjectFile=".\vc9_mswuddll\ogl/"
-				ProgramDataBaseFileName="..\lib\vc9_dll\wxmsw28ud_ogl_vc_custom.pdb"
+				PrecompiledHeaderFile=".\vc9_mswu\studio/studio.pch"
+				AssemblerListingLocation=".\vc9_mswu\studio/"
+				ObjectFile=".\vc9_mswu\studio/"
+				ProgramDataBaseFileName="vc9_mswu\studio.pdb"
 				WarningLevel="4"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,_UNICODE,WXDLLNAME=wxmsw28ud_ogl_vc_custom,WXUSINGDLL,WXMAKINGDLL_OGL"
+				PreprocessorDefinitions="_UNICODE"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="..\lib\vc9_dll\wxmsw28ud_ogl_vc_custom.dll"
-				LinkIncremental="2"
+				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
+				OutputFile=".\vc9_mswu/studio.exe"
+				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\..\lib\vc9_dll/wxmsw28ud_ogl_vc_custom.pdb"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
+				ProgramDatabaseFile=".\vc9_mswu/studio.pdb"
+				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\lib\vc9_dll\wxmsw28ud_ogl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -352,7 +396,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\..\lib\vc9_dll/ogl.bsc"
+				OutputFile=".\vc9_mswu/studio.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -372,10 +416,10 @@
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\src\basic.cpp"
+				RelativePath="cspalette.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -384,7 +428,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -398,11 +442,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -412,10 +455,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\basic2.cpp"
+				RelativePath="csprint.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -424,7 +467,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -438,11 +481,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -452,10 +494,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\bmpshape.cpp"
+				RelativePath="dialogs.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -464,7 +506,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -478,11 +520,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -492,10 +533,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\canvas.cpp"
+				RelativePath="doc.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -504,7 +545,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -518,29 +559,6 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\composit.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -552,190 +570,12 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\constrnt.cpp"
+				RelativePath="link.cpp"
 				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\divided.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\drawn.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\lines.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\link.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -745,7 +585,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -760,12 +600,11 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -776,10 +615,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\mfutils.cpp"
+				RelativePath="mainfrm.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -788,7 +627,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -802,11 +641,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -816,10 +654,53 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\ogldiag.cpp"
+				RelativePath="precomp.cpp"
 				>
 				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="project.cpp"
+				>
+				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -828,7 +709,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -842,11 +723,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -856,10 +736,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\oglmisc.cpp"
+				RelativePath="shapes.cpp"
 				>
 				<FileConfiguration
-					Name="DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -868,7 +748,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="DLL Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -882,11 +762,10 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
+					Name="Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -896,8 +775,17 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\precomp.cpp"
+				RelativePath="studio.cpp"
 				>
+				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="DLL Debug|Win32"
 					>
@@ -905,7 +793,14 @@
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -915,7 +810,67 @@
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="studio.rc"
+				>
+				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="symbols.cpp"
+				>
+				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -924,10 +879,21 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="view.cpp"
+				>
 				<FileConfiguration
 					Name="DLL Unicode Debug|Win32"
 					>
@@ -935,7 +901,32 @@
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
