@@ -1,0 +1,136 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl_ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl", "ogl_ogl.vcproj", "{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7} = {9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogl2", "ogl_ogl2.vcproj", "{2434C5BE-C18E-50A9-AF58-999445D368C6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7} = {9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		DLL Unicode Debug Monolithic|Win32 = DLL Unicode Debug Monolithic|Win32
+		DLL Unicode Debug Multilib|Win32 = DLL Unicode Debug Multilib|Win32
+		DLL Unicode Release Monolithic|Win32 = DLL Unicode Release Monolithic|Win32
+		DLL Unicode Release Multilib|Win32 = DLL Unicode Release Multilib|Win32
+		DLL ANSI Debug Monolithic|Win32 = DLL ANSI Debug Monolithic|Win32
+		DLL ANSI Debug Multilib|Win32 = DLL ANSI Debug Multilib|Win32
+		DLL ANSI Release Monolithic|Win32 = DLL ANSI Release Monolithic|Win32
+		DLL ANSI Release Multilib|Win32 = DLL ANSI Release Multilib|Win32
+		Static Unicode Debug Monolithic|Win32 = Static Unicode Debug Monolithic|Win32
+		Static Unicode Debug Multilib|Win32 = Static Unicode Debug Multilib|Win32
+		Static Unicode Release Monolithic|Win32 = Static Unicode Release Monolithic|Win32
+		Static Unicode Release Multilib|Win32 = Static Unicode Release Multilib|Win32
+		Static ANSI Debug Monolithic|Win32 = Static ANSI Debug Monolithic|Win32
+		Static ANSI Debug Multilib|Win32 = Static ANSI Debug Multilib|Win32
+		Static ANSI Release Monolithic|Win32 = Static ANSI Release Monolithic|Win32
+		Static ANSI Release Multilib|Win32 = Static ANSI Release Multilib|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Monolithic|Win32.ActiveCfg = DLL Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Monolithic|Win32.Build.0 = DLL Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Multilib|Win32.ActiveCfg = DLL Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Multilib|Win32.Build.0 = DLL Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Monolithic|Win32.ActiveCfg = DLL Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Monolithic|Win32.Build.0 = DLL Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Multilib|Win32.ActiveCfg = DLL Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Multilib|Win32.Build.0 = DLL Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Monolithic|Win32.ActiveCfg = DLL ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Monolithic|Win32.Build.0 = DLL ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Multilib|Win32.ActiveCfg = DLL ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Multilib|Win32.Build.0 = DLL ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Monolithic|Win32.ActiveCfg = DLL ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Monolithic|Win32.Build.0 = DLL ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Multilib|Win32.ActiveCfg = DLL ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Multilib|Win32.Build.0 = DLL ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Monolithic|Win32.ActiveCfg = Static Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Monolithic|Win32.Build.0 = Static Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Multilib|Win32.ActiveCfg = Static Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Multilib|Win32.Build.0 = Static Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Monolithic|Win32.ActiveCfg = Static Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Monolithic|Win32.Build.0 = Static Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Multilib|Win32.ActiveCfg = Static Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Multilib|Win32.Build.0 = Static Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Monolithic|Win32.ActiveCfg = Static ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Monolithic|Win32.Build.0 = Static ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Multilib|Win32.ActiveCfg = Static ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Multilib|Win32.Build.0 = Static ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Monolithic|Win32.ActiveCfg = Static ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Monolithic|Win32.Build.0 = Static ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Multilib|Win32.ActiveCfg = Static ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Multilib|Win32.Build.0 = Static ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Monolithic|Win32.ActiveCfg = DLL Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Monolithic|Win32.Build.0 = DLL Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Multilib|Win32.ActiveCfg = DLL Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Debug Multilib|Win32.Build.0 = DLL Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Monolithic|Win32.ActiveCfg = DLL Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Monolithic|Win32.Build.0 = DLL Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Multilib|Win32.ActiveCfg = DLL Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL Unicode Release Multilib|Win32.Build.0 = DLL Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Monolithic|Win32.ActiveCfg = DLL ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Monolithic|Win32.Build.0 = DLL ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Multilib|Win32.ActiveCfg = DLL ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Debug Multilib|Win32.Build.0 = DLL ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Monolithic|Win32.ActiveCfg = DLL ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Monolithic|Win32.Build.0 = DLL ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Multilib|Win32.ActiveCfg = DLL ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.DLL ANSI Release Multilib|Win32.Build.0 = DLL ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Monolithic|Win32.ActiveCfg = Static Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Monolithic|Win32.Build.0 = Static Unicode Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Multilib|Win32.ActiveCfg = Static Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Debug Multilib|Win32.Build.0 = Static Unicode Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Monolithic|Win32.ActiveCfg = Static Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Monolithic|Win32.Build.0 = Static Unicode Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Multilib|Win32.ActiveCfg = Static Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static Unicode Release Multilib|Win32.Build.0 = Static Unicode Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Monolithic|Win32.ActiveCfg = Static ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Monolithic|Win32.Build.0 = Static ANSI Debug Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Multilib|Win32.ActiveCfg = Static ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Debug Multilib|Win32.Build.0 = Static ANSI Debug Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Monolithic|Win32.ActiveCfg = Static ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Monolithic|Win32.Build.0 = Static ANSI Release Monolithic|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Multilib|Win32.ActiveCfg = Static ANSI Release Multilib|Win32
+		{9CECBC02-79A8-5642-8C1F-8CBE7DC6CEF7}.Static ANSI Release Multilib|Win32.Build.0 = Static ANSI Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Debug Monolithic|Win32.ActiveCfg = DLL Unicode Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Debug Monolithic|Win32.Build.0 = DLL Unicode Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Debug Multilib|Win32.ActiveCfg = DLL Unicode Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Debug Multilib|Win32.Build.0 = DLL Unicode Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Release Monolithic|Win32.ActiveCfg = DLL Unicode Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Release Monolithic|Win32.Build.0 = DLL Unicode Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Release Multilib|Win32.ActiveCfg = DLL Unicode Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL Unicode Release Multilib|Win32.Build.0 = DLL Unicode Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Debug Monolithic|Win32.ActiveCfg = DLL ANSI Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Debug Monolithic|Win32.Build.0 = DLL ANSI Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Debug Multilib|Win32.ActiveCfg = DLL ANSI Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Debug Multilib|Win32.Build.0 = DLL ANSI Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Release Monolithic|Win32.ActiveCfg = DLL ANSI Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Release Monolithic|Win32.Build.0 = DLL ANSI Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Release Multilib|Win32.ActiveCfg = DLL ANSI Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.DLL ANSI Release Multilib|Win32.Build.0 = DLL ANSI Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Debug Monolithic|Win32.ActiveCfg = Static Unicode Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Debug Monolithic|Win32.Build.0 = Static Unicode Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Debug Multilib|Win32.ActiveCfg = Static Unicode Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Debug Multilib|Win32.Build.0 = Static Unicode Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Release Monolithic|Win32.ActiveCfg = Static Unicode Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Release Monolithic|Win32.Build.0 = Static Unicode Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Release Multilib|Win32.ActiveCfg = Static Unicode Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static Unicode Release Multilib|Win32.Build.0 = Static Unicode Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Debug Monolithic|Win32.ActiveCfg = Static ANSI Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Debug Monolithic|Win32.Build.0 = Static ANSI Debug Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Debug Multilib|Win32.ActiveCfg = Static ANSI Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Debug Multilib|Win32.Build.0 = Static ANSI Debug Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Release Monolithic|Win32.ActiveCfg = Static ANSI Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Release Monolithic|Win32.Build.0 = Static ANSI Release Monolithic|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Release Multilib|Win32.ActiveCfg = Static ANSI Release Multilib|Win32
+		{2434C5BE-C18E-50A9-AF58-999445D368C6}.Static ANSI Release Multilib|Win32.Build.0 = Static ANSI Release Multilib|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+
