@@ -35,17 +35,17 @@ RSC=rc.exe
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "vc_mswuddll"
-# PROP BASE Intermediate_Dir "vc_mswuddll\studio"
+# PROP BASE Output_Dir "vc6_mswuddll"
+# PROP BASE Intermediate_Dir "vc6_mswuddll\studio"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "vc_mswuddll"
-# PROP Intermediate_Dir "vc_mswuddll\studio"
+# PROP Output_Dir "vc6_mswuddll"
+# PROP Intermediate_Dir "vc6_mswuddll\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc_dll\mswud" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc_mswuddll\studio.pdb" /FD /GZ /EHsc /c
-# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc_mswuddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc_dll\mswud" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswuddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc6_mswuddll\studio.pdb" /FD /GZ /EHsc /c
 # SUBTRACT CPP /nologo
 # ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
@@ -62,17 +62,17 @@ LINK32=link.exe
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "vc_mswddll"
-# PROP BASE Intermediate_Dir "vc_mswddll\studio"
+# PROP BASE Output_Dir "vc6_mswddll"
+# PROP BASE Intermediate_Dir "vc6_mswddll\studio"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "vc_mswddll"
-# PROP Intermediate_Dir "vc_mswddll\studio"
+# PROP Output_Dir "vc6_mswddll"
+# PROP Intermediate_Dir "vc6_mswddll\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc_dll\mswd" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc_mswddll\studio.pdb" /FD /GZ /EHsc /c
-# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc_mswddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I ".\..\..\..\..\lib\vc_dll\mswd" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswddll\studio.pdb" /FD /GZ /EHsc /c
+# ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /Yu"precomp.h" /Fd"vc6_mswddll\studio.pdb" /FD /GZ /EHsc /c
 # SUBTRACT CPP /nologo
 # ADD BASE MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
@@ -89,17 +89,17 @@ LINK32=link.exe
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "vc_mswu"
-# PROP BASE Intermediate_Dir "vc_mswu\studio"
+# PROP BASE Output_Dir "vc6_mswu"
+# PROP BASE Intermediate_Dir "vc6_mswu\studio"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "vc_mswu"
-# PROP Intermediate_Dir "vc_mswu\studio"
+# PROP Output_Dir "vc6_mswu"
+# PROP Intermediate_Dir "vc6_mswu\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc_lib\mswu" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /Fd"vc_mswu\studio.pdb" /FD /EHsc /c
-# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\..\include" /D "_UNICODE" /Yu"precomp.h" /Fd"vc_mswu\studio.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc_lib\mswu" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_mswu\studio.pdb" /FD /EHsc /c
+# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\..\include" /D "_UNICODE" /Yu"precomp.h" /Fd"vc6_mswu\studio.pdb" /FD /EHsc /c
 # SUBTRACT CPP /nologo
 # ADD BASE MTL /nologo /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
 # ADD MTL /nologo /D "_UNICODE" /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
@@ -116,17 +116,17 @@ LINK32=link.exe
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "vc_msw"
-# PROP BASE Intermediate_Dir "vc_msw\studio"
+# PROP BASE Output_Dir "vc6_msw"
+# PROP BASE Intermediate_Dir "vc6_msw\studio"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "vc_msw"
-# PROP Intermediate_Dir "vc_msw\studio"
+# PROP Output_Dir "vc6_msw"
+# PROP Intermediate_Dir "vc6_msw\studio"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc_lib\msw" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_WINDOWS" /D "NOPCH" /Fd"vc_msw\studio.pdb" /FD /EHsc /c
-# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\..\include" /Yu"precomp.h" /Fd"vc_msw\studio.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I ".\..\..\..\..\lib\vc_lib\msw" /I ".\..\..\..\..\include" /I "." /I ".\..\..\..\..\samples" /I ".\..\..\..\include" /D "_WINDOWS" /D "NOPCH" /Fd"vc6_msw\studio.pdb" /FD /EHsc /c
+# ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\..\include" /Yu"precomp.h" /Fd"vc6_msw\studio.pdb" /FD /EHsc /c
 # SUBTRACT CPP /nologo
 # ADD BASE MTL /nologo /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32
 # ADD MTL /nologo /D "_WINDOWS" /D "NOPCH" /mktyplib203 /win32

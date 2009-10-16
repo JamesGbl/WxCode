@@ -34,16 +34,16 @@ CFG=ogl - Win32 DLL Unicode Debug
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
 # PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP BASE Intermediate_Dir "vc_mswuddll\ogl"
+# PROP BASE Intermediate_Dir "vc6_mswuddll\ogl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\lib\vc_dll"
-# PROP Intermediate_Dir "vc_mswuddll\ogl"
+# PROP Intermediate_Dir "vc6_mswuddll\ogl"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswud" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc_mswuddll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswud" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc6_mswuddll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.pdb" /FD /EHsc /c
 # ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Yu"precomp.h" /Fd"..\lib\vc_dll\wxmsw28ud_ogl_vc_custom.pdb" /FD /EHsc /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "_UNICODE" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /mktyplib203 /win32
@@ -65,16 +65,16 @@ LINK32=link.exe
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
 # PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_dll"
-# PROP BASE Intermediate_Dir "vc_mswddll\ogl"
+# PROP BASE Intermediate_Dir "vc6_mswddll\ogl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\lib\vc_dll"
-# PROP Intermediate_Dir "vc_mswddll\ogl"
+# PROP Intermediate_Dir "vc6_mswddll\ogl"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswd" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc_mswddll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28d_ogl_vc_custom.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "..\..\src\ogl\..\..\..\lib\vc_dll\mswd" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Fp"vc6_mswddll\wxprec_ogldll.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_dll\wxmsw28d_ogl_vc_custom.pdb" /FD /EHsc /c
 # ADD CPP /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "__WXDEBUG__" /D "WXUSINGDLL" /D "WXMAKINGDLL_OGL" /Yu"precomp.h" /Fd"..\lib\vc_dll\wxmsw28d_ogl_vc_custom.pdb" /FD /EHsc /c
 # SUBTRACT CPP /nologo
 MTL=midl.exe
@@ -97,15 +97,15 @@ LINK32=link.exe
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
 # PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP BASE Intermediate_Dir "vc_mswu\ogl"
+# PROP BASE Intermediate_Dir "vc6_mswu\ogl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "..\lib\vc_lib"
-# PROP Intermediate_Dir "vc_mswu\ogl"
+# PROP Intermediate_Dir "vc6_mswu\ogl"
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswu" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_UNICODE" /Fp"vc_mswu\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\mswu" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /D "_UNICODE" /Fp"vc6_mswu\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
 # ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /D "_UNICODE" /Yu"precomp.h" /Fd"..\lib\vc_lib\wxmsw28u_ogl.pdb" /FD /EHsc /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
@@ -122,15 +122,15 @@ LIB32=link.exe -lib
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
 # PROP BASE Output_Dir "..\..\src\ogl\..\..\..\lib\vc_lib"
-# PROP BASE Intermediate_Dir "vc_msw\ogl"
+# PROP BASE Intermediate_Dir "vc6_msw\ogl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "..\lib\vc_lib"
-# PROP Intermediate_Dir "vc_msw\ogl"
+# PROP Intermediate_Dir "vc6_msw\ogl"
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\msw" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /Fp"vc_msw\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
+# ADD BASE CPP /nologo /MD /W4 /GR /O2 /I "..\..\src\ogl\..\..\..\lib\vc_lib\msw" /I "..\..\src\ogl\..\..\..\include" /I "..\..\src\ogl\..\..\include" /D "_LIB" /Fp"vc6_msw\wxprec_ogllib.pch" /Yu"wx/wxprec.h" /Fd"..\..\src\ogl\..\..\..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
 # ADD CPP /MT /W4 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /D "_LIB" /Yu"precomp.h" /Fd"..\lib\vc_lib\wxmsw28_ogl.pdb" /FD /EHsc /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
