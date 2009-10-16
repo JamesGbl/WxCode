@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "ogledit.h"
+#include "app.h"
 #include "palette.h"
 #include "doc.h"
 #include "view.h"
@@ -36,6 +36,7 @@ bool MyApp::OnInit(void)
 {
   wxOGLInitialize();
 
+  SetAppName(wxT("OGLEdit Demo"));
   //// Create a document manager
   myDocManager = new wxDocManager;
 
@@ -48,7 +49,7 @@ bool MyApp::OnInit(void)
   myDocManager->SetMaxDocsOpen(1);
 
   //// Create the main frame window
-  frame = new MyFrame(myDocManager, NULL, _T("OGLEdit Demo"), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
+  frame = new MyFrame(myDocManager, NULL, GetAppName(), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
 
   //// Give it an icon
   frame->SetIcon(wxICON(ogl));

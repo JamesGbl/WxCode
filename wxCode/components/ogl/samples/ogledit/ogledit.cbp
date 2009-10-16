@@ -213,7 +213,7 @@
 			<Add directory="$(#WX.lib)" />
 		</Linker>
 		<Unit filename="doc.cpp" />
-		<Unit filename="ogledit.cpp" />
+		<Unit filename="app.cpp" />
 		<Unit filename="ogledit.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

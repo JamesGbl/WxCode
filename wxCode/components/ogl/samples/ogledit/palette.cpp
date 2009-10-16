@@ -13,7 +13,7 @@
 
 #include "doc.h"
 #include "view.h"
-#include "ogledit.h"
+#include "app.h"
 #include "palette.h"
 
 // Include pixmaps

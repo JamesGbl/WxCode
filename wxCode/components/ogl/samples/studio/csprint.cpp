@@ -19,7 +19,7 @@
 #include "wx/metafile.h"
 #endif
 
-#include "studio.h"
+#include "app.h"
 #include "doc.h"
 #include "shapes.h"
 #include "view.h"

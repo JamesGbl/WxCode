@@ -14,7 +14,6 @@
 #include "dialogs.h"
 #include "doc.h"
 #include "view.h"
-#include "studio.h"
 #include "studio_resources.h"
 
 #if wxUSE_WX_RESOURCES

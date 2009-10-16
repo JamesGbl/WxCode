@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "studio.h"
+#include "app.h"
 #include "doc.h"
 #include "view.h"
 #include "cspalette.h"

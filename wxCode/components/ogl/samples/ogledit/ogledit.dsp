@@ -161,7 +161,7 @@ SOURCE=.\link.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ogledit.cpp
+SOURCE=.\app.cpp
 # End Source File
 # Begin Source File
 

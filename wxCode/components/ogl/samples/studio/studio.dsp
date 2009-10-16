@@ -190,7 +190,7 @@ SOURCE=.\shapes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\studio.cpp
+SOURCE=.\app.cpp
 # End Source File
 # Begin Source File
 

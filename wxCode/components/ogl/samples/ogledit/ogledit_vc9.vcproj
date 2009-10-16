@@ -416,6 +416,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath=".\app.cpp"
+				>
+			</File>
+			<File
 				RelativePath="doc.cpp"
 				>
 				<FileConfiguration
@@ -494,45 +498,6 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="ogledit.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>

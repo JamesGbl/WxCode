@@ -13,7 +13,7 @@
 
 #include "doc.h"
 #include "view.h"
-#include "studio.h"
+#include "app.h"
 #include "cspalette.h"
 #include "symbols.h"
 

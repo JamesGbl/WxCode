@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "studio.h"
+#include "app.h"
 #include "project.h"
 
 IMPLEMENT_CLASS(csProjectTreeCtrl, wxTreeCtrl)

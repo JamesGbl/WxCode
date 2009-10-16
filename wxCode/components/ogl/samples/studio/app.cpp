@@ -13,7 +13,7 @@
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
-#include "studio.h"
+#include "app.h"
 #include "view.h"
 #include "doc.h"
 #include "mainfrm.h"
@@ -84,7 +84,7 @@ bool csApp::OnInit(void)
         return false;
     }
 #endif
-
+    SetAppName(wxT("OGL Studio"));
 #if wxUSE_MS_HTML_HELP && !defined(__WXUNIVERSAL__)
     m_helpController = new wxWinHelpController;
 #else
@@ -114,7 +114,7 @@ bool csApp::OnInit(void)
 #define wxDEFAULT_FRAME_STYLE_NO_CLIP \
     (wxDEFAULT_FRAME_STYLE & ~wxCLIP_CHILDREN)
 
-    csFrame* frame = new csFrame(m_docManager, NULL, wxID_ANY, _T("OGL Studio"), m_mainFramePos, m_mainFrameSize,
+    csFrame* frame = new csFrame(m_docManager, NULL, wxID_ANY, GetAppName(), m_mainFramePos, m_mainFrameSize,
                      wxDEFAULT_FRAME_STYLE_NO_CLIP | wxHSCROLL | wxVSCROLL);
 
     // Give it an icon

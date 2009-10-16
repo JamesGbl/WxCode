@@ -416,6 +416,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath=".\app.cpp"
+				>
+			</File>
+			<File
 				RelativePath="cspalette.cpp"
 				>
 				<FileConfiguration
@@ -737,45 +741,6 @@
 			</File>
 			<File
 				RelativePath="shapes.cpp"
-				>
-				<FileConfiguration
-					Name="DLL Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="studio.cpp"
 				>
 				<FileConfiguration
 					Name="DLL Unicode Debug|Win32"

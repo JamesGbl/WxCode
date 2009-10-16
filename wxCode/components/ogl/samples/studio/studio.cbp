@@ -232,7 +232,7 @@
 		</Unit>
 		<Unit filename="project.cpp" />
 		<Unit filename="shapes.cpp" />
-		<Unit filename="studio.cpp" />
+		<Unit filename="app.cpp" />
 		<Unit filename="studio.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

@@ -13,7 +13,7 @@
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
-#include "studio.h"
+#include "app.h"
 #include "doc.h"
 #include "shapes.h"
 #include "view.h"
