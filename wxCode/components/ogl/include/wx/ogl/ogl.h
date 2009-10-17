@@ -19,7 +19,11 @@
 #else // not making nor using DLL
     #define WXDLLIMPEXP_OGL
 #endif
-
+#if defined(__WINDOWS__) && defined(__GNUC__)
+    #define WXDLLIMPEXP_FWD_OGL
+#else
+    #define WXDLLIMPEXP_FWD_OGL WXDLLIMPEXP_OGL
+#endif
 
 #include "wx/ogl/basic.h"      // Basic shapes
 #include "wx/ogl/basicp.h"

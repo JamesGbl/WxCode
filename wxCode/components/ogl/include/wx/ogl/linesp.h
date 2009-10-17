@@ -13,11 +13,11 @@
 #define _OGL_LINESP_H_
 
 
-class WXDLLIMPEXP_OGL wxLineShape;
+class WXDLLIMPEXP_FWD_OGL wxLineShape;
 class WXDLLIMPEXP_OGL wxLineControlPoint: public wxControlPoint
 {
   DECLARE_DYNAMIC_CLASS(wxLineControlPoint)
-  friend class WXDLLIMPEXP_OGL wxLineShape;
+  friend class wxLineShape;
  public:
 
   wxLineControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0,

@@ -36,13 +36,13 @@ protected:
    double        m_y;
 };
 
-class WXDLLIMPEXP_OGL wxShape;
+class WXDLLIMPEXP_FWD_OGL wxShape;
 class WXDLLIMPEXP_OGL wxControlPoint: public wxRectangleShape
 {
  DECLARE_DYNAMIC_CLASS(wxControlPoint)
 
- friend class WXDLLIMPEXP_OGL wxShapeEvtHandler;
- friend class WXDLLIMPEXP_OGL wxShape;
+ friend class wxShapeEvtHandler;
+ friend class wxShape;
 
  public:
   wxControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0, double the_xoffset = 0.0,
@@ -84,11 +84,11 @@ public:
   static double sm_controlPointDragPosY;
 };
 
-class WXDLLIMPEXP_OGL wxPolygonShape;
+class WXDLLIMPEXP_FWD_OGL wxPolygonShape;
 class WXDLLIMPEXP_OGL wxPolygonControlPoint: public wxControlPoint
 {
  DECLARE_DYNAMIC_CLASS(wxPolygonControlPoint)
-  friend class WXDLLIMPEXP_OGL wxPolygonShape;
+  friend class wxPolygonShape;
  public:
   wxPolygonControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0, wxRealPoint *vertex = NULL,
     double the_xoffset = 0.0, double the_yoffset = 0.0);
