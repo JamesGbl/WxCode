@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
+#include "wx/aboutdlg.h"
 
 #include "app.h"
 #include "palette.h"
@@ -173,7 +174,15 @@ void MyFrame::OnCloseWindow(wxCloseEvent& event)
 // Intercept menu commands
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-      (void)wxMessageBox(_T("OGLEdit Demo\nTo draw a shape, select a shape on the toolbar and left-click on the canvas.\nTo draw a line, right-drag between shapes.\nFor further details, see the OGL manual.\n (c) Julian Smart 1996"), _T("About OGLEdit"));
+    wxAboutDialogInfo info;
+    info.SetCopyright(wxT("Copyright (c) 1996 Julian Smart"));
+    info.AddDeveloper(wxT("Julian Smart"));
+    info.SetDescription(
+       wxString(_("To draw a shape, select a shape on the toolbar and left-click on the canvas.\nTo draw a line, right-drag between shapes\n\n")) +
+       wxVERSION_STRING);
+    info.SetWebSite(wxT("http://wxcode.sf.net/showcomp.php?name=ogl"));
+    info.SetLicense(wxT("wxWindows"));
+    ::wxAboutBox(info);
 }
 
 // Creates a canvas. Called by OnInit as a child of the main window

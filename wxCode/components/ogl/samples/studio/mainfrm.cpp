@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
+#include "wx/aboutdlg.h"
 
 #include "app.h"
 #include "view.h"
@@ -82,7 +83,13 @@ void csFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void csFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-      (void)wxMessageBox(_T("OGL Studio\n(c) 1999, Julian Smart"), _T("About OGL Studio"), wxICON_INFORMATION);
+    wxAboutDialogInfo info;
+    info.SetCopyright(wxT("Copyright (c) 1999 Julian Smart"));
+    info.AddDeveloper(wxT("Julian Smart"));
+    info.SetDescription(wxVERSION_STRING);
+    info.SetWebSite(wxT("http://wxcode.sf.net/showcomp.php?name=ogl"));
+    info.SetLicense(wxT("wxWindows"));
+    ::wxAboutBox(info);
 }
 
 void csFrame::OnSashDragPaletteWindow(wxSashEvent& event)
