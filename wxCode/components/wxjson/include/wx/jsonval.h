@@ -134,16 +134,30 @@ public:
   unsigned short AsUShort() const;
   long int       AsLong() const;
   unsigned long  AsULong() const;
+  bool		AsInt( int& i ) const;
+  bool		AsUInt( unsigned int& ui ) const;
+  bool		AsShort( short int& s ) const;
+  bool		AsUShort( unsigned short& us ) const;
+  bool		AsLong( long int& l ) const;
+  bool		AsULong( unsigned long& ul ) const; 
 #if defined( wxJSON_64BIT_INT)
   wxInt32        AsInt32() const;
   wxUint32       AsUInt32() const;
   wxInt64        AsInt64() const;
   wxUint64       AsUInt64() const;
+  bool		AsInt32( wxInt32& i32 ) const;
+  bool		AsUInt32( wxUint32& ui32 ) const;
+  bool		AsInt64( wxInt64& i64 ) const;
+  bool		AsUInt64( wxUint64& ui64 ) const;
 #endif
   bool           AsBool() const;
   double         AsDouble() const;
   wxString       AsString() const;
   const wxChar*  AsCString() const;
+  bool		AsBool( bool& b ) const;
+  bool		AsDouble( double& d ) const;
+  bool		AsString( wxString& str ) const;
+  bool		AsCString( wxChar* ch ) const;
 
   const wxJSONInternalMap*   AsMap() const;
   const wxJSONInternalArray* AsArray() const;

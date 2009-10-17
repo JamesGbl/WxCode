@@ -38,6 +38,7 @@
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/debug.h>
+#include <wx/mstream.h>
 #include <wx/wfstream.h>
 
 #include <wx/jsonval.h>
@@ -46,6 +47,11 @@
 
 #include "test.h"
 
+/****************************************************************************
+
+		FAMILY 7: test wxJSONReader using US-ASCII only strings
+		
+****************************************************************************/
 
 
 // test an array of values: text is well-formed with comments
@@ -358,7 +364,7 @@ int Test7_8()
 	return 0;
 }
 
-
+// check missing close-array character
 int Test7_9()
 {
 	// missing close array char
@@ -381,6 +387,146 @@ int Test7_9()
 	ASSERT( numErrors == 0 )
 	int numWarn = reader.GetWarningCount();
 	ASSERT( numWarn == 1 )
+	return 0;
+}
+
+
+/****************************************************************************
+
+		FAMILY 8: test wxJSONReader using different charsets
+		
+****************************************************************************/
+
+// a UTF-8 buffer containing an array of strings:
+// [
+// "abcABC",
+// "àèì©®",
+// "αβγδ",
+// "ФХЦЧ"
+// ]
+//
+static const char utf8Buff[] = {
+  0x5B,
+  0x22,0x61,0x62,0x63,0x41,0x42,0x43,0x22,0x2C,0x0A,
+  0x22,0xC3,0xA0,0xC3,0xA8, 0xC3,0xAC,0xC2,0xA9,0xC2,0xAE,0x22,0x2C, 0x0A,
+  0x22,0xCE,0xB1,0xCE,0xB2,0xCE,0xB3,0xCE,0xB4,0x22,0x2C,0x0A,
+  0x22,0xD0,0xA4,0xD0,0xA5,0xD0,0xA6,0xD0,0xA7,0x22,0x0A,
+  0x5D,
+  0x0A,0x0A,0x0
+};
+
+// read the buffer as a UTF8 stream (Unicode)
+int Test8_1()
+{
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( (char*) utf8Buff );
+
+	wxMemoryInputStream is( utf8Buff, strlen( utf8Buff ));
+	wxJSONValue root;
+	wxJSONReader reader;
+	int numErrors = reader.Parse( is, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
+
+	ASSERT( numErrors == 0 )
+	int numWarn = reader.GetWarningCount();
+	ASSERT( numWarn == 0 );
+	return 0;
+}
+
+// read the buffer as a wxString (Unicode)
+int Test8_2()
+{
+	wxString s;
+	s = wxString::FromUTF8( utf8Buff );
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
+
+	wxJSONValue root;
+	wxJSONReader reader;
+	int numErrors = reader.Parse( s, &root );
+
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
+
+	ASSERT( numErrors == 0 )
+	int numWarn = reader.GetWarningCount();
+	ASSERT( numWarn == 0 );
+	return 0;
+}
+
+// read the buffer as a UTF8 stream (ANSI)
+int Test8_3()
+{
+	// in ANSI builds, the strings are read in UTF8 but they cannot
+	// be stored correctly in wxString.
+	// The reader simply copies the UTF8 bytes using wxString::From8BitData()
+	// only the US-ASCII string is stored correctly; all other charsets
+	// are stored as 2-bytes 
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( (char*) utf8Buff );
+
+	wxMemoryInputStream is( utf8Buff, strlen( utf8Buff ));
+	wxJSONValue root;
+	wxJSONReader reader;
+	int numErrors = reader.Parse( is, &root );
+	
+	// test the content of the strings
+	wxString usascii  = root[0].AsString();
+	wxString latin1   = root[1].AsString();
+	wxString greek    = root[2].AsString();
+	wxString cyrillic = root[3].AsString();
+	TestCout( _T( "us-ascii length (6): " ));
+	TestCout( usascii.Len(), true );
+	TestCout( _T( "latin1 length (10): " ));
+	TestCout( latin1.Len(), true );
+	TestCout( _T( "greek length (8): " ));
+	TestCout( greek.Len(), true );
+	TestCout( _T( "cyrillic length (8): " ));
+	TestCout( cyrillic.Len(), true );
+	
+	ASSERT( usascii.Len() == 6 );
+	ASSERT( latin1.Len() == 10 );
+	
+	// greek UTF8: 0xCE,0xB1,0xCE,0xB2,0xCE,0xB3,0xCE,0xB4
+	ASSERT( greek.Len() == 8 );
+	
+	// cyrillic UTF8: 0xD0,0xA4,0xD0,0xA5,0xD0,0xA6,0xD0,0xA7
+	ASSERT( cyrillic.Len() == 8 );
+	
+	// for some unknown reason the writer cannot write the latin, greek adn cyrillic
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
+
+	ASSERT( numErrors == 0 )
+	int numWarn = reader.GetWarningCount();
+	ASSERT( numWarn == 0 );
+	return 0;
+}
+
+// read the buffer as a wxString (ANSI)
+int Test8_4()
+{
+	// this does not work!! an empty string is returned by the FromUTF8() function
+	// so the reader does not read anything because input is empty
+	wxString s;
+	s = wxString::FromUTF8( utf8Buff );
+	
+	// en empty string is in input
+	TestCout( _T( "The input JSON text:\n" ));
+	TestCout( s );
+
+	wxJSONValue root;
+	wxJSONReader reader;
+	// Error: cannot find a start-object/array character
+	int numErrors = reader.Parse( s, &root );
+	ASSERT( numErrors == 1 )
+
+	// an invalid wxJSONvalue is returned
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
+
 	return 0;
 }
 

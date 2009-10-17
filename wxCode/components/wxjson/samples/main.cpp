@@ -349,6 +349,27 @@ int main( int argc, char* argv[] )
 		{
 			Test7_9, 3, _T( "missing close array character" )
 		},
+
+
+		// family #8		(test5.cpp)
+		{
+			0,		// test #0: description of the family
+			1,		// m_auto 1=unicode, not applicable in ANSI builds
+			_T( "testing the wxJSONReader class (strings use different charsets)" )
+		},
+		{
+			Test8_1, 1, _T( "(Unicode) an array of strings read from a UTF-8 stream" )
+		},
+		{
+			Test8_2, 1, _T( "(Unicode) an array of strings read from a wxString" )
+		},
+		{
+			Test8_3, 2, _T( "(ANSI) an array of strings read from a UTF-8 stream" )
+		},
+		{
+			Test8_4, 2, _T( "(ANSI) an array of strings read from a wxString" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		
 
 		// END OF TABLE

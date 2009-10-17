@@ -1075,6 +1075,154 @@ wxJSONValue::AsUShort() const
 }
 
 
+//! Stores the value of this object in the provided argument
+/*!
+ The functions of the form \c AsXxxxxx(T&) are the same as the \c AsXxxxxxx()
+ but store the value in the provided argument and return TRUE if the value of
+ this object is of the correct type.
+ By using these functions you can get the value and test if the JSON value is
+ of the expected type in only one step.
+ For example:
+ \code
+   int i; wxJSONValue v(10);
+   if ( !v.AsInt( i )) {
+     cout << "Error: value is not of the expected type";
+   }
+ \endcode
+ This is the same as:
+ \code
+   int i; wxJSONValue v(10);
+   if ( v.IsInt() {
+     i = v.AsInt();
+   }
+   else {
+     cout << "Error: value is not of the expected type";
+   }
+ \endcode
+ Note that all functions of this family just do the same that I wrote
+ before. If FALSE is returned, the value in the provided argument is
+ left unchanged.
+ Thanks to \b catalin who has suggested this new feature.
+*/
+bool
+wxJSONValue::AsInt( int& i ) const
+{
+	bool r = false;
+	if ( IsInt() )	{
+		i = AsInt();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsUInt( unsigned int& ui ) const
+{
+	bool r = false;
+	if ( IsUInt() )	{
+		ui = AsUInt();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsShort( short int& s ) const
+{
+	bool r = false;
+	if ( IsShort() )	{
+		s = AsShort();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsUShort( unsigned short& us ) const
+{
+	bool r = false;
+	if ( IsUShort() )	{
+		us = AsUShort();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsLong( long int& l ) const
+{
+	bool r = false;
+	if ( IsLong() )	{
+		l = AsLong();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsULong( unsigned long& ul ) const
+{
+	bool r = false;
+	if ( IsULong() )	{
+		ul = AsULong();
+		r = true;
+	}
+	return r;
+}
+
+
+bool
+wxJSONValue::AsBool( bool& b ) const
+{
+	bool r = false;
+	if ( IsBool() )	{
+		b = AsBool();
+		r = true;
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsDouble( double& d ) const
+{
+	bool r = false;
+	if ( IsDouble() )	{
+		d = AsDouble();
+		r = true;
+	}
+	return r;
+}
+
+//! Return this string value in the provided argument
+/*!
+ This function is different from \c AsString because the latter always returns
+ a string also when this object does not contain a string. In that case, a string
+ representation of this value is returned.
+ This function, instead, returns TRUE only if this object contains a string, that is
+ only if \c IsString() returns TRUE.
+*/
+bool
+wxJSONValue::AsString( wxString& str ) const
+{
+	bool r = IsString();
+	if ( r )	{
+		str = AsString();
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsCString( wxChar* ch ) const
+{
+	bool r = IsCString();
+	if ( r )	{
+		ch = (wxChar*) AsCString();
+	}
+	return r;
+}
+
+
+
 // internal use
 
 //! Return the stored value as a map object.
@@ -2889,6 +3037,46 @@ wxJSONValue::AsUInt64() const
 
   wxJSON_ASSERT( IsUInt64());  // exapnds only in debug builds
   return ui64;
+}
+
+bool
+wxJSONValue::AsInt32( wxInt32& i32 ) const
+{
+	bool r = IsInt32();
+	if ( r )	{
+		i32 = AsInt32();
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsUInt32( wxUint32& ui32 ) const
+{
+	bool r = IsUInt32();
+	if ( r )	{
+		ui32 = AsUInt32();
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsInt64( wxInt64& i64 ) const
+{
+	bool r = IsInt64();
+	if ( r )	{
+		i64 = AsInt64();
+	}
+	return r;
+}
+
+bool
+wxJSONValue::AsUInt64( wxUint64& ui64 ) const
+{
+	bool r = IsUInt64();
+	if ( r )	{
+		ui64 = AsUInt64();
+	}
+	return r;
 }
 
 //! \overload Append( const wxJSONValue& )
