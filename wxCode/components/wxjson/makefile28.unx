@@ -1,0 +1,308 @@
+# =========================================================================
+#     This makefile was written by L. Cattani
+#     by modifying the original 'makefile.unx'
+#     provided in the 'samples/console/' subdirectory
+#
+#     only usefull for the author: links with wxWidgets 2.8
+# =========================================================================
+
+
+#
+# C++ compiler and linker
+CC = gcc
+LINKER = gcc
+
+#
+# wxJSON version
+VERSION = 1.1.0
+
+#
+# Flags for the compiler. You always have to turn on full warnings.
+CXXFLAGS = -Wall
+
+#
+# Flags for the GNU debugger: if you do not want debug info to
+# be included in the wxJSON components, comment out the following line
+CXXFLAGS += -g -fno-inline
+
+#
+# only usefull for the author: you can comment out the
+# following line
+CXXFLAGS += -DWXJSON_USE_VALUE_COUNTER
+
+
+#
+# include the header's path
+CXXFLAGS += -I./include/
+
+#
+# if you want to use the WXJSON_USE_CSTRING feature you have to
+# uncomment the following line: note that it is not recommended to
+# use this feature. See the wxJSON internals for more info
+# CXXFLAGS += -DWXJSON_USE_CSTRING
+
+
+#
+# Standard linker flags. we have to include the path to wxWidgets libraries
+LDFLAGS = -L/usr/local/lib
+
+#
+# we also have to include the path to the wxJSON library
+LDFLAGS += -L./lib
+
+
+#
+# C++ flags to use with wxWidgets code  You should not change this line
+# because the output of the 'wx-config' command will set the appropriate
+# C flags for the compiler depending on the actual build of wxWidtgets
+CXXFLAGS_UNI = `wx-config --unicode=yes --cxxflags`
+
+#
+# C++ flags to use with an ANSI build of wxWidgets.
+# If you want to compile wxJSON and the test app in ANSI mode you should
+# uncomment the following line
+CXXFLAGS_ANSI = `wx-config --unicode=no --cxxflags`
+
+
+
+#
+# the list of objects for unicode builds
+OBJECTS = src/jsonval.o	\
+	src/jsonwriter.o	\
+	src/jsonreader.o
+
+
+
+#
+# the list of objects for ansi builds
+OBJECTS_A = src/jsonval.oa	\
+	src/jsonwriter.oa	\
+	src/jsonreader.oa
+
+
+#
+# the name of the library in unicode builds
+# this is a name in the following form:
+# libwxjson-0.2.1uni.a
+LIBUNI = wxjson-$(VERSION)uni
+
+
+#
+# the name of the library in ansi builds
+LIBANSI = wxjson-$(VERSION)ansi
+
+#
+# the static library extension
+LIB_EXT = .a
+
+#
+# the library names with the extensions
+LIB_LIBUNI  = lib$(LIBUNI)$(LIB_EXT)
+LIB_LIBANSI = lib$(LIBANSI)$(LIB_EXT)
+
+
+
+### Targets: ###
+
+#
+# the folllowing target makes all that we need. Pleasenote
+# that the target makes both ANSI and Unicode builds of the
+# library and both ANSI and Unicode builds of the test
+# application.
+# You may delete some of the dependencies if you just need
+# one or two targets
+# Example:
+# the following just builds the Unicode version of the library
+# and nothing else
+
+# all: $(LIB_LIBUNI)
+
+all: $(LIB_LIBUNI) $(LIB_LIBANSI) testuni.bin testansi.bin
+
+
+
+#
+# phony targets: do not modify.
+.PHONY: install uninstall clean tarball backup
+
+
+
+#
+# the following target makes the tarball for the release.
+# this is only usefull for the author
+tarball:
+	tar -cvzf wxJSON-$(VERSION).tar.gz          \
+		--exclude *.o		\
+		--exclude *.oa		\
+		--exclude CVS*		\
+		--exclude .svn*		\
+		--exclude *.bin		\
+		--exclude *.a		\
+		--exclude *.doxytag	\
+		./*.txt		\
+		./configure	\
+		./makefile.unx	\
+		./Makefile.in	\
+		./build/*	\
+		./docs/*	\
+		./include/*	\
+		./lib/*.txt	\
+		./samples/*	\
+		./src/*
+
+
+
+#
+# the following target makes the tarball for the backup.
+# this is equal to the 'tarball' targat except that the
+# 'docs/*/html/' subdirectories are not included in the tar.gz
+backup:
+	tar -cvzf wxJSON-$(VERSION).bak.tar.gz	\
+		--exclude html/*		\
+		--exclude *.o			\
+		--exclude *.oa			\
+		--exclude *~			\
+		--exclude *.gz			\
+		--exclude *.bin			\
+		--exclude *.a			\
+		--exclude *.doxytag		\
+		--exclude ./*.bin		\
+		--exclude CVS*			\
+		--exclude .svn*			\
+		--exclude ./Makefil*	\
+		./*
+
+#
+# the install target is empty beause there is no need to install
+# anything. The library is moved into the 'lib/' subfolder when
+# it is compiled. Only the static version of the library is built
+# when you 'make' this makefile you should end up with a file
+# called something like 'libwxjson-0.1.0uni.a' in the 'lib/' subfolder.
+install: 
+
+
+#
+# does nothing: to uninstall the wxJSON component, just delete
+# the whole directory.
+uninstall: 
+
+#
+# this target deletes all objects, binary and library files
+clean: 
+	rm -f $(OBJECTS)
+	rm -f *.bin
+	rm -f *.a
+	rm -f lib/*.a
+	rm -f lib/*.so
+	rm -f samples/*.bin
+	rm -f samples/*.o
+	rm -f samples/*.oa
+	rm -f src/*.o
+	rm -f src/*.oa
+	rm -f src/*~
+	rm -f samples/*~
+	rm -f ./*~
+
+
+#
+# implicit rules for the GCC - you should not need to change this
+.SUFFIXES:      .o .cpp
+.SUFFIXES:      .oa .cpp
+.SUFFIXES:	.o .c
+
+
+.cpp.o :
+	$(CC) -c $(CXXFLAGS) $(CXXFLAGS_UNI) -o $@ $<
+.cpp.oa :
+	$(CC) -c $(CXXFLAGS) $(CXXFLAGS_ANSI) -o $@ $<
+.c.o :
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+
+#
+# this target creates the Unicode build of the library
+$(LIB_LIBUNI) : $(OBJECTS)
+	ar rc $(LIB_LIBUNI) $(OBJECTS)
+	mv -f $(LIB_LIBUNI) ./lib/
+
+
+#
+# this target creates the ANSI build of the library
+$(LIB_LIBANSI) : $(OBJECTS_A)
+	ar rc $(LIB_LIBANSI) $(OBJECTS_A)
+	mv -f $(LIB_LIBANSI) ./lib/
+
+#
+# list of objects for Unicode build for the test application
+TEST_OBJECTS = samples/main.o		\
+		samples/test1.o		\
+		samples/test3.o		\
+		samples/test4.o		\
+		samples/test5.o
+		
+		
+#		samples/test6.o 	\
+#		samples/test7.o		\
+#		samples/test8.o		\
+#		samples/test9.o		\
+#		samples/test10.o	\
+#		samples/test11.o	\
+#		samples/test12.o	\
+#		samples/test13.o	\
+#		samples/test14.o	\
+#		samples/test15.o
+
+
+#
+# list of objects for ANSI build for the test application
+TEST_OBJECTS_A = samples/main.oa	\
+		samples/test1.oa	\
+		samples/test3.oa	\
+		samples/test4.oa	\
+		samples/test5.oa
+		
+		
+#		samples/test6.oa 	\
+#		samples/test7.oa	\
+#		samples/test8.oa	\
+#		samples/test9.oa	\
+#		samples/test10.oa	\
+#		samples/test11.oa	\
+#		samples/test12.oa	\
+#		samples/test13.oa	\
+#		samples/test14.oa	\
+#		samples/test15.oa
+
+
+
+#
+# the following target creates the Unicode builds of test application
+testuni.bin: $(TEST_OBJECTS) $(LIB_LIBUNI)
+	$(LINKER) -o testuni.bin $(TEST_OBJECTS) $(LDFLAGS)	\
+		-l$(LIBUNI) `wx-config --unicode=yes --libs base`
+
+
+#
+# the following target creates the ANSI build of the application
+testansi.bin: $(TEST_OBJECTS_A) $(LIB_LIBANSI)
+	$(LINKER) -o testansi.bin $(TEST_OBJECTS_A) $(LDFLAGS)	\
+		-l$(LIBANSI) `wx-config --unicode=no --libs base`
+
+
+#
+# the following targets are used to make the utility 'hexd.bin'
+# which is used to get C sources that define a buffer equal to
+# a file on disk - this is only usefull for the author
+hexd.bin : hexd.o
+	$(LINKER) -o hexd.bin hexd.o -lstdc++
+
+hexd.o : samples/hexd.cpp
+	$(CC) -c -g -Wall -o hexd.o samples/hexd.cpp
+
+#
+# makes the test_assert - only usefull for the author
+test_assert.bin: samples/test_assert.o
+	$(LINKER) -o test_assert.bin samples/test_assert.o $(LDFLAGS)	\
+		`wx-config --unicode=yes --libs base`
+
+

@@ -178,6 +178,10 @@
 #define wxJSONWRITER_MIN_LENGTH	15
 #define wxJSONWRITER_TAB_LENGTH  4
 
+#if wxCHECK_VERSION(2, 9, 0 )
+#define WXWIN_COMPATIBILITY_2_8 1
+#endif
+
 
 
 #endif // _WX_JSON_DEFS_H_

@@ -754,7 +754,7 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 int
 wxJSONWriter::WriteString( wxOutputStream& os, const wxString& str )
 {
-	::wxLogTrace( writerTraceMask, _T("(%s) string to write=%s"),
+	wxLogTrace( writerTraceMask, _T("(%s) string to write=%s"),
 				  __PRETTY_FUNCTION__, str.c_str() );
 	int lastChar = 0;
 
@@ -768,7 +768,7 @@ wxJSONWriter::WriteString( wxOutputStream& os, const wxString& str )
 		return -1;
 	}
 	
-	::wxLogTrace( writerTraceMask, _T("(%s) result=%d"),
+	wxLogTrace( writerTraceMask, _T("(%s) result=%d"),
 				  __PRETTY_FUNCTION__, lastChar );
 	return lastChar;
 }
@@ -913,7 +913,7 @@ wxJSONWriter::WriteBoolValue( wxOutputStream& os, const wxJSONValue& value )
 int
 wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
 {
-	::wxLogTrace( writerTraceMask, _T("(%s) key write=%s"),
+	wxLogTrace( writerTraceMask, _T("(%s) key write=%s"),
 				  __PRETTY_FUNCTION__, key.c_str() );
 
 	int lastChar = WriteStringValue( os, key );
