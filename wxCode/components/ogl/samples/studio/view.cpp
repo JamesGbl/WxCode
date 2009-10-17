@@ -306,7 +306,7 @@ void csDiagramView::DoCut(wxList& shapes)
 
     if (shapes.GetCount() > 0)
     {
-        csDiagramCommand* cmd = new csDiagramCommand(_T("Cut"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(wxT("Cut"), doc);
 
         wxObjectList::compatibility_iterator node = shapes.GetFirst();
         while (node)
@@ -385,7 +385,7 @@ void csDiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         if (!theBrush)
             return;
 
-        csDiagramCommand* cmd = new csDiagramCommand(_T("Change colour"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(wxT("Change colour"), doc);
 
         wxObjectList::compatibility_iterator node = selections.GetFirst();
         while (node)
@@ -454,7 +454,7 @@ void csDiagramView::ApplyPointSize(int pointSize)
 
     if (selections.GetCount() > 0)
     {
-        csDiagramCommand* cmd = new csDiagramCommand(_T("Point size"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(wxT("Point size"), doc);
 
         wxObjectList::compatibility_iterator node = selections.GetFirst();
         while (node)
@@ -545,9 +545,9 @@ void csDiagramView::OnToggleArrowTool(wxCommandEvent& WXUNUSED(event))
     bool state = wxGetApp().GetDiagramToolBar()->GetToolState(DIAGRAM_TOOLBAR_LINE_ARROW);
     wxString stateName;
     if (state)
-        stateName = _T("Arrow on");
+        stateName = wxT("Arrow on");
     else
-        stateName = _T("Arrow off");
+        stateName = wxT("Arrow off");
 
     wxList selections;
     FindSelectedShapes(selections, CLASSINFO(wxLineShape));
@@ -568,7 +568,7 @@ void csDiagramView::OnToggleArrowTool(wxCommandEvent& WXUNUSED(event))
                 if (theShape->GetArrows().GetCount() == 0)
                 {
                     newShape = (wxLineShape*) theShape->CreateNewCopy();
-                    newShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, _T("Normal arrowhead"));
+                    newShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, wxT("Normal arrowhead"));
                 }
             }
             else
@@ -643,7 +643,7 @@ void csDiagramView::OnAlign(wxCommandEvent& event)
         return;
 
     csDiagramDocument *doc = (csDiagramDocument *)GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(_T("Align"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(wxT("Align"), doc);
 
     node = selections.GetFirst();
     wxShape* firstShape = (wxShape*) node->GetData();
@@ -726,7 +726,7 @@ void csDiagramView::OnAlignUpdate(wxUpdateUIEvent& event)
 void csDiagramView::OnNewLinePoint(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument *doc = (csDiagramDocument *)GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(_T("New line point"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(wxT("New line point"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -747,7 +747,7 @@ void csDiagramView::OnNewLinePoint(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnCutLinePoint(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument *doc = (csDiagramDocument *)GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(_T("Cut line point"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(wxT("Cut line point"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -768,7 +768,7 @@ void csDiagramView::OnCutLinePoint(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnStraightenLines(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument *doc = (csDiagramDocument *)GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(_T("Straighten lines"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(wxT("Straighten lines"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -863,7 +863,7 @@ void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
         csLabelEditingDialog* dialog = new csLabelEditingDialog(GetParent());
 
         dialog->SetShapeLabel( wxEmptyString );
-        dialog->SetTitle(_T("New text box"));
+        dialog->SetTitle(wxT("New text box"));
         if (dialog->ShowModal() == wxID_CANCEL)
         {
             dialog->Destroy();
@@ -895,7 +895,7 @@ void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
         shape->SetX(x);
         shape->SetY(y);
 
-        csDiagramCommand* cmd = new csDiagramCommand(_T("Text box"),
+        csDiagramCommand* cmd = new csDiagramCommand(wxT("Text box"),
             (csDiagramDocument *)GetView()->GetDocument(),
             new csCommandState(ID_CS_ADD_SHAPE, shape, NULL));
         GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);

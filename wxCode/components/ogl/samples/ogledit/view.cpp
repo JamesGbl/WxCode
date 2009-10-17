@@ -174,7 +174,7 @@ void DiagramView::OnCut(wxCommandEvent& WXUNUSED(event))
 
   wxShape *theShape = FindSelectedShape();
   if (theShape)
-    doc->GetCommandProcessor()->Submit(new DiagramCommand(_T("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, true, theShape));
+    doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, true, theShape));
 }
 
 void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
@@ -199,7 +199,7 @@ void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         dialog->Close();
 
         if (theBrush)
-          doc->GetCommandProcessor()->Submit(new DiagramCommand(_T("Change colour"), OGLEDIT_CHANGE_BACKGROUND_COLOUR, doc,
+          doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Change colour"), OGLEDIT_CHANGE_BACKGROUND_COLOUR, doc,
             theBrush, theShape));
       }
 }
@@ -209,8 +209,8 @@ void DiagramView::OnEditLabel(wxCommandEvent& WXUNUSED(event))
       wxShape *theShape = FindSelectedShape();
       if (theShape)
       {
-        wxString newLabel = wxGetTextFromUser(_T("Enter new label"), _T("Shape Label"), ((MyEvtHandler *)theShape->GetEventHandler())->label);
-        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(_T("Edit label"), OGLEDIT_EDIT_LABEL, (DiagramDocument*) GetDocument(), newLabel, theShape));
+        wxString newLabel = wxGetTextFromUser(wxT("Enter new label"), wxT("Shape Label"), ((MyEvtHandler *)theShape->GetEventHandler())->label);
+        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Edit label"), OGLEDIT_EDIT_LABEL, (DiagramDocument*) GetDocument(), newLabel, theShape));
       }
 }
 

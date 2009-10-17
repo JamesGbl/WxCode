@@ -78,7 +78,7 @@ wxOutputStream& DiagramDocument::SaveObject(wxOutputStream& stream)
 
     wxDocument::SaveObject(stream);
     wxChar buf[400];
-    (void) wxGetTempFileName(_T("diag"), buf);
+    (void) wxGetTempFileName(wxT("diag"), buf);
 
     diagram.SaveFile(buf);
 
@@ -97,7 +97,7 @@ wxInputStream& DiagramDocument::LoadObject(wxInputStream& stream)
     wxDocument::LoadObject(stream);
 
     wxChar buf[400];
-    (void) wxGetTempFileName(_T("diag"), buf);
+    (void) wxGetTempFileName(wxT("diag"), buf);
 
     wxTransferStreamToFile(stream, buf);
 
@@ -256,7 +256,7 @@ bool DiagramCommand::Do(void)
         // Yes, you can have more than 2 control points, in which case
         // it becomes a multi-segment line.
         lineShape->MakeLineControlPoints(2);
-        lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_END, 10.0, 0.0, _T("Normal arrowhead"));
+        lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_END, 10.0, 0.0, wxT("Normal arrowhead"));
       }
 
       doc->GetDiagram()->AddShape(theShape);
@@ -415,7 +415,7 @@ void DiagramCommand::RemoveLines(wxShape *shape)
   while (node)
   {
     wxLineShape *line = (wxLineShape *)node->GetData();
-    doc->GetCommandProcessor()->Submit(new DiagramCommand(_T("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, line->Selected(), line));
+    doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, line->Selected(), line));
 
     node = shape->GetLines().GetFirst();
   }
@@ -523,7 +523,7 @@ void MyEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int WX
   if (otherShape && !otherShape->IsKindOf(CLASSINFO(wxLineShape)))
   {
     canvas->view->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand(_T("wxLineShape"), OGLEDIT_ADD_LINE, (DiagramDocument *)canvas->view->GetDocument(), CLASSINFO(wxLineShape),
+      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, (DiagramDocument *)canvas->view->GetDocument(), CLASSINFO(wxLineShape),
       0.0, 0.0, false, NULL, GetShape(), otherShape));
   }
 }
@@ -546,7 +546,7 @@ bool MyDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeSave(db, shape, expr);
   MyEvtHandler *handler = (MyEvtHandler *)shape.GetEventHandler();
-  expr.AddAttributeValueString(_T("label"), handler->label);
+  expr.AddAttributeValueString(wxT("label"), handler->label);
   return true;
 }
 
@@ -554,7 +554,7 @@ bool MyDiagram::OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeLoad(db, shape, expr);
   wxChar *label = NULL;
-  expr.AssignAttributeValue(_T("label"), &label);
+  expr.AssignAttributeValue(wxT("label"), &label);
   MyEvtHandler *handler = new MyEvtHandler(&shape, &shape, wxString(label));
   shape.SetEventHandler(handler);
 

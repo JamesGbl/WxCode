@@ -42,7 +42,7 @@ END_EVENT_TABLE()
 
 // Define my frame constructor
 csFrame::csFrame(wxDocManager* manager, wxFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
-  wxDocMDIParentFrame(manager, parent, id, title, pos, size, style, _T("frame"))
+  wxDocMDIParentFrame(manager, parent, id, title, pos, size, style, wxT("frame"))
 {
     CreateToolBar(wxNO_BORDER|wxTB_FLAT|wxTB_HORIZONTAL);
     wxGetApp().InitToolBar(GetToolBar());

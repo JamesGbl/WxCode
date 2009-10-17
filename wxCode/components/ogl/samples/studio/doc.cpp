@@ -52,9 +52,9 @@ bool csDiagramDocument::OnSaveDocument(const wxString& file)
     if (wxTheApp->GetAppName() != wxEmptyString)
         msgTitle = wxTheApp->GetAppName();
     else
-        msgTitle = wxString(_T("File error"));
+        msgTitle = wxString(wxT("File error"));
 
-    (void)wxMessageBox(_T("Sorry, could not open this file for saving."), msgTitle, wxOK | wxICON_EXCLAMATION,
+    (void)wxMessageBox(wxT("Sorry, could not open this file for saving."), msgTitle, wxOK | wxICON_EXCLAMATION,
       GetDocumentWindow());
     return false;
   }
@@ -73,12 +73,12 @@ bool csDiagramDocument::OnOpenDocument(const wxString& file)
   if (wxTheApp->GetAppName() != wxEmptyString)
     msgTitle = wxTheApp->GetAppName();
   else
-    msgTitle = wxString(_T("File error"));
+    msgTitle = wxString(wxT("File error"));
 
   m_diagram.DeleteAllShapes();
   if (!m_diagram.LoadFile(file))
   {
-    (void)wxMessageBox(_T("Sorry, could not open this file."), msgTitle, wxOK|wxICON_EXCLAMATION,
+    (void)wxMessageBox(wxT("Sorry, could not open this file."), msgTitle, wxOK|wxICON_EXCLAMATION,
      GetDocumentWindow());
     return false;
   }

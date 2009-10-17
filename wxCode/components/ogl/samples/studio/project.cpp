@@ -25,8 +25,8 @@ csProjectTreeCtrl::csProjectTreeCtrl(wxWindow *parent, const wxWindowID id, cons
   wxTreeCtrl(parent, id, pos, size, style),
   m_imageList(16, 16)
 {
-    m_imageList.Add(wxIcon(_T("folder1")));
-    m_imageList.Add(wxIcon(_T("file1")));
+    m_imageList.Add(wxIcon(wxT("folder1")));
+    m_imageList.Add(wxIcon(wxT("file1")));
 
     SetImageList(& m_imageList);
 }

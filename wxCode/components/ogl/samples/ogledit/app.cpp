@@ -42,7 +42,7 @@ bool MyApp::OnInit(void)
   myDocManager = new wxDocManager;
 
   //// Create a template relating drawing documents to their views
-  (void) new wxDocTemplate(myDocManager, _T("Diagram"), _T("*.dia"), wxEmptyString, _T("dia"), _T("Diagram Doc"), _T("Diagram View"),
+  (void) new wxDocTemplate(myDocManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
           CLASSINFO(DiagramDocument), CLASSINFO(DiagramView));
 
   // If we've only got one window, we only get to edit
@@ -58,43 +58,43 @@ bool MyApp::OnInit(void)
   //// Make a menubar
   wxMenu *file_menu = new wxMenu;
 
-  file_menu->Append(wxID_NEW, _T("&New..."));
-  file_menu->Append(wxID_OPEN, _T("&Open..."));
+  file_menu->Append(wxID_NEW, wxT("&New..."));
+  file_menu->Append(wxID_OPEN, wxT("&Open..."));
 
-  file_menu->Append(wxID_CLOSE, _T("&Close"));
-  file_menu->Append(wxID_SAVE, _T("&Save"));
-  file_menu->Append(wxID_SAVEAS, _T("Save &As..."));
+  file_menu->Append(wxID_CLOSE, wxT("&Close"));
+  file_menu->Append(wxID_SAVE, wxT("&Save"));
+  file_menu->Append(wxID_SAVEAS, wxT("Save &As..."));
   file_menu->AppendSeparator();
-  file_menu->Append(wxID_PRINT, _T("&Print..."));
-  file_menu->Append(wxID_PRINT_SETUP, _T("Print &Setup..."));
-  file_menu->Append(wxID_PREVIEW, _T("Print Pre&view"));
+  file_menu->Append(wxID_PRINT, wxT("&Print..."));
+  file_menu->Append(wxID_PRINT_SETUP, wxT("Print &Setup..."));
+  file_menu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
 
   wxMenu *edit_menu = new wxMenu;
-  edit_menu->Append(wxID_UNDO, _T("&Undo"));
-  edit_menu->Append(wxID_REDO, _T("&Redo"));
+  edit_menu->Append(wxID_UNDO, wxT("&Undo"));
+  edit_menu->Append(wxID_REDO, wxT("&Redo"));
   edit_menu->AppendSeparator();
-  edit_menu->Append(wxID_CUT, _T("&Cut"));
+  edit_menu->Append(wxID_CUT, wxT("&Cut"));
   edit_menu->AppendSeparator();
-  edit_menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _T("Change &background colour"));
-  edit_menu->Append(OGLEDIT_EDIT_LABEL, _T("Edit &label"));
+  edit_menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, wxT("Change &background colour"));
+  edit_menu->Append(OGLEDIT_EDIT_LABEL, wxT("Edit &label"));
 
   frame->editMenu = edit_menu;
 
   file_menu->AppendSeparator();
-  file_menu->Append(wxID_EXIT, _T("E&xit"));
+  file_menu->Append(wxID_EXIT, wxT("E&xit"));
 
   // A nice touch: a history of files visited. Use this menu.
   myDocManager->FileHistoryUseMenu(file_menu);
 
   wxMenu *help_menu = new wxMenu;
-  help_menu->Append(OGLEDIT_ABOUT, _T("&About"));
+  help_menu->Append(OGLEDIT_ABOUT, wxT("&About"));
 
   wxMenuBar *menu_bar = new wxMenuBar;
 
-  menu_bar->Append(file_menu, _T("&File"));
+  menu_bar->Append(file_menu, wxT("&File"));
   if (edit_menu)
-    menu_bar->Append(edit_menu, _T("&Edit"));
-  menu_bar->Append(help_menu, _T("&Help"));
+    menu_bar->Append(edit_menu, wxT("&Edit"));
+  menu_bar->Append(help_menu, wxT("&Help"));
 
   frame->canvas = frame->CreateCanvas(NULL, frame);
   frame->palette = wxGetApp().CreatePalette(frame);

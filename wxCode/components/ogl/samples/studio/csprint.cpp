@@ -98,8 +98,8 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
                 wxShape* fromShape = (wxShape*) mapping.Get((long) lineShape->GetFrom());
                 wxShape* toShape = (wxShape*) mapping.Get((long) lineShape->GetTo());
 
-                wxASSERT_MSG( (fromShape != NULL), _T("Could not find 'from' shape"));
-                wxASSERT_MSG( (toShape != NULL), _T("Could not find 'to' shape"));
+                wxASSERT_MSG( (fromShape != NULL), wxT("Could not find 'from' shape"));
+                wxASSERT_MSG( (toShape != NULL), wxT("Could not find 'to' shape"));
 
                 fromShape->AddLine(newShape, toShape, newShape->GetAttachmentFrom(),
                   newShape->GetAttachmentTo());
@@ -131,7 +131,7 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
                 {
                     wxLineShape* newLineShape = (wxLineShape*) mapping.Get((long) lineShape);
 
-                    wxASSERT_MSG( (newLineShape != NULL), _T("Could not find new line shape"));
+                    wxASSERT_MSG( (newLineShape != NULL), wxT("Could not find new line shape"));
 
                     newLines.Append(newLineShape);
                 }
@@ -178,8 +178,8 @@ bool wxDiagramClipboard::CopyToClipboard(double scale)
       delete newBitmap;
 
       wxChar buf[200];
-      wxSprintf(buf, _T("Sorry, could not allocate clipboard bitmap (%dx%d)"), (maxX+10), (maxY+10));
-      wxMessageBox(buf, _T("Clipboard copy problem"));
+      wxSprintf(buf, wxT("Sorry, could not allocate clipboard bitmap (%dx%d)"), (maxX+10), (maxY+10));
+      wxMessageBox(buf, wxT("Clipboard copy problem"));
       return false;
     }
 
@@ -219,7 +219,7 @@ bool wxDiagramClipboard::CopyToClipboard(double scale)
   }
   return true;
 #else
-  wxMessageBox("wxUSE_METAFILE in build required to use Clipboard", _T("Clipboard copy problem"));
+  wxMessageBox("wxUSE_METAFILE in build required to use Clipboard", wxT("Clipboard copy problem"));
   return false;
 #endif
 }
@@ -259,7 +259,7 @@ bool csDiagramClipboard::OnStartCopy(wxDiagram* diagramTo)
     csDiagramDocument* doc = diagram->GetDocument();
     ((csDiagramView*)doc->GetFirstView())->SelectAll(false);
 
-    m_currentCmd = new csDiagramCommand(_T("Paste"), doc);
+    m_currentCmd = new csDiagramCommand(wxT("Paste"), doc);
 
     return true;
 }

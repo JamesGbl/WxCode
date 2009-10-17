@@ -226,14 +226,14 @@ void csEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int at
         lineShape->MakeLineControlPoints(2);
 
         if (haveArrow)
-            lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, _T("Normal arrowhead"));
+            lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, wxT("Normal arrowhead"));
 
         lineShape->SetFrom(GetShape());
         lineShape->SetTo(otherShape);
         lineShape->SetAttachments(attachment, new_attachment);
 
         canvas->GetView()->GetDocument()->GetCommandProcessor()->Submit(
-            new csDiagramCommand(_T("Line"), (csDiagramDocument *)canvas->GetView()->GetDocument(),
+            new csDiagramCommand(wxT("Line"), (csDiagramDocument *)canvas->GetView()->GetDocument(),
                     new csCommandState(ID_CS_ADD_LINE, lineShape, NULL)));
   }
 }
@@ -391,7 +391,7 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
   newShape->SetX(xx);
   newShape->SetY(yy);
 
-  csDiagramCommand* cmd = new csDiagramCommand(_T("Move"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
+  csDiagramCommand* cmd = new csDiagramCommand(wxT("Move"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
                 new csCommandState(ID_CS_MOVE, newShape, GetShape()));
 
   // Move line points
@@ -539,7 +539,7 @@ void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, i
     }
   }
 
-  csDiagramCommand* cmd = new csDiagramCommand(_T("Size"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
+  csDiagramCommand* cmd = new csDiagramCommand(wxT("Size"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
                 new csCommandState(ID_CS_SIZE, newShape, shape));
 
   canvas->GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
@@ -563,7 +563,7 @@ void csEvtHandler::OnChangeAttachment(int attachment, wxLineShape* line, wxList&
     // Problem. If we refresh after the attachment change, we'll get a flicker.
     // We really want to do both in a oner.
 
-    csDiagramCommand* cmd = new csDiagramCommand(_T("Change attachment"), (csDiagramDocument*)canvas->GetView()->GetDocument());
+    csDiagramCommand* cmd = new csDiagramCommand(wxT("Change attachment"), (csDiagramDocument*)canvas->GetView()->GetDocument());
 
     wxLineShape* newLine = (wxLineShape*) line->CreateNewCopy();
     if (line->GetTo() == GetShape())
@@ -605,60 +605,60 @@ bool csEvtHandler::EditProperties()
     if (shape->IsKindOf(CLASSINFO(csThinRectangleShape)))
     {
         attributeDialog = new csThinRectangleDialog;
-        attributeDialogName = _T("thin_rectangle");
-        title = _T("Thin Rectangle Properties");
+        attributeDialogName = wxT("thin_rectangle");
+        title = wxT("Thin Rectangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csWideRectangleShape)))
     {
         attributeDialog = new csWideRectangleDialog;
-        attributeDialogName = _T("wide_rectangle");
-        title = _T("Wide Rectangle Properties");
+        attributeDialogName = wxT("wide_rectangle");
+        title = wxT("Wide Rectangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csTriangleShape)))
     {
         attributeDialog = new csTriangleDialog;
-        attributeDialogName = _T("triangle");
-        title = _T("Triangle Properties");
+        attributeDialogName = wxT("triangle");
+        title = wxT("Triangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csSemiCircleShape)))
     {
         attributeDialog = new csSemiCircleDialog;
-        attributeDialogName = _T("semi_circle");
-        title = _T("Semicircle Properties");
+        attributeDialogName = wxT("semi_circle");
+        title = wxT("Semicircle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csCircleShape)))
     {
         attributeDialog = new csCircleDialog;
-        attributeDialogName = _T("circle");
-        title = _T("Circle Properties");
+        attributeDialogName = wxT("circle");
+        title = wxT("Circle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csCircleShadowShape)))
     {
         attributeDialog = new csCircleShadowDialog;
-        attributeDialogName = _T("circle_shadow");
-        title = _T("Circle Shadow Properties");
+        attributeDialogName = wxT("circle_shadow");
+        title = wxT("Circle Shadow Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csTextBoxShape)))
     {
         attributeDialog = new csTextBoxDialog;
-        attributeDialogName = _T("text_box");
-        title = _T("Text Box Properties");
+        attributeDialogName = wxT("text_box");
+        title = wxT("Text Box Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csGroupShape)))
     {
         attributeDialog = new csGroupDialog;
-        attributeDialogName = _T("group");
-        title = _T("Group Properties");
+        attributeDialogName = wxT("group");
+        title = wxT("Group Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csOctagonShape)))
     {
         attributeDialog = new csOctagonDialog;
-        attributeDialogName = _T("octagon");
-        title = _T("Octagon Properties");
+        attributeDialogName = wxT("octagon");
+        title = wxT("Octagon Properties");
     }
     else
     {
-        wxMessageBox(_T("Unrecognised shape."), _T("Studio"), wxICON_EXCLAMATION);
+        wxMessageBox(wxT("Unrecognised shape."), wxT("Studio"), wxICON_EXCLAMATION);
         return false;
     }
 
@@ -684,7 +684,7 @@ bool csEvtHandler::EditProperties()
     csEvtHandler* handler2 = (csEvtHandler *)newShape->GetEventHandler();
     handler2->m_label = newLabel;
 
-    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(_T("Edit properties"), (csDiagramDocument*) view->GetDocument(),
+    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(wxT("Edit properties"), (csDiagramDocument*) view->GetDocument(),
                 new csCommandState(ID_CS_EDIT_PROPERTIES, newShape, shape)));
 
     return true;
@@ -699,7 +699,7 @@ bool csDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeSave(db, shape, expr);
   csEvtHandler *handler = (csEvtHandler *)shape.GetEventHandler();
-  expr.AddAttributeValueString(_T("label"), handler->m_label);
+  expr.AddAttributeValueString(wxT("label"), handler->m_label);
   return true;
 }
 
@@ -707,7 +707,7 @@ bool csDiagram::OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeLoad(db, shape, expr);
   wxString label = wxEmptyString;
-  expr.GetAttributeValue(_T("label"), label);
+  expr.GetAttributeValue(wxT("label"), label);
   csEvtHandler *handler = new csEvtHandler(&shape, &shape, label);
   shape.SetEventHandler(handler);
 
@@ -969,7 +969,7 @@ IMPLEMENT_DYNAMIC_CLASS(csGroupShape, wxRectangleShape)
 
 csGroupShape::csGroupShape()
 {
-    SetPen(wxThePenList->FindOrCreatePen(_T("BLACK"), 1, wxDOT));
+    SetPen(wxThePenList->FindOrCreatePen(wxT("BLACK"), 1, wxDOT));
     SetBrush(wxTRANSPARENT_BRUSH);
 
     SetSize(csSTANDARD_SHAPE_WIDTH, csSTANDARD_SHAPE_WIDTH);
@@ -1053,7 +1053,7 @@ bool csLineShape::OnMoveMiddleControlPoint(wxDC& WXUNUSED(dc), wxLineControlPoin
     lpt->SetX(lpt->m_originalPos.x); lpt->SetY(lpt->m_originalPos.y);
     lpt->m_point->x = lpt->m_originalPos.x; lpt->m_point->y = lpt->m_originalPos.y;
 
-    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(_T("Move line point"), (csDiagramDocument*) view->GetDocument(),
+    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(wxT("Move line point"), (csDiagramDocument*) view->GetDocument(),
                 new csCommandState(ID_CS_MOVE_LINE_POINT, newShape, this)));
 
     return true;
@@ -1150,12 +1150,12 @@ void studioShapeEditProc(wxMenu& menu, wxCommandEvent& event)
             if (event.GetId() == ID_CS_ROTATE_CLOCKWISE)
             {
                 theta += ninetyDegrees;
-                opStr = _T("Rotate clockwise");
+                opStr = wxT("Rotate clockwise");
             }
             else
             {
                 theta -= ninetyDegrees;
-                opStr = _T("Rotate anticlockwise");
+                opStr = wxT("Rotate anticlockwise");
             }
 
             if (theta >= 2.0*myPi || theta < 0.0)
