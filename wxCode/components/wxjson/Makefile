@@ -36,8 +36,8 @@ CXX = g++
 CXXFLAGS =  -g -O0
 CPPFLAGS = 
 LDFLAGS = 
-WX_CXXFLAGS = -I/usr/local/lib/wx/include/gtk2-ansi-debug-2.8 -I/usr/local/include/wx-2.8 -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXDEBUG__ -D__WXGTK__ -pthread -fno-rtti -fno-exceptions
-WX_LIBS = -L/usr/local/lib -pthread   -lwx_gtk2d_core-2.8 -lwx_based-2.8 
+WX_CXXFLAGS = -I/usr/local/lib/wx/include/gtk2-unicode-debug-2.8 -I/usr/local/include/wx-2.8 -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXDEBUG__ -D__WXGTK__ -pthread -fno-rtti -fno-exceptions
+WX_LIBS = -L/usr/local/lib -pthread   -lwx_gtk2ud_core-2.8 -lwx_baseud-2.8 
 WX_VERSION_MAJOR = 2
 WX_VERSION_MINOR = 8
 WX_PORT = gtk2
@@ -90,8 +90,8 @@ TEST_OBJECTS =  \
 #CXXC = $(CXX)
 CXXC = $(BK_DEPS) $(CXX)
 #WXLIBPOSTFIX = u
-WXLIBPOSTFIX = d
-#WXLIBPOSTFIX = ud
+#WXLIBPOSTFIX = d
+WXLIBPOSTFIX = ud
 COND_WX_SHARED_0___wxjson_lib___depname = \
 	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxjson-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 #__wxjson_lib___depname = $(COND_WX_SHARED_0___wxjson_lib___depname)

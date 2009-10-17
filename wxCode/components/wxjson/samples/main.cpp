@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	7
+#define NUM_TESTS	8
 
 
 // the test function's structure
@@ -354,7 +354,7 @@ int main( int argc, char* argv[] )
 		// family #8		(test5.cpp)
 		{
 			0,		// test #0: description of the family
-			1,		// m_auto 1=unicode, not applicable in ANSI builds
+			3,		// m_auto
 			_T( "testing the wxJSONReader class (strings use different charsets)" )
 		},
 		{
