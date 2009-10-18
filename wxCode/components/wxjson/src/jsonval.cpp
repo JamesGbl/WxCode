@@ -53,6 +53,7 @@ static const wxChar* cowTraceMask = _T("traceCOW" );
  \b wxWidgets documentation in order to speed up processing. 
  The class is used internally by the wxJSONValue class which does
  all processing.
+ To know more about COW see \ref json_internals_cow
 */
 
 #if defined( WXJSON_USE_VALUE_COUNTER )
@@ -83,6 +84,7 @@ wxJSONRefData::~wxJSONRefData()
 {
 }
 
+// Return the number of objects that reference this data.
 int
 wxJSONRefData::GetRefCount() const
 {
@@ -116,11 +118,11 @@ To know more about 64-bits integer support see \ref json_internals_integer
 Storing values in a JSON value object of this class is very simple.
 The following is an example:
 \code
-	wxJSONValue v( _T( "A string")); 	 // store a string value in the object
-	wxString s = v.AsString(); 		// get the string value
+	wxJSONValue v( _T( "A string"));  // store a string value in the object
+	wxString s = v.AsString();        // get the string value
 
-	v = 12;			 // now 'v' contains an integer value
-	int i = v.AsInt(); 		// get the integer
+	v = 12;            // now 'v' contains an integer value
+	int i = v.AsInt(); // get the integer
 \endcode
 
 To know more about using this class see the \ref wxjson_tutorial.
@@ -394,7 +396,7 @@ wxJSONValue::~wxJSONValue()
 
  \par Integer types
 
- Integers are stored internally in a \b (unsigned) \b long \b int
+ Integers are stored internally in a \b signed/unsigned \b long \b int
  or, on platforms that support 64-bits integers, in a
  \b wx(U)Int64 data type.
  When constructed, it is assigned a generic integer type that only
@@ -498,6 +500,12 @@ wxJSONValue::IsNull() const
  The function returns TRUE if the wxJSONValue object was correctly
  initialized - that is it contains a valid value.
  A JSON object is valid if its type is not equal to wxJSONTYPE_INVALID.
+ Please note that the default ctor of wxJSONValue constructs a \b valid
+ JSON object of type \b null.
+ To create an invalid object you have to use;
+ \code
+   wxJSONValue v( wxJSONTYPE_INVALID );
+ \endcode
 */
 bool
 wxJSONValue::IsValid() const
@@ -1104,9 +1112,6 @@ wxJSONValue::AsUShort() const
      cout << "Error: value is not of the expected type";
    }
  \endcode
- Note that all functions of this family just do the same that I wrote
- before. If FALSE is returned, the value in the provided argument is
- left unchanged.
  Thanks to \b catalin who has suggested this new feature.
 */
 bool
@@ -1645,7 +1650,7 @@ wxJSONValue::Item( const wxString& key )
 /*!
  The function returns a copy of the object at the specified
  index.
- If the element does not exist, the function returns an 'empty' value.
+ If the element does not exist, the function returns an \b invalid value.
 */
 wxJSONValue
 wxJSONValue::ItemAt( unsigned index ) const
@@ -1668,7 +1673,7 @@ wxJSONValue::ItemAt( unsigned index ) const
 /*!
  The function returns a copy of the object in the map
  that has the specified key.
- If \c key does not exist, an 'empty' value is returned.
+ If \c key does not exist, an \b invalid value is returned.
 */
 wxJSONValue
 wxJSONValue::ItemAt( const wxString& key ) const

@@ -1,7 +1,7 @@
 
 /*! \mainpage wxJSON - The wxWidgets implementation of JSON 
 
-<center><b>version 1.0</b></center>
+<center><b>version 1.1</b></center>
 
 <center>http://luccat.users.sourceforge.net/wxjson/</center>
 
@@ -203,7 +203,9 @@ JSON implementation is \b iterators.
 Many other JSON implementations do provide iterators for the
 array and the object JSON types.
 I do not implement them because they need STL containers and I
-do not want the wxJSON library to depend on STL.
+do not want the wxJSON library to depend on STL although
+there is a plan to let the user choose the container to be used:
+wxWidget's implementation or STL.
 
 JSON data format is very stable. It is accredited to be
 stable forever or, at least, until programming languages 
@@ -217,7 +219,8 @@ keep \b wxJSON compatible with the new releases of \b wxWidgets.
 
 \section main_thanks Contributors
 
-Many thanks to Bryan Ashby, Robbie Groenewoudt and Alexander Stigsen
+Many thanks to Bryan Ashby, Robbie Groenewoudt, Alexander Stigsen,
+Andrejs Cainikovs and Kolya Kosenko
 for their help in writing and debugging this library.
 
 

@@ -120,6 +120,46 @@ int main( int argc, char* argv[] )
 	// write output to STDOUT
 	gs_cout = new wxFFile( stdout );
 
+#if wxCHECK_VERSION( 2, 9, 0 )
+    // I got compile errors in wxW 2.9 if the string constants of the wxCmdLineDescEntry
+    // class were enclosed in the _T() macro but it seems that wxW 2.8 needs that macro
+    // so I conditionally compile this piece of code
+	wxCmdLineEntryDesc cmdLineDesc[] =  {
+		{ wxCMD_LINE_SWITCH, "s", "nostop", "do not stop on test\'s failure" },
+		{ wxCMD_LINE_SWITCH, "l", "list", "list test\'s descriptions" },
+		{ wxCMD_LINE_OPTION, "r", "reader", 
+			"use the specified flags for the reader", wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_OPTION, "w", "writer", 
+			"use the specified flags for the writer", wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_OPTION, "f", "file", "the filename to be read (test #15)",
+						wxCMD_LINE_VAL_STRING },
+		{ wxCMD_LINE_PARAM, NULL, NULL, "test [sub-test]", wxCMD_LINE_VAL_NUMBER,
+				wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE },
+		{ wxCMD_LINE_NONE },
+	};
+	wxCmdLineParser cmdLine( cmdLineDesc, argc, argv );
+	int result = cmdLine.Parse();
+	if ( result > 0 )  {
+		return 1;        // error
+	}
+	else if ( result < 0 )  {
+		return 1;        // '-h'
+	}
+	if ( cmdLine.Found( _T("nostop" )))  {
+		gs_nostop = true;
+	}
+	if ( cmdLine.Found( _T("list" )))  {
+		gs_list = true;
+	}
+
+	wxString flags;
+	
+	// get a option's argument and store in static variables. This arguments are only usefull for test
+	// nr. 2.7 (write to the specified file) and 4.7 (read from the specified file)
+	cmdLine.Found( _T("file"), &gs_fileName );
+	cmdLine.Found( _T("reader"), &flags );
+	cmdLine.Found( _T("writer"), &flags );
+#else
 	wxCmdLineEntryDesc cmdLineDesc[] =  {
 		{ wxCMD_LINE_SWITCH, _T("s"), _T("nostop"), _T("do not stop on test\'s failure") },
 		{ wxCMD_LINE_SWITCH, _T("l"), _T("list"), _T("list test\'s descriptions") },
@@ -155,6 +195,7 @@ int main( int argc, char* argv[] )
 	cmdLine.Found( _T("file"), &gs_fileName );
 	cmdLine.Found( _T("reader"), &flags );
 	cmdLine.Found( _T("writer"), &flags );
+#endif
 
 	TestStruc testArray[] =  {
 		// family #0 does not exist

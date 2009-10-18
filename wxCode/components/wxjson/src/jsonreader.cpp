@@ -48,7 +48,7 @@
  The wxJSON parser just skips all characters read from the
  input JSON text until the start-object '{' or start-array '[' characters
  are encontered (see the GetStart() function).
- This means that the JSON input text may contain everything
+ This means that the JSON input text may contain anything
  before the first start-object/array character except these two chars themselves
  unless they are included in a C/C++ comment.
  Comment lines that apear before the first start array/object character,
@@ -59,7 +59,7 @@
  returns. Because that function is recursive, the top-level close-object
  '}' or close-array ']' character cause the top-level DoRead() function
  to return thus stopping the parsing process regardless the EOF condition.
- This means that the JSON input text may contain everything \b after
+ This means that the JSON input text may contain anything \b after
  the top-level close-object/array character.
  Here are some examples:
 
@@ -160,8 +160,12 @@
   }
  \endcode
 
+ Starting from version 1.1.0 the wxJSON reader and the writer has changed in
+ their internal organization. 
  To know more about ANSI and Unicode mode read \ref wxjson_tutorial_unicode.
 */
+
+
 
 // if you have the debug build of wxWidgets and wxJSON you can see
 // trace messages by setting the:
@@ -270,13 +274,13 @@ wxJSONReader::~wxJSONReader()
  then this function must change the type of the \c val object to
  \c wxJSONTYPE_OBJECT and the old content of 10 array elements will be lost.
 
- When reading from a \b wxInputStream the JSON text must be encoded
- in UTF-8 format for both Unicode and ANSI builds.
- When reading from a \b wxString object, the input text is encoded
- in different formats depending on the platform and the build
- mode: in Unicode builds, strings are encoded in UCS-2 format on
- Windows and in UCS-4 format on GNU/Linux; in ANSI builds, strings
- contain one-byte locale dependent characters.
+ \par Different input types
+ 
+ The real parsing process in done using UTF-8 streams. If the input is
+ from a \b wxString object, the Parse function converts the input string
+ in a temporary \b wxMemoryInputStream which contains to UTF-8 conversion
+ of the string itself.
+ Next, the overloaded Parse function is called.
 */
 int
 wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )
@@ -431,7 +435,7 @@ wxJSONReader::GetWarningCount() const
  The function also updates the \c m_lineNo and \c m_colNo data
  members and converts all CR+LF sequence in LF.
 
- This function only returns one byte UTF-8 (ont code unit) 
+ This function only returns one byte UTF-8 (one code unit) 
  at a time and not Unicode code points.
  The only reason for this function is to process line and column
  numbers.
@@ -476,8 +480,9 @@ wxJSONReader::ReadChar( wxInputStream& is )
 
 //! Peek a character from the input JSON document
 /*!
- This function is much like GetChar() but it does not update
- the stream or string input position.
+ This function just calls the \b Peek() function on the stream
+ and returns it.
+ If EOF, -1 is returned.
 */
 int
 wxJSONReader::PeekChar( wxInputStream& is )
@@ -495,9 +500,9 @@ wxJSONReader::PeekChar( wxInputStream& is )
 /*!
  This is a recursive function that is called by \c Parse()
  and by the \c DoRead() function itself when a new object /
- array is encontered.
+ array character is encontered.
  The function returns when a EOF condition is encontered or
- when the final close-object / close-array char is encontered.
+ when the corresponding close-object / close-array char is encontered.
  The function also increments the \c m_level
  data member when it is entered and decrements it on return.
  It also sets \c m_depth equal to \c m_level if \c m_depth is
