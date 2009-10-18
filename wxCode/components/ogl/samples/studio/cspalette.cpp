@@ -115,37 +115,37 @@ bool csApp::CreatePalette(wxFrame *parent)
 
   palette->SetToolBitmapSize(toolBitmapSize);
 
-  palette->AddTool(PALETTE_ARROW, PaletteArrow, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Pointer"));
-  palette->AddTool(PALETTE_TEXT_TOOL, TextTool, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Text"));
+  palette->AddCheckTool(PALETTE_ARROW, wxEmptyString, PaletteArrow, wxNullBitmap, _("Pointer"));
+  palette->AddCheckTool(PALETTE_TEXT_TOOL, wxEmptyString, TextTool, wxNullBitmap, _("Text"));
 
   wxChar const * * symbols = new wxChar const *[20];
   int noSymbols = 0;
 
-  symbols[noSymbols] = wxT("Wide Rectangle");
+  symbols[noSymbols] = _("Wide Rectangle");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("Thin Rectangle");
+  symbols[noSymbols] =  _("Thin Rectangle");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("Triangle");
+  symbols[noSymbols] =  _("Triangle");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("Octagon");
+  symbols[noSymbols] =  _("Octagon");
   noSymbols ++;
 
   // For some reason, we're getting Gdk errors with
   // some shapes, such as ones that use DrawEllipse.
 #ifndef __WXGTK__
-  symbols[noSymbols] =  wxT("Group");
+  symbols[noSymbols] =  _("Group");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("Circle");
+  symbols[noSymbols] =  _("Circle");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("Circle shadow");
+  symbols[noSymbols] =  _("Circle shadow");
   noSymbols ++;
 
-  symbols[noSymbols] =  wxT("SemiCircle");
+  symbols[noSymbols] =  _("SemiCircle");
   noSymbols ++;
 #endif
 
@@ -156,7 +156,7 @@ bool csApp::CreatePalette(wxFrame *parent)
       if (symbol)
       {
            wxBitmap* bitmap = GetSymbolDatabase()->CreateToolBitmap(symbol, toolBitmapSize);
-           palette->AddTool(symbol->GetToolId(), *bitmap, wxNullBitmap, true, 0, wxDefaultCoord, NULL, symbol->GetName());
+           palette->AddCheckTool(symbol->GetToolId(), wxEmptyString, *bitmap, wxNullBitmap, symbol->GetName());
 
            delete bitmap;
       }

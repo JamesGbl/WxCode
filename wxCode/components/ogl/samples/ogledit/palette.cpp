@@ -74,11 +74,11 @@ EditorToolPalette *MyApp::CreatePalette(wxFrame *parent)
   palette->SetMargins(2, 2);
   palette->SetToolBitmapSize(wxSize(22, 22));
 
-  palette->AddTool(PALETTE_ARROW, PaletteArrow, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Pointer"));
-  palette->AddTool(PALETTE_TOOL1, PaletteTool1, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Tool 1"));
-  palette->AddTool(PALETTE_TOOL2, PaletteTool2, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Tool 2"));
-  palette->AddTool(PALETTE_TOOL3, PaletteTool3, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Tool 3"));
-  palette->AddTool(PALETTE_TOOL4, PaletteTool4, wxNullBitmap, true, 0, wxDefaultCoord, NULL, wxT("Tool 4"));
+  palette->AddCheckTool(PALETTE_ARROW, wxEmptyString, PaletteArrow, wxNullBitmap, _("Pointer"));
+  palette->AddCheckTool(PALETTE_TOOL1, wxEmptyString, PaletteTool1, wxNullBitmap, _("Tool 1"));
+  palette->AddCheckTool(PALETTE_TOOL2, wxEmptyString, PaletteTool2, wxNullBitmap, _("Tool 2"));
+  palette->AddCheckTool(PALETTE_TOOL3, wxEmptyString, PaletteTool3, wxNullBitmap, _("Tool 3"));
+  palette->AddCheckTool(PALETTE_TOOL4, wxEmptyString, PaletteTool4, wxNullBitmap, _("Tool 4"));
 
   palette->Realize();
 
