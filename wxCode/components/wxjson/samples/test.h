@@ -112,6 +112,10 @@ extern int Test8_4();  // (ANSI) input from a wxString object
 //		*********** test6.cpp ****************
 //
 // family #9: test the wxJSON reader and writer speed
+extern int Test9_1();  // write 40.000 values to a wxString object
+extern int Test9_2();  // write 40.000 values to a stream object
+extern int Test9_3();  // read 40.000 values from a wxString object
+extern int Test9_4();  // read 40.000 values from a stream object
 
 
 

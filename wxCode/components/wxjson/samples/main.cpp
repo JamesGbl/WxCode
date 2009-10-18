@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	8
+#define NUM_TESTS	9
 
 
 // the test function's structure
@@ -409,6 +409,27 @@ int main( int argc, char* argv[] )
 		},
 		{
 			Test8_4, 2, _T( "(ANSI) an array of strings read from a wxString" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+
+
+		// family #9		(test6.cpp)
+		{
+			0,		// test #0: description of the family
+			0,		// m_auto (none)
+			_T( "testing the wxJSON reader and writer speed" )
+		},
+		{
+			Test9_1, 3, _T( "writing 40,000 values to a string object" )
+		},
+		{
+			Test9_2, 3, _T( "writing 40,000 values to a string object" )
+		},
+		{
+			Test9_3, 3, _T( "writing 40,000 values to a string object" )
+		},
+		{
+			Test9_4, 3, _T( "writing 40,000 values to a string object" )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		
