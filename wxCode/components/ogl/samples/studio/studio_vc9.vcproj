@@ -896,6 +896,54 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Header Files"
+			>
+			<File
+				RelativePath=".\app.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cspalette.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dialogs.h"
+				>
+			</File>
+			<File
+				RelativePath=".\doc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\mainfrm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\precomp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\project.h"
+				>
+			</File>
+			<File
+				RelativePath=".\shapes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\studio_resources.h"
+				>
+			</File>
+			<File
+				RelativePath=".\symbols.h"
+				>
+			</File>
+			<File
+				RelativePath=".\view.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

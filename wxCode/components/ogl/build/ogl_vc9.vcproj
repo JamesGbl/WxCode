@@ -940,6 +940,74 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Header Files"
+			>
+			<File
+				RelativePath="..\include\wx\ogl\basic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\basicp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\bmpshape.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\canvas.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\composit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\constrnt.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\divided.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\drawn.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\drawnp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\lines.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\linesp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\mfutils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\misc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\ogl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\ogl\ogldiag.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\precomp.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

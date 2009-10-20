@@ -662,6 +662,30 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Header Files"
+			>
+			<File
+				RelativePath=".\app.h"
+				>
+			</File>
+			<File
+				RelativePath=".\doc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\palette.h"
+				>
+			</File>
+			<File
+				RelativePath=".\precomp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\view.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
