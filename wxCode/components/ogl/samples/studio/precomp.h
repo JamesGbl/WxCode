@@ -1,6 +1,8 @@
 // precomp.h
 
-#include "wx/wx.h"
+#define WX_PRECOMP
+#include "wx/wxprec.h"
+
 #include "wx/laywin.h"
 #include "wx/mdi.h"
 #include "wx/config.h"

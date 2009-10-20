@@ -1,6 +1,8 @@
 // precomp.h
 
-#include "wx/wx.h"
+#define WX_PRECOMP
+#include "wx/wxprec.h"
+
 #include "wx/ioswrap.h"
 #include "wx/toolbar.h"
 #include "wx/colordlg.h"
