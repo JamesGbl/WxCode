@@ -132,7 +132,7 @@ bool csApp::OnInit(void)
     fileMenu->Append(wxID_PRINT_SETUP, wxT("Print &Setup..."));
     fileMenu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
     fileMenu->AppendSeparator();
-    fileMenu->Append(wxID_EXIT, wxT("E&xit"));
+    fileMenu->Append(wxID_EXIT);
 
     // A history of files visited. Use this menu.
     m_docManager->FileHistoryUseMenu(fileMenu);
@@ -240,7 +240,7 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
     fileMenu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
 
     fileMenu->AppendSeparator();
-    fileMenu->Append(wxID_EXIT, wxT("E&xit"));
+    fileMenu->Append(wxID_EXIT);
 
     wxMenu* editMenu = new wxMenu;
     editMenu->Append(wxID_UNDO, wxT("&Undo\tCtrl+Z"));

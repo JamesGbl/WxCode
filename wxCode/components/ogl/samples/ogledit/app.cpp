@@ -81,7 +81,7 @@ bool MyApp::OnInit(void)
   frame->editMenu = edit_menu;
 
   file_menu->AppendSeparator();
-  file_menu->Append(wxID_EXIT, wxT("E&xit"));
+  file_menu->Append(wxID_EXIT);
 
   // A nice touch: a history of files visited. Use this menu.
   myDocManager->FileHistoryUseMenu(file_menu);
