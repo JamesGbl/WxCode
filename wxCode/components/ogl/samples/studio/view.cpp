@@ -135,7 +135,7 @@ void csDiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
 // Clean up windows used for displaying the view.
 bool csDiagramView::OnClose(bool deleteWindow)
 {
-  if (!GetDocument()->Close())
+  if (!wxView::OnClose(deleteWindow))
     return false;
 
   csDiagramDocument *diagramDoc = (csDiagramDocument *)GetDocument();
