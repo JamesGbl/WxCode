@@ -1027,12 +1027,24 @@ wxJSONReader::SkipComment( wxInputStream& is )
  The function reads a string value from input stream and it is
  called by the \c DoRead() function when it enconters the
  double quote characters.
- The function read all characters up to the next double quotes
- unless it is escaped.
- Also, the function recognizes the escaped characters defined
+ The function read all bytes up to the next double quotes
+ (unless it is escaped) and stores them in a temporary UTF-8
+ memory buffer.
+ Also, the function processes the escaped characters defined
  in the JSON syntax.
 
- The string is also stored in the provided wxJSONValue argument
+ Next, the function tries to convert the UTF-8 buffer to a
+ \b wxString object using the \b wxString::FromUTF8 function.
+ Depending on the build mode, we can have the following:
+ \li in Unicode the function always succeeds, provided that the
+    buffer contains valid UTF-8 code units.
+    
+ \li in ANSI builds the conversion may fail because of the presence of
+    unrepresentable characters in the current locale. In this case,
+    the function just \b copies the UTF-8 buffer to the \b wxString
+    object using the \b wxString::From8BitData fucntion.
+    
+ The string is, finally, stored in the provided wxJSONValue argument
  provided that it is empty or it contains a string value.
  This is because the parser class recognizes multi-line strings
  like the following one:
@@ -1043,7 +1055,7 @@ wxJSONReader::SkipComment( wxInputStream& is )
    ]
  \endcode
  Because of the lack of the value separator (,) the parser
- assumes that the string was split into several double-quoted
+ assumes that the string was splitted into several double-quoted
  strings.
  If the value does not contain a string then an error is
  reported.
@@ -1186,12 +1198,13 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 /*!
  This function is called by the ReadValue() when the
  first character encontered is not a special char
- and it is not a string.
- The only possible type is a literal or a number.
- It stores the bytes read in a temporary char buffer
- and then assigns the char buffer to the \c s string.
- Returns the next character read which is a
- whitespace or a special JSON character.
+ and it is not a double-quote.
+ The only possible type is a literal or a number which
+ all lies in the US-ASCII charset so their UTF-8 encodeing
+ is the same as US-ASCII.
+ The function simply reads one byte at a time from the stream
+ and appends them to a \b wxString object.
+ Returns the next character read.
 
  A token cannot include \e unicode \e escaped \e sequences
  so this function does not try to interpret such sequences.
@@ -1246,6 +1259,18 @@ wxJSONReader::ReadToken( wxInputStream& is, int ch, wxString& s )
  The function also checks that \c val is of type wxJSONTYPE_INVALID otherwise
  an error is reported becasue a value cannot follow another value:
  maybe a (,) or (:) is missing.
+ 
+ If the literal starts with a digit, a plus or minus sign, the function
+ tries to interpret it as a number. The following are tried by the function,
+ in this order:
+ 
+ \li if the literal starts with a digit: signed integer, then unsigned integer
+        and finally double conversion is tried
+ \li if the literal starts with a minus sign: signed integer, then  double
+        conversion is tried
+ \li if the literal starts with plus sign: unsigned integer
+        then double conversion is tried
+     
  Returns the next character or -1 on EOF.
 */
 int
@@ -1412,16 +1437,15 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
  \endcode
  where XXXX is a four-digit hex code..
  The function reads four chars from the input UTF8 stream by calling ReadChar()
- four times: if -1( EOF) is encontered before reading four chars, -1 is
- also returned.
+ four times: if EOF is encontered before reading four chars, -1 is
+ also returned and no sequence interpretation is performed.
  The function stores the 4 hexadecimal digits in the \c uesBuffer parameter.
 
- Returns the character after the hex sequence or -1 if EOF or if the
- four characters cannot be converted to a hex number.
+ Returns the character after the hex sequence or -1 if EOF.
  
  \b NOTICE: although the JSON syntax states that only control characters
- are represented in this way, the wxJSON library reads and recognized all
- unicode characters in the BMP stored in such a way.
+ are represented in this way, the wxJSON library reads and recognizes all
+ unicode characters in the BMP.
 */
 int
 wxJSONReader::ReadUES( wxInputStream& is, char* uesBuffer )
@@ -1451,7 +1475,11 @@ wxJSONReader::ReadUES( wxInputStream& is, char* uesBuffer )
 
  that represent a control character.
  The \c uesBuffer parameter contains the 4 hexadecimal digits that are
- converted to a wchar_t character which is then converted to UTF-8.
+ read from \c ReadUES.
+ 
+ The function tries to convert the 4 hex digits in a \b wchar_t character
+ which is appended to the memory buffer \utf8Buff after converting it
+ to UTF-8.
  
  If the conversion from hexadecimal fails, the function does not
  store the character in the UTF-8 buffer and an error is reported.
@@ -1673,7 +1701,7 @@ wxJSONReader::UTF8NumBytes( char ch )
 
 #if defined( wxJSON_64BIT_INT )
 //! Converts a decimal string to a 64-bit signed integer
-/*
+/*!
  This function implements a simple variant
  of the \b strtoll C-library function.
  I needed this implementation because the wxString::To(U)LongLong
@@ -1689,12 +1717,15 @@ wxJSONReader::UTF8NumBytes( char ch )
  the 'wxHAS_STRTOLL' macro is not defined on my system.
  The problem only affects the Unicode builds while it seems 
  that the wxString::To(U)LongLong function works in ANSI builds.
- To know more about see the \c Test58() function in the \c samples/test13.cpp
- source file.
 
  Note that this implementation is not a complete substitute of the
  strtoll function because it only converts decimal strings (only base
  10 is implemented).
+ 
+ @param str the string that contains the decimal literal
+ @param i64 the pointer to long long which holds the converted value
+ 
+ @return TRUE if the conversion succeeds
 */
 bool
 wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
@@ -1729,6 +1760,9 @@ wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
 
 
 //! Converts a decimal string to a 64-bit unsigned integer.
+/*!
+ Similar to \c Strtoll but for unsigned integers
+*/
 bool
 wxJSONReader::Strtoull( const wxString& str, wxUint64* ui64 )
 {
@@ -1742,9 +1776,14 @@ wxJSONReader::Strtoull( const wxString& str, wxUint64* ui64 )
 
 //! Perform the actual conversion from a string to a 64-bit integer
 /*!
- This function is called internally by the Strtoll and Strtoull functions
+ This function is called internally by the \c Strtoll and \c Strtoull functions
  and it does the actual conversion.
  The function is also able to check numeric overflow.
+ 
+ @param str the string that has to be converted
+ @param ui64 the pointer to a unsigned long long that holds the converted value
+ @param sign the pointer to a wxChar character that will get the sign of the literal string, if any
+ @return TRUE if the conversion succeeds
 */
 bool
 wxJSONReader::DoStrto_ll( const wxString& str, wxUint64* ui64, wxChar* sign )

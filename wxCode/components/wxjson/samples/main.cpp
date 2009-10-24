@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	9
+#define NUM_TESTS	10
 
 
 // the test function's structure
@@ -433,6 +433,32 @@ int main( int argc, char* argv[] )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		
+		// family #10		(test7.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto (all)
+			_T( "test the comment related functions (writer)" )
+		},
+		{
+			Test10_1, 3, _T( "test the wxJSONValue's memberfunctions" )
+		},
+		{
+			Test10_2, 3, _T( "write a commented value using style wxJSONWRITER_STYLED" )
+		},
+		{
+			Test10_3, 3, _T( "write a commented value using style wxJSONWRITER_NONE" )
+		},
+		{
+			Test10_4, 3, _T( "write a commented value using style wxJSONWRITER_WRITE_COMMENTS" )
+		},
+		{
+			Test10_5, 3, _T( "write a commented value using style wxJSONWRITER_COMMENTS_BEFORE" )
+		},
+		{
+			Test10_6, 3, _T( "write a commented value using style wxJSONWRITER_COMMENTS_AFTER" )
+		},
+		{ 0 },{ 0 },{ 0 },
+		
 
 		// END OF TABLE
 		{0}
@@ -446,7 +472,7 @@ int main( int argc, char* argv[] )
 	int numSubTestEnd   = NUM_SUBTESTS - 1;
 	
 	// sets the starting test and sub-test numbers for every parameter
-	// parameters are in the form X[.YY]
+	// parameters are in the form XX [YY]
 	wxString p1, p2;
 	if ( numParams > 0 )	{
 		p1 = cmdLine.GetParam( 0 );	// p1 = test number (the family)
@@ -501,22 +527,22 @@ int main( int argc, char* argv[] )
 			TestFunc funcPtr = testArray[idx].m_funcPtr; 
 			if ( funcPtr )	{
 				if ( gs_list )	{
-					TestCout( _T("Subtest number: " ));
+					TestCout( _T("Subtest #" ));
 					TestCout( y );
 					// print the description of the TEST
 					TestCout( _T( " - "));
 					TestCout( testArray[idx].m_testDesc );
-					TestCout( _T( " AUTO=" ));
-					TestCout( ( testArray[idx].m_auto ? _T( "YES" ) : _T( "NO" )));
+					//TestCout( _T( " AUTO=" ));
+					//TestCout( ( testArray[idx].m_auto ? _T( "YES" ) : _T( "NO" )));
 					TestCout( (wxChar) '\n', false );
 					continue;
 				}
 				else	{
-					TestCout( _T("\nPerforming Subtest number: " ));
+					TestCout( _T("\nPerforming Subtest #" ));
 				}
 				TestCout( y );
 				// print the description of the TEST
-				TestCout( _T( " - "));
+				TestCout( _T( "\nDescription: "));
 				TestCout( testArray[idx].m_testDesc );
 				TestCout( (wxChar) '\n', false );
 
@@ -535,9 +561,9 @@ int main( int argc, char* argv[] )
 		#endif
 				if ( runTest )	{
 					result = funcPtr();
-					TestCout( _T("----------------------------\nEND TEST: result=" ));
+					TestCout( _T("<-- END TEST: result=" ));
 					TestCout( result );
-					TestCout( _T("\n----------------------------\n" ));
+					TestCout( _T(" -->\n" ));
 				}
 				// if the test fails, stop the program
 				if ( result > 0 && !gs_nostop )  {

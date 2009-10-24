@@ -291,8 +291,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 
 	// first write the comment if it is BEFORE
 	if ( commentPos == wxJSONVALUE_COMMENT_BEFORE )   {
-		lastChar = WriteIndent( os );
-		lastChar = WriteComment( os, value );
+		lastChar = WriteComment( os, value, true );
 		if ( lastChar < 0 )   {
 			return lastChar;
 		}
@@ -361,8 +360,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 		// the inline comment for objects and arrays are printed in the open char
 		if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
 			commentPos = -1;  // we have already written the comment
-			os.PutC( '\t' );
-			lastChar = WriteComment( os, value );
+			lastChar = WriteComment( os, value, false );
 			if ( lastChar < 0 )   {
 				return lastChar;
 			}
@@ -405,9 +403,8 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 		os.PutC( '{' );
 		// the inline comment for objects and arrays are printed in the open char
 		if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
-			os.PutC( '\t' );
 			commentPos = -1;  // we have already written the comment
-			lastChar = WriteComment( os, value );
+			lastChar = WriteComment( os, value, false );
 			if ( lastChar < 0 )   {
 				return lastChar;
 			}
@@ -456,16 +453,14 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 	}
 
 	if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
-		os.PutC( '\t' );
-		lastChar = WriteComment( os, value );
+		lastChar = WriteComment( os, value, false );
 		if ( lastChar < 0 )   {
 			return lastChar;
 		}
 	}
 	else if ( commentPos == wxJSONVALUE_COMMENT_AFTER )   {
 		WriteSeparator( os );
-		WriteIndent( os );
-		lastChar = WriteComment( os, value );
+		lastChar = WriteComment( os, value, true );
 		if ( lastChar < 0 )   {
 			return lastChar;
 		}
@@ -479,7 +474,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 
 //! Write the comment strings, if any.
 int
-wxJSONWriter::WriteComment( wxOutputStream& os, const wxJSONValue& value )
+wxJSONWriter::WriteComment( wxOutputStream& os, const wxJSONValue& value, bool indent )
 {
 	// the function returns the last character written which should be
 	// a LF char or -1 in case of errors
@@ -494,6 +489,12 @@ wxJSONWriter::WriteComment( wxOutputStream& os, const wxJSONValue& value )
 	const wxArrayString cmt = value.GetCommentArray();
 	int cmtSize = cmt.GetCount();
 	for ( int i = 0; i < cmtSize; i++ )    {
+		if ( indent )	{
+			WriteIndent( os );
+		}
+		else	{
+			os.PutC( '\t' );
+		}
 		WriteString( os, cmt[i]);
 		lastChar = cmt[i].Last();
 		if ( lastChar != '\n' )   {

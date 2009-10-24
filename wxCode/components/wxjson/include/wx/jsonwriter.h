@@ -95,7 +95,7 @@ protected:
 	int  WriteSeparator( wxOutputStream& os );
 
 	int  WriteKey( wxOutputStream& os, const wxString& key );
-	int  WriteComment( wxOutputStream& os, const wxJSONValue& value );
+	int  WriteComment( wxOutputStream& os, const wxJSONValue& value, bool indent );
 
 	// int  WriteComment( const wxJSONValue& value, bool indent );
 	// int  WriteChar( wxOutputStream& os, wxChar ch );

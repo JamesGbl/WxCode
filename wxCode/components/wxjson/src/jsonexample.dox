@@ -151,6 +151,7 @@ Pages related to this documentation:
 
 \li \ref wxjson_tutorial.
 \li \ref pg_json_internals
+\li \ref wxjson_whatsnew
 
 \section main_install Installation
 
@@ -195,8 +196,6 @@ The \b wxJSON library is a complete implementation of the
 JSON data-interchange format.
 All JSON specifications are implemented in this library plus
 some extensions in the writer and in the parser class.
-This version (1.0) has to be considered a final beta release:
-no other features should be implemented in the library.
 
 One of the most important features that is not present in this
 JSON implementation is \b iterators.
@@ -205,23 +204,25 @@ array and the object JSON types.
 I do not implement them because they need STL containers and I
 do not want the wxJSON library to depend on STL although
 there is a plan to let the user choose the container to be used:
-wxWidget's implementation or STL.
+wxWidget's implementation or STL
+(see http://luccat.users.sourceforge.net/wxjson/newver_01.html#vers12).
 
 JSON data format is very stable. It is accredited to be
 stable forever or, at least, until programming languages 
 will be based on numbers, strings, booleans, structures and
 arrays.
-As a conseguence, it is improbable that the wxJSON library
-will have to be changed in its features.
-New versions of this library will be realesed in order to
+This version (1.1) is a stable release but there are plans to
+add some new features to the library
+(see http://luccat.users.sourceforge.net/wxjson/newver_01.html).
+Also, new versions of this library will be realesed in order to
 keep \b wxJSON compatible with the new releases of \b wxWidgets.
 
 
 \section main_thanks Contributors
 
 Many thanks to Bryan Ashby, Robbie Groenewoudt, Alexander Stigsen,
-Andrejs Cainikovs and Kolya Kosenko
-for their help in writing and debugging this library.
+Andrejs Cainikovs, Piotr Likus and Kolya Kosenko
+for their help, hints, feedback.
 
 
 

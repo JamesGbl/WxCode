@@ -122,18 +122,40 @@ extern int Test9_4();  // read 40.000 values from a stream object
 //
 //		*********** test7.cpp ****************
 //
-// family #
+// family #10: test the comment related functions (writer)
+extern int Test10_1();  // test the wxJSONValue's memberfunctions
+extern int Test10_2();  // write the commented value using style wxJSONWRITER_STYLED
+extern int Test10_3();  // write the commented value using style wxJSONWRITER_NONE
+extern int Test10_4();  // write the commented value using style wxJSONWRITER_WRITE_COMMENTS
+extern int Test10_5();  // write the commented value using style wxJSONWRITER_COMMENTS_BEFORE
+extern int Test10_6();  // write the commented value using style wxJSONWRITER_COMMENTS_AFTER
+
+
+//
+// family #11: test the comment related functions (reader)
+extern int Test11_1();  // first test without storing comments
+extern int Test11_2();  // second test storing comments (COMMENTS_BEFORE) 
+extern int Test11_3();  // third test storing comments (COMMENTS_BEFORE) 
+extern int Test11_4();  // first test without comments (COMMENTS_AFTER)
+extern int Test11_5();  // second test storing comments (COMMENTS_AFTER)
+
+
+
+
+//
+// family #11: test the comment related functions (reader)
 
 
 //
 //		*********** test8.cpp ****************
 //
-// family #
+// family #12: wxJSON reference counting feature (was test11.cpp)
+
 
 //
 //		*********** test9.cpp ****************
 //
-// family #
+// family #13: test the 64-bit integer support (was test13.cpp)
 
 
 //

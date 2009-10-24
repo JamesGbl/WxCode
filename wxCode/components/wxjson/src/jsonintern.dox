@@ -11,6 +11,9 @@
 \li \ref json_internals_compare
 \li \ref json_multiline_string
 \li \ref json_comment
+\li \ref json_internals_reader
+\li \ref json_internals_writer
+
 
 
 
@@ -63,13 +66,19 @@ because some compilers may assume the constant value to be an \b int:
 
 \par The wxJSONRefData structure
 
-All data is stored in the wxJSONRefData class which is just like a
+The wxJSONValue class does not actually hold data. It only holds a
+pointer to a data structure of type wxJSONRefData.
+The latter actually holds data: the type of the value, the value itself,
+comments, etc..
+This is used to implement \e copy-on-write (see \ref json_internals_cow
+for details).
+
+All data is stored in the wxJSONRefData class which is just a
 simple structure: the class does not define an interface for accessing
 data: it only defines the data members and the ctors and dtor.
 The interface is totally defined in the wxJSONValue class which, in
 turn, does not contain any data (with the exception of the pointer to
-referenced data). This organization lets we use the \e reference \e counting
-tecnique (also known as \e copy-on-write) when copying wxJSONValue objects.
+referenced data).
 
 The data structure holds the type of the JSON value, the JSON value itself,
 the comment lines, if any, etc. To know more about the individual data
@@ -663,12 +672,24 @@ type of the stored value is compatible with the one you want.
 In the previuos example, an ASSERTION failure occurs in the \c AsCString()
 function because the returned value is, surely, garbage.
 
+\subsection json_internals_integer_newas The new AsXxxxxx(T&) function.
 
-To know more about the return values of the \b IsXxxxxx and the \b AsXxxxxx
-memberfunctions in 64-bits platforms, see the \c Test55() function in the
-\c samples/test13.cpp source file.
-The test function calls all the mentioned memberfunctions for several signed and
-unsigned integers: results are commented.
+Starting from version 1.1 the AsXxxxxxx() functions have a new overloaded
+version which returns TRUE if the access to the value is of the correct type.
+The value is stored in the provided argument.
+These functions just calls the IsXxxxxx() function and returns its return
+value. If TRUE, the value is also accessed, example:
+
+\code
+bool AsInt( in& i )
+{
+   bool r = IsInt();
+   if ( r )  {
+     i = AsInt();
+   }
+   return r;
+}
+\endcode
 
 
 \subsection json_internals_integer_read Reading numeric values from JSON text.
@@ -897,89 +918,6 @@ In this way the function correctly handles this situation:
   bool r = v1.IsSameAs( v2 );      // returns FALSE
 \endcode
 
-
-\section json_multiline_string The multiline string 
-
-\b WARNING: this feature in versions 0.x and 1.0.0 is useless if the string value
-contains a LF character due to an error in the implementation of the JSON syntax
-related to escaped characters. 
-To know more about this read the  http://sourceforge.net/tracker/?func=detail&aid=2720660&group_id=51305&atid=462816.
-
-This feature allows a JSON string to be splitted in two or more lines
-when a string value is written to JSON text. Consider the following
-example:
-
-\code
- {
-    "copyright" : "This library is distributed\nunder the GNU Public License\n(C) 2007 XYZ Software"
- }
-\endcode
-
-It would be by far more human readable if it would be written in the following way:
-
-\code
- {
-    "copyright" : "This library is distributed\n"
-                  "under the GNU Public License\n"
-                  "(C) 2007 XYZ Software"
- }
-\endcode
-
-Note that the escaped LF characters at the end of a line is enforced by splitting
-the string value into two or more indented lines of text as we would normally do in C/C++ sources.
-The wxJSONReader is capable to read such strings but you have to be aware that this
-is not valid JSON text and other parser may report an error.
-
-In order to get this feature you have to construct the JSON writer class using the
-\c wxJSONWRITER_SPLIT_STRING flag. Also, the reader has to be constructed with the
-\c wxJSONREADER_MULTISTRING flag otherwise it would report an error.
-
-In order to recognize such strings, the reader concatenates string values (that is
-values enclosed in double quotes) if a comma separator is not present.
-Note that only strings can be splitted into more than one line: numbers
-and literals cannot be splitted.
-The drawback is that this feature is error-prone. Consider the following
-example:
-\code
-  {
-    "seasons" :  [
-      "spring",
-      "summer"
-      "autumn",
-      "winter"
-     ]
-  }
-\endcode
-
-The array has four elements but I forgot the comma character between the
-second and the third element.
-What I get in this case is a three-elements array where the second element
-is the concatenation of the two strings "summer" and "autumn" which is not
-what I wanted.
-Worse, the parser does not consider this an error: only a warning is
-reported.
-
-
-\par Very long lines
-
-The \c wxJSONWRITER_SPLIT_STRING flag also splits very long lines in addtion
-to enforcing LF characters.
-To know more about this read \ref wxjson_tutorial_style
-
-\par The wxJSONWRITER_MULTILINE_STRING writer's flag
-
-This is a multiline string mode where newlines and tabs are not escaped.
-This is not valid JSON text but it helps immensely when manually editing
-JSON files that contains multiline strings.
-In the example above the JSON text output will be as follows:
-
-\code
- {
-    "copyright" : "This library is distributed
-under the GNU Public License
-(C) 2007 XYZ Software"
- }
-\endcode
 
 
 
