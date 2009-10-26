@@ -1,0 +1,18 @@
+===============================================================================
+wxPlotCtrl changelog:
+===============================================================================
+
+2009-02-17
+  - Add wxPlotData::OneSidedPowerSpectrum(), wxPlotData::Get2Norm(), 
+    fix wxPlotData::PowerX/Y(). Thanks to Zbigniew Karkuszewski.
+ 
+2008-11-25
+    Fix drawing markers. 
+
+Version 1.0.1
+  - Fixed showing data curves with 0 width or height. Bug #1808098
+  - Added virtual wxPlotCurve* wxPlotCurve::Clone() function to create a new
+    instance of the derived class on the heap.
+
+2006-04-27
+    Initial public release.

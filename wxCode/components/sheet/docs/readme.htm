@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta content="John Labenski" name="author"><title>wxSheet_readme.htm</title>
+</head>
+<body><h2>wxSheet readme.htm</h2>Copyright
+: 2004-2007 John Labenski and others (see headers)<br>License :
+wxWidgets license.<br><br>This library/program is free
+software; you can redistribute it and/or modify it under the terms of
+the wxWidgets Licence; either version 3 of the Licence, or (at your
+option) any later version.<br><br>This library is
+distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the wxWidgets Licence
+for more details.<br><br>If you use this program/library
+and find any bugs or have added any features that you feel may be
+generally useful, please feel free to write to the wxCode mailing list
+on SourceForge.net.<br><h2>Summary:</h2> wxSheet is a
+spreadsheet type grid widget for the wxWidgets GUI
+library. The wxSheet code is based on the wxWidget's wxGrid class and
+is, for the most part, a complete rewrite, almost every function has
+been tweaked. It is not backwards compatible, but operates and is
+logically similiar. Many of the functions have the same names
+and you can expect them to perform a similiar task, but the parameters
+may be different. The reason for creating a
+completely separate grid implementation is to allow far more
+control over the different aspects of the operation either though
+subclassing or intercepting events.<br>You will find
+documentation included in the header files with the member functions
+ordered by function. You can of course look under the hood, at the cpp
+files, to fully understand what each function does.<br><br>I
+welcome any changes or interesting ideas you may have for improvement.
+The current version suits my needs in terms of flexibility, but I only
+use a grid widget in a limited capacity.<br><h2>Provides:</h2><ul><li>wxSheet
+- The main wxWindow derived class that contains the row/col/corner
+label windows, the grid window, and independent horizontal and
+vertical scrollbars. </li><li>wxSheetSplitter - A
+four way splitter window parent for the wxSheet, it can split
+horizontally and/or vertically. </li><ul><li>Splitting
+works by setting wxSheet::EnableSplitVertically/Horizontally which will
+draw a little button next to the scrollbars like Excel/OOCalc for
+example. </li><li>The sheet checks for
+the mouse dragging in the buttons and sends an event, however
+the sheet DOES NOT split itself, but if the parent is a wxSheetSplitter
+it gets the event, grabs the mouse, draws the splitting line,
+and (un)splits by appropriately creating/deleting a sheet and
+showing/hiding the label windows and scrollbars.</li></ul><li>wxSheetTable
+- the base class for a data container to provide values, attributes,
+and spanned cells for label and grid wxSheet cells. By default it can
+handle string data and store cell attributes that you may set.</li><li>wxSheetStringArray
+= wxGridStringArray - a 2D wxString wxArray (uses grid's if WXUSE_GRID)</li><li>wxPairArrayIntSheetString
+- pair array of (int, string)</li><li>wxArrayPairArrayIntSheetString
+- 2D array of pairs of (int, string)</li><li>wxPairArrayIntPairArraySheetString
+- pair array [int, array pair (int, string)]</li><li>wxSheetValueProviderBase
+- a base class for a value provider for the table</li><li>wxSheetValueProviderString
+- a wxSheetStringArray (i.e. 2D array of wxStrings) data provider for
+the table. Good for mostly full sheets, though it is optimised to only
+fill the arrays as necessary.</li><li>wxSheetValueProviderSparseString
+- a wxPairArrayIntPairArraySheetString valueprovider class for probably
+less than 2/3 full sheets</li><li>wxSheetCellAttr -
+an attribute for the grid/row/col/corner label cells. They provide
+colours, text alignment, renders, editors... They are chained together
+so that whatever values are unset for a particular attribute are
+retrieved from the parent attribute.</li><li>wxNullSheetCellAttr
+- a const uncreated attribute</li><li>wxSheetCellAttrProvider
+- a container for storing non default attributes for the grid and label
+cells in the wxSheetTable.</li><li>wxSheetCoords - row, col
+coords for
+accessing cells</li><li>wxSheetBlock - a rectangular block
+of cells</li><li>wxSheetSelection - a selection
+container that stores an array of sorted and nonoverlapping
+wxSheetBlocks.</li><li>wxSheetSelectionIterator - an
+iterator for traversing the selection from top to bottom or in the
+reverse direction.</li><li>wxSheetCellEditor - a container
+for a variety of editors to use with the wxSheet. The ref counted data
+actually contains the editor code so that they can easily passed
+around. Please see sheetctl.h for a list.</li><li>wxSheetCellRenderer
+- a container for a variety of renderers to use with the wxSheet. The
+ref counted data actually contains the renderer code so that they can
+easily passed around. Please see sheetren.h for a list.<br></li></ul><h2>Additional
+Features over the wxGrid:</h2><ul><li>Faster
+rendering, about %10-%20 faster, but your mileage may
+vary. GTK2 for example is very slow at rendering antialiased
+text so that the speedup from the more optimized redrawing is
+marginalized by the time actually spent drawing.</li><li>wxSheetCellAttr/Renderer/Editors
+are wxObject refed so it's simple to use. No more Inc/DecRef, treat
+them just like wxBitmaps, wxPens, etc...</li><li>Added
+OnKeyDown and OnChar for editors so they can be more interactive</li><li>Text
+editor expands as you type by full cells like other spreadsheets</li><li>TextRenderer
+draws a little arrow to show that the text is clipped</li><li>Smooth
+scrolling for mouse selection out of the grid window</li><li>Attributes
+for all windows, grid cells and row/col/corner labels</li><li>Renderers
+for all windows, grid cells and row/col/corner labels</li><li>Editors
+for all windows, grid row/col/corner labels or not.</li><ul><li>The
+default attributes for the labels are set readonly by default.</li><li>Note:
+if you can edit the row/col/corner labels then a single click doesn't
+select the row/col/everything. You must drag it a pixel or two. This is
+a reasonable tradeoff since otherwise for a double click to edit you
+select then deselect which looks bad. If you can't edit it, then single
+click sels.</li></ul><li>Adds
+wxSheetStringSparseTable that is not just a huge double array. Uses
+binary search for lookup, ideal for less than half full grids.</li><li>DECLARE_PAIRED_DATA_ARRAYS
+used for key/value pairs that need to be sorted. These are used for
+faster Attr lookup and sparse string table</li><li>Added
+selecting for page up/down</li><li>Grid lines drawn
+horizontal and/or vertical or none</li><li>Additional
+events RANGE_SELECTING/SELECTED so you can block it</li><li>AltDown
++ Arrows resizes cell like OOffice</li><li>Independent
+scrollbars, you can have none, both, as needed, or either.</li><li>Left
+Double click begins editing as well as slow click.</li><li>wxSheetBlock(row,
+col, height, width) a rectangular block of cells immensely simplifies
+logic.</li><li>Moved the cell spanning (was
+wxGrid::SetCellSize) code out of the attributes for faster lookup.</li><li>Rudimentary
+copy and paste for strings only, not default behavior and you must call
+the functions yourself.</li><li>wxSheetSplitter window, a
+window that given a single child wxSheet can split the view into two or
+four
+panes.</li><li>You can have complete control over the
+selection mechanism, override only </li><ul><li>IsSelection,
+IsCell/Row/ColSelected, (De)SelectBlock, and ClearSelection.</li></ul><li>You
+can have complete control over the attributes, override only</li><ul><li>CanHaveAttributes,
+GetOrCreateAttr, GetAttr, and SetAttr. </li><li>Also
+works as the
+wxGrid does by passing to the table where you can override it
+there or in the attr provider.</li></ul><li>You
+can have complete control over the cell values in the grid, override
+only</li><ul><li>Get/SetCellValue. </li><li>Also
+works as the
+wxGrid by passing to the table where you can override it there or in
+the value provider.</li></ul></ul><h2>Things
+that were "fixed" (you may disagree however)</h2><ul><li>MoveCellBlock
+so that it matches OpenOffice.org by staying on cells w/ values</li><li>Right
+drag in grid does nothing</li><li>Selecting w/ keyboard
+moves cursor cell</li><li>Numpad arrows work to move mouse
+using EVT_CHAR<br></li><li>For selection type
+rows/cols don't allow sel on opposite col/row labels.<br></li></ul><h2>Coordinates
+in the wxSheet</h2><ul><li>The sheet consists of 4
+individual windows
+each is accessed with coords using the semantics below.</li><li>Functions
+named Get/SetGridXXX(wxSheetCoords, ...) apply to the grid cells,
+otherwise the function uses the -1 cell notation to access the label
+cells.</li><li>There
+are a slew of static bool
+IsGrid/RowLabel/ColLabel/CornerLabelCell(wxSheetCoords) functions to
+genericly determine what type of cell it is as well as bool
+ContainsGrid/RowLabel/ColLabelCell(wxSheetCoords) to determine if the
+coords are valid for the current grid size. While this may seem
+slightly more complicated, it makes the code quite a bit more
+readable.</li></ul><table style="text-align: left; margin-left: auto; margin-right: auto;" border="1" cellpadding="2" cellspacing="2"><tbody><tr><td style="font-weight: bold; text-align: center;">corner label<br>(-1,
+-1)</td><td style="font-weight: bold; text-align: center;">col
+label<br>(-1, 0)</td><td style="font-weight: bold; text-align: center;">col label<br>(-1,
+1)</td><td style="font-weight: bold; text-align: center;">...</td><td style="font-weight: bold; text-align: center;">col label<br>(-1,
+GetNumberCols() - 1)</td></tr><tr><td style="font-weight: bold; text-align: center;">row label<br>(0,
+-1)</td><td style="text-align: center;">grid cell<br>(0,
+0)</td><td style="text-align: center;">grid cell<br>(0,
+1)</td><td style="text-align: center;">...</td><td style="text-align: center;">grid cell<br>(0,
+GetNumberCols() - 1)</td></tr><tr><td style="font-weight: bold; text-align: center;">row label<br>(1,
+-1)</td><td style="text-align: center;">grid cell<br>(1,
+0)</td><td style="text-align: center;">grid cell<br>(1,
+1)</td><td style="text-align: center;">...</td><td style="text-align: center;">grid cell<br>(1,
+GetNumberCols() - 1)</td></tr><tr><td style="font-weight: bold; text-align: center;">...</td><td style="text-align: center;">...</td><td style="text-align: center;">...</td><td style="text-align: center;">...</td><td style="text-align: center;">...</td></tr><tr><td style="font-weight: bold; text-align: center;">row label<br></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">...</td><td style="text-align: center;">(GetNumberRows() - 1,<br>GetNumberCols()
+- 1)</td></tr></tbody></table><h2>Differences
+to wxGrid</h2><ul><li>wxGrid::Foo( row, col )
+-&gt; Foo( const wxSheetCoords&amp; coords )</li><li>wxGrid::GetRow/ColSize
+-&gt; GetRowHeight/Width - size is ambiguous</li><li>wxGrid::Get/SetDefaultCol/RowSize
+-&gt; Get/SetDefaultCol/RowHeight/Width - size is ambiguous</li><li>wxGrid::Get/SetHighlightXXX
+-&gt; Get/SetCursorCellHighlightXXX it's for the cursor</li><li>wxGrid::HighlightBlock
+-&gt; HighlightSelectingBlock that's what it really does</li><li>wxGrid::IsVisible
+-&gt; IsCellVisible</li><li>wxGrid::Set/GetCaptureWindow
+added a locker for captured window, never access m_winCapture</li><li>wxGrid::GetAttr/SetAttr/GetOrCreateAttr
+all the helper Get/SetXXXAttr call these uses -1 notation for label cell</li><li>wxGrid::Get/SetCellThis/That
+-&gt; Get/SetAttr/This/That </li><ul><li>These
+functions can actually get
+specific values for specific attributes, ie. for a cell/row/col attr,
+of course you must have set one previously. The default is like the
+wxGrid, just any type of attr value you can returning the default if
+none set.</li></ul><li>wxSheet
+&amp; wxSheetCellAttr Get/SetAlignment uses single int, no point in
+horiz and vert since aligments are non intersecting enums</li><li>DrawTextRectangle
+only takes one alignment</li><li>wxSheet &amp;
+wxSheetAttr::IsReadOnly -&gt; GetReadOnly everything else is GetXXX</li><li>wxSheet
+Editing redone. Have m_cellEditor, m_cellEditorCoords to get later</li><li>More
+wxCHECK stuff to ensure that you're not arbitrarily calling
+editor functions since it can be touchy.</li><li>wxGrid::GetCellSize
+-&gt; GetCellSpan</li><li>wxSheet::GetCellSize actually
+gets the size of the cell as wxSize</li><li>wxSheet::GetCellSpan,
+GetCellBlock, GetCellOwner for cell spanning this is implemented using
+a wxSheetSelection. It is considerably cleaner than
+the wxGrid attribute method since it only stores a single block for a
+spanned cell.</li><li>wxSheet::XToCol/YToRow(val,
+clipToMinMax) -&gt; removed internalXToCol/YToRow</li><li>Redrawing
+reworked, more functions for simple refreshes so that the code in
+different functions need only call a single redraw function</li><li>wxGrid::MovePageUp/Down
+-&gt; MoveCursorUp/DownPage to match the other MoveCursorXXX</li><li>wxSheet::DoMoveXXX
+simplier functions to implement these functions and reduce the amount
+of duplicate code.</li><li>wxGrid::IsSelected(cell)
+-&gt; IsCellSelected (match other cell functions)</li><li>wxGrid::IsSelection
+-&gt; HasSelection (bad grammar)<br></li></ul><ul><li>wxSheetCellEditor
+and wxSheetCellRenderer are wxObject refed classes, the actual
+implementation is in the ref data so they're passed as const
+&amp;obj</li><li>wxGridCellEditor::Create -&gt;
+CreateEditor say what it does</li><li>Added
+wxNullSheetCellRenderer, wxNullSheetCellEditor</li><li>Added
+OnKeyDown and OnChar for interactive editors</li><li>Added
+GetValue, GetInitValue so that you can get the current or initial value</li><li>wxSheetCellEditor::PaintBackground
+takes same parameters as wxSheetCellRenderer::Draw<br></li></ul><ul><li>wxGridCellCoords
+-&gt; wxSheetCoords other name is too long, members PUBLIC!</li><li>wxSheetCoords
+added useful operators to make it complete</li><li>wxGridNoCellCoords
+-&gt; wxNullSheetCoords matches other wxWindows empty items</li><li>Added
+wxSheetBlock a rectangular selection of cells blocks are similiar to
+wxRects and implement similiar functionality<br></li></ul><ul><li>wxGridTableMessage
+- removed use UpdatePos functions</li><li>wxSheetTable::SendInsert/Append/Delete/Rows/ColsTableMsg
+to call appropriate UpdatePos functions</li><li>wxSheetTable::GetFirstNonEmptyColToLeft,
+render helper get next col to left that's not empty or -1, (if you
+can't do this just return col-1, base does this)</li><li>wxGridStringTable
+- removed, wxSheetTable has member data providers now</li></ul><ul><li>wxSheetEvent
+is parent for the other events since they're basicly the same</li><li>wxSheetEvent
+doesn't take a million different items in constructor add
+SetKeyDownMousePos( wxEvent* ) to get vals from mouse/key evt.</li><li>EVT_SHEET_RANGE_SELECT
+broke into SELECTING and SELECTED, can Veto it</li><li>EVT_SHEET_SELECT_CELL
+broke into SELECTING and SELECTED</li><li>EVT_SHEET_CELL_LEFT/RIGHT_CLICK
+-&gt; EVT_SHEET_CELL_LEFT/RIGHT_DOWN</li><li>Added
+EVT_SHEET_CELL_LEFT/RIGHT_UP</li><li>EVT_SHEET_EDITOR_SHOWN/HIDDEN
+-&gt; ENABLED/DISABLED since the events didn't match what they were
+named after</li><li>Removed wxSheetSizeEvent - there is no
+point for it since wxSheetEvent contains all necessary information<br></li></ul><ul><li>wxSheetCellAttr
+- wxObject ref counted, just like wxBitmap etc...</li><li>wxGridNoCellAttr
+-&gt; wxNullSheetCellAttr matches other wxWindows empty items</li><li>wxGridCellAttr::IsReadOnly
+= HasReadWriteMode everything else is HasXXX</li><li>wxSheetCellAttr::Get/SetAlignment
+single alignment, no need for horiz &amp; vert</li><li>Added
+Get/Set/HasOrientation for wxHORIZONTAL, wxVERTICAL</li><li>wxGridCellAttr::GetSize
+removed, this is now in wxSheet and called Span</li><li>All
+enum/int values are stored in single int so it's smaller<br></li></ul><ul><li>wxSheetCellAttrProvider::Get/SetAttr
+- Get/SetCellAttr and param order matches sheet</li><li>wxSheetCellAttrProvider::UpdateAttrRows/Cols
+-&gt; UpdateRows/Cols</li><li>wxSheetCellAttrData
+&amp; wxSheetRowOrColAttrData - use binary search<br></li></ul><ul><li>wxSheetSelection
+is completely different, it just selects blocks of cells for full
+rows/cols it selects to # of rows/cols as opposed to rows/cols-1.</li><li>You
+can use wxSheetSelection::SetBoundingBlock to trim it back to grid size
+if
+you desire.</li><li>The selection is a dumb container and
+is used for other purposes, cell span, and redrawing for example.</li><li>You
+can freely modify the selection! Just repaint when done.</li><li>You
+can completely override the selection. </li><li>wxSheetSelection
+type is stored in the wxSheet since the selection does nothing with it
+anyway.</li><li>Added wxSheetSelectionIterator that can
+iterate forwards from top left by rows then cols or backwards from
+bottom left by cols then rows.</li><li>The selection is not
+preserved when switching selection type or inserting/deleting
+rows/cols. Ideally you should send slews of confusing (de)selection
+events and so I think it's best to just clear it. If you click anywhere
+the selection is cleared so the selection is not that precious
+anyway. There is
+no technical reason why this couldn't beimplemented however.</li><li>Added
+EVT_SHEET_RANGE_SELECTING(ED), you can block the SELECTING<br></li></ul><h2>List
+of files</h2><ul><li>include/wx/sheet/</li><ul><li>pairarr.h
+- defines a a
+macro for arbitrary wxArrays of (key, value) pairs</li><li>sheet.h
+- the main header file for the wxSheet component</li><li>sheetatr.h
+- wxSheetCellAttr and friends</li><li>sheetdef.h
+- #defines and other definitions for the wxSheet</li><li>sheetedg.h
+- A cell edge container for storing the cell widths</li><li>sheetedt.h
+- wxSheetCellEditor classes</li><li>sheetren.h
+- wxSheetCellRenderer classes</li><li>sheetsel.h
+- the header for the wxSheetSelection, selection mechanism also
+contains wxSheetCoords, wxSheetBlock.</li><li>sheetspt.h -
+header for wxSheetSplitter</li><li>sheettbl.h - wxSheetTable</li><li>sheetval.h
+- wxSheetValueProvider classes</li><li>wx24defs.h -
+provides
+backwards compatibility for code written for wxWidgets &gt;= 2.5 to
+compile in wxWidgets 2.4.x</li><li><br></li></ul><li>src/</li><ul><li>*.cpp
+- Source file names map identically to header file names</li><li>Makefile
+- makefile for gcc, relies on wx-config in your path generates a
+library in your `wx-config --prefix`/lib dir</li><li>sheetlib_wx24.dsp
+- project file for lib, Visual Studio for wxWidgets 2.4.x</li><li>sheetlib_wx25.dsp
+- project file for lib, Visual Studio for wxWidgets 2.5.x</li><li>sheetlib_wx26.dsp
+- project file for lib, Visual Studio for wxWidgets 2.5.x</li></ul><li>samples/sheet</li><ul><li>sheetdemo.h/cpp
+- a sample program based on wxWidget's griddemo sample</li><li>Makefile
+- makefile for gcc, relies on wx-config in your path</li><li>sheetdemo_wx24.dsp
+- project file for Visual Studio for wxWidgets 2.4.x</li><li>sheetdemo_wx25.dsp
+- project file for Visual Studio for wxWidgets 2.5.x</li><li>sheetdemo_wx26.dsp
+- project file for Visual Studio for wxWidgets 2.5.x<br></li></ul></ul><h2>Compliation
+and use:</h2>Note: I only use wxWidgets &gt;=2.8 now.<br><br>wxSheet
+has been tested in wxMSW and wxGTK using wxWidgets 2.8. It should be
+able to run on any platform that the wxGrid does. I welcome any fixes
+for different platforms or versions of wxWindows than the ones I use
+(GTK, MSW, 2.8, but mostly CVS head).<br><br>There is a
+Makefile for building a library and the sample sheetdemo (griddemo)
+program for Unix systems and a MSVS project file for the sample.<br><br>You
+can build it as a library or just include the source files in your
+program. It is an independent widget and doesn't rely on the wxGrid,
+though it does use the string array defined in grid.h if
+wxUSE_GRID is defined so it's not duplicated.<br><br></body></html>

@@ -1,0 +1,293 @@
+Changelog.txt for wxSheet
+
+
+version 1.1.0
+ - Rename wxSheet::DoGetDefaultXXXAttr() to GetTheDefaultXXXAttr() to better
+   imply that you're really getting the default attr itself.
+ - Moved static bool wxSheet::IsXXXCell(coords) to wxSheetCoords::IsXXXCell()
+   since it's often easier to work with the coords themselves.
+ - Renamed wxSheetCellAttr::Clone() to Copy() and NewClone() to Clone()
+   to follow the semantics of wxEvent::Clone().
+   i.e. "classname obj = other.Copy()" and "classname* obj = other.Clone()"
+-------------------------------------------------------------------------------
+
+version 1.0.1
+ - Change wxSheetCellEditorRefData::DestroyControl() to return bool
+ - Change void wxSheetCellBoolEditorRefData::StartingClick(wxMouseEvent& ev)
+   to accept mouse event.
+
+-------------------------------------------------------------------------------
+07/06/2007
+    Replace cursor cell highlight width & colour with a wxPen for more
+        flexibility.
+
+11/20/06
+    wxSheet::SetNumberCells updates cols even if no changes to # rows are made
+
+08/31/06
+    Make wxSheetSelection::FindTopRow a little more robust
+    Change wxSheet::Clone to take the same parameters as constructor
+    Replaced bool wxSheet::IsEditable and EnableEditing(bool) with
+        IsAreaEditable, GetAreaEditable, SetAreaEditable to take enum
+        wxSheetCell_Type to enable/disable editing for different parts.
+
+04/12/06
+    Draw the outlines for the row/col labels for the case where they need to
+    be refreshed but not the cells themselves. Thanks to Elijah Demin.
+
+07/23/05
+    Allow setting row/col heights/widths to 0 for hiding them
+        otherwise use minallowed as before.
+    Fix MakeCellVisible to show just the left or top for cells to wide/tall
+    Remove GetDefaultRowLabelWidth, GetDefaultColLabelHeight, use enums.
+    Set the col label height to be the same as the row label height in Create.
+    Added option to value providers to set empty strings, by default they're
+        not set and will just remove the value.
+
+07/10/05
+    Use wxSplitterWindow's notation for vertical and horizontal splitting
+        vertical means the splitter is vertical and windows are side by side
+        horiz means the splitter is horiz and windows are above and below
+
+07/07/05
+    Add wxSheetCellEditor::InitEditor to set colours, font instead of Show()
+    Fix wxSheetCellEditor::GetBestSize and use that to initially size control
+    wxSheetCellBitmapRendererRefData works properly for all alignments now
+    wxSheetSelectionIterator reverse was broken, enums now wxSHEET_SELITER_XXX
+    Removed wxSheetValueProviderHashString since it wasn't impressive or useful
+    sheetdemo tests string alignment and bmprenderer alignment
+    Fix drawing text (just tweaks)
+    Allow vertical text for all renderers
+    Moved value providers into their own file, sheetval.h/cpp
+    Fixed selection of full rows/cols
+
+06/20/05
+    Fix bug in sheetsel where bounds were not cleared (pasting works again)
+    Send new value for CELL_CHANGING event and allow veto, test in sheetdemo
+    Properly focus the windows using SetFocus as wxGrid does
+        Note: this is a new issue with wxWidgets and seems like a bug...
+
+06/20/05
+    Made the event sending of sizing of cells complete, they send
+    wxSheetCellSizeEvents now.
+    EVT_SHEET_ROW_SIZE means that the cursor is hovering over a cell to resize
+    EVT_SHEET_ROW_SIZING sends events every time the cell is sized
+    EVT_SHEET_ROW_SIZED reports when sizing is done
+    Send cell size events for keyboard sizing too
+
+05/20/05
+    Override wxWindow::Enable to ensure it redraws properly.
+    Changed pairarr.h to use the naming conventions of wxArray
+    Changed EVT_SHEET_ROW_SIZE to SIZING AND SIZED so you can block it (by req)
+
+    ---------------------------------------------------------------------------
+12/01/04 - Summary of changes since 7/12/04
+
+    Split the code for the table, attributes, definitions into their own files.
+        sheetatr.h, sheettbl.h, sheetdef.h, sheetatr.cpp, sheettbl.cpp
+
+    General:
+        WXDLLIMPEXP_SHEET for DLL usage (not tested, but used throughout)
+
+    Added :
+        wxSheetArrayEdge - an edge container for the row/col edges. Takes 1/2
+            the space of the previous wxArrayInt method. Stores min sizes,
+            default sizes, and min allowed sizes.
+        wxSheetChildWindow - a generic child window for the sheet that forwards
+            mouse, key, and paint events to the sheet
+        wxSheetTable - uses data value containers so that all the other tables
+            are obsolete. You can still override everything, of course.
+        wxArrayStringUpdatePos - a function to "update" a single wxArrayString
+        wxSheetValueProviderBase - a base class for a data provider for the
+            wxSheetTable.
+        wxSheetValueProviderString - a wxString data value provider class.
+            uses a 2D array of wxStrings that are expanded as necessary.
+            Good for mostly full sheets.
+        wxSheetValueProviderSparseString - a wxPairArrayIntPairArraySheetString
+            data value provider for the table. Good for less than 3/4 full
+            sheets.
+
+    Removed :
+        wxSheetTableMessage - see the unified UpdateRows/Cols functions
+        wxSheetGrid/RowLabel/ColLabel/CornerLabel/Window - replaced with single
+            wxSheetChildWindow
+        wxSheetTableBase, wxSheetStringTable, wxSheetStringSparseTable -
+            replaced by single wxSheetTable using value containers
+
+    Changed :
+
+    wxSheet
+        Set/Get/CreateTable now uses wxSheetTable and SetTable can be called
+            as many times as desired.
+        Clear -> ClearValues(updateType) can clear different things, values,
+            attrs, you can still override it to do something else.
+        Append/Insert/Delete/Rows/Cols forwarded to a function UpdateRows/Cols
+            The Update functions then calls Update on the table. The table must
+            then call DoUpdateRows/Cols back on the sheet though it's
+            UpdateSheetRows/Cols functions. This allows the table to modify
+            the update before the sheet does anything (this behavior is the same
+            as before, but function calls replace the TableMessage).
+        AutoSizeColumn(s) -> AutoSizeCol(s)
+        Enable/Disable/Can/DragXXX - internally use an enum to specify state
+            which is forwarded to Set/GetDragXXX
+        Set/Get/HasDragCellSize - added - unified control of mouse drag resizing
+        Spanned cell container is now in the table. It can operate if
+            GetSpannedCells returns NULL so that you can more easily
+            override it.
+        CanHaveAttributes - removed since you should really assign the
+            attribute container in the table if you really want it and not
+            rely on one automagically created for you.
+        IsCellEmpty -> HasCellValue to match all the other Get/Set/Has functions
+        DoGet/SetCornerLabelValue - removed the table now holds this value
+            as it does all the others
+        RefreshBlock - added - as the "base" refresh function
+        Refresh/Row/Col/Grid/Window(bool eraseBkg, wxRect *) - these call
+            wxWindow::Refresh on all the sheet areas of the Refed sheets for
+            the splitter (if used). Previously there were functions in the Ref
+            data to do this. The rect is a logical rect which will be translated
+            and cropped to the size of each sheet's window area.
+        wxPaintEvents of the children are propagated up to the sheet and then
+            divided up and sent to the PaintXXXWindow functions
+        OnXXXPaint - renamed - PaintXXXWindow since OnXXX should be for events
+        GetGridExtent() - added - get the full size of the grid, the larger of
+            the virtual size or the grid window size (for painting)
+
+    wxSheetTable
+        IsEmptyCell -> HasValue
+        Clear -> ClearValues(updateType) - can be used to clear different
+            things, values, attributes. You can override this to do whatever
+        Get/SetValueAsXXX - actually work now. By default they call GetValue
+            as a string and then try to convert it to the specific type.
+        CanGetValueAs - actually works and tries to see if it can get the value
+            as it's type
+        Append/Insert/DeleteRows/Cols - removed - replaced with UpdateRows/Cols
+            to help unify and simply the processing
+        SendUpdateTableMsg -> UpdateSheetRowsCols calls append/delete to make
+            the sheet have same number of rows/cols as the table.
+        UpdateSheetRows/Cols - should be called by your table to return back to
+            sheet and let it update itself.
+        Get/SetGridCell/RowLabel/ColLabel/ValueProvider - these are where the
+            Get/SetValue functions are forwarded to. You can provide your own
+            or none, but if NULL then it'll assert if you try to Set a value.
+        Get/SetSpannedCells - spanned cell container moved to table since that's
+            where the values are.
+    wxSheetCellAttr
+        No API changes
+    wxSheetAttrProvider
+        UpdateAttrRows/Cols -> UpdateRows/Cols matches the other functions
+
+10/10/04
+    wxSheetCellAttrProvider::UpdateAttrRows/Cols -> UpdateRows/Cols
+        Takes an int instead of size_t to match UpdateRows/Cols for the others
+
+10/02/04
+    Removed the Refresh functions in the wxSheetRefData.
+    Switched all the RefreshXXXWindow functions to take the logical (unscrolled)
+    coordinates. These iterate through the ref data's sheets and call Refresh
+    directly on their windows.
+
+    Added to the wxSheetTableBase and wxSheet
+    virtual bool UpdateRows( int row, int numRows, bool updateLabels = true );
+    virtual bool UpdateCols( int col, int numCols, bool updateLabels = true );
+    and directed all the Insert/Append/DeleteRows/Cols to these two functions.
+    You can override either these two UpdateRows/Cols functions or all six
+    of the others.
+
+    enum wxSHEET_Update_Type defines what type of updates for
+    the functions depending on the sign of the inputs. The goal here is to
+    simplify and standardize the change in the number of rows/cols and if
+    the user really wants to they can update the data containers themselves.
+
+    Added updateLabels to the Insert/Append/DeleteRows/Cols UpdateRows/Cols
+    functions passed from the sheet.
+
+    *BUGFIX - forgot a few const in the declarations of some of the renderer
+    functions. These functions were never called even though they should have
+    been virtual.
+
+    TRUE/FALSE -> true/false
+
+10/01/04
+    Added default behavior for wxSheetTableBase Get/Set/ValueAsLong/Double/Bool
+    Convert TRUE/FALSE to true/false
+
+    Some better and more error messages instead of silent failure.
+
+    *** Removed all the wxSheetRow/Col/Corner/Grid(Label)Window classes and
+    replaced them with a single wxSheetChildWindow class. They were basicly
+    identical to each other. All events are now routed to the parent wxSheet
+    and handled there. This should allow more flexibility since you don't have
+    to subclass the child windows, just intercept events.
+
+    ---------------------------------------------------------------------------
+
+7/12/04
+    wxSheet::CopyStringToSelection works for DOS and Unix line endings.
+    Fix setting zero value for float editor.
+
+6/05/04
+    Moved the include dir to include/wx/sheet instead of include/sheet.
+    Hopefully this makes sense since it is a wxWidgets component.
+    Moved the sample program sheetdemo into the samples/sheet dir.
+
+5/01/04
+    Removed GetRow/Col from the wxSheet events since you should use GetCoords
+    which is returned as a const reference instead.
+
+    EnableGridLines now takes an int for wxHORIZONTAL|wxVERTICAL instead of a
+    bool so you can have either or both.
+
+    wxSheetSelectionMode_Type added wxSHEET_SelectNone to not allow any
+    selections using the mouse or keyboard. Doesn't stop the programmer from
+    calling SelectXXX however.
+
+    Selection mechanism returns from lookup a little faster, operators for
+    wxSheetCoords a little cleaner and maybe faster.
+
+    Fixed bug in editor code that lead to a memory leak when deleting the
+    pushed event handler.
+
+    wxSheetCellBitmapRendererRefData mostly works.
+
+4/03/04
+    Changed the Editors from using a wxControl to a more generic wxWindow.
+    This shouldn't change any behavior and make it possible to use a wider
+    variety of editor controls.
+
+    Added ability to have multiple views of the same sheet data. Adds
+    wxSheetRefData which contains most of the "member" variables
+    for the wxSheet now. Add wxSheetSplitter a splitter window that given a
+    single wxSheet child window can split into 4 windows.
+
+    All window refreshes now go through RefreshXXX functions in the wxSheet so
+    that the other refed sheets will be updated as well.
+
+03/29/04
+    Fix scrolling when selecting so that the mouse position is correct.
+
+    *** NOTE!
+    Added SendAppendRowsTableMsg (insert, delete and for cols). Use this
+    instead of calling wxSheetTableBase to send the messages. By default
+    the table base does nothing in Append/Insert/Delete/Rows/Cols, but give
+    and error message as the wxGrid does. (previously I sent the message)
+
+03/20/04
+    Removed temp attr for the editors, it was just asking for trouble. Added
+    sending the attr to SetSize which was the only place it was required.
+
+    Added some more functions for the editors to see if the wxControl is Ok and
+    DestroyControl to destroy it.
+
+    Recreate the edit control if it's for a different window, that way we can
+    use wxSheet::GetDefaultEditorForType for setting the editor in different
+    areas. Maybe we need to save controls for different windows?
+    Probably not though, creating a control is pretty fast and you can always
+    call SetAttrEditor(wxSheetCellEditor(new wxSheetCellXXXEditorRefData()) to
+    avoid having to recreate the editor for different windows.
+
+03/19/04 :
+    Fixed off by one bug in pasting copied selection.
+    Renamed copy/paste functions so they describe what they do better.
+    Fixed MSVC warnings.
+
+03/18/04 : Initial release.

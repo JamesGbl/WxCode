@@ -1,0 +1,15 @@
+Maintainer: John Labenski (jrl1)
+Component:  wxSheet
+Subdir:     wxsheet
+Parts:      ???
+More infos: -
+wxWidgets:  ???
+
+Description:
+wxSheet is a spreadsheet type grid widget for the wxWidgets GUI library. The wxSheet code
+is based on the wxWidget\'s wxGrid class and is, for the most part, a complete rewrite,
+almost every function has been tweaked. It is not backwards compatible, but operates and is
+logically similiar. Many of the functions have the same names and you can expect them to
+perform a similiar task, but the parameters may be different. The reason for creating a
+completely separate grid implementation is to allow far more control over the different
+aspects of the operation either though subclassing or intercepting events.

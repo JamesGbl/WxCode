@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type" />
+<meta http-equiv="Content-Type" content="text/html" /><title>wxplotctrl.html</title>
+
+<meta content="John Labenski" name="author" />
+<meta content="readme.html for wxPlotCtrl library" name="description" />
+</head>
+<body style="background-color: rgb(255, 255, 255);">
+<h1>README for wxPlotCtrl</h1>
+<span style="font-weight: bold;">Copyright : 2006, John
+Labenski</span><br />
+<span style="font-weight: bold;">License : wxWindows
+license.</span><br />
+<br />
+<span style="font-style: italic;">This library/program is
+free
+software; you can
+redistribute it and/or modify it under the terms of the wxWindows
+License; either version 3 of the License, or (at your option) any later
+version.</span><br style="font-style: italic;" />
+<br style="font-style: italic;" />
+<span style="font-style: italic;">This library is
+distributed in the
+hope that it will
+be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+wxWindows License for more details.</span><br />
+<br />
+If you use this program/library and find any bugs or
+have added any features that you feel may be generally useful, please
+feel free to contact the author by e-mail at
+jrl1[at]sourceforge[dot]net.<br />
+<br />
+<h2>Summary :</h2>
+wxPlotCtrl is a plotting widget and library for the wxWidgets
+cross-platform C++ GUI library. It is designed as an X-Y interactive
+plotting widget that allows for easy user manipulation of the data
+using the mouse or the keyboard. It does not implement pie, bar, or
+surface plots. In addition to the widget itself are a number
+of data container classes for loading, saving, and
+manipulating plot data, selecting points, function fitting,
+and arbitrary function plotting.<br />
+<br />
+It has been tested in MS Windows OS &gt;= 95 and *nix using GTK 1.2
+or
+2.0. <br />
+The recommended version of wxWidgets is 2.8.x.
+<h2>References :</h2>
+http://wxcode.sourceforge.net
+<br />
+http://www.wxwidgets.org
+<br />
+http://bakefile.sourceforge.net
+<br />
+<br />
+<h2>Provides : (at a glance)</h2>
+<ul type="disc">
+<li align="left">wxPlotCtrl - The main plotting widget
+with axes and scrollbars.</li>
+<ul>
+<li align="left">Create as you would a wxWindow and </li>
+</ul>
+<li align="left">wxPlotCtrlArea - A wxWindow
+child of the wxPlotCtrl where the data is plotted. </li>
+<ul>
+<li align="left">This window forwards
+events to the virtual functions wxPlotCtrl::ProcessAreaEVT_XXX() which
+can be easily overridden.</li>
+</ul>
+<li align="left">wxPlotCtrlAxis - Either an X
+or Y axis wxWindow child of the wxPlotCtrl. </li>
+<ul>
+<li align="left">This window forwards events to the
+virtual functions wxPlotCtrl::ProcessAxisEVT_XXX() which can be easily
+overridden. </li>
+</ul>
+<li align="left">wxPlotCtrlEvent - Events from the
+wxPlotCtrl. </li>
+<ul>
+<li align="left">See the bottom of plotctrl.h
+for descriptions of the event types.</li>
+</ul>
+<li align="left">wxPlotCtrlSelEvent - Selection events
+from the the wxPlotCtrl. </li>
+<ul>
+<li align="left">See the bottom of plotctrl.h
+for descriptions of the event types.</li>
+</ul>
+<li align="left">wxPlotCurve
+- wxObject derived base class for a "curve" that stores a bounding
+rect, pens, ability to store string options, and is a wxClientData
+container.</li>
+<ul>
+<li align="left">New curves can be derived from this
+class, but you must override:</li>
+<ul>
+<li align="left">wxPlotCurve* Clone() const - create
+a "new" refed instance of the curve.</li>
+<li align="left">virtual bool Ok() const - Ref data
+exists and the curve is Ok.</li>
+<li align="left">virtual double GetY( double x )
+const - This is the function y = f(x) for the curve.</li>
+<li align="left">The wxObject ref data must be
+derived from wxPlotCurveRefData and you should update
+m_boundingRect as appropriate.</li>
+</ul>
+<li align="left">The colors for the curve are stored
+in an array and are initialized at creation from a static
+array. You can change the default colors and/or adjust them after
+creation.</li>
+</ul>
+<li align="left">wxPlotData - A data curve, load, save,
+copy, resize, search, offset, add, abs, deviation, variance, FFT, power
+spectrum, FFT filters (high, low, notch, butterworth, custom)...</li>
+<li align="left">wxPlotFunction - Arbitrary function
+curve, plots the function given as a string.</li>
+<li align="left">wxPlotDrawerBase - Base class for
+drawing, plot area, axis, key, curves...</li>
+<ul>
+<li align="left">This class stores some useful
+information commonly used in the derived drawers.</li>
+</ul>
+<li align="left">wxPlotDrawerArea - Not used.</li>
+<li align="left">wxPlotDrawerAxisBase - Base class for
+the X or Y axis drawer.</li>
+<ul>
+<li align="left">wxPlotDrawerXAxis - Draws an X axis.</li>
+<li align="left">wxPlotDrawerYAxis - Draws an Y axis.</li>
+</ul>
+<li align="left">wxPlotMarker - Arbitrary markers that
+can be added to the plot.</li>
+<ul>
+<li align="left">This class stores values for a marker
+and the drawing is done by the wxPlotDrawerMarker.</li>
+</ul>
+<li align="left">wxPlotPrintout - WYSIWYG printing for
+the plot control.</li>
+<li align="left">LM_LeastSquare - Levenberg-Marquart
+nonlinear least squares 2-D curve fitting using a wxPlotFunction to
+find to a wxPlotData. </li>
+</ul>
+<h2>Compilation :</h2>
+Compiles for wxWidgets version 2.6 and up, recommended version
+&gt;=
+2.8
+<br />
+Tested in Linux using gcc and wxGTK and wxMSW using MSVS 6&amp;7. <br />
+<br />
+<h3>Linux using GCC and gmake :</h3>
+Use the Makefile in the src or samples/plotctrl directory which depends
+on the wxWidget's 'wx-config' script being in the path. The Makefile in
+the /src directory will create a library in the wxWidgets/lib directory
+using the wxWidgets naming conventions. To create the library
+elsewhere, change the variable $(WXLIBDIR) in the Makefile. <br />
+<br />
+The Makefile in the samples/plotctrl dir will automatically try to
+build
+the library first and so you can simply run make in the
+samples/plotctrl
+dir to build both. <br />
+<br />
+<h3>MSW using MSVS :</h3>
+Use the dsw file in the build dir to build both the sample and
+the library. You must have the WXWIN environment variable set to the
+location of your copy of the wxWidgets source to use the project files.
+In MS Win 9x you must edit your config.sys file and reboot. In 2k/XP
+you can right click on &#8220;My
+Computer-&gt;Properties-&gt;Advanced-&gt;Environment
+Variables&#8221; and add
+a user variable, you must restart MSVS for the change to take effect.<br />
+<br />
+<h3>Bakefile :</h3>
+I am unable to test all of these configurations, the Microsoft 2003
+free compiler has been tested however. Use these make and project files
+in the same way that you would use them in the wxWidget's samples
+directory.
+<br />
+<br />
+Normally, you do not have to regenerate these... In the build directory
+is a bakefile called "wxplotctrl.bkl&#8221;. To
+regenerate the make and project files run &#8220;bakefile_gen
+wxplotctrl.bkl&#8221;,
+to regenerate a single type, like the Visual Studio project files for
+example, use &#8220;bakefile_gen -f msvs stedit.bkl&#8221;.
+<br />
+The base files for bakefile are, wxplotctrl.bkl (the main
+bakefile),
+Bakefile.bkgen (edit to point to wxplotctrl.bkl), and for gcc
+in linux
+aclocal.m4, acregen.sh, config.guess, config.sub, configure.as.
+<br />
+<br />
+<h2>Documentation :</h2>
+The "full documentation" is included in the headers with a description
+of the public functions. There is also a doxygen.cfg file in the "docs"
+directory that you can use to create cross referenced html docs, please
+review and adjust the file to your liking.
+<br />
+<br />
+<h4>wxplotctrl.cpp : samples/plotctrl/wxplotctrl.cpp</h4>
+Sample program that uses the wxPlotCtrl to load xy data and plot
+arbitrary functions. It shows most of the bool functions of the
+wxPlotCtrl class and prints all the events to a log window.
+<br />
+<br />
+<h4>#defines and enums : include/wx/plotctrl/plotdefs.h</h4>
+TODO - write more docs, for now see the headers.<br />
+<br />
+</body></html>
