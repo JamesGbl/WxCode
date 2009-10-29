@@ -947,7 +947,7 @@ wxJSONReader::SkipComment( wxInputStream& is )
 		// UTF-8 code units until the first LF or CR+LF
 		AddWarning( wxJSONREADER_ALLOW_COMMENTS, warn );
 		m_commentLine = m_lineNo;
-		m_comment.append( _T("//") );
+		utf8Buff.AppendData( "//", 2 );
 		
 		while ( ch >= 0 )  {
 			if ( ch == '\n' )	{
@@ -976,7 +976,7 @@ wxJSONReader::SkipComment( wxInputStream& is )
 	else if ( ch == '*' )  {     // C-style comment
 		AddWarning(wxJSONREADER_ALLOW_COMMENTS, warn );
 		m_commentLine = m_lineNo;
-		m_comment.append( _T("/*") );
+		utf8Buff.AppendData( "/*", 2 );
 		while ( ch >= 0 ) {
 			// check the END-COMMENT chars ('*/')
 			if ( ch == '*' )	{

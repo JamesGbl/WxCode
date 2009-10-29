@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	10
+#define NUM_TESTS	11
 
 
 // the test function's structure
@@ -459,6 +459,29 @@ int main( int argc, char* argv[] )
 		},
 		{ 0 },{ 0 },{ 0 },
 		
+
+		// family #11		(test8.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto (all)
+			_T( "test the comment related functions (reader)" )
+		},
+		{
+			Test11_1, 3, _T( "first test without storing comments" )
+		},
+		{
+			Test11_2, 3, _T( "second test storing comments (COMMENTS_BEFORE)" )
+		},
+		{
+			Test11_3, 3, _T( "third test storing comments (COMMENTS_BEFORE)" )
+		},
+		{
+			Test11_4, 3, _T( "first test without comments (COMMENTS_AFTER)" )
+		},
+		{
+			Test11_5, 3, _T( "second test storing comments (COMMENTS_AFTER)" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// END OF TABLE
 		{0}
