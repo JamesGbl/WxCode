@@ -2651,48 +2651,47 @@ wxJSONValue::SetType( wxJSONType type )
 int
 wxJSONValue::GetLineNo() const
 {
-  // return ZERO if there is not a referenced data structure
-  int n = 0;
-  wxJSONRefData* data = GetRefData();
-  if ( data != 0 ) {
-    n = data->m_lineNo;
-  }
-  return n;
+	// return ZERO if there is not a referenced data structure
+	int n = 0;
+	wxJSONRefData* data = GetRefData();
+	if ( data != 0 ) {
+		n = data->m_lineNo;
+	}
+	return n;
 }
 
 //! Set the line number of this JSON value object.
 void
 wxJSONValue::SetLineNo( int num )
 {
-  wxJSONRefData* data = COW();
-  wxJSON_ASSERT( data );
-  data->m_lineNo = num;
+	wxJSONRefData* data = COW();
+	wxJSON_ASSERT( data );
+	data->m_lineNo = num;
 }
 
 //! Set the pointer to the referenced data.
 void
 wxJSONValue::SetRefData(wxJSONRefData* data)
 {
-  m_refData = data;
+	m_refData = data;
 }
 
 //! Increments the referenced data counter.
 void
 wxJSONValue::Ref(const wxJSONValue& clone)
 {
-  // nothing to be done
-  if (m_refData == clone.m_refData)
-    return;
+	// nothing to be done
+	if (m_refData == clone.m_refData)
+		return;
 
-  // delete reference to old data
-  UnRef();
+	// delete reference to old data
+	UnRef();
 
-  // reference new data
-  if ( clone.m_refData )
-  {
-    m_refData = clone.m_refData;
-    ++(m_refData->m_refCount);
-  }
+	// reference new data
+	if ( clone.m_refData )	{
+		m_refData = clone.m_refData;
+		++(m_refData->m_refCount);
+	}
 }
 
 //! Unreferences the shared data
@@ -2704,20 +2703,21 @@ wxJSONValue::Ref(const wxJSONValue& clone)
 void
 wxJSONValue::UnRef()
 {
-  if ( m_refData )   {
-    wxASSERT_MSG( m_refData->m_refCount > 0, _T("invalid ref data count") );
+	if ( m_refData )   {
+		wxASSERT_MSG( m_refData->m_refCount > 0, _T("invalid ref data count") );
 
-    if ( --m_refData->m_refCount == 0 )
-      delete m_refData;
-      m_refData = NULL;
-    }
+		if ( --m_refData->m_refCount == 0 )	{
+			delete m_refData;
+			m_refData = NULL;
+		}
+	}
 }
 
 //! Makes an exclusive copy of shared data
 void
 wxJSONValue::UnShare()
 {
-  AllocExclusive();
+	AllocExclusive();
 }
 
 
@@ -2729,17 +2729,17 @@ wxJSONValue::UnShare()
 void
 wxJSONValue::DeepCopy( const wxJSONValue& other )
 {
-  UnRef();
-  wxJSONRefData* data = CloneRefData( other.m_refData );
-  SetRefData( data );
+	UnRef();
+	wxJSONRefData* data = CloneRefData( other.m_refData );
+	SetRefData( data );
 }
 
 //! Return the pointer to the referenced data structure.
 wxJSONRefData*
 wxJSONValue::GetRefData() const
 {
-  wxJSONRefData* data = m_refData;
-  return data;
+	wxJSONRefData* data = m_refData;
+	return data;
 }
 
 
@@ -2755,37 +2755,36 @@ wxJSONValue::GetRefData() const
 wxJSONRefData*
 wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 {
-  wxJSON_ASSERT( otherData );
+	wxJSON_ASSERT( otherData );
 
-  // make a static cast to pointer-to-wxJSONRefData
-  const wxJSONRefData* other = otherData;
+	// make a static cast to pointer-to-wxJSONRefData
+	const wxJSONRefData* other = otherData;
 
-  // allocate a new instance of wxJSONRefData using the default
-  // ctor; we cannot use the copy ctor of a wxJSONRefData
-  wxJSONRefData* data = new wxJSONRefData();
+	// allocate a new instance of wxJSONRefData using the default
+	// ctor; we cannot use the copy ctor of a wxJSONRefData
+	wxJSONRefData* data = new wxJSONRefData();
 
-  // wxObjectRefData is private and cannot be accessed by this
-  // wxJSONValue class - but we need to set the reference counter
-  // to 1 so we cannot simply use the default copy ctor of 
-  // wxJSONRefData* data = new wxJSONRefData( *other );
-  // wxJSONRefData structure.
-  //data->m_count = 1;
+	// wxObjectRefData is private and cannot be accessed by this
+	// wxJSONValue class - but we need to set the reference counter
+	// to 1 so we cannot simply use the default copy ctor of 
+	// wxJSONRefData* data = new wxJSONRefData( *other );
+	// wxJSONRefData structure.
+	//data->m_count = 1;
 
-  // copy the referenced data structure's data members
-  data->m_type       = other->m_type;
-  data->m_value      = other->m_value;
-  data->m_commentPos = other->m_commentPos;
-  data->m_comments   = other->m_comments;
-  data->m_lineNo     = other->m_lineNo;
-  data->m_valString  = other->m_valString;
-  data->m_valArray   = other->m_valArray;
-  data->m_valMap  = other->m_valMap;
+	// copy the referenced data structure's data members
+	data->m_type       = other->m_type;
+	data->m_value      = other->m_value;
+	data->m_commentPos = other->m_commentPos;
+	data->m_comments   = other->m_comments;
+	data->m_lineNo     = other->m_lineNo;
+	data->m_valString  = other->m_valString;
+	data->m_valArray   = other->m_valArray;
+	data->m_valMap  = other->m_valMap;
 
+	wxLogTrace( cowTraceMask, _T("(%s) CloneRefData() PROGR: other=%d data=%d"),
+			__PRETTY_FUNCTION__, other->GetRefCount(), data->GetRefCount() );
 
-  wxLogTrace( cowTraceMask, _T("(%s) CloneRefData() PROGR: other=%d data=%d"),
-			 __PRETTY_FUNCTION__, other->GetRefCount(), data->GetRefCount() );
-
-  return data;
+	return data;
 }
 
 //! Create a new data structure
@@ -2798,9 +2797,9 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 wxJSONRefData*
 wxJSONValue::CreateRefData() const
 {
-  wxJSONRefData* data = new wxJSONRefData();
-  data->m_type = wxJSONTYPE_INVALID;
-  return data;
+	wxJSONRefData* data = new wxJSONRefData();
+	data->m_type = wxJSONTYPE_INVALID;
+	return data;
 }
 
 
@@ -2815,36 +2814,34 @@ wxJSONValue::CreateRefData() const
 wxJSONRefData*
 wxJSONValue::COW()
 {
-  wxJSONRefData* data = GetRefData();
-  wxLogTrace( cowTraceMask, _T("(%s) COW() START data=%p data->m_count=%d"),
+	wxJSONRefData* data = GetRefData();
+	wxLogTrace( cowTraceMask, _T("(%s) COW() START data=%p data->m_count=%d"),
 			 __PRETTY_FUNCTION__, data, data->GetRefCount());
-  UnShare();
-  data = GetRefData();
-  wxLogTrace( cowTraceMask, _T("(%s) COW() END data=%p data->m_count=%d"),
+	UnShare();
+	data = GetRefData();
+	wxLogTrace( cowTraceMask, _T("(%s) COW() END data=%p data->m_count=%d"),
 			 __PRETTY_FUNCTION__, data, data->GetRefCount());
-  return GetRefData();
+	return GetRefData();
 }
 
 //! Makes a private copy of the referenced data
 void
 wxJSONValue::AllocExclusive()
 {
-  if ( !m_refData )
-  {
-     m_refData = CreateRefData();
-  }
-  else if ( m_refData->GetRefCount() > 1 )
-  {
-     // note that ref is not going to be destroyed in this case
-     const wxJSONRefData* ref = m_refData;
-     UnRef();
+	if ( !m_refData )	{
+		m_refData = CreateRefData();
+	}
+	else if ( m_refData->GetRefCount() > 1 )	{
+		// note that ref is not going to be destroyed in this case
+		const wxJSONRefData* ref = m_refData;
+		UnRef();
 
-     // ... so we can still access it
-     m_refData = CloneRefData(ref);
-  }
-  //else: ref count is 1, we are exclusive owners of m_refData anyhow
+		// ... so we can still access it
+		m_refData = CloneRefData(ref);
+	}
+	//else: ref count is 1, we are exclusive owners of m_refData anyhow
 
-  wxASSERT_MSG( m_refData && m_refData->GetRefCount() == 1,
+	wxASSERT_MSG( m_refData && m_refData->GetRefCount() == 1,
                   _T("wxObject::AllocExclusive() failed.") );
 }
 
@@ -2861,23 +2858,23 @@ wxJSONValue::AllocExclusive()
 //! \overload wxJSONValue()
 wxJSONValue::wxJSONValue( wxInt64 i )
 {
-  m_refData = 0;
-  wxJSONRefData* data = Init( wxJSONTYPE_INT );
-  wxJSON_ASSERT( data );
-  if ( data != 0 ) {
-    data->m_value.VAL_INT = i;
-  }
+	m_refData = 0;
+	wxJSONRefData* data = Init( wxJSONTYPE_INT );
+	wxJSON_ASSERT( data );
+	if ( data != 0 ) {
+		data->m_value.VAL_INT = i;
+	}
 }
 
 //! \overload wxJSONValue()
 wxJSONValue::wxJSONValue( wxUint64 ui )
 {
-  m_refData = 0;
-  wxJSONRefData* data = Init( wxJSONTYPE_UINT );
-  wxJSON_ASSERT( data );
-  if ( data != 0 ) {
-    data->m_value.VAL_UINT = ui;
-  }
+	m_refData = 0;
+	wxJSONRefData* data = Init( wxJSONTYPE_UINT );
+	wxJSON_ASSERT( data );
+	if ( data != 0 ) {
+		data->m_value.VAL_UINT = ui;
+	}
 }
 
 //! Return TRUE if the stored value is a 32-bits integer
@@ -2892,8 +2889,8 @@ wxJSONValue::wxJSONValue( wxUint64 ui )
 bool
 wxJSONValue::IsInt32() const
 {
-  bool r = IsLong();
-  return r;
+	bool r = IsLong();
+	return r;
 }
 
 //! Return TRUE if the stored value is a unsigned 32-bits integer
@@ -2908,8 +2905,8 @@ wxJSONValue::IsInt32() const
 bool
 wxJSONValue::IsUInt32() const
 {
-  bool r = IsULong();
-  return r;
+	bool r = IsULong();
+	return r;
 }
 
 
@@ -2926,13 +2923,13 @@ wxJSONValue::IsUInt32() const
 bool
 wxJSONValue::IsInt64() const
 {
-  wxJSONRefData* data = GetRefData();
-  wxJSON_ASSERT( data );
-  bool r = false;
-  if ( data->m_type == wxJSONTYPE_INT ) {
-    r = true;
-  }
-  return r;
+	wxJSONRefData* data = GetRefData();
+	wxJSON_ASSERT( data );
+	bool r = false;
+	if ( data->m_type == wxJSONTYPE_INT ) {
+		r = true;
+	}
+	return r;
 }
 
 
@@ -2949,13 +2946,13 @@ wxJSONValue::IsInt64() const
 bool
 wxJSONValue::IsUInt64() const
 {
-  wxJSONRefData* data = GetRefData();
-  wxJSON_ASSERT( data );
-  bool r = false;
-  if ( data->m_type == wxJSONTYPE_UINT ) {
-    r = true;
-  }
-  return r;
+	wxJSONRefData* data = GetRefData();
+	wxJSON_ASSERT( data );
+	bool r = false;
+	if ( data->m_type == wxJSONTYPE_UINT ) {
+		r = true;
+	}
+	return r;
 }
 
 //! Returns the low-order 32 bits of the value as an integer
@@ -2973,9 +2970,9 @@ wxJSONValue::IsUInt64() const
 wxInt32
 wxJSONValue::AsInt32() const
 {
-  wxInt32 i;
-  i = (wxInt32) AsLong();
-  return i;
+	wxInt32 i;
+	i = (wxInt32) AsLong();
+	return i;
 }
 
 //! Returns the low-order 32 bits of the value as an unsigned integer
@@ -2993,9 +2990,9 @@ wxJSONValue::AsInt32() const
 wxUint32
 wxJSONValue::AsUInt32() const
 {
-  wxUint32 ui;
-  ui = (wxUint32) AsULong();
-  return ui;
+	wxUint32 ui;
+	ui = (wxUint32) AsULong();
+	return ui;
 }
 
 
@@ -3016,12 +3013,12 @@ wxJSONValue::AsUInt32() const
 wxInt64
 wxJSONValue::AsInt64() const
 {
-  wxJSONRefData* data = GetRefData();
-  wxJSON_ASSERT( data );
-  wxInt64 i64 = data->m_value.m_valInt64;
+	wxJSONRefData* data = GetRefData();
+	wxJSON_ASSERT( data );
+	wxInt64 i64 = data->m_value.m_valInt64;
 
-  wxJSON_ASSERT( IsInt64());  // exapnds only in debug builds
-  return i64;
+	wxJSON_ASSERT( IsInt64());  // exapnds only in debug builds
+	return i64;
 }
 
 //! Return the numeric value as a 64-bit unsigned integer.
@@ -3041,12 +3038,12 @@ wxJSONValue::AsInt64() const
 wxUint64
 wxJSONValue::AsUInt64() const
 {
-  wxJSONRefData* data = GetRefData();
-  wxJSON_ASSERT( data );
-  wxUint64 ui64 = data->m_value.m_valUInt64;
+	wxJSONRefData* data = GetRefData();
+	wxJSON_ASSERT( data );
+	wxUint64 ui64 = data->m_value.m_valUInt64;
 
-  wxJSON_ASSERT( IsUInt64());  // exapnds only in debug builds
-  return ui64;
+	wxJSON_ASSERT( IsUInt64());  // exapnds only in debug builds
+	return ui64;
 }
 
 bool
@@ -3093,18 +3090,18 @@ wxJSONValue::AsUInt64( wxUint64& ui64 ) const
 wxJSONValue&
 wxJSONValue::Append( wxInt64 i )
 {
-  wxJSONValue v( i );
-  wxJSONValue& r = Append( v );
-  return r;
+	wxJSONValue v( i );
+	wxJSONValue& r = Append( v );
+	return r;
 }
 
 //! \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( wxUint64 ui )
 {
-  wxJSONValue v( ui );
-  wxJSONValue& r = Append( v );
-  return r;
+	wxJSONValue v( ui );
+	wxJSONValue& r = Append( v );
+	return r;
 }
 
 
@@ -3112,18 +3109,18 @@ wxJSONValue::Append( wxUint64 ui )
 wxJSONValue&
 wxJSONValue::operator = ( wxInt64 i )
 {
-  wxJSONRefData* data = SetType( wxJSONTYPE_INT );
-  data->m_value.VAL_INT = i;
-  return *this;
+	wxJSONRefData* data = SetType( wxJSONTYPE_INT );
+	data->m_value.VAL_INT = i;
+	return *this;
 }
 
 //! \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( wxUint64 ui )
 {
-  wxJSONRefData* data = SetType( wxJSONTYPE_UINT );
-  data->m_value.VAL_UINT = ui;
-  return *this;
+	wxJSONRefData* data = SetType( wxJSONTYPE_UINT );
+	data->m_value.VAL_UINT = ui;
+	return *this;
 }
 
 
