@@ -30,7 +30,7 @@ end
 if ( target == "vs2005" ) then
 	-- Windows and Visual C++ 2005
 	table.insert(package.defines, "_CRT_SECURE_NO_DEPRECATE" )
-         table.insert(package.defines, "_DISWARNINGS_MSVC" ) 
+         	table.insert(package.defines, "_DISWARNINGS_MSVC" ) 
 end
 if( ( target == "vs2003" or target == "vs2005" ) and options["no-builtin-wchar"] ) then
 	table.insert(package.buildoptions, "/Zc:wchar_t-")
@@ -44,32 +44,6 @@ end
 
 -- Set the include paths.
 package.includepaths = { "../include", "../src" }
-
--- Setup the output directory options.
---		Note: Use 'libdir' for "lib" kind only.
-if ( windows ) then
-	if ( target == "gnu" or target == "cb-gcc" or target == "cl-gcc" ) then
-		if ( package.kind == "dll" ) then
-			package.bindir = "../lib/gcc_dll"
-		else
-			package.libdir = "../lib/gcc_lib"
-		end
-	else
-		if( options["shared"] ) then
-			package.bindir = "../lib/vc_dll"
-			package.libdir = "../lib/vc_dll"
-		else
-			package.bindir = "../lib/vc_lib"
-			package.libdir = "../lib/vc_lib"
-		end
-	end
-else
-	if ( package.kind == "dll" ) then
-		package.bindir = "../lib/gcc_dll"
-	else
-		package.libdir = "../lib/gcc_lib"
-	end
-end
 
 -- Set precompiled headers support
 package.pchheader = "wx_pch.h"

@@ -15,9 +15,6 @@ FrameCanvas::FrameCanvas(wxSFDiagramManager* manager, wxWindow* parent, wxWindow
 	
 	// initialize grid
 
-	//UseGrid(true); !!! DEPRECATED !!!
-	//ShowGrid(true); !!! DEPRECATED !!!
-
 	AddStyle(sfsGRID_USE);
 	AddStyle(sfsGRID_SHOW);
 
@@ -64,7 +61,7 @@ FrameCanvas::FrameCanvas(wxSFDiagramManager* manager, wxWindow* parent, wxWindow
 
 	// you can set also the canvas history manager working mode:
 	// 1) FASTER, but requires implementation of xsSerializable::Clone() virtual function
-	// in all classes derived from the xsSerializable class
+	// and copy constructor in all classes derived from the xsSerializable class
 	GetHistoryManager().SetMode(wxSFCanvasHistory::histUSE_CLONING);
 	// 2) SLOWER, but no other programming overhead is required (except implementation
 	// of standard serialization functionality). This working mode is default.
@@ -210,6 +207,9 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
 				pShape->AcceptConnection(wxT("All"));
                 pShape->AcceptSrcNeighbour(wxT("All"));
                 pShape->AcceptTrgNeighbour(wxT("All"));
+				
+				// child shapes can be locked accordingly to their parent's origin if the parent is resized
+				//pShape->AddStyle( wxSFShapeBase::sfsLOCK_CHILDREN );
 			}
 		}
 		break;
@@ -338,7 +338,28 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
                 wxSFShapeCanvas::OnLeftDown(event);
         }
         break;
+		
+	case MainFrm::modeSTANDALONELINE:
+		{
+			pShape = GetDiagramManager()->AddShape(CLASSINFO(wxSFLineShape), event.GetPosition(), sfDONT_SAVE_STATE);
+			if( pShape )
+			{
+				// set the line to be stand-alone
+				((wxSFLineShape*) pShape)->SetStandAlone( true );
+			
+				((wxSFLineShape*) pShape)->SetSrcPoint( wxSFCommonFcn::Conv2RealPoint(event.GetPosition() - wxPoint( 50, 0 )) );
+				((wxSFLineShape*) pShape)->SetTrgPoint( wxSFCommonFcn::Conv2RealPoint(event.GetPosition() + wxPoint( 50, 0 )) );
+				
+				// line's ending style can be set as follows:
+				//((wxSFLineShape*) pShape)->SetSrcArrow(CLASSINFO(wxSFCircleArrow));
+				//((wxSFLineShape*) pShape)->SetTrgArrow(CLASSINFO(wxSFCircleArrow));
 
+				pShape->AcceptChild(wxT("wxSFTextShape"));
+				pShape->AcceptChild(wxT("wxSFEditTextShape"));
+			}
+		}
+		break;
+	
 	default:
 		// do default actions
 		wxSFShapeCanvas::OnLeftDown(event);

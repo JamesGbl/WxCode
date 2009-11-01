@@ -14,13 +14,17 @@
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
 
-#include "ShapeBase.h"
-#include "DiagramManager.h"
-#include "MultiSelRect.h"
-#include "CanvasHistory.h"
-#include "LineShape.h"
-#include "EditTextShape.h"
-#include "Printout.h"
+#include <wx/wxsf/ShapeBase.h>
+#include <wx/wxsf/DiagramManager.h>
+#include <wx/wxsf/MultiSelRect.h>
+#include <wx/wxsf/CanvasHistory.h>
+#include <wx/wxsf/LineShape.h>
+#include <wx/wxsf/EditTextShape.h>
+#include <wx/wxsf/Printout.h>
+
+#ifdef __WXMAC__ 
+#include <wx/mac/carbon/printdlg.h> 
+#endif 
 
 /*! \brief XPM (mono-)bitmap which can be used in shape's shadow brush */
 extern const char* wxSFShadowBrush_xpm[];
@@ -919,8 +923,10 @@ private:
 	void InitializePrinting();
 	/*! \brief Deinitialize prnting framework */
 	void DeinitializePrinting();
-	/*! \brief Remove given shape for temporary conatiners */
+	/*! \brief Remove given shape for temporary containers */
 	void RemoveFromTemporaries(wxSFShapeBase *shape);
+	/*! \brief Clear all temporary containers */
+	void ClearTemporaries();
 	/*! \brief Assign give shape to parent at given location (if exists) */
 	void ReparentShape(wxSFShapeBase *shape, const wxPoint& parentpos);
 
@@ -950,7 +956,7 @@ private:
 	 * \param event Size event
 	 */
 	void _OnResize(wxSizeEvent& event);
-
+	
 	// original private event handlers
 	/*!
 	 * \brief Original private event handler called when the canvas is clicked by

@@ -1,5 +1,5 @@
 --*****************************************************************************
---*	Author:		Michal BliæÚ·k
+--*	Author:		Michal Bli≈æ≈à√°k
 --*	Date:		18/11/2007
 --*	Version:	1.00
 --*	
@@ -29,7 +29,7 @@ if ( windows ) then
 elseif ( linux ) then
 	wx_target = "wx_gtk2"
 elseif ( macosx ) then
-	wx_target = "wxmac"
+	wx_target = "wx_mac"
 end
 
 usign = ""

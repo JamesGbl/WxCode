@@ -535,6 +535,24 @@ wxSFShapeBase* wxSFShapeBase::GetGrandParentShape()
 	return pGrandPa;
 }
 
+bool wxSFShapeBase::IsDescendant(wxSFShapeBase *parent)
+{
+	ShapeList lstChildren;
+	
+	if( parent ) parent->GetChildShapes( NULL, lstChildren, sfRECURSIVE );
+	
+	return ( lstChildren.IndexOf(this) != wxNOT_FOUND );
+}
+
+bool wxSFShapeBase::IsAncestor(wxSFShapeBase *child)
+{
+	ShapeList lstChildren;
+	
+	GetChildShapes( NULL, lstChildren, sfRECURSIVE );
+	
+	return ( lstChildren.IndexOf(child) != wxNOT_FOUND );	
+}
+
 void wxSFShapeBase::SetUserData(xsSerializable* data)
 {
     m_pUserData = data;
@@ -700,7 +718,7 @@ void wxSFShapeBase::_GetNeighbours(ShapeList& neighbours, wxClassInfo *shapeInfo
 
                 case lineBOTH:
                     {
-                        if(m_nId == pLine->GetSrcShapeId())pOposite = GetShapeManager()->FindShape(pLine->GetTrgShapeId());
+                        if(GetId() == pLine->GetSrcShapeId())pOposite = GetShapeManager()->FindShape(pLine->GetTrgShapeId());
                         else
                             pOposite = GetShapeManager()->FindShape(pLine->GetSrcShapeId());
                     }
@@ -1108,11 +1126,7 @@ void wxSFShapeBase::_OnDragging(const wxPoint& pos)
 		GetCompleteBoundingBox(currBB, bbSELF | bbCONNECTIONS | bbCHILDREN | bbSHADOW);
 
 		// update canvas
-		if(GetShapeManager()->GetShapeCanvas())
-		{
-			const wxRect unionRect = prevBB.Union(currBB);
-			Refresh(unionRect);
-		}
+		Refresh( prevBB.Union(currBB) );
 
 		m_fFirstMove = false;
 	}
@@ -1276,10 +1290,17 @@ void wxSFShapeBase::_OnKey(int key)
 
 void wxSFShapeBase::_OnHandle(wxSFShapeHandle& handle)
 {
-    wxSFShapeBase *pChild;
-    wxSFShapeCanvas *pCanvas = GetShapeManager()->GetShapeCanvas();
+	if( !m_pParentManager )return;
 
-    if( !m_pParentManager )return;
+    wxSFShapeBase *pChild;
+	wxRect prevBB, currBB;
+	
+	if( m_pParentItem )
+	{
+		GetGrandParentShape()->GetCompleteBoundingBox( prevBB );
+	}
+	else
+		this->GetCompleteBoundingBox( prevBB );
 
     // call appropriate user-defined handler
 	this->OnHandle(handle);
@@ -1298,9 +1319,15 @@ void wxSFShapeBase::_OnHandle(wxSFShapeHandle& handle)
     }
     // update shape
     this->Update();
+	
+	if( m_pParentItem )
+	{
+		GetGrandParentShape()->GetCompleteBoundingBox( currBB );
+	}
+	else
+		this->GetCompleteBoundingBox( currBB );
 
-    // refresh canvas
-    if( pCanvas ) pCanvas->Refresh(false);
-
+    // refresh shape
+    Refresh( currBB.Union( prevBB ) );
 }
 

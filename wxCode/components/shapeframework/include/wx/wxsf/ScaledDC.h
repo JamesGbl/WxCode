@@ -15,7 +15,7 @@
 #include <wx/dc.h>
 #include <math.h>
 
-#include "Defs.h"
+#include <wx/wxsf/Defs.h>
 
 /*! \brief Class acts as a wrapper for given DC class and provides modified
  * drawing functions cooperating with the shape canvas able to draw scaled graphics.
@@ -122,11 +122,11 @@ protected:
 	/**
 	 * \brief Initialize wxGraphicsContext.
 	 */
-    //void InitGC();
+    void InitGC();
 	/**
 	 * \brief Uninitialize wxGraphicsContext.
 	 */
-    //void UninitGC();
+    void UninitGC();
 
 	virtual bool DoBlit(wxCoord xdest, wxCoord ydest, wxCoord width, wxCoord height, wxDC *source, wxCoord xsrc, wxCoord ysrc, int rop = wxCOPY, bool useMask = false, wxCoord xsrcMask = wxDefaultCoord, wxCoord ysrcMask = wxDefaultCoord);
 	virtual void DoCrossHair(wxCoord x, wxCoord y);

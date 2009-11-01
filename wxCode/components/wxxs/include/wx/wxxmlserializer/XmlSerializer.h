@@ -15,9 +15,10 @@
     #include <wx/wx.h>
 #endif
 
-#include "wx/wxxmlserializer/PropertyIO.h"
+#include <wx/wxxmlserializer/PropertyIO.h>
 
 #include <wx/xml/xml.h>
+#include <wx/hashmap.h>
 
 #define xsWITH_ROOT true
 #define xsWITHOUT_ROOT false
@@ -147,6 +148,8 @@ class WXDLLIMPEXP_XS wxXmlSerializer;
 
 WX_DECLARE_LIST_WITH_DECL(xsProperty, PropertyList, class WXDLLIMPEXP_XS);
 WX_DECLARE_LIST_WITH_DECL(xsSerializable, SerializableList, class WXDLLIMPEXP_XS);
+
+WX_DECLARE_HASH_MAP( long, xsSerializable*, wxIntegerHash, wxIntegerEqual, IDMap );
 
 /*!
  * \brief Base class encapsulating object which can be serialized/deserialized to/from
@@ -294,6 +297,13 @@ public:
      */
     xsSerializable* AddChild(xsSerializable* child);
     /*!
+     * \brief Insert serializable child object to this object at given position.
+	 * \param pos Zero-based position
+     * \param child Pointer to added child object (must NOT be NULL)
+     * \return Pointer to to the added child object
+     */
+    xsSerializable* InsertChild(size_t pos, xsSerializable* child);
+    /*!
      * \brief Assign this object as a child to given parent object.
      * \param parent Pointer to new parent object (must NOT be NULL)
      */
@@ -306,7 +316,7 @@ public:
      * serializable object is attached to another one (or directly to root node of wxXmlSerializer) by
      * wxXmlSerializer::AddItem() member function.
      */
-    inline void SetId(long id) { m_nId = id; }
+    void SetId(long id);
     /*!
      * \brief Get object ID.
      * \return ID value or -1 if the ID hasn't been set yet
@@ -332,6 +342,12 @@ public:
      * \sa xsProperty
      */
     void AddProperty(xsProperty* property);
+	/**
+	 * \brief Remove given property from the property list.
+	 * \param property Pointer to existing property.
+	 * \sa xsProperty, GetProperty()
+	 */
+	void RemoveProperty(xsProperty *property);
     /*!
      * \brief Get serialized property of given name.
      * \return Pointer to the property object if exists, otherwise NULL
@@ -394,13 +410,17 @@ protected:
 	/*! \brief Pointer to parent data manager */
 	wxXmlSerializer *m_pParentManager;
 
-    /*! \brief Object ID */
-    long m_nId;
     /*! \brief Object serialization flag */
     bool m_fSerialize;
 	/*! \brief Object cloning flag */
 	bool m_fClone;
 
+	/**
+	 * \brief Initialize new child object.
+	 * \param child Pointer to new child object
+	 */
+	void InitChild(xsSerializable *child);
+	
     // protected virtual functions
     /*!
      * \brief Serialize stored properties to the given XML node. The serialization
@@ -463,6 +483,10 @@ protected:
      * \endcode
      */
     virtual void Deserialize(wxXmlNode* node);
+	
+private:
+    /*! \brief Object ID */
+    long m_nId;
 };
 
 /*!
@@ -555,6 +579,12 @@ public:
      * \return True if the object is included in the serializer, otherwise False
      */
     bool Contains(xsSerializable *object) const;
+    /*!
+     * \brief Check whether any object of given type is included in the serializer.
+     * \param type Pointer to class info
+     * \return True if at least one object of given type is included in the serializer, otherwise False
+     */	
+    bool Contains(wxClassInfo *type);
 
     /*!
      * \brief Set root item.
@@ -612,24 +642,28 @@ public:
      * \brief Serialize stored objects to given file.
      * \param file Full path to output file
      * \param withroot If TRUE then the root item's properties are serialized as well
+	 * \return TRUE on success, otherwise FALSE
      */
-    virtual void SerializeToXml(const wxString& file, bool withroot = false);
+    virtual bool SerializeToXml(const wxString& file, bool withroot = false);
     /*!
      * \brief Serialize stored objects to given stream.
      * \param outstream Output stream
      * \param withroot If TRUE then the root item's properties are serialized as well
+	 * \return TRUE on success, otherwise FALSE
      */
-    virtual void SerializeToXml(wxOutputStream& outstream, bool withroot = false);
+    virtual bool SerializeToXml(wxOutputStream& outstream, bool withroot = false);
     /*!
      * \brief Deserialize objects from given file.
      * \param file Full path to input file
+	 * \return TRUE on success, otherwise FALSE
      */
-    virtual void DeserializeFromXml(const wxString& file);
+    virtual bool DeserializeFromXml(const wxString& file);
     /*!
      * \brief Deserialize objects from given stream.
      * \param instream Input stream
+	 * \return TRUE on success, otherwise FALSE
      */
-    virtual void DeserializeFromXml(wxInputStream& instream);
+    virtual bool DeserializeFromXml(wxInputStream& instream);
 
     /*!
      * \brief Serialize child objects of given parent object (parent object can be optionaly
@@ -663,6 +697,11 @@ public:
 	 * \return Number of ID's occurences
 	 */
 	int GetIDCount(long id);
+	/*!
+	 * \brief Get map of used IDs.
+	 * \return Reference to map where all used IDs are stored
+	 */
+	IDMap& GetUsedIDs() { return m_mapUsedIDs; }
 
 	/*! \brief Initialize all standard property IO handlers */
 	void InitializeAllIOHandlers();
@@ -699,6 +738,9 @@ protected:
 
 	/*! \brief Object cloning flag */
 	bool m_fClone;
+	
+	/*! \brief Map storing information which ID is already used */
+	IDMap m_mapUsedIDs;
 
 private:
     // private data members

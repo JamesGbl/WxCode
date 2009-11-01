@@ -18,9 +18,9 @@
 #include <wx/arrstr.h>
 #include <wx/list.h>
 
-#include "ShapeHandle.h"
-#include "Defs.h"
-#include "../wxxmlserializer/XmlSerializer.h"
+#include <wx/wxsf/ShapeHandle.h>
+#include <wx/wxsf/Defs.h>
+#include <wx/wxxmlserializer/XmlSerializer.h>
 
 #define sfRECURSIVE true
 #define sfNORECURSIVE false
@@ -149,6 +149,8 @@ public:
 	    sfsSHOW_HANDLES = 256,
 	    /*! \brief Show shadow under the shape */
 	    sfsSHOW_SHADOW = 512,
+		/*! \brief Lock children relative position if the parent is resized */
+		sfsLOCK_CHILDREN = 1024,
 		/*! \brief Default shape style. */
 		sfsDEFAULT_SHAPE_STYLE = sfsPARENT_CHANGE | sfsPOSITION_CHANGE | sfsSIZE_CHANGE | sfsHOVERING | sfsHIGHLIGHTING | sfsSHOW_HANDLES | sfsALWAYS_INSIDE | sfsDELETE_USER_DATA
 	};
@@ -442,6 +444,18 @@ public:
 	wxSFShapeBase* GetParentShape();
     /*! \brief Get pointer to the topmost parent shape */
 	wxSFShapeBase* GetGrandParentShape();
+	/**
+	 * \brief Determine whether this shape is ancestor of given child shape.
+	 * \param child Pointer to child shape.
+	 * \return TRUE if this shape is parent of given child shape, otherwise FALSE
+	 */
+	bool IsAncestor(wxSFShapeBase *child);
+	/**
+	 * \brief Determine whether this shape is descendant of given parent shape.
+	 * \param parent Pointer to parent shape
+	 * \return TRUE if this shape is a child of given parent shape, otherwise FALSE
+	 */
+	bool IsDescendant(wxSFShapeBase *parent);
 
     /*!
      * \brief Associate user data with the shape.

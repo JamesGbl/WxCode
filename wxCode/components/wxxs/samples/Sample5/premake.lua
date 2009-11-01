@@ -43,14 +43,5 @@ package.includepaths = { "../../include" }
 -- Set the libraries it links to.
 package.links = { "wxXmlSerializer" }
 
--- Setup the output directory options.
---		Note: Use 'libdir' for "lib" kind only.
-
-if ( ( target == "vs2003" ) or ( target == "vs2005" ) ) then
-	package.bindir = "bin/vc"
-else
-	package.bindir = "bin/gcc"
-end
-
 dofile('../../build/premake/scripts/wxpresets.lua')
 

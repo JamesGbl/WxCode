@@ -1,3 +1,18 @@
+Changes in version 1.3.0 beta (2009-10-14):
+-------------------------------------------
+- Added function xsSerializable::RemoveProperty(xsProperty *property).
+- Added function xsSerializable::InsertChild(size_t pos, xsSerializable *child).
+- Added function bool wxXmlSerializer::Contains(wxClassInfo *type) which returns TRUE if object of given type is included
+  in the serializer.
+- Improved performance of wxXmlSerializer::GetNewId(), wxXmlSerializer::IsIdUsed(), wxXmlSerializer::GetItem(long id) functions.
+- Functions wxXmlSerializer::SerializeToXML() and wxXmlSerializer::DeserializeFromXml() now returns bool value informing about the
+  operation success/fail.
+- Changed visibility of xsSerializable::m_nId data member from protected to private.
+
+Changes in version 1.2.1 beta (2009-07-16):
+-------------------------------------------
+- Updated premake build files to work properly also on Mac.
+
 Changes in version 1.2.0 beta (2009-06-11):
 -------------------------------------------
 - Added functions void xsProperty::ToString() which returns textual representation of current property value and
