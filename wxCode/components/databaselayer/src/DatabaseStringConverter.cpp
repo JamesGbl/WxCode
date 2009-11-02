@@ -33,6 +33,8 @@ const wxCharBuffer DatabaseStringConverter::ConvertToUnicodeStream(const wxStrin
 
 size_t DatabaseStringConverter::GetEncodedStreamLength(const wxString& inputString)
 {
+  if(inputString == _T(""))
+    return 0;
 #if wxUSE_UNICODE
   size_t length = wxConvUTF8.WC2MB(NULL, inputString.wc_str(), (unsigned int)0);
 #else
@@ -71,6 +73,8 @@ const wxCharBuffer DatabaseStringConverter::ConvertToUnicodeStream(const wxStrin
 
 size_t DatabaseStringConverter::GetEncodedStreamLength(const wxString& inputString, const char* encoding)
 {
+  if(inputString == _T(""))
+    return 0;
 #if wxUSE_UNICODE
   size_t length = wxConvUTF8.WC2MB(NULL, inputString.wc_str(), (unsigned int)0);
 #else

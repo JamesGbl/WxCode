@@ -209,14 +209,25 @@ bool FirebirdDatabaseLayer::Open()
   
   if (m_strRole == wxEmptyString)
   {
+#ifdef wxUSE_UNICODE
     m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
         isc_dpb_password, (const char*)passwordCharBuffer, isc_dpb_lc_ctype, (const char*)systemEncoding, NULL);
+#else
+    m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
+        isc_dpb_password, (const char*)m_strPassword.c_str(), isc_dpb_lc_ctype, (const char*)systemEncoding, NULL);
+#endif
   }
   else
   {
+#ifdef wxUSE_UNICODE
     m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
-        isc_dpb_password, (const char*)passwordCharBuffer, isc_dpb_lc_ctype, (const char*)systemEncoding, 
+        isc_dpb_password, (const char*)passwordCharBuffer, isc_dpb_lc_ctype, (const char*)systemEncoding,
         isc_dpb_sql_role_name, (const char*)roleCharBuffer, NULL);
+#else
+    m_pInterface->GetIscExpandDpb()(&pDpb, &nDpbLength, isc_dpb_user_name, (const char*)userCharBuffer,
+        isc_dpb_password, (const char*)m_strPassword.c_str(), isc_dpb_lc_ctype, (const char*)systemEncoding,
+        isc_dpb_sql_role_name, (const char*)roleCharBuffer, NULL);
+#endif
   }
     
   // Combine the server and databsae path strings to pass into the isc_attach_databse function
@@ -960,11 +971,12 @@ wxString FirebirdDatabaseLayer::TranslateErrorCodeToString(FirebirdInterface* pI
     long* pVector = (long*)status;
     pInterface->GetFbInterpret()(szError, 512, (const ISC_STATUS**)&pVector);
     //puts(szError);
-    strReturn = wxString::Format(_("%s\n"), szError);
+    wxCharBuffer systemEncoding = wxLocale::GetSystemEncodingName().mb_str(*wxConvCurrent);
+    strReturn = DatabaseStringConverter::ConvertFromUnicodeStream(szError, (const char*)systemEncoding);
     while (pInterface->GetFbInterpret()(szError, 512, (const ISC_STATUS**)&pVector))
     {
       //puts(szError);
-      strReturn += wxString::Format(_("%s\n"), szError);
+      strReturn += DatabaseStringConverter::ConvertFromUnicodeStream(szError, (const char*)systemEncoding);
     }
   }
   else

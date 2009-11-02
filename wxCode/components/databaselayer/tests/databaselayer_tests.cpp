@@ -96,6 +96,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         TEST_CASE(testFieldNotInResultSetError)
         TEST_CASE(testNullValues)  // DateTime, Blob
         TEST_CASE(testNullParameters)  // DateTime, Blob
+        TEST_CASE(testEmptyStringParameters)  // wxString
         TEST_CASE(testSingleLinePreparedStatement)
         TEST_CASE(testEncodingSupport)
         TEST_CASE(testParameterEncodingSupport);
@@ -2525,6 +2526,87 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
 
         }
       }
+
+      void testEmptyStringParameters()
+      {
+        puts("testEmptyStringParameters");
+        ASSERT( m_pDatabaseLayer != NULL );
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+
+          // Add a table just for this test
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+          SQL_STATEMENT_ARRAY::iterator createTableSql = m_SqlMap.find(CREATE_TABLE7);
+          if (createTableSql != m_SqlMap.end())
+          {
+            for (unsigned int i=0; i<(*createTableSql).second.size(); i++)
+            {
+              m_pDatabaseLayer->RunQuery((*createTableSql).second.Item(i));
+            }
+          }
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            // Don't stop on error here since this could be a "table already exists" error
+            ProcessException(e, false);
+          }
+#endif
+          
+          // Make sure that the tearDown function knows to remove this test table
+          m_DeleteStatements.push_back(_("DROP TABLE table7;"));
+          
+          m_pDatabaseLayer->RunQuery(_("DELETE FROM table7;")); // Be extra sure the table is empty
+
+          // Insert 1 record in the table with a key followed by all NULL values
+          PreparedStatement* pStatement = m_pDatabaseLayer->PrepareStatement(_("INSERT INTO table7 (KeyCol, StringCol) VALUES (1, ?);"));
+          ASSERT(pStatement != NULL);
+          DatabaseErrorCheck(pStatement);
+          if (pStatement)
+          {
+            pStatement->SetParamString(1, _T(""));
+            pStatement->RunQuery();
+
+            m_pDatabaseLayer->CloseStatement(pStatement);
+            pStatement = NULL;
+          }
+
+          DatabaseResultSet* pResultSet = m_pDatabaseLayer->RunQueryWithResults(_("SELECT * FROM table7 WHERE KeyCol = 1;"));
+          ASSERT(pResultSet != NULL);
+          DatabaseErrorCheck(pResultSet);
+          if (pResultSet)
+          {
+            if (pResultSet->Next())
+            {
+              wxString stringValue = pResultSet->GetResultString(_("StringCol"));
+              ASSERT_EQUALS(wxString(_("")), stringValue);
+            }
+            else
+            {
+              FAIL("Error: No results found when inserting a table row with all NULL values");
+            }
+
+            m_pDatabaseLayer->CloseResultSet(pResultSet);
+          }
+          
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+
+        }
+      }
+
 
       void testSingleLinePreparedStatement()
       {
@@ -5699,6 +5781,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
   #ifdef USE_FIREBIRD_EMBEDDED
         m_pDatabaseLayer = new FirebirdDatabaseLayer(strDatabase, strUser, strPassword);
   #else
+//	puts(strServer.mbc_str());
+//	puts(strDatabase.mbc_str());
+//	puts(strUser.mbc_str());
+//	puts(strPassword.mbc_str());
         m_pDatabaseLayer = new FirebirdDatabaseLayer(strServer, strDatabase, strUser, strPassword);
         // Alternatively, you can do something like the following:
         //m_pDatabaseLayer = new FirebirdDatabaseLayer();
@@ -6000,6 +6086,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
         catch (DatabaseLayerException& e)
         {
+	    puts("m_Databaselayer was not created");
           ProcessException(e, false);
           wxDELETE(m_pDatabaseLayer);
           return false;
@@ -6007,7 +6094,10 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
 #endif
         ASSERT(m_pDatabaseLayer != NULL);
         if (m_pDatabaseLayer == NULL)
+	{
+	    puts("m_Databaselayer was not created");
           return false;
+        }
 
         return true;
     }
