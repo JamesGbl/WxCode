@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        demo.cpp
-// Purpose:
+// Purpose:     demo application implementation
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
@@ -11,6 +11,9 @@
 #include "demo.h"
 #include <wx/aui/aui.h>
 #include <wx/aboutdlg.h>
+
+const wxString appVersion = wxT("1.1");
+const wxString appName = wxT("wxAdvTable demo 1.1");
 
 /**
  * Demo application.
@@ -45,9 +48,12 @@ IMPLEMENT_APP(DemoApp);
 enum CONTROL_IDS {
 	CHOICE_SELECT_MODE = 101,
 	CHOICE_HIGHLIGHT_MODE,
+	CHOICE_SORT_MODE,
 	CHECK_SHOW_ROWS,
 	CHECK_SHOW_COLS,
 	CHECK_SHOW_CORNER,
+	CHECK_SORT_BY_ANY_ROW,
+	CHECK_SORT_BY_ANY_COL,
 	SPINCTRL_GRID_WIDTH,
 	SPINCTRL_FOCUSED_WIDTH,
 };
@@ -55,9 +61,12 @@ enum CONTROL_IDS {
 BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
 	EVT_CHOICE(CHOICE_SELECT_MODE, ControlPanel::OnChoiceSelectMode)
 	EVT_CHOICE(CHOICE_HIGHLIGHT_MODE, ControlPanel::OnChoiceHighlightMode)
+	EVT_CHOICE(CHOICE_SORT_MODE, ControlPanel::OnChoiceSortMode)
 	EVT_CHECKBOX(CHECK_SHOW_ROWS, ControlPanel::OnCheckShowRows)
 	EVT_CHECKBOX(CHECK_SHOW_COLS, ControlPanel::OnCheckShowCols)
 	EVT_CHECKBOX(CHECK_SHOW_CORNER, ControlPanel::OnCheckShowCorner)
+	EVT_CHECKBOX(CHECK_SORT_BY_ANY_ROW, ControlPanel::OnCheckSortByAnyRow)
+	EVT_CHECKBOX(CHECK_SORT_BY_ANY_COL, ControlPanel::OnCheckSortByAnyCol)
 	EVT_SPINCTRL(SPINCTRL_GRID_WIDTH, ControlPanel::OnSpinCtrlGridWidth)
 	EVT_SPINCTRL(SPINCTRL_FOCUSED_WIDTH, ControlPanel::OnSpinCtrlFocusedWidth)
 END_EVENT_TABLE()
@@ -98,6 +107,28 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	advTable->SetHighlightMode(wxAdvTable::HighlightNone);
 	choiceHighlightMode->SetSelection(0);
 
+	// sort mode choices
+	wxArrayString choicesSortMode;
+	choicesSortMode.Add(wxT("SortRows"));
+	choicesSortMode.Add(wxT("SortCols"));
+	choicesSortMode.Add(wxT("SortDisabled"));
+
+	wxChoice *choiceSortMode = new wxChoice(this, CHOICE_SORT_MODE, wxDefaultPosition, wxDefaultSize,
+			choicesSortMode);
+	ADD_FIELD(this, choiceSizer, wxT("Sort mode"), choiceSortMode);
+
+	switch (advTable->GetSortMode()) {
+	case wxAdvTable::SortRows:
+		choiceSortMode->SetSelection(0);
+		break;
+	case wxAdvTable::SortCols:
+		choiceSortMode->SetSelection(1);
+		break;
+	case wxAdvTable::SortDisabled:
+		choiceSortMode->SetSelection(2);
+		break;
+	}
+
 	sizer->Add(choiceSizer,
 			0, wxEXPAND);
 
@@ -120,6 +151,17 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
+	// create "sort by any row" checkbox
+	checkBox = new wxCheckBox(this, CHECK_SORT_BY_ANY_ROW, wxT("Allow sort by any row"), wxDefaultPosition, wxDefaultSize);
+	checkBox->SetValue(m_advTable->IsAllowSortByAnyRow());
+	sizer->Add(checkBox,
+			0, wxEXPAND);
+
+	// create "sort by any column" checkbox
+	checkBox = new wxCheckBox(this, CHECK_SORT_BY_ANY_COL, wxT("Allow sort by any column"), wxDefaultPosition, wxDefaultSize);
+	checkBox->SetValue(m_advTable->IsAllowSortByAnyCol());
+	sizer->Add(checkBox,
+			0, wxEXPAND);
 
 	// create graphics object, grid pen, focused pen, etc.
 	wxSizer *graphicsSizer = new wxFlexGridSizer(0, 2, 5, 5);
@@ -196,6 +238,28 @@ void ControlPanel::OnChoiceHighlightMode(wxCommandEvent &ev)
 	wxLogMessage(wxT("Highlight mode %s"), ev.GetString().c_str());
 }
 
+void ControlPanel::OnChoiceSortMode(wxCommandEvent &ev)
+{
+	int mode;
+
+	switch (ev.GetSelection()) {
+	case 0:
+		mode = wxAdvTable::SortRows;
+		break;
+	case 1:
+		mode = wxAdvTable::SortCols;
+		break;
+	case 2:
+		mode = wxAdvTable::SortDisabled;
+		break;
+	default:
+		return ;
+	}
+
+	m_advTable->SetSortMode((wxAdvTable::SortMode) mode);
+	wxLogMessage(wxT("Sort mode %s"), ev.GetString().c_str());
+}
+
 void ControlPanel::OnCheckShowRows(wxCommandEvent &ev)
 {
 	m_advTable->SetShowRows(ev.IsChecked());
@@ -209,6 +273,16 @@ void ControlPanel::OnCheckShowCols(wxCommandEvent &ev)
 void ControlPanel::OnCheckShowCorner(wxCommandEvent &ev)
 {
 	m_advTable->SetShowCorner(ev.IsChecked());
+}
+
+void ControlPanel::OnCheckSortByAnyRow(wxCommandEvent &ev)
+{
+	m_advTable->SetAllowSortByAnyRow(ev.IsChecked());
+}
+
+void ControlPanel::OnCheckSortByAnyCol(wxCommandEvent &ev)
+{
+	m_advTable->SetAllowSortByAnyCol(ev.IsChecked());
 }
 
 void ControlPanel::OnSpinCtrlGridWidth(wxSpinEvent &ev)
@@ -227,6 +301,7 @@ void ControlPanel::OnSpinCtrlFocusedWidth(wxSpinEvent &ev)
 	m_advTable->SetFocusedPen(pen);
 }
 
+
 //
 // MainFrame
 //
@@ -239,10 +314,19 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_GRID_CELL_LEFT_DCLICK(MainFrame::OnGridLeftDClick)
 	EVT_GRID_CELL_RIGHT_DCLICK(MainFrame::OnGridRightDClick)
 	EVT_GRID_RANGE_SELECT(MainFrame::OnGridRangeSelect)
+	EVT_GRID_CELL_CHANGE(MainFrame::OnGridCellChange)
+	EVT_GRID_SELECT_CELL(MainFrame::OnGridSelectCell)
+	EVT_GRID_EDITOR_SHOWN(MainFrame::OnGridEditorShown)
+	EVT_GRID_EDITOR_HIDDEN(MainFrame::OnGridEditorHidden)
+
+	EVT_ADVTABLE_HDRCELL_LEFT_CLICK(MainFrame::OnAdvTableHdrCellLeftClick)
+	EVT_ADVTABLE_HDRCELL_RIGHT_CLICK(MainFrame::OnAdvTableHdrCellRightClick)
+	EVT_ADVTABLE_HDRCELL_LEFT_DCLICK(MainFrame::OnAdvTableHdrCellLeftDClick)
+	EVT_ADVTABLE_HDRCELL_RIGHT_DCLICK(MainFrame::OnAdvTableHdrCellRightDClick)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, wxT("wxAdvTable demo 1.1"), wxDefaultPosition, wxSize(900, 600))
+: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(900, 600))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -278,6 +362,7 @@ MainFrame::MainFrame()
 
 	SetMenuBar(menuBar);
 
+	// create wxAdvTable structure
 	CreateTableStructure();
 }
 
@@ -289,7 +374,7 @@ void MainFrame::OnAbout(wxCommandEvent &ev)
 {
 	wxAboutDialogInfo about;
 	about.SetName(wxT("wxAdvTable demo"));
-	about.SetVersion(wxT("1.1"));
+	about.SetVersion(appVersion);
 	about.SetDescription(wxT("This demo shows wxAdvTable features"));
 	about.SetCopyright(wxT("Copyright (C) 2008-2009 Moskvichev Andrey V."));
 
@@ -331,6 +416,67 @@ void MainFrame::OnGridRangeSelect(wxGridRangeSelectEvent &ev)
 			ev.GetBottomRow(), ev.GetRightCol());
 }
 
+void MainFrame::OnGridCellChange(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_CELL_CHANGE row=%i col=%i"),
+			ev.GetRow(), ev.GetCol());
+
+	if (ev.GetRow() == 3 && ev.GetCol() == 0) {
+		wxMessageDialog dlg(this, wxT("Allow cell change?"), wxT("Question"), wxYES_NO);
+		if (dlg.ShowModal() == wxID_NO) {
+			ev.Veto();
+		}
+	}
+}
+
+void MainFrame::OnGridSelectCell(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_SELECT_CELL row=%i col=%i"),
+			ev.GetRow(), ev.GetCol());
+}
+
+void MainFrame::OnGridEditorShown(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_EDITOR_SHOWN"));
+}
+
+void MainFrame::OnGridEditorHidden(wxGridEvent &ev)
+{
+	wxLogMessage(wxT("wxEVT_GRID_EDITOR_HIDDEN"));
+}
+
+void MainFrame::OnAdvTableHdrCellLeftClick(wxAdvHdrCellEvent &ev)
+{
+	wxAdvHdrCell *hdrCell = ev.GetHdrCell();
+
+	wxLogMessage(wxT("wxEVT_ADVTABLE_HDRCELL_LEFT_CLICK: %s index=%i"),
+			(hdrCell->IsRow() ? wxT("row") : wxT("column")), hdrCell->Index());
+}
+
+void MainFrame::OnAdvTableHdrCellRightClick(wxAdvHdrCellEvent &ev)
+{
+	wxAdvHdrCell *hdrCell = ev.GetHdrCell();
+
+	wxLogMessage(wxT("wxEVT_ADVTABLE_HDRCELL_RIGHT_CLICK: %s index=%i"),
+			(hdrCell->IsRow() ? wxT("row") : wxT("column")), hdrCell->Index());
+}
+
+void MainFrame::OnAdvTableHdrCellLeftDClick(wxAdvHdrCellEvent &ev)
+{
+	wxAdvHdrCell *hdrCell = ev.GetHdrCell();
+
+	wxLogMessage(wxT("wxEVT_ADVTABLE_HDRCELL_LEFT_DCLICK: %s index=%i"),
+			(hdrCell->IsRow() ? wxT("row") : wxT("column")), hdrCell->Index());
+}
+
+void MainFrame::OnAdvTableHdrCellRightDClick(wxAdvHdrCellEvent &ev)
+{
+	wxAdvHdrCell *hdrCell = ev.GetHdrCell();
+
+	wxLogMessage(wxT("wxEVT_ADVTABLE_HDRCELL_RIGHT_DCLICK: %s index=%i"),
+			(hdrCell->IsRow() ? wxT("row") : wxT("column")), hdrCell->Index());
+}
+
 //
 // Most interesting function - this creates table structure.
 //
@@ -338,7 +484,7 @@ void MainFrame::CreateTableStructure()
 {
 	// row definitions
 	wxAdvHdrCell rows[] = {
-		wxAdvHdrCell(wxT("Row\nI")), // make first row sortable
+		wxAdvHdrCell(wxT("Row\nI")).Sortable(), // make first row sortable
 		wxAdvHdrCell(wxT("Row\nII")).VerticalText() // we need to draw row name vertical
 			.Sub(wxAdvHdrCell(wxT("Row II-I")) // first subrow, it also contains two subrows
 					.Sub(wxT("Row II-I-I"))
@@ -355,7 +501,7 @@ void MainFrame::CreateTableStructure()
 			.Sub(wxT("Col II-II"))
 			.Sub(wxT("Col\nII-III")),
 		wxAdvHdrCell(wxT("Col III")),
-		wxAdvHdrCell(wxT("Col IV")),
+		wxAdvHdrCell(wxT("Col IV")).Sortable().Size(100), // make last column sortable
 	};
 
 	// we also need table corner
@@ -363,8 +509,8 @@ void MainFrame::CreateTableStructure()
 
 	// create table model
 	// take attention on wxAdvHdrCell::GetDecompCellCount call
-	// table row count can be _not_ equal to row count in definitions array.
-	wxAdvStringTableDataModel *model = new wxAdvStringTableDataModel(
+	// table row count can be NOT equal to row count in definitions array.
+	wxAdvDefaultTableDataModel *model = new wxAdvDefaultTableDataModel(
 			wxAdvHdrCell::GetDecompCellCount(rows, N(rows)),
 			wxAdvHdrCell::GetDecompCellCount(cols, N(cols)),
 			false);
@@ -372,11 +518,37 @@ void MainFrame::CreateTableStructure()
 	// and set some values to it
 	model->SetCellValue(0, 0, wxT("value"));
 	model->SetCellValue(2, 0, wxT("another value"));
+	model->SetCellValue(3, 0, wxT("vetoable edit value"));
+
+	// set formats for entire columns
+	model->SetColFormat(3, wxColourFormat);
+	model->SetColFormat(4, wxBoolFormat);
+
+	// set some colour values
+	model->SetCellValue(0, 3, wxGREEN->GetAsString());
+	model->SetCellValue(1, 3, wxRED->GetAsString());
+	model->SetCellValue(2, 3, wxBLUE->GetAsString());
+	model->SetCellValue(3, 3, wxCYAN->GetAsString());
+	model->SetCellValue(4, 3, wxLIGHT_GREY->GetAsString());
+
+	// set some boolean values
+	model->SetCellValue(0, 4, boolFalse);
+	model->SetCellValue(1, 4, boolTrue);
+	model->SetCellValue(2, 4, boolTrue);
+
+	// set values to last column, to sort table by them
+	model->SetCellValue(0, 5, wxT("d"));
+	model->SetCellValue(1, 5, wxT("b"));
+	model->SetCellValue(2, 5, wxT("e"));
+	model->SetCellValue(3, 5, wxT("c"));
+	model->SetCellValue(4, 5, wxT("a"));
 
 	// create table
 	// we pass our row and column definitions and table data model to it
 	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
 
-	// set editor so editing will be possible
-	m_advTable->SetEditorForFormat(wxStringFormat, new wxAdvStringCellEditor(m_advTable));
+	m_advTable->SetSorter(new wxAdvTableStringSorter());
+	m_advTable->SetSortingIndex(5); // sort table by 5-th column
+	m_advTable->SetSortDirection(wxAdvTable::SortDirAscending);
+	m_advTable->SetSortMode(wxAdvTable::SortRows); // we will sort rows
 }

@@ -29,3 +29,18 @@ End Project Dependency
 
 ###############################################################################
 
+Project: "wxadvtable_sample_dll"=wxadvtable_vc6_wxadvtable_sample_dll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name wxadvtable
+End Project Dependency
+}}}
+
+###############################################################################
+

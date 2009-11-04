@@ -58,24 +58,31 @@ CPPDEPS = -MT$@ -MF$@.d -MD -MP
 WXADVTABLE_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____wxadvtable) $(____wxadvtable_3) -W -Wall -I..\include $(CPPFLAGS) \
+	$(____wxadvtable) $(____wxadvtable_5) -W -Wall -I..\include $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXADVTABLE_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_lib_wxadvtable.o
 WXADVTABLE_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____wxadvtable) $(____wxadvtable_3) -W -Wall -I..\include \
+	$(____wxadvtable) $(____wxadvtable_5) -W -Wall -I..\include \
 	-DWXMAKINGDLL_ADVTABLE $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_dll_wxadvtable.o
 WXADVTABLE_SAMPLE_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____wxadvtable) $(____wxadvtable_3) -W -Wall -I..\include $(CPPFLAGS) \
+	$(____wxadvtable) $(____wxadvtable_5) -W -Wall -I..\include $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXADVTABLE_SAMPLE_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_sample_demo.o
+WXADVTABLE_SAMPLE_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	$(____wxadvtable) $(____wxadvtable_5) -W -Wall -I..\include $(CPPFLAGS) \
+	$(CXXFLAGS)
+WXADVTABLE_SAMPLE_DLL_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_sample_dll_demo.o
 
 ### Conditionally set variables: ###
 
@@ -96,14 +103,23 @@ ifeq ($(WX_SHARED),1)
 __wxadvtable_dll___depname = \
 	..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll
 endif
-ifeq ($(WX_MONOLITHIC),0)
-__WXLIB_AUI_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui
+ifeq ($(WX_SHARED),0)
+__wxadvtable_sample___depname = ..\samples\wxadvtable_sample.exe
+endif
+ifeq ($(WX_SHARED),1)
+__wxadvtable_sample_dll___depname = ..\samples\wxadvtable_sample_dll.exe
 endif
 ifeq ($(SHARED),0)
 ____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
 ifeq ($(SHARED),1)
 ____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+endif
+ifeq ($(WX_SHARED),0)
+____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
+endif
+ifeq ($(WX_SHARED),1)
+____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 endif
 ifeq ($(WX_SHARED),0)
 ____WX_SHARED = 
@@ -138,14 +154,11 @@ endif
 ifeq ($(WX_DEBUG),1)
 ____wxadvtable = -O0
 endif
-ifeq ($(WX_SHARED),0)
-____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
-endif
-ifeq ($(WX_SHARED),1)
-____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
-endif
 ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_AUI_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui
 endif
 ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core
@@ -163,10 +176,10 @@ ifeq ($(WX_SHARED),1)
 WXLIBPATH = \lib\gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-____wxadvtable_3 = 
+____wxadvtable_5 = 
 endif
 ifeq ($(WX_DEBUG),1)
-____wxadvtable_3 = -g
+____wxadvtable_5 = -g
 endif
 
 
@@ -176,7 +189,7 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) ..\samples\wxadvtable_sample.exe
+all: test_for_selected_wxbuild $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) $(__wxadvtable_sample___depname) $(__wxadvtable_sample_dll___depname)
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
@@ -185,6 +198,7 @@ clean:
 	-if exist ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll del ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll
 	-if exist ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a del ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a
 	-if exist ..\samples\wxadvtable_sample.exe del ..\samples\wxadvtable_sample.exe
+	-if exist ..\samples\wxadvtable_sample_dll.exe del ..\samples\wxadvtable_sample_dll.exe
 
 test_for_selected_wxbuild: 
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -210,16 +224,26 @@ make_dir_wxadvtable_lib:
 
 ifeq ($(WX_SHARED),1)
 ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.dll: make_dir_wxadvtable_dll  $(WXADVTABLE_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(LDFLAGS)  $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_5) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(LDFLAGS)  $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_wxadvtable_dll: 
 	if not exist ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
+ifeq ($(WX_SHARED),0)
 ..\samples\wxadvtable_sample.exe: $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample  $(__wxadvtable_lib___depname)
-	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_3) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(__WXLIB_ADV_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxadvtable_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(__WXLIB_ADV_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+endif
 
 make_sample_dir_wxadvtable_sample: 
+	if not exist ..\samples mkdir ..\samples
+
+ifeq ($(WX_SHARED),1)
+..\samples\wxadvtable_sample_dll.exe: $(WXADVTABLE_SAMPLE_DLL_OBJECTS) make_sample_dir_wxadvtable_sample_dll  $(__wxadvtable_dll___depname)
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxadvtable_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxadvtable_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_advtable.a $(__WXLIB_ADV_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+endif
+
+make_sample_dir_wxadvtable_sample_dll: 
 	if not exist ..\samples mkdir ..\samples
 
 tarball: 
@@ -241,6 +265,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_dll_wxadvtable.o: ../
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_sample_demo.o: ../samples/demo.cpp
 	$(CXX) -c -o $@ $(WXADVTABLE_SAMPLE_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxadvtable_sample_dll_demo.o: ../samples/demo.cpp
+	$(CXX) -c -o $@ $(WXADVTABLE_SAMPLE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean
 

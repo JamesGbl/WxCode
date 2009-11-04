@@ -12,6 +12,7 @@
   - composite rows/columns
   - built-in sorting and filtering support
   - flexible rendering and editing support
+  - flexible data access model
   - dynamic row/columns add/removal
   - and visual features like: highlight modes, cell attributes, etc
   - MCV (Model-Controller-View) design
@@ -79,9 +80,28 @@
  Editors are associated with data formats. 
 
 	Sorting.
- TODO: sorting is not implemented yet
+ wxAdvTable can be sorted. Rows or columns can be sorted by object called 
+ "Sorter", than is derivate of wxAdvTableSorter class. 
 
-	
+    Events.
+ wxAdvTable supports some wxGrid events and have it's own events.
+ wxGrid event are cell click, change, select events:
+ wxEVT_GRID_CELL_LEFT_CLICK, wxEVT_GRID_CELL_RIGHT_CLICK, 
+ wxEVT_GRID_CELL_LEFT_DCLICK, wxEVT_GRID_CELL_RIGHT_DCLICK,
+ wxEVT_GRID_CELL_CHANGE, wxEVT_GRID_SELECT_CELL, 
+ wxEVT_GRID_EDITOR_SHOWN, wxEVT_GRID_EDITOR_HIDDEN. 
+ 
+ wxAdvTable events are hdrCell click, move, resize events:
+ wxEVT_ADVTABLE_HDRCELL_LEFT_CLICK, wxEVT_ADVTABLE_HDRCELL_RIGHT_CLICK,
+ wxEVT_ADVTABLE_HDRCELL_LEFT_DCLICK, wxEVT_ADVTABLE_HDRCELL_RIGHT_DCLICK,
+ wxEVT_ADVTABLE_HDRCELL_SIZE, wxEVT_ADVTABLE_HDRCELL_MOVE.
+
+ Because wxAdvTable rows/columns can be composite, wxGrid events for
+ rows/columns cannot be used. 
+ 
+    Row/columns resize.
+ 
+  
  Installation - win32
  --------------------
  
@@ -111,24 +131,31 @@
  ChangeLog
  ---------
  
+ 1.2: third version of wxAdvTable at wxCode
+      What's new:
+       - many bugfixes
+       - updated demo application
+       - wxAdvStringTableDataModel is extended to support different cell
+         formats, and renamed to wxAdvDefaultTableDataModel
+       - many refactoring changes
+ 
  1.1: second version of wxAdvTable at wxCode
       What's new:
+       - added row/columns drag resize and move, and corresponding events
        - major redesign
        - headers drawing bugfixes
        - editors bugfixes
-       - updated documentation
        - sorting bugfixes 
-       - scrolling bugs fixed
+       - scrolling bugfixes
+       - updated documentation
        - many refactoring changes
-	
+       	
  1.0 - first version of wxAdvTable at wxCode
  
  Known issues:
- - lack of Perl and Python bindings.
- - paint system must be cleaned up and optimized.
- - lack of filtering.
- - many sorting bugs.
- - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64), 
-   if someone can test on other wxWidgets ports, please let me know.
- - bugs with keydown handling on wxGTK.
+       - lack of Perl and Python bindings
+       - lack of filtering
+       - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64),
+         if someone can test on other wxWidgets ports, please let me know
+       - bugs with keydown handling on wxGTK
  
