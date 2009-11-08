@@ -595,8 +595,7 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 	// NOTE: in ANSI builds this conversion mai fail (see samples/test5.cpp,
 	// test 7.3) although I do not know why
 	if ( utf8Buff == 0 )	{
-		const char* err = "<wxJSONWriter::WriteStringValue(): error converting the "
-					"string to a UTF8 buffer>";
+		const char* err = "<wxJSONWriter::WriteStringValue(): error converting the string to a UTF8 buffer>";
 		os.Write( err, strlen( err ));
 		return 0;
 	}
@@ -941,7 +940,7 @@ wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
 int
 wxJSONWriter::WriteInvalid( wxOutputStream& os )
 {
-	wxFAIL_MSG( _T("wxJSONWriter::WriteEmpty() cannot be called (not a valid JSON text"));
+	wxFAIL_MSG( _T("wxJSONWriter::WriteInvalid() cannot be called (not a valid JSON text"));
 	int lastChar = 0;
 	os.Write( "<invalid>", 9 );
 	return lastChar;

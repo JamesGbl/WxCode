@@ -238,19 +238,16 @@ TEST_OBJECTS = samples/main.o		\
 		samples/test1.o		\
 		samples/test3.o		\
 		samples/test4.o		\
-		samples/test5.o
-		
-		
-#		samples/test6.o 	\
-#		samples/test7.o		\
-#		samples/test8.o		\
-#		samples/test9.o		\
-#		samples/test10.o	\
-#		samples/test11.o	\
-#		samples/test12.o	\
-#		samples/test13.o	\
-#		samples/test14.o	\
-#		samples/test15.o
+		samples/test5.o		\
+		samples/test6.o 	\
+		samples/test7.o		\
+		samples/test8.o		\
+		samples/test9.o		\
+		samples/test10.o	\
+		samples/test11.o	\
+		samples/test12.o	\
+		samples/test13.o	\
+		samples/test14.o
 
 
 #
@@ -259,19 +256,16 @@ TEST_OBJECTS_A = samples/main.oa	\
 		samples/test1.oa	\
 		samples/test3.oa	\
 		samples/test4.oa	\
-		samples/test5.oa
-		
-		
-#		samples/test6.oa 	\
-#		samples/test7.oa	\
-#		samples/test8.oa	\
-#		samples/test9.oa	\
-#		samples/test10.oa	\
-#		samples/test11.oa	\
-#		samples/test12.oa	\
-#		samples/test13.oa	\
-#		samples/test14.oa	\
-#		samples/test15.oa
+		samples/test5.oa	\
+		samples/test6.oa 	\
+		samples/test7.oa	\
+		samples/test8.oa	\
+		samples/test9.oa	\
+		samples/test10.oa	\
+		samples/test11.oa	\
+		samples/test12.oa	\
+		samples/test13.oa	\
+		samples/test14.oa
 
 
 

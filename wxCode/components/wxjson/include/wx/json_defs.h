@@ -186,6 +186,15 @@
 #endif
 
 
+//
+// some compilers (i.e. MSVC++) defines their own 'snprintf' function
+// so if it is not defined, define it in the following lines
+// please note that we cannot use the wxWidget's counterpart 'wxSnprintf'
+// because the latter uses 'wxChar' but wxJSON only use 'char'
+#if !defined(snprintf) && defined(_MSC_VER)
+#define snprintf _snprintf
+#endif
+
 
 #endif // _WX_JSON_DEFS_H_
 

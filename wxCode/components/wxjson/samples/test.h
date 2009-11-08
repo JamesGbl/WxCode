@@ -146,6 +146,9 @@ extern int Test11_5();  // second test storing comments (COMMENTS_AFTER)
 //		*********** test9.cpp ****************
 //
 // family #12: wxJSON reference counting feature (was test11.cpp)
+extern int Test12_1();  // test some copies of the value and unref
+extern int Test12_2();  // a test used in DDD for getting hardcopy
+extern int Test12_3();  // copy, write and test of sub-levels
 
 
 
@@ -153,6 +156,14 @@ extern int Test11_5();  // second test storing comments (COMMENTS_AFTER)
 //		*********** test10.cpp ****************
 //
 // family #13: test the 64-bit integer support (was test13.cpp)
+extern int Test13_1();  // test the wxWidgets definitions and macros
+extern int Test13_2();  // test various return values from INT, SHORT, LONG and LONG LONG
+extern int Test13_3();  // test the wxString::To(U)LongLong() function
+extern int Test13_4();  // test the wxString::To(U)Long() function
+extern int Test13_5();  // test the writer class for various integer types
+extern int Test13_6();  // test the reader class for 64-bits integers
+extern int Test13_7();  // test the wxJSONReader::Strto(u)ll function
+
 
 
 //
@@ -176,92 +187,6 @@ extern int Test11_5();  // second test storing comments (COMMENTS_AFTER)
 //
 // family #
 
-
-/*
-
-//
-// in test7.cpp.old: test the comment related functions (reader)
-extern int Test6_1();
-extern int Test6_2();
-extern int Test6_3();
-extern int Test6_4();
-extern int Test6_5();
-
-//
-// in test8.cpp.old: test the unicode stuff
-extern int Test7_1();
-extern int Test7_2();
-extern int Test7_3();
-extern int Test7_4();
-extern int Test7_5();
-extern int Test7_6();
-
-
-
-//
-// in test9.cpp.old: the JSON writer in unicode mode
-extern int Test36();   // convert a ISO-8859-1 string to UTF-8 format
-extern int Test37();   // writes to a UTF-8 stream (Unicode)
-extern int Test38();   // writes to a string and convert to UCS-2BE (Unicode)
-extern int Test39();   // writes to a string and convert to UCS-4BE (Unicode)
-extern int Test40();   // writes to a string and convert to ISO-8859-1 (Unicode)
-extern int Test41();   // writes to a stream in UTF-8 (Unicode)
-extern int Test42();   // writes to a stream in UTF-8 (ANSI)
-extern int Test43();   // another version of Test38() (Unicode)
-extern int Test44();   // test only the wxString- conversion functions (Unicode)
-
-//
-// in test10.cpp.old: wxJSON reader in Unicode/ANSI builds (input from streams)
-extern int Test45();   // read a UTF-8 stream containing latin-1, greek and cyrillic (Uni)
-extern int Test46();   // read a UTF-8 stream containing latin-1, greek and cyrillic (ANSI)
-
-//
-// in test11.cpp.old: wxJSON reference counting feature
-extern int Test47();   // check the old DeepCopy() function (maybe there is a bug)
-extern int Test48();   // check the new COW functions: nested objects
-extern int Test49();   // check the new COW functions: a simple 4-items array
-extern int Test50();   // check the new COW functions: several level-2 values
-extern int Test51();   // check the new COW functions: read a copy of a value
-
-//
-// in test12.cpp.old: bug-fixing in 0.4.1 (reader and writer)
-extern int Test52();   // testing the wxJSONReader::AddWarning() function
-extern int Test53();   // testing errors in writing to streams
-
-//
-// in test13.cpp.old: test the 64-bit integer support
-extern int Test54();   // testing wxWidget's macro definitions
-extern int Test55();   // testing a custom version of the wxASSERT macro
-extern int Test56();   // testing the wxJSON_NOABORT_ASSERT macro
-extern int Test57();   // testing the wxJSONReader's integer related functions
-extern int Test58();   // testing the wxString::To(U)LongLong() functions
-extern int Test59();   // testing the wxJSONReader::Strtoll() functions
-extern int Test60();   // testing the wxJSONWriter::WriteChar() function
-extern int Test61();   // testing the wxString::To(U)Long functions
-extern int Test62();   // testing the wxJSONValue::AsString() function for 64-bits int
-extern int Test63();   // testing the wxJSONWriter for various integer types
-extern int Test64();   // testing the wxJSONReader for various integer types
-
-//
-// in test14.cpp.old: test the wxJSONWriter class with various flags
-extern int Test65();   // writing an array of values using wxJSONWRITER_NONE
-extern int Test66();   // writing an array of values using wxJSONWRITER_STYLED
-extern int Test67();   // writing an array of values using wxJSONWRITER_WRITE_COMMENTS
-extern int Test68();   // writing an array of values using wxJSONWRITER_NO_LINEFEEDS
-extern int Test69();   // writing an array of values using wxJSONWRITER_SPLIT_STRING
-extern int Test70();   // writing an array of values using wxJSONWRITER_MULTILINE_STRING
-extern int Test71();   // checking the wxJSONWRITER_SPLIT_STRING
-extern int Test72();   // checking the wxJSONWRITER_SPLIT_STRING
-extern int Test73();   // checking the wxJSONWRITER_TAB_INDENT
-
-//
-// in test15.cpp.old: test the speed of wxJSON reader and writer
-extern int Test74();   // writes 10000 values to a wxString object 
-extern int Test75();   // writes 10000 values to a stream
-extern int Test76();   // read 10000 values from a wxString object
-extern int Test77();   // read 10000 values from a stream
-
-*/
 
 // global variables in 'main.cpp'
 extern int gs_tolerant;

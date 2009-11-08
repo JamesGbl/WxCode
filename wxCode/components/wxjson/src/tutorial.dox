@@ -16,6 +16,7 @@ connection.
 \li \ref wxjson_tutorial_ex2
 \li \ref wxjson_tutorial_ex3
 \li \ref wxjson_tutorial_get
+\li \ref wxjson_tutorial_read_numbers
 \li \ref wxjson_tutorial_comment
 \li \ref wxjson_tutorial_unicode
 \li \ref wxjson_tutorial_style
@@ -705,33 +706,36 @@ The second function returns:
 	object is of type wxJSONTYPE_CSTRING (see \ref json_internals_cstring for
 	details about c-string type)
  \li a NULL pointer in all other cases.
+ 
+ \subsection json_internals_integer_newas The new AsXxxxxx(T&) function.
 
 In order to get the correct value from a JSON value object you should always
-call the \b IsXxxxxx() function before getting the value:
+call the \b IsXxxxxx() function before getting the value and, if it is of the
+wrong type you should notify the user:
 
 \code
-  wxJSONValue v;
-
+  wxJSONValue v( _T("100"));
+  int i = 10;           // the default value
   if ( v.IsInt() )  {
-    int i = v.AsInt();
+    i = v.AsInt();
   }
-  else if ( v.IsDouble() )  {
-    double d = v.AsDouble();
+  else  {
+    wxMessageBox( _T("Warning: parameter is of the wrong type - using default")) ;
   }
-  else ...
 \endcode
 
 Starting from version 1.1 you can get the value of a wxJSONValue object and check
 if it is of the expected type in only one call using an overloaded version
 of the \c AsXxxxxxx functions which takes the expected type as a parameter
 and returns TRUE if the value actually stored in the wxJSONValue object is
-of that type (see \ref wxJSONValue::AsInt(int&) for details). For example:
+of that type (see wxJSONValue::AsInt(int&) for details). For example:
 
 \code
-  wxJSONValue value( 10 );    // this is a SHORT
-  int i;
-  if ( !value.AsInt( i ) ) {  // SHORT can be accessed as INT, LONG and wxInt64 
-    cout << "Error: value is not of the expected type";
+  wxJSONValue v( _T("100"));
+  int i = 10;           // the default value
+  
+  if ( !value.AsInt( i ) ) {
+    wxMessageBox( _T("Warning: parameter is of the wrong type - using default")) ;
   }
 \endcode
 
@@ -744,12 +748,15 @@ in a \b switch statement:
   wxJSONValue value( 100 );
   wxJSONType type = value.GetType();
   switch ( type )  {
+    // use 64-bit int for all signed integers
     case wxJSONTYPE_INT :
     case wxJSONTYPE_SHORT :
     case wxJSONTYPE_LONG :
     case wxJSONTYPE_INT64 :
       wxInt64 i64 = value.AsInt64();
-
+      break;
+      
+    // use 64-bit uint for all unsigned integers
     case wxJSONTYPE_UINT :
     case wxJSONTYPE_USHORT :
     case wxJSONTYPE_ULONG :
@@ -796,6 +803,18 @@ The conseguence is that the function returns a wrong value. Example:
   wxChar* c  = v.AsCString();
 \endcode
 
+The above return values are just examples which demonstrate the wrong
+results. When you store something in the \c m_value data member of the
+JSON value object, the actual return value is undefined if incorrectly
+accessed.
+For example, if a positive integer value of 100,000 (0x186A0) is stored 
+in a JSON value object and we try to access it as a SHORT we get:
+
+\li \b 0x86A0 (34,464) in a little-endian machine
+\li \b 0x0 in a 64-bit big-endian machine
+\li \b 0x1 in a 32-bit big-endian machine
+
+
 However, in debug builds all \b AsXxxxxx() functions ASSERT that the
 corresponding \b IsXxxxx functions return TRUE so avoiding type mismatch
 errors.
@@ -823,6 +842,61 @@ If the library is compiled with the 64-bits support enabled, the
 JSON value class defines functions in order to let the user know
 the storage needed by the integer value (16-, 32-bits or 64-bits).
 To know more about this topic read \ref json_internals_integer.
+
+
+
+\section wxjson_tutorial_read_numbers How numbers are read from JSON text.
+
+If 64-bits support is enabled in the wxJSON library, reading values
+from JSON text may have different results.
+If a numeric value is too large for 32-bits integer storage, it will be
+stored as a double data type in versions 0.4 and previous ones but it may be
+stored as and integer if it fits in a 64-bit integer storage.
+
+When the wxJSON parser reads a token that start with a digit or with a
+minus or plus sign, it assumes that the value read is a number and
+it tries to convert it to:
+
+\li first tries signed integer conversion
+\li if the number does not fit, tries unsigned conversion
+\li if the number does not fit, tries double conversion
+\li if unsuccessfull, an error is reported
+
+
+Note that if 64-bits storage is enabled, the wxJSON parser, does not try to
+convert numeric tokens in a 32-bits integer but immediatly tries 64-bits
+storage.
+This has the conseguence that numeric values that are between
+INT_MAX + 1 and UINT_MAX are stored as signed integers in a 64-bits environment
+and as unsigned integers in a 32-bits environment.
+
+Examples:
+
+\code
+  {
+    // if 64 bits integer is not enabled
+    100         // read as a signed long integer
+    2147483647  // INT_MAX: read as a signed long integer
+    2147483648  // INT_MAX + 1: read as a unsigned long
+
+   -2147483648  // INT_MIN: read as a signed long integer
+    4294967295  // UINT_MAX: read as a unsigned long integer
+
+    4294967296  // UINT_MAX + 1: read as a double
+
+    // if 64-bits integer is enabled
+    4294967295  // UINT_MAX: read as a signed wxInt64
+    4294967296  // UINT_MAX + 1: read as a signed wxInt64
+  }
+\endcode
+
+Also note that if a number is between INT64_MIN and INT64_MAX (or
+LONG_MIN and LONG_MAX, depending on the platform) it is always
+read as a signed integer regardless its original type.
+You can use a special writer's flag in order to force the wxJSON
+library to recognize unsigned JSON values written to JSON text.
+See \ref wxjson_tutorial_style_unsigned for more info.
+
 
 
 \section wxjson_tutorial_comment Using comment lines in wxJSON
@@ -1471,9 +1545,13 @@ saved as UTF-8 on Windows platform.
 
 From the Wikipedia (http://en.wikipedia.org/wiki/Byte_Order_Mark):
 
-\quote
-While UTF-8 does not have byte order issues, a BOM encoded in UTF-8 may nonetheless be encountered. A UTF-8 BOM is explicitly allowed by the Unicode standard, but is not recommended, as it only identifies a file as UTF-8 and does not state anything about byte order. Many Windows programs (including Windows Notepad) add BOM's to UTF-8 files by default.
-\endquote
+\code
+While UTF-8 does not have byte order issues, a BOM encoded in UTF-8 may
+nonetheless be encountered. A UTF-8 BOM is explicitly allowed by the Unicode
+standard, but is not recommended, as it only identifies a file as UTF-8 and
+does not state anything about byte order. Many Windows programs (including
+Windows Notepad) add BOM's to UTF-8 files by default.
+\endcode
 
 As UTF-8 is the only recognized encoding of a stream and as UTF-8 does not have
 byte order issues:
@@ -1485,6 +1563,7 @@ is present, it is simply ignored.
 
 
 \section wxjson_tutorial_style The wxJSON writer's styles
+
 
 The JSON text generator - wxJSONWriter class - normally generates
 strict JSON text which is very hard to read by humans.
@@ -1734,7 +1813,7 @@ What I get in this case is a three-elements array where the second element
 is the concatenation of the two strings "summer" and "autumn" which is not
 what I wanted.
 Worse, the parser does not consider this an error: only a warning is
-reported.
+reported if the parser is constructed with the wxJSONREADER_MULTISTRING flag.
 
 
 

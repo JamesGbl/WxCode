@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	11
+#define NUM_TESTS	13
 
 
 // the test function's structure
@@ -482,6 +482,54 @@ int main( int argc, char* argv[] )
 			Test11_5, 3, _T( "second test storing comments (COMMENTS_AFTER)" )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },
+		
+		// family #12		(test9.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto (all)
+			_T( "test the copy-on-write implementation" )
+		},
+		{
+			Test12_1, 3, _T( "test some copies of the value and unref" )
+		},
+		{
+			Test12_2, 3, _T( "a test used in DDD for getting hardcopy" )
+		},
+		{
+			Test12_3, 3, _T( "copy, write and test of sub-levels" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+
+		
+		// family #13		(test10.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto (all)
+			_T( "test the 64-bit integer support" )
+		},
+		{
+			Test13_1, 3, _T( "test the wxWidgets definitions and macros" )
+		},
+		{
+			Test13_2, 3, _T( "test return values from INT, SHORT, LONG and LLONG" )
+		},
+		{
+			Test13_3, 3, _T( "test the wxString::To(U)LongLong() function" )
+		},
+		{
+			Test13_4, 3, _T( "test the wxString::To(U)Long() function" )
+		},
+		{
+			Test13_5, 3, _T( "test the writer class for various integer types" )
+		},
+		{
+			Test13_6, 3, _T( "test the reader class for 64-bits integers" )
+		},
+		{
+			Test13_7, 3, _T( "test the wxJSONReader::Strto(u)ll function" )
+		},
+		{ 0 },{ 0 },
+		
 
 		// END OF TABLE
 		{0}

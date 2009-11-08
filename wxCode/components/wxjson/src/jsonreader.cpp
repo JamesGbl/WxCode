@@ -121,7 +121,7 @@
 	splitted in two or more lines as in the standard C/C++
 	languages. The drawback is that this feature is error-prone
 	and you have to use it with care.
-	For more info about this topic read \ref json_multiline_string
+	For more info about this topic read \ref wxjson_tutorial_style_split
 
  Note that you can control how much error-tolerant should the parser be
  and also you can specify how many and what extensions are recognized.
@@ -277,10 +277,15 @@ wxJSONReader::~wxJSONReader()
  \par Different input types
  
  The real parsing process in done using UTF-8 streams. If the input is
- from a \b wxString object, the Parse function converts the input string
- in a temporary \b wxMemoryInputStream which contains to UTF-8 conversion
+ from a \b wxString object, the Parse function first converts the input string
+ in a temporary \b wxMemoryInputStream which contains the UTF-8 conversion
  of the string itself.
  Next, the overloaded Parse function is called.
+ 
+ @èaram doc	the JSON text that has to be parsed
+ @param val	the wxJSONValue object that contains the parsed text; if NULL the
+ 		parser do not store anything but errors and warnings are reported
+ @return the total number of errors encontered
 */
 int
 wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )
@@ -357,6 +362,9 @@ wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
  If the two starting characters are inside a C/C++ comment, they
  are ignored.
  Returns the JSON-text start character or -1 on EOF.
+ 
+ @param is	the input stream that contains the JSON text
+ @return -1 on errors or EOF; one of '{' or '['
 */
 int
 wxJSONReader::GetStart( wxInputStream& is )
@@ -403,7 +411,7 @@ wxJSONReader::GetWarnings() const
 /*!
  The function returns the number of times the recursive \c DoRead function was
  called in the parsing process thus returning the maximum depth of the JSON
- input text
+ input text.
 */
 int
 wxJSONReader::GetDepth() const
@@ -439,6 +447,9 @@ wxJSONReader::GetWarningCount() const
  at a time and not Unicode code points.
  The only reason for this function is to process line and column
  numbers.
+ 
+ @param is	the input stream that contains the JSON text
+ @return the next char (one single byte) in the input stream or -1 on error or EOF
 */
 int
 wxJSONReader::ReadChar( wxInputStream& is )
@@ -482,7 +493,9 @@ wxJSONReader::ReadChar( wxInputStream& is )
 /*!
  This function just calls the \b Peek() function on the stream
  and returns it.
- If EOF, -1 is returned.
+
+ @param is	the input stream that contains the JSON text
+ @return the next char (one single byte) in the input stream or -1 on error or EOF
 */
 int
 wxJSONReader::PeekChar( wxInputStream& is )
@@ -513,6 +526,12 @@ wxJSONReader::PeekChar( wxInputStream& is )
  easy.
 
  Returns the last close-object/array character read or -1 on EOF.
+
+ @param is	the input stream that contains the JSON text
+ @param parent the JSON value object that is the parent of all subobjects
+ 		read by the function until the next close-object/array (for
+ 		the top-level \c DoRead function \c parent is the root JSON object)
+ @return one of close-array or close-object char or -1 on error or EOF
 */
 int
 wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
@@ -561,8 +580,7 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
 			case '{' :
 				if ( parent.IsObject() ) {
 					if ( key.empty() )   {
-						AddError( _T("\'{\' is not allowed here (\'name\'"
-									" is missing") );
+						AddError( _T("\'{\' is not allowed here (\'name\' is missing") );
 					}
 					if ( value.IsValid() )   {
 						AddError( _T("\'{\' cannot follow a \'value\'") );
@@ -570,8 +588,7 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
 				}
 				else if ( parent.IsArray() )  {
 					if ( value.IsValid() )   {
-						AddError( _T("\'{\' cannot follow a \'value\'"
-										" in JSON array") );
+						AddError( _T("\'{\' cannot follow a \'value\' in JSON array") );
 					}
 				}
 				else  {
@@ -600,8 +617,7 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
 			case '[' :
 				if ( parent.IsObject() ) {
 					if ( key.empty() )   {
-						AddError( _T("\'[\' is not allowed here (\'name\' "
-								"is missing") );
+						AddError( _T("\'[\' is not allowed here (\'name\' is missing") );
 					}
 					if ( value.IsValid() )   {
 						AddError( _T("\'[\' cannot follow a \'value\' text") );
@@ -654,12 +670,10 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
 					AddError( _T( "\':\' can only used in object's values" ));
 				}
 				else if ( !value.IsString() )  {
-					AddError( _T( "\':\' follows a value which is not of"
-							" type \'string\'" ));
+					AddError( _T( "\':\' follows a value which is not of type \'string\'" ));
 				}
 				else if ( !key.empty() )  {
-					AddError( _T( "\':\' not allowed where a \'name\' string"
-							" was already available" ));
+					AddError( _T( "\':\' not allowed where a \'name\' string was already available" ));
 				}
 				else  {
 					// the string in 'value' is set as the 'key'
@@ -711,7 +725,8 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
  \param ch	the character read: a comma or close objecty/array char
  \param key	the \b key string: must be empty if \c parent is an array
  \param value	the current JSON value to be stored in \c parent
- \param parent	the JSON value that holds \c value.
+ \param parent	the JSON value that is the parent of \c value.
+ \return none 
 */
 void
 wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSONValue& parent )
@@ -744,12 +759,10 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
 		// key or value are not empty
 		if ( parent.IsObject() )  {
 			if ( !value.IsValid() ) {
-				AddError( _T("cannot store the value: \'value\' is missing"
-							" for JSON object type"));
+				AddError( _T("cannot store the value: \'value\' is missing for JSON object type"));
 			 }
 			 else if ( key.empty() ) {
-				AddError( _T("cannot store the value: \'key\' is missing"
-							" for JSON object type"));
+				AddError( _T("cannot store the value: \'key\' is missing for JSON object type"));
 			}
 			else  {
 				// OK, adding the value to parent key/value map
@@ -762,12 +775,10 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
 		}
 		else if ( parent.IsArray() ) {
 			if ( !value.IsValid() ) {
-			        AddError( _T("cannot store the item: \'value\' is missing"
-			        			" for JSON array type"));
+			        AddError( _T("cannot store the item: \'value\' is missing for JSON array type"));
 			}
 			if ( !key.empty() ) {
-				AddError( _T("cannot store the item: \'key\' (\'%s\') is not"
-							" permitted in JSON array type"), key);
+				AddError( _T("cannot store the item: \'key\' (\'%s\') is not permitted in JSON array type"), key);
 			}
 			wxLogTrace( traceMask, _T("(%s) appending value to parent array"),
 								 __PRETTY_FUNCTION__ );
@@ -814,7 +825,7 @@ wxJSONReader::AddError( const wxString& msg )
 		m_errors.Add( err );
 	}
 	else if ( (int) m_errors.size() == m_maxErrors )  {
-		m_errors.Add( _T("Error: too many error messages - ignoring further errors"));
+		m_errors.Add( _T("ERROR: too many error messages - ignoring further errors"));
 	}
 	// else if ( m_errors > m_maxErrors ) do nothing, thus ignore the error message
 }
@@ -1209,8 +1220,10 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
  A token cannot include \e unicode \e escaped \e sequences
  so this function does not try to interpret such sequences.
  
+ @param is	the input stream
  @param ch	the character read by DoRead
  @param s	the string object that contains the token read
+ @return -1 in case of errors or EOF
 */
 int
 wxJSONReader::ReadToken( wxInputStream& is, int ch, wxString& s )
@@ -1361,7 +1374,7 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
 			tUnsigned = false;
 			break;
 		default :
-			AddError( _T( "Value \'%s\' is incorrect (did you forget quotes?)"), s );
+			AddError( _T( "Literal \'%s\' is incorrect (did you forget quotes?)"), s );
 			return nextCh;
 	}
 	
@@ -1422,7 +1435,7 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
 	
 	
 	// the value is not syntactically correct
-	AddError( _T( "Value \'%s\' is incorrect (did you forget quotes?)"), s );
+	AddError( _T( "Literal \'%s\' is incorrect (did you forget quotes?)"), s );
 	return nextCh;
   return nextCh;
 }
@@ -1473,20 +1486,23 @@ wxJSONReader::ReadUES( wxInputStream& is, char* uesBuffer )
   \u0001
  \endcode
 
- that represent a control character.
+ which represents a control character.
  The \c uesBuffer parameter contains the 4 hexadecimal digits that are
  read from \c ReadUES.
  
  The function tries to convert the 4 hex digits in a \b wchar_t character
- which is appended to the memory buffer \utf8Buff after converting it
+ which is appended to the memory buffer \c utf8Buff after converting it
  to UTF-8.
  
  If the conversion from hexadecimal fails, the function does not
  store the character in the UTF-8 buffer and an error is reported.
  The function is the same in ANSI and Unicode.
  Returns -1 if the buffer does not contain valid hex digits.
- sequence.
- On success returns ZERO.
+ sequence. On success returns ZERO.
+ 
+ @param utf8Buff	the UTF-8 buffer to which the control char is written
+ @param uesBuffer	the four-hex-digits read from the input text
+ @return ZERO on success, -1 if the four-hex-digit buffer cannot be converted
 */
 int
 wxJSONReader::AppendUES( wxMemoryBuffer& utf8Buff, const char* uesBuffer )
@@ -1616,8 +1632,8 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
 			m_lastStored->AddComment( m_comment, wxJSONVALUE_COMMENT_AFTER );
 		}
 		else   {
-			wxLogTrace( storeTraceMask, _T("(%s) cannot find a value for storing the"
-						" AFTER comment"), __PRETTY_FUNCTION__ );
+			wxLogTrace( storeTraceMask,
+				_T("(%s) cannot find a value for storing the AFTER comment"), __PRETTY_FUNCTION__ );
 			AddError(_T("Cannot find a value for storing the comment (flag AFTER)"));
 		}
 	}

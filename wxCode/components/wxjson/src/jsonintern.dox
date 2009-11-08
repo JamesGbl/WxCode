@@ -9,7 +9,6 @@
 \li \ref json_internals_array
 \li \ref json_internals_map.
 \li \ref json_internals_compare
-\li \ref json_multiline_string
 \li \ref json_comment
 \li \ref json_internals_reader
 \li \ref json_internals_writer
@@ -568,183 +567,6 @@ on the definition of the INT_MAX, INT_MIN and UINT_MAX macros.
 
 
 
-\subsection json_internals_integer_is The IsXxxxx() functions
-
-The wxJSONValue class also defines functions of the form \b IsXxxxxx() to know
-the storage needs of an integer type:
-
-\par Signed integers
-\li \c IsInt()
-\li \c IsShort()
-\li \c IsLong()
-\li \c IsInt64()
-
-\par Unsigned integers
-\li \c IsUInt()
-\li \c IsUShort()
-\li \c IsULong()
-\li \c IsUInt64()
-
-
-Note that in version 1.x those functions behaves differently than in versions 0.x
-Now all functions return TRUE if the value can be stored in the desired type, with
-respect to the sign of the value.
-
-In 0.x versions only one of the 8 functions returned TRUE: the one that match
-the sign of the stored value AND the storage needs.
-In other words, if a value contains the signed integer value of 100, the
-\b IsInt() function returns TRUE while the \b isInt64() returns FALSE.
-This is wrong because the value fits in a 64-bits integer.
-In the new 1.0 version, all functions related to signed integer return TRUE if
-the value contained is 100.
-
-All 64-bits integer memberfunctions are only available if
-the platform on which runs your application natively supports
-64-bits integers.
-This is in constrast with the \b wxLongLong class which is also
-available on 32-bits platforms.
-
-If your system natively supports 64-bits integers but you do not want
-to include this feature in the \b wxJSON library, you can define the
-following macro when compiling the library (see \c include/wx/json_defs.h):
-
-\code
-  wxJSON_NO_64BIT_INT
-\endcode
-
-You can check whether or not 64-bits support is enabled in the wxJSON library,
-by checking if the wxJSON_64BIT_INT macro is defined.
- 
-
-
-\subsection json_internals_integer_asis The IsXxxxxxx() and AsXxxxxxx() functions
-
-You can get the type of a JSON value object by calling the \c IsXxxxxx()
-functions where \c Xxxxxx is the type.
-For example, to know if a JSON value object contains an integer value,
-you call the \c wxJSONValue::IsInt() memberfunction.
-Note that the function returns TRUE if the stored value is of
-type wxJSONTYPE_INT and it fits in a \b int data type.
-Example:
-
-\code
- wxJSONValue value(100);
- bool r = value.IsInt();        // return TRUE
-      r = value.IsShort();      // return TRUE
-      r = value.IsUInt();       // return FALSE (value is signed)
-      r = value.IsLong();       // return TRUE
-
- value = (wxInt64) LONG_MAX + 1;  // needs 64-bits integer support
-
-      r = value.IsInt64();        // return TRUE
-      r = value.IsLong();         // return FALSE
-      r = value.IsInt();          // return FALSE 
-\endcode
-
-On the other hand, the \b AsXxxxxx functions return the value as the
-specified type, without checking if the stored value is actually
-of the same type as the one wanted.
-In other words, the AsXxxxxx() functions just returns the bit pattern
-stored in the union interpreting those bits as the desired type.
-
-Example:
-
-\code
- wxJSONValue value(-1);
- int i             = value.AsLong();    // return -1
- unsigned int ui   = value.AsULong();   // return 4294967295
- unsigned short us = value.AsUShort();  // return 65535
-\endcode
-
-Note that all primitive types are stored in a \b union so you can get
-the value of a primitive type as the one you want.
-Also note that the \c AsXxxxxx() function does not check that the
-value is compatible with the one you want.
-For example:
-
-\code
-  wxJSONValue value( 10000 );
-  wxChar* ch = value.AsCString();    // returns 10000 which is garbage
-\endcode
-
-However, in debug builds, all AsXxxxxx() functions wxASSERT that the
-type of the stored value is compatible with the one you want.
-In the previuos example, an ASSERTION failure occurs in the \c AsCString()
-function because the returned value is, surely, garbage.
-
-\subsection json_internals_integer_newas The new AsXxxxxx(T&) function.
-
-Starting from version 1.1 the AsXxxxxxx() functions have a new overloaded
-version which returns TRUE if the access to the value is of the correct type.
-The value is stored in the provided argument.
-These functions just calls the IsXxxxxx() function and returns its return
-value. If TRUE, the value is also accessed, example:
-
-\code
-bool AsInt( in& i )
-{
-   bool r = IsInt();
-   if ( r )  {
-     i = AsInt();
-   }
-   return r;
-}
-\endcode
-
-
-\subsection json_internals_integer_read Reading numeric values from JSON text.
-
-If 64-bits support is enabled in the wxJSON library, reading values
-from JSON text may have different results.
-If a numeric value is too large for 32-bits integer storage, it will be
-stored as a double data type in versions 0.4 and previous ones but it may be
-stored as and integer if it fits in a 64-bit integer storage.
-
-When the wxJSON parser reads a token that start with a digit or with a
-minus or plus sign, it assumes that the value read is a number and
-it tries to convert it to:
-
-\li first tries signed integer conversion
-\li if the number does not fit, tries unsigned conversion
-\li if the number does not fit, tries double conversion
-\li if unsuccessfull, an error is reported
-
-
-Note that if 64-bits storage is enabled, the wxJSON parser, does not try to
-convert numeric tokens in a 32-bits integer but immediatly tries 64-bits
-storage.
-This has the conseguence that numeric values that are between
-INT_MAX + 1 and UINT_MAX are stored as signed integers in a 64-bits environment
-and as unsigned integers in a 32-bits environment.
-
-Examples:
-
-\code
-  {
-    // if 64 bits integer is not enabled
-    100         // read as a signed long integer
-    2147483647  // INT_MAX: read as a signed long integer
-    2147483648  // INT_MAX + 1: read as a unsigned long
-
-   -2147483648  // INT_MIN: read as a signed long integer
-    4294967295  // UINT_MAX: read as a unsigned long integer
-
-    4294967296  // UINT_MAX + 1: read as a double
-
-    // if 64-bits integer is enabled
-    4294967295  // UINT_MAX: read as a signed wxInt64
-    4294967296  // UINT_MAX + 1: read as a signed wxInt64
-  }
-\endcode
-
-Also note that if a number is between INT64_MIN and INT64_MAX (or
-LONG_MIN and LONG_MAX, depending on the platform) it is always
-read as a signed integer regardless its original type.
-You can use a special writer's flag in order to force the wxJSON
-library to recognize unsigned JSON values written to JSON text.
-See \ref wxjson_tutorial_style_unsigned for more info.
-
-
 \section json_internals_array The array of values.
 
 An object of this type holds an array of \c wxJSONValue objects.
@@ -926,6 +748,11 @@ In this way the function correctly handles this situation:
 Starting with release 0.2, the wxJSON library recognizes and stores
 C/C++ comments in JSON value objects.
 See \ref wxjson_comments for a detailed implementation.
+
+\section json_internals_reader The wxJSONReader class
+
+
+\section json_internals_writer The wxJSONWriter class
 
 
 
