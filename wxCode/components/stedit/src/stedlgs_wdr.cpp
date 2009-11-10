@@ -3,21 +3,12 @@
 // Do not modify this file, all changes will be lost!
 //------------------------------------------------------------------------------
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-    #pragma implementation "stedlgs_wdr.h"
-#endif
-
-// For compilers that support precompilation
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
+#include "precomp.h"
 
 // Include private header
 #include "stedlgs_wdr.h"
 
-#include <wx/intl.h>
+#include "wx/intl.h"
 
 // Euro sign hack of the year
 #if wxUSE_UNICODE

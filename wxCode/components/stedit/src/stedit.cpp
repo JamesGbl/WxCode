@@ -37,17 +37,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/spinctrl.h"
-#endif // WX_PRECOMP
+#include "precomp.h"
 
 #include "wx/file.h"
 #include "wx/filename.h"

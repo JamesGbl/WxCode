@@ -8,17 +8,7 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
-// For compilers that support precompilation, includes <wx/wx.h>.
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
-
-// for all others, include the necessary headers
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-#endif
+#include "precomp.h"
 
 #include "wx/stedit/steprefs.h"
 #include "wx/stedit/stedit.h"
