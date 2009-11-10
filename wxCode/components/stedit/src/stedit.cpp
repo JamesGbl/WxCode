@@ -2462,7 +2462,10 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     if (save_file && (ret == wxYES))
     {
         // use dialog if it wasn't originally loaded from disk
-        SaveFile(!GetFileModificationTime().IsValid());
+        if (!SaveFile(!GetFileModificationTime().IsValid()))
+        {
+           ret = wxCANCEL;
+        }
     }
 
     return ret;
