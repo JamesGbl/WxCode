@@ -51,16 +51,11 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "wx/html/htmprint.h"   // wxHtmlEasyPrint
 #include "wx/wfstream.h"        // wxFileInputStream
 
-#include <sys/stat.h>           // to get file size
-#include <ctype.h>              // for isprint
-
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
+#include "wx/numdlg.h"
 
 //-----------------------------------------------------------------------------
-#if wxCHECK_VERSION(2,5,0)
-    #include "wx/numdlg.h"
-#else
 
     // This is copied straight from 2.4.2's wxWidgets/src/generic/numdlgg.cpp
     // Note: it sets the spinctrl value using "%lu" so you must reset it

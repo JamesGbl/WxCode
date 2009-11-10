@@ -20,7 +20,6 @@
 #include "wx/listbook.h"
 #include "wx/imaglist.h"
 #include "wx/filename.h"   // wxFileName
-#include <sys/stat.h>      // struct stat
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData_RefData - data shared by multiple pages shown at once

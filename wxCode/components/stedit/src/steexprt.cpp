@@ -224,7 +224,6 @@ int wxSTEditorExporter::SciToSTEStyle(int sci_style) const
 #include <ctype.h>
 #include <stdio.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <time.h>
 
 // Some compatibility defines to simplify transition
