@@ -6,6 +6,7 @@
 #include "wx/ioswrap.h"
 #include "wx/toolbar.h"
 #include "wx/colordlg.h"
+#include "wx/stockitem.h"
 
 #include <ctype.h>
 #include <stdlib.h>

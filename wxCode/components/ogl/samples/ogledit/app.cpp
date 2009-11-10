@@ -58,43 +58,42 @@ bool MyApp::OnInit(void)
   //// Make a menubar
   wxMenu *file_menu = new wxMenu;
 
-  file_menu->Append(wxID_NEW, wxT("&New..."));
-  file_menu->Append(wxID_OPEN, wxT("&Open..."));
-
-  file_menu->Append(wxID_CLOSE, wxT("&Close"));
-  file_menu->Append(wxID_SAVE, wxT("&Save"));
-  file_menu->Append(wxID_SAVEAS, wxT("Save &As..."));
+  file_menu->Append(wxID_NEW);
+  file_menu->Append(wxID_OPEN);
+  file_menu->Append(wxID_CLOSE, wxGetStockLabel(wxID_CLOSE) + wxT("\tCtrl-W"));
+  file_menu->Append(wxID_SAVE);
+  file_menu->Append(wxID_SAVEAS);
   file_menu->AppendSeparator();
-  file_menu->Append(wxID_PRINT, wxT("&Print..."));
-  file_menu->Append(wxID_PRINT_SETUP, wxT("Print &Setup..."));
-  file_menu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
+  file_menu->Append(wxID_PRINT, wxGetStockLabel(wxID_PRINT) + wxT("\tCtrl-P"));
+  file_menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
+  file_menu->Append(wxID_PREVIEW, _("Print Pre&view"));
 
-  wxMenu *edit_menu = new wxMenu;
-  edit_menu->Append(wxID_UNDO, wxT("&Undo"));
-  edit_menu->Append(wxID_REDO, wxT("&Redo"));
+  wxMenu *edit_menu = new wxMenu();
+  edit_menu->Append(wxID_UNDO);
+  edit_menu->Append(wxID_REDO);
   edit_menu->AppendSeparator();
-  edit_menu->Append(wxID_CUT, wxT("&Cut"));
+  edit_menu->Append(wxID_CUT);
   edit_menu->AppendSeparator();
-  edit_menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, wxT("Change &background colour"));
-  edit_menu->Append(OGLEDIT_EDIT_LABEL, wxT("Edit &label"));
+  edit_menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _("Change &background colour"));
+  edit_menu->Append(OGLEDIT_EDIT_LABEL, _("Edit &label"));
 
   frame->editMenu = edit_menu;
 
   file_menu->AppendSeparator();
-  file_menu->Append(wxID_EXIT);
+  file_menu->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\tCtrl-Q"));
 
   // A nice touch: a history of files visited. Use this menu.
   myDocManager->FileHistoryUseMenu(file_menu);
 
-  wxMenu *help_menu = new wxMenu;
-  help_menu->Append(OGLEDIT_ABOUT, wxT("&About"));
+  wxMenu *help_menu = new wxMenu();
+  help_menu->Append(OGLEDIT_ABOUT);
 
-  wxMenuBar *menu_bar = new wxMenuBar;
+  wxMenuBar *menu_bar = new wxMenuBar();
 
-  menu_bar->Append(file_menu, wxT("&File"));
+  menu_bar->Append(file_menu, _("&File"));
   if (edit_menu)
-    menu_bar->Append(edit_menu, wxT("&Edit"));
-  menu_bar->Append(help_menu, wxT("&Help"));
+    menu_bar->Append(edit_menu, _("&Edit"));
+  menu_bar->Append(help_menu, _("&Help"));
 
   frame->canvas = frame->CreateCanvas(NULL, frame);
   frame->palette = wxGetApp().CreatePalette(frame);

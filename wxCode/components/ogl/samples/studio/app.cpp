@@ -123,32 +123,30 @@ bool csApp::OnInit(void)
     // Make a menubar
     wxMenu *fileMenu = new wxMenu;
 
-    fileMenu->Append(wxID_NEW, wxT("&New...\tCtrl+N"));
-    fileMenu->Append(wxID_OPEN, wxT("&Open...\tCtrl+O"));
+    fileMenu->Append(wxID_NEW);
+    fileMenu->Append(wxID_OPEN);
 
     fileMenu->AppendSeparator();
 
-    fileMenu->Append(wxID_PRINT, wxT("&Print...\tCtrl+P"));
-    fileMenu->Append(wxID_PRINT_SETUP, wxT("Print &Setup..."));
-    fileMenu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
+    fileMenu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
     fileMenu->AppendSeparator();
-    fileMenu->Append(wxID_EXIT);
+    fileMenu->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\tCtrl+Q"));
 
     // A history of files visited. Use this menu.
     m_docManager->FileHistoryUseMenu(fileMenu);
 
     wxMenu *viewMenu = new wxMenu;
-    viewMenu->Append(ID_CS_SETTINGS, wxT("&Settings..."));
+    viewMenu->Append(ID_CS_SETTINGS, _("&Settings..."));
 
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(wxID_HELP, wxT("&Help Contents\tF1"));
-    helpMenu->Append(ID_CS_ABOUT, wxT("&About"));
+    helpMenu->Append(wxID_HELP);
+    helpMenu->Append(ID_CS_ABOUT, _("&About"));
 
     wxMenuBar *menuBar = new wxMenuBar;
 
-    menuBar->Append(fileMenu, wxT("&File"));
-    menuBar->Append(viewMenu, wxT("&View"));
-    menuBar->Append(helpMenu, wxT("&Help"));
+    menuBar->Append(fileMenu, _("&File"));
+    menuBar->Append(viewMenu, _("&View"));
+    menuBar->Append(helpMenu, _("&Help"));
 
     // Associate the menu bar with the frame
     frame->SetMenuBar(menuBar);
@@ -172,12 +170,12 @@ bool csApp::OnInit(void)
 
     // Create the shape editing menu
     m_shapeEditMenu = new ShapeEditMenu;
-    m_shapeEditMenu->Append(ID_CS_EDIT_PROPERTIES, wxT("Edit properties"));
+    m_shapeEditMenu->Append(ID_CS_EDIT_PROPERTIES, _("Edit properties"));
     m_shapeEditMenu->AppendSeparator();
-    m_shapeEditMenu->Append(ID_CS_ROTATE_CLOCKWISE, wxT("Rotate clockwise"));
-    m_shapeEditMenu->Append(ID_CS_ROTATE_ANTICLOCKWISE, wxT("Rotate anticlockwise"));
+    m_shapeEditMenu->Append(ID_CS_ROTATE_CLOCKWISE, _("Rotate clockwise"));
+    m_shapeEditMenu->Append(ID_CS_ROTATE_ANTICLOCKWISE, _("Rotate anticlockwise"));
     m_shapeEditMenu->AppendSeparator();
-    m_shapeEditMenu->Append(ID_CS_CUT, wxT("Cut"));
+    m_shapeEditMenu->Append(ID_CS_CUT, _("Cut"));
 
     frame->Show(true);
 
@@ -190,19 +188,12 @@ int csApp::OnExit(void)
 {
     WriteOptions();
 
-    delete m_symbolDatabase;
-    m_symbolDatabase = NULL;
+    wxDELETE(m_symbolDatabase);
+    wxDELETE(m_docManager);
+    wxDELETE(m_shapeEditMenu);
+    wxDELETE(m_helpController);
 
-    delete m_docManager;
-    m_docManager = NULL;
-
-    delete m_shapeEditMenu;
-    m_shapeEditMenu = NULL;
-
-    delete m_helpController;
-    m_helpController = NULL;
-
-    wxOGLCleanUp();
+    ::wxOGLCleanUp();
 
     return 0;
 }
@@ -228,33 +219,33 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
     //// Make a menubar
     wxMenu *fileMenu = new wxMenu;
 
-    fileMenu->Append(wxID_NEW, wxT("&New...\tCtrl+N"));
-    fileMenu->Append(wxID_OPEN, wxT("&Open...\tCtrl+O"));
-    fileMenu->Append(wxID_CLOSE, wxT("&Close\tCtrl+W"));
-    fileMenu->Append(wxID_SAVE, wxT("&Save\tCtrl+S"));
-    fileMenu->Append(wxID_SAVEAS, wxT("Save &As...\tF12"));
+    fileMenu->Append(wxID_NEW);
+    fileMenu->Append(wxID_OPEN);
+    fileMenu->Append(wxID_CLOSE, wxGetStockLabel(wxID_CLOSE) + wxT("\tCtrl-W"));
+    fileMenu->Append(wxID_SAVE);
+    fileMenu->Append(wxID_SAVEAS);
 
     fileMenu->AppendSeparator();
-    fileMenu->Append(wxID_PRINT, wxT("&Print...\tCtrl+P"));
-    fileMenu->Append(wxID_PRINT_SETUP, wxT("Print &Setup..."));
-    fileMenu->Append(wxID_PREVIEW, wxT("Print Pre&view"));
+    fileMenu->Append(wxID_PRINT, wxGetStockLabel(wxID_PRINT) + wxT("\tCtrl-P"));
+    fileMenu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
+    fileMenu->Append(wxID_PREVIEW, _("Print Pre&view"));
 
     fileMenu->AppendSeparator();
-    fileMenu->Append(wxID_EXIT);
+    fileMenu->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\tCtrl-Q"));
 
     wxMenu* editMenu = new wxMenu;
-    editMenu->Append(wxID_UNDO, wxT("&Undo\tCtrl+Z"));
-    editMenu->Append(wxID_REDO, wxT("&Redo\tCtrl+Y"));
+    editMenu->Append(wxID_UNDO);
+    editMenu->Append(wxID_REDO);
     editMenu->AppendSeparator();
-    editMenu->Append(wxID_CUT, wxT("Cu&t\tCtrl+X"));
-    editMenu->Append(wxID_COPY, wxT("&Copy\tCtrl+C"));
-    editMenu->Append(wxID_PASTE, wxT("&Paste\tCtrl+V"));
-    editMenu->Append(wxID_DUPLICATE, wxT("&Duplicate\tCtrl+D"));
+    editMenu->Append(wxID_CUT);
+    editMenu->Append(wxID_COPY);
+    editMenu->Append(wxID_PASTE);
+    editMenu->Append(wxID_DUPLICATE, _("&Duplicate\tCtrl+D"));
     editMenu->AppendSeparator();
-    editMenu->Append(wxID_CLEAR, wxT("Cle&ar\tDelete"));
-    editMenu->Append(ID_CS_SELECT_ALL, wxT("Select A&ll\tCtrl+A"));
+    editMenu->Append(wxID_CLEAR, _("Cle&ar\tDelete"));
+    editMenu->Append(ID_CS_SELECT_ALL, _("Select A&ll\tCtrl+A"));
     editMenu->AppendSeparator();
-    editMenu->Append(ID_CS_EDIT_PROPERTIES, wxT("Edit P&roperties..."));
+    editMenu->Append(ID_CS_EDIT_PROPERTIES, _("Edit P&roperties..."));
 
     *editMenuRet = editMenu;
 
@@ -264,18 +255,18 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
     doc->GetCommandProcessor()->SetEditMenu(editMenu);
 
     wxMenu *viewMenu = new wxMenu;
-    viewMenu->Append(ID_CS_SETTINGS, wxT("&Settings..."));
+    viewMenu->Append(ID_CS_SETTINGS, _("&Settings..."));
 
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(wxID_HELP, wxT("&Help Contents\tF1"));
-    helpMenu->Append(ID_CS_ABOUT, wxT("&About"));
+    helpMenu->Append(wxID_HELP, _("&Help Contents\tF1"));
+    helpMenu->Append(ID_CS_ABOUT, wxGetStockLabel(wxID_ABOUT));
 
     wxMenuBar *menuBar = new wxMenuBar;
 
-    menuBar->Append(fileMenu, wxT("&File"));
-    menuBar->Append(editMenu, wxT("&Edit"));
-    menuBar->Append(viewMenu, wxT("&View"));
-    menuBar->Append(helpMenu, wxT("&Help"));
+    menuBar->Append(fileMenu, _("&File"));
+    menuBar->Append(editMenu, _("&Edit"));
+    menuBar->Append(viewMenu, _("&View"));
+    menuBar->Append(helpMenu, _("&Help"));
 
     //// Associate the menu bar with the frame
     subframe->SetMenuBar(menuBar);

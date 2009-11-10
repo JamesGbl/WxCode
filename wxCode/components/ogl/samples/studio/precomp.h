@@ -8,6 +8,7 @@
 #include "wx/config.h"
 #include "wx/helpwin.h"
 #include "wx/colordlg.h"
+#include "wx/stockitem.h"
 
 #include <ctype.h>
 #include <stdlib.h>
