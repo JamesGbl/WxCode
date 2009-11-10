@@ -39,11 +39,9 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include "wx/filename.h"
 #include "wx/printdlg.h"        // wxPageSetupDialog
 #include "wx/fileconf.h"        // wxFileConfig
 #include "wx/clipbrd.h"         // wxClipboard
-#include "wx/tokenzr.h"         // wxStringTokenizer
 #include "wx/wfstream.h"        // wxFileInputStream
 #include "wx/numdlg.h"
 

@@ -15,8 +15,6 @@
 #include "wx/stedit/stedit.h"
 #include "stedlgs_wdr.h"
 
-#include "wx/config.h"    // wxConfigBase
-
 //-----------------------------------------------------------------------------
 // Static functions for prepending strings to wxArrayString and wxComboBoxes
 //-----------------------------------------------------------------------------

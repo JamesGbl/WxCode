@@ -13,9 +13,6 @@
 #include "wx/stedit/stelangs.h"
 #include "wx/stedit/stedit.h"
 
-#include "wx/tokenzr.h"
-#include "wx/config.h"
-#include "wx/filename.h"
 #if (wxVERSION_NUMBER >= 2900)
 #include "wx/stc/private.h" // wx2stc()
 #endif

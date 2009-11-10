@@ -18,7 +18,6 @@
 #include "wx/colordlg.h"
 #include "wx/fontdlg.h"
 #include "wx/listbook.h"
-#include "wx/filename.h"   // wxFileName
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData_RefData - data shared by multiple pages shown at once

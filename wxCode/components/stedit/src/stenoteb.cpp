@@ -15,7 +15,6 @@
 #include "wx/stedit/stenoteb.h"
 #include "wx/stedit/stedlgs.h"
 
-#include "wx/filename.h"  // wxFileName
 #include "wx/progdlg.h"   // wxProgressDialog
 
 //-----------------------------------------------------------------------------

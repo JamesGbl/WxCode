@@ -14,9 +14,6 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 
-#include "wx/filename.h"  // wxFileName
-#include "wx/tokenzr.h"
-#include "wx/config.h"    // wxConfigBase
 #include "wx/docview.h"   // wxFileHistory
 
 #include "../art/pencil16.xpm"

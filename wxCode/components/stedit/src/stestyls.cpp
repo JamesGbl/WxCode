@@ -41,9 +41,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "wx/stedit/stestyls.h"
 #include "wx/stedit/stedit.h"
 
-#include "wx/tokenzr.h"
-#include "wx/config.h"
-
 #include "wx/arrimpl.cpp"
 WX_DEFINE_OBJARRAY(wxArraySTEditorStyle);
 DEFINE_PAIRARRAY_INTKEY(wxSTEditorStyle, wxSTEPairArrayIntSTEStyle)

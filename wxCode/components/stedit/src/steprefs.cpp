@@ -13,8 +13,6 @@
 #include "wx/stedit/steprefs.h"
 #include "wx/stedit/stedit.h"
 
-#include "wx/config.h"
-
 extern wxSTEditorPrefs  s_wxSTEditorPrefs;
 
 //----------------------------------------------------------------------------
