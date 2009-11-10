@@ -11,27 +11,27 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DLL Debug|Win32 = DLL Debug|Win32
+		DLL Unicode Debug|Win32 = DLL Unicode Debug|Win32
 		Static Release|Win32 = Static Release|Win32
-		Unicode DLL Debug|Win32 = Unicode DLL Debug|Win32
-		Unicode Static Release|Win32 = Unicode Static Release|Win32
+		Static Unicode Release|Win32 = Static Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
+		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Release|Win32.ActiveCfg = Static Release|Win32
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Release|Win32.Build.0 = Static Release|Win32
-		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Unicode DLL Debug|Win32.ActiveCfg = Unicode DLL Debug|Win32
-		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Unicode DLL Debug|Win32.Build.0 = Unicode DLL Debug|Win32
-		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Unicode Static Release|Win32.ActiveCfg = Unicode Static Release|Win32
-		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Unicode Static Release|Win32.Build.0 = Unicode Static Release|Win32
+		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Unicode Release|Win32.ActiveCfg = Static Unicode Release|Win32
+		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Unicode Release|Win32.Build.0 = Static Unicode Release|Win32
 		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
 		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
+		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
 		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Release|Win32.ActiveCfg = Static Release|Win32
 		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Release|Win32.Build.0 = Static Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Unicode DLL Debug|Win32.ActiveCfg = Unicode DLL Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Unicode DLL Debug|Win32.Build.0 = Unicode DLL Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Unicode Static Release|Win32.ActiveCfg = Unicode Static Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Unicode Static Release|Win32.Build.0 = Unicode Static Release|Win32
+		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Unicode Release|Win32.ActiveCfg = Static Unicode Release|Win32
+		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Unicode Release|Win32.Build.0 = Static Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

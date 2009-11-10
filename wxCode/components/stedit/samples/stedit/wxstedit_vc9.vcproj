@@ -16,7 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode DLL Debug|Win32"
+			Name="DLL Unicode Debug|Win32"
 			OutputDirectory=".\vc9_mswuddll"
 			IntermediateDirectory=".\vc9_mswuddll"
 			ConfigurationType="1"
@@ -311,7 +311,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Unicode Static Release|Win32"
+			Name="Static Unicode Release|Win32"
 			OutputDirectory=".\vc9_mswu"
 			IntermediateDirectory=".\vc9_mswu"
 			ConfigurationType="1"

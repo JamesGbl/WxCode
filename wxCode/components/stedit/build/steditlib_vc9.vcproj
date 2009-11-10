@@ -168,7 +168,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Unicode DLL Debug|Win32"
+			Name="DLL Unicode Debug|Win32"
 			OutputDirectory=".\vc9_mswuddll"
 			IntermediateDirectory=".\vc9_mswuddll"
 			ConfigurationType="4"
@@ -245,7 +245,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Unicode Static Release|Win32"
+			Name="Static Unicode Release|Win32"
 			OutputDirectory=".\vc9_mswu"
 			IntermediateDirectory=".\vc9_mswu"
 			ConfigurationType="4"
@@ -426,7 +426,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -435,7 +435,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -466,7 +466,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -475,7 +475,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -506,7 +506,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -515,7 +515,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -546,7 +546,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -555,7 +555,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -586,7 +586,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -595,7 +595,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -626,7 +626,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -635,7 +635,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -666,7 +666,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -675,7 +675,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -706,7 +706,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -715,7 +715,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -746,7 +746,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -755,7 +755,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -786,7 +786,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -795,7 +795,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -826,7 +826,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -835,7 +835,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -866,7 +866,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -875,7 +875,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -906,7 +906,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -915,7 +915,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -946,7 +946,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -955,7 +955,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -986,7 +986,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -995,7 +995,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1026,7 +1026,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode DLL Debug|Win32"
+					Name="DLL Unicode Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1035,7 +1035,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode Static Release|Win32"
+					Name="Static Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
