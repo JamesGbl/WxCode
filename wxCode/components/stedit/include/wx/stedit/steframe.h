@@ -129,7 +129,7 @@ public:
     void SetTitleBase( const wxString& titleBase ) { m_titleBase = titleBase; }
 
     // Show the about dialog, called for wxID_ABOUT
-    virtual void ShowAboutDialog();
+    static void ShowAboutDialog(wxWindow* parent);
 
     // Load/Save the config for showing sidebar and frame size
     //   See also wxSTEditorOptions for paths and internal saving config.

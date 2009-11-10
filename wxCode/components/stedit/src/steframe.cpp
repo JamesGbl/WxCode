@@ -250,7 +250,7 @@ wxSTEditorSplitter *wxSTEditorFrame::GetEditorSplitter(int page) const
     return GetEditorNotebook() ? GetEditorNotebook()->GetEditorSplitter(page) : m_steSplitter;
 }
 
-void wxSTEditorFrame::ShowAboutDialog()
+void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
 {
     wxString msg;
     msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
@@ -263,7 +263,7 @@ void wxSTEditorFrame::ShowAboutDialog()
     //if ((wxFileConfig*)wxConfigBase::Get(false))
     //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
 
-    wxMessageBox(msg, _("About editor"), wxOK|wxICON_INFORMATION, this);
+    wxMessageBox(msg, _("About editor"), wxOK|wxICON_INFORMATION, parent);
 }
 
 void wxSTEditorFrame::UpdateAllItems()
@@ -696,7 +696,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
         }
         case wxID_ABOUT :
         {
-            ShowAboutDialog();
+            ShowAboutDialog(this);
             return true;
         }
         default : break;
