@@ -138,7 +138,7 @@ bool wxSTEditorExporter::ExportToFile(int file_format, const wxString& fileName,
 
     if (overwrite_prompt && wxFileExists(fileName))
     {
-        int overw = wxMessageBox(_("Overwrite file : '")+fileName+wxT("'?\n"),
+        int overw = wxMessageBox(wxString::Format(_("Overwrite file : '%s'?\n"), fileName.wx_str()),
                            _("Export error"),
                            wxOK|wxCANCEL|wxCENTRE|wxICON_QUESTION, m_editor);
 
@@ -161,7 +161,7 @@ bool wxSTEditorExporter::ExportToFile(int file_format, const wxString& fileName,
 
     if (!ret && msg_on_error)
     {
-        wxMessageBox(_("Unable to export to file : '")+fileName+wxT("'.\n"),
+         wxMessageBox(wxString::Format(_("Unable to export to file : '%s'.\n"), fileName.wx_str()),
                      _("Export error"),
                      wxOK|wxCENTRE|wxICON_ERROR, m_editor);
     }

@@ -2356,7 +2356,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     wxFile file(fileName, wxFile::write);
     if (!file.IsOpened())
     {
-        wxMessageBox(_("Error opening file :'") + fileName + wxT("'"),
+        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , this);
         return false;
     }
@@ -2453,7 +2453,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     bool sendEvents = m_sendEvents;
     m_sendEvents = false; // block focus when dialog closes
 
-    int ret = wxMessageBox(GetFileName()+_("\nHas unsaved changes.\nWould you like to save your file before closing?"),
+    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), GetFileName().wx_str()),
                            _("Unsaved changes"),
                            style|wxCENTRE|wxICON_QUESTION, this);
 
@@ -2491,7 +2491,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         // oops, file is gone, just tell them
         if (show_reload_dialog)
         {
-            wxMessageBox( GetFileName()+_("\nDoesn't exist on disk anymore."),
+            wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."),  GetFileName().wx_str()),
                           _("File removed from disk"),
                           wxOK | wxICON_EXCLAMATION, this);
         }
@@ -2505,7 +2505,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
 
     if (altered && show_reload_dialog)
     {
-        int ret = wxMessageBox( _("The file '")+GetFileName()+_("' has been modified externally.\nWould you like to reload the file?"),
+        int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"), GetFileName().wx_str()),
                                 _("File changed on disk"),
                                 wxYES_NO | wxICON_QUESTION, this);
         if (ret == wxYES)

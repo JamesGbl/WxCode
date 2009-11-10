@@ -217,7 +217,7 @@ bool wxStEditApp::OnInit()
                     //wxLogMessage(wxT("Config file '")+configFile+wxT("' does not exist."));
                     if (configFile.IsEmpty() || !fN.IsOk() || wxIsWild(configFile))
                     {
-                        int ret = wxMessageBox(_("Config file '")+configFile+_("' has an invalid name.\nContinue without using a config file?"),
+                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' has an invalid name.\nContinue without using a config file?"), configFile.wx_str()),
                                                _("Invalid config file name"),
                                                wxICON_QUESTION|wxYES_NO);
                         if (ret == wxNO)
@@ -227,7 +227,7 @@ bool wxStEditApp::OnInit()
                     }
                     else // file doesn't exist, ask if they want to create a new one
                     {
-                        int ret = wxMessageBox(_("Config file '")+configFile+_("' does not exist.\nWould you like to create a new one?"),
+                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' does not exist.\nWould you like to create a new one?"), configFile.wx_str()),
                                                _("Invalid config file"),
                                                wxICON_QUESTION|wxYES_NO|wxCANCEL);
                         if (ret == wxCANCEL)
