@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="studio"
 	ProjectGUID="{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}"
+	RootNamespace="studio"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -49,7 +50,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud,$(WXWIN)\include,..\..\include"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..\include"
 				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -345,7 +346,7 @@
 				AdditionalOptions="/EHsc "
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\..\include"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\..\include"
 				PreprocessorDefinitions="_UNICODE;UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
