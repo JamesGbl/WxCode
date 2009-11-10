@@ -262,11 +262,11 @@ wxSTEditorSplitter *wxSTEditorFrame::GetEditorSplitter(int page) const
 void wxSTEditorFrame::ShowAboutDialog()
 {
     wxString msg;
-    msg.Printf( _T("Welcome to ") STE_VERSION_STRING _T(".\n")
-                _T("Using the Scintilla editor, http://www.scintilla.org\n")
-                _T("and the wxWidgets library, http://www.wxwidgets.org.\n")
-                _T("Written by John Labenski, Otto Wyss.\n\n")
-                _T("Compiled with %s."), wxVERSION_STRING);
+    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
+                wxT("Using the Scintilla editor, http://www.scintilla.org\n")
+                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
+                wxT("Written by John Labenski, Otto Wyss.\n\n")
+                wxT("Compiled with %s."), wxVERSION_STRING);
 
     // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
     //if ((wxFileConfig*)wxConfigBase::Get(false))
