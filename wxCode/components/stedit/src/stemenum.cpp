@@ -339,7 +339,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     if (HasMenuOptionType(STE_MENU_FRAME))
     {
         if (add_sep) menu->AppendSeparator();
-        menu->Append(MenuItem(menu, wxID_EXIT, _("E&xit\tCtrl-Q"), _("Exit editor"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_EXIT)));
+        menu->Append(MenuItem(menu, wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\tCtrl-Q"), _("Exit editor"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_EXIT)));
     }
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
@@ -354,7 +354,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
 {
     wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    if (!menu) menu = new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_CUTCOPYPASTE))
