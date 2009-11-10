@@ -39,6 +39,10 @@
     #include "wx/wx.h"
 #endif
 
+#if (wxVERSION_NUMBER >= 2900)
+#include "wx/stc/private.h" // stc2wx()
+#endif
+
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
 
@@ -464,7 +468,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         {
             wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, _("Help for wxStEdit"), wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(stc2wx((const char*)wxstedit_htm)))
+            if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm)))
             {
                 helpFrame->Centre();
                 helpFrame->Show(true);
@@ -478,7 +482,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         {
             wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, _("Programming help for wxStEdit"), wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(stc2wx((const char*)readme_htm)))
+            if (htmlWin->SetPage(::stc2wx((const char*)readme_htm)))
             {
                 helpFrame->Centre();
                 helpFrame->Show(true);

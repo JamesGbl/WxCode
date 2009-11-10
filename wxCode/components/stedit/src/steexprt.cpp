@@ -44,6 +44,9 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "stedlgs_wdr.h"
 
 #include "wx/filesys.h"
+#if (wxVERSION_NUMBER >= 2900)
+#include "wx/stc/private.h" // wx2stc()
+#endif
 
 // ----------------------------------------------------------------------------
 // The code below is copied to avoid having to include the Scintilla headers
@@ -1829,7 +1832,7 @@ void STEExporterHTML_Font(int style_n, int old_style_n,
     {
         // always set new colour
         if ((old_style_n < 0) || (sd[old_style_n].fore != sd[style_n].fore))
-            htmlString += wxString::Format(wxT("<FONT COLOR = \"%s\">"), stc2wx(sd[style_n].fore.c_str()).c_str());
+            htmlString += wxString::Format(wxT("<FONT COLOR = \"%s\">"), stc2wx(sd[style_n].fore.c_str()).wx_str());
 
         if (sd[style_n].bold       && ((old_style_n < 0) || !sd[old_style_n].bold))
             htmlString << wxT("<B>");

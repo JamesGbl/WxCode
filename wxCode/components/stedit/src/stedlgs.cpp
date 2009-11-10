@@ -1481,7 +1481,7 @@ void wxSTEditorPrefDialog::OnApply(wxCommandEvent &event)
 
     size_t n, count = m_noteBook->GetPageCount();
     for (n = 0; n < count; n++)
-        m_noteBook->GetPage(n)->ProcessEvent(event);
+        m_noteBook->GetPage(n)->GetEventHandler()->ProcessEvent(event);
 
     // set the language without update since will do it later
     if (GetEditorPrefData().GetEditor())
@@ -1518,7 +1518,7 @@ void wxSTEditorPrefDialog::OnReset(wxCommandEvent &event)
     }
 
     int n = m_noteBook->GetSelection();
-    m_noteBook->GetPage(n)->ProcessEvent(event);
+    m_noteBook->GetPage(n)->GetEventHandler()->ProcessEvent(event);
 }
 
 void wxSTEditorPrefDialog::OnNotebookPageChanged(wxNotebookEvent &)

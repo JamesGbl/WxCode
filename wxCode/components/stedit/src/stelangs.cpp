@@ -17,6 +17,9 @@
 #include "wx/config.h"
 #include "wx/textfile.h"
 #include "wx/filename.h"
+#if (wxVERSION_NUMBER >= 2900)
+#include "wx/stc/private.h" // wx2stc()
+#endif
 
 DEFINE_PAIRARRAY_INTKEY(wxString, wxSTEPairArrayIntString)
 

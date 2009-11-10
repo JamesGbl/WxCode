@@ -307,7 +307,7 @@ bool wxSTEditorPrefs::Create(wxSTEditor *editor)
     SetPrefInt(STE_PREF_VIEW_WHITESPACE, editor->GetViewWhiteSpace(), false);
 
 
-    SetPrefBool(STE_PREF_INDENT_GUIDES, editor->GetIndentationGuides(), false);
+    SetPrefBool(STE_PREF_INDENT_GUIDES, editor->GetIndentationGuides() ? true : false, false);
     SetPrefInt(STE_PREF_EDGE_MODE,      editor->GetEdgeMode(), false);
     SetPrefInt(STE_PREF_EDGE_COLUMN,    editor->GetEdgeColumn(), false);
 
@@ -656,7 +656,7 @@ void wxSTEditorPrefs::LoadConfig( wxConfigBase &config,
             if (config.Read(key + name, &val))
                 SetPrefInt(pref_n, val, false);
         }
-        else if (config.Read(key + name, strVal))
+        else if (config.Read(key + name, &strVal))
             SetPref(pref_n, strVal, false);
     }
 
