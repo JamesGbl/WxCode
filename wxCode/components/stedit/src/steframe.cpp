@@ -14,7 +14,6 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 
-#include "wx/file.h"
 #include "wx/filename.h"  // wxFileName
 #include "wx/tokenzr.h"
 #include "wx/config.h"    // wxConfigBase

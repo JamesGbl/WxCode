@@ -15,9 +15,7 @@
 #include "wx/stedit/stedit.h"
 #include "stedlgs_wdr.h"
 
-#include "wx/printdlg.h"  // wxPageSetupDialog
 #include "wx/progdlg.h"   // wxProgressDialog
-#include "wx/module.h"    // wxModule
 
 #if wxUSE_PRINTING_ARCHITECTURE
 

@@ -43,8 +43,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "wx/tokenzr.h"
 #include "wx/config.h"
-#include "wx/textfile.h"
-#include "wx/filename.h"
 
 #include "wx/arrimpl.cpp"
 WX_DEFINE_OBJARRAY(wxArraySTEditorStyle);

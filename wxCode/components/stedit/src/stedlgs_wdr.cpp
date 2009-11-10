@@ -8,8 +8,6 @@
 // Include private header
 #include "stedlgs_wdr.h"
 
-#include "wx/intl.h"
-
 // Euro sign hack of the year
 #if wxUSE_UNICODE
     #define __WDR_EURO__ wxT("\u20ac")

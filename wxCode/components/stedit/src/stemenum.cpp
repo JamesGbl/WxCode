@@ -14,8 +14,6 @@
 #include "wx/stedit/stemenum.h"
 #include "wx/stedit/stedit.h"
 
-#include "wx/artprov.h"   // wxArtProvider
-
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - a holding place for menu generating code
 //-----------------------------------------------------------------------------

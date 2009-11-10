@@ -18,7 +18,6 @@
 #include "wx/colordlg.h"
 #include "wx/fontdlg.h"
 #include "wx/listbook.h"
-#include "wx/imaglist.h"
 #include "wx/filename.h"   // wxFileName
 
 //-----------------------------------------------------------------------------

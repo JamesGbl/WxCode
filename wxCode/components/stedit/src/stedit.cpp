@@ -39,21 +39,16 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include "wx/file.h"
 #include "wx/filename.h"
-#include "wx/filefn.h"          // wxStat for filesize check
-#include "wx/config.h"          // wxConfigBase
-#include "wx/docview.h"         // wxFileHistory
 #include "wx/printdlg.h"        // wxPageSetupDialog
 #include "wx/fileconf.h"        // wxFileConfig
 #include "wx/clipbrd.h"         // wxClipboard
 #include "wx/tokenzr.h"         // wxStringTokenizer
-#include "wx/html/htmprint.h"   // wxHtmlEasyPrint
 #include "wx/wfstream.h"        // wxFileInputStream
+#include "wx/numdlg.h"
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
-#include "wx/numdlg.h"
 
 //-----------------------------------------------------------------------------
 // Global data
