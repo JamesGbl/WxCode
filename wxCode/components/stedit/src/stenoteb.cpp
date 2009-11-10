@@ -110,6 +110,9 @@ void wxSTEditorNotebook::CreateOptions(const wxSTEditorOptions& options)
 wxString wxSTEditorNotebook::FileNameToTabName(const wxString& fileName) const
 {
     wxString name = wxFILE_SEP_PATH+fileName;
+#ifdef __WXMSW__
+    name.Replace(wxT("&"), wxT("&&")); // TROELS TRK
+#endif
     return name.AfterLast(wxFILE_SEP_PATH);
 }
 
