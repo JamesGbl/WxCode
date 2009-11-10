@@ -56,38 +56,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "wx/numdlg.h"
 
 //-----------------------------------------------------------------------------
-
-    // This is copied straight from 2.4.2's wxWidgets/src/generic/numdlgg.cpp
-    // Note: it sets the spinctrl value using "%lu" so you must reset it
-    //       see wxSTEditor::ShowSetZoomDialog
-    class WXDLLEXPORT wxNumberEntryDialog : public wxDialog
-    {
-    public:
-        wxNumberEntryDialog(wxWindow *parent,
-                            const wxString& message,
-                            const wxString& prompt,
-                            const wxString& caption,
-                            long value, long min, long max,
-                            const wxPoint& pos);
-
-        long GetValue() const { return m_value; }
-
-        // implementation only
-        void OnOK(wxCommandEvent& event);
-        void OnCancel(wxCommandEvent& event);
-
-        //protected: make it public to reset value
-        wxSpinCtrl *m_spinctrl;
-
-        long m_value, m_min, m_max;
-
-    private:
-        DECLARE_EVENT_TABLE()
-    };
-
-#endif // wxCHECK_VERSION(2,5,0)
-
-//-----------------------------------------------------------------------------
 // Global data
 
 wxSTEditorFindReplaceData s_wxSTEditor_FindData(wxFR_DOWN|STE_FR_WRAPAROUND);
