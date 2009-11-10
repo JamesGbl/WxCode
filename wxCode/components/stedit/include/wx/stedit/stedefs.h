@@ -54,7 +54,7 @@
 #ifdef WXMAKINGDLL_STEDIT
     #define WXDLLIMPEXP_STEDIT WXEXPORT
     #define WXDLLIMPEXP_DATA_STEDIT(type) WXEXPORT type
-#elif defined(WXUSINGDLL)
+#elif defined(WXUSINGDLL_STEDIT)
     #define WXDLLIMPEXP_STEDIT WXIMPORT
     #define WXDLLIMPEXP_DATA_STEDIT(type) WXIMPORT type
 #else // not making nor using DLL
