@@ -650,7 +650,7 @@ void wxSTEditorNotebook::OnSTEState(wxSTEditorEvent &event)
             if (page >= 0) // if < 0 then not in notebook (or at least yet)
             {
                 wxString modified = editor->GetModify() ? wxT("*") : wxT("");
-                SetPageText(page, modified+FileNameToTabName(event.GetString()));
+                SetPageText(page, FileNameToTabName(event.GetString()) + modified);
                 SortTabs(GetOptions().GetNotebookOptions());
             }
         }

@@ -344,7 +344,7 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
             steMM->EnableEditorItems(true, NULL, GetMenuBar(), GetToolBar());
 
         wxString modified = editor->IsModified() ? wxT("*") : wxT("");
-        title += wxT(" - ") + modified + editor->GetFileName();
+        title += wxT(" - ") + editor->GetFileName() + modified;
     }
     else
     {
@@ -532,7 +532,7 @@ void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
     if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED) )
     {
         wxString modified = editor->IsModified() ? wxT("*") : wxT("");
-        SetTitle(m_titleBase + wxT(" - ") + modified + event.GetString());
+        SetTitle(m_titleBase + wxT(" - ") + event.GetString() + modified);
 
         UpdateFileTreeCtrl();
         if (event.HasStateChange(STE_FILENAME) && GetOptions().GetFileHistory())
