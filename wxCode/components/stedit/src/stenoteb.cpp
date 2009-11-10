@@ -847,20 +847,20 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     // change labels of existing items
     for (n=0; n<item_count; n++)
     {
-        label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str());
+        label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str());
         if (menu->GetLabel(startID+n) != label)
             menu->SetLabel(startID+n, label);
     }
     // append new pages
     for (n=item_count; n<page_count; n++)
-        menu->AppendRadioItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str()));
+        menu->AppendRadioItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
 */
 /*
     // This just clears it and adds the items fresh
     for (n=0; n<item_count; n++)
         menu->Delete(startID+n);
     for (n=0; n<page_count; n++)
-        menu->AppendRadioItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str()));
+        menu->AppendRadioItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
 */
 
 // ==== check items do not
@@ -879,7 +879,7 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     // change labels of existing items
     for (n = 0; n < item_count; n++)
     {
-        label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str());
+        label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str());
         if (menu->GetLabel(startID+n) != label)
             menu->SetLabel(startID+n, label);
 
@@ -887,14 +887,14 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     }
     // append new pages
     for (n = item_count; n < page_count; n++)
-        menu->AppendCheckItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str()));
+        menu->AppendCheckItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
 
 /*
     // use check items
     for (n = 0; n < item_count; n++)
         menu->Delete(startID+n);
     for (n = 0; n < page_count; n++)
-        menu->AppendCheckItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).c_str()));
+        menu->AppendCheckItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
 */
 
     // show what page we're on
@@ -1138,7 +1138,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
         int count = ReplaceAllStrings(findString, replaceString, flags, &pages);
 
         wxString msg = wxString::Format(_("Replaced %d occurances of\n'%s' with '%s'\nin %d documents."),
-                       count, findString.c_str(), replaceString.c_str(), pages);
+                       count, findString.wx_str(), replaceString.wx_str(), pages);
 
         wxMessageBox( msg, _("Finished replacing"),
                       wxOK|wxICON_INFORMATION|wxSTAY_ON_TOP,

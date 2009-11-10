@@ -568,7 +568,7 @@ void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
         wxString s = editor->GetLineText(line_n);
         size_t n, len = s.Length();
 
-        //wxPrintf(wxT("%d %d '%s'\n"), line_n, len, s.c_str());
+        //wxPrintf(wxT("%d %d '%s'\n"), line_n, len, s.wx_str());
 
         for ( n = edge_col-1; n >= 0; n--)
         {
@@ -576,7 +576,7 @@ void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
             {
                 wxString keep = s.Mid(0, n);
                 wxString split = s.Mid(n+1, len-1);
-                //wxPrintf(wxT("'%s' '%s'\n"), keep.c_str(), split.c_str());
+                //wxPrintf(wxT("'%s' '%s'\n"), keep.wx_str(), split.wx_str());
                 editor->SetLineText(line_n, keep);
                 editor->MarkerAdd(line_n, STE_MARKER_BOOKMARK);
 
@@ -1040,7 +1040,7 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
     int pos = PositionFromLine(line);
     int line_len = inc_newline ? GetLine(line).Length() : GetLineEndPosition(line) - pos;
 
-    //wxPrintf(wxT("SetLineText l %d lc %d added %d len %d end %d '%s'\n"), line, line_count, line-line_count, GetLine(line).Length() , GetLineEndPosition(line)-pos, text.c_str()); fflush(stdout);
+    //wxPrintf(wxT("SetLineText l %d lc %d added %d len %d end %d '%s'\n"), line, line_count, line-line_count, GetLine(line).Length() , GetLineEndPosition(line)-pos, text.wx_str()); fflush(stdout);
 
     int target_start = GetTargetStart();
     int target_end   = GetTargetEnd();
@@ -1510,7 +1510,7 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
             if ((col < num_cols - 1) && (match_len < 1+maxLenArray[col]))
                 newLine += wxString(wxT(' '), 1+maxLenArray[col]-match_len);
 
-            //wxPrintf(wxT("'%s' '%s'\n"), lineText.c_str(), newLine.c_str()); fflush(stdout);
+            //wxPrintf(wxT("'%s' '%s'\n"), lineText.wx_str(), newLine.wx_str()); fflush(stdout);
         }
 
         SetLineText(line, newLine, false);
@@ -1993,7 +1993,7 @@ bool wxSTEditor::StartAutoComplete() {
         wxString root = line.Mid(startword, current - startword);
 
         if (!root.IsEmpty()) {
-                //wxString words; //= apis.GetNearestWords(root.c_str(), root.length(),
+                //wxString words; //= apis.GetNearestWords(root.wx_str(), root.length(),
                                   //  autoCompleteIgnoreCase, calltipParametersStart[0]);
                 wxString words = GetAutoCompleteKeyWords(root);
                 if (!words.IsEmpty()) {
@@ -2046,7 +2046,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
 
         int doclen = GetLength();
         //TextToFind ft = {{0, 0}, 0, {0, 0}};
-        //ft.lpstrText = const_cast<char*>(root.c_str());
+        //ft.lpstrText = const_cast<char*>(root.wx_str());
         //ft.chrg.cpMin = 0;
         //ft.chrg.cpMax = doclen;
         //ft.chrgText.cpMin = 0;
@@ -2082,7 +2082,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                 while ((wordend < wordstart_len) && iswordcharforsel(wordstart[wordend]))
                         wordend++;
                 wordstart = wordstart.Mid(0, wordend);
-                //wxPrintf(wxT("%d %d '%s'\n"), posFind, wordstart.Find(wxT("current")), wordstart.c_str());
+                //wxPrintf(wxT("%d %d '%s'\n"), posFind, wordstart.Find(wxT("current")), wordstart.wx_str());
                 unsigned int wordlen = wordstart.length();
                 if (wordlen > root.length()) {
                         if (wordsNear.Index(wordstart) == wxNOT_FOUND) {   // add a new entry
@@ -3186,7 +3186,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
                     wxString str;
                     str += wxString::Format(wxT("%ld@%d,%d|%s (%4d) "),
                             (long)this, startPositions[n], endPositions[n],
-                            name.c_str(), line+1);
+                            name.wx_str(), line+1);
                     str += GetLine(line);
                     findAllStrings->Add(str);
                 }
@@ -3250,7 +3250,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         }
 
         wxString msg = wxString::Format(_("Replaced %d occurances of\n'%s' with '%s'."),
-                             count, findString.c_str(), replaceString.c_str());
+                             count, findString.wx_str(), replaceString.wx_str());
 
         wxWindow* parent = wxDynamicCast(event.GetEventObject(), wxWindow);
         wxMessageBox( msg, _("Finished replacing"),
@@ -3856,7 +3856,7 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
 {
     STE_INITRETURNVAL(false)
 
-    //wxPrintf(wxT("Send event %d, %d %ld '%s'\n"), long(eventType), evt_int, extra_long, evtStr.c_str());
+    //wxPrintf(wxT("Send event %d, %d %ld '%s'\n"), long(eventType), evt_int, extra_long, evtStr.wx_str());
 
     if ((eventType == wxEVT_STE_STATE_CHANGED) ||
         (eventType == wxEVT_STE_SET_FOCUS) ||

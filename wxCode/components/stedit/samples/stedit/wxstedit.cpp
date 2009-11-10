@@ -179,7 +179,7 @@ bool wxStEditApp::OnInit()
         wxArrayString a = parser.ConvertStringToArgs(argv[k]);
         for (int n=0; n < a.GetCount(); n++)
         {
-            wxPrintf(wxT("Arg %d #%d '%s'\n"), k, n, a[n].c_str()); fflush(stdout);
+            wxPrintf(wxT("Arg %d #%d '%s'\n"), k, n, a[n].wx_str()); fflush(stdout);
         }
     }
 */
@@ -333,7 +333,7 @@ bool wxStEditApp::OnInit()
         {
             wxFileName fN(fileNames[n]);
             fN.MakeAbsolute();
-            //wxPrintf(wxT("Loading file '%s' to '%s'\n"), fileNames[n].c_str(), fN.GetFullPath().c_str()); fflush(stdout);
+            //wxPrintf(wxT("Loading file '%s' to '%s'\n"), fileNames[n].wx_str(), fN.GetFullPath().wx_str()); fflush(stdout);
             wxDir::GetAllFiles(fN.GetPath(), &recurseFileNames, fN.GetFullName());
 
             // if they did wxstedit /r c:\*.* stop the insanity...
@@ -347,7 +347,7 @@ bool wxStEditApp::OnInit()
         }
 
         //for (n=0; n < recurseFileNames.GetCount(); n++)
-        //  { wxPrintf(wxT("Loading file '%s'\n"), recurseFileNames[n].c_str()); fflush(stdout); }
+        //  { wxPrintf(wxT("Loading file '%s'\n"), recurseFileNames[n].wx_str()); fflush(stdout); }
 
         fileNames = recurseFileNames; // these are really the files to open
     }
