@@ -90,7 +90,7 @@ wxSTEditorFrame::~wxSTEditorFrame()
         GetOptions().SetStatusBar(NULL);
 
     // This stuff always gets saved when the frame closes
-    wxConfigBase *config = wxConfigBase::Get(false);
+    wxConfigBase *config = GetConfigBase();
     if (config && GetOptions().HasConfigOption(STE_CONFIG_FILEHISTORY))
         GetOptions().SaveFileConfig(*config);
 
@@ -124,7 +124,7 @@ void wxSTEditorFrame::SetSendSTEEvents(bool send)
 void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 {
     m_options = options;
-    wxConfigBase *config = wxConfigBase::Get(false);
+    wxConfigBase *config = GetConfigBase();
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
 
     if (steMM && GetOptions().HasFrameOption(STF_CREATE_MENUBAR))
@@ -615,7 +615,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
         case ID_STE_SAVE_PREFERENCES :
         {
             // we save everything the children do and more
-            wxConfigBase *config = wxConfigBase::Get(false);
+            wxConfigBase *config = GetConfigBase();
             if (config)
             {
                 SaveConfig(*config, GetOptions().GetConfigPath(STE_OPTION_CFGPATH_FRAME));
@@ -973,3 +973,7 @@ void wxSTETreeCtrlHelper::SortChildren(const wxTreeItemId& item_)
     }
 }
 
+wxConfigBase* wxSTEditorFrame::GetConfigBase() 
+{
+   return wxConfigBase::Get(false);
+}

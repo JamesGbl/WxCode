@@ -155,6 +155,8 @@ public:
 
     void OnClose(wxCloseEvent &event);
 
+    virtual wxConfigBase* GetConfigBase();
+
 protected:
     wxSTEditorOptions m_options;
     wxString m_titleBase;
