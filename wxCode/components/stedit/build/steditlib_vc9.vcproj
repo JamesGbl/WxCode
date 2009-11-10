@@ -333,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\precomp.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\wx\stedit\setup.h"
 				>
 			</File>

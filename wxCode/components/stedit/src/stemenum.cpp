@@ -274,24 +274,24 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
 wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 {
     wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    if (!menu) menu = new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_NEW))
     {
-        menu->Append(MenuItem(menu, wxID_NEW, _("&New...\tCtrl-N"), _("Clear contents and start a new file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_NEW)));
+        menu->Append(MenuItem(menu, wxID_NEW, wxEmptyString, _("Clear contents and start a new file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_NEW)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_OPEN))
     {
-        menu->Append(MenuItem(menu, wxID_OPEN, _("&Open...\tCtrl-O"), _("Open file..."), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_OPEN)));
+        menu->Append(MenuItem(menu, wxID_OPEN, wxEmptyString, _("Open file..."), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_OPEN)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_CLOSE) && HasMenuOptionType(STE_MENU_FRAME))
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(ID_STN_CLOSE_PAGE, _("&Close current page\tCtrl-Shift-Q"), _("Close current page"));
+        menu->Append(ID_STN_CLOSE_PAGE, _("&Close current page\tCtrl-W"), _("Close current page"));
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
             menu->Append(ID_STN_CLOSE_ALL, _("Cl&ose all pages..."), _("Close all pages"));
 
@@ -301,7 +301,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_SAVE,   _("&Save \tCtrl-S"), _("Save current file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVE)));
+        menu->Append(MenuItem(menu, wxID_SAVE,   wxEmptyString, _("Save current file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVE)));
         menu->Enable(wxID_SAVE, false);
         menu->Append(MenuItem(menu, wxID_SAVEAS, _("Save &As...\tAlt-S"), _("Save as file..."), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVEAS)));
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
@@ -322,7 +322,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(ID_STE_PROPERTIES, _("Document propert&ies..."), _("Show document properties dialog"));
+        menu->Append(ID_STE_PROPERTIES, _("Document propert&ies...\tAlt-Enter"), _("Show document properties dialog"));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_PRINT))
@@ -360,14 +360,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_CUTCOPYPASTE))
     {
         if (!HasMenuOptionType(STE_MENU_READONLY))
-            menu->Append(MenuItem(menu, wxID_CUT,   _("Cu&t   \tCtrl-X"), _("Cut selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CUT)));
-        menu->Append(MenuItem(menu, wxID_COPY,  _("&Copy  \tCtrl-C"), _("Copy selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_COPY)));
+            menu->Append(MenuItem(menu, wxID_CUT,   wxEmptyString, _("Cut selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CUT)));
+        menu->Append(MenuItem(menu, wxID_COPY,  wxEmptyString, _("Copy selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_COPY)));
 #ifdef __UNIX__
         menu->Append(ID_STE_COPY_PRIMARY,  _("Copy primary\tCtrl-Shift-C"), _("Copy selected text to primary clipboard"));
 #endif // __UNIX__
         if (!HasMenuOptionType(STE_MENU_READONLY))
         {
-            menu->Append(MenuItem(menu, wxID_PASTE, _("&Paste \tCtrl-V"), _("Paste text from clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PASTE)));
+            menu->Append(MenuItem(menu, wxID_PASTE, wxEmptyString, _("Paste text from clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PASTE)));
             menu->Append(ID_STE_PASTE_RECT, _("Paste &Rect\tAlt-Shift-V"), _("Paste rectangular text from clipboard (select with Shift+Alt)"));
         }
 
@@ -384,15 +384,15 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         wxMenu *m = new wxMenu();
         // FIXME - these aren't Ctrl-L since the stc handles the keys already (works everywhere?)
         if (!HasMenuOptionType(STE_MENU_READONLY))
-            m->Append(ID_STE_LINE_CUT,   _("Line Cu&t \tCtrl-L"), _("Cut current line to clipboard"));
+            m->Append(ID_STE_LINE_CUT,   _("Line Cu&t\tCtrl-L"), _("Cut current line to clipboard"));
 
-        m->Append(ID_STE_LINE_COPY,  _("Line &Copy  \tCtrl-Shift-T"), _("Copy current line to clipboard"));
+        m->Append(ID_STE_LINE_COPY,  _("Line &Copy\tCtrl-Shift-T"), _("Copy current line to clipboard"));
 
         if (!HasMenuOptionType(STE_MENU_READONLY))
         {
-            m->Append(ID_STE_LINE_DELETE, _("Line &Delete \tCtrl-Shift-L"), _("Delete current line"));
-            m->Append(ID_STE_LINE_TRANSPOSE, _("Line &Transpose \tCtrl-T"), _("Transpose current line upwards"));
-            m->Append(ID_STE_LINE_DUPLICATE, _("Line D&uplicate \tCtrl-D"), _("Duplicate current line"));
+            m->Append(ID_STE_LINE_DELETE, _("Line &Delete\tCtrl-Shift-L"), _("Delete current line"));
+            m->Append(ID_STE_LINE_TRANSPOSE, _("Line &Transpose\tCtrl-T"), _("Transpose current line upwards"));
+            m->Append(ID_STE_LINE_DUPLICATE, _("Line D&uplicate\tCtrl-D"), _("Duplicate current line"));
         }
 
         menu->Append(ID_STE_MENU_LINE, _("L&ine Editing"), m);
@@ -402,7 +402,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_FIND,        _("&Find...\tCtrl-F"), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
+        menu->Append(MenuItem(menu, wxID_FIND,        wxEmptyString, _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
         menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next\tF3"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
         menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward\tF2"), _("Search forward/reverse in document"));
         if (!HasMenuOptionType(STE_MENU_READONLY))
@@ -420,8 +420,8 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_UNDO, _("&Undo \tCtrl-Z"), _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
-        menu->Append(MenuItem(menu, wxID_REDO, _("&Redo \tCtrl-Y"), _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
+        menu->Append(MenuItem(menu, wxID_UNDO, _("&Undo\tCtrl-Z"), _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
+        menu->Append(MenuItem(menu, wxID_REDO, _("&Redo\tCtrl-Y"), _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY) && !HasMenuOptionType(STE_MENU_READONLY))
