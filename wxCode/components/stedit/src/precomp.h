@@ -7,3 +7,4 @@
 #include "wx/config.h"
 #include "wx/filename.h"
 #include "wx/stockitem.h"
+#include "wx/docview.h"

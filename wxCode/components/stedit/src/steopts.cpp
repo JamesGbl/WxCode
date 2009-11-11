@@ -14,8 +14,6 @@
 #include "wx/stedit/steopts.h"
 #include "wx/stedit/stedit.h"
 
-#include "wx/docview.h"   // wxFileHistory
-
 //-----------------------------------------------------------------------------
 // wxSTEditorOptions
 //-----------------------------------------------------------------------------

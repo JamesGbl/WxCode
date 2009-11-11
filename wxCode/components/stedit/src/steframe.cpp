@@ -14,8 +14,6 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 
-#include "wx/docview.h"   // wxFileHistory
-
 #include "../art/pencil16.xpm"
 #include "../art/pencil32.xpm"
 
