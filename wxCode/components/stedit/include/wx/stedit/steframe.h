@@ -61,16 +61,16 @@ class WXDLLIMPEXP_FWD_CORE wxTreeEvent;
 //                   ^
 //              SideSplitter
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxDocParentFrame
+class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxFrame
 {
 public:
-    wxSTEditorFrame() : wxDocParentFrame() { Init(); }
+    wxSTEditorFrame() : wxFrame() { Init(); }
     wxSTEditorFrame(wxWindow *parent, wxWindowID id,
                     const wxString& title = wxT(STE_APPDISPLAYNAME),
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxSize(400, 400),
                     long style = wxDEFAULT_FRAME_STYLE,
-                    const wxString& name = wxT("wxSTEditorFrame")) : wxDocParentFrame()
+                    const wxString& name = wxT("wxSTEditorFrame")) : wxFrame()
     {
         Init();
         Create(parent, id, title, pos, size, style, name);
