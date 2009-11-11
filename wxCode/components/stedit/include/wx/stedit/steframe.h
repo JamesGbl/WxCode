@@ -66,7 +66,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxFrame
 public:
     wxSTEditorFrame() : wxFrame() { Init(); }
     wxSTEditorFrame(wxWindow *parent, wxWindowID id,
-                    const wxString& title = wxT("wxStEdit"),
+                    const wxString& title = wxT(STE_APPDISPLAYNAME),
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxSize(400, 400),
                     long style = wxDEFAULT_FRAME_STYLE,
@@ -80,7 +80,7 @@ public:
     virtual bool Destroy();
 
     bool Create(wxWindow *parent, wxWindowID id,
-                const wxString& title = wxT("wxStEdit"),
+                const wxString& title = wxT(STE_APPDISPLAYNAME),
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
                 long style = wxDEFAULT_FRAME_STYLE,

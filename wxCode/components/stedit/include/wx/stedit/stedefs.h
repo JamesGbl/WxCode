@@ -37,7 +37,9 @@
 #define STE_MINOR_VERSION      2
 #define STE_RELEASE_VERSION    5
 #define STE_SUBRELEASE_VERSION 0
-#define STE_VERSION_STRING    wxT("wxStEdit 1.2.5")
+#define STE_APPNAME           "wxstedit"
+#define STE_APPDISPLAYNAME    "wxStEdit"
+#define STE_VERSION_STRING    wxT(STE_APPDISPLAYNAME)wxT(" 1.2.5")
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
