@@ -503,9 +503,10 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
             break;
         }
         case ID_TEST_STESHELL : CreateShell(); break;
-        default : break;
+        default:
+            event.Skip();
+            break;
     }
-    event.Skip();
 }
 
 void wxStEditApp::OnSTEShellEvent(wxSTEditorEvent& event)
