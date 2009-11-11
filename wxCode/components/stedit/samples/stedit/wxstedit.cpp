@@ -320,15 +320,15 @@ bool wxStEditApp::OnInit()
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
     m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent));
+                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
     m_frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent));
+                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
     // add menu item for testing the shell
     menu->AppendSeparator();
     menu->Append(ID_TEST_STESHELL, _("Test STE shell..."), _("Test the STE shell component"));
     m_frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent));
+                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
     m_frame->GetMenuBar()->Append(menu, wxT("&Help"));
 
@@ -454,7 +454,7 @@ void wxStEditApp::CreateShell()
     shell->EndWriteable();
 
     shell->Connect(wxID_ANY, wxEVT_STESHELL_ENTER,
-                   wxSTEditorEventHandler(wxStEditApp::OnSTEShellEvent));
+                   wxSTEditorEventHandler(wxStEditApp::OnSTEShellEvent), NULL, this);
 
     int width = shell->TextWidth(wxSTC_STYLE_DEFAULT,
                                  wxT(" SetMaxHistoryLines num : set the number of lines in history buffer  "));
@@ -468,15 +468,11 @@ void wxStEditApp::CreateShell()
 
 void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
 {
-    // note: use wxGetApp().CreateShell() and wxGetApp().m_frame because
-    //       we're called from a handler Connected from the frame to the
-    //       app and you'll crash otherwise.
-
     switch (event.GetId())
     {
         case ID_SHOW_HELP :
         {
-            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, 
+            wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
                wxString::Format(_("Help for %s"), wxT(STE_APPDISPLAYNAME)),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
@@ -492,7 +488,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         }
         case ID_SHOW_README :
         {
-            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, 
+            wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
                wxString::Format(_("Programming help for %s"), wxT(STE_APPDISPLAYNAME)),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
@@ -506,7 +502,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
 
             break;
         }
-        case ID_TEST_STESHELL : wxGetApp().CreateShell(); break;
+        case ID_TEST_STESHELL : CreateShell(); break;
         default : break;
     }
     event.Skip();
