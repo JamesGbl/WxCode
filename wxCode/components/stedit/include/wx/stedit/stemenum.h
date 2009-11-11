@@ -13,10 +13,10 @@
 
 #include "wx/stedit/stedefs.h"
 
-class WXDLLEXPORT wxMenu;
-class WXDLLEXPORT wxMenuBar;
-class WXDLLEXPORT wxMenuItem;
-class WXDLLEXPORT wxToolBar;
+class WXDLLIMPEXP_FWD_CORE wxMenu;
+class WXDLLIMPEXP_FWD_CORE wxMenuBar;
+class WXDLLIMPEXP_FWD_CORE wxMenuItem;
+class WXDLLIMPEXP_FWD_CORE wxToolBar;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - Menu creation for wxSTEditor and friends

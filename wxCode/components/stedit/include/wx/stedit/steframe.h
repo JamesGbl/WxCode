@@ -15,17 +15,17 @@
 #include "wx/dnd.h"
 #include "wx/treectrl.h"
 
-class WXDLLEXPORT wxFrame;
-class WXDLLEXPORT wxSplitterWindow;
-class WXDLLEXPORT wxNotebook;
-class WXDLLEXPORT wxNotebookEvent;
-class WXDLLEXPORT wxMenu;
-class WXDLLEXPORT wxKeyEvent;
-class WXDLLEXPORT wxToolBar;
-class WXDLLEXPORT wxConfigBase;
-class WXDLLEXPORT wxFileHistory;
-class WXDLLEXPORT wxTreeCtrl;
-class WXDLLEXPORT wxTreeEvent;
+class WXDLLIMPEXP_FWD_CORE wxFrame;
+class WXDLLIMPEXP_FWD_CORE wxSplitterWindow;
+class WXDLLIMPEXP_FWD_CORE wxNotebook;
+class WXDLLIMPEXP_FWD_CORE wxNotebookEvent;
+class WXDLLIMPEXP_FWD_CORE wxMenu;
+class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
+class WXDLLIMPEXP_FWD_CORE wxToolBar;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
+class WXDLLIMPEXP_FWD_CORE wxFileHistory;
+class WXDLLIMPEXP_FWD_CORE wxTreeCtrl;
+class WXDLLIMPEXP_FWD_CORE wxTreeEvent;
 
 #include "wx/stedit/stedefs.h"
 
@@ -61,16 +61,16 @@ class WXDLLEXPORT wxTreeEvent;
 //                   ^
 //              SideSplitter
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxFrame
+class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxDocParentFrame
 {
 public:
-    wxSTEditorFrame() : wxFrame() { Init(); }
+    wxSTEditorFrame() : wxDocParentFrame() { Init(); }
     wxSTEditorFrame(wxWindow *parent, wxWindowID id,
                     const wxString& title = wxT(STE_APPDISPLAYNAME),
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxSize(400, 400),
                     long style = wxDEFAULT_FRAME_STYLE,
-                    const wxString& name = wxT("wxSTEditorFrame")) : wxFrame()
+                    const wxString& name = wxT("wxSTEditorFrame")) : wxDocParentFrame()
     {
         Init();
         Create(parent, id, title, pos, size, style, name);

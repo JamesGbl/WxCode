@@ -13,7 +13,7 @@
 
 #include "wx/stedit/stedefs.h"
 
-class WXDLLEXPORT wxConfigBase;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
 //----------------------------------------------------------------------------
 // wxSTEditorPrefBase - base for prefs/styles/langs, mangages editors

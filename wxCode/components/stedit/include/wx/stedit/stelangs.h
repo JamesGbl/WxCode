@@ -14,7 +14,7 @@
 #include "wx/stedit/stedefs.h"
 #include "wx/stedit/steprefs.h"
 
-class WXDLLEXPORT wxConfigBase;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
 #include "wx/stedit/pairarr.h"
 DECLARE_PAIRARRAY_INTKEY(wxString, wxArrayString, wxSTEPairArrayIntString, class WXDLLIMPEXP_STEDIT)

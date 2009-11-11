@@ -13,8 +13,8 @@
 
 #include "wx/stedit/stedefs.h"
 
-class WXDLLEXPORT wxFileHistory;
-class WXDLLEXPORT wxConfigBase;
+class WXDLLIMPEXP_FWD_CORE wxFileHistory;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
 //-----------------------------------------------------------------------------
 // Editor and window options for wxSTEditor and friends

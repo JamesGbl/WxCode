@@ -16,12 +16,13 @@
 #include "wx/fdrepdlg.h"
 #include "wx/treectrl.h"
 
-class WXDLLEXPORT wxMenu;
-class WXDLLEXPORT wxKeyEvent;
-class WXDLLEXPORT wxFindDialogEvent;
-class WXDLLEXPORT wxToolBar;
-class WXDLLEXPORT wxConfigBase;
-class WXDLLEXPORT wxFileHistory;
+class WXDLLIMPEXP_FWD_CORE wxMenu;
+class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
+class WXDLLIMPEXP_FWD_CORE wxFindDialogEvent;
+class WXDLLIMPEXP_FWD_CORE wxToolBar;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
+class WXDLLIMPEXP_FWD_CORE wxFileHistory;
+class WXDLLIMPEXP_FWD_CORE wxDocument;
 
 #include "wx/stedit/stedefs.h"
 #include "wx/stedit/steprefs.h"

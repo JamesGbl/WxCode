@@ -15,7 +15,7 @@
 
 #include "wx/stedit/stedefs.h"
 
-class WXDLLEXPORT wxConfigBase;
+class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
 //-----------------------------------------------------------------------------
 // Static functions for prepending strings to wxArrayString and wxComboBoxes

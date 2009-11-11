@@ -63,6 +63,11 @@
     #define WXDLLIMPEXP_STEDIT
     #define WXDLLIMPEXP_DATA_STEDIT(type) type
 #endif
+#if defined(__WINDOWS__) && defined(__GNUC__)
+    #define WXDLLIMPEXP_FWD_STEDIT
+#else
+    #define WXDLLIMPEXP_FWD_STEDIT WXDLLIMPEXP_STEDIT
+#endif
 
 //-----------------------------------------------------------------------------
 // Generic convenience defines

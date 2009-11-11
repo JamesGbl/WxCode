@@ -14,15 +14,15 @@
 #include "wx/stedit/stedefs.h"
 #include "wx/stedit/stedit.h"
 
-class WXDLLEXPORT wxComboBox;
-class WXDLLEXPORT wxSpinCtrl;
-class WXDLLEXPORT wxSpinEvent;
-class WXDLLEXPORT wxNotebook;
-class WXDLLEXPORT wxNotebookEvent;
-class WXDLLEXPORT wxListbook;
-class WXDLLEXPORT wxImageList;
+class WXDLLIMPEXP_FWD_CORE wxComboBox;
+class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
+class WXDLLIMPEXP_FWD_CORE wxSpinEvent;
+class WXDLLIMPEXP_FWD_CORE wxNotebook;
+class WXDLLIMPEXP_FWD_CORE wxNotebookEvent;
+class WXDLLIMPEXP_FWD_CORE wxListbook;
+class WXDLLIMPEXP_FWD_CORE wxImageList;
 
-class WXDLLIMPEXP_STEDIT wxSTEditorPrefDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefDialog;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData - data shared by multiple pages shown at once
