@@ -53,6 +53,8 @@
 #include "wx/filename.h"
 #include "wx/html/htmlwin.h"
 
+#include "../../src/wxext.h" // wxLocale_Init()
+
 #include "wxstedit_htm.hpp" // include docs
 #include "readme_htm.hpp"
 
@@ -104,12 +106,20 @@ public:
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
     wxSTEditorFrame* m_frame;
+    wxLocale m_locale;
 };
 
 IMPLEMENT_APP(wxStEditApp)
 
 bool wxStEditApp::OnInit()
 {
+    SetAppName(wxT(STE_APPNAME));
+#if (wxVERSION_NUMBER >= 2900)
+    SetAppDisplayName(wxT(STE_APPDISPLAYNAME));
+#endif
+    ::wxLocale_Init(&m_locale, wxT(STE_APPNAME));
+    //::wxLocale_Init(&m_locale, wxT(STE_APPNAME), wxLANGUAGE_GERMAN);
+
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically
     //  created and/or managed for you. For every window created the
@@ -244,7 +254,7 @@ bool wxStEditApp::OnInit()
                 // use the specified config file, if it's still set
                 if ( !configFile.IsEmpty() )
                 {
-                    wxFileConfig *config = new wxFileConfig(wxT("wxStEdit"), wxT("wxWidgets"),
+                    wxFileConfig *config = new wxFileConfig(wxT(STE_APPDISPLAYNAME), wxT("wxWidgets"),
                                                             configFile, wxEmptyString,
                                                             wxCONFIG_USE_RELATIVE_PATH);
                     wxConfigBase::Set((wxConfigBase*)config);
@@ -257,7 +267,7 @@ bool wxStEditApp::OnInit()
             else
             {
                 // Always use a wxFileConfig since I don't care for registry entries.
-                wxFileConfig *config = new wxFileConfig(wxT("wxStEdit"), wxT("wxWidgets"));
+                wxFileConfig *config = new wxFileConfig(wxT(STE_APPDISPLAYNAME), wxT("wxWidgets"));
                 wxConfigBase::Set((wxConfigBase*)config);
             }
 
@@ -305,8 +315,8 @@ bool wxStEditApp::OnInit()
 
     menu->Append(wxID_ABOUT, _("&About..."), _("About this program"));
     // Add our help dialogs
-    menu->Append(ID_SHOW_HELP, _("Help..."), _("Show help on using wxStEdit"));
-    menu->Append(ID_SHOW_README, _("Programming help..."), _("Show help on the wxStEdit library"));
+    menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), wxT(STE_APPDISPLAYNAME)));
+    menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), wxT(STE_APPDISPLAYNAME)));
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
     m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
@@ -466,7 +476,9 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
     {
         case ID_SHOW_HELP :
         {
-            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, _("Help for wxStEdit"), wxDefaultPosition, wxSize(600,400));
+            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, 
+               wxString::Format(_("Help for %s"), wxT(STE_APPDISPLAYNAME)),
+               wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
             if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm)))
             {
@@ -480,7 +492,9 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         }
         case ID_SHOW_README :
         {
-            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, _("Programming help for wxStEdit"), wxDefaultPosition, wxSize(600,400));
+            wxFrame *helpFrame = new wxFrame(wxGetApp().m_frame, wxID_ANY, 
+               wxString::Format(_("Programming help for %s"), wxT(STE_APPDISPLAYNAME)),
+               wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
             if (htmlWin->SetPage(::stc2wx((const char*)readme_htm)))
             {
