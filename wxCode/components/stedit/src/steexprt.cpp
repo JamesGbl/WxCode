@@ -1495,7 +1495,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxString& saveName) {
     //WindowAccessor acc(wEditor.GetID(), props);
     bool styleIsUsed[STYLE_MAX + 1];
 
-    int titleFullPath = 0;                  //props.GetInt("export.tex.title.fullpath", 0);
+    //int titleFullPath = 0;                  //props.GetInt("export.tex.title.fullpath", 0);
 
     int i;
     for (i = 0; i <= STYLE_MAX; i++) {
