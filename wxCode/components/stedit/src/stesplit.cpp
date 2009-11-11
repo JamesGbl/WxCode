@@ -470,8 +470,11 @@ void wxSTEditorSplitter::OnScroll(wxScrollEvent& event)
 
     // pass our scrollbar events to the editor
     if (GetEditor1() &&
-        (event.GetEventObject() == m_hScrollBar) ||
-        (event.GetEventObject() == m_vScrollBar))
+        (
+          (event.GetEventObject() == m_hScrollBar) ||
+          (event.GetEventObject() == m_vScrollBar)
+        )
+       )
     {
         GetEditor1()->GetEventHandler()->ProcessEvent(event);
     }
