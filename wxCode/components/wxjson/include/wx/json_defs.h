@@ -196,6 +196,17 @@
 #endif
 
 
+//
+// force use of STL-style implementation of wxHashMap container
+// this is needed for compiling on MinGW
+// wxJSON_USE_MINGW
+
+
+
+
+
+
+
 #endif // _WX_JSON_DEFS_H_
 
 

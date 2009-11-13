@@ -37,8 +37,17 @@
 // forward declarations
 class WXDLLIMPEXP_JSON wxJSONReader;
 class WXDLLIMPEXP_JSON wxJSONRefData;
-class WXDLLIMPEXP_JSON wxJSONInternalMap;
-class WXDLLIMPEXP_JSON wxJSONInternalArray;
+
+#if defined( wxJSON_USE_MINGW )
+	// if compiling on MinGW we use the STL-style declaration of wxWidget's
+	// container classes 
+	class WXDLLIMPEXP_JSON wxJSONValue;
+	WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
+	WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+#else
+	class WXDLLIMPEXP_JSON wxJSONInternalMap;
+	class WXDLLIMPEXP_JSON wxJSONInternalArray;
+#endif
 
 
 //! The type of the value held by the wxJSONRefData class
@@ -272,6 +281,14 @@ protected:
 };
 
 
+#if !defined( wxJSON_USE_MINGW )
+	// if using wxWidget's implementation of container classes we declare	
+	// the OBJARRAY are HASH_MAP _after_ the wxJSONValue is fully known
+	WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
+	WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+#endif
+
+
 /***********************************************************************
 
 			class wxJSONRefData
@@ -279,9 +296,6 @@ protected:
 ***********************************************************************/
 
 
-
-WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
-WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
 
 
 //! The actual value held by the wxJSONValue class (internal use)

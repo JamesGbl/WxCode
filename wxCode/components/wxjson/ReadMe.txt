@@ -56,7 +56,7 @@
        IsSameAs() function (see docs for more details)
 
  0.2.3 bug fix release: the library did not compile in UNICODE mode because
-       same string constants were not enclosed in the _T() macro.
+       some string constants were not enclosed in the _T() macro.
        In this release the compile problems were fixed and the library and
        the test application do compile but they do not work properly in the
        JSON parser and writer when compiled in UNICODE mode.
@@ -113,7 +113,8 @@
  1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
  	(r 960)	fixed the bug - see the Bug Tracker on sf.net
  	
- 1.1 this release is a rewriting of the wxJSONReader and wxJSONWriter class which now 
+ 	
+ 1.1.0 this release is a rewriting of the wxJSONReader and wxJSONWriter class which now 
  	process JSON text input / output only in UTF-8 format. If I/O is from / to
  	wxString objects, the reader and the writer convert the string object to a
  	temporary UTF-8 memory-input/output-stream for processing

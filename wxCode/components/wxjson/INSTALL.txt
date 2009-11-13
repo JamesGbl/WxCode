@@ -43,6 +43,16 @@ After you have copied or moved the file, type:
 
 > test.exe
 
+Installation - MinGW system
+---------------------------
+The library does not compile on MingGW because the wxHashMap class's
+implementation has an issue when using forward declarations.
+To know the details of this failure see bug ID: 2807075.
+In order to compile on this system you have to uncomment the following
+line in the 'include/wx/json_defs,h' header file:
+
+wxJSON_USE_MINGW
+
 
 Installation - unix
 -------------------
@@ -74,6 +84,9 @@ the 'last resort'.
 In the top level directory of the wxJSON distribution you will find the
 'makefile.unx' file which was edited by hand and extensively commented.
 You have to edit this file in order to meet your system.
+Do not edit 'makefile28.unx' and 'makefile29.unx' because these files are
+specific for the author's system: the first compiles against wxWidgets 2.8
+and the second against wxWidgets 2.9
 
 
 Installation - checked-out sources
