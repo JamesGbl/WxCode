@@ -134,26 +134,16 @@ void wxSTEditor::Init()
 wxSTEditor::wxSTEditor( wxWindow *parent, wxWindowID id,
                         const wxPoint& pos, const wxSize& size,
                         long style, const wxString &name )
-#if !wxCHECK_VERSION(2,5,0)
-                 : wxStyledTextCtrl( parent, id, pos, size, style, STE_INITNAME )
-#endif // wxCHECK_VERSION(2,5,0)
 {
     Init();
     Create(parent, id, pos, size, style, name);
 }
 
-#if wxCHECK_VERSION(2,5,0)
 bool wxSTEditor::Create( wxWindow *parent, wxWindowID id,
                          const wxPoint& pos, const wxSize& size,
                          long style, const wxString& name )
 {
     wxStyledTextCtrl::Create(parent, id, pos, size, style, name);
-#else
-bool wxSTEditor::Create( wxWindow *WXUNUSED(parent), wxWindowID WXUNUSED(id),
-                         const wxPoint& WXUNUSED(pos), const wxSize& size,
-                         long WXUNUSED(style), const wxString& name )
-{
-#endif // wxCHECK_VERSION(2,5,0)
 
     if ((size.x > 0) && (size.y > 0))
         SetInitialSize(size);
@@ -1564,12 +1554,6 @@ bool wxSTEditor::ShowSetZoomDialog()
                                wxEmptyString,
                                _("Change text font size"),
                                GetZoom(), -10, 20, wxDefaultPosition);
-#if !wxCHECK_VERSION(2,5,0)
-    // fix the spinctrl value since src/generic/numdlgg.cpp in 2.4 uses "%lu"
-    if (GetZoom() < 0)
-        numDlg.m_spinctrl->SetValue(GetZoom());
-#endif // wxCHECK_VERSION(2,5,0)
-
     if (numDlg.ShowModal() == wxID_CANCEL)
         return false;
 
@@ -3569,27 +3553,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
         return false;
     }
 
-#if wxCHECK_VERSION(2,5,0)
     wxPreviewFrame *frame = new wxPreviewFrame(preview, this, _("Print Preview"));
-#else
-    // The wxPreviewFrame wants a wxFrame as a parent in 2.4.x
-    wxFrame *previewParent = NULL;
-    wxWindow *parent = GetParent();
-
-    while (parent)
-    {
-        if (wxDynamicCast(parent, wxFrame) != NULL)
-        {
-            previewParent = wxDynamicCast(parent, wxFrame);
-            break;
-        }
-
-        if (parent->IsTopLevel()) break;
-        parent = parent->GetParent();
-    }
-
-    wxPreviewFrame *frame = new wxPreviewFrame(preview, previewParent, _("Print Preview"));
-#endif // wxCHECK_VERSION(2,5,0)
 
     wxRect rect = wxGetClientDisplayRect();
     rect.Intersect(wxRect(rect.x, rect.y, 600, 700));
@@ -3613,10 +3577,6 @@ bool wxSTEditor::ShowPrintSetupDialog()
 
     wxPrintDialogData printDialogData(*printData);
     wxPrintDialog printerDialog(this, &printDialogData);
-
-#if !wxCHECK_VERSION(2,7,0)
-    printerDialog.GetPrintDialogData().SetSetupDialog(true);
-#endif //!wxCHECK_VERSION(2,7,0)
 
     int ret = printerDialog.ShowModal();
 

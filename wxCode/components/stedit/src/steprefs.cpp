@@ -173,11 +173,7 @@ void wxSTEditorPrefs::Init()
     AddInitPref(wxT("Two Phase Draw"),      0, STE_PREF_FLAG_BOOL);
     // DO NOT USE page cache in wxWidgets < 2.5.4, leads to a crash eventually Need Scintilla 1.61
     AddInitPref(wxT("Layout Cache"),
-#if wxCHECK_VERSION(2, 5, 4)
                                             wxSTC_CACHE_PAGE, STE_PREF_FLAG_INT);
-#else
-                                            wxSTC_CACHE_NONE, STE_PREF_FLAG_INT);
-#endif // wxCHECK_VERSION(2, 5, 4)
     AddInitPref(wxT("Use Antialiasing"),    1,                STE_PREF_FLAG_BOOL);
 
     AddInitPref(wxT("Save Remove Trailing Whitespace"), 0,    STE_PREF_FLAG_BOOL);

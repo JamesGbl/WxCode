@@ -142,9 +142,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditor : public wxStyledTextCtrl
 public :
 
     // wxStyledTextCtrl doesn't have Create method in 2.4.x
-#if wxCHECK_VERSION(2,5,0)
     wxSTEditor() : wxStyledTextCtrl() { Init(); }
-#endif // wxCHECK_VERSION(2,5,0)
 
     wxSTEditor(wxWindow *parent, wxWindowID id,
                const wxPoint& pos = wxDefaultPosition,

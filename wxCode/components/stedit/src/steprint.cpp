@@ -31,11 +31,7 @@ public:
     wxSTEditorModule() : wxModule() {}
     bool OnInit()
     {
-#if wxCHECK_VERSION(2,7,2)
         wxArtProvider::Push(new wxSTEditorArtProvider);
-#else
-        wxArtProvider::PushProvider(new wxSTEditorArtProvider);
-#endif //wxCHECK_VERSION(2,7,2)
         return true;
     }
     void OnExit()

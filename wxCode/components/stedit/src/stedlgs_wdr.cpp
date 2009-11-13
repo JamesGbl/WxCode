@@ -37,11 +37,7 @@ wxSizer *wxSTEditorStyleSizer( wxWindow *parent, bool call_fit, bool set_sizer )
     item3->AddGrowableRow( 0 );
 
     wxNotebook *item5 = new wxNotebook( parent, ID_STEDLG_STYLE_NOTEBOOK, wxDefaultPosition, wxSize(200,160), 0 );
-#if !wxCHECK_VERSION(2,5,2)
-    wxNotebookSizer *item4 = new wxNotebookSizer( item5 );
-#else
     wxWindow *item4 = item5;
-#endif
 
     item3->Add( item4, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 
@@ -208,11 +204,7 @@ wxSizer *wxSTEditorLangSizer( wxWindow *parent, bool call_fit, bool set_sizer )
     item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxNotebook *item9 = new wxNotebook( parent, ID_STEDLG_LANG_NOTEBOOK, wxDefaultPosition, wxSize(200,160), 0 );
-#if !wxCHECK_VERSION(2,5,2)
-    wxNotebookSizer *item8 = new wxNotebookSizer( item9 );
-#else
     wxWindow *item8 = item9;
-#endif
 
     item1->Add( item8, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
 

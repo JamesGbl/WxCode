@@ -652,11 +652,7 @@ void wxSTEditorStyles::UpdateEditor( wxSTEditor *editor )
     if (HasStyle(STE_STYLE_CARET_COLOUR))
     {
         editor->SetCaretForeground(GetForegroundColour(STE_STYLE_CARET_COLOUR, true));
-#if wxCHECK_VERSION(2, 7, 1)
         editor->SetCaretLineBackground(GetBackgroundColour(STE_STYLE_CARET_COLOUR, true));
-#else
-        editor->SetCaretLineBack(GetBackgroundColour(STE_STYLE_CARET_COLOUR, true));
-#endif // wxCHECK_VERSION(2, 7, 1)
     }
 
     if (HasStyle(STE_STYLE_FOLD_COLOUR))

@@ -489,11 +489,7 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
     m_fontChoice->Clear();
     wxFontEnumerator fontEnum;
     fontEnum.EnumerateFacenames(wxFONTENCODING_SYSTEM, true);
-#if wxCHECK_VERSION(2, 7, 0)
     wxArrayString faceNames = fontEnum.GetFacenames();
-#else
-    wxArrayString faceNames = *fontEnum.GetFacenames();
-#endif // wxCHECK_VERSION(2, 7, 0)
 
     faceNames.Sort();
     count = faceNames.GetCount();
@@ -1450,12 +1446,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     wxFlexGridSizer *panelSizer = new wxFlexGridSizer(1);
     panelSizer->AddGrowableCol(0);
     panelSizer->AddGrowableRow(0);
-#if wxCHECK_VERSION(2,5,0)
     panelSizer->Add(m_noteBook, 0, wxEXPAND, 0);  // don't need notesizer for 2.5
-#else
-    wxNotebookSizer *noteSizer = new wxNotebookSizer(m_noteBook);
-    panelSizer->Add(noteSizer, 0, wxEXPAND, 0);
-#endif // wxCHECK_VERSION(2,5,0)
 
     panelSizer->Add(buttonpane, 0, wxEXPAND|wxTOP|wxLEFT|wxRIGHT|wxBOTTOM, 10);
 

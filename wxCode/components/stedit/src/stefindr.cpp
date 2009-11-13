@@ -42,23 +42,7 @@ void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox
     if (pos != wxNOT_FOUND)
         combo->Delete(pos);
 
-#if wxCHECK_VERSION(2,5,0)
     combo->Insert(str, 0);
-#else
-    // note: can use SetString in MSW, but not in GTK
-    int n, count = combo->GetCount();
-    wxArrayString strings;
-    strings.Alloc(count);
-    for (n = 0; n < count; n++)
-        strings.Add(combo->GetString(n));
-
-    combo->Clear();
-    combo->Append(str); // put new string first
-
-    for (n = 0; n < count; n++)
-        combo->Append(strings[n]);
-#endif
-
     combo->SetSelection(0);
 
     if (max_strings > 0)
@@ -198,10 +182,6 @@ void wxSTEditorFindReplacePanel::Init()
 
     m_resultEditor      = NULL;
 }
-
-#if !wxCHECK_VERSION(2, 5, 0)
-typedef wxList wxSizerItemList;
-#endif
 
 wxSizer *FindSizerSizer(wxSizer *sizer, wxSizer *topSizer)
 {

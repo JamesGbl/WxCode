@@ -15,9 +15,6 @@
 #include "wx/defs.h"
 #include "wx/dlimpexp.h"
 
-// Include backward compatibility macros to allow this to work with wx2.4
-//    This is no longer tested, 2/13/2007
-#include "wx/stedit/wx24defs.h"
 // Include wxStyledTextCtrl
 #include "wx/stc/stc.h"
 
@@ -904,7 +901,6 @@ enum STE_LangTypes
     STE_LANG_PS,           // 42
     STE_LANG_NSIS,         // 43
     STE_LANG_MMIXAL,       // 44
-#if wxCHECK_VERSION(2,5,0)
     STE_LANG_CLW,          // 45
     STE_LANG_CLWNOCASE,    // 46
     STE_LANG_LOT,          // 47
@@ -925,7 +921,6 @@ enum STE_LangTypes
     STE_LANG_BASH,         // 62
     STE_LANG_ASN1,         // 63
     STE_LANG_VHDL,         // 64
-#endif // wxCHECK_VERSION(2,5,0)
     // Derived languages that use a lexer above, but have their own keywords
     STE_LANG_JAVA,         // 65
     STE_LANG_JAVASCRIPT,   // 66
