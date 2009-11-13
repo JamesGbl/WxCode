@@ -94,6 +94,10 @@ SOURCE=.\stedlgs.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\wxext.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\stedlgs_wdr.cpp
 # End Source File
 # Begin Source File
