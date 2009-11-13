@@ -6,6 +6,7 @@ Changelog:
 
 11/13/2009
   - Added branches/docview, branches/aui
+  - Removed pre-2.8 compatibility
 
 11/12/2009
   - Substantial i18n changes
