@@ -1,10 +1,8 @@
 ===============================================================================
 Changelog:
 
-11/xx/2009
-  - Bump version to 1.2.6
-
 11/13/2009
+  - Bump version to 1.2.6
   - Added branches/docview, branches/aui
   - Removed pre-2.8 compatibility
 
