@@ -1,6 +1,17 @@
 ===============================================================================
 Changelog:
 
+11/xx/2009
+  - Bump version to 1.2.6
+
+11/13/2009
+  - Added #ifdef STEDIT_DOCVIEW sections
+
+11/12/2009
+  - Substantial i18n changes
+  - Fix gcc+MinGW warnings
+  - wx2.9 compatibility
+
 1.2.5
   - Fix bug in GTK for not being able to click a button that you've just
     enabled without first capturing and releasing the mouse.
