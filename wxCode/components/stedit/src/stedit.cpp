@@ -89,7 +89,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxSTEditor, wxStyledTextCtrl)
 BEGIN_EVENT_TABLE(wxSTEditor, wxStyledTextCtrl)
     EVT_SET_FOCUS            (wxSTEditor::OnSetFocus)
 
-    EVT_RIGHT_UP             (wxSTEditor::OnRightUp)
+    EVT_CONTEXT_MENU         (wxSTEditor::OnContextMenu)
     EVT_KEY_DOWN             (wxSTEditor::OnKeyDown)
     //EVT_KEY_UP               (wxSTEditor::OnKeyUp)
     EVT_MOUSEWHEEL           (wxSTEditor::OnMouseWheel)
@@ -2483,14 +2483,16 @@ void wxSTEditor::ShowPropertiesDialog()
     dlg.ShowModal();
 }
 
-void wxSTEditor::OnRightUp(wxMouseEvent &event)
+void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
 {
     wxMenu* popupMenu = GetOptions().GetEditorPopupMenu();
     if (popupMenu)
     {
         UpdateItems(popupMenu);
         if (!SendEvent(wxEVT_STE_POPUPMENU, 0, GetState(), GetFileName()))
-            PopupMenu(popupMenu, event.GetPosition());
+        {
+            PopupMenu(popupMenu);
+        }
     }
     else
         event.Skip();

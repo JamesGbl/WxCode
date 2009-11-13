@@ -581,7 +581,7 @@ public :
     // implementation
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
-    void OnRightUp(wxMouseEvent &event); // popup menu if one is set in options
+    void OnContextMenu(wxContextMenuEvent&); // popup menu if one is set in options
 
     void OnMenu(wxCommandEvent &event);
     // handle menu events of known types, returns sucess, false for unknown id
