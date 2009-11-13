@@ -84,8 +84,6 @@ CheckResult( const wxMemoryOutputStream& jsonText, const char* result )
 	char* buffStart = (char*) osBuff->GetBufferStart();
 	size_t len = jsonText.GetLength();
 
-	TestCout( _T( "The JSON text output:\n"));
-	TestCout( osBuff );
 	TestCout( _T( "\nThe expected result:\n"));
 	TestCout( result );
 

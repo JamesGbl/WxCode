@@ -158,7 +158,7 @@ The solution I found is:
 
 \li when input is from a string object, the reader first convert the \b wxString 
 	JSON text input in a temporary UTF-8 memory buffer which is used to
-	construct as \b wxMemoryInputStream object
+	construct a \b wxMemoryInputStream object
 	
 \li when output is to be sent to a string object, the writer first construct
 	a temporary empty \b wxMemoryOutputStream which holds the JSON text output.
@@ -170,89 +170,66 @@ on streams and slower on strings because of the construction of the temporary UT
 memory buffers.
 	
 
-\subsection json_ver11_ansiread Issues in ANSI mode
+\subsection json_ver11_ansiread New feature in ANSI mode
 
-In versions up to 1.0 the \b wxJSON library gives you a limited Unicode support
-in AMSI mode when reading UTF-8 streams. 
-For example, suppose we have a UTF-8 file that contains the following text:
+The default behaviour of the \b wxJSON library in ANSI builds when reading from
+/ writing to streams is to use UTF-8 encoded text so that the writer produces
+valid JSON text and the reader gives some limited Unicode support (see
+\ref wxjson_tutorial_unicode_ansi for details).
 
-\code
-{
-  "us-ascii" : "abcABC",
-  "latin1"   : "àèì©®",
-  "greek"    : "αβγδ",
-  "cyrillic" : "ФХЦЧ"
-}
-\endcode
-
-We read the file in a wxWidgets application built in ANSI mode and localized
-in West Europa thus using the ISO-8859-1 (Latin1) character set.
-Because Latin1 charset does not have support for greek and cyrillic characters,
-the reader \b cannot store such values in the \c wxJSONValue object because
-it contains a \c wxString object which only uses one-byte locale dependent characters
-to be stored.
-
-In order to keep the original meaning of data, the \b wxJSON library converted
-each character that cannot be represented in the current locale into a \e unicode
-\e escaped \e sequence. Below you find a representation of the content of the \c wxJSONvalue
-when the file is read:
+In version 1.1 I introduced a new feature for ANSI builds: both the reader
+and the writer can be constructed with a special flag:
 
 \code
-{
-  "us-ascii" : "abcABC",
-  "latin1"   : "àèì©®",
-  "greek"    : "\u03B1\u03B2\u03B3\u03B4",
-  "cyrillic" : "\u0424\u0425\u0426\u0427"
-}
+  wxJSONREADER_NOUTF8_STREAM
+  wxJSONWRITER_NOUTF8_STREAM
 \endcode
 
-I thought that this would be an elegant solution for reading UTF-8 streams in
-ANSI mode and that data could be exchanged safely from ANSI to Unicode
-and viceversa but... there are some drawbacks in this solution:
+that suppress UTF-8 conversion:
 
-\li because of the use of only four hexadecimal digits, only Unicode 
-	characters in the first plane (the so-called BMP) can be represented;
+\li the writer produces ANSI JSON text which can be correctly read by the
+	application that wrote it provided that it is localized in the same locale
+\li the reader does not try to convert the JSON text input from UTF-8 because
+	it suppose that the text is stored in ANSI format.
 	
-\li writing the wxJSONValue back to its JSON text representation does not
-	revert to UTF-8 encoding: characters are written as \e unicode
-	\e escaped \e sequences but I am not sure that this is valid JSON text:
-	I think that only control chars should be represented in the form \b \\uXXXX.
-	
-\li in order to get the \e unicode \e escaped \e sequence of
-	unrepresentable chars, the \b wxJSON reader has to convert the string
-	char-by-char which is what I want to avoid in this new version because 
-	such conversion slows drastically things down.
+The advantage of this ANSI mode is speed: string's data is simply copied from
+the stream to \b wxString by the reader; JSON values containing string are simply
+copied from the \b wxString object to the stream by the writer.
 
-Because in the new organization the reader and the parser only process UTF-8
-streams, there is a problem when the string contains unrepresentable UTF-8
-characters. Note that this only happens in the parser class and when the
-JSON text input is actually from a stream: it does not happen if the processed
-stream is a temporary UTF-8 buffer obtained by converting the \b wxString 
-input text.
+Also note that this feature can be used also if the stream is in UTF-8 format.
+By suppressing UTF-8 conversion the reader copies all UTF-8 code units in the
+\b wxString object: naturally, the meaning of those code-units are misunderstood
+by the wxString object which treats them as locale dependent one-byte characters:
+the advantage is that writing them back in ANSI mode just preserve the
+UTF-8 encoding because each UTF-8 code-unit is simply \b copied to the stream.
+The drawback is that the UTF-8 stream read by the wxJSON reader may contain characters
+that \b can be represented in the current locale.
+If UTF-8 conversion is disabled in the reader, no conversion takes place.
 
-The solution suggested by Piotr Likus in his e-mail was pretty simple and
-very fast: who cares about internal encoding of \b wxString? When a double-quote
-character is encontered, just \b copy all the stream up to the next unescaped
-double-quote char; only process escaped sequences.
-The \b wxString object will, therefore, contain UTF-8 octets in ANY modes and platforms.
+For example: suppose that in a UTF-8 input stream there is the following string:
 
-Although this would be a very fast solution, one problem still remains: what if
-the stored strings have to be used / processed / displayed by the application?
-They surely need to be converted to the native internal encoding which is
-platform- and mode-dependant.
+\code
+  C3 A0 C3 A8 C3 AC C2 A9 C2 AE
+\endcode
 
-So, I decided to do the conversion in the wxJSON reader: string
-values are always stored in the native format so that they can be immediatly
-processed by the application: for speed purposes, the conversion is done
-for the whole string, in one step.
-In Unicode builds the conversion of the UTF-8 buffer always succeeds.
-In ANSI builds it may succeed or not. If the conversion fails then the
-UTF-8 buffer is copied to the \b wxString object.
+which has to following meaning (five characters, ten UTF-8 code-units)
 
-Note that this behaviour is different from version 1.0 which instead
-stores \e unicode \e escaped \e sequences.
-This is not a compaibility break but a bug fix for the reasons I wrote before
- 
+\code
+  àèì©®
+\endcode
+
+The character's meaning could be correcly interpreted in an ANSI application localized in
+a Latin-1 charset
+If UTF-8 conversion is not disabled, the wxJSON reader reads the five Latin-1 characters correctly.
+On the other hand, if UTF-8 conversion is disabled, the ten UTF-8 code-units are simply
+copied to the \b wxString object which contains 10 characters whose meaning (in ths ISO-8859-1
+charset) is the following:
+
+\code
+  Ã Ã¨Ã¬Â©Â®
+\endcode
+
+
 
 
 */

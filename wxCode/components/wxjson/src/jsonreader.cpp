@@ -207,6 +207,10 @@ static const wxChar* storeTraceMask = _T("StoreComment");
      assumes that comment lines apear \b before the value they
      refer to unless this constant is specified. In the latter case, 
      comments apear \b after the value they refer to.
+ \li wxJSONREADER_NOUTF8_STREAM: suppress UTF-8 conversion when reading a
+ 		string value from a stream: the reader assumes that the input stream
+ 		is encoded in ANSI format and not in UTF-8; only meaningfull in ANSI
+ 		builds, this flag is simply ignored in Unicode builds.
 
  You can also use the following shortcuts to specify some predefined
  flag's combinations:
@@ -234,6 +238,14 @@ wxJSONReader::wxJSONReader( int flags, int maxErrors )
 {
 	m_flags     = flags;
 	m_maxErrors = maxErrors;
+	m_noUtf8    = false;
+#if !defined( wxJSON_USE_UNICODE )
+	// in ANSI builds we can suppress UTF-8 conversion for both the writer and the reader
+	if ( m_flags & wxJSONREADER_NOUTF8_STREAM )	{
+		m_noUtf8 = true;
+	}
+#endif
+
 }
 
 //! Dtor - does nothing
@@ -282,7 +294,7 @@ wxJSONReader::~wxJSONReader()
  of the string itself.
  Next, the overloaded Parse function is called.
  
- @èaram doc	the JSON text that has to be parsed
+ @param doc	the JSON text that has to be parsed
  @param val	the wxJSONValue object that contains the parsed text; if NULL the
  		parser do not store anything but errors and warnings are reported
  @return the total number of errors encontered
@@ -290,13 +302,35 @@ wxJSONReader::~wxJSONReader()
 int
 wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )
 {
-	// convert the string to a UTF-8 memory stream and calls overloaded Parse()
-	wxCharBuffer cb = doc.ToUTF8();
-	const char* utf8Buff = cb.data();	// get the char data. release() can be used to get ownership
-	size_t len = strlen( utf8Buff );
-	wxMemoryInputStream is( utf8Buff, len );
+#if !defined( wxJSON_USE_UNICODE )
+	// in ANSI builds input from a string never use UTF-8 conversion
+	bool noUtf8_bak = m_noUtf8;		// save the current setting
+	m_noUtf8 = true;
+#endif
+
+	// convert the string to a UTF-8 / ANSI memory stream and calls overloaded Parse()
+	char* readBuff = 0;
+	wxCharBuffer utf8CB = doc.ToUTF8();		// the UTF-8 buffer
+#if !defined( wxJSON_USE_UNICODE )
+	wxCharBuffer ansiCB( doc.c_str());		// the ANSI buffer
+	if ( m_noUtf8 )	{
+		readBuff = ansiCB.data();
+	}
+	else	{
+		readBuff = utf8CB.data();
+	}
+#else
+		readBuff = utf8CB.data();
+#endif
+
+	// now construct the temporary memory input stream
+	size_t len = strlen( readBuff );
+	wxMemoryInputStream is( readBuff, len );
   
 	int numErr = Parse( is, val );
+#if !defined( wxJSON_USE_UNICODE )
+	m_noUtf8 = noUtf8_bak;
+#endif
 	return numErr;
 }
 
@@ -948,8 +982,8 @@ wxJSONReader::SkipComment( wxInputStream& is )
 	wxLogTrace( storeTraceMask, _T("(%s) start comment line=%d col=%d"),
 			 __PRETTY_FUNCTION__, m_lineNo, m_colNo );
 
-	// the temporary UTF-8 buffer that holds the comment string. This will be
-	// converted to a wxString object using wxString::FromUTF8()
+	// the temporary UTF-8/ANSI buffer that holds the comment string. This will be
+	// converted to a wxString object using wxString::FromUTF8() or From8BitData()
 	wxMemoryBuffer utf8Buff;
 	unsigned char c;
 	
@@ -1003,9 +1037,15 @@ wxJSONReader::SkipComment( wxInputStream& is )
 			utf8Buff.AppendByte( c );
 			ch = ReadChar( is );
 		}
-		// now convert the temporary UTF-8 buffer
-		m_comment = wxString::FromUTF8( (const char*) utf8Buff.GetData(),
+		// now convert the temporary buffer in a wxString object
+		if ( m_noUtf8 )	{
+			m_comment = wxString::From8BitData( (const char*) utf8Buff.GetData(),
 								utf8Buff.GetDataLen());
+		}
+		else	{
+			m_comment = wxString::FromUTF8( (const char*) utf8Buff.GetData(),
+								utf8Buff.GetDataLen());
+		} 
 	}
 
 	else  {   // it is not a comment, return the character next the first '/'
@@ -1138,37 +1178,42 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 	}
 
 	// now convert the temporary UTF-8 buffer to a wxString object in one step.
-	// first we check that the UTF-8 buffer is correct, i.e. it contains valid
-	// UTF-8 code points.
-	// this works in both ANSI and Unicode builds.
-	size_t convLen = wxConvUTF8.ToWChar( 0,		// wchar_t destination
-						0,	// size_t  destLenght 
-			(const char*) utf8Buff.GetData(),	// char_t  source
-				utf8Buff.GetDataLen());		// size_t  sourceLenght
-
+	// in ANSI builds chek if UTF-8 conversion is disabled
 	wxString s;
-	if ( convLen == wxCONV_FAILED )	{
-		AddError( _T( "String value: the UTF-8 stream is invalid"));
-		s.append( _T( "<UTF-8 stream not valid>"));
+	if ( m_noUtf8 )	{
+		s = wxString::From8BitData( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
 	}
 	else	{
+		// UTF-8 conversion is not disabled
+		// first we check that the UTF-8 buffer is correct, i.e. it contains valid
+		// UTF-8 code points.
+		// this works in both ANSI and Unicode builds.
+		size_t convLen = wxConvUTF8.ToWChar( 0,		// wchar_t destination
+						0,							// size_t  destLenght 
+			(const char*) utf8Buff.GetData(),		// char_t  source
+				utf8Buff.GetDataLen());				// size_t  sourceLenght
+
+		if ( convLen == wxCONV_FAILED )	{
+			AddError( _T( "String value: the UTF-8 stream is invalid"));
+			s.append( _T( "<UTF-8 stream not valid>"));
+		}
+		else	{
 #if defined( wxJSON_USE_UNICODE )
-		// in Unicode just convert to wxString
-		s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
+			// in Unicode just convert to wxString
+			s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
 #else
-		// in ANSI, the conversion may fail: an empty string is returned
-		// in this case, the UTF-8 buffer is copied to the wxString object
-	  	// This is incompatible with the old 1.0 behaviour which, instead,
-	  	// stored the unicode escape sequence of unrepresentable chars.
-	  	// This old behaviour is incorrect because it uses only 4 hex digits
-	  	// for representing unicode code-points thus only characters in the
-	  	// first plane (the BMP) were represented.
-		s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
-		if ( s.IsEmpty() )	{
-			s = wxString::From8BitData( (const char*) utf8Buff.GetData(),
-								utf8Buff.GetDataLen());
-		}		
+			// in ANSI, the conversion may fail and an empty string is returned
+			// in this case, the reader do a char-by-char conversion storing
+		  	// unicode escaped sequences of unrepresentable characters
+			s = wxString::FromUTF8( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
+			if ( s.IsEmpty() )	{
+				int r = ConvertCharByChar( s, utf8Buff );	// return number of escaped sequences
+				if ( r > 0 )	{
+					AddError( _T( "The string value contains unrepresentable Unicode characters"));
+				}
+			}
 #endif
+		}
  	}
 	wxLogTrace( traceMask, _T("(%s) line=%d col=%d"),
 			 __PRETTY_FUNCTION__, m_lineNo, m_colNo );
@@ -1711,6 +1756,69 @@ wxJSONReader::UTF8NumBytes( char ch )
 		num = 1;
 	}
 	return num;
+}
+
+//! Convert a UTF-8 memory buffer one char at a time
+/*!
+ This function is used in ANSI mode when input from a stream is in UTF-8
+ format and the UTF-8 buffer read cannot be converted to the locale 
+ wxString object.
+ The function performs a char-by-char conversion of the buffer and appends
+ every representable character to the string \c s.
+ Characters that cannot be represented are stored as \e unicode \e escaped
+ \e sequences in the form:
+ \code
+   \uXXXX
+ \endcode
+ where XXXX is a for-hex-digits Unicode code point.
+ The function returns the number of characters that cannot be represented
+ in the current locale.
+*/
+int
+wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
+{
+	size_t len  = utf8Buffer.GetDataLen();
+	char*  buff = (char*) utf8Buffer.GetData();
+	char* buffEnd = buff + len;
+	
+	int result = 0;
+	char temp[16];	// the UTF-8 code-point
+	
+	while ( 1 )	{
+		if ( buff >= buffEnd )	{
+			break;
+		}
+		temp[0] = *buff;	// the first UTF-8 code-unit
+		++buff;
+		// compute the number of code-untis that make one UTF-8 code-point
+		int numBytes = NumBytes( *buff );
+		for ( int i = 1; i < numBytes; i++ )	{
+			if ( buff >= buffEnd )	{
+				break;
+			}
+			temp[i] = *buff;	// the first UTF-8 code-unit
+			++buff;
+		}
+		if ( buff >= buffEnd )	{
+			break;
+		}
+		// now convert 'temp' to a wide-character
+		wchar_t dst[10];
+		size_t outLength = wxConvUTF8.ToWChar( dst, 10, temp, numBytes );
+
+		// now convert the wide char to a locale dependent character
+		len = wxConvLocal.FromWChar( temp, 16, dst, outLength );
+		if ( len == wxCONV_FAILED )	{
+			++result;
+			wxString t;
+			t.Printf( _T( "\\u%04X"), (int) dst[0] );
+			s.Append( t );
+		}
+		else	{
+			s.Append( temp[0], 1 );
+		}
+	}		// end while
+	return result;
 }
 
 

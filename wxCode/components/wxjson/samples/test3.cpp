@@ -51,7 +51,7 @@ CheckResult( const wxString& jsonText, const wxString& result )
 	TestCout( result );
 
 	TestCout( _T( "\nChecking the result:\n"));
-	size_t len = jsonText.length();
+	size_t len = result.length();
 	for ( size_t i = 0; i < len; i++ )  {
 		wxChar ch = jsonText.at( i );
 		wxChar ex = result.at( i );
@@ -478,6 +478,13 @@ int Test4_5()
 }
 
 // test control characters
+// BUG: this test fails. The expected result is:
+// [
+//    "\u0001\u0003\u0005"
+// ]
+// but it is not: an empty string is printed. This is because the NULL byte at
+// the beginning cause the strlen() function to return a ZERO length when the
+// string is converted to a wxCharBuffer (either UTF-8 or ANSI)
 int Test4_6()
 {
 	wxJSONValue root;

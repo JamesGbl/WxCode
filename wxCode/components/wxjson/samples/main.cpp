@@ -349,10 +349,10 @@ int main( int argc, char* argv[] )
 			_T( "testing the wxJSONWriter class with Unicode" )
 		},
 		{
-			Test6_1, 3, _T( "write to wxString an array of strings from different charsets" )
+			Test6_1, 1, _T( "write to wxString an array of strings from different charsets" )
 		},
 		{
-			Test6_2, 3, _T( "writing to stream an array of strings from different charsets" )
+			Test6_2, 1, _T( "writing to stream an array of strings from different charsets" )
 		},
 		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 		

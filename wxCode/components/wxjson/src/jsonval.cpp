@@ -652,7 +652,7 @@ wxJSONValue::IsUShort() const
 /*!
  This function returns TRUE if the stored value is of
  type signed LONG integer and the numeric value fits int a
- \B long \b int data type.
+ \b long \b int data type.
  In other words, the function returns TRUE if the \c wxJSONRefData::m_type 
  data member is of type \c wxJSONTYPE_INT and:
 
@@ -677,7 +677,7 @@ wxJSONValue::IsLong() const
 /*!
  This function returns TRUE if the stored value is of
  type unsigned LONG integer and the numeric value fits int a
- \b unsigned \B long \b int data type.
+ \b unsigned \b long \b int data type.
  In other words, the function returns TRUE if the \c wxJSONRefData::m_type 
  data member is of type \c wxJSONTYPE_UINT and:
 

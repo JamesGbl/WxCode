@@ -138,9 +138,12 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 		In order for this style to take effect, you also have to specify the 
 		wxJSONWRITER_STYLED flag.
 		This style produces strict JSON text.
-	\li wxSJONWRITER_NO_INDENTATION: this flag cause the JSON writer to not add
+	\li wxJSONWRITER_NO_INDENTATION: this flag cause the JSON writer to not add
 		indentation. It is ignored if wxJSONWRITER_STYLED is not set.
 		This style produces strict JSON text.
+	\li wxJSONWRITER_NOUTF8_STREAM: suppress UTF-8 conversion when writing string
+		values to the stream thus producing ANSI text output; only meaningfull in
+		ANSI builds, this flag is simply ignored in Unicode builds.
 
  Note that for the style wxJSONWRITER_NONE the JSON text output is a bit
  different from that of old 0.x versions although it is syntactically equal.
@@ -176,10 +179,18 @@ wxJSONWriter::wxJSONWriter( int style, int indent, int step )
 	m_indent = indent;
 	m_step   = step;
 	m_style  = style;
+	m_noUtf8 = false;
 	if ( m_style == wxJSONWRITER_NONE )  {
 		m_indent = 0;
 		m_step   = 0;
 	}
+	
+#if !defined( wxJSON_USE_UNICODE )
+	// in ANSI builds we can suppress UTF-8 conversion for both the writer and the reader
+	if ( m_style == wxJSONWRITER_NOUTF8_STREAM )	{
+		m_noUtf8 = true;
+	}
+#endif
 }
 
 //! Dtor - does nothing
@@ -231,6 +242,12 @@ wxJSONWriter::~wxJSONWriter()
 void
 wxJSONWriter::Write( const wxJSONValue& value, wxString& str )
 {
+#if !defined( wxJSON_USE_UNICODE )
+	// in ANSI builds output to a string never use UTF-8 conversion
+	bool noUtf8_bak = m_noUtf8;		// save the current setting
+	m_noUtf8 = true;
+#endif
+
 	wxMemoryOutputStream os;
 	Write( value, os );
 	
@@ -238,8 +255,16 @@ wxJSONWriter::Write( const wxJSONValue& value, wxString& str )
 	wxFileOffset len = os.GetLength();
 	wxStreamBuffer* osBuff = os.GetOutputStreamBuffer();
 	void* buffStart = osBuff->GetBufferStart();
-	
-	str = wxString::FromUTF8( (const char*) buffStart, len );
+
+	if ( m_noUtf8 )	{
+		str = wxString::From8BitData( (const char*) buffStart, len );
+	}
+	else	{
+		str = wxString::FromUTF8( (const char*) buffStart, len );
+	} 
+#if !defined( wxJSON_USE_UNICODE )
+	m_noUtf8 = noUtf8_bak;		// restore the old setting
+#endif
 }
 
 //! \overload Write( const wxJSONValue&, wxString& )
@@ -583,24 +608,35 @@ wxJSONWriter::WriteIndent( wxOutputStream& os, int num )
 int
 wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 {
-	// JSON values of type STRING are written by conerting the whole string
+	// JSON values of type STRING are written by converting the whole string
 	// to UTF-8 and then copying the UTF-8 buffer to the 'os' stream
 	// one byte at a time and processing them
 	os.PutC( '\"' );		// open quotes
 
-	// get the UTF-8 buffer and its length
-	wxCharBuffer cb = str.ToUTF8();
-	const char* utf8Buff = cb.data();
-	
-	// NOTE: in ANSI builds this conversion mai fail (see samples/test5.cpp,
+	// the buffer that has to be written is either UTF-8 or ANSI c_str() depending 
+	// on the 'm_noUtf8' flag
+	char* writeBuff = 0;
+	wxCharBuffer utf8CB = str.ToUTF8();		// the UTF-8 buffer
+#if !defined( wxJSON_USE_UNICODE )
+	wxCharBuffer ansiCB( str.c_str());		// the ANSI buffer
+	if ( m_noUtf8 )	{
+		writeBuff = ansiCB.data();
+	}
+	else	{
+		writeBuff = utf8CB.data();
+	}
+#else
+		writeBuff = utf8CB.data();
+#endif
+
+	// NOTE: in ANSI builds UTF-8 conversion may fail (see samples/test5.cpp,
 	// test 7.3) although I do not know why
-	if ( utf8Buff == 0 )	{
+	if ( writeBuff == 0 )	{
 		const char* err = "<wxJSONWriter::WriteStringValue(): error converting the string to a UTF8 buffer>";
 		os.Write( err, strlen( err ));
 		return 0;
 	}
-
-	size_t len = strlen( utf8Buff );
+	size_t len = strlen( writeBuff );
 	int lastChar = 0;
 
 	// store the column at which the string starts
@@ -613,8 +649,8 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 	size_t i;
 	for ( i = 0; i < len; i++ ) {
 		bool shouldEscape = false;
-		unsigned char ch = *utf8Buff;
-		++utf8Buff;		// point to the next byte
+		unsigned char ch = *writeBuff;
+		++writeBuff;		// point to the next byte
 		
 		// the escaped character
 		char escCh;
@@ -757,13 +793,34 @@ wxJSONWriter::WriteString( wxOutputStream& os, const wxString& str )
 	wxLogTrace( writerTraceMask, _T("(%s) string to write=%s"),
 				  __PRETTY_FUNCTION__, str.c_str() );
 	int lastChar = 0;
-
-	// convert the string to UTF-8 and copy the buffer to the stream
-	wxCharBuffer cb = str.ToUTF8();
-	const char* utf8Buff = cb.data();
-	size_t len = strlen( utf8Buff );
+	char* writeBuff = 0;
 	
-	os.Write( utf8Buff, len );
+	// the buffer that has to be written is either UTF-8 or ANSI c_str() depending 
+	// on the 'm_noUtf8' flag
+	wxCharBuffer utf8CB = str.ToUTF8();		// the UTF-8 buffer
+#if !defined( wxJSON_USE_UNICODE )
+	wxCharBuffer ansiCB( str.c_str());		// the ANSI buffer
+	
+	if ( m_noUtf8 )	{
+		writeBuff = ansiCB.data();
+	}
+	else	{
+		writeBuff = utf8CB.data();
+	}
+#else
+	writeBuff = utf8CB.data();
+#endif
+
+	// NOTE: in ANSI builds UTF-8 conversion may fail (see samples/test5.cpp,
+	// test 7.3) although I do not know why
+	if ( writeBuff == 0 )	{
+		const char* err = "<wxJSONWriter::WriteComment(): error converting the string to UTF-8>";
+		os.Write( err, strlen( err ));
+		return 0;
+	}
+	size_t len = strlen( writeBuff );
+	
+	os.Write( writeBuff, len );
 	if ( os.GetLastError() != wxSTREAM_NO_ERROR )	{
 		return -1;
 	}
@@ -933,7 +990,7 @@ wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
 
  This function writes a non-JSON text to the output stream:
  \code
-  <invalid>
+  <invalid JSON value>
  \endcode
  In debug mode, the function always fails with an wxFAIL_MSG failure.
 */
@@ -942,7 +999,7 @@ wxJSONWriter::WriteInvalid( wxOutputStream& os )
 {
 	wxFAIL_MSG( _T("wxJSONWriter::WriteInvalid() cannot be called (not a valid JSON text"));
 	int lastChar = 0;
-	os.Write( "<invalid>", 9 );
+	os.Write( "<invalid JSON value>", 9 );
 	return lastChar;
 }
 
