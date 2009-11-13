@@ -154,7 +154,6 @@
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="..\src\wxext.cpp" />
-		<Unit filename="..\src\stedoc.cpp" />
 		<Unit filename="..\src\stedit.cpp" />
 		<Unit filename="..\src\stedlgs.cpp" />
 		<Unit filename="..\src\stedlgs_wdr.cpp" />
