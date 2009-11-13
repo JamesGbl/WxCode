@@ -2187,38 +2187,67 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 	// they are of compatible types such as INT, UINT and DOUBLE
 	if ( data->m_type != otherData->m_type )  {
 		// if the types are not compatible, returns false
+		// otherwise compares the compatible types: INT, UINT and DOUBLE
 		double val, otherVal;
 		switch ( data->m_type )  {
 			case wxJSONTYPE_INT :
-				val = data->m_value.VAL_INT;
+				if ( otherData->m_type == wxJSONTYPE_UINT )	{
+					// compare the bits and returns true if value is between 0 and LLONG_MAX
+					if ( (data->m_value.VAL_UINT <= LLONG_MAX ) && 
+							(data->m_value.VAL_UINT == otherData->m_value.VAL_UINT))
+							{
+								r = true;
+							}
+				}
+				else if ( otherData->m_type == wxJSONTYPE_DOUBLE )	{
+					val = data->m_value.VAL_INT;
+					if ( val == otherData->m_value.m_valDouble )	{
+						r = true;
+					}
+				}
+				else	{
+					r = false;
+				}
 				break;
 			case wxJSONTYPE_UINT :
-				val = data->m_value.VAL_UINT;
+				if ( otherData->m_type == wxJSONTYPE_INT )	{
+					// compare the bits and returns true if value is between 0 and LLONG_MAX
+					if ( (data->m_value.VAL_UINT <= LLONG_MAX ) && 
+							(data->m_value.VAL_UINT == otherData->m_value.VAL_UINT))
+						{
+							r = true;
+						}
+				}
+				else if ( otherData->m_type == wxJSONTYPE_DOUBLE )	{
+					val = data->m_value.VAL_UINT;
+					if ( val == otherData->m_value.m_valDouble )	{
+						r = true;
+					}
+				}
+				else	{
+					r = false;
+				}
 				break;
 			case wxJSONTYPE_DOUBLE :
-				val = data->m_value.m_valDouble;
+				if ( otherData->m_type == wxJSONTYPE_INT )	{
+					val = otherData->m_value.VAL_INT;
+					if ( val == data->m_value.m_valDouble )	{
+						r = true;
+					}
+				}
+				else if ( otherData->m_type == wxJSONTYPE_UINT )	{
+					val = otherData->m_value.VAL_UINT;
+					if ( val == data->m_value.m_valDouble )	{
+						r = true;
+					}
+				}
+				else	{
+					r = false;
+				}
 				break;
 			default:
 				return false;
 			break;
-		}
-		switch ( otherData->m_type )  {
-			case wxJSONTYPE_INT :
-				otherVal = otherData->m_value.VAL_INT;
-				break;
-			case wxJSONTYPE_UINT :
-				otherVal = otherData->m_value.VAL_UINT;
-				break;
-			case wxJSONTYPE_DOUBLE :
-				otherVal = otherData->m_value.m_valDouble;
-				break;
-			default:
-				return false;
-			break;
-		}
-		bool r = false;
-		if ( val == otherVal )  {
-			r = true;
 		}
 		return r;
 	}
@@ -2233,7 +2262,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 	switch ( data->m_type )  {
 		case wxJSONTYPE_INVALID :
 		case wxJSONTYPE_NULL :
-		// there is no need to compare the values
+			// there is no need to compare the values
 			break;
 		case wxJSONTYPE_INT :
 			if ( data->m_value.VAL_INT != otherData->m_value.VAL_INT )  {
@@ -2277,35 +2306,20 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 			if ( size != other.Size() )  {
 				wxLogTrace( compareTraceMask, _T("(%s) Sizes does not match"),
 						__PRETTY_FUNCTION__ );
-			return false;
+				return false;
 			}
-			// for every element in this object iterates through all
-			// items in the 'other' object searching for a matching
-			// value. if not found, returns FALSE.
-			// note that when an element is found in other it must be marked as
-			// 'already used' (see 'test/testjson4.cpp')
-			usedElements = new int[size];
-			for ( int y = 0; y < size; y++ )  {
-				usedElements[y] = 0;
-			} 
+			// compares every element in this object with the element of
+			// the same index in the 'other' object
 			for ( int i = 0; i < size; i++ )  {
 				wxLogTrace( compareTraceMask, _T("(%s) Comparing array element=%d"),
 						__PRETTY_FUNCTION__, i );
-				r = false;
-				for ( int y = 0; y < size; y++ )  {
-					if ( ItemAt( i ).IsSameAs( other.ItemAt( y )) && usedElements[y] == 0 )  {
-					r = true;
-					usedElements[y] = 1;
-					break;
-					}	 
-				}
-				if ( r == false )  {
-					delete [] usedElements;
-					wxLogTrace( compareTraceMask, _T("(%s) Comparison failed"), __PRETTY_FUNCTION__ );
+				wxJSONValue v1 = ItemAt( i );
+				wxJSONValue v2 = other.ItemAt( i );
+				
+				if ( !v1.IsSameAs( v2 ))  {
 					return false;
 				}
 			}
-			delete [] usedElements;
 			break;
 		case wxJSONTYPE_OBJECT :
 			size = Size();
@@ -2317,7 +2331,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 								__PRETTY_FUNCTION__ );
 				return false;
 			}
-			// for every key, calls itself on the value found in
+			// for every key calls itself on the value found in
 			// the other object. if 'key' does no exist, returns FALSE
 			// wxJSONInternalMap::const_iterator it;
 			for ( it = data->m_valMap.begin(); it != data->m_valMap.end(); it++ )  {
