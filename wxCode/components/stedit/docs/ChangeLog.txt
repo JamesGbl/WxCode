@@ -5,7 +5,7 @@ Changelog:
   - Bump version to 1.2.6
 
 11/13/2009
-  - Added #ifdef STEDIT_DOCVIEW sections
+  - Added branches/docview, branches/aui
 
 11/12/2009
   - Substantial i18n changes
