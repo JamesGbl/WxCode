@@ -75,17 +75,16 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXADVTABLE_LIB_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_5) -W -Wall \
-	-I../include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXADVTABLE_LIB_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_lib_wxadvtable.o
 WXADVTABLE_LIB_HEADERS =  \
 	include/wx/observable.h \
 	include/wx/wxadvtable.h \
 	include/wx/wxadvtabledefs.h
-WXADVTABLE_DLL_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_5) -W -Wall \
-	-I../include -DWXMAKINGDLL_ADVTABLE -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
+WXADVTABLE_DLL_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include \
+	-DWXMAKINGDLL_ADVTABLE -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_dll_wxadvtable.o
@@ -93,16 +92,26 @@ WXADVTABLE_DLL_HEADERS =  \
 	include/wx/observable.h \
 	include/wx/wxadvtable.h \
 	include/wx/wxadvtabledefs.h
-WXADVTABLE_SAMPLE_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_5) -W -Wall \
-	-I../include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXADVTABLE_SAMPLE_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_SAMPLE_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_sample_demo.o
-WXADVTABLE_SAMPLE_DLL_CXXFLAGS = $(____wxadvtable) $(____wxadvtable_5) -W -Wall \
-	-I../include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXADVTABLE_SAMPLE_DLL_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_SAMPLE_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_sample_dll_demo.o
+BUILDER_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
+	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+BUILDER_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_builder.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_properties.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_propertypage.o
+BUILDER_DLL_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+BUILDER_DLL_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_builder.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_properties.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_propertypage.o
 
 ### Conditionally set variables: ###
 
@@ -182,20 +191,26 @@ endif
 ifeq ($(WX_SHARED),1)
 __wxadvtable_sample_dll___depname = ../samples/wxadvtable_sample_dll
 endif
+ifeq ($(WX_SHARED),0)
+__builder___depname = ../builder/builder
+endif
+ifeq ($(WX_SHARED),1)
+__builder_dll___depname = ../builder/builder_dll
+endif
 ifeq ($(WX_DEBUG),0)
-____wxadvtable = -O2
+VAR = -O2
 endif
 ifeq ($(WX_DEBUG),1)
-____wxadvtable = -O0
+VAR = -O0
 endif
 ifeq ($(SHARED),1)
-__wxadvtable_sample = -Wl,-rpath,../lib/gcc_dll
+VAR_4 = -Wl,-rpath,../lib/gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-____wxadvtable_5 = 
+VAR_5 = 
 endif
 ifeq ($(WX_DEBUG),1)
-____wxadvtable_5 = -g
+VAR_5 = -g
 endif
 
 
@@ -205,7 +220,7 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) $(__wxadvtable_sample___depname) $(__wxadvtable_sample_dll___depname)
+all: test_for_selected_wxbuild $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) $(__wxadvtable_sample___depname) $(__wxadvtable_sample_dll___depname) $(__builder___depname) $(__builder_dll___depname)
 
 install: $(__install_wxadvtable_lib___depname) $(__install_wxadvtable_lib_headers___depname) $(__install_wxadvtable_dll___depname) $(__install_wxadvtable_dll_headers___depname)
 
@@ -219,6 +234,8 @@ clean:
 	rm -f ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../samples/wxadvtable_sample
 	rm -f ../samples/wxadvtable_sample_dll
+	rm -f ../builder/builder
+	rm -f ../builder/builder_dll
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
@@ -264,7 +281,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxadvtable_dll  $(WXADVTABLE_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS)  $(____wxadvtable_5) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,core,base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXADVTABLE_DLL_OBJECTS)  $(VAR_5) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -303,7 +320,7 @@ endif
 
 ifeq ($(WX_SHARED),0)
 ../samples/wxadvtable_sample: $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample $(__wxadvtable_lib___depname)
-	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS)  $(____wxadvtable_5) -L../lib  $(__wxadvtable_sample) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS)  $(VAR_5) -L../lib  $(VAR_4) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
 endif
 
 make_sample_dir_wxadvtable_sample: 
@@ -311,17 +328,34 @@ make_sample_dir_wxadvtable_sample:
 
 ifeq ($(WX_SHARED),1)
 ../samples/wxadvtable_sample_dll: $(WXADVTABLE_SAMPLE_DLL_OBJECTS) make_sample_dir_wxadvtable_sample_dll $(__wxadvtable_dll___depname)
-	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_DLL_OBJECTS)  $(____wxadvtable_5) -L../lib  $(__wxadvtable_sample) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
+	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_DLL_OBJECTS)  $(VAR_5) -L../lib  $(VAR_4) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
 endif
 
 make_sample_dir_wxadvtable_sample_dll: 
 	@mkdir -p ../samples
 
+ifeq ($(WX_SHARED),0)
+../builder/builder: $(BUILDER_OBJECTS) make_sample_dir_builder $(__wxadvtable_lib___depname)
+	$(CXX) -o $@ $(BUILDER_OBJECTS)  $(VAR_5) -L../lib  $(VAR_4) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
+endif
+
+make_sample_dir_builder: 
+	@mkdir -p ../builder
+
+ifeq ($(WX_SHARED),1)
+../builder/builder_dll: $(BUILDER_DLL_OBJECTS) make_sample_dir_builder_dll $(__wxadvtable_dll___depname)
+	$(CXX) -o $@ $(BUILDER_DLL_OBJECTS)  $(VAR_5) -L../lib  $(VAR_4) $(LDFLAGS)  ../lib/gcc_$(__wxadvtable_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,aui,core,base`
+endif
+
+make_sample_dir_builder_dll: 
+	@mkdir -p ../builder
+
 tarball: 
-	make clean
+	make distclean
 	( cd ../.. && tar -cvzf advtable.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" advtable/* )
 
 zip: clean
+	del ../../advtable.zip
 	( cd ../.. && zip -r9 advtable.zip advtable -x "*.pdb" -x "*.log" -x "*.o*" )
 
 docs: 
@@ -338,6 +372,24 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_sample_demo.o: ../samples/dem
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_sample_dll_demo.o: ../samples/demo.cpp
 	$(CXX) -c -o $@ $(WXADVTABLE_SAMPLE_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_builder.o: ../builder/builder.cpp
+	$(CXX) -c -o $@ $(BUILDER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_properties.o: ../builder/properties.cpp
+	$(CXX) -c -o $@ $(BUILDER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_propertypage.o: ../builder/propertypage.cpp
+	$(CXX) -c -o $@ $(BUILDER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_builder.o: ../builder/builder.cpp
+	$(CXX) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_properties.o: ../builder/properties.cpp
+	$(CXX) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/builder_dll_propertypage.o: ../builder/propertypage.cpp
+	$(CXX) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all install uninstall clean install_wxadvtable_lib \
 	uninstall_wxadvtable_lib install_wxadvtable_lib_headers \

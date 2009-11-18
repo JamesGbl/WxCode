@@ -70,6 +70,25 @@ size_t wxAdvHdrCell::GetDecompCellCount(wxAdvHdrCell *cells, size_t numCells)
 	return count;
 }
 
+wxAdvHdrCell *wxAdvHdrCell::RightSibling()
+{
+	if (m_parent == NULL) {
+		if (m_isRow) {
+			return m_table->GetRow(m_subIndex + 1);
+		}
+		else {
+			return m_table->GetCol(m_subIndex + 1);
+		}
+	}
+	else {
+		if (m_subIndex + 1 >= m_parent->m_subCells.Count()) {
+			return NULL;
+		}
+
+		return &m_parent->m_subCells[m_subIndex + 1];
+	}
+	return NULL;
+}
 
 IMPLEMENT_DYNAMIC_CLASS(wxAdvHdrCellEvent, wxNotifyEvent)
 
@@ -92,6 +111,13 @@ wxAdvHdrCellEvent::wxAdvHdrCellEvent(int id, wxEventType type, wxObject* obj,
 //
 // Drawing helper functions.
 //
+
+void ResizeBitmap(wxBitmap &bmp, wxCoord newWidth, wxCoord newHeight)
+{
+	if (bmp.GetWidth() != newWidth || bmp.GetHeight() != newHeight) {
+		bmp.Create(newWidth, newHeight);
+	}
+}
 
 /**
  * Draws bevel.
@@ -352,6 +378,7 @@ void wxAdvDefaultTableDataModel::SetRowFormat(size_t row, int format)
 	for (size_t col = 0; col < colCount; col++) {
 		m_formats[row][col] = format;
 	}
+	FireTableChanged();
 }
 
 void wxAdvDefaultTableDataModel::SetColFormat(size_t col, int format)
@@ -362,6 +389,53 @@ void wxAdvDefaultTableDataModel::SetColFormat(size_t col, int format)
 	for (size_t row = 0; row < rowCount; row++) {
 		m_formats[row][col] = format;
 	}
+	FireTableChanged();
+}
+
+void wxAdvDefaultTableDataModel::InsertRows(size_t before, size_t count, int format)
+{
+	const size_t colCount = m_data[0].Count();
+
+	wxArrayString row;
+	row.Add(wxEmptyString, colCount);
+	m_data.Insert(row, before, count);
+
+	wxIntArray rowFormat;
+	rowFormat.Add(format, colCount);
+	m_formats.Insert(rowFormat, before, count);
+
+	FireTableChanged();
+}
+
+void wxAdvDefaultTableDataModel::InsertCols(size_t before, size_t count, int format)
+{
+	const size_t rowCount = m_data.Count();
+
+	for (size_t row = 0; row < rowCount; row++) {
+		m_data[row].Insert(wxEmptyString, before, count);
+		m_formats[row].Insert(format, before, count);
+	}
+
+	FireTableChanged();
+}
+
+void wxAdvDefaultTableDataModel::RemoveRows(size_t first, size_t count)
+{
+	m_data.RemoveAt(first, count);
+	m_formats.RemoveAt(first, count);
+
+	FireTableChanged();
+}
+
+void wxAdvDefaultTableDataModel::RemoveCols(size_t first, size_t count)
+{
+	const size_t rowCount = m_data.Count();
+	for (size_t row = 0; row < rowCount; row++) {
+		m_data[row].RemoveAt(first, count);
+		m_formats[row].RemoveAt(first, count);
+	}
+
+	FireTableChanged();
 }
 
 //
@@ -565,6 +639,8 @@ void wxAdvBoolCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxStrin
 
 	if (checked) {
 		LoadBitmaps();
+
+		wxDCClipper clipper(dc, rc);
 
 		dc.DrawBitmap(g_bmpCheckMark,
 				rc.x + (rc.width - g_bmpCheckMark.GetWidth()) / 2,
@@ -1084,9 +1160,11 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(wxAdvTable, wxScrolledWindow)
 
-wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &m_size)
-: wxScrolledWindow(parent, id, pos, m_size, wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE | wxWANTS_CHARS)
+wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size)
+: wxScrolledWindow(parent, id, pos, size, wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE | wxWANTS_CHARS)
 {
+	SetInitialSize(size);
+
 	m_tableCreated = false;
 	m_model = NULL;
 	m_defaultRenderer = new wxAdvStringCellRenderer();
@@ -1166,8 +1244,8 @@ void wxAdvTable::Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, 
 
 	m_cornerCell.Label(cornerLabel);
 
-	AddHdrCells(m_rows, rows, numRows, true);
-	AddHdrCells(m_cols, cols, numCols, false);
+	AddHdrCells(m_rows, rows, numRows, UNDEF_SIZE, true);
+	AddHdrCells(m_cols, cols, numCols, UNDEF_SIZE, false);
 
 	// recalculate entire geometry
 	CalcTableGeometry();
@@ -1182,6 +1260,21 @@ void wxAdvTable::Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, 
 
 	m_tableCreated = true;
 	ResizeBackBitmaps();
+}
+
+void wxAdvTable::Create(wxAdvHdrCellArray &rows, wxAdvHdrCellArray &cols, const wxString &cornerLabel, wxAdvTableDataModel *model)
+{
+	wxAdvHdrCell rowsA[rows.Count()];
+	wxAdvHdrCell colsA[cols.Count()];
+
+	FOREACH_HDRCELL(n, rows) {
+		rowsA[n] = rows[n];
+	}
+	FOREACH_HDRCELL(n, cols) {
+		colsA[n] = cols[n];
+	}
+
+	Create(rowsA, rows.Count(), colsA, cols.Count(), cornerLabel, model);
 }
 
 void wxAdvTable::Create(size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model)
@@ -1215,22 +1308,92 @@ void wxAdvTable::DestroyTable()
 	wxDELETE(m_model);
 
 	ClearSelection();
+
+	// destroy backbuffers
+	m_backBitmap.Create(0, 0);
+	m_backBitmapRows.Create(0, 0);
+	m_backBitmapCols.Create(0, 0);
+	RedrawAll();
 }
 
-void wxAdvTable::AddRows(wxAdvHdrCell *rows, size_t numRows)
+void wxAdvTable::AddRows(wxAdvHdrCell *rows, size_t numRows, size_t before)
 {
 	wxCHECK_RET(m_tableCreated, wxT("wxAdvTable::AddRows: Table is not created"));
 
-	AddHdrCells(m_rows, rows, numRows, true);
+	AddHdrCells(m_rows, rows, numRows, before, true);
 	UpdateGeometry();
 }
 
-void wxAdvTable::AddCols(wxAdvHdrCell *cols, size_t numCols)
+void wxAdvTable::AddCols(wxAdvHdrCell *cols, size_t numCols, size_t before)
 {
 	wxCHECK_RET(m_tableCreated, wxT("wxAdvTable::AddCols: Table is not created"));
 
-	AddHdrCells(m_cols, cols, numCols, false);
+	AddHdrCells(m_cols, cols, numCols, before, false);
 	UpdateGeometry();
+}
+
+void wxAdvTable::RemoveRows(size_t from, size_t count)
+{
+	RemoveHdrCells(from, count, true);
+}
+
+void wxAdvTable::RemoveCols(size_t from, size_t count)
+{
+	RemoveHdrCells(from, count, false);
+}
+
+void wxAdvTable::RemoveHdrCells(size_t from, size_t count, bool isRows)
+{
+	wxCHECK_RET(m_tableCreated, wxT("wxAdvTable::RemoveHdrCells: Table is not created"));
+
+	wxAdvHdrCellArray *hdrCells;
+
+	if (isRows) {
+		hdrCells = &m_rows;
+	}
+	else {
+		hdrCells = &m_cols;
+	}
+
+	if (m_pressedHdrCell != NULL || m_currentHdrCell != NULL || m_resizingHdrCell != NULL) {
+		for (size_t index = from; index < (from + count); index++) {
+			wxAdvHdrCell *hdrCell = &(*hdrCells)[index];
+
+			if (hdrCell == m_pressedHdrCell) {
+				m_pressedHdrCell = NULL;
+			}
+			if (hdrCell == m_currentHdrCell) {
+				m_currentHdrCell = NULL;
+			}
+			if (hdrCell == m_resizingHdrCell) {
+				m_resizingHdrCell = NULL;
+			}
+		}
+	}
+
+	hdrCells->RemoveAt(from, count);
+	UpdateGeometry();
+}
+
+void wxAdvTable::RemoveHdrCell(wxAdvHdrCell *hdrCell)
+{
+	if (hdrCell == m_pressedHdrCell) {
+		m_pressedHdrCell = NULL;
+	}
+	if (hdrCell == m_currentHdrCell) {
+		m_currentHdrCell = NULL;
+	}
+	if (hdrCell == m_resizingHdrCell) {
+		m_resizingHdrCell = NULL;
+	}
+
+	if (hdrCell->m_parent != NULL) {
+		hdrCell->m_parent->RemoveSubCell(hdrCell->m_subIndex);
+		UpdateGeometry();
+	}
+	else {
+		RemoveHdrCells(hdrCell->m_subIndex, hdrCell->m_subIndex, hdrCell->m_isRow);
+	}
 }
 
 void wxAdvTable::UpdateGeometry()
@@ -1239,8 +1402,11 @@ void wxAdvTable::UpdateGeometry()
 		return ;
 	}
 
+	m_sortOrder.Empty();
+
 	CalcTableGeometry();
 	ResizeBackBitmaps();
+	UpdateSortOrder();
 }
 
 //
@@ -1250,6 +1416,14 @@ void wxAdvTable::CalcTableGeometry()
 {
 	size_t numRowLayers = GetLayerCount(m_rows);
 	size_t numColLayers = GetLayerCount(m_cols);
+
+	// update indexes
+	FOREACH_HDRCELL(n, m_rows) {
+		m_rows[n].m_subIndex = n;
+	}
+	FOREACH_HDRCELL(n, m_cols) {
+		m_cols[n].m_subIndex = n;
+	}
 
 	// Layer sizes
 	m_rowLayerWidths.Clear();
@@ -1459,7 +1633,7 @@ void wxAdvTable::DecomposeHdrCells(wxAdvHdrCellArray &hdrCells, wxAdvHdrCellPtrA
 void wxAdvTable::DecomposeHdrCell(wxAdvHdrCell &hdrCell, wxAdvHdrCellPtrArray &decompHdrCells)
 {
 	if (!hdrCell.IsComposite()) {
-		hdrCell.m_index = decompHdrCells.Count();
+		hdrCell.m_decompIndex = decompHdrCells.Count();
 		decompHdrCells.Add(&hdrCell);
 	}
 	else {
@@ -1504,12 +1678,11 @@ size_t wxAdvTable::GetLayerCount(wxAdvHdrCellArray &hdrCells)
 	return numLayers;
 }
 
-void wxAdvTable::AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, size_t numCells, bool isRows)
+void wxAdvTable::AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, size_t numCells, size_t before, bool isRows)
 {
 	arr.Alloc(arr.Count() + numCells);
 
 	size_t number = arr.Count() + 1;
-	size_t subIndex = arr.Count();
 	for (size_t n = 0; n < numCells; n++) {
 		wxAdvHdrCell *cell;
 
@@ -1528,10 +1701,16 @@ void wxAdvTable::AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, siz
 			cell->MarkAsCol();
 		}
 
-		cell->m_subIndex = subIndex;
-		subIndex++;
+		if (before != UNDEF_SIZE) {
+			arr.Insert(*cell, before);
+		}
+		else {
+			arr.Add(*cell);
+		}
+	}
 
-		arr.Add(*cell);
+	FOREACH_HDRCELL(n, arr) {
+		arr[n].m_table = this;
 	}
 }
 
@@ -1574,9 +1753,14 @@ void wxAdvTable::UpdateSortOrder()
 
 	wxSortHelperArray helpers(SorterFunc);
 
-	// XXX need normal sorting method, this code is very ugly.
+	// XXX need normal sorting method, this code is very ugly!
 	if (m_sortMode == SortRows) {
 		if (m_sortingIndex > MaxCol()) {
+			RedrawAll();
+			return ;
+		}
+
+		if (!CanSortByHdrCell(m_decompCols[m_sortingIndex])) {
 			RedrawAll();
 			return ;
 		}
@@ -1590,6 +1774,11 @@ void wxAdvTable::UpdateSortOrder()
 	}
 	else if (m_sortMode == SortCols) {
 		if (m_sortingIndex > MaxRow()) {
+			RedrawAll();
+			return ;
+		}
+
+		if (!CanSortByHdrCell(m_decompRows[m_sortingIndex])) {
 			RedrawAll();
 			return ;
 		}
@@ -1637,8 +1826,10 @@ bool wxAdvTable::IsSorting()
 
 void wxAdvTable::SetAllowSortByAnyRow(bool sortByAnyRow)
 {
-	m_sortByAnyRow = true;
-	UpdateSortOrder();
+	if (m_sortByAnyRow != sortByAnyRow) {
+		m_sortByAnyRow = sortByAnyRow;
+		UpdateSortOrder();
+	}
 }
 
 bool wxAdvTable::IsAllowSortByAnyRow()
@@ -1648,8 +1839,10 @@ bool wxAdvTable::IsAllowSortByAnyRow()
 
 void wxAdvTable::SetAllowSortByAnyCol(bool sortByAnyCol)
 {
-	m_sortByAnyCol = true;
-	UpdateSortOrder();
+	if (m_sortByAnyCol != sortByAnyCol) {
+		m_sortByAnyCol = sortByAnyCol;
+		UpdateSortOrder();
+	}
 }
 
 bool wxAdvTable::IsAllowSortByAnyCol()
@@ -1773,7 +1966,7 @@ void wxAdvTable::DrawHdrCellSelf(wxDC &dc, wxAdvHdrCell *hdrCell)
 	bool pressed = false;
 	bool selected = false;
 
-	if (IsSorting() && m_sortingIndex == hdrCell->m_index) {
+	if (IsSorting() && m_sortingIndex == hdrCell->m_decompIndex) {
 		if (CanSortByHdrCell(hdrCell)) {
 			sortDirection = m_sortDirection;
 		}
@@ -1946,7 +2139,7 @@ bool wxAdvTable::IsCellEditable(size_t row, size_t col)
 
 void wxAdvTable::ToModelCellCoord(size_t row, size_t col, size_t &modelRow, size_t &modelCol)
 {
-	if (m_sorter == NULL || m_sortingIndex == UNDEF_SIZE) {
+	if (!IsSorting() || m_sortOrder.Count() == 0) {
 		modelRow = row;
 		modelCol = col;
 	}
@@ -1958,19 +2151,15 @@ void wxAdvTable::ToModelCellCoord(size_t row, size_t col, size_t &modelRow, size
 		modelRow = row;
 		modelCol = m_sortOrder[col];
 	}
-	else {
-		modelRow = row;
-		modelCol = col;
-	}
 }
 
 void wxAdvTable::ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol)
 {
-	if (m_sorter == NULL || m_sortingIndex == UNDEF_SIZE) {
+	if (!IsSorting() || m_sortOrder.Count() == 0) {
 		tableRow = row;
 		tableCol = col;
 	}
-	else if (m_sortMode == SortRows && m_sortingIndex < m_sortOrder.Count()) {
+	else if (m_sortMode == SortRows) {
 		for (size_t n = 0; n < m_sortOrder.Count(); n++) {
 			if (m_sortOrder[n] == row) {
 				tableRow = n;
@@ -1980,7 +2169,7 @@ void wxAdvTable::ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &t
 
 		tableCol = col;
 	}
-	else if (m_sortMode == SortCols && m_sortingIndex < m_sortOrder.Count()) {
+	else if (m_sortMode == SortCols) {
 		tableRow = row;
 
 		for (size_t n = 0; n < m_sortOrder.Count(); n++) {
@@ -1989,10 +2178,6 @@ void wxAdvTable::ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &t
 				break;
 			}
 		}
-	}
-	else {
-		tableRow = row;
-		tableCol = col;
 	}
 }
 
@@ -2078,6 +2263,16 @@ void wxAdvTable::GetRangeRect(wxRect &rc, size_t row1, size_t col1, size_t row2,
 //
 // Graphical objects functions.
 //
+void wxAdvTable::SetBgBrush(const wxBrush &bgBrush)
+{
+	m_bgBrush = bgBrush;
+	RedrawAll();
+}
+
+const wxBrush &wxAdvTable::GetBgBrush()
+{
+	return m_bgBrush;
+}
 
 void wxAdvTable::SetSelectedBgBrush(const wxBrush &selectedBgBrush)
 {
@@ -2309,6 +2504,7 @@ void wxAdvTable::StopEditing()
 void wxAdvTable::ResizeBackBitmaps()
 {
 	if (!m_tableCreated) {
+		m_backBitmap.Create(0, 0);
 		return ;
 	}
 
@@ -2329,7 +2525,7 @@ void wxAdvTable::ResizeBackBitmaps()
 			dataSize.x = 0;
 		}
 
-		m_backBitmapRows.Create(rowsWidth, wxMin(rowsHeight, size.GetHeight()));
+		ResizeBitmap(m_backBitmapRows, rowsWidth, wxMin(rowsHeight, size.GetHeight()));
 	}
 	else {
 		m_backBitmapRows.Create(0, 0);
@@ -2345,7 +2541,7 @@ void wxAdvTable::ResizeBackBitmaps()
 			dataSize.y = 0;
 		}
 
-		m_backBitmapCols.Create(wxMin(colsWidth, size.GetWidth()), colsHeight);
+		ResizeBitmap(m_backBitmapCols, wxMin(colsWidth, size.GetWidth()), colsHeight);
 	}
 	else {
 		m_backBitmapCols.Create(0, 0);
@@ -2370,7 +2566,7 @@ void wxAdvTable::ResizeBackBitmaps()
 		}
 	}
 
-	m_backBitmap.Create(wxMin(colsWidth, dataSize.GetWidth()), wxMin(rowsHeight, dataSize.GetHeight()));
+	ResizeBitmap(m_backBitmap, wxMin(colsWidth, dataSize.GetWidth()), wxMin(rowsHeight, dataSize.GetHeight()));
 
 	RedrawAll();
 }
@@ -2667,78 +2863,43 @@ void wxAdvTable::EditCell(wxAdvCellEditor *editor, size_t row, size_t col)
 	}
 }
 
-void wxAdvTable::ShiftHdrCell(wxAdvHdrCell *hdrCell, int d)
+bool wxAdvTable::ResizeHdrCellSelf(wxAdvHdrCell *hdrCell, int d, int shift)
 {
+	wxCoord newSize;
+
 	if (hdrCell->IsRow()) {
-		hdrCell->m_rc.y += d;
+		newSize = hdrCell->m_rc.height + d;
 	}
 	else {
-		hdrCell->m_rc.x += d;
+		newSize = hdrCell->m_rc.width + d;
 	}
 
-	FOREACH_HDRCELL(n, hdrCell->m_subCells) {
-		ShiftHdrCell(&hdrCell->m_subCells[n], d);
-	}
-}
+	bool canResizeMore = true;
 
-void wxAdvTable::ResizeHdrCell(wxAdvHdrCell *hdrCell, int d, bool up, bool down, bool initial)
-{
-	const bool isRow = hdrCell->IsRow();
-
-	// resize hdrCell itself
-	if (isRow) {
-		hdrCell->m_rc.height += d;
-		hdrCell->m_size = hdrCell->m_rc.height;
+	if (newSize < hdrCell->MinSize()) {
+		canResizeMore = false;
+		newSize = hdrCell->MinSize();
 	}
-	else {
-		hdrCell->m_rc.width += d;
-		hdrCell->m_size = hdrCell->m_rc.width;
+	else if (hdrCell->MaxSize() != (wxCoord) UNDEF_SIZE && newSize > hdrCell->MaxSize()) {
+		canResizeMore = false;
+		newSize = hdrCell->MaxSize();
 	}
 
-	if (hdrCell->IsRightEdge()) {
-		if (up && hdrCell->m_subCells.Count() > 0) {
-			ResizeHdrCell(&hdrCell->m_subCells.Last(), d, true, false);
-		}
-
-		if (down && hdrCell->m_parent != NULL) {
-			ResizeHdrCell(hdrCell->m_parent, d, false, true);
-		}
-	}
-	else if (hdrCell->m_parent == NULL && initial && hdrCell->IsComposite()) {
-		ResizeHdrCell(&hdrCell->m_subCells.Last(), d, true, false);
-
-		wxAdvHdrCellArray *arr;
-		if (isRow) {
-			arr = &m_rows;
-		}
-		else {
-			arr = &m_cols;
-		}
-
-		for (size_t n = hdrCell->m_subIndex + 1; n < arr->Count(); n++) {
-			ShiftHdrCell(&(*arr)[n], d);
+	if (hdrCell->IsRow()) {
+		hdrCell->m_rc.height = newSize;
+		if (canResizeMore) {
+			hdrCell->m_rc.x += shift;
 		}
 	}
 	else {
-		wxAdvHdrCell *sibling = hdrCell->RightSibling();
-		if (sibling != NULL) {
-
-			if (isRow) {
-				sibling->m_rc.y += d;
-				sibling->m_rc.height -= d;
-				sibling->m_size = sibling->m_rc.height;
-			}
-			else {
-				sibling->m_rc.x += d;
-				sibling->m_rc.width -= d;
-				sibling->m_size = sibling->m_rc.width;
-			}
-		}
-
-		if (up && hdrCell->m_subCells.Count() > 0) {
-			ResizeHdrCell(&hdrCell->m_subCells.Last(), d, true, false);
+		hdrCell->m_rc.width = newSize;
+		if (canResizeMore) {
+			hdrCell->m_rc.y += shift;
 		}
 	}
+
+	hdrCell->m_size = newSize;
+	return canResizeMore;
 }
 
 void wxAdvTable::ResizeHdrCell(const wxMouseEvent &ev, wxAdvHdrCell *hdrCell)
@@ -2753,10 +2914,15 @@ void wxAdvTable::ResizeHdrCell(const wxMouseEvent &ev, wxAdvHdrCell *hdrCell)
 		d = pt.x - hdrCell->m_rc.x - hdrCell->m_rc.width;
 	}
 
-	ResizeHdrCell(hdrCell, d, true, true, true);
+	wxAdvHdrCell *resizeCell = hdrCell;
+	while (resizeCell->IsComposite()) {
+		resizeCell = &resizeCell->m_subCells.Last();
+	}
 
-	UpdateVirtualSize();
-	ResizeBackBitmaps(); // TODO: need optimization
+	// TODO: must be optimized
+	if (ResizeHdrCellSelf(resizeCell, d, 0)) {
+		UpdateGeometry();
+	}
 }
 
 //
@@ -2865,13 +3031,13 @@ void wxAdvTable::OnPaint(wxPaintEvent &WXUNUSED(ev))
 	}
 
 	// draw row hdrCells
-	if (m_showRows) {
+	if (m_showRows && m_backBitmapRows.IsOk()) {
 		wxRect rcRows = CalcRowsAreaRect();
 		dc.DrawBitmap(m_backBitmapRows, rcRows.x, rcRows.y);
 	}
 
 	// draw column hdrCells
-	if (m_showCols) {
+	if (m_showCols && m_backBitmapCols.IsOk()) {
 		wxRect rcCols = CalcColsAreaRect();
 		dc.DrawBitmap(m_backBitmapCols, rcCols.x, rcCols.y);
 	}
@@ -2882,8 +3048,10 @@ void wxAdvTable::OnPaint(wxPaintEvent &WXUNUSED(ev))
 	}
 
 	// draw data
-	wxRect rcTable = CalcTableRect();
-	dc.DrawBitmap(m_backBitmap, rcTable.x, rcTable.y);
+	if (m_backBitmap.IsOk()) {
+		wxRect rcTable = CalcTableRect();
+		dc.DrawBitmap(m_backBitmap, rcTable.x, rcTable.y);
+	}
 }
 
 void wxAdvTable::OnMouseEvents(wxMouseEvent &ev)
@@ -2969,7 +3137,7 @@ void wxAdvTable::HandleHdrCellMouseEvent(const wxMouseEvent &ev, wxAdvHdrCell *h
 	if (ev.LeftUp()) {
 		if (hdrCell == m_pressedHdrCell && m_pressedHdrCell != NULL) {
 			if (m_sorter != NULL && CanSortByHdrCell(m_pressedHdrCell)) {
-				SetSortingIndex(m_pressedHdrCell->m_index);
+				SetSortingIndex(m_pressedHdrCell->m_decompIndex);
 			}
 		}
 
@@ -3018,9 +3186,9 @@ void wxAdvTable::HandleHdrCellMouseEvent(const wxMouseEvent &ev, wxAdvHdrCell *h
 		else {
 			SetCursor(wxNullCursor);
 		}
-	}
 
-	SetCurrentHdrCell(hdrCell);
+		SetCurrentHdrCell(hdrCell);
+	}
 }
 
 void wxAdvTable::HandleCellMouseEvent(const wxMouseEvent &ev, size_t row, size_t col)

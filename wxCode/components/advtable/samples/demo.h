@@ -24,11 +24,13 @@
 
 #include "wx/wxadvtable.h"
 
+#include <wx/clrpicker.h>
+
 /**
- * Control panel is GUI object used to set
+ * Control panel is panel used to set
  * wxAdvTable properties.
  */
-class ControlPanel : public wxPanel
+class ControlPanel : public wxScrolledWindow
 {
 public:
 	ControlPanel(wxWindow *parent, wxAdvTable *advTable);
@@ -49,8 +51,18 @@ private:
 	void OnCheckSortByAnyRow(wxCommandEvent &ev);
 	void OnCheckSortByAnyCol(wxCommandEvent &ev);
 
+	void OnCheckResizeAllRows(wxCommandEvent &ev);
+	void OnCheckResizeAllCols(wxCommandEvent &ev);
+
 	void OnSpinCtrlGridWidth(wxSpinEvent &ev);
 	void OnSpinCtrlFocusedWidth(wxSpinEvent &ev);
+
+	void OnColourPickerGridColour(wxColourPickerEvent &ev);
+	void OnColourPickerFocusedColour(wxColourPickerEvent &ev);
+	void OnColourPickerFocusedBgColour(wxColourPickerEvent &ev);
+	void OnColourPickerBackgroundColour(wxColourPickerEvent &ev);
+	void OnColourPickerSelectedColour(wxColourPickerEvent &ev);
+	void OnColourPickerHighlightedColour(wxColourPickerEvent &ev);
 
 	wxAdvTable *m_advTable;
 
@@ -68,10 +80,16 @@ public:
 
 private:
 	void CreateTableStructure();
+	void CreateMainMenu();
 
 	//
 	// Event handlers
 	//
+	void OnInsertFirstCol(wxCommandEvent &ev);
+	void OnInsertFirstRow(wxCommandEvent &ev);
+	void OnRemoveFirstCol(wxCommandEvent &ev);
+	void OnRemoveFirstRow(wxCommandEvent &ev);
+
 	void OnAbout(wxCommandEvent &ev);
 	void OnExit(wxCommandEvent &ev);
 

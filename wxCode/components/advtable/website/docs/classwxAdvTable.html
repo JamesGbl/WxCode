@@ -68,6 +68,9 @@ Inheritance diagram for wxAdvTable:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#fc4f3438e918f7a9c212174cabd73b34">Create</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *rows, size_t numRows, <a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *cols, size_t numCols, const wxString &amp;cornerLabel, <a class="el" href="classwxAdvTableDataModel.html">wxAdvTableDataModel</a> *model)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create table and arrange rows and columns.  <a href="#fc4f3438e918f7a9c212174cabd73b34"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#624675cdaa23404c4ef267ae69d9c933">Create</a> (wxAdvHdrCellArray &amp;rows, wxAdvHdrCellArray &amp;cols, const wxString &amp;cornerLabel, <a class="el" href="classwxAdvTableDataModel.html">wxAdvTableDataModel</a> *model)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create table and arrange rows and columns.  <a href="#624675cdaa23404c4ef267ae69d9c933"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#13fb2511125d5b16f505d479b4fa434e">Create</a> (size_t numRows, <a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *cols, size_t numCols, const wxString &amp;cornerLabel, <a class="el" href="classwxAdvTableDataModel.html">wxAdvTableDataModel</a> *model)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create table and arrange rows and columns, with specified row count.  <a href="#13fb2511125d5b16f505d479b4fa434e"></a><br></td></tr>
@@ -83,13 +86,27 @@ Inheritance diagram for wxAdvTable:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#2ae501f7a847ab7da3d6ff80c8a44d85">UpdateGeometry</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Recalculate entire table geometry and repaint it.  <a href="#2ae501f7a847ab7da3d6ff80c8a44d85"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#2cd8f322ec3257ac5a3c8c71d62c811e">AddRows</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *rows, size_t numRows)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#0401fd8ecfa50066d4895e9234552434">AddRows</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *rows, size_t numRows, size_t before=UNDEF_SIZE)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#2d4fbe52c34336e0238bb5df65bc72ed">AddCols</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *cols, size_t numCols)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add rows to table.  <a href="#0401fd8ecfa50066d4895e9234552434"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#0dfe9298efbcb2aeb86c482b67e8b651">AddCols</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *cols, size_t numCols, size_t before=UNDEF_SIZE)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add columns to table.  <a href="#0dfe9298efbcb2aeb86c482b67e8b651"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#1abf57d6de9e0f9b9d239a8c1695c61b">RemoveRows</a> (size_t from, size_t count)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove rows from table.  <a href="#1abf57d6de9e0f9b9d239a8c1695c61b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#1d4cbbbbf423390f7ba8f7e5005126f7">RemoveCols</a> (size_t from, size_t count)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove columns from table.  <a href="#1d4cbbbbf423390f7ba8f7e5005126f7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#7ecaf9ae56d5cfa0e8aeb274659c5ce9">RemoveHdrCells</a> (size_t from, size_t count, bool isRows)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove header cells from table.  <a href="#7ecaf9ae56d5cfa0e8aeb274659c5ce9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#b734d89db1c8b8d1253d9b5bd675836e">RemoveHdrCell</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *hdrCell)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove header cell from table.  <a href="#b734d89db1c8b8d1253d9b5bd675836e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#ebb980fc1bd0f21cce2f8f3a8dc0756c">SetShowHeaders</a> (bool showRows, bool showCols, bool showCorner)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove rows from.  <a href="#ebb980fc1bd0f21cce2f8f3a8dc0756c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets headers (row, column, corner header) show params.  <a href="#ebb980fc1bd0f21cce2f8f3a8dc0756c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#6474d5ca45f080ab80a5ef7d6bc48792">SetShowRows</a> (bool showRows)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets whether to show rows header.  <a href="#6474d5ca45f080ab80a5ef7d6bc48792"></a><br></td></tr>
@@ -166,9 +183,11 @@ Inheritance diagram for wxAdvTable:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#b12f43186a639fbf7395db17fbf3e504">GetDecompColCount</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns decomposed column count.  <a href="#b12f43186a639fbf7395db17fbf3e504"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#9be1c919c72e21b1f8fbe8c0a521d481">GetRow</a> (size_t index)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#d59abd4fc0d7a351548e02ab1b282bfb">GetRow</a> (size_t index)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#70af5e2ba4afde19a0fd882943cafba2">GetDecompRow</a> (size_t index)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#cf4eb04e5b9914f7947e0e179de5eb64">GetCol</a> (size_t index)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#a9128fdb7d02c79e8244586f4e6d6f84">GetDecompCol</a> (size_t index)</td></tr>
 
@@ -183,6 +202,7 @@ Inheritance diagram for wxAdvTable:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns table data model.  <a href="#49a9244a1d3e69fb3306ff5766aef9fa"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvCellEditor.html">wxAdvCellEditor</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#231fd5d0cb31e8d6c2cc9d4eedfc71b3">GetEditorForCell</a> (size_t row, size_t col)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns editor to edit cell value.  <a href="#231fd5d0cb31e8d6c2cc9d4eedfc71b3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#15f241d6527206f51e021d4c036abc29">SetEditorForFormat</a> (int format, <a class="el" href="classwxAdvCellEditor.html">wxAdvCellEditor</a> *editor)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set cell editor for specified cell format.  <a href="#15f241d6527206f51e021d4c036abc29"></a><br></td></tr>
@@ -236,7 +256,11 @@ Inheritance diagram for wxAdvTable:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks if specified cell is highlighted.  <a href="#dd5194dac08e510acef48a800216460c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#066f17104ed455976c5be3571e10a58d">SetResizeAllRowsAllowed</a> (bool resizeAllRowsAllowed)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#487c0e7cc00ad1d6edb7ed21dfed032e">IsResizeAllRowsAllowed</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#d297f23280b5aae44e1da0b7d40dd3aa">SetResizeAllColsAllowed</a> (bool resizeAllColsAllowed)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#286e802926a4903db9e21a24bdd66ba6">IsResizeAllColsAllowed</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#3713cd107ad4e0c8e40fd2ae592d1448">SetSelection</a> (<a class="el" href="classwxAdvRange.html">wxAdvRange</a> &amp;range)</td></tr>
 
@@ -295,6 +319,12 @@ Inheritance diagram for wxAdvTable:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#fac74e3f1bd76aff49152793a53fcd57">GetRangeRect</a> (wxRect &amp;rc, size_t row1, size_t col1, size_t row2, size_t col2)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#0815beed65cc32eb49e51c2788ba7a6c">SetBgBrush</a> (const wxBrush &amp;bgBrush)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets brush to draw cells background.  <a href="#0815beed65cc32eb49e51c2788ba7a6c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const wxBrush &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#24504b62169f23c3c78bc23b2a66bbd4">GetBgBrush</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cells background brush.  <a href="#24504b62169f23c3c78bc23b2a66bbd4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTable.html#7341104a75319408a259cea88af63541">SetSelectedBgBrush</a> (const wxBrush &amp;selectedBgBrush)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets brush to draw selected cells background.  <a href="#7341104a75319408a259cea88af63541"></a><br></td></tr>
@@ -338,7 +368,7 @@ Inheritance diagram for wxAdvTable:</div>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Main component class. 
 <p>
-Table control implementation.<p>
+Advanced table control implementation.<p>
 Features:<ul>
 <li>composite rows/columns.</li><li>sorting and filtering.</li><li>MCV design (designed after Java(tm) JTable classes). Data accesed through wxAdvTableModel, renderered by <a class="el" href="classwxAdvCellRenderer.html" title="Draws cell content.">wxAdvCellRenderer</a>, edited by <a class="el" href="classwxAdvCellEditor.html" title="Table cell editors base class.">wxAdvCellEditor</a></li><li>rows/columns dynamic add/remove support</li><li>TODO: add printing support</li><li>TODO: add filters support</li></ul>
 <p>
@@ -574,6 +604,57 @@ Call this after you create <a class="el" href="classwxAdvTable.html" title="Main
 
 </div>
 </div><p>
+<a class="anchor" name="624675cdaa23404c4ef267ae69d9c933"></a><!-- doxytag: member="wxAdvTable::Create" ref="624675cdaa23404c4ef267ae69d9c933" args="(wxAdvHdrCellArray &amp;rows, wxAdvHdrCellArray &amp;cols, const wxString &amp;cornerLabel, wxAdvTableDataModel *model)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::Create           </td>
+          <td>(</td>
+          <td class="paramtype">wxAdvHdrCellArray &amp;&nbsp;</td>
+          <td class="paramname"> <em>rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wxAdvHdrCellArray &amp;&nbsp;</td>
+          <td class="paramname"> <em>cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wxString &amp;&nbsp;</td>
+          <td class="paramname"> <em>cornerLabel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classwxAdvTableDataModel.html">wxAdvTableDataModel</a> *&nbsp;</td>
+          <td class="paramname"> <em>model</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create table and arrange rows and columns. 
+<p>
+Call this after you create <a class="el" href="classwxAdvTable.html" title="Main component class.">wxAdvTable</a> before using it. <a class="el" href="classwxAdvTable.html" title="Main component class.">wxAdvTable</a> takes ownership for table model <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>rows</em>&nbsp;</td><td>rows array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cols</em>&nbsp;</td><td>columns arrray </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cornerLabel</em>&nbsp;</td><td>string to use as corner </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>model</em>&nbsp;</td><td>data model </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <a class="anchor" name="13fb2511125d5b16f505d479b4fa434e"></a><!-- doxytag: member="wxAdvTable::Create" ref="13fb2511125d5b16f505d479b4fa434e" args="(size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &amp;cornerLabel, wxAdvTableDataModel *model)" -->
 <div class="memitem">
 <div class="memproto">
@@ -780,10 +861,10 @@ Destroy table, free data model.
 <p>
 Recalculate entire table geometry and repaint it. 
 <p>
-Need to be called after change in hdrCell attributes by user. 
+Need to be called by user after change in hdrCell attributes. 
 </div>
 </div><p>
-<a class="anchor" name="2cd8f322ec3257ac5a3c8c71d62c811e"></a><!-- doxytag: member="wxAdvTable::AddRows" ref="2cd8f322ec3257ac5a3c8c71d62c811e" args="(wxAdvHdrCell *rows, size_t numRows)" -->
+<a class="anchor" name="0401fd8ecfa50066d4895e9234552434"></a><!-- doxytag: member="wxAdvTable::AddRows" ref="0401fd8ecfa50066d4895e9234552434" args="(wxAdvHdrCell *rows, size_t numRows, size_t before=UNDEF_SIZE)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -797,7 +878,13 @@ Need to be called after change in hdrCell attributes by user.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>numRows</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>numRows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>before</em> = <code>UNDEF_SIZE</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -809,10 +896,19 @@ Need to be called after change in hdrCell attributes by user.
 <div class="memdoc">
 
 <p>
+Add rows to table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>rows</em>&nbsp;</td><td>rows array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>numRows</em>&nbsp;</td><td>number of rows in rows array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>before</em>&nbsp;</td><td>index to row, before which to insert row, UNDEF_SIZE to insert at the end </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
-<a class="anchor" name="2d4fbe52c34336e0238bb5df65bc72ed"></a><!-- doxytag: member="wxAdvTable::AddCols" ref="2d4fbe52c34336e0238bb5df65bc72ed" args="(wxAdvHdrCell *cols, size_t numCols)" -->
+<a class="anchor" name="0dfe9298efbcb2aeb86c482b67e8b651"></a><!-- doxytag: member="wxAdvTable::AddCols" ref="0dfe9298efbcb2aeb86c482b67e8b651" args="(wxAdvHdrCell *cols, size_t numCols, size_t before=UNDEF_SIZE)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -826,7 +922,13 @@ Need to be called after change in hdrCell attributes by user.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>numCols</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>numCols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>before</em> = <code>UNDEF_SIZE</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -838,6 +940,160 @@ Need to be called after change in hdrCell attributes by user.
 <div class="memdoc">
 
 <p>
+Add columns to table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>cols</em>&nbsp;</td><td>columns array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>numCols</em>&nbsp;</td><td>number of columns in cols array </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>before</em>&nbsp;</td><td>index to column, before which to insert column, UNDEF_SIZE to insert at the end </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="1abf57d6de9e0f9b9d239a8c1695c61b"></a><!-- doxytag: member="wxAdvTable::RemoveRows" ref="1abf57d6de9e0f9b9d239a8c1695c61b" args="(size_t from, size_t count)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::RemoveRows           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove rows from table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>from</em>&nbsp;</td><td>first index to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>rows count to remove </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="1d4cbbbbf423390f7ba8f7e5005126f7"></a><!-- doxytag: member="wxAdvTable::RemoveCols" ref="1d4cbbbbf423390f7ba8f7e5005126f7" args="(size_t from, size_t count)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::RemoveCols           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove columns from table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>from</em>&nbsp;</td><td>first index to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>columns count to remove </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="7ecaf9ae56d5cfa0e8aeb274659c5ce9"></a><!-- doxytag: member="wxAdvTable::RemoveHdrCells" ref="7ecaf9ae56d5cfa0e8aeb274659c5ce9" args="(size_t from, size_t count, bool isRows)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::RemoveHdrCells           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>from</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>isRows</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove header cells from table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>from</em>&nbsp;</td><td>first index to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>cells count to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>isRows</em>&nbsp;</td><td>true if you want to remove rows, false - columns </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="b734d89db1c8b8d1253d9b5bd675836e"></a><!-- doxytag: member="wxAdvTable::RemoveHdrCell" ref="b734d89db1c8b8d1253d9b5bd675836e" args="(wxAdvHdrCell *hdrCell)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::RemoveHdrCell           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td>
+          <td class="paramname"> <em>hdrCell</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove header cell from table. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hdrCell</em>&nbsp;</td><td>header cell to remove </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -873,9 +1129,9 @@ Need to be called after change in hdrCell attributes by user.
 <div class="memdoc">
 
 <p>
-Remove rows from. 
+Sets headers (row, column, corner header) show params. 
 <p>
-Sets headers (row, column, corner header) show params. <dl compact><dt><b>Parameters:</b></dt><dd>
+<dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>showRows</em>&nbsp;</td><td>true if you wish to rows header to be shown </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>showCols</em>&nbsp;</td><td>true if you wish to cols header to be shown </td></tr>
@@ -1517,12 +1773,12 @@ Returns decomposed column count.
 
 </div>
 </div><p>
-<a class="anchor" name="9be1c919c72e21b1f8fbe8c0a521d481"></a><!-- doxytag: member="wxAdvTable::GetRow" ref="9be1c919c72e21b1f8fbe8c0a521d481" args="(size_t index)" -->
+<a class="anchor" name="d59abd4fc0d7a351548e02ab1b282bfb"></a><!-- doxytag: member="wxAdvTable::GetRow" ref="d59abd4fc0d7a351548e02ab1b282bfb" args="(size_t index)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>&amp; wxAdvTable::GetRow           </td>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>* wxAdvTable::GetRow           </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>index</em>          </td>
@@ -1543,6 +1799,26 @@ Returns decomposed column count.
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>* wxAdvTable::GetDecompRow           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>index</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="cf4eb04e5b9914f7947e0e179de5eb64"></a><!-- doxytag: member="wxAdvTable::GetCol" ref="cf4eb04e5b9914f7947e0e179de5eb64" args="(size_t index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>* wxAdvTable::GetCol           </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>index</em>          </td>
@@ -1669,6 +1945,15 @@ Returns table data model.
 <div class="memdoc">
 
 <p>
+Returns editor to edit cell value. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>editor for cell </dd></dl>
 
 </div>
 </div><p>
@@ -1760,8 +2045,8 @@ Returns renderer for cell content.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index of cell </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>col index of cell </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>renderer for cell content </dd></dl>
@@ -2020,10 +2305,10 @@ Transforms cell coordinate from table to model space.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>sorted row index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>sorted column index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>modelRow</em>&nbsp;</td><td>unsorted row index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>modelCol</em>&nbsp;</td><td>unsorted column index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>table row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>table column index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>modelRow</em>&nbsp;</td><td>output model row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>modelCol</em>&nbsp;</td><td>output model column index </td></tr>
   </table>
 </dl>
 
@@ -2071,10 +2356,10 @@ Transforms cell coordinate from model to table space.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>sorted row index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>sorted column index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>tableRow</em>&nbsp;</td><td>unsorted row index </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>tableCol</em>&nbsp;</td><td>unsorted column index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>model row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>model column index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tableRow</em>&nbsp;</td><td>output table row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tableCol</em>&nbsp;</td><td>output table column index </td></tr>
   </table>
 </dl>
 
@@ -2110,8 +2395,8 @@ Returns table cell rectangle.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row number </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 
@@ -2154,10 +2439,11 @@ Returns table cell rectangle.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>rc</em>&nbsp;</td><td>reference to rectangle </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row number </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column number </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if rc is set to table cell rectangle </dd></dl>
 
 </div>
 </div><p>
@@ -2259,8 +2545,8 @@ Checks if specified cell is selected.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index of cell </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index of cell </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 
@@ -2296,8 +2582,8 @@ Checks if specified cell is highlighted.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index of cell </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index of cell </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 
@@ -2323,6 +2609,25 @@ Checks if specified cell is highlighted.
 
 </div>
 </div><p>
+<a class="anchor" name="487c0e7cc00ad1d6edb7ed21dfed032e"></a><!-- doxytag: member="wxAdvTable::IsResizeAllRowsAllowed" ref="487c0e7cc00ad1d6edb7ed21dfed032e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool wxAdvTable::IsResizeAllRowsAllowed           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="d297f23280b5aae44e1da0b7d40dd3aa"></a><!-- doxytag: member="wxAdvTable::SetResizeAllColsAllowed" ref="d297f23280b5aae44e1da0b7d40dd3aa" args="(bool resizeAllColsAllowed)" -->
 <div class="memitem">
 <div class="memproto">
@@ -2332,6 +2637,25 @@ Checks if specified cell is highlighted.
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>resizeAllColsAllowed</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="286e802926a4903db9e21a24bdd66ba6"></a><!-- doxytag: member="wxAdvTable::IsResizeAllColsAllowed" ref="286e802926a4903db9e21a24bdd66ba6" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool wxAdvTable::IsResizeAllColsAllowed           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
         </tr>
@@ -2400,8 +2724,8 @@ Sets selection to single cell in SelectCell mode, row - in SelectRows mode, colu
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index of cell </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index of cell </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 
@@ -2644,8 +2968,8 @@ Sets focused cell.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index of cell </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index of cell </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>cell row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>cell column index </td></tr>
   </table>
 </dl>
 
@@ -2907,6 +3231,55 @@ Returns columns area rectangle.
 <div class="memdoc">
 
 <p>
+
+</div>
+</div><p>
+<a class="anchor" name="0815beed65cc32eb49e51c2788ba7a6c"></a><!-- doxytag: member="wxAdvTable::SetBgBrush" ref="0815beed65cc32eb49e51c2788ba7a6c" args="(const wxBrush &amp;bgBrush)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTable::SetBgBrush           </td>
+          <td>(</td>
+          <td class="paramtype">const wxBrush &amp;&nbsp;</td>
+          <td class="paramname"> <em>bgBrush</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Sets brush to draw cells background. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bgBrush</em>&nbsp;</td><td>new brush </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="24504b62169f23c3c78bc23b2a66bbd4"></a><!-- doxytag: member="wxAdvTable::GetBgBrush" ref="24504b62169f23c3c78bc23b2a66bbd4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const wxBrush &amp; wxAdvTable::GetBgBrush           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns cells background brush. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>cells background brush </dd></dl>
 
 </div>
 </div><p>
@@ -3256,7 +3629,7 @@ Called when all table data has been changed.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 4 16:54:52 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

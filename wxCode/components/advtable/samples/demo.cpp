@@ -12,8 +12,14 @@
 #include <wx/aui/aui.h>
 #include <wx/aboutdlg.h>
 
-const wxString appVersion = wxT("1.1");
-const wxString appName = wxT("wxAdvTable demo 1.1");
+const wxString appVersion = wxT("1.3");
+const wxString appName = wxT("wxAdvTable demo 1.3");
+
+/*
+ * TODO:
+ *  - show cell attributes usage
+ *  - add fit for data methods
+ */
 
 /**
  * Demo application.
@@ -54,11 +60,19 @@ enum CONTROL_IDS {
 	CHECK_SHOW_CORNER,
 	CHECK_SORT_BY_ANY_ROW,
 	CHECK_SORT_BY_ANY_COL,
+	CHECK_RESIZE_ALL_ROWS,
+	CHECK_RESIZE_ALL_COLS,
 	SPINCTRL_GRID_WIDTH,
 	SPINCTRL_FOCUSED_WIDTH,
+	COLOURPICKER_GRID_COLOUR,
+	COLOURPICKER_FOCUSED_COLOUR,
+	COLOURPICKER_FOCUSED_BG_COLOUR,
+	COLOURPICKER_BACKGROUND_COLOUR,
+	COLOURPICKER_SELECTED_COLOUR,
+	COLOURPICKER_HIGHLIGHTED_COLOUR,
 };
 
-BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
+BEGIN_EVENT_TABLE(ControlPanel, wxScrolledWindow)
 	EVT_CHOICE(CHOICE_SELECT_MODE, ControlPanel::OnChoiceSelectMode)
 	EVT_CHOICE(CHOICE_HIGHLIGHT_MODE, ControlPanel::OnChoiceHighlightMode)
 	EVT_CHOICE(CHOICE_SORT_MODE, ControlPanel::OnChoiceSortMode)
@@ -67,12 +81,20 @@ BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
 	EVT_CHECKBOX(CHECK_SHOW_CORNER, ControlPanel::OnCheckShowCorner)
 	EVT_CHECKBOX(CHECK_SORT_BY_ANY_ROW, ControlPanel::OnCheckSortByAnyRow)
 	EVT_CHECKBOX(CHECK_SORT_BY_ANY_COL, ControlPanel::OnCheckSortByAnyCol)
+	EVT_CHECKBOX(CHECK_RESIZE_ALL_ROWS, ControlPanel::OnCheckResizeAllRows)
+	EVT_CHECKBOX(CHECK_RESIZE_ALL_COLS, ControlPanel::OnCheckResizeAllCols)
 	EVT_SPINCTRL(SPINCTRL_GRID_WIDTH, ControlPanel::OnSpinCtrlGridWidth)
 	EVT_SPINCTRL(SPINCTRL_FOCUSED_WIDTH, ControlPanel::OnSpinCtrlFocusedWidth)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_GRID_COLOUR, ControlPanel::OnColourPickerGridColour)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_FOCUSED_COLOUR, ControlPanel::OnColourPickerFocusedColour)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_FOCUSED_BG_COLOUR, ControlPanel::OnColourPickerFocusedBgColour)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_BACKGROUND_COLOUR, ControlPanel::OnColourPickerBackgroundColour)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_SELECTED_COLOUR, ControlPanel::OnColourPickerSelectedColour)
+	EVT_COLOURPICKER_CHANGED(COLOURPICKER_HIGHLIGHTED_COLOUR, ControlPanel::OnColourPickerHighlightedColour)
 END_EVENT_TABLE()
 
 ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
-: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(100, 200))
+: wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(225, 400), wxHSCROLL)
 {
 	m_advTable = advTable;
 
@@ -163,6 +185,18 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 	sizer->Add(checkBox,
 			0, wxEXPAND);
 
+	// create "allow resize all rows" checkBox
+	checkBox = new wxCheckBox(this, CHECK_RESIZE_ALL_ROWS, wxT("Allow resize all rows"), wxDefaultPosition, wxDefaultSize);
+	checkBox->SetValue(m_advTable->IsResizeAllRowsAllowed());
+	sizer->Add(checkBox,
+			0, wxEXPAND);
+
+	// create "allow resize all columns" checkBox
+	checkBox = new wxCheckBox(this, CHECK_RESIZE_ALL_COLS, wxT("Allow resize all columns"), wxDefaultPosition, wxDefaultSize);
+	checkBox->SetValue(m_advTable->IsResizeAllColsAllowed());
+	sizer->Add(checkBox,
+			0, wxEXPAND);
+
 	// create graphics object, grid pen, focused pen, etc.
 	wxSizer *graphicsSizer = new wxFlexGridSizer(0, 2, 5, 5);
 
@@ -170,9 +204,27 @@ ControlPanel::ControlPanel(wxWindow *parent, wxAdvTable *advTable)
 			new wxSpinCtrl(this, SPINCTRL_GRID_WIDTH, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 					wxSP_ARROW_KEYS, 1, 100, 1));
 
-	ADD_FIELD(this, graphicsSizer, wxT("Focused lines width"),
+	ADD_FIELD(this, graphicsSizer, wxT("Grid lines colour"),
+			new wxColourPickerCtrl(this, COLOURPICKER_GRID_COLOUR, m_advTable->GetGridPen().GetColour()));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Focused line width"),
 			new wxSpinCtrl(this, SPINCTRL_FOCUSED_WIDTH, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 					wxSP_ARROW_KEYS, 1, 100, 1));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Focused lines colour"),
+				new wxColourPickerCtrl(this, COLOURPICKER_FOCUSED_COLOUR, m_advTable->GetFocusedPen().GetColour()));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Focused background colour"),
+				new wxColourPickerCtrl(this, COLOURPICKER_FOCUSED_BG_COLOUR, m_advTable->GetFocusedBgBrush().GetColour()));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Background colour"),
+				new wxColourPickerCtrl(this, COLOURPICKER_BACKGROUND_COLOUR, m_advTable->GetBgBrush().GetColour()));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Selected colour"),
+				new wxColourPickerCtrl(this, COLOURPICKER_SELECTED_COLOUR, m_advTable->GetSelectedBgBrush().GetColour()));
+
+	ADD_FIELD(this, graphicsSizer, wxT("Highlighed colour"),
+				new wxColourPickerCtrl(this, COLOURPICKER_HIGHLIGHTED_COLOUR, m_advTable->GetHighlightedBgBrush().GetColour()));
 
 	sizer->Add(graphicsSizer,
 			0, wxEXPAND);
@@ -285,6 +337,16 @@ void ControlPanel::OnCheckSortByAnyCol(wxCommandEvent &ev)
 	m_advTable->SetAllowSortByAnyCol(ev.IsChecked());
 }
 
+void ControlPanel::OnCheckResizeAllRows(wxCommandEvent &ev)
+{
+	m_advTable->SetResizeAllRowsAllowed(ev.IsChecked());
+}
+
+void ControlPanel::OnCheckResizeAllCols(wxCommandEvent &ev)
+{
+	m_advTable->SetResizeAllColsAllowed(ev.IsChecked());
+}
+
 void ControlPanel::OnSpinCtrlGridWidth(wxSpinEvent &ev)
 {
 	wxPen pen = m_advTable->GetGridPen();
@@ -301,14 +363,73 @@ void ControlPanel::OnSpinCtrlFocusedWidth(wxSpinEvent &ev)
 	m_advTable->SetFocusedPen(pen);
 }
 
+void ControlPanel::OnColourPickerGridColour(wxColourPickerEvent &ev)
+{
+	wxPen pen = m_advTable->GetGridPen();
+	pen.SetColour(ev.GetColour());
+
+	m_advTable->SetGridPen(pen);
+}
+
+void ControlPanel::OnColourPickerFocusedColour(wxColourPickerEvent &ev)
+{
+	wxPen pen = m_advTable->GetFocusedPen();
+	pen.SetColour(ev.GetColour());
+
+	m_advTable->SetFocusedPen(pen);
+}
+
+void ControlPanel::OnColourPickerFocusedBgColour(wxColourPickerEvent &ev)
+{
+	wxBrush brush = m_advTable->GetFocusedBgBrush();
+	brush.SetColour(ev.GetColour());
+
+	m_advTable->SetFocusedBgBrush(brush);
+}
+
+void ControlPanel::OnColourPickerBackgroundColour(wxColourPickerEvent &ev)
+{
+	wxBrush brush = m_advTable->GetBgBrush();
+	brush.SetColour(ev.GetColour());
+
+	m_advTable->SetBgBrush(brush);
+}
+
+void ControlPanel::OnColourPickerSelectedColour(wxColourPickerEvent &ev)
+{
+	wxBrush brush = m_advTable->GetSelectedBgBrush();
+	brush.SetColour(ev.GetColour());
+
+	m_advTable->SetSelectedBgBrush(brush);
+}
+
+void ControlPanel::OnColourPickerHighlightedColour(wxColourPickerEvent &ev)
+{
+	wxBrush brush = m_advTable->GetHighlightedBgBrush();
+	brush.SetColour(ev.GetColour());
+
+	m_advTable->SetHighlightedBgBrush(brush);
+}
 
 //
 // MainFrame
 //
+enum {
+	MENU_INSERT_FIRST_COL = 101,
+	MENU_INSERT_FIRST_ROW,
+	MENU_REMOVE_FIRST_COL,
+	MENU_REMOVE_FIRST_ROW,
+};
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_MENU(MENU_INSERT_FIRST_COL, MainFrame::OnInsertFirstCol)
+	EVT_MENU(MENU_INSERT_FIRST_ROW, MainFrame::OnInsertFirstRow)
+	EVT_MENU(MENU_REMOVE_FIRST_COL, MainFrame::OnRemoveFirstCol)
+	EVT_MENU(MENU_REMOVE_FIRST_ROW, MainFrame::OnRemoveFirstRow)
+
 	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+
 	EVT_GRID_CELL_LEFT_CLICK(MainFrame::OnGridLeftClick)
 	EVT_GRID_CELL_RIGHT_CLICK(MainFrame::OnGridRightClick)
 	EVT_GRID_CELL_LEFT_DCLICK(MainFrame::OnGridLeftDClick)
@@ -326,7 +447,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(900, 600))
+: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(950, 800))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -334,40 +455,92 @@ MainFrame::MainFrame()
 	m_advTable = new wxAdvTable(this, wxID_ANY);
 	auiManager->AddPane(m_advTable, wxAuiPaneInfo().Center().Caption(wxT("wxAdvTable")).CloseButton(false));
 
+	// create wxAdvTable structure
+	CreateTableStructure();
+
 	// create control panel, used to set table properties
 	m_controlPanel = new ControlPanel(this, m_advTable);
 	auiManager->AddPane(m_controlPanel, wxAuiPaneInfo().Left().Caption(wxT("Control")).CloseButton(false));
 
 	// create log window
-	wxTextCtrl *logCtrl = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize,
+	wxTextCtrl *logCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 			wxTE_MULTILINE | wxTE_READONLY);
-	auiManager->AddPane(logCtrl, wxAuiPaneInfo().Bottom().Caption(wxT("Messages")).CloseButton(false).MinSize(500, 200));
+	auiManager->AddPane(logCtrl, wxAuiPaneInfo().Bottom().Caption(wxT("Messages")).CloseButton(false).MinSize(500, 150));
 	wxLog::SetActiveTarget(new wxLogTextCtrl(logCtrl));
 
 	auiManager->Update();
 
 	Centre();
 
+	CreateMainMenu();
+}
+
+MainFrame::~MainFrame()
+{
+}
+
+void MainFrame::CreateMainMenu()
+{
 	// Create main menu
 	wxMenuBar *menuBar = new wxMenuBar();
 
 	wxMenu *menuFile = new wxMenu();
 	menuFile->Append(wxID_EXIT, wxT("E&xit"));
 
+	wxMenu *menuAdd = new wxMenu();
+	menuAdd->Append(MENU_INSERT_FIRST_COL, wxT("Insert first column"));
+	menuAdd->Append(MENU_INSERT_FIRST_ROW, wxT("Insert first row"));
+	menuAdd->Append(MENU_REMOVE_FIRST_COL, wxT("Remove first column"));
+	menuAdd->Append(MENU_REMOVE_FIRST_ROW, wxT("Remove first row"));
+
 	wxMenu *menuHelp = new wxMenu();
 	menuHelp->Append(wxID_ABOUT, wxT("&About"));
 
 	menuBar->Append(menuFile, wxT("&File"));
+	menuBar->Append(menuAdd, wxT("&Add rows/cols"));
 	menuBar->Append(menuHelp, wxT("&Help"));
 
 	SetMenuBar(menuBar);
-
-	// create wxAdvTable structure
-	CreateTableStructure();
 }
 
-MainFrame::~MainFrame()
+void MainFrame::OnInsertFirstCol(wxCommandEvent &ev)
 {
+	wxAdvHdrCell newCol[] = {
+			wxAdvHdrCell(wxT("New col")),
+	};
+
+	wxAdvDefaultTableDataModel *model = (wxAdvDefaultTableDataModel *) m_advTable->GetModel();
+
+	model->InsertCols(0, 1);
+	m_advTable->AddCols(newCol, 1, 0);
+}
+
+void MainFrame::OnInsertFirstRow(wxCommandEvent &ev)
+{
+	wxAdvHdrCell newRow[] = {
+			wxAdvHdrCell(wxT("New row")),
+	};
+
+	wxAdvDefaultTableDataModel *model = (wxAdvDefaultTableDataModel *) m_advTable->GetModel();
+
+	model->InsertRows(0, 1);
+	m_advTable->AddRows(newRow, 1, 0);
+}
+
+void MainFrame::OnRemoveFirstCol(wxCommandEvent &ev)
+{
+	wxAdvDefaultTableDataModel *model = (wxAdvDefaultTableDataModel *) m_advTable->GetModel();
+
+	m_advTable->RemoveCols(0, 1);
+	model->RemoveCols(0, 1);
+}
+
+void MainFrame::OnRemoveFirstRow(wxCommandEvent &ev)
+{
+	wxAdvDefaultTableDataModel *model = (wxAdvDefaultTableDataModel *) m_advTable->GetModel();
+
+	m_advTable->RemoveRows(0, 1);
+	model->RemoveRows(0, 1);
 }
 
 void MainFrame::OnAbout(wxCommandEvent &ev)
@@ -495,7 +668,7 @@ void MainFrame::CreateTableStructure()
 
 	// column definitions
 	wxAdvHdrCell cols[] = {
-		wxAdvHdrCell(wxT("Col I")).Size(150), // we can explicitly define size of column
+		wxAdvHdrCell(wxT("Col I")).Size(125), // we can explicitly define size of column
 		wxAdvHdrCell(wxT("Col II")) // second column containing three subcolumns
 			.Sub(wxT("Col II-I"))
 			.Sub(wxT("Col II-II"))

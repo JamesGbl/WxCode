@@ -66,8 +66,22 @@ Inheritance diagram for wxAdvDefaultTableDataModel:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as double.  <a href="#e028e8cd4eee506a20e246c563d871c8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#4bceac7cf30d2a44d77b081ec6775076">SetRowFormat</a> (size_t row, int format)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set cell format for entire row.  <a href="#4bceac7cf30d2a44d77b081ec6775076"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#6e6f6659961818e572ea7e5fdd857bd1">SetColFormat</a> (size_t col, int format)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set cell format for entire column.  <a href="#6e6f6659961818e572ea7e5fdd857bd1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#566773ab790bf4e3d48658ce75b9f259">InsertRows</a> (size_t before, size_t count, int format=wxStringFormat)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert new rows to specified position.  <a href="#566773ab790bf4e3d48658ce75b9f259"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#3a44c6cc11b4f82a82ed59518a1304f7">InsertCols</a> (size_t before, size_t count, int format=wxStringFormat)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert new columns to specified position.  <a href="#3a44c6cc11b4f82a82ed59518a1304f7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#dbd86cf56979eb5ff190f6696ba62769">RemoveRows</a> (size_t first, size_t count)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove specified rows.  <a href="#dbd86cf56979eb5ff190f6696ba62769"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#2f4e43ad91f726a60b0c5ec329ee50c4">RemoveCols</a> (size_t first, size_t count)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove specified columns.  <a href="#2f4e43ad91f726a60b0c5ec329ee50c4"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Default table model for <a class="el" href="classwxAdvTable.html" title="Main component class.">wxAdvTable</a>. 
@@ -445,6 +459,14 @@ NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b
 <div class="memdoc">
 
 <p>
+Set cell format for entire row. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>format</em>&nbsp;</td><td>format for row </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -474,12 +496,182 @@ NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b
 <div class="memdoc">
 
 <p>
+Set cell format for entire column. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>format</em>&nbsp;</td><td>format for column </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="566773ab790bf4e3d48658ce75b9f259"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::InsertRows" ref="566773ab790bf4e3d48658ce75b9f259" args="(size_t before, size_t count, int format=wxStringFormat)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvDefaultTableDataModel::InsertRows           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>before</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>format</em> = <code>wxStringFormat</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Insert new rows to specified position. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>before</em>&nbsp;</td><td>row index before which to insert new rows </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>row count to insert </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>format</em>&nbsp;</td><td>format for new rows </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="3a44c6cc11b4f82a82ed59518a1304f7"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::InsertCols" ref="3a44c6cc11b4f82a82ed59518a1304f7" args="(size_t before, size_t count, int format=wxStringFormat)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvDefaultTableDataModel::InsertCols           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>before</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>format</em> = <code>wxStringFormat</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Insert new columns to specified position. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>before</em>&nbsp;</td><td>column index before which to insert new columns </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>column count to insert </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>format</em>&nbsp;</td><td>format for new columns </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="dbd86cf56979eb5ff190f6696ba62769"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::RemoveRows" ref="dbd86cf56979eb5ff190f6696ba62769" args="(size_t first, size_t count)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvDefaultTableDataModel::RemoveRows           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>first</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove specified rows. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>first</em>&nbsp;</td><td>first row index to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>row count to remove </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="2f4e43ad91f726a60b0c5ec329ee50c4"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::RemoveCols" ref="2f4e43ad91f726a60b0c5ec329ee50c4" args="(size_t first, size_t count)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvDefaultTableDataModel::RemoveCols           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>first</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>count</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove specified columns. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>first</em>&nbsp;</td><td>first column index to remove </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>column count to remove </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 4 16:54:52 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

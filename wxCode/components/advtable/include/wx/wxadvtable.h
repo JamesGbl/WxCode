@@ -590,9 +590,49 @@ public:
 
 	virtual double GetCellValueDouble(size_t row, size_t col);
 
+	/**
+	 * Set cell format for entire row.
+	 * @param row row index
+	 * @param format format for row
+	 */
 	void SetRowFormat(size_t row, int format);
 
+	/**
+	 * Set cell format for entire column.
+	 * @param col column index
+	 * @param format format for column
+	 */
 	void SetColFormat(size_t col, int format);
+
+	/**
+	 * Insert new rows to specified position.
+	 * @param before row index before which to insert new rows
+	 * @param count row count to insert
+	 * @param format format for new rows
+	 */
+	void InsertRows(size_t before, size_t count, int format = wxStringFormat);
+
+	/**
+	 * Insert new columns to specified position.
+	 * @param before column index before which to insert new columns
+	 * @param count column count to insert
+	 * @param format format for new columns
+	 */
+	void InsertCols(size_t before, size_t count, int format = wxStringFormat);
+
+	/**
+	 * Remove specified rows.
+	 * @param first first row index to remove
+	 * @param count row count to remove
+	 */
+	void RemoveRows(size_t first, size_t count);
+
+	/**
+	 * Remove specified columns.
+	 * @param first first column index to remove
+	 * @param count column count to remove
+	 */
+	void RemoveCols(size_t first, size_t count);
 
 private:
 	bool m_readOnly;
@@ -963,7 +1003,7 @@ private:
  * - label horizontal/vertical alignment
  * - spacing - distance between label and cell edges
  * - sortable or not
- * - horizontal and vertical label alignment
+ * - horizontal or vertical label text
  *
  * Header cell can be simple or composite.
  * Composite cells contains one or more subcells.
@@ -973,6 +1013,9 @@ class WXDLLEXPORT wxAdvHdrCell
 	friend class wxAdvTable;
 	friend class wxAdvDefaultHdrCellRenderer;
 public:
+	static const int defaultSpacing = 5;
+	static const int defaultAlignVertical = wxALIGN_CENTER_VERTICAL;
+	static const int defaultAlignHorizontal = wxALIGN_CENTER_HORIZONTAL;
 
 	/**
 	 * Copy constructor.
@@ -980,7 +1023,6 @@ public:
 	wxAdvHdrCell(const wxAdvHdrCell &o)
 	{
 		// copy attributes
-		m_subCells = o.m_subCells;
 		m_label = o.m_label;
 		m_size  = o.m_size;
 		m_alignVertical = o.m_alignVertical;
@@ -989,6 +1031,9 @@ public:
 		m_verticalText = o.m_verticalText;
 		m_sortable = o.m_sortable;
 		m_resizeAllowed = o.m_resizeAllowed;
+
+		m_minSize = o.m_minSize;
+		m_maxSize = o.m_maxSize;
 
 		if (o.m_renderer != NULL) {
 			m_renderer = o.m_renderer->Clone();
@@ -999,10 +1044,16 @@ public:
 
 		// copy internals
 		m_rc = o.m_rc;
-		m_index = o.m_index;
+		m_decompIndex = o.m_decompIndex;
 		m_isRow = o.m_isRow;
 		m_parent = o.m_parent;
 		m_subIndex = o.m_subIndex;
+
+		m_table = o.m_table;
+
+		// copy subcells
+		m_subCells = o.m_subCells;
+		ReparentSubCells();
 	}
 
 	/**
@@ -1107,13 +1158,23 @@ public:
 	}
 
 	/**
+	 * Set whether to vertical text label.
+	 * @param verticalText true if you want to label be vertical
+	 * @return reference to itself
+	 */
+	wxAdvHdrCell &SetVerticalText(bool verticalText)
+	{
+		m_verticalText = verticalText;
+		return *this;
+	}
+
+	/**
 	 * Marks cell to draw label vertical.
 	 * @return reference to itself
 	 */
 	wxAdvHdrCell &VerticalText()
 	{
-		m_verticalText = true;
-		return *this;
+		return SetVerticalText(true);
 	}
 
 	/**
@@ -1126,13 +1187,24 @@ public:
 	}
 
 	/**
+	 * Marks cell as sortable or not.
+	 * @param sortable true if you want to cell be sortable,
+	 *  false - overwise
+	 * @return reference to itself
+	 */
+	wxAdvHdrCell &SetSortable(bool sortable)
+	{
+		m_sortable = sortable;
+		return *this;
+	}
+
+	/**
 	 * Marks cell as sortable.
 	 * @return reference to itself
 	 */
 	wxAdvHdrCell &Sortable()
 	{
-		m_sortable = true;
-		return *this;
+		return SetSortable(true);
 	}
 
 	/**
@@ -1276,6 +1348,34 @@ public:
 	}
 
 	/**
+	 * Checks whether cell is sub cell of another cell.
+	 * @return true if this cell is sub cell of another cell
+	 */
+	bool IsSubcell()
+	{
+		return m_parent != NULL;
+	}
+
+	/**
+	 * Returns subcell count.
+	 * @return subcell count
+	 */
+	size_t GetSubCellCount()
+	{
+		return m_subCells.Count();
+	}
+
+	/**
+	 * Returns subcell at index.
+	 * @param index subcell index
+	 * @return subcell
+	 */
+	wxAdvHdrCell *GetSubCell(size_t index)
+	{
+		return &m_subCells[index];
+	}
+
+	/**
 	 * Returns size, needed for cell.
 	 * @param dc device context
 	 */
@@ -1359,28 +1459,15 @@ public:
 	 */
 	size_t Index()
 	{
-		return m_index;
+		return m_decompIndex;
 	}
 
 	bool IsRightEdge()
 	{
-		if (m_parent != NULL) {
-			return (m_subIndex == m_parent->m_subCells.Count() - 1);
-		}
-		return false;
+		return (RightSibling() == NULL); // if we have right sibling - cell is right edge
 	}
 
-	wxAdvHdrCell *RightSibling()
-	{
-		if (m_parent == NULL) {
-			return NULL;
-		}
-
-		if (m_subIndex < m_parent->m_subCells.Count() - 1) {
-			return &m_parent->m_subCells[m_subIndex + 1];
-		}
-		return NULL;
-	}
+	wxAdvHdrCell *RightSibling();
 
 	/**
 	 * Returns summary hdrCell layer cell count.
@@ -1416,9 +1503,9 @@ private:
 	void SetDefaults()
 	{
 		m_size = 0;
-		m_alignVertical = wxALIGN_CENTRE_VERTICAL;
-		m_alignHorizontal = wxALIGN_CENTRE_HORIZONTAL;
-		m_spacing = 5;
+		m_alignVertical = defaultAlignVertical;
+		m_alignHorizontal = defaultAlignHorizontal;
+		m_spacing = defaultSpacing;
 		m_verticalText = false;
 		m_sortable = false;
 		m_resizeAllowed = false;
@@ -1426,13 +1513,34 @@ private:
 		m_renderer = NULL;
 
 		m_minSize = 0;
-		m_maxSize = 0;
+		m_maxSize = (wxCoord) UNDEF_SIZE;
 
-		m_index = UNDEF_SIZE;
+		m_decompIndex = UNDEF_SIZE;
 
 		m_parent = NULL;
 		m_subIndex = UNDEF_SIZE;
+
+		m_table = NULL;
 	}
+
+	void ReparentSubCells()
+	{
+		FOREACH_HDRCELL(n, m_subCells) {
+			m_subCells[n].m_parent = this;
+
+			m_subCells[n].ReparentSubCells();
+		}
+	}
+
+	/**
+	 * Remove sub cell at index.
+	 * @param index sub cell index
+	 */
+	void RemoveSubCell(size_t index)
+	{
+		m_subCells.RemoveAt(index);
+	}
+
 
 	//
 	// Variables.
@@ -1464,13 +1572,15 @@ private:
 	//
 	// for wxAdvTable to store row/column position
 	wxRect m_rc;
-	size_t m_index;
+	size_t m_decompIndex;
 	bool m_isRow;
+
+	wxAdvTable *m_table;
 };
 
 /**
  * Main component class.
- * Table control implementation.
+ * Advanced table control implementation.
  *
  * Features:
  * - composite rows/columns.
@@ -1523,6 +1633,17 @@ public:
 	void Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model);
 
 	/**
+	 * Create table and arrange rows and columns.
+	 * Call this after you create wxAdvTable before using it.
+	 * wxAdvTable takes ownership for table model
+	 * @param rows rows array
+	 * @param cols columns arrray
+	 * @param cornerLabel string to use as corner
+	 * @param model data model
+	 */
+	void Create(wxAdvHdrCellArray &rows, wxAdvHdrCellArray &cols, const wxString &cornerLabel, wxAdvTableDataModel *model);
+
+	/**
 	 * Create table and arrange rows and columns,
 	 * with specified row count.
 	 * Call this after you create wxAdvTable before using it.
@@ -1567,26 +1688,57 @@ public:
 
 	/**
 	 * Recalculate entire table geometry and repaint it.
-	 * Need to be called after change in hdrCell attributes by
-	 * user.
-	 *
+	 * Need to be called by user after change in hdrCell attributes.
 	 */
 	void UpdateGeometry();
 
 	//
 	// Dynamic row/column add/remove functions.
 	//
-	void AddRows(wxAdvHdrCell *rows, size_t numRows);
-
-	void AddCols(wxAdvHdrCell *cols, size_t numCols);
 
 	/**
-	 * Remove rows from
+	 * Add rows to table.
+	 * @param rows rows array
+	 * @param numRows number of rows in rows array
+	 * @param before index to row, before which to insert row, UNDEF_SIZE to insert at the end
 	 */
-/*	void RemoveRows(size_t from, size_t to);
+	void AddRows(wxAdvHdrCell *rows, size_t numRows, size_t before = UNDEF_SIZE);
 
-	void RemoveCols(size_t from, size_t to);
-*/
+	/**
+	 * Add columns to table.
+	 * @param cols columns array
+	 * @param numCols number of columns in cols array
+	 * @param before index to column, before which to insert column, UNDEF_SIZE to insert at the end
+	 */
+	void AddCols(wxAdvHdrCell *cols, size_t numCols, size_t before = UNDEF_SIZE);
+
+	/**
+	 * Remove rows from table.
+	 * @param from first index to remove
+	 * @param count rows count to remove
+	 */
+	void RemoveRows(size_t from, size_t count);
+
+	/**
+	 * Remove columns from table.
+	 * @param from first index to remove
+	 * @param count columns count to remove
+	 */
+	void RemoveCols(size_t from, size_t count);
+
+	/**
+	 * Remove header cells from table.
+	 * @param from first index to remove
+	 * @param count cells count to remove
+	 * @param isRows true if you want to remove rows, false - columns
+	 */
+	void RemoveHdrCells(size_t from, size_t count, bool isRows);
+
+	/**
+	 * Remove header cell from table.
+	 * @param hdrCell header cell to remove
+	 */
+	void RemoveHdrCell(wxAdvHdrCell *hdrCell);
 
 	//
 	// Show headers functions.
@@ -1741,6 +1893,10 @@ public:
 	 */
 	bool CanSortByHdrCell(wxAdvHdrCell *hdrCell);
 
+	//
+	// Highlight functions.
+	//
+
 	/**
 	 * Sets new highlight mode.
 	 * @param highlightMode new highlight mode
@@ -1796,13 +1952,21 @@ public:
 		return m_decompCols.Count();
 	}
 
-	wxAdvHdrCell &GetRow(size_t index)
+	wxAdvHdrCell *GetRow(size_t index)
 	{
-		return m_rows[index];
+		wxCHECK(index < m_rows.Count(), NULL);
+		return &m_rows[index];
 	}
+
 	wxAdvHdrCell *GetDecompRow(size_t index)
 	{
 		return m_decompRows[index];
+	}
+
+	wxAdvHdrCell *GetCol(size_t index)
+	{
+		wxCHECK(index < m_cols.Count(), NULL);
+		return &m_cols[index];
 	}
 
 	wxAdvHdrCell *GetDecompCol(size_t index)
@@ -1845,6 +2009,12 @@ public:
 		return m_model;
 	}
 
+	/**
+	 * Returns editor to edit cell value.
+	 * @param row cell row index
+	 * @param col cell column index
+	 * @return editor for cell
+	 */
 	wxAdvCellEditor *GetEditorForCell(size_t row, size_t col);
 
 	/**
@@ -1862,8 +2032,8 @@ public:
 
 	/**
 	 * Returns renderer for cell content.
-	 * @param row row index of cell
-	 * @param col col index of cell
+	 * @param row cell row index
+	 * @param col cell column index
 	 * @return renderer for cell content
 	 */
 	wxAdvCellRenderer *GetRendererForCell(size_t row, size_t col);
@@ -1916,34 +2086,35 @@ public:
 
 	/**
 	 * Transforms cell coordinate from table to model space.
-	 * @param row sorted row index
-	 * @param col sorted column index
-	 * @param modelRow unsorted row index
-	 * @param modelCol unsorted column index
+	 * @param row table row index
+	 * @param col table column index
+	 * @param modelRow output model row index
+	 * @param modelCol output model column index
 	 */
 	void ToModelCellCoord(size_t row, size_t col, size_t &modelRow, size_t &modelCol);
 
 	/**
 	 * Transforms cell coordinate from model to table space.
-	 * @param row sorted row index
-	 * @param col sorted column index
-	 * @param tableRow unsorted row index
-	 * @param tableCol unsorted column index
+	 * @param row model row index
+	 * @param col model column index
+	 * @param tableRow output table row index
+	 * @param tableCol output table column index
 	 */
 	void ToCellCoord(size_t row, size_t col, size_t &tableRow, size_t &tableCol);
 
 	/**
 	 * Returns table cell rectangle.
-	 * @param row row number
-	 * @param col column number
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	wxRect GetCellRect(size_t row, size_t col);
 
 	/**
 	 * Returns table cell rectangle.
 	 * @param rc reference to rectangle
-	 * @param row row number
-	 * @param col column number
+	 * @param row cell row index
+	 * @param col cell column index
+	 * @return true if rc is set to table cell rectangle
 	 */
 	bool GetCellRect(wxRect &rc, size_t row, size_t col);
 
@@ -1964,8 +2135,8 @@ public:
 
 	/**
 	 * Checks if specified cell is selected.
-	 * @param row row index of cell
-	 * @param col column index of cell
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	bool IsCellSelected(size_t row, size_t col)
 	{
@@ -1974,8 +2145,8 @@ public:
 
 	/**
 	 * Checks if specified cell is highlighted.
-	 * @param row row index of cell
-	 * @param col column index of cell
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	bool IsCellHighlighted(size_t row, size_t col);
 
@@ -1984,9 +2155,19 @@ public:
 		m_resizeAllRowsAllowed = resizeAllRowsAllowed;
 	}
 
+	bool IsResizeAllRowsAllowed()
+	{
+		return m_resizeAllRowsAllowed;
+	}
+
 	void SetResizeAllColsAllowed(bool resizeAllColsAllowed)
 	{
 		m_resizeAllColsAllowed = resizeAllColsAllowed;
+	}
+
+	bool IsResizeAllColsAllowed()
+	{
+		return m_resizeAllColsAllowed;
 	}
 
 	//
@@ -2003,8 +2184,8 @@ public:
 	/**
 	 * Sets selection to single cell in SelectCell mode,
 	 * row - in SelectRows mode, column - in SelectCols mode.
-	 * @param row row index of cell
-	 * @param col column index of cell
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	void SetSelection(size_t row, size_t col);
 
@@ -2058,8 +2239,8 @@ public:
 
 	/**
 	 * Sets focused cell.
-	 * @param row row index of cell
-	 * @param col column index of cell
+	 * @param row cell row index
+	 * @param col cell column index
 	 */
 	void SetFocusedCell(size_t row, size_t col);
 
@@ -2129,6 +2310,18 @@ public:
 	//
 	// Graphical objects functions.
 	//
+
+	/**
+	 * Sets brush to draw cells background.
+	 * @param bgBrush new brush
+	 */
+	void SetBgBrush(const wxBrush &bgBrush);
+
+	/**
+	 * Returns cells background brush.
+	 * @return cells background brush
+	 */
+	const wxBrush &GetBgBrush();
 
 	/**
 	 * Sets brush to draw selected cells background.
@@ -2220,8 +2413,8 @@ private:
 
 	bool IsHdrCellResizeEvent(const wxMouseEvent &ev, wxAdvHdrCell *cell);
 
-	void ShiftHdrCell(wxAdvHdrCell *hdrCell, int d);
-	void ResizeHdrCell(wxAdvHdrCell *hdrCell, int d, bool up, bool down, bool initial = false);
+	bool ResizeHdrCellSelf(wxAdvHdrCell *hdrCell, int d, int shift);
+
 	void ResizeHdrCell(const wxMouseEvent &ev, wxAdvHdrCell *cell);
 
 	//
@@ -2311,7 +2504,7 @@ private:
 
 	static size_t GetLayerCount(wxAdvHdrCellArray &hdrCells);
 
-	void AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, size_t numCells, bool isRows);
+	void AddHdrCells(wxAdvHdrCellArray &arr, wxAdvHdrCell *hdrCells, size_t numCells, size_t before, bool isRows);
 
 	size_t IncrRow(size_t row, int incr)
 	{

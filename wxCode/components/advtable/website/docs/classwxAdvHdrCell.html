@@ -61,12 +61,18 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#cc3c9e89b834a97f8b7ab54388637d4b">AlignHorizontal</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns horizontal text alignment.  <a href="#cc3c9e89b834a97f8b7ab54388637d4b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#7713b5d4cc2f2bb9fd875e942e24ef42">SetVerticalText</a> (bool verticalText)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to vertical text label.  <a href="#7713b5d4cc2f2bb9fd875e942e24ef42"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#363016226ba7128de71b184a74ea3028">VerticalText</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Marks cell to draw label vertical.  <a href="#363016226ba7128de71b184a74ea3028"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#c5e2279a45a287234f07ec8a92c56557">IsVerticalText</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks whether label text is vertical.  <a href="#c5e2279a45a287234f07ec8a92c56557"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#8093d218fbe08c885ec1c4b9af6e68d7">SetSortable</a> (bool sortable)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Marks cell as sortable or not.  <a href="#8093d218fbe08c885ec1c4b9af6e68d7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#65739b0055117e73410753d56db092be">Sortable</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Marks cell as sortable.  <a href="#65739b0055117e73410753d56db092be"></a><br></td></tr>
@@ -112,6 +118,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxCoord&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#ad66d2c056fe02b08bb25aa6746373d6">MaxSize</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns maximal size.  <a href="#ad66d2c056fe02b08bb25aa6746373d6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#613b52b97282793738a5fb4efa442fc9">IsSubcell</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks whether cell is sub cell of another cell.  <a href="#613b52b97282793738a5fb4efa442fc9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#e86cae449cd79803c90c2516a48ee623">GetSubCellCount</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns subcell count.  <a href="#e86cae449cd79803c90c2516a48ee623"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#699deb63f8580e477327d19cb15259c2">GetSubCell</a> (size_t index)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns subcell at index.  <a href="#699deb63f8580e477327d19cb15259c2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxSize&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#0e75f457991df4e25c9a87cbbb22b8c3">CalcExtent</a> (wxDC &amp;dc)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns size, needed for cell.  <a href="#0e75f457991df4e25c9a87cbbb22b8c3"></a><br></td></tr>
@@ -129,12 +144,19 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns decomposed index.  <a href="#91b00ef458af8a6164da00fa2ae9cbf8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#cfae6d7df30f2c59048adb099d5d3892">IsRightEdge</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#571b7ee272f833e72a1d99e0253e2055">RightSibling</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#8572bb47a5474b8bd04fbe0d9c5dc967">RightSibling</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#da6df9a45077ee337e486ff0647a41b0">GetDecompCellCount</a> (<a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> *cells, size_t numCells)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns summary hdrCell layer cell count.  <a href="#da6df9a45077ee337e486ff0647a41b0"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#ef5590c53d02ad3587eb3bba1150f355">defaultSpacing</a> = 5</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#386b6854095ac05ad0ed3b17abf9931e">defaultAlignVertical</a> = wxALIGN_CENTER_VERTICAL</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#4cf640384b5e0bf39349e631a0b3ada4">defaultAlignHorizontal</a> = wxALIGN_CENTER_HORIZONTAL</td></tr>
+
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html#f4532b10940189895c6ac814c9ca27b3">wxAdvTable</a></td></tr>
 
@@ -145,7 +167,7 @@
 Row/column description. 
 <p>
 Contains attributes to draw and arrange header cell, such as:<ul>
-<li>cell label</li><li>size (if not set it will be calculated automatically)</li><li>label horizontal/vertical alignment</li><li>spacing - distance between label and cell edges</li><li>sortable or not</li><li>horizontal and vertical label alignment</li></ul>
+<li>cell label</li><li>size (if not set it will be calculated automatically)</li><li>label horizontal/vertical alignment</li><li>spacing - distance between label and cell edges</li><li>sortable or not</li><li>horizontal or vertical label text</li></ul>
 <p>
 Header cell can be simple or composite. Composite cells contains one or more subcells. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="9dac7a0aec046a85af27562d809d149d"></a><!-- doxytag: member="wxAdvHdrCell::wxAdvHdrCell" ref="9dac7a0aec046a85af27562d809d149d" args="(const wxAdvHdrCell &amp;o)" -->
@@ -422,6 +444,34 @@ Returns horizontal text alignment.
 
 </div>
 </div><p>
+<a class="anchor" name="7713b5d4cc2f2bb9fd875e942e24ef42"></a><!-- doxytag: member="wxAdvHdrCell::SetVerticalText" ref="7713b5d4cc2f2bb9fd875e942e24ef42" args="(bool verticalText)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>&amp; wxAdvHdrCell::SetVerticalText           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>verticalText</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set whether to vertical text label. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>verticalText</em>&nbsp;</td><td>true if you want to label be vertical </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>reference to itself </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="363016226ba7128de71b184a74ea3028"></a><!-- doxytag: member="wxAdvHdrCell::VerticalText" ref="363016226ba7128de71b184a74ea3028" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -463,6 +513,34 @@ Marks cell to draw label vertical.
 Checks whether label text is vertical. 
 <p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>true if label text is vertical </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8093d218fbe08c885ec1c4b9af6e68d7"></a><!-- doxytag: member="wxAdvHdrCell::SetSortable" ref="8093d218fbe08c885ec1c4b9af6e68d7" args="(bool sortable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>&amp; wxAdvHdrCell::SetSortable           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>sortable</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Marks cell as sortable or not. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>sortable</em>&nbsp;</td><td>true if you want to cell be sortable, false - overwise </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>reference to itself </dd></dl>
 
 </div>
 </div><p>
@@ -832,6 +910,78 @@ Returns maximal size.
 
 </div>
 </div><p>
+<a class="anchor" name="613b52b97282793738a5fb4efa442fc9"></a><!-- doxytag: member="wxAdvHdrCell::IsSubcell" ref="613b52b97282793738a5fb4efa442fc9" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool wxAdvHdrCell::IsSubcell           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Checks whether cell is sub cell of another cell. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if this cell is sub cell of another cell </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="e86cae449cd79803c90c2516a48ee623"></a><!-- doxytag: member="wxAdvHdrCell::GetSubCellCount" ref="e86cae449cd79803c90c2516a48ee623" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t wxAdvHdrCell::GetSubCellCount           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns subcell count. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>subcell count </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="699deb63f8580e477327d19cb15259c2"></a><!-- doxytag: member="wxAdvHdrCell::GetSubCell" ref="699deb63f8580e477327d19cb15259c2" args="(size_t index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>* wxAdvHdrCell::GetSubCell           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>index</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns subcell at index. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>index</em>&nbsp;</td><td>subcell index </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>subcell </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="0e75f457991df4e25c9a87cbbb22b8c3"></a><!-- doxytag: member="wxAdvHdrCell::CalcExtent" ref="0e75f457991df4e25c9a87cbbb22b8c3" args="(wxDC &amp;dc)" -->
 <div class="memitem">
 <div class="memproto">
@@ -966,16 +1116,16 @@ If hdrCell is composite, it will return UNDEF_SIZE. <dl class="return" compact><
 
 </div>
 </div><p>
-<a class="anchor" name="571b7ee272f833e72a1d99e0253e2055"></a><!-- doxytag: member="wxAdvHdrCell::RightSibling" ref="571b7ee272f833e72a1d99e0253e2055" args="()" -->
+<a class="anchor" name="8572bb47a5474b8bd04fbe0d9c5dc967"></a><!-- doxytag: member="wxAdvHdrCell::RightSibling" ref="8572bb47a5474b8bd04fbe0d9c5dc967" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a>* wxAdvHdrCell::RightSibling           </td>
+          <td class="memname"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a> * wxAdvHdrCell::RightSibling           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -1054,9 +1204,55 @@ Returns summary hdrCell layer cell count.
 
 </div>
 </div><p>
+<hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="ef5590c53d02ad3587eb3bba1150f355"></a><!-- doxytag: member="wxAdvHdrCell::defaultSpacing" ref="ef5590c53d02ad3587eb3bba1150f355" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classwxAdvHdrCell.html#ef5590c53d02ad3587eb3bba1150f355">wxAdvHdrCell::defaultSpacing</a> = 5<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="386b6854095ac05ad0ed3b17abf9931e"></a><!-- doxytag: member="wxAdvHdrCell::defaultAlignVertical" ref="386b6854095ac05ad0ed3b17abf9931e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classwxAdvHdrCell.html#386b6854095ac05ad0ed3b17abf9931e">wxAdvHdrCell::defaultAlignVertical</a> = wxALIGN_CENTER_VERTICAL<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="4cf640384b5e0bf39349e631a0b3ada4"></a><!-- doxytag: member="wxAdvHdrCell::defaultAlignHorizontal" ref="4cf640384b5e0bf39349e631a0b3ada4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int <a class="el" href="classwxAdvHdrCell.html#4cf640384b5e0bf39349e631a0b3ada4">wxAdvHdrCell::defaultAlignHorizontal</a> = wxALIGN_CENTER_HORIZONTAL<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 4 16:54:52 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

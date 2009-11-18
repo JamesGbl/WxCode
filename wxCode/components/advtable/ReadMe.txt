@@ -10,11 +10,11 @@
  simplicity and flexibility in mind.
  It has many advanced features like: 
   - composite rows/columns
-  - built-in sorting and filtering support
+  - built-in sorting support
   - flexible rendering and editing support
   - flexible data access model
   - dynamic row/columns add/removal
-  - and visual features like: highlight modes, cell attributes, etc
+  - visual features like: highlight modes, cell attributes, etc
   - MCV (Model-Controller-View) design
  
  	Composite row/columns.
@@ -80,9 +80,23 @@
  Editors are associated with data formats. 
 
 	Sorting.
- wxAdvTable can be sorted. Rows or columns can be sorted by object called 
- "Sorter", than is derivate of wxAdvTableSorter class. 
-
+ wxAdvTable has built-in sorting support. Rows or columns can be sorted by object called 
+ "Sorter", that is derivate of wxAdvTableSorter class.
+ There are two sorting modes: 
+ SortRows - in which rows will be rearranged by order specified by sorter,
+ and SortCols - in which columns will be rearranged.
+ There is sorting index, index of row/column by which will be sorting 
+ performed. Sorting index is row index for SortCols mode, and 
+ column index for SortRows mode.
+ Sorting index is set by mouse click on row/column header, or 
+ can be set by calling wxAdvTable::SetSortingIndex.
+ Rows/columns by default are not sortable. To enable sorting you can 
+ call wxAdvHdrCell::Sortable or set all rows/columns sortable by 
+ calling wxAdvTable::SetAllowSortByAnyRos or wxAdvTable::SetAllowSortByAnyCol.
+ 
+    Row/columns resize.
+ TODO write more.
+ 
     Events.
  wxAdvTable supports some wxGrid events and have it's own events.
  wxGrid event are cell click, change, select events:
@@ -98,8 +112,6 @@
 
  Because wxAdvTable rows/columns can be composite, wxGrid events for
  rows/columns cannot be used. 
- 
-    Row/columns resize.
  
   
  Installation - win32
@@ -131,6 +143,15 @@
  ChangeLog
  ---------
  
+ 1.3:
+      What's new:
+       - sorting bugfixes
+       - rows/columns resize bugfixes
+       - rows/columns remove methods added
+       - rows/columns minimal/maximal size added
+       - builder application added 
+       - demo application updated
+ 
  1.2: third version of wxAdvTable at wxCode
       What's new:
        - many bugfixes
@@ -155,6 +176,8 @@
  Known issues:
        - lack of Perl and Python bindings
        - lack of filtering
+       - sorting code must be rewritten
+       - resize code must be optimized
        - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64),
          if someone can test on other wxWidgets ports, please let me know
        - bugs with keydown handling on wxGTK

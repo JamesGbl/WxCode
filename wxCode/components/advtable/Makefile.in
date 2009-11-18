@@ -74,6 +74,19 @@ WXADVTABLE_SAMPLE_DLL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) \
 WXADVTABLE_SAMPLE_DLL_OBJECTS =  \
 	wxadvtable_sample_dll_demo.o \
 	$(__wxadvtable_sample_dll___win32rc)
+BUILDER_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+BUILDER_OBJECTS =  \
+	builder_builder.o \
+	builder_properties.o \
+	builder_propertypage.o \
+	$(__builder___win32rc)
+BUILDER_DLL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
+BUILDER_DLL_OBJECTS =  \
+	builder_dll_builder.o \
+	builder_dll_properties.o \
+	builder_dll_propertypage.o \
+	$(__builder_dll___win32rc)
 
 ### Conditionally set variables: ###
 
@@ -177,11 +190,28 @@ COND_PLATFORM_OS2_1___wxadvtable_sample_dll___os2_emxbindcmd = $(NM) \
 	wxadvtable_sample_dll$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
 	wxadvtable_sample_dll$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__wxadvtable_sample_dll___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___wxadvtable_sample_dll___os2_emxbindcmd)
-@COND_SHARED_1@__wxadvtable_sample = -Wl,-rpath,../lib
+@COND_WX_SHARED_0@__builder___depname = $(srcdir)/builder/builder$(EXEEXT)
+@COND_PLATFORM_MAC_0@__builder___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__builder___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL $(srcdir)/builder/builder$(EXEEXT)
+COND_PLATFORM_OS2_1___builder___os2_emxbindcmd = $(NM) builder$(EXEEXT) | if \
+	grep -q pmwin.763 ; then emxbind -ep builder$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__builder___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___builder___os2_emxbindcmd)
+@COND_WX_SHARED_1@__builder_dll___depname = \
+@COND_WX_SHARED_1@	$(srcdir)/builder/builder_dll$(EXEEXT)
+@COND_PLATFORM_MAC_0@__builder_dll___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__builder_dll___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
+@COND_PLATFORM_MAC_1@	$(srcdir)/builder/builder_dll$(EXEEXT)
+COND_PLATFORM_OS2_1___builder_dll___os2_emxbindcmd = $(NM) \
+	builder_dll$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	builder_dll$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__builder_dll___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___builder_dll___os2_emxbindcmd)
+@COND_SHARED_1@VAR = -Wl,-rpath,../lib
 
 ### Targets: ###
 
-all: $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) $(__wxadvtable_sample___depname) $(__wxadvtable_sample_dll___depname)
+all: $(__wxadvtable_lib___depname) $(__wxadvtable_dll___depname) $(__wxadvtable_sample___depname) $(__wxadvtable_sample_dll___depname) $(__builder___depname) $(__builder_dll___depname)
 
 install: $(__install_wxadvtable_lib___depname) $(__install_wxadvtable_lib_headers___depname) $(__install_wxadvtable_dll___depname) $(__install_wxadvtable_dll_headers___depname)
 
@@ -199,6 +229,8 @@ clean:
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxadvtable_dll___targetsuf2)
 	rm -f $(srcdir)/samples/wxadvtable_sample$(EXEEXT)
 	rm -f $(srcdir)/samples/wxadvtable_sample_dll$(EXEEXT)
+	rm -f $(srcdir)/builder/builder$(EXEEXT)
+	rm -f $(srcdir)/builder/builder_dll$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -260,7 +292,7 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 @COND_WX_SHARED_0@$(srcdir)/samples/wxadvtable_sample$(EXEEXT): $(WXADVTABLE_SAMPLE_OBJECTS) make_sample_dir_wxadvtable_sample  $(__wxadvtable_lib___depname)
-@COND_WX_SHARED_0@	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxadvtable_sample) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_0@	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_0@	
 @COND_WX_SHARED_0@	$(__wxadvtable_sample___mac_setfilecmd)
 @COND_WX_SHARED_0@	$(__wxadvtable_sample___os2_emxbindcmd)
@@ -269,13 +301,31 @@ make_sample_dir_wxadvtable_sample:
 	@mkdir -p $(srcdir)/samples
 
 @COND_WX_SHARED_1@$(srcdir)/samples/wxadvtable_sample_dll$(EXEEXT): $(WXADVTABLE_SAMPLE_DLL_OBJECTS) make_sample_dir_wxadvtable_sample_dll  $(__wxadvtable_dll___depname)
-@COND_WX_SHARED_1@	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_DLL_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxadvtable_sample) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_1@	$(CXX) -o $@ $(WXADVTABLE_SAMPLE_DLL_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxadvtable_sample_dll___mac_setfilecmd)
 @COND_WX_SHARED_1@	$(__wxadvtable_sample_dll___os2_emxbindcmd)
 
 make_sample_dir_wxadvtable_sample_dll: 
 	@mkdir -p $(srcdir)/samples
+
+@COND_WX_SHARED_0@$(srcdir)/builder/builder$(EXEEXT): $(BUILDER_OBJECTS) make_sample_dir_builder  $(__wxadvtable_lib___depname)
+@COND_WX_SHARED_0@	$(CXX) -o $@ $(BUILDER_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_0@	
+@COND_WX_SHARED_0@	$(__builder___mac_setfilecmd)
+@COND_WX_SHARED_0@	$(__builder___os2_emxbindcmd)
+
+make_sample_dir_builder: 
+	@mkdir -p $(srcdir)/builder
+
+@COND_WX_SHARED_1@$(srcdir)/builder/builder_dll$(EXEEXT): $(BUILDER_DLL_OBJECTS) make_sample_dir_builder_dll  $(__wxadvtable_dll___depname)
+@COND_WX_SHARED_1@	$(CXX) -o $@ $(BUILDER_DLL_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(VAR) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_advtable-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+@COND_WX_SHARED_1@	
+@COND_WX_SHARED_1@	$(__builder_dll___mac_setfilecmd)
+@COND_WX_SHARED_1@	$(__builder_dll___os2_emxbindcmd)
+
+make_sample_dir_builder_dll: 
+	@mkdir -p $(srcdir)/builder
 
 tarball: 
 	make distclean
@@ -299,6 +349,24 @@ wxadvtable_sample_demo.o: $(srcdir)/samples/demo.cpp
 
 wxadvtable_sample_dll_demo.o: $(srcdir)/samples/demo.cpp
 	$(CXXC) -c -o $@ $(WXADVTABLE_SAMPLE_DLL_CXXFLAGS) $(srcdir)/samples/demo.cpp
+
+builder_builder.o: $(srcdir)/builder/builder.cpp
+	$(CXXC) -c -o $@ $(BUILDER_CXXFLAGS) $(srcdir)/builder/builder.cpp
+
+builder_properties.o: $(srcdir)/builder/properties.cpp
+	$(CXXC) -c -o $@ $(BUILDER_CXXFLAGS) $(srcdir)/builder/properties.cpp
+
+builder_propertypage.o: $(srcdir)/builder/propertypage.cpp
+	$(CXXC) -c -o $@ $(BUILDER_CXXFLAGS) $(srcdir)/builder/propertypage.cpp
+
+builder_dll_builder.o: $(srcdir)/builder/builder.cpp
+	$(CXXC) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(srcdir)/builder/builder.cpp
+
+builder_dll_properties.o: $(srcdir)/builder/properties.cpp
+	$(CXXC) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(srcdir)/builder/properties.cpp
+
+builder_dll_propertypage.o: $(srcdir)/builder/propertypage.cpp
+	$(CXXC) -c -o $@ $(BUILDER_DLL_CXXFLAGS) $(srcdir)/builder/propertypage.cpp
 
 
 # Include dependency info, if present:
