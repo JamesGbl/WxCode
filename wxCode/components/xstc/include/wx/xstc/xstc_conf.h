@@ -126,8 +126,8 @@
  #define WXDLLIMPEXP_XSTC
 #endif
 
-#define XSTC_USE_WXSCINTILLA //define this if you are using wxScintilla
-//#define XSTC_USE_WXSTC       //define this if you are using wxStyledTextCtrl
+//#define XSTC_USE_WXSCINTILLA //define this if you are using wxScintilla
+#define XSTC_USE_WXSTC       //define this if you are using wxStyledTextCtrl
 //define one or the other
 
 //#define XSTC_NO_ALPHA

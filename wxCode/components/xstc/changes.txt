@@ -1,5 +1,8 @@
 CHANGES for version 6.3
 added exports for dll version, they where not all present.
+fixed a minor bug in SaveFileX
+updated stc build macros for wx-2.9
+added a config root entry in the SetConfig function so that the configs can be a child of a larger config tree.
 
 CHANGES for version 6.2
 added missing language macros in GetEXTLexer so that languagees can be fully disabled

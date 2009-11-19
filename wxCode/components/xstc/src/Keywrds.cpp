@@ -3072,7 +3072,11 @@ wxString XSTC::LoadKeyWords(wxString filename)
        keys->ReadAll(&keywords,wxConvUTF8);
        keys->Close();
    }
-   wxDELETE(keys)
+   if(keys)
+   {
+        delete keys;
+        keys = 0;
+   }
 
    return keywords;
 }

@@ -1571,7 +1571,7 @@ WXDLLIMPEXP_XSTC void LexYAML();
               XSTC/COLOR/ is used for all coloring/styling options
               XSTC/EXT/ is used for the extension and property options
     */
-WXDLLIMPEXP_XSTC void SetColorConf(wxConfigBase* clrconf);
+WXDLLIMPEXP_XSTC void SetColorConf(wxConfigBase* clrconf, wxString root = wxT("//"));
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_TRIMTRAIL
@@ -1977,6 +1977,7 @@ WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
 ***********************************************Variables here***********************************************************
 ***********************************************************************************************************************/
 
+    
     /**
     \brief holds the width for the internally mapped margins
     */
@@ -2000,6 +2001,11 @@ WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
               function call.
     */
     wxColourDatabase* XSTCcolorDbase;
+    
+    /**
+    \brief user set location for the XSTC config. defaults to '/'
+    */
+    wxString confroot;
 #endif //XSTC_NO_CONFIG
 
     /**
