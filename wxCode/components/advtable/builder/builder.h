@@ -147,6 +147,7 @@ public:
 private:
 	void CreateMenuBar();
 
+	void OnExit(wxCommandEvent &ev);
 	void OnAbout(wxCommandEvent &ev);
 	void OnMenuInsertRows(wxCommandEvent &ev);
 	void OnMenuInsertCols(wxCommandEvent &ev);

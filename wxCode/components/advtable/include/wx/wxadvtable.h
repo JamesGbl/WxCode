@@ -36,10 +36,6 @@
 #define NULL 0
 #endif /* NULL */
 
-#ifndef N
-#define N(arr) (sizeof(arr) / sizeof(*arr))
-#endif /* N */
-
 #define wxREPLACE(dst, src) do {					\
 	wxDELETE(dst);									\
 	dst = src;										\
@@ -1012,10 +1008,11 @@ class WXDLLEXPORT wxAdvHdrCell
 {
 	friend class wxAdvTable;
 	friend class wxAdvDefaultHdrCellRenderer;
+
 public:
-	static const int defaultSpacing = 5;
-	static const int defaultAlignVertical = wxALIGN_CENTER_VERTICAL;
-	static const int defaultAlignHorizontal = wxALIGN_CENTER_HORIZONTAL;
+	static const int defaultSpacing;
+	static const int defaultAlignVertical;
+	static const int defaultAlignHorizontal;
 
 	/**
 	 * Copy constructor.

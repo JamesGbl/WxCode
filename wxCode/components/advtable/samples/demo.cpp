@@ -684,8 +684,8 @@ void MainFrame::CreateTableStructure()
 	// take attention on wxAdvHdrCell::GetDecompCellCount call
 	// table row count can be NOT equal to row count in definitions array.
 	wxAdvDefaultTableDataModel *model = new wxAdvDefaultTableDataModel(
-			wxAdvHdrCell::GetDecompCellCount(rows, N(rows)),
-			wxAdvHdrCell::GetDecompCellCount(cols, N(cols)),
+			wxAdvHdrCell::GetDecompCellCount(rows, WXSIZEOF(rows)),
+			wxAdvHdrCell::GetDecompCellCount(cols, WXSIZEOF(cols)),
 			false);
 
 	// and set some values to it
@@ -718,7 +718,7 @@ void MainFrame::CreateTableStructure()
 
 	// create table
 	// we pass our row and column definitions and table data model to it
-	m_advTable->Create(rows, N(rows), cols, N(cols), cornerLabel, model);
+	m_advTable->Create(rows, WXSIZEOF(rows), cols, WXSIZEOF(cols), cornerLabel, model);
 
 	m_advTable->SetSorter(new wxAdvTableStringSorter());
 	m_advTable->SetSortingIndex(5); // sort table by 5-th column

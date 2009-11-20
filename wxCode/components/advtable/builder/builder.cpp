@@ -544,9 +544,9 @@ static int g_horizAlignValues[] = {
 static Property *g_hdrCellProps[] = {
 		new PropertyString(wxT("Label"), HDRCELL_LABEL),
 		new PropertySelect(wxT("Vertical align"), HDRCELL_VERTICAL_ALIGN,
-				g_vertAlignKeys, g_vertAlignValues, N(g_vertAlignKeys)),
+				g_vertAlignKeys, g_vertAlignValues, WXSIZEOF(g_vertAlignKeys)),
 		new PropertySelect(wxT("Horizontal align"), HDRCELL_HORIZONTAL_ALIGN,
-				g_horizAlignKeys, g_horizAlignValues, N(g_horizAlignKeys)),
+				g_horizAlignKeys, g_horizAlignValues, WXSIZEOF(g_horizAlignKeys)),
 		new PropertyInt(wxT("Size"), HDRCELL_SIZE),
 		new PropertyInt(wxT("Spacing"), HDRCELL_SPACING),
 		new PropertyBool(wxT("Vertical text"), HDRCELL_VERTICAL_TEXT),
@@ -578,7 +578,7 @@ private:
 
 HdrCellPropertyObject::HdrCellPropertyObject(wxAdvTable *table, wxAdvHdrCell *hdrCell)
 {
-	m_propColl = new PropertyCollection(g_hdrCellProps, N(g_hdrCellProps));
+	m_propColl = new PropertyCollection(g_hdrCellProps, WXSIZEOF(g_hdrCellProps));
 	m_table = table;
 	m_hdrCell = hdrCell;
 }
@@ -741,7 +741,7 @@ void TablePanel::InsertRows()
 		wxAdvHdrCell(wxT("Row")),
 	};
 
-	m_table->AddRows(rows, N(rows));
+	m_table->AddRows(rows, WXSIZEOF(rows));
 }
 
 void TablePanel::InsertCols()
@@ -750,7 +750,7 @@ void TablePanel::InsertCols()
 		wxAdvHdrCell(wxT("Col")),
 	};
 
-	m_table->AddCols(cols, N(cols));
+	m_table->AddCols(cols, WXSIZEOF(cols));
 }
 
 //
@@ -764,6 +764,7 @@ enum {
 IMPLEMENT_CLASS(MainFrame, wxDocParentFrame);
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 	EVT_MENU(MENU_INSERT_ROWS, MainFrame::OnMenuInsertRows)
 	EVT_MENU(MENU_INSERT_COLS, MainFrame::OnMenuInsertCols)
 
@@ -826,6 +827,11 @@ void MainFrame::CreateMenuBar()
 	menuBar->Append(menuHelp, wxT("&Help"));
 
 	SetMenuBar(menuBar);
+}
+
+void MainFrame::OnExit(wxCommandEvent &ev)
+{
+	Close();
 }
 
 void MainFrame::OnAbout(wxCommandEvent &ev)
