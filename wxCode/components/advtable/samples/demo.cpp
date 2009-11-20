@@ -447,7 +447,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(950, 800))
+: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(1000, 800))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -671,10 +671,11 @@ void MainFrame::CreateTableStructure()
 		wxAdvHdrCell(wxT("Col I")).Size(125), // we can explicitly define size of column
 		wxAdvHdrCell(wxT("Col II")) // second column containing three subcolumns
 			.Sub(wxT("Col II-I"))
-			.Sub(wxT("Col II-II"))
+			.Sub(wxAdvHdrCell(wxT("Col II-II")).Size(100).Sortable())
 			.Sub(wxT("Col\nII-III")),
 		wxAdvHdrCell(wxT("Col III")),
-		wxAdvHdrCell(wxT("Col IV")).Sortable().Size(100), // make last column sortable
+		wxAdvHdrCell(wxT("Col IV")).Sortable().Size(75), // make column sortable
+		wxAdvHdrCell(wxT("Col V")).Size(100),
 	};
 
 	// we also need table corner
@@ -694,8 +695,28 @@ void MainFrame::CreateTableStructure()
 	model->SetCellValue(3, 0, wxT("vetoable edit value"));
 
 	// set formats for entire columns
+	model->SetColFormat(2, wxDateTimeFormat);
 	model->SetColFormat(3, wxColourFormat);
 	model->SetColFormat(4, wxBoolFormat);
+	model->SetColFormat(6, wxChoicesFormat);
+
+	// set some datetime values
+	wxDateTime date;
+
+	date.Set(1, wxDateTime::Feb, 2000);
+	model->SetCellValue(0, 2, date.Format(wxT("%x %X")));
+
+	date.Set(20, wxDateTime::Jan, 2001);
+	model->SetCellValue(1, 2, date.Format(wxT("%x %X")));
+
+	date.Set(7, wxDateTime::Aug, 1999);
+	model->SetCellValue(2, 2, date.Format(wxT("%x %X")));
+
+	date.Set(1, wxDateTime::Jun, 2002);
+	model->SetCellValue(3, 2, date.Format(wxT("%x %X")));
+
+	date.Set(1, wxDateTime::Jun, 2004);
+	model->SetCellValue(4, 2, date.Format(wxT("%x %X")));
 
 	// set some colour values
 	model->SetCellValue(0, 3, wxGREEN->GetAsString());
@@ -709,19 +730,32 @@ void MainFrame::CreateTableStructure()
 	model->SetCellValue(1, 4, boolTrue);
 	model->SetCellValue(2, 4, boolTrue);
 
-	// set values to last column, to sort table by them
+	// set string values to column
 	model->SetCellValue(0, 5, wxT("d"));
 	model->SetCellValue(1, 5, wxT("b"));
 	model->SetCellValue(2, 5, wxT("e"));
 	model->SetCellValue(3, 5, wxT("c"));
 	model->SetCellValue(4, 5, wxT("a"));
 
+	// set choices values to last column
+	model->SetCellValue(0, 6, wxT("1;1;2;3;4;5"));
+	model->SetCellValue(1, 6, wxT("a;a;b;c;d;e"));
+	model->SetCellValue(2, 6, wxT("a\\;a;a\\;a;B"));
+	model->SetCellValue(3, 6, wxT("first;first;second;third"));
+	model->SetCellValue(4, 6, wxT("five;one;two;three;four;five"));
+
 	// create table
 	// we pass our row and column definitions and table data model to it
 	m_advTable->Create(rows, WXSIZEOF(rows), cols, WXSIZEOF(cols), cornerLabel, model);
 
-	m_advTable->SetSorter(new wxAdvTableStringSorter());
-	m_advTable->SetSortingIndex(5); // sort table by 5-th column
+	m_advTable->SetEditorForFormat(wxDateTimeFormat, new wxAdvDateTimeCellEditor(m_advTable, false));
+	m_advTable->SetEditorForFormat(wxChoicesFormat, new wxAdvChoicesCellEditor(m_advTable, false));
+
+	m_advTable->SetRendererForFormat(wxDateTimeFormat, new wxAdvDateTimeCellRenderer());
+	m_advTable->SetRendererForFormat(wxChoicesFormat, new wxAdvChoicesCellRenderer());
+
+	m_advTable->SetSorter(new wxAdvTableDateTimeSorter());
+	m_advTable->SetSortingIndex(2); // sort table by 2 (datetime) column
 	m_advTable->SetSortDirection(wxAdvTable::SortDirAscending);
 	m_advTable->SetSortMode(wxAdvTable::SortRows); // we will sort rows
 }

@@ -28,6 +28,12 @@
 #include <wx/dynarray.h>
 #include "observable.h"
 
+#if wxUSE_DATEPICKCTRL
+#include <wx/datectrl.h>
+#include <wx/dateevt.h>
+#endif /* wxUSE_DATEPICKCTRL */
+
+
 // iterate through all hdrCell in array
 #define FOREACH_HDRCELL(n, hdrCells) for (size_t n = 0; n < hdrCells.GetCount(); n++)
 
@@ -50,7 +56,7 @@ enum {
 	wxDoubleFormat,
 	wxBoolFormat,
 	wxColourFormat,
-	wxDateFormat,
+	wxDateTimeFormat,
 	wxChoicesFormat,
 	wxLastFormat
 };
@@ -547,7 +553,22 @@ public:
 	 * @param col column index
 	 * @return cell value
 	 */
-	virtual double GetCellValueDouble(size_t row, size_t col);
+	virtual double GetCellValueAsDouble(size_t row, size_t col);
+
+	/**
+	 * Returns cell value as wxDateTime.
+	 * NOTE: not all values can be accessed this way.
+	 * @param row row index
+	 * @param col column index
+	 * @return cell value
+	 */
+	virtual wxDateTime GetCellValueAsDateTime(size_t row, size_t col);
+
+	static void StringToChoices(const wxString &value, wxString &selection, wxArrayString &choices);
+
+	static wxString ChoicesToString(const wxString &selection, wxArrayString &choices);
+
+	static wxString ChoicesSelection(const wxString &value);
 
 protected:
 	FIRE_WITH_VALUE2(CellChanged, size_t, row, size_t, col);
@@ -584,7 +605,9 @@ public:
 
 	virtual wxAdvCellAttribute *GetCellAttribute(size_t row, size_t col);
 
-	virtual double GetCellValueDouble(size_t row, size_t col);
+	virtual double GetCellValueAsDouble(size_t row, size_t col);
+
+	virtual wxDateTime GetCellValueAsDateTime(size_t row, size_t col);
 
 	/**
 	 * Set cell format for entire row.
@@ -667,7 +690,9 @@ public:
 
 	virtual wxAdvCellAttribute *GetCellAttribute(size_t row, size_t col);
 
-	virtual double GetCellValueDouble(size_t row, size_t col);
+	virtual double GetCellValueAsDouble(size_t row, size_t col);
+
+	virtual wxDateTime GetCellValueAsDateTime(size_t row, size_t col);
 
 	//
 	// wxAdvTableDataModelObserver
@@ -788,6 +813,32 @@ public:
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
 };
 
+/**
+ * Draws datetime cell content.
+ */
+class WXDLLEXPORT wxAdvDateTimeCellRenderer : public wxAdvStringCellRenderer
+{
+public:
+	wxAdvDateTimeCellRenderer(wxChar *format = wxT("%x"));
+	virtual ~wxAdvDateTimeCellRenderer();
+
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
+
+	void SetFormat(const wxString &format);
+
+private:
+	wxString m_format;
+};
+
+class WXDLLEXPORT wxAdvChoicesCellRenderer : public wxAdvStringCellRenderer
+{
+public:
+	wxAdvChoicesCellRenderer();
+	virtual ~wxAdvChoicesCellRenderer();
+
+	virtual void Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr);
+};
+
 //
 // Table data editors.
 //
@@ -892,7 +943,7 @@ private:
 };
 
 /**
- * Editor for boolean cell values. Uses wxCheckBox for editing.
+ * Editor for boolean cell values.
  */
 class WXDLLEXPORT wxAdvBoolCellEditor : public wxAdvCellEditor
 {
@@ -944,6 +995,67 @@ private:
 	wxSpinCtrl *m_spinCtrl;
 };
 
+#if wxUSE_DATEPICKCTRL
+/**
+ * Editor for datetime data. Uses wxDateTimePicker for editing.
+ */
+class WXDLLEXPORT wxAdvDateTimeCellEditor : public wxAdvCellEditor, public wxEvtHandler
+{
+public:
+	/**
+	 * Constructs new datetime editor.
+	 * @param table wxAdvTable for which editor to be created
+	 * @param dropDown true if you want dropdown calendar, false - for spin
+	 */
+	wxAdvDateTimeCellEditor(wxAdvTable *table, bool dropDown = true);
+	virtual ~wxAdvDateTimeCellEditor();
+
+	virtual bool OneClickActivate();
+
+protected:
+	virtual void DoActivate();
+	virtual void DoDeactivate();
+
+private:
+	void OnDateChanged(wxDateEvent &ev);
+
+	wxDatePickerCtrl *m_datePicker;
+
+	DECLARE_EVENT_TABLE()
+};
+#endif /* wxUSE_DATEPICKCTRL */
+
+/**
+ * Editor for choices data. Uses wxComboBox for editing.
+ */
+class WXDLLEXPORT wxAdvChoicesCellEditor : public wxAdvCellEditor, public wxEvtHandler
+{
+public:
+	/**
+	 * Constructs new choices editor.
+	 * @param table wxAdvTable for which editor to be created
+	 * @param editable true if you want to allow user to edit choice text
+	 */
+	wxAdvChoicesCellEditor(wxAdvTable *table, bool editable = false);
+	virtual ~wxAdvChoicesCellEditor();
+
+	virtual bool OneClickActivate();
+
+protected:
+	virtual void DoActivate();
+	virtual void DoDeactivate();
+
+private:
+	void UpdateValue();
+
+	void OnCombobox(wxCommandEvent &ev);
+	void OnText(wxCommandEvent &ev);
+
+	wxComboBox *m_comboBox;
+
+	DECLARE_EVENT_TABLE()
+};
+
 //
 // Sorters.
 //
@@ -988,6 +1100,21 @@ public:
 
 private:
 	int Compare(double value1, double value2);
+};
+
+/**
+ * Sorts data by comparing datetime values.
+ */
+class WXDLLEXPORT wxAdvTableDateTimeSorter : public wxAdvTableStringSorter
+{
+public:
+	wxAdvTableDateTimeSorter();
+	virtual ~wxAdvTableDateTimeSorter();
+
+	virtual int Compare(wxAdvTable *table, size_t row1, size_t col1, size_t row2, size_t col2);
+
+private:
+	int Compare(const wxDateTime &value1, const wxDateTime &value2);
 };
 
 

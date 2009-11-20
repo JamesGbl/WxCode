@@ -3,7 +3,7 @@
  -------------
  
  Website: http://wxcode.sourceforge.net/components/advtable
- Author: Moskvichev Andrey V.
+ Author: Moskvichev Andrey V. (email: mab [at] smtp [dot] ru)
  Version: 1.1 
  Description:
  wxAdvTable is table component (like wxGrid) designed with 
@@ -71,7 +71,8 @@
  derivates of wxAdvTableCellRenderer class. Renderers associates with
  data formats. There are wxAdvStringCellRender for string data,
  wxAdvBoolCellRenderer for boolean data, 
- wxAdvColourCellRenderer for color data. 
+ wxAdvColourCellRenderer for color data,
+ wxAdvDateTimeCellRenderer for datetime data. 
 
 	Editors.
  Editors are objects that performs data editing. They are activated on 
@@ -93,6 +94,9 @@
  Rows/columns by default are not sortable. To enable sorting you can 
  call wxAdvHdrCell::Sortable or set all rows/columns sortable by 
  calling wxAdvTable::SetAllowSortByAnyRos or wxAdvTable::SetAllowSortByAnyCol.
+ There are some special sorter for data formats:
+ wxAdvTableDateTimeSorter for datetime values, 
+ wxAdvTableDoubleSorter for double values.
  
     Row/columns resize.
  TODO write more.
@@ -143,6 +147,11 @@
  ChangeLog
  ---------
  
+ 1.4:
+      What's new:
+       - three state sorting: ascending, descending, nosorting 
+       - added datetime renderer/editor, and wxAdvTableDateTimeSorter
+       
  1.3:
       What's new:
        - sorting bugfixes
@@ -178,7 +187,7 @@
        - lack of filtering
        - sorting code must be rewritten
        - resize code must be optimized
-       - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2) and wxGTK-2.8.8 (Gentoo Linux x86_64),
+       - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2 mingw) and wxGTK-2.8.8 (Gentoo Linux x86_64 gcc),
          if someone can test on other wxWidgets ports, please let me know
        - bugs with keydown handling on wxGTK
  

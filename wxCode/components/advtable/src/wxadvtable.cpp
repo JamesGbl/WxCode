@@ -299,9 +299,91 @@ wxAdvTableDataModel::~wxAdvTableDataModel()
 {
 }
 
-double wxAdvTableDataModel::GetCellValueDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
+double wxAdvTableDataModel::GetCellValueAsDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
 {
 	return 0;
+}
+
+wxDateTime wxAdvTableDataModel::GetCellValueAsDateTime(size_t WXUNUSED(row), size_t WXUNUSED(col))
+{
+	return wxDateTime();
+}
+
+void wxAdvTableDataModel::StringToChoices(const wxString &value, wxString &selection, wxArrayString &choices)
+{
+	wxChar prevCh = wxT('0');
+
+	size_t wordStart = 0;
+	int nWord = 0;
+
+	for (size_t n = 0; n < value.Length(); n++) {
+		wxChar ch = value[n];
+
+		if (ch == wxT(';') && prevCh != wxT('\\')) {
+			wxString word = value.SubString(wordStart, n - 1);
+			word.Replace(wxT("\\;"), wxT(";"));
+
+			if (nWord == 0) {
+				selection = word;
+			}
+			else {
+				choices.Add(word);
+			}
+
+			nWord++;
+			wordStart = n + 1;
+		}
+
+		prevCh = ch;
+	}
+
+	// parse string tail
+	wxString word = value.SubString(wordStart, value.Length() - 1);
+	word.Replace(wxT("\\;"), wxT(";"));
+
+	if (nWord == 0) {
+		selection = word;
+	}
+	else {
+		choices.Add(word);
+	}
+}
+
+wxString wxAdvTableDataModel::ChoicesToString(const wxString &selection, wxArrayString &choices)
+{
+	wxString value;
+
+	value += selection;
+	value.Replace(wxT(";"), wxT("\\;"));
+
+	for (size_t n = 0; n < choices.Count(); n++) {
+		wxString choice = choices[n];
+
+		choice.Replace(wxT(";"), wxT("\\;"));
+
+		value += wxT(";");
+		value += choice;
+	}
+	return value;
+}
+
+wxString wxAdvTableDataModel::ChoicesSelection(const wxString &value)
+{
+	wxChar prevCh = wxT('\0');
+
+	for (size_t n = 0; n < value.Length(); n++) {
+		wxChar ch = value[n];
+
+		if (ch == wxT(';') && prevCh != wxT('\\')) {
+			wxString word = value.SubString(0, n - 1);
+			word.Replace(wxT("\\;"), wxT(";"));
+
+			return word;
+		}
+
+		prevCh = ch;
+	}
+	return value;
 }
 
 //
@@ -345,9 +427,8 @@ int wxAdvDefaultTableDataModel::GetCellFormat(size_t row, size_t col)
 
 void wxAdvDefaultTableDataModel::SetCellFormat(size_t row, size_t col, int format)
 {
-//  VC 6.0 error C2562: 'SetCellFormat' : 'void' function returning a value
-//	wxCHECK(row < (size_t)m_formats.Count(), true);
-//	wxCHECK(col < (size_t) m_formats[row].Count(), true);
+	wxCHECK(row < (size_t) m_formats.Count(), );
+	wxCHECK(col < (size_t) m_formats[row].Count(), );
 	m_formats[row][col] = format;
 }
 
@@ -370,15 +451,23 @@ wxAdvCellAttribute *wxAdvDefaultTableDataModel::GetCellAttribute(size_t WXUNUSED
 	return NULL;
 }
 
-double wxAdvDefaultTableDataModel::GetCellValueDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
+double wxAdvDefaultTableDataModel::GetCellValueAsDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
 {
 	return 0;
 }
 
+wxDateTime wxAdvDefaultTableDataModel::GetCellValueAsDateTime(size_t row, size_t col)
+{
+	wxString value = GetCellValue(row, col);
+
+	wxDateTime dt;
+	dt.ParseDateTime(value);
+	return dt;
+}
+
 void wxAdvDefaultTableDataModel::SetRowFormat(size_t row, int format)
 {
-    //  VC 6.0 error C2562: 'SetCellFormat' : 'void' function returning a value
-	// wxCHECK(row < (size_t) m_formats.Count(), true);
+	wxCHECK(row < (size_t) m_formats.Count(), );
 
 	const size_t colCount = m_formats[0].Count();
 	for (size_t col = 0; col < colCount; col++) {
@@ -389,8 +478,7 @@ void wxAdvDefaultTableDataModel::SetRowFormat(size_t row, int format)
 
 void wxAdvDefaultTableDataModel::SetColFormat(size_t col, int format)
 {
-    //  VC 6.0 error C2562: 'SetCellFormat' : 'void' function returning a value
-	// wxCHECK(col < (size_t) m_formats[0].Count(), true);
+	wxCHECK(col < (size_t) m_formats[0].Count(), );
 
 	const size_t rowCount = m_formats.Count();
 	for (size_t row = 0; row < rowCount; row++) {
@@ -502,9 +590,27 @@ wxAdvCellAttribute *wxAdvFilterTableDataModel::GetCellAttribute(size_t row, size
 	return m_undelayingModel->GetCellAttribute(row, col);
 }
 
-double wxAdvFilterTableDataModel::GetCellValueDouble(size_t row, size_t col)
+double wxAdvFilterTableDataModel::GetCellValueAsDouble(size_t row, size_t col)
 {
-	return m_undelayingModel->GetCellValueDouble(row, col);
+	if (GetCellFormat(row, col) != wxDoubleFormat) {
+		return 0;
+	}
+
+	wxString value = GetCellValue(row, col);
+	double dvalue;
+	if (value.ToDouble(&dvalue)) {
+		return dvalue;
+	}
+	return 0;
+}
+
+wxDateTime wxAdvFilterTableDataModel::GetCellValueAsDateTime(size_t row, size_t col)
+{
+	wxString value = GetCellValue(row, col);
+
+	wxDateTime dt;
+	dt.ParseDateTime(value);
+	return dt;
 }
 
 void wxAdvFilterTableDataModel::TableChanged()
@@ -550,7 +656,7 @@ wxAdvDefaultHdrCellRenderer::~wxAdvDefaultHdrCellRenderer()
 {
 }
 
-void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxAdvHdrCell *hdrCell, bool WXUNUSED(selected), bool pressed, int sortDirection)
+void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection)
 {
 	wxColour colour1, colour2, bgColour, textColour;
 	textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
@@ -627,35 +733,8 @@ wxAdvCellRenderer::~wxAdvCellRenderer()
 }
 
 //
-// wxAdvBoolCellRenderer
+// wxAdvStringCellRenderer
 //
-wxAdvBoolCellRenderer::wxAdvBoolCellRenderer()
-{
-}
-
-wxAdvBoolCellRenderer::~wxAdvBoolCellRenderer()
-{
-}
-
-void wxAdvBoolCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
-{
-	bool checked = false;
-	if (value.Cmp(boolTrue) == 0) {
-		checked = true;
-	}
-
-	if (checked) {
-		LoadBitmaps();
-
-		wxDCClipper clipper(dc, rc);
-
-		dc.DrawBitmap(g_bmpCheckMark,
-				rc.x + (rc.width - g_bmpCheckMark.GetWidth()) / 2,
-				rc.y + (rc.height - g_bmpCheckMark.GetHeight()) / 2,
-				true);
-	}
-}
-
 wxAdvStringCellRenderer::wxAdvStringCellRenderer()
 {
 }
@@ -687,6 +766,39 @@ void wxAdvStringCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect
 	dc.DrawLabel(value, rc, attr->Alignment());
 }
 
+//
+// wxAdvBoolCellRenderer
+//
+wxAdvBoolCellRenderer::wxAdvBoolCellRenderer()
+{
+}
+
+wxAdvBoolCellRenderer::~wxAdvBoolCellRenderer()
+{
+}
+
+void wxAdvBoolCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
+{
+	bool checked = false;
+	if (value.Cmp(boolTrue) == 0) {
+		checked = true;
+	}
+
+	if (checked) {
+		LoadBitmaps();
+
+		wxDCClipper clipper(dc, rc);
+
+		dc.DrawBitmap(g_bmpCheckMark,
+				rc.x + (rc.width - g_bmpCheckMark.GetWidth()) / 2,
+				rc.y + (rc.height - g_bmpCheckMark.GetHeight()) / 2,
+				true);
+	}
+}
+
+//
+// wxAdvColourCellRenderer
+//
 wxAdvColourCellRenderer::wxAdvColourCellRenderer()
 {
 }
@@ -695,7 +807,7 @@ wxAdvColourCellRenderer::~wxAdvColourCellRenderer()
 {
 }
 
-void wxAdvColourCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
+void wxAdvColourCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
 {
 	wxColour colour(value);
 
@@ -703,6 +815,50 @@ void wxAdvColourCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect
 	dc.DrawRectangle(rc);
 }
 
+//
+// wxAdvDateTimeCellRenderer
+//
+
+wxAdvDateTimeCellRenderer::wxAdvDateTimeCellRenderer(wxChar *format)
+{
+	m_format = format;
+}
+
+wxAdvDateTimeCellRenderer::~wxAdvDateTimeCellRenderer()
+{
+}
+
+void wxAdvDateTimeCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr)
+{
+	// XXX overhead
+	wxDateTime dt;
+	dt.ParseFormat(value.c_str(), wxT("%x %X"));
+
+	value = dt.Format(m_format.c_str());
+
+	wxAdvStringCellRenderer::Draw(table, dc, rc, value, selected, focused, attr);
+}
+
+void wxAdvDateTimeCellRenderer::SetFormat(const wxString &format)
+{
+	m_format = format;
+}
+
+//
+// wxAdvChoicesCellRenderer
+//
+wxAdvChoicesCellRenderer::wxAdvChoicesCellRenderer()
+{
+}
+
+wxAdvChoicesCellRenderer::~wxAdvChoicesCellRenderer()
+{
+}
+
+void wxAdvChoicesCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool selected, bool focused, wxAdvCellAttribute *attr)
+{
+	wxAdvStringCellRenderer::Draw(table, dc, rc, wxAdvTableDataModel::ChoicesSelection(value), selected, focused, attr);
+}
 
 //
 // Editors
@@ -1006,6 +1162,138 @@ void wxAdvIntervalCellEditor::DoDeactivate()
 	SetNewValue(wxString::Format(wxT("%i"), m_spinCtrl->GetValue()));
 }
 
+#if wxUSE_DATEPICKCTRL
+//
+// wxAdvDateTimeCellEditor
+//
+BEGIN_EVENT_TABLE(wxAdvDateTimeCellEditor, wxEvtHandler)
+	EVT_DATE_CHANGED(wxID_ANY, wxAdvDateTimeCellEditor::OnDateChanged)
+END_EVENT_TABLE()
+
+wxAdvDateTimeCellEditor::wxAdvDateTimeCellEditor(wxAdvTable *table, bool dropDown)
+: wxAdvCellEditor(table)
+{
+	m_datePicker = new wxDatePickerCtrl(table, wxID_ANY, wxDefaultDateTime,
+			wxDefaultPosition, wxDefaultSize, wxDP_SHOWCENTURY | (dropDown ? wxDP_DROPDOWN : wxDP_SPIN));
+	m_datePicker->Show(false);
+}
+
+wxAdvDateTimeCellEditor::~wxAdvDateTimeCellEditor()
+{
+	m_datePicker->Close();
+}
+
+bool wxAdvDateTimeCellEditor::OneClickActivate()
+{
+	return false;
+}
+
+void wxAdvDateTimeCellEditor::DoActivate()
+{
+	wxRect rc = GetCellRect();
+	GetTable()->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
+
+	wxString value = GetValue();
+
+	wxDateTime dtValue;
+	wxCHECK_RET(dtValue.ParseFormat(value.c_str(), wxT("%x %X")) != NULL, wxT("Error parsing datetime value"));
+
+	m_datePicker->SetValue(dtValue);
+
+	m_datePicker->SetSize(rc.x, rc.y, rc.width, rc.height);
+	m_datePicker->Show();
+	m_datePicker->SetFocus();
+}
+
+void wxAdvDateTimeCellEditor::DoDeactivate()
+{
+	m_datePicker->Show(false);
+
+	wxString value = m_datePicker->GetValue().Format(wxT("%x %X"));
+	SetNewValue(value);
+}
+
+void wxAdvDateTimeCellEditor::OnDateChanged(wxDateEvent &ev)
+{
+	wxString value = m_datePicker->GetValue().Format(wxT("%x %X"));
+	SetNewValue(value);
+}
+
+#endif /* wxUSE_DATEPICKCTRL */
+
+//
+// wxAdvChoicesCellEditor
+//
+BEGIN_EVENT_TABLE(wxAdvChoicesCellEditor, wxEvtHandler)
+	EVT_COMBOBOX(wxID_ANY, wxAdvChoicesCellEditor::OnCombobox)
+	EVT_TEXT(wxID_ANY, wxAdvChoicesCellEditor::OnText)
+END_EVENT_TABLE()
+
+wxAdvChoicesCellEditor::wxAdvChoicesCellEditor(wxAdvTable *table, bool editable)
+: wxAdvCellEditor(table)
+{
+	m_comboBox = new wxComboBox(table, wxID_ANY, wxEmptyString,
+			wxDefaultPosition, wxDefaultSize, 0, NULL, (editable ? 0 : wxCB_READONLY));
+	m_comboBox->Show(false);
+}
+
+wxAdvChoicesCellEditor::~wxAdvChoicesCellEditor()
+{
+	m_comboBox->Close();
+}
+
+bool wxAdvChoicesCellEditor::OneClickActivate()
+{
+	return false;
+}
+
+void wxAdvChoicesCellEditor::DoActivate()
+{
+	wxRect rc = GetCellRect();
+	GetTable()->CalcScrolledPosition(rc.x, rc.y, &rc.x, &rc.y);
+
+	wxString value = GetValue();
+	wxArrayString choices;
+	wxString selection;
+
+	wxAdvTableDataModel::StringToChoices(value, selection, choices);
+	m_comboBox->Clear();
+	m_comboBox->Append(choices);
+	m_comboBox->SetStringSelection(selection);
+
+	m_comboBox->SetSize(rc.x, rc.y, rc.width, rc.height);
+	m_comboBox->Show();
+	m_comboBox->SetFocus();
+}
+
+void wxAdvChoicesCellEditor::DoDeactivate()
+{
+	m_comboBox->Show(false);
+
+	UpdateValue();
+}
+
+void wxAdvChoicesCellEditor::UpdateValue()
+{
+	wxArrayString choices = m_comboBox->GetStrings();
+
+	SetNewValue(wxAdvTableDataModel::ChoicesToString(
+			m_comboBox->GetStringSelection(),
+			choices));
+}
+
+void wxAdvChoicesCellEditor::OnCombobox(wxCommandEvent &ev)
+{
+	UpdateValue();
+	EndEditing();
+}
+
+void wxAdvChoicesCellEditor::OnText(wxCommandEvent &ev)
+{
+	UpdateValue();
+}
+
+
 //
 // wxAdvCellAttribute
 //
@@ -1132,8 +1420,8 @@ int wxAdvTableDoubleSorter::Compare(wxAdvTable *table, size_t row1, size_t col1,
 {
 	wxAdvTableDataModel *dataModel = table->GetModel();
 
-	double value1 = dataModel->GetCellValueDouble(row1, col1);
-	double value2 = dataModel->GetCellValueDouble(row2, col2);
+	double value1 = dataModel->GetCellValueAsDouble(row1, col1);
+	double value2 = dataModel->GetCellValueAsDouble(row2, col2);
 
 	return Compare(value1, value2);
 }
@@ -1148,6 +1436,46 @@ int wxAdvTableDoubleSorter::Compare(double value1, double value2)
 	}
 	else {
 		return 1;
+	}
+}
+
+//
+// wxAdvTableDoubleSorter
+//
+wxAdvTableDateTimeSorter::wxAdvTableDateTimeSorter()
+{
+}
+
+wxAdvTableDateTimeSorter::~wxAdvTableDateTimeSorter()
+{
+}
+
+int wxAdvTableDateTimeSorter::Compare(wxAdvTable *table, size_t row1, size_t col1, size_t row2, size_t col2)
+{
+	wxAdvTableDataModel *dataModel = table->GetModel();
+
+	// if values are not in datetime format, fallback to string compare.
+	if ((dataModel->GetCellFormat(row1, col1) != wxDateTimeFormat)
+			|| (dataModel->GetCellFormat(row2, col2) != wxDateTimeFormat)) {
+		return wxAdvTableStringSorter::Compare(table, row1, col1, row2, col2);
+	}
+
+	wxDateTime value1 = dataModel->GetCellValueAsDateTime(row1, col1);
+	wxDateTime value2 = dataModel->GetCellValueAsDateTime(row2, col2);
+
+	return Compare(value1, value2);
+}
+
+int wxAdvTableDateTimeSorter::Compare(const wxDateTime &value1, const wxDateTime &value2)
+{
+	if (value1.IsEarlierThan(value2)) {
+		return -1;
+	}
+	else if (value1.IsLaterThan(value2)) {
+		return 1;
+	}
+	else {
+		return 0;
 	}
 }
 
@@ -1787,7 +2115,7 @@ void wxAdvTable::UpdateSortOrder()
 {
 	m_sortOrder.Empty();
 
-	if (m_sorter == NULL) {
+	if (m_sorter == NULL || m_sortDirection == SortDirNoSorting) {
 		RedrawAll();
 		return ;
 	}
@@ -1897,8 +2225,17 @@ void wxAdvTable::SetSortingIndex(size_t sortingIndex, bool invert)
 {
 	if (sortingIndex != UNDEF_SIZE) {
 		if (invert && m_sortingIndex == sortingIndex) {
-			m_sortDirection = (m_sortDirection == SortDirAscending) ?
-					SortDirDescending : SortDirAscending;
+			switch (m_sortDirection) {
+			case SortDirAscending:
+				m_sortDirection = SortDirDescending;
+				break;
+			case SortDirDescending:
+				m_sortDirection = SortDirNoSorting;
+				break;
+			case SortDirNoSorting:
+				m_sortDirection = SortDirAscending;
+				break;
+			}
 		}
 		else {
 			m_sortDirection = SortDirAscending;
@@ -3437,7 +3774,7 @@ void wxAdvTable::OnScrollWin(wxScrollWinEvent &ev)
 	RedrawAll();
 }
 
-void wxAdvTable::ScrollWindow(int WXUNSED(dx), int WXUNUSED(dy), const wxRect* WXUNUSED(rect))
+void wxAdvTable::ScrollWindow(int WXUNUSED(dx), int WXUNUSED(dy), const wxRect* WXUNUSED(rect))
 {
 }
 
