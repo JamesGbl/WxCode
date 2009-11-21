@@ -54,16 +54,14 @@ WXADVTABLE_LIB_OBJECTS =  \
 	wxadvtable_lib_wxadvtable.o
 WXADVTABLE_LIB_HEADERS =  \
 	include/wx/observable.h \
-	include/wx/wxadvtable.h \
-	include/wx/wxadvtabledefs.h
+	include/wx/wxadvtable.h
 WXADVTABLE_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_ADVTABLE \
 	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_DLL_OBJECTS =  \
 	wxadvtable_dll_wxadvtable.o
 WXADVTABLE_DLL_HEADERS =  \
 	include/wx/observable.h \
-	include/wx/wxadvtable.h \
-	include/wx/wxadvtabledefs.h
+	include/wx/wxadvtable.h
 WXADVTABLE_SAMPLE_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXADVTABLE_SAMPLE_OBJECTS =  \

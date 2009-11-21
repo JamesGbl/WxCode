@@ -882,10 +882,6 @@ SOURCE=..\include\wx\observable.h
 
 SOURCE=..\include\wx\wxadvtable.h
 # End Source File
-# Begin Source File
-
-SOURCE=..\include\wx\wxadvtabledefs.h
-# End Source File
 # End Group
 # End Target
 # End Project

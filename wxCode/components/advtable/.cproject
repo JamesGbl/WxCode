@@ -76,9 +76,6 @@
 </tool>
 </toolChain>
 </folderInfo>
-<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.973795838.1445039202" name="demo.cpp" rcbsApplicability="disable" resourcePath="samples/demo.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.855997963.499645363">
-<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.855997963.499645363" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.855997963"/>
-</fileInfo>
 <fileInfo id="cdt.managedbuild.config.gnu.exe.debug.973795838.2069836990" name="demo.h" rcbsApplicability="disable" resourcePath="samples/demo.h" toolsToInvoke=""/>
 <sourceEntries>
 <entry excluding="builder|samples/propertypage.h|samples/propertypage.cpp|samples/properties.h|samples/properties.cpp|samples/builder.cpp|samples/builder.h" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
@@ -1374,8 +1371,9 @@
 </tool>
 </toolChain>
 </folderInfo>
+<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.973795838.1595292529.1777310613" name="demo.h" rcbsApplicability="disable" resourcePath="samples/demo.h" toolsToInvoke=""/>
 <sourceEntries>
-<entry excluding="builder|samples/demo.h|samples/demo.cpp|samples/propertypage.h|samples/propertypage.cpp|samples/properties.h|samples/properties.cpp|samples/builder.h|samples/builder.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="builder|samples/propertypage.h|samples/propertypage.cpp|samples/properties.h|samples/properties.cpp|samples/builder.h|samples/builder.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

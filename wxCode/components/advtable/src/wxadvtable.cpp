@@ -990,11 +990,13 @@ bool wxAdvStringCellEditor::OneClickActivate()
 
 void wxAdvStringCellEditor::HandleKeyEvent(wxKeyEvent &ev)
 {
+	/*
 	int keyCode = ev.GetKeyCode();
 
 	if (wxIsalnum(keyCode)) {
 		m_textCtrl->EmulateKeyPress(ev);
 	}
+	*/
 }
 
 void wxAdvStringCellEditor::DoActivate()
@@ -1574,6 +1576,7 @@ wxAdvTable::~wxAdvTable()
 void wxAdvTable::Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model)
 {
 	if (m_tableCreated) {
+		// destroy old data and structures if any
 		DestroyTable();
 	}
 
@@ -1586,10 +1589,6 @@ void wxAdvTable::Create(wxAdvHdrCell *rows, size_t numRows, wxAdvHdrCell *cols, 
 	CalcTableGeometry();
 
 	// assign new model for table data
-	if (m_model != NULL) {
-		m_model->RemoveObserver(this);
-		wxDELETE(m_model);
-	}
 	m_model = model;
 	m_model->AddObserver(this);
 
@@ -1647,9 +1646,14 @@ void wxAdvTable::DestroyTable()
 	m_rowLayerWidths.Clear();
 	m_colLayerHeights.Clear();
 
-	wxDELETE(m_model);
+	if (m_model != NULL) {
+		m_model->RemoveObserver(this);
+		wxDELETE(m_model);
+	}
 
 	ClearSelection();
+
+	m_tableCreated = false;
 
 	// destroy backbuffers
 	m_backBitmap.Create(0, 0);
@@ -3742,8 +3746,10 @@ void wxAdvTable::OnKillFocus(wxFocusEvent &WXUNUSED(ev))
 	StopEditing();
 }
 
-void wxAdvTable::OnSize(wxSizeEvent &WXUNUSED(ev))
+void wxAdvTable::OnSize(wxSizeEvent &ev)
 {
+	HandleOnSize(ev); // make scrollbars adjustment before redrawing
+
 	ResizeBackBitmaps();
 }
 

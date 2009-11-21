@@ -30,10 +30,11 @@ Inheritance diagram for wxAdvCellEditor:</div>
 
 <p><center><img src="classwxAdvCellEditor.png" usemap="#wxAdvCellEditor_map" border="0" alt=""></center>
 <map name="wxAdvCellEditor_map">
-<area href="classwxAdvBoolCellEditor.html" alt="wxAdvBoolCellEditor" shape="rect" coords="0,56,147,80">
-<area href="classwxAdvColourCellEditor.html" alt="wxAdvColourCellEditor" shape="rect" coords="157,56,304,80">
-<area href="classwxAdvIntervalCellEditor.html" alt="wxAdvIntervalCellEditor" shape="rect" coords="314,56,461,80">
-<area href="classwxAdvStringCellEditor.html" alt="wxAdvStringCellEditor" shape="rect" coords="471,56,618,80">
+<area href="classwxAdvBoolCellEditor.html" alt="wxAdvBoolCellEditor" shape="rect" coords="0,56,151,80">
+<area href="classwxAdvChoicesCellEditor.html" alt="wxAdvChoicesCellEditor" shape="rect" coords="161,56,312,80">
+<area href="classwxAdvColourCellEditor.html" alt="wxAdvColourCellEditor" shape="rect" coords="322,56,473,80">
+<area href="classwxAdvIntervalCellEditor.html" alt="wxAdvIntervalCellEditor" shape="rect" coords="483,56,634,80">
+<area href="classwxAdvStringCellEditor.html" alt="wxAdvStringCellEditor" shape="rect" coords="644,56,795,80">
 </map>
 </div>
 
@@ -57,9 +58,9 @@ Inheritance diagram for wxAdvCellEditor:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvCellEditor.html#e7bb9ec6ef167b3ba93bb5536732ff96">IsActive</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks whether editor is active.  <a href="#e7bb9ec6ef167b3ba93bb5536732ff96"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvCellEditor.html#a4182d9d88f30c366a0add63ecbdee7e">HandleKeyEvent</a> (wxKeyEvent &amp;ev)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvCellEditor.html#1aa65cdeffaf92b9aed55bb574b1eb40">HandleKeyEvent</a> (wxKeyEvent &amp;ev)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called to handle key event, that triggers editor activation.  <a href="#a4182d9d88f30c366a0add63ecbdee7e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called to handle key event, that triggers editor activation.  <a href="#1aa65cdeffaf92b9aed55bb574b1eb40"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvCellEditor.html#df3aede5d7b694a66a206e5c7a8961ae">DoActivate</a> ()=0</td></tr>
 
@@ -144,7 +145,7 @@ Editor is an object, that perform cell values editing, it activated from <a clas
 Return true, if editor activated with one click (such as boolean cells editor). 
 <p>
 
-<p>Reimplemented in <a class="el" href="classwxAdvStringCellEditor.html#ae0ff6aab544472805a57190c6dd0f0b">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#f86e2ac5b9305a77288aad894cbbfbe9">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#d1b9ebcccb5cf746e156af67ca0662ea">wxAdvColourCellEditor</a>, and <a class="el" href="classwxAdvIntervalCellEditor.html#5e104e1f21b40f810abc157b30580a34">wxAdvIntervalCellEditor</a>.</p>
+<p>Reimplemented in <a class="el" href="classwxAdvStringCellEditor.html#ae0ff6aab544472805a57190c6dd0f0b">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#f86e2ac5b9305a77288aad894cbbfbe9">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#d1b9ebcccb5cf746e156af67ca0662ea">wxAdvColourCellEditor</a>, <a class="el" href="classwxAdvIntervalCellEditor.html#5e104e1f21b40f810abc157b30580a34">wxAdvIntervalCellEditor</a>, and <a class="el" href="classwxAdvChoicesCellEditor.html#4533638e73a7d2f55d58ec8e0ef09e4b">wxAdvChoicesCellEditor</a>.</p>
 
 </div>
 </div><p>
@@ -233,12 +234,12 @@ Checks whether editor is active.
 
 </div>
 </div><p>
-<a class="anchor" name="a4182d9d88f30c366a0add63ecbdee7e"></a><!-- doxytag: member="wxAdvCellEditor::HandleKeyEvent" ref="a4182d9d88f30c366a0add63ecbdee7e" args="(wxKeyEvent &amp;ev)" -->
+<a class="anchor" name="1aa65cdeffaf92b9aed55bb574b1eb40"></a><!-- doxytag: member="wxAdvCellEditor::HandleKeyEvent" ref="1aa65cdeffaf92b9aed55bb574b1eb40" args="(wxKeyEvent &amp;ev)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void wxAdvCellEditor::HandleKeyEvent           </td>
+          <td class="memname">virtual void wxAdvCellEditor::HandleKeyEvent           </td>
           <td>(</td>
           <td class="paramtype">wxKeyEvent &amp;&nbsp;</td>
           <td class="paramname"> <em>ev</em>          </td>
@@ -274,7 +275,7 @@ Called by <a class="el" href="classwxAdvTable.html" title="Main component class.
 
 <p>
 
-<p>Implemented in <a class="el" href="classwxAdvStringCellEditor.html#e2c9b5bf7d0b895b158ce65dc3008ff3">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#a71672da03a06af6f7c2554ae4646d70">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#a25e8b4d076e537819a6a334b6e52014">wxAdvColourCellEditor</a>, and <a class="el" href="classwxAdvIntervalCellEditor.html#23046a009cb89b01dc1cc5f82083552d">wxAdvIntervalCellEditor</a>.</p>
+<p>Implemented in <a class="el" href="classwxAdvStringCellEditor.html#e2c9b5bf7d0b895b158ce65dc3008ff3">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#a71672da03a06af6f7c2554ae4646d70">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#a25e8b4d076e537819a6a334b6e52014">wxAdvColourCellEditor</a>, <a class="el" href="classwxAdvIntervalCellEditor.html#23046a009cb89b01dc1cc5f82083552d">wxAdvIntervalCellEditor</a>, and <a class="el" href="classwxAdvChoicesCellEditor.html#e72c0bd902fa38fe03c3446be35830d0">wxAdvChoicesCellEditor</a>.</p>
 
 </div>
 </div><p>
@@ -295,7 +296,7 @@ Called by <a class="el" href="classwxAdvTable.html" title="Main component class.
 
 <p>
 
-<p>Implemented in <a class="el" href="classwxAdvStringCellEditor.html#08964168372c874cc15166c3da8dcd6e">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#c959d7b79b396146536a7ec83defc81d">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#47d78ace0f9896b02175450716baf648">wxAdvColourCellEditor</a>, and <a class="el" href="classwxAdvIntervalCellEditor.html#e0fd5836e648bd807d9792a7fb84d7f4">wxAdvIntervalCellEditor</a>.</p>
+<p>Implemented in <a class="el" href="classwxAdvStringCellEditor.html#08964168372c874cc15166c3da8dcd6e">wxAdvStringCellEditor</a>, <a class="el" href="classwxAdvBoolCellEditor.html#c959d7b79b396146536a7ec83defc81d">wxAdvBoolCellEditor</a>, <a class="el" href="classwxAdvColourCellEditor.html#47d78ace0f9896b02175450716baf648">wxAdvColourCellEditor</a>, <a class="el" href="classwxAdvIntervalCellEditor.html#e0fd5836e648bd807d9792a7fb84d7f4">wxAdvIntervalCellEditor</a>, and <a class="el" href="classwxAdvChoicesCellEditor.html#1390be3a645ba979ac371f2910fef9b1">wxAdvChoicesCellEditor</a>.</p>
 
 </div>
 </div><p>
@@ -437,7 +438,7 @@ Call this when editor initiate self deactivation.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Nov 21 20:47:14 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

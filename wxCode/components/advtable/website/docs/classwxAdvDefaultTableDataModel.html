@@ -61,9 +61,12 @@ Inheritance diagram for wxAdvDefaultTableDataModel:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classwxAdvCellAttribute.html">wxAdvCellAttribute</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#49932a91e2828ec6e2995a0df6cfca83">GetCellAttribute</a> (size_t row, size_t col)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell attribute.  <a href="#49932a91e2828ec6e2995a0df6cfca83"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#e028e8cd4eee506a20e246c563d871c8">GetCellValueDouble</a> (size_t row, size_t col)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#7723085ce627404207fce17fe5aba056">GetCellValueAsDouble</a> (size_t row, size_t col)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as double.  <a href="#e028e8cd4eee506a20e246c563d871c8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as double.  <a href="#7723085ce627404207fce17fe5aba056"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual wxDateTime&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#4c810bf3b259fcdac8f6737d7aaf5b20">GetCellValueAsDateTime</a> (size_t row, size_t col)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as wxDateTime.  <a href="#4c810bf3b259fcdac8f6737d7aaf5b20"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDefaultTableDataModel.html#4bceac7cf30d2a44d77b081ec6775076">SetRowFormat</a> (size_t row, int format)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set cell format for entire row.  <a href="#4bceac7cf30d2a44d77b081ec6775076"></a><br></td></tr>
@@ -393,12 +396,12 @@ Cell attribute is graphical properties such as font, text color, alignment, etc.
 
 </div>
 </div><p>
-<a class="anchor" name="e028e8cd4eee506a20e246c563d871c8"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::GetCellValueDouble" ref="e028e8cd4eee506a20e246c563d871c8" args="(size_t row, size_t col)" -->
+<a class="anchor" name="7723085ce627404207fce17fe5aba056"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::GetCellValueAsDouble" ref="7723085ce627404207fce17fe5aba056" args="(size_t row, size_t col)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double wxAdvDefaultTableDataModel::GetCellValueDouble           </td>
+          <td class="memname">virtual double wxAdvDefaultTableDataModel::GetCellValueAsDouble           </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>row</em>, </td>
@@ -429,7 +432,47 @@ NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>cell value </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classwxAdvTableDataModel.html#ab60f9ced8d8357d927e790803776b4a">wxAdvTableDataModel</a>.</p>
+<p>Reimplemented from <a class="el" href="classwxAdvTableDataModel.html#c98da07b2595a206071dd7182a39f140">wxAdvTableDataModel</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="4c810bf3b259fcdac8f6737d7aaf5b20"></a><!-- doxytag: member="wxAdvDefaultTableDataModel::GetCellValueAsDateTime" ref="4c810bf3b259fcdac8f6737d7aaf5b20" args="(size_t row, size_t col)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxDateTime wxAdvDefaultTableDataModel::GetCellValueAsDateTime           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>col</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns cell value as wxDateTime. 
+<p>
+NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>cell value </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classwxAdvTableDataModel.html#567d5f3204f5c0e0b07090b62c14ac51">wxAdvTableDataModel</a>.</p>
 
 </div>
 </div><p>
@@ -671,7 +714,7 @@ Remove specified columns.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Nov 21 20:47:14 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

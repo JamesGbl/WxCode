@@ -81,8 +81,7 @@ WXADVTABLE_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_lib_wxadvtable.o
 WXADVTABLE_LIB_HEADERS =  \
 	include/wx/observable.h \
-	include/wx/wxadvtable.h \
-	include/wx/wxadvtabledefs.h
+	include/wx/wxadvtable.h
 WXADVTABLE_DLL_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include \
 	-DWXMAKINGDLL_ADVTABLE -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
@@ -90,8 +89,7 @@ WXADVTABLE_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxadvtable_dll_wxadvtable.o
 WXADVTABLE_DLL_HEADERS =  \
 	include/wx/observable.h \
-	include/wx/wxadvtable.h \
-	include/wx/wxadvtabledefs.h
+	include/wx/wxadvtable.h
 WXADVTABLE_SAMPLE_CXXFLAGS = $(VAR) $(VAR_5) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXADVTABLE_SAMPLE_OBJECTS =  \

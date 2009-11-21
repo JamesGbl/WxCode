@@ -59,9 +59,19 @@ Inheritance diagram for wxAdvTableDataModel:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classwxAdvCellAttribute.html">wxAdvCellAttribute</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#a9ba5df8ddfc7a617a41a4c3f5cacc0a">GetCellAttribute</a> (size_t row, size_t col)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell attribute.  <a href="#a9ba5df8ddfc7a617a41a4c3f5cacc0a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#ab60f9ced8d8357d927e790803776b4a">GetCellValueDouble</a> (size_t row, size_t col)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#c98da07b2595a206071dd7182a39f140">GetCellValueAsDouble</a> (size_t row, size_t col)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as double.  <a href="#ab60f9ced8d8357d927e790803776b4a"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as double.  <a href="#c98da07b2595a206071dd7182a39f140"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual wxDateTime&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#567d5f3204f5c0e0b07090b62c14ac51">GetCellValueAsDateTime</a> (size_t row, size_t col)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns cell value as wxDateTime.  <a href="#567d5f3204f5c0e0b07090b62c14ac51"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#93a68ae9c82a60158de7d83522b577fd">StringToChoices</a> (const wxString &amp;value, wxString &amp;selection, wxArrayString &amp;choices)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#86ca787710a9c1ca0a202f3d75e9de17">ChoicesToString</a> (const wxString &amp;selection, wxArrayString &amp;choices)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#b9996b40532ecfd6784c839d3b14522c">ChoicesSelection</a> (const wxString &amp;value)</td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDataModel.html#a9cbc0ca67f3bdf74cb4d86521254a0e">FIRE_WITH_VALUE2</a> (CellChanged, size_t, row, size_t, col)</td></tr>
 
@@ -316,12 +326,12 @@ Cell attribute is graphical properties such as font, text color, alignment, etc.
 
 </div>
 </div><p>
-<a class="anchor" name="ab60f9ced8d8357d927e790803776b4a"></a><!-- doxytag: member="wxAdvTableDataModel::GetCellValueDouble" ref="ab60f9ced8d8357d927e790803776b4a" args="(size_t row, size_t col)" -->
+<a class="anchor" name="c98da07b2595a206071dd7182a39f140"></a><!-- doxytag: member="wxAdvTableDataModel::GetCellValueAsDouble" ref="c98da07b2595a206071dd7182a39f140" args="(size_t row, size_t col)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double wxAdvTableDataModel::GetCellValueDouble           </td>
+          <td class="memname">virtual double wxAdvTableDataModel::GetCellValueAsDouble           </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>row</em>, </td>
@@ -352,7 +362,131 @@ NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>cell value </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classwxAdvDefaultTableDataModel.html#e028e8cd4eee506a20e246c563d871c8">wxAdvDefaultTableDataModel</a>, and <a class="el" href="classwxAdvFilterTableDataModel.html#6603cd67a2dec83bea4815ae6dd0a40e">wxAdvFilterTableDataModel</a>.</p>
+<p>Reimplemented in <a class="el" href="classwxAdvDefaultTableDataModel.html#7723085ce627404207fce17fe5aba056">wxAdvDefaultTableDataModel</a>, and <a class="el" href="classwxAdvFilterTableDataModel.html#d257bb163c4ffcb45a076899376b9366">wxAdvFilterTableDataModel</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="567d5f3204f5c0e0b07090b62c14ac51"></a><!-- doxytag: member="wxAdvTableDataModel::GetCellValueAsDateTime" ref="567d5f3204f5c0e0b07090b62c14ac51" args="(size_t row, size_t col)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual wxDateTime wxAdvTableDataModel::GetCellValueAsDateTime           </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>col</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns cell value as wxDateTime. 
+<p>
+NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>row</em>&nbsp;</td><td>row index </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>col</em>&nbsp;</td><td>column index </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>cell value </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classwxAdvDefaultTableDataModel.html#4c810bf3b259fcdac8f6737d7aaf5b20">wxAdvDefaultTableDataModel</a>, and <a class="el" href="classwxAdvFilterTableDataModel.html#f6ab44a942b1fec080fe6c0ec1686640">wxAdvFilterTableDataModel</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="93a68ae9c82a60158de7d83522b577fd"></a><!-- doxytag: member="wxAdvTableDataModel::StringToChoices" ref="93a68ae9c82a60158de7d83522b577fd" args="(const wxString &amp;value, wxString &amp;selection, wxArrayString &amp;choices)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wxAdvTableDataModel::StringToChoices           </td>
+          <td>(</td>
+          <td class="paramtype">const wxString &amp;&nbsp;</td>
+          <td class="paramname"> <em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wxString &amp;&nbsp;</td>
+          <td class="paramname"> <em>selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wxArrayString &amp;&nbsp;</td>
+          <td class="paramname"> <em>choices</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="86ca787710a9c1ca0a202f3d75e9de17"></a><!-- doxytag: member="wxAdvTableDataModel::ChoicesToString" ref="86ca787710a9c1ca0a202f3d75e9de17" args="(const wxString &amp;selection, wxArrayString &amp;choices)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxString wxAdvTableDataModel::ChoicesToString           </td>
+          <td>(</td>
+          <td class="paramtype">const wxString &amp;&nbsp;</td>
+          <td class="paramname"> <em>selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wxArrayString &amp;&nbsp;</td>
+          <td class="paramname"> <em>choices</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="b9996b40532ecfd6784c839d3b14522c"></a><!-- doxytag: member="wxAdvTableDataModel::ChoicesSelection" ref="b9996b40532ecfd6784c839d3b14522c" args="(const wxString &amp;value)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxString wxAdvTableDataModel::ChoicesSelection           </td>
+          <td>(</td>
+          <td class="paramtype">const wxString &amp;&nbsp;</td>
+          <td class="paramname"> <em>value</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -425,7 +559,7 @@ NOTE: not all values can be accessed this way. <dl compact><dt><b>Parameters:</b
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="wxadvtable_8h-source.html">wxadvtable.h</a><li><a class="el" href="wxadvtable_8cpp.html">wxadvtable.cpp</a></ul>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Nov 21 20:47:14 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

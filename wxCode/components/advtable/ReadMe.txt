@@ -151,6 +151,8 @@
       What's new:
        - three state sorting: ascending, descending, nosorting 
        - added datetime renderer/editor, and wxAdvTableDateTimeSorter
+       - added choices renderer/editor, and wxAdvTableChoicesSorter
+       - some redraw bugfixes
        
  1.3:
       What's new:
@@ -183,6 +185,7 @@
  1.0 - first version of wxAdvTable at wxCode
  
  Known issues:
+ 	   - choices editor on Windows (tm) looks ugly
        - lack of Perl and Python bindings
        - lack of filtering
        - sorting code must be rewritten

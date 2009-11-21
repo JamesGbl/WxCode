@@ -1887,9 +1887,6 @@
 			<File
 				RelativePath="..\include\wx\wxadvtable.h">
 			</File>
-			<File
-				RelativePath="..\include\wx\wxadvtabledefs.h">
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

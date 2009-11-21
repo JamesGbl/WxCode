@@ -64,6 +64,11 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvColourCellRenderer.html">wxAdvColourCellRenderer</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Renderer to draw color cell values (draws colored rectangles).  <a href="classwxAdvColourCellRenderer.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvDateTimeCellRenderer.html">wxAdvDateTimeCellRenderer</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Draws datetime cell content.  <a href="classwxAdvDateTimeCellRenderer.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvChoicesCellRenderer.html">wxAdvChoicesCellRenderer</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvCellEditor.html">wxAdvCellEditor</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Table cell editors base class.  <a href="classwxAdvCellEditor.html#_details">More...</a><br></td></tr>
@@ -79,6 +84,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvIntervalCellEditor.html">wxAdvIntervalCellEditor</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Editor for interval numeric data.  <a href="classwxAdvIntervalCellEditor.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvChoicesCellEditor.html">wxAdvChoicesCellEditor</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Editor for choices data.  <a href="classwxAdvChoicesCellEditor.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableSorter.html">wxAdvTableSorter</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Performs table data sorting.  <a href="classwxAdvTableSorter.html#_details">More...</a><br></td></tr>
@@ -88,6 +96,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDoubleSorter.html">wxAdvTableDoubleSorter</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sorts data by comparing double values.  <a href="classwxAdvTableDoubleSorter.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvTableDateTimeSorter.html">wxAdvTableDateTimeSorter</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sorts data by comparing datetime values.  <a href="classwxAdvTableDateTimeSorter.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxAdvHdrCell.html">wxAdvHdrCell</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Row/column description.  <a href="classwxAdvHdrCell.html#_details">More...</a><br></td></tr>
@@ -98,8 +109,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="wxadvtable_8h.html#c5587eb794d69655ba50ba7edb4d6122">FOREACH_HDRCELL</a>(n, hdrCells)&nbsp;&nbsp;&nbsp;for (size_t n = 0; n &lt; hdrCells.GetCount(); n++)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="wxadvtable_8h.html#070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>&nbsp;&nbsp;&nbsp;0</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="wxadvtable_8h.html#cd0fed4fa36fe3466f243aebc4080c0c">N</a>(arr)&nbsp;&nbsp;&nbsp;(sizeof(arr) / sizeof(*arr))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="wxadvtable_8h.html#2ae651a52a6f33c95ca9e90f0f5bef05">wxREPLACE</a>(dst, src)</td></tr>
 
@@ -148,7 +157,7 @@
 <a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55be85f3799235caed365872796dd499051">wxBoolFormat</a>, 
 <br>
 &nbsp;&nbsp;<a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55bbbf7468ca3a4c865c8c4d7c97365a734">wxColourFormat</a>, 
-<a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55b57e51754cf017d1819eb5ceff2dd1e20">wxDateFormat</a>, 
+<a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55bd2f6f888bbe0e7f2aa9af1f69684db96">wxDateTimeFormat</a>, 
 <a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55bbdac4936283d2eccbaaef03876e6f727">wxChoicesFormat</a>, 
 <a class="el" href="wxadvtable_8h.html#06fc87d81c62e9abb8790b6e5713c55b01e480caf0623e92f431e15d13ecd963">wxLastFormat</a>
 <br>
@@ -488,26 +497,6 @@
 
 </div>
 </div><p>
-<a class="anchor" name="cd0fed4fa36fe3466f243aebc4080c0c"></a><!-- doxytag: member="wxadvtable.h::N" ref="cd0fed4fa36fe3466f243aebc4080c0c" args="(arr)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define N          </td>
-          <td>(</td>
-          <td class="paramtype">arr&nbsp;</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%">&nbsp;&nbsp;&nbsp;(sizeof(arr) / sizeof(*arr))</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="070d2ce7b6bb7e5c05602aa8c308d0c4"></a><!-- doxytag: member="wxadvtable.h::NULL" ref="070d2ce7b6bb7e5c05602aa8c308d0c4" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -652,7 +641,7 @@
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="06fc87d81c62e9abb8790b6e5713c55bbbf7468ca3a4c865c8c4d7c97365a734"></a><!-- doxytag: member="wxColourFormat" ref="06fc87d81c62e9abb8790b6e5713c55bbbf7468ca3a4c865c8c4d7c97365a734" args="" -->wxColourFormat</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="06fc87d81c62e9abb8790b6e5713c55b57e51754cf017d1819eb5ceff2dd1e20"></a><!-- doxytag: member="wxDateFormat" ref="06fc87d81c62e9abb8790b6e5713c55b57e51754cf017d1819eb5ceff2dd1e20" args="" -->wxDateFormat</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="06fc87d81c62e9abb8790b6e5713c55bd2f6f888bbe0e7f2aa9af1f69684db96"></a><!-- doxytag: member="wxDateTimeFormat" ref="06fc87d81c62e9abb8790b6e5713c55bd2f6f888bbe0e7f2aa9af1f69684db96" args="" -->wxDateTimeFormat</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="06fc87d81c62e9abb8790b6e5713c55bbdac4936283d2eccbaaef03876e6f727"></a><!-- doxytag: member="wxChoicesFormat" ref="06fc87d81c62e9abb8790b6e5713c55bbdac4936283d2eccbaaef03876e6f727" args="" -->wxChoicesFormat</em>&nbsp;</td><td>
 </td></tr>
@@ -990,7 +979,7 @@
 
 </div>
 </div><p>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Nov 18 21:06:04 2009 for wxAdvTable by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Nov 21 20:47:14 2009 for wxAdvTable by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>
