@@ -489,14 +489,14 @@ int Test2_2()
 	// if value is positive and between LLONG_MAX they are the same, otherwise not the same
 	wxJSONValue si( 1000 );
 	wxJSONValue ui( (unsigned) 1000 );	
-	r = s1.IsSameAs( ui );
-	ASSERT( r == true );   // BUG: the test returns FALSE; fixed in version 1.1
+	r = si.IsSameAs( ui );
+	ASSERT( r == true );
 
 	// comparing unsigned and signed: negative values are NOT the same
 	si = -1000;
 	ui = (unsigned) -1000;	
-	r = s1.IsSameAs( ui );
-	ASSERT( r == false );	// BUG: the test returns TRUE
+	r = si.IsSameAs( ui );
+	ASSERT( r == false );
 	
 	return 0;
 }
@@ -673,6 +673,35 @@ int Test2_7()
 
 	return 0;
 }
+
+// a test for searching for the BUG in Test2_2()
+int Test2_8() 
+{
+	// this is the test failure
+	wxJSONValue si( 1000 );
+	wxJSONValue ui( (unsigned) 1000 );	
+	// bool r = s1.IsSameAs( ui );
+	// ASSERT( r == true );   // BUG: the test returns FALSE
+
+	// get the referenced data
+	wxJSONRefData* siData = si.GetRefData();
+	wxJSONRefData* uiData = ui.GetRefData();
+	
+	// compare the m_value->m_valUint64 data member
+	TestCout( _T("Comparing valUInt64 values: "));
+	bool r = siData->m_value.m_valUInt64 == uiData->m_value.m_valUInt64;
+	TestCout( r ? _T("TRUE") : _("FALSE"));
+	TestCout( _T("\n"));
+
+	TestCout( _T("Comparing VAL_UINT values: "));
+	bool r2 = siData->m_value.VAL_UINT == uiData->m_value.VAL_UINT;
+	TestCout( r2 ? _T("TRUE") : _("FALSE"));
+	TestCout( _T("\n"));
+
+	
+	return 0;
+}
+
 
 /*
 {

@@ -1789,9 +1789,9 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
 			break;
 		}
 		temp[0] = *buff;	// the first UTF-8 code-unit
-		++buff;
 		// compute the number of code-untis that make one UTF-8 code-point
 		int numBytes = NumBytes( *buff );
+		++buff;
 		for ( int i = 1; i < numBytes; i++ )	{
 			if ( buff >= buffEnd )	{
 				break;
@@ -1807,7 +1807,9 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
 		size_t outLength = wxConvUTF8.ToWChar( dst, 10, temp, numBytes );
 
 		// now convert the wide char to a locale dependent character
-		len = wxConvLocal.FromWChar( temp, 16, dst, outLength );
+		// len = wxConvLocal.FromWChar( temp, 16, dst, outLength );
+		// len = wxConviso8859_1.FromWChar( temp, 16, dst, outLength );
+		len = wxConvLibc.FromWChar( temp, 16, dst, outLength );
 		if ( len == wxCONV_FAILED )	{
 			++result;
 			wxString t;

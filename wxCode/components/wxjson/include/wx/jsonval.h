@@ -357,7 +357,7 @@ public:
   // there is no need to define copy ctor
   // wxJSONRefData( const wxJSONRefData& other );
 
-protected:
+//protected:
   //! the references count
   int               m_refCount;
 

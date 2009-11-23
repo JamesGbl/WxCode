@@ -2,7 +2,8 @@
 
    test11.cpp
 
-    <one line description>
+    testing Unicode support in ANSI builds
+
     Copyright (C) 2009  Luciano Cattani
 
     This program is free software; you can redistribute it and/or modify
@@ -27,15 +28,17 @@
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/debug.h>
-#include <wx/wfstream.h>
+#include <wx/mstream.h>
 
 #include <wx/jsonval.h>
 #include <wx/jsonwriter.h>
 #include "test.h"
 
-
-static int TestX_X()
+//
+// test writing to UTF8 streams
+int Test14_1()
 {
+
 	return 0;
 }
 

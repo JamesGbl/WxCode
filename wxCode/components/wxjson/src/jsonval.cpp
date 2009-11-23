@@ -2159,15 +2159,16 @@ wxJSONValue::GetInfo() const
  comparison which is, sure, useless.
  For further info see \ref json_internals_compare.
 
- \bug comparing very large 64-bits integers that differ by a small
-	value may cause the function to return TRUE intead of FALSE
+ \bug comparing negative INTs and UINTs that have the same bit patterns
+ 	(for example -1 and (unsigned) -1 (all bits sets) returns TRUE
+ 	instead of FALSE (see Test2_7() in 'samples/test1.cpp')
 */
 bool
 wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 {
 	// this is a recursive function: it calls itself
 	// for every 'value' object in an array or map
-	bool r = true;
+	bool r = false;
 
 	// some variables used in the switch statement
 	int size; wxJSONInternalMap::const_iterator it; int* usedElements;
@@ -2195,9 +2196,9 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 					// compare the bits and returns true if value is between 0 and LLONG_MAX
 					if ( (data->m_value.VAL_UINT <= LLONG_MAX ) && 
 							(data->m_value.VAL_UINT == otherData->m_value.VAL_UINT))
-							{
+						{
 								r = true;
-							}
+						}
 				}
 				else if ( otherData->m_type == wxJSONTYPE_DOUBLE )	{
 					val = data->m_value.VAL_INT;
@@ -2246,7 +2247,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 				}
 				break;
 			default:
-				return false;
+				r = false;
 			break;
 		}
 		return r;
@@ -2258,6 +2259,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 	// objects: this is to avoid using strcmp() and wcscmp() which
 	// may not be available on all platforms
 	wxString s1, s2;
+	r = true;
 
 	switch ( data->m_type )  {
 		case wxJSONTYPE_INVALID :

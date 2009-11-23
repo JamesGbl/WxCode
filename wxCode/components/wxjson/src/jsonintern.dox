@@ -675,24 +675,19 @@ Althrough, the values that the two objects contain are \b the
 For this reason the wxJSONValue class does not define the
 comparison operator but a similar function: the \c wxJSONValue::IsSameAs()
 which returns TRUE if the two objects contain the same values
-even if they are not in the same order: this applies for both
-key/value maps and for arrays.
+even if they are not in the same order: this applies only for
+key/value maps but not for arrays because the latter are ordered
+collections of values.
 
-The comparison function is much time-consuming: for key/value
-maps, the function first compares the number of elements in the
-two objects and, if it is equal, for every key in the first
-object it searches the second object and compares the values.
-
-The job of comparing arrays is even worse: the comparison function
-has to first compare the number of elements then, because the order
-of the elements is unimportant, for each element in the first 
-array the function iterates through all elements in the second
-array searching for a matching element.
+The comparison function is much time-consuming because it is recursive.
+All items are compared for \e sameas until the first couple of items
+returns FALSE.
 
 If the two objects are very complex, the comparison function
 is very slow and you are discouraged to use it unless it is
 strictly necessary.
 I have defined this function only for debugging purposes.
+
 
 \subsection json_internals_compare_convert Comparing different types
 
@@ -739,7 +734,6 @@ In this way the function correctly handles this situation:
   wxJSONValue v2( (unsigned) -1);  // this is 4.294.967.296
   bool r = v1.IsSameAs( v2 );      // returns FALSE
 \endcode
-
 
 
 

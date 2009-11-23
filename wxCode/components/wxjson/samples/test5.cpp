@@ -461,11 +461,10 @@ int Test8_3()
 {
 	// in ANSI builds, the strings are read in UTF8 but they cannot
 	// be stored correctly in wxString.
-	// The reader simply copies the UTF8 bytes using wxString::From8BitData()
-	// only the US-ASCII string is stored correctly; all other charsets
-	// are stored as 2-bytes 
+	// The default behaviour of the reader is to convert unrepresentable
+	// characters as unicode escaped sequence
 	TestCout( _T( "The input JSON text:\n" ));
-	TestCout( (char*) utf8Buff );
+	// TestCout( wxString( utf8Buff));
 
 	wxMemoryInputStream is( utf8Buff, strlen( utf8Buff ));
 	wxJSONValue root;
@@ -477,17 +476,22 @@ int Test8_3()
 	wxString latin1   = root[1].AsString();
 	wxString greek    = root[2].AsString();
 	wxString cyrillic = root[3].AsString();
-	TestCout( _T( "us-ascii length (6): " ));
+	TestCout( _T( "\nus-ascii length (6): " ));
 	TestCout( usascii.Len(), true );
-	TestCout( _T( "latin1 length (10): " ));
+	TestCout( usascii );
+	TestCout( _T( "\nlatin1 length (10): " ));
 	TestCout( latin1.Len(), true );
-	TestCout( _T( "greek length (8): " ));
+	TestCout( latin1 );
+	TestCout( _T( "\ngreek length (8): " ));
 	TestCout( greek.Len(), true );
-	TestCout( _T( "cyrillic length (8): " ));
+	TestCout( greek );
+	TestCout( _T( "\ncyrillic length (8): " ));
 	TestCout( cyrillic.Len(), true );
+	TestCout( cyrillic );
+	TestCout( _T( "\n" ));
 	
 	ASSERT( usascii.Len() == 6 );
-	ASSERT( latin1.Len() == 10 );
+	ASSERT( latin1.Len() == 5 );
 	
 	// greek UTF8: 0xCE,0xB1,0xCE,0xB2,0xCE,0xB3,0xCE,0xB4
 	ASSERT( greek.Len() == 8 );
@@ -527,6 +531,41 @@ int Test8_4()
 	TestCout( _T( "The read JSON value:\n" ));
 	PrintValue( root, &reader );
 
+	return 0;
+}
+
+// read a string that contains latin-1 characters (ANSI)
+// used for single stepping in DDD
+int Test8_5()
+{
+
+	// a UTF-8 buffer containing an array of strings:
+	// [
+	// "àèì©®"
+	// ]
+	//
+	static const char utf8_b[] = {
+		0x5B,
+		0x22,0xC3,0xA0,0xC3,0xA8, 0xC3,0xAC,0xC2,0xA9,0xC2,0xAE,0x22,0x2C, 0x0A,
+		0x5D,
+		0x0A,0x0A,0x0
+	};
+
+	wxMemoryInputStream is( utf8_b, strlen( utf8_b ));
+	wxJSONValue root;
+	wxJSONReader reader;
+	int numErrors = reader.Parse( is, &root );
+	
+	// get the string
+	wxString str   = root[0].AsString();
+	TestCout( _T( "\nstring length (6): " ));
+	TestCout( str.Len(), true );
+	TestCout( str );
+	TestCout( _T( "\n" ));
+	
+	// for some unknown reason the writer cannot write the latin, greek adn cyrillic
+	TestCout( _T( "The read JSON value:\n" ));
+	PrintValue( root, &reader );
 	return 0;
 }
 

@@ -256,7 +256,10 @@ int main( int argc, char* argv[] )
 		{
 			Test2_7, 3, _T( "comparing incompatible types" )
 		},
-		{ 0 },{ 0 },
+		{
+			Test2_8, 3, _T( "comparing data structure of positive INT and UINT" )
+		},
+		{ 0 },
 		
 		// family #3		(test3.cpp)
 		{
@@ -410,7 +413,10 @@ int main( int argc, char* argv[] )
 		{
 			Test8_4, 2, _T( "(ANSI) an array of strings read from a wxString" )
 		},
-		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+		{
+			Test8_5, 2, _T( "(ANSI) read a latin-1 string from UTF-8 buffer" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },
 
 
 		// family #9		(test6.cpp)

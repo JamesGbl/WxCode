@@ -52,7 +52,7 @@ extern int Test2_4();  // comparing objects
 extern int Test2_5();  // comparing arrays
 extern int Test2_6();  // comparing maps, special case: the NULL value
 extern int Test2_7();  // comparing incompatible types
-extern int Test2_7();  // comparing arrays
+extern int Test2_8();  // comparing arrays
 
 //
 //		*********** test3.cpp ****************
@@ -106,6 +106,7 @@ extern int Test8_1();  // (Unicode) input from a UTF-8 stream
 extern int Test8_2();  // (Unicode) input from a wxString object
 extern int Test8_3();  // (ANSI) input from a UTF-8 stream
 extern int Test8_4();  // (ANSI) input from a wxString object
+extern int Test8_5();  // (ANSI) read a latin-1 string
 
 
 //
@@ -169,7 +170,9 @@ extern int Test13_7();  // test the wxJSONReader::Strto(u)ll function
 //
 //		*********** test11.cpp ****************
 //
-// family #
+// family #14: testing Unicode support in ANSI builds
+extern int Test14_1();  // 
+
 
 //
 //		*********** test12.cpp ****************
