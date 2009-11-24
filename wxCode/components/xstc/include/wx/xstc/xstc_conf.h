@@ -122,8 +122,13 @@
  #define WXMAKINGDLL_SCI //this if for wxScintilla
  #define WXMAKINGDLL_STC //this is for wxstyledtextctrl
  #define SCI_LEXER //need this for scintilla when building
+ #define LINK_LEXERS
 #else
  #define WXDLLIMPEXP_XSTC
+#endif
+
+#ifndef _DEBUG
+ #define NDEBUG
 #endif
 
 //#define XSTC_USE_WXSCINTILLA //define this if you are using wxScintilla
