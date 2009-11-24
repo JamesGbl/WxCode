@@ -4,7 +4,7 @@
  
  Website: http://wxcode.sourceforge.net/components/advtable
  Author: Moskvichev Andrey V. (email: mab [at] smtp [dot] ru)
- Version: 1.1 
+ Version: 1.4 
  Description:
  wxAdvTable is table component (like wxGrid) designed with 
  simplicity and flexibility in mind.
@@ -53,6 +53,12 @@
  When accessing data from model, it indexed by decomposed count, 
  _not_ by count of row/column definitions.
 
+	Rows/columns definition.
+ Rows/columns defined by wxAdvHdrCell class, which contains 
+ attributes like: rows/column label, size, sortable or not, resizable or not, 
+ horizontal and vertical label text alignment, and etc.
+ wxAdvHdrCell also defines subcells for row/column.
+ 
 	Data model.
  wxAdvTable not stores data by itself, it delegate data access to 
  data model. Data model is abstract, so you can use it to access data 
@@ -72,7 +78,8 @@
  data formats. There are wxAdvStringCellRender for string data,
  wxAdvBoolCellRenderer for boolean data, 
  wxAdvColourCellRenderer for color data,
- wxAdvDateTimeCellRenderer for datetime data. 
+ wxAdvDateTimeCellRenderer for datetime data, 
+ wxAdvChoicesCellRenderer for choices data. 
 
 	Editors.
  Editors are objects that performs data editing. They are activated on 
@@ -98,9 +105,17 @@
  wxAdvTableDateTimeSorter for datetime values, 
  wxAdvTableDoubleSorter for double values.
  
-    Row/columns resize.
- TODO write more.
+ 	Filtering.
+ TODO: Filtering is not implemented yet. 
  
+    Row/columns resize.
+ Rows/columns can be resized if they marked by wxAdvHdrCell::Resizable method 
+ call or when all rows/columns resize enabled in wxAdvTable (by calling 
+ wxAdvTable::SetAllowResizeAll[Rows|Cols] with true argument).
+ There are two resize constraints: minSize and maxSize. They can be set 
+ to rows/cols by calling wxAdvHdrCell::MinSize and MaxSize method.
+ MaxSize by default is unlimited, MinSize is set to zero.
+  
     Events.
  wxAdvTable supports some wxGrid events and have it's own events.
  wxGrid event are cell click, change, select events:
@@ -136,8 +151,7 @@
  When building on a Linux/GNU-based system, type
 
   cd build
-  ./configure
-  make
+  make -f GNUmakefile
 
  to build against the default build of wxWidgets (the one listed as 'default' 
  by wx-config --list). Type "./configure --help" for more info.
@@ -190,6 +204,10 @@
        - lack of filtering
        - sorting code must be rewritten
        - resize code must be optimized
+       - keys up/down/left/right/page up/page down must move cell focus
+         and also scroll table if needed
+       - TODO: make posible to save wxAdvTable to Excel (tm) or OpenOffice document 
+         workbook.
        - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2 mingw) and wxGTK-2.8.8 (Gentoo Linux x86_64 gcc),
          if someone can test on other wxWidgets ports, please let me know
        - bugs with keydown handling on wxGTK

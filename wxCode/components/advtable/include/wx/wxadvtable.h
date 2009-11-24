@@ -2581,7 +2581,7 @@ private:
 	void DecomposeHdrCell(wxAdvHdrCell &hdrCell, wxAdvHdrCellPtrArray &decompHdrCells);
 
 	//
-	// Table geometry functions.
+	// Table geometry internal functions.
 	//
 
 	/**

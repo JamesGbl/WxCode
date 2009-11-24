@@ -12,8 +12,8 @@
 #include <wx/aui/aui.h>
 #include <wx/aboutdlg.h>
 
-const wxString appVersion = wxT("1.3");
-const wxString appName = wxT("wxAdvTable demo 1.3");
+const wxString appVersion = wxT("1.4");
+const wxString appName = wxT("wxAdvTable demo 1.4");
 
 /*
  * TODO:
@@ -447,7 +447,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(1000, 800))
+: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(1100, 800))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
