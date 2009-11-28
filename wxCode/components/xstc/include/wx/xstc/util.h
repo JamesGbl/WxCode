@@ -92,6 +92,19 @@
  #define XSTC_NO_POWERPRO
  #define XSTC_NO_NIMROD
  #define XSTC_NO_SML
+ 
+ #if wxMAJOR_VERSION >= 2
+ #if wxMINOR_VERSION = 9
+ //these languages are present in 2.9 but not 2.8
+ #define XSTC_NO_ABAQUS
+ #define XSTC_NO_CMAKE
+ #define XSTC_NO_D
+ #define XSTC_NO_GAP
+ #define XSTC_NO_PLM
+ #define XSTC_NO_PROGRESS
+ #endif
+ #endif
+ 
 
  #define XSTC_NO_MARK_AVAILABLE
  #define XSTC_NO_MARK_LEFTRECT
