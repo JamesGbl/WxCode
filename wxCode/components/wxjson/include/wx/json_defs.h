@@ -177,14 +177,6 @@
 #define wxJSONWRITER_MIN_LENGTH	15
 #define wxJSONWRITER_TAB_LENGTH  4
 
-//
-// in version 2.9 and above, we use the wxW 2.8 compatibility
-// note that the library has to be built with 2.8 compatibility
-// enabled in order to use it
-#if wxCHECK_VERSION(2, 9, 0 )
-#define WXWIN_COMPATIBILITY_2_8 1
-#endif
-
 
 //
 // some compilers (i.e. MSVC++) defines their own 'snprintf' function

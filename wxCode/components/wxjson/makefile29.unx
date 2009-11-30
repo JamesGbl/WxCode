@@ -45,7 +45,7 @@ CXXFLAGS += -I./include/
 
 #
 # Standard linker flags. we have to include the path to wxWidgets libraries
-LDFLAGS = -L/home/luciano/wxwidgets/wxWidgets-2009-10-17/lib
+LDFLAGS = -L/home/luciano/wxwidgets/wxWidgets-2009-11-26/lib
 
 #
 # we also have to include the path to the wxJSON library
@@ -62,7 +62,7 @@ CXXFLAGS_UNI = `/home/luciano/wxwidgets/wxWidgets-2009-10-17/wx-config --unicode
 # C++ flags to use with an ANSI build of wxWidgets.
 # If you want to compile wxJSON and the test app in ANSI mode you should
 # uncomment the following line
-CXXFLAGS_ANSI = `/home/luciano/wxwidgets/wxWidgets-2009-10-17/wx-config --unicode=no --cxxflags`
+CXXFLAGS_ANSI = `/home/luciano/wxwidgets/wxWidgets-2009-11-26/wx-config --unicode=no --cxxflags`
 
 
 
@@ -276,14 +276,14 @@ TEST_OBJECTS_A = samples/main.oa	\
 # the following target creates the Unicode builds of test application
 testuni.bin: $(TEST_OBJECTS) $(LIB_LIBUNI)
 	$(LINKER) -o testuni.bin $(TEST_OBJECTS) $(LDFLAGS)	\
-		-l$(LIBUNI) `/home/luciano/wxwidgets/wxWidgets-2009-10-17/wx-config --unicode=yes --libs base`
+		-l$(LIBUNI) `/home/luciano/wxwidgets/wxWidgets-2009-11-26/wx-config --unicode=yes --libs base`
 
 
 #
 # the following target creates the ANSI build of the application
 testansi.bin: $(TEST_OBJECTS_A) $(LIB_LIBANSI)
 	$(LINKER) -o testansi.bin $(TEST_OBJECTS_A) $(LDFLAGS)	\
-		-l$(LIBANSI) `/home/luciano/wxwidgets/wxWidgets-2009-10-17/wx-config --unicode=no --libs base`
+		-l$(LIBANSI) `/home/luciano/wxwidgets/wxWidgets-2009-11-26/wx-config --unicode=no --libs base`
 
 
 #
