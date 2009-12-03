@@ -147,7 +147,6 @@ DECLARE_APP(csApp)
 #define ID_CS_ADD_SHAPE_SELECT            21
 #define ID_CS_ADD_LINE_SELECT             22
 
-#define ID_CS_ABOUT                       100
 #define ID_CS_SELECT_ALL                  102
 #define ID_CS_SETTINGS                    103
 

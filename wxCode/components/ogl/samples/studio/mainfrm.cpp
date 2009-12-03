@@ -20,7 +20,7 @@
 #include "dialogs.h"
 
 BEGIN_EVENT_TABLE(csFrame, wxDocMDIParentFrame)
-    EVT_MENU(ID_CS_ABOUT, csFrame::OnAbout)
+    EVT_MENU(wxID_ABOUT, csFrame::OnAbout)
     EVT_MENU(wxID_EXIT, csFrame::OnQuit)
     EVT_MENU(wxID_HELP, csFrame::OnHelp)
     EVT_MENU(ID_CS_SETTINGS, csFrame::OnSettings)

@@ -44,7 +44,9 @@
 #include "bitmaps/cutpoint.xpm"
 #include "bitmaps/straight.xpm"
 
-#include "studio.xpm"
+#ifndef __WXMSW__
+    #include "ogl.xpm"
+#endif
 
 IMPLEMENT_APP(csApp)
 
@@ -118,7 +120,7 @@ bool csApp::OnInit(void)
                      wxDEFAULT_FRAME_STYLE_NO_CLIP | wxHSCROLL | wxVSCROLL);
 
     // Give it an icon
-    frame->SetIcon(wxIcon(studio_xpm));
+    frame->SetIcon(wxICON(ogl));
 
     // Make a menubar
     wxMenu *fileMenu = new wxMenu;
@@ -140,7 +142,7 @@ bool csApp::OnInit(void)
 
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(wxID_HELP);
-    helpMenu->Append(ID_CS_ABOUT, _("&About"));
+    helpMenu->Append(wxID_ABOUT, _("&About"));
 
     wxMenuBar *menuBar = new wxMenuBar;
 
@@ -209,11 +211,10 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
     csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, ((wxDocMDIParentFrame*)GetTopWindow()), wxID_ANY, wxT("Child Frame"),
                                                     wxPoint(10, 10), wxSize(300, 300), wxDEFAULT_FRAME_STYLE);
 
-#ifdef __WXMSW__
-    subframe->SetIcon(wxString(wxT("chart")));
-#endif
 #ifdef __X__
     subframe->SetIcon(wxIcon(wxT("doc.xbm")));
+#else
+    subframe->SetIcon(wxICON(ogl));
 #endif
 
     //// Make a menubar
@@ -259,7 +260,7 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
 
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(wxID_HELP, _("&Help Contents\tF1"));
-    helpMenu->Append(ID_CS_ABOUT, wxGetStockLabel(wxID_ABOUT));
+    helpMenu->Append(wxID_ABOUT, wxGetStockLabel(wxID_ABOUT));
 
     wxMenuBar *menuBar = new wxMenuBar;
 
