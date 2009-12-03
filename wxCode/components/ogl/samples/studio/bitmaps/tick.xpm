@@ -1,21 +1,19 @@
 /* XPM */
-static const char *tick[] = {
-/* width height num_colors chars_per_pixel */
-"    11    11        2            1",
-/* colors */
-". c #000000",
-"# c #c0c0c0",
+static const char *tick_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"11 11 2 1",
+". c Black",
+"  c None",
 /* pixels */
-"###########",
-".#######.##",
-".######...#",
-".#####....#",
-".####....##",
-"..##....###",
-".......####",
-"......#####",
-".#...######",
-".##.#######",
-".##########"
+"           ",
+".       .  ",
+".      ... ",
+".     .... ",
+".    ....  ",
+"..  ....   ",
+".......    ",
+"......     ",
+". ...      ",
+".  .       ",
+".          "
 };
-SIMPLE  =                    T                                                  BITPIX  =                    8                                                  NAXIS   =                    2                                                  NAXIS1  =                   11                                                  NAXIS2  =                   11                                                  HISTORY Written by XV 3.10a                                                     END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
