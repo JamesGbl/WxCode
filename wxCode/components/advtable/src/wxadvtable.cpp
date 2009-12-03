@@ -37,6 +37,7 @@ DEFINE_EVENT_TYPE(wxEVT_ADVTABLE_HDRCELL_LEFT_DCLICK)
 DEFINE_EVENT_TYPE(wxEVT_ADVTABLE_HDRCELL_RIGHT_DCLICK)
 DEFINE_EVENT_TYPE(wxEVT_ADVTABLE_HDRCELL_MOVE)
 DEFINE_EVENT_TYPE(wxEVT_ADVTABLE_HDRCELL_SIZE)
+DEFINE_EVENT_TYPE(wxEVT_ADVTABLE_HDRCELL_SORT)
 
 static bool g_bitmapsLoaded = false;
 static wxBitmap g_bmpCheckMark;
@@ -123,6 +124,45 @@ void ResizeBitmap(wxBitmap &bmp, wxCoord newWidth, wxCoord newHeight)
 	}
 }
 
+
+wxColour Darker(wxColour colour)
+{
+	const double mult = 0.8;
+
+	double red = colour.Red() * mult;
+	double green = colour.Green() * mult;
+	double blue = colour.Blue() * mult;
+
+	return wxColour((unsigned char) red,
+			(unsigned char) green,
+			(unsigned char) blue);
+
+}
+
+wxColour Brighter(wxColour colour)
+{
+	const double mult = 1.2;
+
+	double red = colour.Red() * mult;
+	double green = colour.Green() * mult;
+	double blue = colour.Blue() * mult;
+
+	if (red > 255) {
+		red = 255;
+	}
+	if (green > 255) {
+		green = 255;
+	}
+	if (blue > 255) {
+		blue = 255;
+	}
+
+	return wxColour((unsigned char) red,
+			(unsigned char) green,
+			(unsigned char) blue);
+
+}
+
 /**
  * Draws bevel.
  * @param dc device context
@@ -131,13 +171,19 @@ void ResizeBitmap(wxBitmap &bmp, wxCoord newWidth, wxCoord newHeight)
  * @param colour1 colour of left and top edges
  * @param colour2 colour of right and bottom edges
  * @param edgeWidth edgeWidth
+ * @param gradient true to draw gradient bevel
  */
-void DrawBevel(wxDC &dc, const wxRect &rc, wxColour bgColour, wxColour colour1, wxColour colour2, int edgeWidth)
+void DrawBevel(wxDC &dc, const wxRect &rc, wxColour bgColour, wxColour colour1, wxColour colour2, int edgeWidth, bool gradient)
 {
 	// draw background
 	dc.SetBrush(*wxTheBrushList->FindOrCreateBrush(bgColour));
 	dc.SetPen(*wxThePenList->FindOrCreatePen(bgColour, 1, wxSOLID));
-	dc.DrawRectangle(rc);
+	if (gradient) {
+		dc.GradientFillLinear(rc, bgColour, Brighter(bgColour), wxNORTH);
+	}
+	else {
+		dc.DrawRectangle(rc);
+	}
 
 	// draw light edge
 	dc.SetPen(*wxThePenList->FindOrCreatePen(colour1, edgeWidth, wxSOLID));
@@ -538,8 +584,8 @@ void wxAdvDefaultTableDataModel::RemoveCols(size_t first, size_t count)
 //
 wxAdvFilterTableDataModel::wxAdvFilterTableDataModel(wxAdvTableDataModel *model, size_t numRows, size_t numCols)
 {
-	m_undelayingModel = model;
-	m_undelayingModel->AddObserver(this);
+	m_underlayingModel = model;
+	m_underlayingModel->AddObserver(this);
 
 	wxArrayString row;
 	row.Add(wxEmptyString, numCols);
@@ -550,7 +596,8 @@ wxAdvFilterTableDataModel::wxAdvFilterTableDataModel(wxAdvTableDataModel *model,
 
 wxAdvFilterTableDataModel::~wxAdvFilterTableDataModel()
 {
-	delete m_undelayingModel;
+	m_underlayingModel->RemoveObserver(this);
+	delete m_underlayingModel;
 }
 
 wxString wxAdvFilterTableDataModel::GetCellValue(size_t row, size_t col)
@@ -566,28 +613,28 @@ wxString wxAdvFilterTableDataModel::GetCellValue(size_t row, size_t col)
 
 int wxAdvFilterTableDataModel::GetCellFormat(size_t row, size_t col)
 {
-	return m_undelayingModel->GetCellFormat(row, col);
+	return m_underlayingModel->GetCellFormat(row, col);
 }
 
 bool wxAdvFilterTableDataModel::IsCellEditable(size_t row, size_t col)
 {
-	return m_undelayingModel->IsCellEditable(row, col);
+	return m_underlayingModel->IsCellEditable(row, col);
 }
 
 void wxAdvFilterTableDataModel::CellChanged(size_t row, size_t col)
 {
-	m_data[row][col] = m_undelayingModel->GetCellValue(row, col);
+	m_data[row][col] = m_underlayingModel->GetCellValue(row, col);
 	FireCellChanged(row, col);
 }
 
 bool wxAdvFilterTableDataModel::SetCellValue(size_t row, size_t col, wxString value)
 {
-	return m_undelayingModel->SetCellValue(row, col, value);
+	return m_underlayingModel->SetCellValue(row, col, value);
 }
 
 wxAdvCellAttribute *wxAdvFilterTableDataModel::GetCellAttribute(size_t row, size_t col)
 {
-	return m_undelayingModel->GetCellAttribute(row, col);
+	return m_underlayingModel->GetCellAttribute(row, col);
 }
 
 double wxAdvFilterTableDataModel::GetCellValueAsDouble(size_t row, size_t col)
@@ -623,10 +670,15 @@ void wxAdvFilterTableDataModel::UpdateValues()
 {
 	for (size_t row = 0; row < m_data.Count(); row++) {
 		for (size_t col = 0; col < m_data[row].Count(); col++) {
-			m_data[row][col] = m_undelayingModel->GetCellValue(row, col);
+			m_data[row][col] = m_underlayingModel->GetCellValue(row, col);
 		}
 	}
 	m_needUpdate = false;
+}
+
+wxAdvTableDataModel *wxAdvFilterTableDataModel::GetUnderlayingModel()
+{
+	return m_underlayingModel;
 }
 
 //
@@ -650,36 +702,25 @@ wxAdvHdrCellRenderer::~wxAdvHdrCellRenderer()
 //
 wxAdvDefaultHdrCellRenderer::wxAdvDefaultHdrCellRenderer()
 {
+	m_edgeWidth = 3;
+	m_drawGradient = true;
 }
 
 wxAdvDefaultHdrCellRenderer::~wxAdvDefaultHdrCellRenderer()
 {
 }
 
-void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection)
+void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection)
 {
-	wxColour colour1, colour2, bgColour, textColour;
-	textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
-	bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
+	DrawBackground(dc, hdrCell, selected, pressed);
 
-	if (pressed) {
-		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
-		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
-	}
-	else {
-		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
-		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
-	}
-
-	const int edgeWidth = 3;
-
-	DrawBevel(dc, hdrCell->m_rc, bgColour, colour1, colour2, edgeWidth);
+	wxColour textColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT);
 
 	dc.SetFont(*wxNORMAL_FONT);
 	dc.SetTextForeground(textColour);
 
 	wxRect rc = hdrCell->m_rc;
-	rc.Deflate(edgeWidth, edgeWidth);
+	rc.Deflate(m_edgeWidth, m_edgeWidth);
 
 	if (sortDirection != wxAdvTable::SortDirNoSorting) {
 		// draw sort arrow
@@ -716,6 +757,29 @@ void wxAdvDefaultHdrCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell
 			hdrCell->IsVerticalText());
 }
 
+void wxAdvDefaultHdrCellRenderer::DrawBackground(wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed)
+{
+	wxColour colour1, colour2, bgColour;
+	bgColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
+
+	if (pressed) {
+		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
+		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
+	}
+	else {
+		colour1 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
+		colour2 = wxSystemSettings::GetColour(wxSYS_COLOUR_3DDKSHADOW);
+	}
+
+	if (selected) {
+		bgColour = Darker(bgColour);
+		colour1 = Darker(colour1);
+		colour2 = Darker(colour2);
+	}
+
+	DrawBevel(dc, hdrCell->m_rc, bgColour, colour1, colour2, m_edgeWidth, m_drawGradient);
+}
+
 wxAdvHdrCellRenderer *wxAdvDefaultHdrCellRenderer::Clone()
 {
 	return new wxAdvDefaultHdrCellRenderer();
@@ -747,16 +811,16 @@ void wxAdvStringCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect
 {
 	wxDCClipper clip(dc, rc);
 
-	if (attr->Brush().GetStyle() !=	wxTRANSPARENT) {
+	if (attr->BgBrush().GetStyle() != wxTRANSPARENT) {
 		// blend brush colors.
 		wxColour clr1 = dc.GetBrush().GetColour();
-		wxColour clr2 = attr->Brush().GetColour();
+		wxColour clr2 = attr->BgBrush().GetColour();
 
 		wxColour blendedClr((clr1.Red() + clr2.Red()) / 2,
 			(clr1.Green() + clr2.Green()) / 2,
 			(clr1.Blue() + clr2.Blue()) / 2);
 
-		wxBrush brush = *wxTheBrushList->FindOrCreateBrush(blendedClr, attr->Brush().GetStyle());
+		wxBrush brush = *wxTheBrushList->FindOrCreateBrush(blendedClr, attr->BgBrush().GetStyle());
 		dc.SetBrush(brush);
 	}
 
@@ -807,7 +871,7 @@ wxAdvColourCellRenderer::~wxAdvColourCellRenderer()
 {
 }
 
-void wxAdvColourCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
+void wxAdvColourCellRenderer::Draw(wxAdvTable *WXUNUSED(table), wxDC &dc, wxRect rc, wxString value, bool WXUNUSED(selected), bool WXUNUSED(focused), wxAdvCellAttribute *WXUNUSED(attr))
 {
 	wxColour colour(value);
 
@@ -988,7 +1052,7 @@ bool wxAdvStringCellEditor::OneClickActivate()
 	return false;
 }
 
-void wxAdvStringCellEditor::HandleKeyEvent(wxKeyEvent &ev)
+void wxAdvStringCellEditor::HandleKeyEvent(wxKeyEvent &WXUNUSED(ev))
 {
 	/*
 	int keyCode = ev.GetKeyCode();
@@ -1215,7 +1279,7 @@ void wxAdvDateTimeCellEditor::DoDeactivate()
 	SetNewValue(value);
 }
 
-void wxAdvDateTimeCellEditor::OnDateChanged(wxDateEvent &ev)
+void wxAdvDateTimeCellEditor::OnDateChanged(wxDateEvent &WXUNUSED(ev))
 {
 	wxString value = m_datePicker->GetValue().Format(wxT("%x %X"));
 	SetNewValue(value);
@@ -1284,13 +1348,13 @@ void wxAdvChoicesCellEditor::UpdateValue()
 			choices));
 }
 
-void wxAdvChoicesCellEditor::OnCombobox(wxCommandEvent &ev)
+void wxAdvChoicesCellEditor::OnCombobox(wxCommandEvent &WXUNUSED(ev))
 {
 	UpdateValue();
 	EndEditing();
 }
 
-void wxAdvChoicesCellEditor::OnText(wxCommandEvent &ev)
+void wxAdvChoicesCellEditor::OnText(wxCommandEvent &WXUNUSED(ev))
 {
 	UpdateValue();
 }
@@ -1304,7 +1368,7 @@ wxAdvCellAttribute::wxAdvCellAttribute()
 	// default values
 	m_font = *wxNORMAL_FONT;
 	m_alignment = wxALIGN_CENTER | wxALIGN_RIGHT;
-	m_brush = *wxTheBrushList->FindOrCreateBrush(*wxBLACK, wxTRANSPARENT);
+	m_bgBrush = *wxTheBrushList->FindOrCreateBrush(*wxBLACK, wxTRANSPARENT);
 }
 
 wxAdvCellAttribute::~wxAdvCellAttribute()
@@ -1421,6 +1485,12 @@ wxAdvTableDoubleSorter::~wxAdvTableDoubleSorter()
 int wxAdvTableDoubleSorter::Compare(wxAdvTable *table, size_t row1, size_t col1, size_t row2, size_t col2)
 {
 	wxAdvTableDataModel *dataModel = table->GetModel();
+
+	// if values are not in double format, fallback to string compare.
+	if ((dataModel->GetCellFormat(row1, col1) != wxDoubleFormat)
+			|| (dataModel->GetCellFormat(row2, col2) != wxDoubleFormat)) {
+		return wxAdvTableStringSorter::Compare(table, row1, col1, row2, col2);
+	}
 
 	double value1 = dataModel->GetCellValueAsDouble(row1, col1);
 	double value2 = dataModel->GetCellValueAsDouble(row2, col2);
@@ -1540,7 +1610,7 @@ wxAdvTable::wxAdvTable(wxWindow *parent, wxWindowID id, const wxPoint &pos, cons
 	ClearSelection();
 
 	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-	SetScrollRate(1, 1);
+	SetScrollRate(10, 10);
 
 	// set default editors/renderers for formats
 	SetEditorForFormat(wxStringFormat, new wxAdvStringCellEditor(this));
@@ -1614,8 +1684,8 @@ void wxAdvTable::Create(wxAdvHdrCellArray &rows, wxAdvHdrCellArray &cols, const 
 
 	Create(rowsA, rows.Count(), colsA, cols.Count(), cornerLabel, model);
 
-	delete rowsA;
-	delete colsA;
+	wxDELETEA(rowsA);
+	wxDELETEA(colsA);
 }
 
 void wxAdvTable::Create(size_t numRows, wxAdvHdrCell *cols, size_t numCols, const wxString &cornerLabel, wxAdvTableDataModel *model)
@@ -1654,6 +1724,8 @@ void wxAdvTable::DestroyTable()
 	ClearSelection();
 
 	m_tableCreated = false;
+
+	SetVirtualSize(0, 0);
 
 	// destroy backbuffers
 	m_backBitmap.Create(0, 0);
@@ -2888,7 +2960,10 @@ void wxAdvTable::StopEditing()
 void wxAdvTable::ResizeBackBitmaps()
 {
 	if (!m_tableCreated) {
+		// destroy backbuffers
 		m_backBitmap.Create(0, 0);
+		m_backBitmapCols.Create(0, 0);
+		m_backBitmapRows.Create(0, 0);
 		return ;
 	}
 
@@ -2972,7 +3047,10 @@ void wxAdvTable::RedrawRange(size_t row1, size_t col1, size_t row2, size_t col2)
 	}
 
 	int xViewStart, yViewStart;
-	CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	//CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	wxPoint viewStart = ToViewportPosition(wxPoint(0, 0));
+	xViewStart = viewStart.x;
+	yViewStart = viewStart.y;
 
 	row1 = wxMax(row1, visibleRange.TopRow());
 	col1 = wxMax(col1, visibleRange.LeftCol());
@@ -3005,7 +3083,10 @@ void wxAdvTable::RedrawAll()
 	}
 
 	int xViewStart, yViewStart;
-	CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	//CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	wxPoint viewStart = ToViewportPosition(wxPoint(0, 0));
+	xViewStart = viewStart.x;
+	yViewStart = viewStart.y;
 
 	wxRect rcData = CalcTableRect();
 
@@ -3038,7 +3119,10 @@ void wxAdvTable::RedrawHdrCell(wxAdvHdrCell *cell)
 	wxRect rcData = CalcTableRect();
 
 	int xViewStart, yViewStart;
-	CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	//CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	wxPoint viewStart = ToViewportPosition(wxPoint(0, 0));
+	xViewStart = viewStart.x;
+	yViewStart = viewStart.y;
 
 	if (cell->m_isRow) {
 		wxMemoryDC dc(m_backBitmapRows);
@@ -3091,7 +3175,10 @@ bool wxAdvTable::GetVisibleRange(wxAdvRange &range)
 	size_t col2 = UNDEF_SIZE;
 
 	int xViewStart, yViewStart;
-	CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	//CalcUnscrolledPosition(0, 0, &xViewStart, &yViewStart);
+	wxPoint viewStart = ToViewportPosition(wxPoint(0, 0));
+	xViewStart = viewStart.x;
+	yViewStart = viewStart.y;
 
 	wxRect tableRc = CalcTableRect();
 	wxCoord x0 = tableRc.x + xViewStart;
@@ -3311,6 +3398,8 @@ void wxAdvTable::ResizeHdrCell(const wxMouseEvent &ev, wxAdvHdrCell *hdrCell)
 	// TODO: must be optimized
 	if (ResizeHdrCellSelf(resizeCell, d, 0)) {
 		UpdateGeometry();
+
+		SendHdrCellEvent(wxEVT_ADVTABLE_HDRCELL_SIZE, resizeCell, ev);
 	}
 }
 
@@ -3527,6 +3616,9 @@ void wxAdvTable::HandleHdrCellMouseEvent(const wxMouseEvent &ev, wxAdvHdrCell *h
 		if (hdrCell == m_pressedHdrCell && m_pressedHdrCell != NULL) {
 			if (m_sorter != NULL && CanSortByHdrCell(m_pressedHdrCell)) {
 				SetSortingIndex(m_pressedHdrCell->m_decompIndex);
+
+				// fire sort event
+				SendHdrCellEvent(wxEVT_ADVTABLE_HDRCELL_SORT, m_pressedHdrCell, ev);
 			}
 		}
 
@@ -3571,13 +3663,14 @@ void wxAdvTable::HandleHdrCellMouseEvent(const wxMouseEvent &ev, wxAdvHdrCell *h
 				cursorId = wxCURSOR_SIZEWE;
 			}
 			SetCursor(wxCursor(cursorId)); // XXX: can leak resources?!
+			return ;
 		}
 		else {
 			SetCursor(wxNullCursor);
 		}
-
-		SetCurrentHdrCell(hdrCell);
 	}
+
+	SetCurrentHdrCell(hdrCell);
 }
 
 void wxAdvTable::HandleCellMouseEvent(const wxMouseEvent &ev, size_t row, size_t col)

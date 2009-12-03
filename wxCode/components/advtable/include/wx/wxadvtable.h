@@ -103,6 +103,7 @@ BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_EXPORTED_EVENT_TYPE(WXDLLEXPORT, wxEVT_ADVTABLE_HDRCELL_RIGHT_DCLICK, 5003)
 	DECLARE_EXPORTED_EVENT_TYPE(WXDLLEXPORT, wxEVT_ADVTABLE_HDRCELL_MOVE, 5004)
 	DECLARE_EXPORTED_EVENT_TYPE(WXDLLEXPORT, wxEVT_ADVTABLE_HDRCELL_SIZE, 5005)
+	DECLARE_EXPORTED_EVENT_TYPE(WXDLLEXPORT, wxEVT_ADVTABLE_HDRCELL_SORT, 5006)
 END_DECLARE_EVENT_TYPES()
 
 class WXDLLEXPORT wxAdvHdrCellEvent : public wxNotifyEvent
@@ -168,6 +169,7 @@ typedef void (wxEvtHandler::*wxAdvHdrCellEventFunction)(wxAdvHdrCellEvent &);
 #define EVT_ADVTABLE_CMD_HDRCELL_RIGHT_DCLICK(id, fn) wx__DECLARE_ADVHDRCELLEVT(HDRCELL_RIGHT_DCLICK, id, fn)
 #define EVT_ADVTABLE_CMD_HDRCELL_MOVE(id, fn) wx__DECLARE_ADVHDRCELLEVT(HDRCELL_MOVE, id, fn)
 #define EVT_ADVTABLE_CMD_HDRCELL_SIZE(id, fn) wx__DECLARE_ADVHDRCELLEVT(HDRCELL_SIZE, id, fn)
+#define EVT_ADVTABLE_CMD_HDRCELL_SORT(id, fn) wx__DECLARE_ADVHDRCELLEVT(HDRCELL_SORT, id, fn)
 
 #define EVT_ADVTABLE_HDRCELL_LEFT_CLICK(fn) EVT_ADVTABLE_CMD_HDRCELL_LEFT_CLICK(wxID_ANY, fn)
 #define EVT_ADVTABLE_HDRCELL_RIGHT_CLICK(fn) EVT_ADVTABLE_CMD_HDRCELL_RIGHT_CLICK(wxID_ANY, fn)
@@ -175,6 +177,7 @@ typedef void (wxEvtHandler::*wxAdvHdrCellEventFunction)(wxAdvHdrCellEvent &);
 #define EVT_ADVTABLE_HDRCELL_RIGHT_DCLICK(fn) EVT_ADVTABLE_CMD_HDRCELL_RIGHT_DCLICK(wxID_ANY, fn)
 #define EVT_ADVTABLE_HDRCELL_MOVE(fn) EVT_ADVTABLE_CMD_HDRCELL_MOVE(wxID_ANY, fn)
 #define EVT_ADVTABLE_HDRCELL_SIZE(fn) EVT_ADVTABLE_CMD_HDRCELL_SIZE(wxID_ANY, fn)
+#define EVT_ADVTABLE_HDRCELL_SORT(fn) EVT_ADVTABLE_CMD_HDRCELL_SORT(wxID_ANY, fn)
 
 /**
  * Table cell coordinate.
@@ -193,6 +196,8 @@ public:
 
 	/**
 	 * Sets coordinate.
+	 * @param row row index
+	 * @param col column index
 	 */
 	void Set(size_t row, size_t col)
 	{
@@ -425,43 +430,80 @@ public:
 	wxAdvCellAttribute();
 	virtual ~wxAdvCellAttribute();
 
+	/**
+	 * Sets text alignment.
+	 * @param alignment text alignment
+	 */
 	void Alignment(int alignment)
 	{
 		m_alignment = alignment;
 	}
 
+	/**
+	 * Returns text alignment.
+	 * @return text alignment
+	 */
 	int Alignment()
 	{
 		return m_alignment;
 	}
 
+	/**
+	 * Sets text font.
+	 * @param font text font
+	 */
+	void Font(wxFont &font)
+	{
+		m_font = font;
+	}
+
+	/**
+	 * Returns text font.
+	 * @return text font
+	 */
 	const wxFont &Font()
 	{
 		return m_font;
 	}
 
-	const wxBrush &Brush()
+	/**
+	 * Sets background brush.
+	 * @param bgBrush background brush
+	 */
+	void BgBrush(wxBrush bgBrush)
 	{
-		return m_brush;
+		m_bgBrush = bgBrush;
 	}
 
-	void Brush(wxBrush brush)
+	/**
+	 * Returns background brush.
+	 * @return background brush
+	 */
+	const wxBrush &BgBrush()
 	{
-		m_brush = brush;
+		return m_bgBrush;
 	}
 
+	/**
+	 * Returns text colour.
+	 * @return text colour
+	 */
 	wxColour TextColour()
 	{
 		return m_textColour;
 	}
 
+	/**
+	 * Sets text colour.
+	 * @param textColour text colour
+	 */
 	void TextColour(wxColour textColour)
 	{
 		m_textColour = textColour;
 	}
 
 private:
-	wxBrush m_brush;
+	wxBrush m_bgBrush;
 	wxFont m_font;
 
 	int m_alignment;
@@ -701,10 +743,12 @@ public:
 
 	virtual void TableChanged();
 
+	wxAdvTableDataModel *GetUnderlayingModel();
+
 private:
 	void UpdateValues();
 
-	wxAdvTableDataModel *m_undelayingModel;
+	wxAdvTableDataModel *m_underlayingModel;
 
 	wxArrayArrayString m_data;
 	bool m_needUpdate;
@@ -753,6 +797,17 @@ public:
 	virtual void Draw(wxAdvTable *table, wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed, int sortDirection);
 
 	virtual wxAdvHdrCellRenderer *Clone();
+
+	void SetDrawGradient(bool drawGradient)
+	{
+		m_drawGradient = drawGradient;
+	}
+
+protected:
+	virtual void DrawBackground(wxDC &dc, wxAdvHdrCell *hdrCell, bool selected, bool pressed);
+
+	int m_edgeWidth;
+	bool m_drawGradient;
 };
 
 /**
@@ -1090,7 +1145,7 @@ private:
 /**
  * Sorts data by comparing double values.
  */
-class WXDLLEXPORT wxAdvTableDoubleSorter : public wxAdvTableSorter
+class WXDLLEXPORT wxAdvTableDoubleSorter : public wxAdvTableStringSorter
 {
 public:
 	wxAdvTableDoubleSorter();

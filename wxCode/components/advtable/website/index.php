@@ -27,7 +27,15 @@
   <p>The documentation for this component is available online
   <a href="../../docs/advtable/">here</a>.</p>
 
-
+	<br/><?php write_h1("Support project"); ?>
+	<p>Donate to support project development</p><br/>
+	<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="10094632">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/ru_RU/i/scr/pixel.gif" width="1" height="1">
+</form>
+	
 	<br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>
 
