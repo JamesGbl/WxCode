@@ -17,10 +17,8 @@
 #include "cspalette.h"
 #include "symbols.h"
 
-#ifndef __WXMSW__
 #include "bitmaps/arrow.xpm"
 #include "bitmaps/texttool.xpm"
-#endif
 
 /*
  * Object editor tool palette
@@ -99,15 +97,9 @@ bool csApp::CreatePalette(wxFrame *parent)
     m_diagramPaletteSashWindow->Show(false);
 
   // Load palette bitmaps
-#ifdef __WXMSW__
-    wxBitmap PaletteArrow(wxT("arrowtool"));
-    wxBitmap TextTool(wxT("texttool"));
-    wxSize toolBitmapSize(32, 32);
-#else // !__WXMSW__
-    wxBitmap PaletteArrow(arrow_xpm);
-    wxBitmap TextTool(texttool_xpm);
-    wxSize toolBitmapSize(22, 22);
-#endif
+  wxBitmap PaletteArrow(arrow_xpm);
+  wxBitmap TextTool(texttool_xpm);
+  wxSize toolBitmapSize(22, 22);
 
   csEditorToolPalette *palette = new csEditorToolPalette(m_diagramPaletteSashWindow, ID_DIAGRAM_PALETTE, wxPoint(0, 0), wxDefaultSize, wxTB_HORIZONTAL|wxNO_BORDER);
 
