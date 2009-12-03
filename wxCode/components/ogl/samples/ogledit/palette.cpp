@@ -22,6 +22,7 @@
 #include "bitmaps/tool2.xpm"
 #include "bitmaps/tool3.xpm"
 #include "bitmaps/tool4.xpm"
+#include "bitmaps/texttool.xpm"
 
 /*
  * Object editor tool palette
@@ -66,6 +67,7 @@ EditorToolPalette *MyApp::CreatePalette(wxFrame *parent)
   wxBitmap PaletteTool2(tool2_xpm);
   wxBitmap PaletteTool3(tool3_xpm);
   wxBitmap PaletteTool4(tool4_xpm);
+  wxBitmap PaletteTool5(texttool_xpm);
   wxBitmap PaletteArrow(arrow_xpm);
 
   EditorToolPalette *palette = new EditorToolPalette(parent, wxPoint(0, 0), wxDefaultSize,
@@ -79,6 +81,7 @@ EditorToolPalette *MyApp::CreatePalette(wxFrame *parent)
   palette->AddCheckTool(PALETTE_TOOL2, wxEmptyString, PaletteTool2, wxNullBitmap, _("Tool 2"));
   palette->AddCheckTool(PALETTE_TOOL3, wxEmptyString, PaletteTool3, wxNullBitmap, _("Tool 3"));
   palette->AddCheckTool(PALETTE_TOOL4, wxEmptyString, PaletteTool4, wxNullBitmap, _("Tool 4"));
+  palette->AddCheckTool(PALETTE_TOOL5, wxEmptyString, PaletteTool5, wxNullBitmap, _("Tool 5"));
 
   palette->Realize();
 
