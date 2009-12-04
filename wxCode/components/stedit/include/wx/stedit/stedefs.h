@@ -786,7 +786,12 @@ enum STE_StyleType
 
 // A fixed width font - courier is not great, but a reasonable start
 #ifndef STE_DEF_FACENAME
-    #define STE_DEF_FACENAME wxT("courier")
+    #ifdef __WXMSW__
+        // Use a TrueType/ClearType font on Windows
+        #define STE_DEF_FACENAME wxT("Courier New")
+    #else
+        #define STE_DEF_FACENAME wxT("Courier")
+    #endif
 #endif // #ifndef STE_DEF_FACENAME
 
 // ----------------------------------------------------------------------------
