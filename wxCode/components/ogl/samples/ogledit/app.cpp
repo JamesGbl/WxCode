@@ -35,11 +35,13 @@ MyApp::MyApp(void)
 // main frame
 bool MyApp::OnInit(void)
 {
-  wxOGLInitialize();
+  ::wxOGLInitialize();
 
-  SetAppName(wxT("OGLEdit Demo"));
-  //// Create a document manager
-  myDocManager = new wxDocManager;
+   SetAppName(wxT("ogledit"));
+   SetAppDisplayName(wxT("OGLEdit Demo"));
+
+   //// Create a document manager
+  myDocManager = new wxDocManager();
 
   //// Create a template relating drawing documents to their views
   (void) new wxDocTemplate(myDocManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
@@ -50,7 +52,7 @@ bool MyApp::OnInit(void)
   myDocManager->SetMaxDocsOpen(1);
 
   //// Create the main frame window
-  frame = new MyFrame(myDocManager, NULL, GetAppName(), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
+  frame = new MyFrame(myDocManager, NULL, GetAppDisplayName(), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
 
   //// Give it an icon
   frame->SetIcon(wxICON(ogl));
@@ -110,7 +112,8 @@ bool MyApp::OnInit(void)
     frame->SetMenuBar(menu_bar);
 
 #if wxUSE_STATUSBAR
-    frame->CreateStatusBar(1);
+    frame->CreateStatusBar();
+    frame->GetStatusBar()->PushStatusText(_("Ready"));
 #endif // wxUSE_STATUSBAR
 
   frame->Centre(wxBOTH);
@@ -181,6 +184,9 @@ void MyFrame::OnCloseWindow(wxCloseEvent& event)
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxAboutDialogInfo info;
+#if (wxVERSION_NUMBER < 2900)
+    info.SetName(wxGetApp().GetAppDisplayName());
+#endif
     info.SetCopyright(wxT("Copyright (c) 1996 Julian Smart"));
     info.AddDeveloper(wxT("Julian Smart"));
     info.SetDescription(
@@ -188,13 +194,13 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
        wxVERSION_STRING);
     info.SetWebSite(wxT("http://wxcode.sf.net/showcomp.php?name=ogl"));
     info.SetLicense(wxT("wxWindows"));
-    ::wxAboutBox(info);
+    ::wxAboutBox(info, this);
 }
 
 // Creates a canvas. Called by OnInit as a child of the main window
 MyCanvas *MyFrame::CreateCanvas(wxView *view, wxFrame *parent)
 {
-  int width, height;
+  wxCoord width, height;
   parent->GetClientSize(&width, &height);
 
   // Non-retained canvas

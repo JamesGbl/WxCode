@@ -86,7 +86,8 @@ bool csApp::OnInit(void)
         return false;
     }
 #endif
-    SetAppName(wxT("OGL Studio"));
+    SetAppName(wxT("oglstudio"));
+    SetAppDisplayName(wxT("OGL Studio"));
 #if wxUSE_MS_HTML_HELP && !defined(__WXUNIVERSAL__)
     m_helpController = new wxWinHelpController;
 #else
@@ -116,7 +117,7 @@ bool csApp::OnInit(void)
 #define wxDEFAULT_FRAME_STYLE_NO_CLIP \
     (wxDEFAULT_FRAME_STYLE & ~wxCLIP_CHILDREN)
 
-    csFrame* frame = new csFrame(m_docManager, NULL, wxID_ANY, GetAppName(), m_mainFramePos, m_mainFrameSize,
+    csFrame* frame = new csFrame(m_docManager, NULL, wxID_ANY, GetAppDisplayName(), m_mainFramePos, m_mainFrameSize,
                      wxDEFAULT_FRAME_STYLE_NO_CLIP | wxHSCROLL | wxVSCROLL);
 
     // Give it an icon
@@ -162,6 +163,7 @@ bool csApp::OnInit(void)
 
 #if wxUSE_STATUSBAR
     frame->CreateStatusBar();
+    frame->GetStatusBar()->PushStatusText(_("Ready"));
 #endif // wxUSE_STATUSBAR
 
     // The ordering of these is important for layout purposes

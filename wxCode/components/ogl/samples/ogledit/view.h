@@ -44,27 +44,32 @@ class MyCanvas: public wxShapeCanvas
 DECLARE_EVENT_TABLE()
 };
 
-class DiagramView: public wxView
+class DiagramDocument;
+class DiagramView : public wxView
 {
+   typedef wxView base;
   DECLARE_DYNAMIC_CLASS(DiagramView)
- private:
- public:
+private:
+public:
   wxFrame *frame;
   MyCanvas *canvas;
 
   DiagramView(void) { canvas = NULL; frame = NULL; };
-  ~DiagramView(void) {};
+  virtual ~DiagramView(void) {};
+  virtual void OnChangeFilename();
 
-  bool OnCreate(wxDocument *doc, long flags);
+  DiagramDocument* GetDocument();
+
+  bool OnCreate(wxDocument*, long flags);
   void OnDraw(wxDC *dc);
   void OnUpdate(wxView *sender, wxObject *hint = NULL);
   bool OnClose(bool deleteWindow = true);
 
   wxShape *FindSelectedShape(void);
 
-  void OnCut(wxCommandEvent& event);
-  void OnChangeBackgroundColour(wxCommandEvent& event);
-  void OnEditLabel(wxCommandEvent& event);
+  void OnCut(wxCommandEvent&);
+  void OnChangeBackgroundColour(wxCommandEvent&);
+  void OnEditLabel(wxCommandEvent&);
 
 DECLARE_EVENT_TABLE()
 };

@@ -14,13 +14,14 @@
 
 #include "wx/docview.h"
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include "wx29.h"
 
 // Define a new application
 class MyFrame;
 class EditorToolPalette;
-class MyApp : public wxApp
+class MyApp : public wxAppEx
 {
-    typedef wxApp base;
+    typedef wxAppEx base;
   public:
     MyFrame* frame;
     wxDocManager* myDocManager;

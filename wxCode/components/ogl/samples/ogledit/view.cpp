@@ -47,6 +47,11 @@ bool DiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
   return true;
 }
 
+DiagramDocument* DiagramView::GetDocument()
+{
+   return wxStaticCast(base::GetDocument(), DiagramDocument);
+}
+
 #define CENTER  false // Place the drawing to the center of the page
 
 
@@ -58,7 +63,7 @@ void DiagramView::OnDraw(wxDC *dc)
   /* You might use THIS code if you were scaling
    * graphics of known size to fit on the page.
    */
-  int w, h;
+  wxCoord w, h;
 
   // We need to adjust for the graphic size, a formula will be added
   float maxX = 900;
@@ -103,7 +108,7 @@ void DiagramView::OnDraw(wxDC *dc)
 
   // This part was added to preform the print preview and printing functions
 
-  wxDiagram *diagram_p=((DiagramDocument*)GetDocument())->GetDiagram();  // Get the current diagram
+  wxDiagram *diagram_p= GetDocument()->GetDiagram();  // Get the current diagram
   if (diagram_p->GetShapeList())
   {
     /* wxCursor *old_cursor = NULL; */
@@ -127,13 +132,28 @@ void DiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
     canvas->Refresh();
 }
 
-// Clean up windows used for displaying the view.
-bool DiagramView::OnClose(bool WXUNUSED(deleteWindow))
+void DiagramView::OnChangeFilename()
 {
-  if (!GetDocument()->Close())
+    //base::OnChangeFilename();
+    wxWindow *win = GetFrame();
+    if (!win) return;
+
+    wxDocument *doc = GetDocument();
+    if (!doc) return;
+
+    win->SetLabel(wxString::Format(wxT("%s - %s"), 
+       doc->GetTitle().wx_str(),
+       wxGetApp().GetAppDisplayName().wx_str()
+       ));
+}
+
+// Clean up windows used for displaying the view.
+bool DiagramView::OnClose(bool deleteWindow)
+{
+  if (!base::OnClose(deleteWindow))
     return false;
 
-  DiagramDocument *diagramDoc = (DiagramDocument *)GetDocument();
+  DiagramDocument *diagramDoc = GetDocument();
   diagramDoc->GetDiagram()->SetCanvas(NULL);
 
   canvas->ClearBackground();
@@ -141,7 +161,7 @@ bool DiagramView::OnClose(bool WXUNUSED(deleteWindow))
   canvas->view = NULL;
   canvas = NULL;
 
-  wxString s = wxTheApp->GetAppName();
+  wxString s = wxGetApp().GetAppDisplayName();
   if (frame)
     frame->SetTitle(s);
 
@@ -154,7 +174,7 @@ bool DiagramView::OnClose(bool WXUNUSED(deleteWindow))
 
 wxShape *DiagramView::FindSelectedShape(void)
 {
-  DiagramDocument *doc = (DiagramDocument *)GetDocument();
+  DiagramDocument *doc = GetDocument();
   wxObjectList::compatibility_iterator node = doc->GetDiagram()->GetShapeList()->GetFirst();
   while (node)
   {
@@ -170,7 +190,7 @@ wxShape *DiagramView::FindSelectedShape(void)
 
 void DiagramView::OnCut(wxCommandEvent& WXUNUSED(event))
 {
-  DiagramDocument *doc = (DiagramDocument *)GetDocument();
+  DiagramDocument *doc = GetDocument();
 
   wxShape *theShape = FindSelectedShape();
   if (theShape)
@@ -179,7 +199,7 @@ void DiagramView::OnCut(wxCommandEvent& WXUNUSED(event))
 
 void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
 {
-      DiagramDocument *doc = (DiagramDocument *)GetDocument();
+      DiagramDocument *doc = GetDocument();
 
       wxShape *theShape = FindSelectedShape();
       if (theShape)
@@ -210,7 +230,7 @@ void DiagramView::OnEditLabel(wxCommandEvent& WXUNUSED(event))
       if (theShape)
       {
         wxString newLabel = wxGetTextFromUser(wxT("Enter new label"), wxT("Shape Label"), ((MyEvtHandler *)theShape->GetEventHandler())->label);
-        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Edit label"), OGLEDIT_EDIT_LABEL, (DiagramDocument*) GetDocument(), newLabel, theShape));
+        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Edit label"), OGLEDIT_EDIT_LABEL, GetDocument(), newLabel, theShape));
       }
 }
 

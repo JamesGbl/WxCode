@@ -25,6 +25,7 @@
 #include "wx/ogl/ogl.h"
 #include "wx/ogl/canvas.h"
 #include "shapes.h"
+#include "wx29.h"
 
 class csEditorToolPalette;
 class csProjectTreeCtrl;
@@ -39,9 +40,9 @@ class csFrame;
 #define csGRID_STYLE_DOTTED     2
 
 // Define a new application
-class csApp : public wxApp
+class csApp : public wxAppEx
 {
-    typedef wxApp base;
+    typedef wxAppEx base;
     friend class csFrame;
 public:
     csApp();

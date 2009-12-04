@@ -84,12 +84,15 @@ void csFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void csFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxAboutDialogInfo info;
+#if (wxVERSION_NUMBER < 2900)
+    info.SetName(wxGetApp().GetAppDisplayName());
+#endif
     info.SetCopyright(wxT("Copyright (c) 1999 Julian Smart"));
     info.AddDeveloper(wxT("Julian Smart"));
     info.SetDescription(wxVERSION_STRING);
     info.SetWebSite(wxT("http://wxcode.sf.net/showcomp.php?name=ogl"));
     info.SetLicense(wxT("wxWindows"));
-    ::wxAboutBox(info);
+    ::wxAboutBox(info, this);
 }
 
 void csFrame::OnSashDragPaletteWindow(wxSashEvent& event)
