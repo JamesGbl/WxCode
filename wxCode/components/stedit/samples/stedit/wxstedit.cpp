@@ -71,21 +71,27 @@ enum Menu_IDs
 // wxCmdLineParser functions
 // ----------------------------------------------------------------------------
 
+#if (wxVERSION_NUMBER >= 2900)
+   #define WXT(a) a
+#else
+   #define WXT wxT
+#endif
+
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
-    { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),   _("help on command line switches"),
+    { wxCMD_LINE_SWITCH, WXT("h"), WXT("help"),   _("help on command line switches"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_OPTION_HELP },
 
-    { wxCMD_LINE_SWITCH, wxT("1"), wxT("single"), _("single file mode"),
+    { wxCMD_LINE_SWITCH, WXT("1"), WXT("single"), _("single file mode"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
-    { wxCMD_LINE_SWITCH, wxT("r"), wxT("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
+    { wxCMD_LINE_SWITCH, WXT("r"), WXT("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
-    { wxCMD_LINE_OPTION, wxT("c"), wxT("config"), _("use config file"),
+    { wxCMD_LINE_OPTION, WXT("c"), WXT("config"), _("use config file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_NEEDS_SEPARATOR },
 
-    { wxCMD_LINE_PARAM,  wxT(""),  wxT(""),       _("input filenames(s)"),
+    { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filenames(s)"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
 
     { wxCMD_LINE_NONE }
