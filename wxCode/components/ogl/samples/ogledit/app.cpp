@@ -69,9 +69,17 @@ bool MyApp::OnInit(void)
     menu->Append(wxID_SAVE);
     menu->Append(wxID_SAVEAS);
     menu->AppendSeparator();
-    menu->Append(wxID_PRINT, wxGetStockLabel(wxID_PRINT) + wxT("\tCtrl-P"));
+    menu->Append(wxID_PRINT, wxString::Format(wxT("%s\t%s"), 
+       wxGetStockLabel(wxID_PRINT).wx_str(),
+       wxAcceleratorEntry(wxACCEL_CTRL, 'P').ToString().wx_str()
+       ));
     menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
     menu->Append(wxID_PREVIEW, _("Print Pre&view"));
+    menu->AppendSeparator();
+    menu->Append(wxID_EXIT, wxString::Format(wxT("%s\t%s"), 
+       wxGetStockLabel(wxID_EXIT).wx_str(),
+       wxAcceleratorEntry(wxACCEL_CTRL, 'Q').ToString().wx_str()
+       ));
     menu_bar->Append(menu, wxGetStockLabel(wxID_FILE));
     // A nice touch: a history of files visited. Use this menu.
     myDocManager->FileHistoryUseMenu(menu);
@@ -84,11 +92,6 @@ bool MyApp::OnInit(void)
     menu->AppendSeparator();
     menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _("Change &background colour"));
     menu->Append(OGLEDIT_EDIT_LABEL, _("Edit &label"));
-    menu->AppendSeparator();
-    menu->Append(wxID_EXIT, wxString::Format(wxT("%s\t%s"), 
-       wxGetStockLabel(wxID_EXIT).wx_str(),
-       wxAcceleratorEntry(wxACCEL_CTRL, 'Q').ToString().wx_str()
-       ));
     frame->editMenu = menu;
     menu_bar->Append(menu, wxGetStockLabel(wxID_EDIT));
 
