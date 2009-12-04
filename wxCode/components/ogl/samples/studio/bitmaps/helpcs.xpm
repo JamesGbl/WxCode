@@ -3,7 +3,7 @@ static const char *helpcs_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 2 1",
 ". c Black",
-"  c #C0C0C0",
+"  c None",
 /* pixels */
 "                ",
 ".        .....  ",

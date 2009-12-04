@@ -3,8 +3,8 @@ static const char *newpoint_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 3 1",
 "X c Black",
+"  c None",
 ". c #FFFF00",
-"  c #C0C0C0",
 /* pixels */
 "       .        ",
 "   .   .   .    ",
