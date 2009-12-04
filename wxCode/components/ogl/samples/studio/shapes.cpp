@@ -685,7 +685,7 @@ bool csEvtHandler::EditProperties()
     handler2->m_label = newLabel;
 
     view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(wxT("Edit properties"), (csDiagramDocument*) view->GetDocument(),
-                new csCommandState(ID_CS_EDIT_PROPERTIES, newShape, shape)));
+                new csCommandState(wxID_PROPERTIES, newShape, shape)));
 
     return true;
 }
@@ -1102,7 +1102,7 @@ void studioShapeEditProc(wxMenu& menu, wxCommandEvent& event)
 
     switch (event.GetId())
     {
-        case ID_CS_EDIT_PROPERTIES:
+        case wxID_PROPERTIES:
         {
             csEvtHandler* handler1 = (csEvtHandler *)shape->GetEventHandler();
             handler1->EditProperties();

@@ -18,18 +18,19 @@
 // Define a new application
 class MyFrame;
 class EditorToolPalette;
-class MyApp: public wxApp
+class MyApp : public wxApp
 {
+    typedef wxApp base;
   public:
-    MyFrame *frame;
+    MyFrame* frame;
     wxDocManager* myDocManager;
 
     MyApp(void);
-    bool OnInit(void);
-    int OnExit(void);
+    virtual bool OnInit(void);
+    virtual int OnExit(void);
 
     // Palette stuff
-    EditorToolPalette *CreatePalette(wxFrame *parent);
+    EditorToolPalette* CreatePalette(wxFrame* parent);
 };
 
 DECLARE_APP(MyApp)
@@ -38,6 +39,7 @@ DECLARE_APP(MyApp)
 class MyCanvas;
 class MyFrame: public wxDocParentFrame
 {
+    typedef wxDocParentFrame base;
     DECLARE_CLASS(MyFrame)
 public:
     wxMenu *editMenu;
@@ -45,15 +47,15 @@ public:
     MyCanvas *canvas;
     EditorToolPalette *palette;
 
-    MyFrame(wxDocManager *manager, wxFrame *parent, const wxString& title,
+    MyFrame(wxDocManager*, wxFrame*parent, const wxString& title,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
             long style = wxDEFAULT_FRAME_STYLE);
 
-    MyCanvas *CreateCanvas(wxView *view, wxFrame *parent);
-    void OnSize(wxSizeEvent& event);
-    void OnCloseWindow(wxCloseEvent& event);
-    void OnAbout(wxCommandEvent& event);
+    MyCanvas *CreateCanvas(wxView*, wxFrame*parent);
+    void OnSize(wxSizeEvent&);
+    void OnCloseWindow(wxCloseEvent&);
+    void OnAbout(wxCommandEvent&);
 
 DECLARE_EVENT_TABLE()
 };

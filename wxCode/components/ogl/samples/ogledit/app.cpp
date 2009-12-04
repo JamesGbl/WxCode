@@ -55,55 +55,56 @@ bool MyApp::OnInit(void)
   //// Give it an icon
   frame->SetIcon(wxICON(ogl));
 
-  //// Make a menubar
-  wxMenu *file_menu = new wxMenu;
+    // Make a menubar
+    wxMenuBar* menu_bar = new wxMenuBar();
+    wxMenu* menu;
 
-  file_menu->Append(wxID_NEW);
-  file_menu->Append(wxID_OPEN);
-  file_menu->Append(wxID_CLOSE, wxGetStockLabel(wxID_CLOSE) + wxT("\tCtrl-W"));
-  file_menu->Append(wxID_SAVE);
-  file_menu->Append(wxID_SAVEAS);
-  file_menu->AppendSeparator();
-  file_menu->Append(wxID_PRINT, wxGetStockLabel(wxID_PRINT) + wxT("\tCtrl-P"));
-  file_menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
-  file_menu->Append(wxID_PREVIEW, _("Print Pre&view"));
+    menu = new wxMenu();
+    menu->Append(wxID_NEW);
+    menu->Append(wxID_OPEN);
+    menu->Append(wxID_CLOSE, wxString::Format(wxT("%s\t%s"), 
+       wxGetStockLabel(wxID_CLOSE).wx_str(),
+       wxAcceleratorEntry(wxACCEL_CTRL, 'W').ToString().wx_str()
+       ));
+    menu->Append(wxID_SAVE);
+    menu->Append(wxID_SAVEAS);
+    menu->AppendSeparator();
+    menu->Append(wxID_PRINT, wxGetStockLabel(wxID_PRINT) + wxT("\tCtrl-P"));
+    menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
+    menu->Append(wxID_PREVIEW, _("Print Pre&view"));
+    menu_bar->Append(menu, wxGetStockLabel(wxID_FILE));
+    // A nice touch: a history of files visited. Use this menu.
+    myDocManager->FileHistoryUseMenu(menu);
 
-  wxMenu *edit_menu = new wxMenu();
-  edit_menu->Append(wxID_UNDO);
-  edit_menu->Append(wxID_REDO);
-  edit_menu->AppendSeparator();
-  edit_menu->Append(wxID_CUT);
-  edit_menu->AppendSeparator();
-  edit_menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _("Change &background colour"));
-  edit_menu->Append(OGLEDIT_EDIT_LABEL, _("Edit &label"));
+    menu = new wxMenu();
+    menu->Append(wxID_UNDO);
+    menu->Append(wxID_REDO);
+    menu->AppendSeparator();
+    menu->Append(wxID_CUT);
+    menu->AppendSeparator();
+    menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _("Change &background colour"));
+    menu->Append(OGLEDIT_EDIT_LABEL, _("Edit &label"));
+    menu->AppendSeparator();
+    menu->Append(wxID_EXIT, wxString::Format(wxT("%s\t%s"), 
+       wxGetStockLabel(wxID_EXIT).wx_str(),
+       wxAcceleratorEntry(wxACCEL_CTRL, 'Q').ToString().wx_str()
+       ));
+    frame->editMenu = menu;
+    menu_bar->Append(menu, wxGetStockLabel(wxID_EDIT));
 
-  frame->editMenu = edit_menu;
+    menu = new wxMenu();
+    menu->Append(OGLEDIT_ABOUT);
+    menu_bar->Append(menu, wxGetStockLabel(wxID_HELP));
 
-  file_menu->AppendSeparator();
-  file_menu->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\tCtrl-Q"));
+    frame->canvas = frame->CreateCanvas(NULL, frame);
+    frame->palette = wxGetApp().CreatePalette(frame);
+    myDocManager->CreateDocument(wxEmptyString, wxDOC_NEW);
 
-  // A nice touch: a history of files visited. Use this menu.
-  myDocManager->FileHistoryUseMenu(file_menu);
-
-  wxMenu *help_menu = new wxMenu();
-  help_menu->Append(OGLEDIT_ABOUT);
-
-  wxMenuBar *menu_bar = new wxMenuBar();
-
-  menu_bar->Append(file_menu, _("&File"));
-  if (edit_menu)
-    menu_bar->Append(edit_menu, _("&Edit"));
-  menu_bar->Append(help_menu, _("&Help"));
-
-  frame->canvas = frame->CreateCanvas(NULL, frame);
-  frame->palette = wxGetApp().CreatePalette(frame);
-  myDocManager->CreateDocument(wxEmptyString, wxDOC_NEW);
-
-  //// Associate the menu bar with the frame
-  frame->SetMenuBar(menu_bar);
+    // Associate the menu bar with the frame
+    frame->SetMenuBar(menu_bar);
 
 #if wxUSE_STATUSBAR
-  frame->CreateStatusBar(1);
+    frame->CreateStatusBar(1);
 #endif // wxUSE_STATUSBAR
 
   frame->Centre(wxBOTH);
@@ -115,8 +116,8 @@ bool MyApp::OnInit(void)
 int MyApp::OnExit(void)
 {
     wxOGLCleanUp();
-    delete myDocManager;
-    return 0;
+    wxDELETE(myDocManager);
+    return base::OnExit();
 }
 
 /*
@@ -144,16 +145,16 @@ void MyFrame::OnSize(wxSizeEvent& event)
 {
   if (canvas && palette)
   {
-    int cw, ch;
+    wxCoord cw, ch;
     GetClientSize(&cw, &ch);
-    int paletteX = 0;
-    int paletteY = 0;
-    int paletteW = 30;
-    int paletteH = ch;
-    int canvasX = paletteX + paletteW;
-    int canvasY = 0;
-    int canvasW = cw - paletteW;
-    int canvasH = ch;
+    wxCoord paletteX = 0;
+    wxCoord paletteY = 0;
+    wxCoord paletteW = 30;
+    wxCoord paletteH = ch;
+    wxCoord canvasX = paletteX + paletteW;
+    wxCoord canvasY = 0;
+    wxCoord canvasW = cw - paletteW;
+    wxCoord canvasH = ch;
 
     palette->SetSize(paletteX, paletteY, paletteW, paletteH);
     canvas->SetSize(canvasX, canvasY, canvasW, canvasH);

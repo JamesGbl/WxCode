@@ -39,16 +39,17 @@ class csFrame;
 #define csGRID_STYLE_DOTTED     2
 
 // Define a new application
-class csApp: public wxApp
+class csApp : public wxApp
 {
+    typedef wxApp base;
     friend class csFrame;
 public:
     csApp();
-    ~csApp();
+    virtual ~csApp();
 
 // Operations
-    bool OnInit(void);
-    int OnExit(void);
+    virtual bool OnInit(void);
+    virtual int OnExit(void);
 
     // Read/write configuration information
     bool ReadOptions();
@@ -124,11 +125,8 @@ protected:
 
 DECLARE_APP(csApp)
 
-#define ID_CS_CUT                         wxID_CUT
 #define ID_CS_ADD_SHAPE                   2
 #define ID_CS_ADD_LINE                    3
-// #define ID_CS_EDIT_LABEL                  4
-#define ID_CS_EDIT_PROPERTIES             4
 #define ID_CS_CHANGE_BACKGROUND_COLOUR    5
 #define ID_CS_MOVE                        6
 #define ID_CS_SIZE                        7
@@ -147,7 +145,6 @@ DECLARE_APP(csApp)
 #define ID_CS_ADD_SHAPE_SELECT            21
 #define ID_CS_ADD_LINE_SELECT             22
 
-#define ID_CS_SELECT_ALL                  102
 #define ID_CS_SETTINGS                    103
 
 #define ID_LAYOUT_WINDOW_PALETTE          200

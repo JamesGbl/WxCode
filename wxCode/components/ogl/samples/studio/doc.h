@@ -24,12 +24,13 @@
  * A diagram document, which contains a diagram.
  */
 
-class csDiagramDocument: public wxDocument
+class csDiagramDocument : public wxDocument
 {
-  DECLARE_DYNAMIC_CLASS(csDiagramDocument)
+   typedef wxDocument base;
+   DECLARE_DYNAMIC_CLASS(csDiagramDocument)
 public:
-  csDiagramDocument();
-  ~csDiagramDocument();
+   csDiagramDocument();
+   virtual ~csDiagramDocument();
 
 #if wxUSE_PROLOGIO
   bool OnSaveDocument(const wxString& file);
@@ -69,15 +70,16 @@ protected:
 
 
 class csCommandState;
-class csDiagramCommand: public wxCommand
+class csDiagramCommand : public wxCommand
 {
-    friend class csCommandState;
+   typedef wxCommand base;
+   friend class csCommandState;
  public:
-  // Multi-purpose constructor for creating, deleting shapes
-  csDiagramCommand(const wxString& name, csDiagramDocument *doc,
-    csCommandState* onlyState = NULL); // Allow for the common case of just one state to change
+   // Multi-purpose constructor for creating, deleting shapes
+   csDiagramCommand(const wxString& name, csDiagramDocument *doc,
+   csCommandState* onlyState = NULL); // Allow for the common case of just one state to change
 
-  ~csDiagramCommand();
+  virtual ~csDiagramCommand();
 
   bool Do();
   bool Undo();
@@ -94,19 +96,20 @@ class csDiagramCommand: public wxCommand
   // Find the state that refers to this shape
   csCommandState* FindStateByShape(wxShape* shape);
 
-  wxList& GetStates() const { return (wxList&) m_states; }
+  const wxList& GetStates() const { return m_states; }
 
  protected:
   csDiagramDocument*    m_doc;
   wxList                m_states;
 };
 
-class csCommandState: public wxObject
+class csCommandState : public wxObject
 {
+    typedef wxObject base;
     friend class csDiagramCommand;
 public:
     csCommandState(int cmd, wxShape* savedState, wxShape* shapeOnCanvas);
-    ~csCommandState();
+    virtual ~csCommandState();
 
     bool Do();
     bool Undo();

@@ -149,7 +149,7 @@ void csDiagramCommand::RemoveLines()
             wxLineShape *line = (wxLineShape *)node1->GetData();
             if (!FindStateByShape(line))
             {
-                csCommandState* newState = new csCommandState(ID_CS_CUT, NULL, line);
+                csCommandState* newState = new csCommandState(wxID_CUT, NULL, line);
                 InsertState(newState);
             }
 
@@ -223,7 +223,7 @@ bool csCommandState::Do()
 {
   switch (m_cmd)
   {
-    case ID_CS_CUT:
+    case wxID_CUT:
     {
         // New state is 'nothing' - maybe pass shape ID to state so we know what
         // we're talking about.
@@ -360,7 +360,7 @@ bool csCommandState::Do()
     case ID_CS_CHANGE_BACKGROUND_COLOUR:
     case ID_CS_MOVE:
     case ID_CS_SIZE:
-    case ID_CS_EDIT_PROPERTIES:
+    case wxID_PROPERTIES:
     case ID_CS_FONT_CHANGE:
     case ID_CS_ARROW_CHANGE:
     case ID_CS_ROTATE_CLOCKWISE:
@@ -451,7 +451,7 @@ bool csCommandState::Do()
 
             m_shapeOnCanvas->GetEventHandler()->OnEndSize(width, height);
         }
-        else if (m_cmd == ID_CS_EDIT_PROPERTIES || m_cmd == ID_CS_FONT_CHANGE)
+        else if ( (m_cmd == wxID_PROPERTIES) || (m_cmd == ID_CS_FONT_CHANGE))
         {
             csEvtHandler *handler = (csEvtHandler *)m_shapeOnCanvas->GetEventHandler();
             m_shapeOnCanvas->FormatText(dc, handler->m_label);
@@ -478,7 +478,7 @@ bool csCommandState::Undo()
 {
   switch (m_cmd)
   {
-    case ID_CS_CUT:
+    case wxID_CUT:
     {
         wxASSERT( (m_savedState != NULL) );
         wxASSERT( (m_doc != NULL) );
@@ -560,7 +560,7 @@ bool csCommandState::Undo()
     case ID_CS_CHANGE_BACKGROUND_COLOUR:
     case ID_CS_MOVE:
     case ID_CS_SIZE:
-    case ID_CS_EDIT_PROPERTIES:
+    case wxID_PROPERTIES:
     case ID_CS_FONT_CHANGE:
     case ID_CS_ARROW_CHANGE:
     case ID_CS_ROTATE_CLOCKWISE:

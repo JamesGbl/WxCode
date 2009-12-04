@@ -16,8 +16,9 @@
 #include "wx/ogl/ogl.h"
 
 class csDiagramView;
-class csCanvas: public wxShapeCanvas
+class csCanvas : public wxShapeCanvas
 {
+   typedef wxShapeCanvas base;
 DECLARE_CLASS(csCanvas)
  public:
 
@@ -51,29 +52,32 @@ DECLARE_CLASS(csCanvas)
 DECLARE_EVENT_TABLE()
 };
 
-class csDiagramView: public wxView
+class csDiagramView : public wxView
 {
-  DECLARE_DYNAMIC_CLASS(csDiagramView)
- public:
-  csDiagramView(void) { canvas = NULL; frame = NULL; };
-  ~csDiagramView(void);
+   typedef wxView base;
+   DECLARE_DYNAMIC_CLASS(csDiagramView)
+public:
+   csDiagramView(void) { canvas = NULL; frame = NULL; };
+   virtual ~csDiagramView(void);
 
-  bool OnCreate(wxDocument *doc, long flags);
-  void OnDraw(wxDC *dc);
-  void OnUpdate(wxView *sender, wxObject *hint = NULL);
-  bool OnClose(bool deleteWindow = true);
-  void OnSelectAll(wxCommandEvent& event);
+   bool OnCreate(wxDocument*, long flags);
+   void OnDraw(wxDC*);
+   void OnUpdate(wxView *sender, wxObject *hint = NULL);
+   bool OnClose(bool deleteWindow = true);
+   void OnSelectAll(wxCommandEvent&);
 
-  wxShape *FindFirstSelectedShape(void);
+   csDiagramDocument* GetDocument();
 
-  // Scans the canvas for selections (doesn't use m_selections)
-  void FindSelectedShapes(wxList& selections, wxClassInfo* toFind = NULL);
+   wxShape *FindFirstSelectedShape(void);
 
-  // The selections in the order in which they were selected
-  inline wxList& GetSelectionList() const { return (wxList&) m_selections; }
+   // Scans the canvas for selections (doesn't use m_selections)
+   void FindSelectedShapes(wxList& selections, wxClassInfo* toFind = NULL);
+
+   // The selections in the order in which they were selected
+   inline const wxList& GetSelectionList() const { return m_selections; }
 
   // Adds or removes shape from m_selections
-  void SelectShape(wxShape* shape, bool select);
+  void SelectShape(wxShape*, bool select);
 
   // Apply point size to current shapes
   void ApplyPointSize(int pointSize);
@@ -82,7 +86,7 @@ class csDiagramView: public wxView
   void ReflectPointSize(int pointSize);
 
   // Make the arrow toggle button reflect the state of the line
-  void ReflectArrowState(wxLineShape* lineShape);
+  void ReflectArrowState(wxLineShape*);
 
   // Do a cut operation for the given list of shapes
   void DoCut(wxList& shapes);
@@ -94,36 +98,36 @@ class csDiagramView: public wxView
   void SelectAll(bool select = true);
 
 // Event handlers
-  void OnCut(wxCommandEvent& event);
-  void OnCopy(wxCommandEvent& event);
-  void OnPaste(wxCommandEvent& event);
-  void OnDuplicate(wxCommandEvent& event);
-  void OnClear(wxCommandEvent& event);
-  void OnChangeBackgroundColour(wxCommandEvent& event);
-  void OnEditProperties(wxCommandEvent& event);
-  void OnPointSizeComboSel(wxCommandEvent& event);
-  void OnPointSizeComboText(wxCommandEvent& event);
-  void OnToggleArrowTool(wxCommandEvent& event);
-  void OnZoomSel(wxCommandEvent& event);
-  void OnAlign(wxCommandEvent& event);
-  void OnNewLinePoint(wxCommandEvent& event);
-  void OnCutLinePoint(wxCommandEvent& event);
-  void OnStraightenLines(wxCommandEvent& event);
+  void OnCut(wxCommandEvent&);
+  void OnCopy(wxCommandEvent&);
+  void OnPaste(wxCommandEvent&);
+  void OnDuplicate(wxCommandEvent&);
+  void OnClear(wxCommandEvent&);
+  void OnChangeBackgroundColour(wxCommandEvent&);
+  void OnEditProperties(wxCommandEvent&);
+  void OnPointSizeComboSel(wxCommandEvent&);
+  void OnPointSizeComboText(wxCommandEvent&);
+  void OnToggleArrowTool(wxCommandEvent&);
+  void OnZoomSel(wxCommandEvent&);
+  void OnAlign(wxCommandEvent&);
+  void OnNewLinePoint(wxCommandEvent&);
+  void OnCutLinePoint(wxCommandEvent&);
+  void OnStraightenLines(wxCommandEvent&);
 
 // UI update handles
-  void OnToggleArrowToolUpdate(wxUpdateUIEvent& event);
-  void OnEditPropertiesUpdate(wxUpdateUIEvent& event);
-  void OnCutUpdate(wxUpdateUIEvent& event);
-  void OnClearUpdate(wxUpdateUIEvent& event);
-  void OnCopyUpdate(wxUpdateUIEvent& event);
-  void OnPasteUpdate(wxUpdateUIEvent& event);
-  void OnDuplicateUpdate(wxUpdateUIEvent& event);
-  void OnAlignUpdate(wxUpdateUIEvent& event);
-  void OnNewLinePointUpdate(wxUpdateUIEvent& event);
-  void OnCutLinePointUpdate(wxUpdateUIEvent& event);
-  void OnStraightenLinesUpdate(wxUpdateUIEvent& event);
-  void OnUndoUpdate(wxUpdateUIEvent& event);
-  void OnRedoUpdate(wxUpdateUIEvent& event);
+  void OnToggleArrowToolUpdate(wxUpdateUIEvent&);
+  void OnEditPropertiesUpdate(wxUpdateUIEvent&);
+  void OnCutUpdate(wxUpdateUIEvent&);
+  void OnClearUpdate(wxUpdateUIEvent&);
+  void OnCopyUpdate(wxUpdateUIEvent&);
+  void OnPasteUpdate(wxUpdateUIEvent&);
+  void OnDuplicateUpdate(wxUpdateUIEvent&);
+  void OnAlignUpdate(wxUpdateUIEvent&);
+  void OnNewLinePointUpdate(wxUpdateUIEvent&);
+  void OnCutLinePointUpdate(wxUpdateUIEvent&);
+  void OnStraightenLinesUpdate(wxUpdateUIEvent&);
+  void OnUndoUpdate(wxUpdateUIEvent&);
+  void OnRedoUpdate(wxUpdateUIEvent&);
 
 DECLARE_EVENT_TABLE()
 
