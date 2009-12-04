@@ -240,7 +240,10 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
        wxAcceleratorEntry(wxACCEL_CTRL, 'P').ToString().wx_str()
        ));
     menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
-    menu->Append(wxID_PREVIEW, _("Print Pre&view"));
+    menu->Append(wxID_PREVIEW, wxString::Format(wxT("%s\t%s"), 
+       wxString(_("Print Pre&view")).wx_str(),
+       wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'P').ToString().wx_str()
+       ));
 
     menu->AppendSeparator();
     menu->Append(wxID_EXIT, wxString::Format(wxT("%s\t%s"), 
