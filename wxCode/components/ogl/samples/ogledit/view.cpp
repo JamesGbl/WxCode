@@ -31,6 +31,7 @@ bool DiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
   frame = GetMainFrame();
   canvas = GetMainFrame()->canvas;
   canvas->view = this;
+  canvas->Enable(true);
 
   SetFrame(frame);
   Activate(true);
@@ -159,6 +160,7 @@ bool DiagramView::OnClose(bool deleteWindow)
   canvas->ClearBackground();
   canvas->SetDiagram(NULL);
   canvas->view = NULL;
+  canvas->Enable(false);
   canvas = NULL;
 
   wxString s = wxGetApp().GetAppDisplayName();
