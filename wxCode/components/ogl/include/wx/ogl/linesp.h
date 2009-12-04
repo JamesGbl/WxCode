@@ -22,12 +22,12 @@ class WXDLLIMPEXP_OGL wxLineControlPoint: public wxControlPoint
 
   wxLineControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0,
      double x = 0.0, double y = 0.0, int the_type = 0);
-  ~wxLineControlPoint();
+  virtual ~wxLineControlPoint();
 
-  void OnDraw(wxDC& dc);
-  void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
 
   // Obsolete (left-dragging now moves attachment point to new relative position OR new
   // attachment id)
@@ -55,16 +55,16 @@ class WXDLLIMPEXP_OGL wxLabelShape: public wxRectangleShape
 
  public:
   wxLabelShape(wxLineShape *parent = NULL, wxShapeRegion *region = NULL, double w = 0.0, double h = 0.0);
-  ~wxLabelShape();
+  virtual ~wxLabelShape();
 
-  void OnDraw(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
-  void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
-  void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
-  void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
-  bool OnMovePre(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
+  virtual void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual bool OnMovePre(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
 
 public:
   wxLineShape*      m_lineShape;

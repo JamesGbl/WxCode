@@ -48,6 +48,8 @@
     #include "ogl.xpm"
 #endif
 
+#define WXK_HELP WXK_F1
+
 IMPLEMENT_APP(csApp)
 
 csApp::csApp()
@@ -188,6 +190,8 @@ bool csApp::OnInit(void)
 
     SetTopWindow(frame);
 
+    m_docManager->CreateDocument(wxEmptyString, wxDOC_NEW);
+
     return true;
 }
 
@@ -210,11 +214,11 @@ int csApp::OnExit(void)
  * Called from view.cpp, when a view is created.
  */
 
-wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu** editMenuRet)
+wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu** editMenuRet)
 {
     //// Make a child frame
-    csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, ((wxDocMDIParentFrame*)GetTopWindow()), wxID_ANY, wxT("Child Frame"),
-                                                    wxPoint(10, 10), wxSize(300, 300), wxDEFAULT_FRAME_STYLE);
+    csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, (wxMDIParentFrame*)GetTopWindow(), wxID_ANY, wxEmptyString,
+                                                    wxPoint(10, 10), wxSize(300, 300), wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE | wxMAXIMIZE);
 
 #ifdef __X__
     subframe->SetIcon(wxIcon(wxT("doc.xbm")));
@@ -292,7 +296,7 @@ wxMDIChildFrame *csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu**
     menu = new wxMenu();
     menu->Append(wxID_HELP, wxString::Format(wxT("%s\t%s"), 
        wxString(_("&Help Contents")).wx_str(),
-       wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1).ToString().wx_str()
+       wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP).ToString().wx_str()
        ));
     menu->Append(wxID_ABOUT);
     menuBar->Append(menu, wxGetStockLabel(wxID_HELP));

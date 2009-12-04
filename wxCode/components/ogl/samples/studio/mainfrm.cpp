@@ -19,6 +19,8 @@
 #include "mainfrm.h"
 #include "dialogs.h"
 
+#define WXK_HELP WXK_F1
+
 BEGIN_EVENT_TABLE(csFrame, wxDocMDIParentFrame)
     EVT_MENU(wxID_ABOUT, csFrame::OnAbout)
     EVT_MENU(wxID_EXIT, csFrame::OnQuit)
@@ -50,12 +52,14 @@ csFrame::csFrame(wxDocManager* manager, wxFrame *parent, wxWindowID id, const wx
     // Accelerators
     wxAcceleratorEntry entries[4];
 
-    entries[0].Set(wxACCEL_NORMAL,  WXK_F1,        wxID_HELP);
-    entries[1].Set(wxACCEL_CTRL,   'O',            wxID_OPEN);
-    entries[2].Set(wxACCEL_CTRL,   'N',            wxID_NEW);
-    entries[3].Set(wxACCEL_CTRL,   'P',            wxID_PRINT);
+    size_t i = 0;
+    entries[i++].Set(wxACCEL_NORMAL,  WXK_HELP,        wxID_HELP);
+    entries[i++].Set(wxACCEL_CTRL,   'O',            wxID_OPEN);
+    entries[i++].Set(wxACCEL_CTRL,   'N',            wxID_NEW);
+    entries[i++].Set(wxACCEL_CTRL,   'P',            wxID_PRINT);
 
-    wxAcceleratorTable accel(4, entries);
+    wxASSERT(i == WXSIZEOF(entries));
+    wxAcceleratorTable accel(WXSIZEOF(entries), entries);
     SetAcceleratorTable(accel);
 }
 
@@ -228,7 +232,7 @@ csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame
   wxDocMDIChildFrame(doc, view, parent, id, title, pos, size, style)
 {
     // Accelerators
-    int i = 0;
+    size_t i = 0;
     wxAcceleratorEntry entries[18];
 
     // Usual editing functions
@@ -247,7 +251,7 @@ csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame
     entries[i++].Set(wxACCEL_NORMAL,  WXK_RETURN,     wxID_PROPERTIES);
     entries[i++].Set(wxACCEL_ALT,     WXK_RETURN,     wxID_PROPERTIES);
     entries[i++].Set(wxACCEL_CTRL,   'D',            wxID_DUPLICATE);
-    entries[i++].Set(wxACCEL_NORMAL,  WXK_F1,        wxID_HELP);
+    entries[i++].Set(wxACCEL_NORMAL,  WXK_HELP,        wxID_HELP);
 
     // File handling
     entries[i++].Set(wxACCEL_CTRL,   'S',            wxID_SAVE);

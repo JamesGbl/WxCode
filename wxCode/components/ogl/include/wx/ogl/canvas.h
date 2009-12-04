@@ -12,30 +12,32 @@
 #ifndef _OGL_CANVAS_H_
 #define _OGL_CANVAS_H_
 
-
-// Drag states
-#define NoDragging             0
-#define StartDraggingLeft      1
-#define ContinueDraggingLeft   2
-#define StartDraggingRight     3
-#define ContinueDraggingRight  4
+enum DragState
+{
+   NoDragging,
+   StartDraggingLeft,
+   ContinueDraggingLeft,
+   StartDraggingRight,
+   ContinueDraggingRight
+};
 
 WXDLLIMPEXP_OGL extern const wxChar* wxShapeCanvasNameStr;
 
 // When drag_count reaches 0, process drag message
 
-class WXDLLIMPEXP_OGL wxDiagram;
+class WXDLLIMPEXP_FWD_OGL wxDiagram;
 
-class WXDLLIMPEXP_OGL wxShapeCanvas: public wxScrolledWindow
+class WXDLLIMPEXP_OGL wxShapeCanvas : public wxScrolledWindow
 {
- DECLARE_DYNAMIC_CLASS(wxShapeCanvas)
- public:
+    typedef wxScrolledWindow base;
+DECLARE_DYNAMIC_CLASS(wxShapeCanvas)
+public:
   wxShapeCanvas(wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
                 long style = wxBORDER | wxRETAINED,
                 const wxString& name = wxShapeCanvasNameStr);
-  ~wxShapeCanvas();
+  virtual ~wxShapeCanvas();
 
   inline void SetDiagram(wxDiagram *diag) { m_shapeDiagram = diag; }
   inline wxDiagram *GetDiagram() const { return m_shapeDiagram; }
@@ -62,18 +64,18 @@ class WXDLLIMPEXP_OGL wxShapeCanvas: public wxScrolledWindow
   virtual void InsertShape(wxShape *object);
   virtual void RemoveShape(wxShape *object);
   virtual bool GetQuickEditMode();
-  virtual void Redraw(wxDC& dc);
+  virtual void Redraw(wxDC&);
   void Snap(double *x, double *y);
 
   // Events
-  void OnPaint(wxPaintEvent& event);
-  void OnMouseEvent(wxMouseEvent& event);
+  void OnPaint(wxPaintEvent&);
+  void OnMouseEvent(wxMouseEvent&);
 
  protected:
   wxDiagram*        m_shapeDiagram;
-  int               m_dragState;
-  double             m_oldDragX, m_oldDragY;     // Previous drag coordinates
-  double             m_firstDragX, m_firstDragY; // INITIAL drag coordinates
+  enum DragState    m_dragState;
+  double            m_oldDragX, m_oldDragY;     // Previous drag coordinates
+  double            m_firstDragX, m_firstDragY; // INITIAL drag coordinates
   bool              m_checkTolerance;           // Whether to check drag tolerance
   wxShape*          m_draggedShape;
   int               m_draggedAttachment;

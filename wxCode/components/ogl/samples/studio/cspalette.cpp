@@ -27,9 +27,9 @@
 
 csEditorToolPalette::csEditorToolPalette(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size,
             long style):
-  TOOLPALETTECLASS(parent, id, pos, size, style)
+  wxToolBar(parent, id, pos, size, style)
 {
-  m_currentlySelected = -1;
+  m_currentlySelected = wxNOT_FOUND;
 
   SetMaxRowsCols(1, 1000);
 }
@@ -37,13 +37,13 @@ csEditorToolPalette::csEditorToolPalette(wxWindow* parent, wxWindowID id, const 
 bool csEditorToolPalette::OnLeftClick(int toolIndex, bool toggled)
 {
   // BEGIN mutual exclusivity code
-  if (toggled && (m_currentlySelected != -1) && (toolIndex != m_currentlySelected))
+  if (toggled && (m_currentlySelected != wxNOT_FOUND) && (toolIndex != m_currentlySelected))
     ToggleTool(m_currentlySelected, false);
 
   if (toggled)
     m_currentlySelected = toolIndex;
   else if (m_currentlySelected == toolIndex)
-    m_currentlySelected = -1;
+    m_currentlySelected = wxNOT_FOUND;
   //  END mutual exclusivity code
 
   return true;
@@ -54,27 +54,27 @@ void csEditorToolPalette::OnMouseEnter(int toolIndex)
 #if wxUSE_STATUSBAR
     wxString msg = wxEmptyString;
     if (toolIndex == PALETTE_ARROW)
-        msg = wxT("Pointer");
-    else if (toolIndex != -1)
+        msg = _("Pointer");
+    else if (toolIndex != wxNOT_FOUND)
     {
         csSymbol* symbol = wxGetApp().GetSymbolDatabase()->FindSymbol(toolIndex);
         if (symbol)
             msg = symbol->GetName();
     }
-    ((wxFrame*) wxGetApp().GetTopWindow())->SetStatusText(msg);
+    wxStaticCast(wxGetApp().GetTopWindow(), wxFrame)->SetStatusText(msg);
 #else
     wxUnusedVar(toolIndex);
 #endif // wxUSE_STATUSBAR
 }
 
-void csEditorToolPalette::SetSize(int x, int y, int width, int height, int sizeFlags)
+void csEditorToolPalette::SetSize(wxCoord x, wxCoord y, wxCoord width, wxCoord height, wxCoord sizeFlags)
 {
-  TOOLPALETTECLASS::SetSize(x, y, width, height, sizeFlags);
+  base::SetSize(x, y, width, height, sizeFlags);
 }
 
 void csEditorToolPalette::SetSelection(int sel)
 {
-    if ((sel != m_currentlySelected) && (m_currentlySelected != -1))
+    if ((sel != m_currentlySelected) && (m_currentlySelected != wxNOT_FOUND))
     {
         ToggleTool(m_currentlySelected, false);
     }

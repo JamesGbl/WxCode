@@ -33,19 +33,19 @@ EditorToolPalette::EditorToolPalette(wxWindow* parent, const wxPoint& pos, const
             long style):
   TOOLPALETTECLASS(parent, wxID_ANY, pos, size, style)
 {
-    currentlySelected = -1;
+    currentlySelected = wxNOT_FOUND;
 }
 
 bool EditorToolPalette::OnLeftClick(int toolIndex, bool toggled)
 {
   // BEGIN mutual exclusivity code
-  if (toggled && (currentlySelected != -1) && (toolIndex != currentlySelected))
+  if (toggled && (currentlySelected != wxNOT_FOUND) && (toolIndex != currentlySelected))
     ToggleTool(currentlySelected, false);
 
   if (toggled)
     currentlySelected = toolIndex;
   else if (currentlySelected == toolIndex)
-    currentlySelected = -1;
+    currentlySelected = wxNOT_FOUND;
   //  END mutual exclusivity code
 
   return true;

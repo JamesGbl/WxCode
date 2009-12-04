@@ -12,11 +12,7 @@
 #ifndef _STUDIO_DOC_H_
 #define _STUDIO_DOC_H_
 
-#include "wx/docview.h"
-#include "wx/cmdproc.h"
-#include "wx/string.h"
-
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include "wx/ogl/ogl.h"
 
 #include "shapes.h"
 
@@ -26,23 +22,24 @@
 
 class csDiagramDocument : public wxDocument
 {
-   typedef wxDocument base;
-   DECLARE_DYNAMIC_CLASS(csDiagramDocument)
+    typedef wxDocument base;
+    DECLARE_DYNAMIC_CLASS(csDiagramDocument)
 public:
-   csDiagramDocument();
-   virtual ~csDiagramDocument();
+    csDiagramDocument();
+    virtual ~csDiagramDocument();
 
 #if wxUSE_PROLOGIO
   bool OnSaveDocument(const wxString& file);
   bool OnOpenDocument(const wxString& file);
 #endif // wxUSE_PROLOGIO
 
-  inline wxDiagram *GetDiagram() { return &m_diagram; }
+    inline wxDiagram *GetDiagram() { return &m_diagram; }
 
-  bool OnCloseDocument();
+    virtual bool OnCloseDocument();
+    virtual bool DeleteContents();
 
 protected:
-  csDiagram         m_diagram;
+    csDiagram         m_diagram;
 };
 
 /*
@@ -72,35 +69,35 @@ protected:
 class csCommandState;
 class csDiagramCommand : public wxCommand
 {
-   typedef wxCommand base;
-   friend class csCommandState;
- public:
-   // Multi-purpose constructor for creating, deleting shapes
-   csDiagramCommand(const wxString& name, csDiagramDocument *doc,
-   csCommandState* onlyState = NULL); // Allow for the common case of just one state to change
+    typedef wxCommand base;
+    friend class csCommandState;
+public:
+    // Multi-purpose constructor for creating, deleting shapes
+    csDiagramCommand(const wxString& name, csDiagramDocument*,
+        csCommandState* onlyState = NULL); // Allow for the common case of just one state to change
 
-  virtual ~csDiagramCommand();
+    virtual ~csDiagramCommand();
 
-  bool Do();
-  bool Undo();
+    bool Do();
+    bool Undo();
 
-  // Add a state to the end of the list
-  void AddState(csCommandState* state);
+    // Add a state to the end of the list
+    void AddState(csCommandState*);
 
-  // Insert a state at the beginning of the list
-  void InsertState(csCommandState* state);
+    // Insert a state at the beginning of the list
+    void InsertState(csCommandState*);
 
-  // Schedule all lines connected to the states to be cut.
-  void RemoveLines();
+    // Schedule all lines connected to the states to be cut.
+    void RemoveLines();
 
-  // Find the state that refers to this shape
-  csCommandState* FindStateByShape(wxShape* shape);
+    // Find the state that refers to this shape
+    csCommandState* FindStateByShape(wxShape* shape);
 
-  const wxList& GetStates() const { return m_states; }
+    const wxList& GetStates() const { return m_states; }
 
- protected:
-  csDiagramDocument*    m_doc;
-  wxList                m_states;
+protected:
+    csDiagramDocument*    m_doc;
+    wxList                m_states;
 };
 
 class csCommandState : public wxObject

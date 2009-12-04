@@ -13,29 +13,29 @@
 #define _OGL_COMPOSIT_H_
 
 
-class WXDLLIMPEXP_OGL wxDivisionShape;
-class WXDLLIMPEXP_OGL wxOGLConstraint;
+class WXDLLIMPEXP_FWD_OGL wxDivisionShape;
+class WXDLLIMPEXP_FWD_OGL wxOGLConstraint;
 
 /*
  * A composite object is an invisible rectangle surrounding all children
  *
  */
 
-class WXDLLIMPEXP_OGL wxCompositeShape: public wxRectangleShape
+class WXDLLIMPEXP_OGL wxCompositeShape : public wxRectangleShape
 {
- DECLARE_DYNAMIC_CLASS(wxCompositeShape)
+    DECLARE_DYNAMIC_CLASS(wxCompositeShape)
 public:
 
   wxCompositeShape();
-  ~wxCompositeShape();
+  virtual ~wxCompositeShape();
 
-  void OnDraw(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
-  void OnErase(wxDC& dc);
-  bool OnMovePre(wxDC& dc, double x, double y, double oldX, double oldY, bool display = true);
-  void OnDragLeft(bool draw, double x, double y, int keys, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys, int attachment = 0);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnErase(wxDC&);
+  virtual bool OnMovePre(wxDC&, double x, double y, double oldX, double oldY, bool display = true);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys, int attachment = 0);
 
   void OnRightClick(double x, double y, int keys, int attachment = 0);
 
@@ -92,8 +92,8 @@ public:
   // Returns true if division is a descendant of this container
   bool ContainsDivision(wxDivisionShape *division);
 
-  inline wxList& GetDivisions() const { return (wxList&) m_divisions; }
-  inline wxList& GetConstraints() const { return (wxList&) m_constraints; }
+  inline wxList& GetDivisions() { return m_divisions; }
+  inline const wxList& GetConstraints() const { return m_constraints; }
 
 protected:
   double             m_oldX;
@@ -125,16 +125,16 @@ class WXDLLIMPEXP_OGL wxDivisionShape: public wxCompositeShape
  public:
 
   wxDivisionShape();
-  ~wxDivisionShape();
+  virtual ~wxDivisionShape();
 
-  void OnDraw(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
-  bool OnMovePre(wxDC& dc, double x, double y, double oldX, double oldY, bool display = true);
-  void OnDragLeft(bool draw, double x, double y, int keys, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys, int attachment = 0);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual bool OnMovePre(wxDC&, double x, double y, double oldX, double oldY, bool display = true);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys, int attachment = 0);
 
-  void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
+  virtual void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
 
   // Don't want this kind of composite to resize its subdiagrams, so
   // override composite's SetSize.

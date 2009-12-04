@@ -28,7 +28,7 @@ public:
     csProjectTreeCtrl(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,
        long style = wxTR_HAS_BUTTONS|wxTR_LINES_AT_ROOT);
 
-    ~csProjectTreeCtrl();
+    virtual ~csProjectTreeCtrl();
 
     wxImageList *GetImageList() const { return (wxImageList *)&m_imageList; }
 protected:

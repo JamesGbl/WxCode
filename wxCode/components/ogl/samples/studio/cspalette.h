@@ -12,8 +12,6 @@
 #ifndef _STUDIO_CSPALETTE_H_
 #define _STUDIO_CSPALETTE_H_
 
-#include "wx/wx.h"
-#include "wx/string.h"
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
 /*
@@ -21,10 +19,9 @@
  *
  */
 
-#define TOOLPALETTECLASS    wxToolBar
-
-class csEditorToolPalette: public TOOLPALETTECLASS
+class csEditorToolPalette: public wxToolBar
 {
+   typedef wxToolBar base;
 public:
 
   csEditorToolPalette(wxWindow *parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
@@ -37,7 +34,7 @@ public:
   inline int GetSelection() const { return m_currentlySelected; }
   void SetSelection(int sel);
 
-  void SetSize(int x, int y, int width, int height, int sizeFlags = wxSIZE_AUTO);
+  void SetSize(wxCoord x, wxCoord y, wxCoord width, wxCoord height, int sizeFlags = wxSIZE_AUTO);
 
 protected:
   int           m_currentlySelected;

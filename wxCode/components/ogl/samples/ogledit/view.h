@@ -25,10 +25,10 @@ class MyCanvas: public wxShapeCanvas
   MyCanvas(wxView *view, wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxRETAINED);
-  ~MyCanvas(void);
+  virtual ~MyCanvas(void);
 
-  void OnMouseEvent(wxMouseEvent& event);
-  void OnPaint(wxPaintEvent& event);
+  void OnMouseEvent(wxMouseEvent&);
+  void OnPaint(wxPaintEvent&);
 
   virtual void OnLeftClick(double x, double y, int keys = 0);
   virtual void OnRightClick(double x, double y, int keys = 0);
@@ -54,14 +54,14 @@ public:
   wxFrame *frame;
   MyCanvas *canvas;
 
-  DiagramView(void) { canvas = NULL; frame = NULL; };
-  virtual ~DiagramView(void) {};
+  DiagramView(void) { canvas = NULL, frame = NULL; }
+  virtual ~DiagramView(void) {}
   virtual void OnChangeFilename();
 
   DiagramDocument* GetDocument();
 
   bool OnCreate(wxDocument*, long flags);
-  void OnDraw(wxDC *dc);
+  void OnDraw(wxDC*);
   void OnUpdate(wxView *sender, wxObject *hint = NULL);
   bool OnClose(bool deleteWindow = true);
 

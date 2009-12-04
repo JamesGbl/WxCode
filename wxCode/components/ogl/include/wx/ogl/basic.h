@@ -12,14 +12,6 @@
 #ifndef _OGL_BASIC_H_
 #define _OGL_BASIC_H_
 
-#ifndef wxUSE_DEPRECATED
-#define wxUSE_DEPRECATED 0
-#endif
-
-#if wxUSE_DEPRECATED
-    #include "wx/deprecated/setup.h"
-#endif
-
 #ifndef wxUSE_PROLOGIO
     #define wxUSE_PROLOGIO 0
 #endif
@@ -143,19 +135,19 @@ class WXDLLIMPEXP_OGL wxShapeEvtHandler: public wxObject, public wxClientDataCon
 
   // This is called when the _shape_ is deleted.
   virtual void OnDelete();
-  virtual void OnDraw(wxDC& dc);
-  virtual void OnDrawContents(wxDC& dc);
-  virtual void OnDrawBranches(wxDC& dc, bool erase = false);
-  virtual void OnMoveLinks(wxDC& dc);
-  virtual void OnErase(wxDC& dc);
-  virtual void OnEraseContents(wxDC& dc);
-  virtual void OnHighlight(wxDC& dc);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnDrawBranches(wxDC&, bool erase = false);
+  virtual void OnMoveLinks(wxDC&);
+  virtual void OnErase(wxDC&);
+  virtual void OnEraseContents(wxDC&);
+  virtual void OnHighlight(wxDC&);
   virtual void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
   virtual void OnLeftDoubleClick(double x, double y, int keys = 0, int attachment = 0);
   virtual void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
   virtual void OnSize(double x, double y);
-  virtual bool OnMovePre(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
-  virtual void OnMovePost(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
+  virtual bool OnMovePre(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
+  virtual void OnMovePost(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
 
   virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
   virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
@@ -163,16 +155,16 @@ class WXDLLIMPEXP_OGL wxShapeEvtHandler: public wxObject, public wxClientDataCon
   virtual void OnDragRight(bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
   virtual void OnBeginDragRight(double x, double y, int keys=0, int attachment = 0);
   virtual void OnEndDragRight(double x, double y, int keys=0, int attachment = 0);
-  virtual void OnDrawOutline(wxDC& dc, double x, double y, double w, double h);
-  virtual void OnDrawControlPoints(wxDC& dc);
-  virtual void OnEraseControlPoints(wxDC& dc);
-  virtual void OnMoveLink(wxDC& dc, bool moveControlPoints = true);
+  virtual void OnDrawOutline(wxDC&, double x, double y, double w, double h);
+  virtual void OnDrawControlPoints(wxDC&);
+  virtual void OnEraseControlPoints(wxDC&);
+  virtual void OnMoveLink(wxDC&, bool moveControlPoints = true);
 
   // Control points ('handles') redirect control to the actual shape, to make it easier
   // to override sizing behaviour.
-  virtual void OnSizingDragLeft(wxControlPoint* pt, bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
-  virtual void OnSizingBeginDragLeft(wxControlPoint* pt, double x, double y, int keys=0, int attachment = 0);
-  virtual void OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnSizingDragLeft(wxControlPoint*, bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
+  virtual void OnSizingBeginDragLeft(wxControlPoint*, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnSizingEndDragLeft(wxControlPoint*, double x, double y, int keys=0, int attachment = 0);
 
   virtual void OnBeginSize(double WXUNUSED(w), double WXUNUSED(h)) { }
   virtual void OnEndSize(double WXUNUSED(w), double WXUNUSED(h)) { }
@@ -221,21 +213,21 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   wxShape *GetTopAncestor();
   inline wxList& GetChildren() { return m_children; }
 
-  virtual void OnDraw(wxDC& dc);
-  virtual void OnDrawContents(wxDC& dc);
-  virtual void OnMoveLinks(wxDC& dc);
-  virtual void Unlink() { };
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnMoveLinks(wxDC&);
+  virtual void Unlink() { }
   void SetDrawHandles(bool drawH);
   inline bool GetDrawHandles() { return m_drawHandles; }
-  virtual void OnErase(wxDC& dc);
-  virtual void OnEraseContents(wxDC& dc);
-  virtual void OnHighlight(wxDC& dc);
+  virtual void OnErase(wxDC&);
+  virtual void OnEraseContents(wxDC&);
+  virtual void OnHighlight(wxDC&);
   virtual void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
   virtual void OnLeftDoubleClick(double WXUNUSED(x), double WXUNUSED(y), int WXUNUSED(keys) = 0, int WXUNUSED(attachment) = 0) {}
   virtual void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
   virtual void OnSize(double x, double y);
-  virtual bool OnMovePre(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
-  virtual void OnMovePost(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
+  virtual bool OnMovePre(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
+  virtual void OnMovePost(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
 
   virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
   virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
@@ -243,9 +235,9 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   virtual void OnDragRight(bool draw, double x, double y, int keys=0, int attachment = 0); // Erase if draw false
   virtual void OnBeginDragRight(double x, double y, int keys=0, int attachment = 0);
   virtual void OnEndDragRight(double x, double y, int keys=0, int attachment = 0);
-  virtual void OnDrawOutline(wxDC& dc, double x, double y, double w, double h);
-  virtual void OnDrawControlPoints(wxDC& dc);
-  virtual void OnEraseControlPoints(wxDC& dc);
+  virtual void OnDrawOutline(wxDC&, double x, double y, double w, double h);
+  virtual void OnDrawControlPoints(wxDC&);
+  virtual void OnEraseControlPoints(wxDC&);
 
   virtual void OnBeginSize(double WXUNUSED(w), double WXUNUSED(h)) { }
   virtual void OnEndSize(double WXUNUSED(w), double WXUNUSED(h)) { }
@@ -305,13 +297,13 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
 
   virtual void Show(bool show);
   virtual bool IsShown() const { return m_visible; }
-  virtual void Move(wxDC& dc, double x1, double y1, bool display = true);
-  virtual void Erase(wxDC& dc);
-  virtual void EraseContents(wxDC& dc);
-  virtual void Draw(wxDC& dc);
+  virtual void Move(wxDC&, double x1, double y1, bool display = true);
+  virtual void Erase(wxDC&);
+  virtual void EraseContents(wxDC&);
+  virtual void Draw(wxDC&);
   virtual void Flash();
-  virtual void MoveLinks(wxDC& dc);
-  virtual void DrawContents(wxDC& dc);  // E.g. for drawing text label
+  virtual void MoveLinks(wxDC&);
+  virtual void DrawContents(wxDC&);  // E.g. for drawing text label
   virtual void SetSize(double x, double y, bool recursive = true);
   virtual void SetAttachmentSize(double x, double y);
   void Attach(wxShapeCanvas *can);
@@ -340,7 +332,7 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   // Set the default, single region size to be consistent
   // with the object size
   void SetDefaultRegionSize();
-  virtual void FormatText(wxDC& dc, const wxString& s, int regionId = 0);
+  virtual void FormatText(wxDC&, const wxString& s, int regionId = 0);
   virtual void SetFormatMode(int mode, int regionId = 0);
   virtual int GetFormatMode(int regionId = 0) const;
   virtual void SetFont(wxFont *font, int regionId = 0);
@@ -357,7 +349,7 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   // in composites.
   virtual wxString GetRegionName(int regionId);
 
-  // Gets the region corresponding to the name, or -1 if not found.
+  // Gets the region corresponding to the name, or wxNOT_FOUND
   virtual int GetRegionId(const wxString& name);
 
   // Construct names for regions, unique even for children of a composite.
@@ -418,10 +410,10 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   // attachmentPoint is the attachment point (= side) in question.
   virtual bool AttachmentSortTest(int attachmentPoint, const wxRealPoint& pt1, const wxRealPoint& pt2);
 
-  virtual void EraseLinks(wxDC& dc, int attachment = -1, bool recurse = false);
-  virtual void DrawLinks(wxDC& dc, int attachment = -1, bool recurse = false);
+  virtual void EraseLinks(wxDC&, int attachment = -1, bool recurse = false);
+  virtual void DrawLinks(wxDC&, int attachment = -1, bool recurse = false);
 
-  virtual bool MoveLineToNewAttachment(wxDC& dc, wxLineShape *to_move,
+  virtual bool MoveLineToNewAttachment(wxDC&, wxLineShape *to_move,
                                        double x, double y);
 
   // Reorders the lines coming into the node image at this attachment
@@ -462,8 +454,8 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   virtual int GetAttachmentLineCount(int attachment) const;
 
   // Draw the branches (not the actual arcs though)
-  virtual void OnDrawBranches(wxDC& dc, int attachment, bool erase = false);
-  virtual void OnDrawBranches(wxDC& dc, bool erase = false);
+  virtual void OnDrawBranches(wxDC&, int attachment, bool erase = false);
+  virtual void OnDrawBranches(wxDC&, bool erase = false);
 
   // Branching attachment settings
   inline void SetBranchNeckLength(int len) { m_branchNeckLength = len; }
@@ -513,7 +505,7 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   void ClearAttachments();
 
   // Recentres all the text regions for this object
-  void Recentre(wxDC& dc);
+  void Recentre(wxDC&);
 
   // Clears points from a list of wxRealPoints
   void ClearPointList(wxList& list);
@@ -576,7 +568,7 @@ class WXDLLIMPEXP_OGL wxPolygonShape: public wxShape
  DECLARE_DYNAMIC_CLASS(wxPolygonShape)
  public:
   wxPolygonShape();
-  ~wxPolygonShape();
+  virtual ~wxPolygonShape();
 
   // Takes a list of wxRealPoints; each point is an OFFSET from the centre.
   // Deletes user's points in destructor.
@@ -590,8 +582,8 @@ class WXDLLIMPEXP_OGL wxPolygonShape: public wxShape
                                  double *x3, double *y3);
   bool HitTest(double x, double y, int *attachment, double *distance);
   void SetSize(double x, double y, bool recursive = true);
-  void OnDraw(wxDC& dc);
-  void OnDrawOutline(wxDC& dc, double x, double y, double w, double h);
+  void OnDraw(wxDC&);
+  void OnDrawOutline(wxDC&, double x, double y, double w, double h);
 
   // Control points ('handles') redirect control to the actual shape, to make it easier
   // to override sizing behaviour.
@@ -660,7 +652,7 @@ class WXDLLIMPEXP_OGL wxRectangleShape: public wxShape
   bool GetPerimeterPoint(double x1, double y1,
                                  double x2, double y2,
                                  double *x3, double *y3);
-  void OnDraw(wxDC& dc);
+  void OnDraw(wxDC&);
   void SetSize(double x, double y, bool recursive = true);
   void SetCornerRadius(double rad); // If > 0, rounded corners
   double GetCornerRadius() const { return m_cornerRadius; }
@@ -693,7 +685,7 @@ class WXDLLIMPEXP_OGL wxTextShape: public wxRectangleShape
  public:
   wxTextShape(double width = 0.0, double height = 0.0);
 
-  void OnDraw(wxDC& dc);
+  virtual void OnDraw(wxDC&);
 
 #if wxUSE_PROLOGIO
     void WriteAttributes(wxExpr *clause);
@@ -714,7 +706,7 @@ class WXDLLIMPEXP_OGL wxEllipseShape: public wxShape
                                  double x2, double y2,
                                  double *x3, double *y3);
 
-  void OnDraw(wxDC& dc);
+  virtual void OnDraw(wxDC&);
   void SetSize(double x, double y, bool recursive = true);
 
 #if wxUSE_PROLOGIO

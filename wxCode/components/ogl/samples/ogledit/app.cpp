@@ -173,10 +173,10 @@ void MyFrame::OnSize(wxSizeEvent& event)
 
 void MyFrame::OnCloseWindow(wxCloseEvent& event)
 {
-  wxDocParentFrame::OnCloseWindow(event);
+  base::OnCloseWindow(event);
   if (!event.GetVeto())
   {
-    wxOGLCleanUp();
+     ::wxOGLCleanUp();
   }
 }
 

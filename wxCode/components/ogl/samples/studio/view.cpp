@@ -56,11 +56,11 @@ BEGIN_EVENT_TABLE(csDiagramView, wxView)
     EVT_UPDATE_UI(DIAGRAM_TOOLBAR_CUT_POINT, csDiagramView::OnCutLinePointUpdate)
     EVT_UPDATE_UI(DIAGRAM_TOOLBAR_STRAIGHTEN, csDiagramView::OnStraightenLinesUpdate)
     EVT_UPDATE_UI(DIAGRAM_TOOLBAR_LINE_ARROW, csDiagramView::OnToggleArrowToolUpdate)
-    EVT_UPDATE_UI(wxID_CUT, csDiagramView::OnCutUpdate)
-    EVT_UPDATE_UI(wxID_COPY, csDiagramView::OnCopyUpdate)
-    EVT_UPDATE_UI(wxID_CLEAR, csDiagramView::OnClearUpdate)
+    EVT_UPDATE_UI(wxID_CUT, csDiagramView::OnNeedSelection)
+    EVT_UPDATE_UI(wxID_COPY, csDiagramView::OnNeedSelection)
+    EVT_UPDATE_UI(wxID_CLEAR, csDiagramView::OnNeedSelection)
     EVT_UPDATE_UI(wxID_PASTE, csDiagramView::OnPasteUpdate)
-    EVT_UPDATE_UI(wxID_DUPLICATE, csDiagramView::OnDuplicateUpdate)
+    EVT_UPDATE_UI(wxID_DUPLICATE, csDiagramView::OnNeedSelection)
     EVT_UPDATE_UI(wxID_PROPERTIES, csDiagramView::OnEditPropertiesUpdate)
     EVT_UPDATE_UI(wxID_UNDO, csDiagramView::OnUndoUpdate)
     EVT_UPDATE_UI(wxID_REDO, csDiagramView::OnRedoUpdate)
@@ -71,19 +71,19 @@ END_EVENT_TABLE()
 bool csDiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
 {
   wxMenu* editMenu;
-  frame = wxGetApp().CreateChildFrame(doc, this, &editMenu);
-  canvas = wxGetApp().CreateCanvas(this, frame);
-  canvas->SetView(this);
+  m_frame = wxGetApp().CreateChildFrame(doc, this, &editMenu);
+  m_canvas = wxGetApp().CreateCanvas(this, m_frame);
+  m_canvas->SetView(this);
 
-  SetFrame(frame);
+  SetFrame(m_frame);
   Activate(true);
 
   // Initialize the edit menu Undo and Redo items
   doc->GetCommandProcessor()->SetEditMenu(editMenu);
   doc->GetCommandProcessor()->Initialize();
 
-  wxShapeCanvas *shapeCanvas = (wxShapeCanvas *)canvas;
-  csDiagramDocument *diagramDoc = (csDiagramDocument *)doc;
+  wxShapeCanvas *shapeCanvas = m_canvas;
+  csDiagramDocument *diagramDoc = wxStaticCast(doc, csDiagramDocument);
   shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
   diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
 
@@ -114,9 +114,9 @@ bool csDiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
 
 csDiagramView::~csDiagramView(void)
 {
-    if (frame)
+    if (m_frame)
     {
-        ((wxDocMDIChildFrame*)frame)->SetView(NULL);
+        m_frame->SetView(NULL);
     }
 }
 
@@ -128,8 +128,8 @@ void csDiagramView::OnDraw(wxDC *WXUNUSED(dc))
 
 void csDiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
 {
-  if (canvas)
-    canvas->Refresh();
+  if (m_canvas)
+    m_canvas->Refresh();
 }
 
 // Clean up windows used for displaying the view.
@@ -141,22 +141,22 @@ bool csDiagramView::OnClose(bool deleteWindow)
   csDiagramDocument* diagramDoc = GetDocument();
   diagramDoc->GetDiagram()->SetCanvas(NULL);
 
-  canvas->ClearBackground();
-  canvas->SetDiagram(NULL);
-  canvas->SetView(NULL);
-  canvas = NULL;
+  m_canvas->ClearBackground();
+  m_canvas->SetDiagram(NULL);
+  m_canvas->SetView(NULL);
+  m_canvas = NULL;
 
-  wxMenu* fileMenu = frame->GetMenuBar()->GetMenu(0);
+  wxMenu* fileMenu = m_frame->GetMenuBar()->GetMenu(0);
 
   // Remove file menu from those managed by the command history
   wxGetApp().GetDocManager()->FileHistoryRemoveMenu(fileMenu);
 
   Activate(false);
-  frame->Show(false);
+  m_frame->Show(false);
 
   if (deleteWindow)
   {
-    frame->Destroy();
+    m_frame->Destroy();
   }
 
   return true;
@@ -273,31 +273,16 @@ void csDiagramView::OnDuplicate(wxCommandEvent& WXUNUSED(event))
     wxGetApp().GetDiagramClipboard().Paste(doc->GetDiagram(), NULL, 20, 20);
 }
 
-void csDiagramView::OnCutUpdate(wxUpdateUIEvent& event)
-{
-    event.Enable( (m_selections.GetCount() > 0) );
-}
-
-void csDiagramView::OnClearUpdate(wxUpdateUIEvent& event)
-{
-    event.Enable( (m_selections.GetCount() > 0) );
-}
-
-void csDiagramView::OnCopyUpdate(wxUpdateUIEvent& event)
-{
-    event.Enable( (m_selections.GetCount() > 0) );
-}
-
 void csDiagramView::OnPasteUpdate(wxUpdateUIEvent& event)
 {
     int n = wxGetApp().GetDiagramClipboard().GetCount();
 
-    event.Enable( (n > 0) );
+    event.Enable(n > 0);
 }
 
-void csDiagramView::OnDuplicateUpdate(wxUpdateUIEvent& event)
+void csDiagramView::OnNeedSelection(wxUpdateUIEvent& event)
 {
-    event.Enable( (m_selections.GetCount() > 0) );
+    event.Enable(m_selections.GetCount() > 0);
 }
 
 csDiagramDocument* csDiagramView::GetDocument()
@@ -311,7 +296,7 @@ void csDiagramView::DoCut(wxList& shapes)
 
     if (shapes.GetCount() > 0)
     {
-        csDiagramCommand* cmd = new csDiagramCommand(wxT("Cut"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(_("Cut"), doc);
 
         wxObjectList::compatibility_iterator node = shapes.GetFirst();
         while (node)
@@ -378,7 +363,7 @@ void csDiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
             data.SetColour(firstShape->GetBrush()->GetColour());
         }
 
-        wxColourDialog *dialog = new wxColourDialog(frame, &data);
+        wxColourDialog *dialog = new wxColourDialog(m_frame, &data);
         wxBrush *theBrush = NULL;
         if (dialog->ShowModal() == wxID_OK)
         {
@@ -390,7 +375,7 @@ void csDiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         if (!theBrush)
             return;
 
-        csDiagramCommand* cmd = new csDiagramCommand(wxT("Change colour"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(_("Change colour"), doc);
 
         wxObjectList::compatibility_iterator node = selections.GetFirst();
         while (node)
@@ -459,7 +444,7 @@ void csDiagramView::ApplyPointSize(int pointSize)
 
     if (selections.GetCount() > 0)
     {
-        csDiagramCommand* cmd = new csDiagramCommand(wxT("Point size"), doc);
+        csDiagramCommand* cmd = new csDiagramCommand(_("Point size"), doc);
 
         wxObjectList::compatibility_iterator node = selections.GetFirst();
         while (node)
@@ -498,15 +483,15 @@ void csDiagramView::OnZoomSel(wxCommandEvent& event)
 
     int scale = (int) ((noStrings - combo->GetSelection() - 1)*inc + minZoom);
 
-    canvas->SetScale((double) (scale/100.0), (double) (scale/100.0));
-    canvas->Refresh();
+    m_canvas->SetScale((double) (scale/100.0), (double) (scale/100.0));
+    m_canvas->Refresh();
 }
 
 // Select or deselect all
 void csDiagramView::SelectAll(bool select)
 {
-    wxClientDC dc(canvas);
-    canvas->PrepareDC(dc);
+    wxClientDC dc(m_canvas);
+    m_canvas->PrepareDC(dc);
 
     if (!select)
     {
@@ -648,7 +633,7 @@ void csDiagramView::OnAlign(wxCommandEvent& event)
         return;
 
     csDiagramDocument* doc = GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(wxT("Align"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(_("Align"), doc);
 
     node = selections.GetFirst();
     wxShape* firstShape = (wxShape*) node->GetData();
@@ -731,7 +716,7 @@ void csDiagramView::OnAlignUpdate(wxUpdateUIEvent& event)
 void csDiagramView::OnNewLinePoint(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument* doc = GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(wxT("New line point"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(_("New line point"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -752,7 +737,7 @@ void csDiagramView::OnNewLinePoint(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnCutLinePoint(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument* doc = GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(wxT("Cut line point"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(_("Cut line point"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -773,7 +758,7 @@ void csDiagramView::OnCutLinePoint(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnStraightenLines(wxCommandEvent& WXUNUSED(event))
 {
     csDiagramDocument* doc = GetDocument();
-    csDiagramCommand* cmd = new csDiagramCommand(wxT("Straighten lines"), doc);
+    csDiagramCommand* cmd = new csDiagramCommand(_("Straighten lines"), doc);
 
     wxObjectList::compatibility_iterator node = m_selections.GetFirst();
     while (node)
@@ -823,7 +808,7 @@ BEGIN_EVENT_TABLE(csCanvas, wxShapeCanvas)
     EVT_PAINT(csCanvas::OnPaint)
 END_EVENT_TABLE()
 
-// Define a constructor for my canvas
+// Define a constructor for my m_canvas
 csCanvas::csCanvas(csDiagramView *v, wxWindow *parent, wxWindowID id, const wxPoint& pos,
     const wxSize& size, long style):
  wxShapeCanvas(parent, id, pos, size, style)
@@ -841,7 +826,7 @@ void csCanvas::DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2)
     dc.SetPen(dottedPen);
     dc.SetBrush(* wxTRANSPARENT_BRUSH);
 
-    dc.DrawRectangle((long) x1, (long) y1, (long) (x2 - x1), (long) (y2 - y1));
+    dc.DrawRectangle((wxCoord) x1, (wxCoord) y1, (wxCoord) (x2 - x1), (wxCoord) (y2 - y1));
 }
 
 void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
@@ -900,7 +885,7 @@ void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
         shape->SetX(x);
         shape->SetY(y);
 
-        csDiagramCommand* cmd = new csDiagramCommand(wxT("Text box"),
+        csDiagramCommand* cmd = new csDiagramCommand(_("Text box"),
             (csDiagramDocument *)GetView()->GetDocument(),
             new csCommandState(ID_CS_ADD_SHAPE, shape, NULL));
         GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
@@ -934,7 +919,7 @@ void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
         theShape->SetY(y);
 
         csDiagramCommand* cmd = new csDiagramCommand(symbol->GetName(),
-            (csDiagramDocument *)GetView()->GetDocument(),
+            GetView()->GetDocument(),
             new csCommandState(ID_CS_ADD_SHAPE, theShape, NULL));
         GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
 

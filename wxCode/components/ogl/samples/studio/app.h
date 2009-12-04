@@ -12,7 +12,6 @@
 #ifndef _STUDIO_STUDIO_H_
 #define _STUDIO_STUDIO_H_
 
-#include "wx/docmdi.h"
 #include "wx/help.h"
 #include "wx/cshelp.h"
 #include "wx/helphtml.h"
@@ -68,8 +67,8 @@ public:
     // Create and initialise the diagram toolbar
     void CreateDiagramToolBar(wxFrame* parent);
 
-    wxMDIChildFrame *CreateChildFrame(wxDocument *doc, wxView *view, wxMenu** editMenu);
-    csCanvas *CreateCanvas(wxView *view, wxMDIChildFrame *parent);
+    wxDocMDIChildFrame* CreateChildFrame(wxDocument*, wxView*, wxMenu** editMenu);
+    csCanvas *CreateCanvas(wxView*, wxMDIChildFrame *parent);
 
     // Fill out the project tree control
     void FillProjectTreeCtrl();

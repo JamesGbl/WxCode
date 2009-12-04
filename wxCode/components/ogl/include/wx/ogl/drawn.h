@@ -16,16 +16,16 @@
 #define oglMETAFLAGS_OUTLINE         1
 #define oglMETAFLAGS_ATTACHMENTS     2
 
-class WXDLLIMPEXP_OGL wxDrawnShape;
-class WXDLLIMPEXP_OGL wxPseudoMetaFile: public wxObject
+class WXDLLIMPEXP_FWD_OGL wxDrawnShape;
+class WXDLLIMPEXP_OGL wxPseudoMetaFile : public wxObject
 {
  DECLARE_DYNAMIC_CLASS(wxPseudoMetaFile)
  public:
   wxPseudoMetaFile();
   wxPseudoMetaFile(wxPseudoMetaFile& mf);
-  ~wxPseudoMetaFile();
+  virtual ~wxPseudoMetaFile();
 
-  void Draw(wxDC& dc, double xoffset, double yoffset);
+  void Draw(wxDC&, double xoffset, double yoffset);
 
 #if wxUSE_PROLOGIO
   void WriteAttributes(wxExpr *clause, int whichAngle);
@@ -125,14 +125,14 @@ public:
 #define oglDRAWN_ANGLE_180      2
 #define oglDRAWN_ANGLE_270      3
 
-class WXDLLIMPEXP_OGL wxDrawnShape: public wxRectangleShape
+class WXDLLIMPEXP_OGL wxDrawnShape : public wxRectangleShape
 {
  DECLARE_DYNAMIC_CLASS(wxDrawnShape)
  public:
   wxDrawnShape();
-  ~wxDrawnShape();
+  virtual ~wxDrawnShape();
 
-  void OnDraw(wxDC& dc);
+  virtual void OnDraw(wxDC&);
 
 #if wxUSE_PROLOGIO
   // I/O

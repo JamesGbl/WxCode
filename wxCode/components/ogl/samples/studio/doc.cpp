@@ -18,26 +18,23 @@
 
 IMPLEMENT_DYNAMIC_CLASS(csDiagramDocument, wxDocument)
 
-#ifdef __VISUALC__
-#pragma warning(disable:4355)
-#endif
-
-csDiagramDocument::csDiagramDocument():m_diagram(this)
+csDiagramDocument::csDiagramDocument() : m_diagram(this)
 {
 }
-
-#ifdef __VISUALC__
-#pragma warning(default:4355)
-#endif
 
 csDiagramDocument::~csDiagramDocument()
 {
 }
 
+bool csDiagramDocument::DeleteContents()
+{
+    m_diagram.DeleteAllShapes();
+    return base::DeleteContents();
+}
+
 bool csDiagramDocument::OnCloseDocument()
 {
-  m_diagram.DeleteAllShapes();
-  return true;
+    return base::OnCloseDocument();
 }
 
 #if wxUSE_PROLOGIO

@@ -12,16 +12,6 @@
 #ifndef _OGLSAMPLE_DOC_H_
 #define _OGLSAMPLE_DOC_H_
 
-#include "wx/docview.h"
-#include "wx/cmdproc.h"
-#include "wx/string.h"
-
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
-
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
 
 #if wxUSE_STD_IOSTREAM
@@ -32,10 +22,11 @@
  * Override a few members for this application
  */
 
-class MyDiagram: public wxDiagram
+class MyDiagram : public wxDiagram
 {
- public:
-  MyDiagram(void) {}
+    typedef wxDiagram base;
+public:
+    MyDiagram(void) {}
 #if wxUSE_PROLOGIO
   bool OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
   bool OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
@@ -49,18 +40,18 @@ class MyDiagram: public wxDiagram
 
 class wxRoundedRectangleShape: public wxRectangleShape
 {
-  DECLARE_DYNAMIC_CLASS(wxRoundedRectangleShape)
- private:
- public:
-  wxRoundedRectangleShape(double w = 0.0, double h = 0.0);
+    typedef wxRectangleShape base;
+    DECLARE_DYNAMIC_CLASS(wxRoundedRectangleShape)
+public:
+    wxRoundedRectangleShape(double w = 0.0, double h = 0.0);
 };
 
-class wxDiamondShape: public wxPolygonShape
+class wxDiamondShape : public wxPolygonShape
 {
-  DECLARE_DYNAMIC_CLASS(wxDiamondShape)
- private:
- public:
-  wxDiamondShape(double w = 0.0, double h = 0.0);
+    typedef wxPolygonShape base;
+    DECLARE_DYNAMIC_CLASS(wxDiamondShape)
+public:
+    wxDiamondShape(double w = 0.0, double h = 0.0);
 };
 
 /*
@@ -68,22 +59,23 @@ class wxDiamondShape: public wxPolygonShape
  * have to derive from each shape class. We plug this in to each shape.
  */
 
-class MyEvtHandler: public wxShapeEvtHandler
+class MyEvtHandler : public wxShapeEvtHandler
 {
- public:
-  wxString label;
-  MyEvtHandler(wxShapeEvtHandler *prev = NULL, wxShape *shape = NULL, const wxString& lab = wxEmptyString):wxShapeEvtHandler(prev, shape)
-  {
-    label = lab;
-  }
-  ~MyEvtHandler(void)
-  {
-  }
-  void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
-  void OnBeginDragRight(double x, double y, int keys = 0, int attachment = 0);
-  void OnDragRight(bool draw, double x, double y, int keys = 0, int attachment = 0);
-  void OnEndDragRight(double x, double y, int keys = 0, int attachment = 0);
-  void OnEndSize(double x, double y);
+    typedef wxShapeEvtHandler base;
+public:
+    wxString label;
+    MyEvtHandler(wxShapeEvtHandler *prev = NULL, wxShape *shape = NULL, const wxString& lab = wxEmptyString):wxShapeEvtHandler(prev, shape)
+   {
+        label = lab;
+    }
+    virtual ~MyEvtHandler(void)
+   {
+   }
+   void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
+   void OnBeginDragRight(double x, double y, int keys = 0, int attachment = 0);
+   void OnDragRight(bool draw, double x, double y, int keys = 0, int attachment = 0);
+   void OnEndDragRight(double x, double y, int keys = 0, int attachment = 0);
+   void OnEndSize(double x, double y);
 };
 
 /*
@@ -92,13 +84,14 @@ class MyEvtHandler: public wxShapeEvtHandler
 
 class DiagramDocument: public wxDocument
 {
-  DECLARE_DYNAMIC_CLASS(DiagramDocument)
- private:
- public:
-  MyDiagram diagram;
+    typedef wxDocument base;
+    DECLARE_DYNAMIC_CLASS(DiagramDocument)
+private:
+public:
+    MyDiagram m_diagram;
 
-  DiagramDocument(void);
-  ~DiagramDocument(void);
+    DiagramDocument(void);
+    virtual ~DiagramDocument(void);
 
 #if wxUSE_STD_IOSTREAM
     virtual wxSTD ostream& SaveObject(wxSTD ostream& stream);
@@ -108,9 +101,10 @@ class DiagramDocument: public wxDocument
     virtual wxInputStream& LoadObject(wxInputStream& stream);
 #endif
 
-  inline wxDiagram *GetDiagram() { return &diagram; }
+    inline wxDiagram *GetDiagram() { return &m_diagram; }
 
-  bool OnCloseDocument(void);
+    virtual bool DeleteContents();
+    virtual bool OnCloseDocument(void);
 };
 
 /*
@@ -139,46 +133,47 @@ class DiagramDocument: public wxDocument
  * when we recreate.
  */
 
-class DiagramCommand: public wxCommand
+class DiagramCommand : public wxCommand
 {
- protected:
-  DiagramDocument *doc;
-  int cmd;
-  wxShape *shape; // Pointer to the shape we're acting on
-  wxShape *fromShape;
-  wxShape *toShape;
-  wxClassInfo *shapeInfo;
-  double x;
-  double y;
-  bool selected;
-  bool deleteShape;
+    typedef wxCommand base;
+protected:
+    DiagramDocument *doc;
+    int cmd;
+    wxShape *shape; // Pointer to the shape we're acting on
+    wxShape *fromShape;
+    wxShape *toShape;
+    wxClassInfo *shapeInfo;
+    double x;
+    double y;
+    bool selected;
+    bool deleteShape;
 
-  // Storage for property commands
-  const wxBrush *shapeBrush;
-  wxPen *shapePen;
-  wxString shapeLabel;
- public:
-  // Multi-purpose constructor for creating, deleting shapes
-  DiagramCommand(const wxString& name, int cmd, DiagramDocument *ddoc, wxClassInfo *shapeInfo = NULL,
-     double x = 0.0, double y = 0.0, bool sel = false, wxShape *theShape = NULL, wxShape *fs = NULL, wxShape *ts = NULL);
+    // Storage for property commands
+    const wxBrush *shapeBrush;
+    wxPen *shapePen;
+    wxString shapeLabel;
+public:
+    // Multi-purpose constructor for creating, deleting shapes
+    DiagramCommand(const wxString& name, int cmd, DiagramDocument*, wxClassInfo *shapeInfo = NULL,
+        double x = 0.0, double y = 0.0, bool sel = false, wxShape *theShape = NULL, wxShape *fs = NULL, wxShape *ts = NULL);
 
-  // Property-changing command constructors
-  DiagramCommand(const wxString& name, int cmd, DiagramDocument *ddoc, wxBrush *backgroundColour, wxShape *theShape);
-  DiagramCommand(const wxString& name, int cmd, DiagramDocument *ddoc, const wxString& lab, wxShape *theShape);
+    // Property-changing command constructors
+    DiagramCommand(const wxString& name, int cmd, DiagramDocument*, wxBrush *backgroundColour, wxShape *theShape);
+    DiagramCommand(const wxString& name, int cmd, DiagramDocument*, const wxString& lab, wxShape *theShape);
 
-  ~DiagramCommand(void);
+    virtual ~DiagramCommand(void);
 
-  bool Do(void);
-  bool Undo(void);
+    bool Do(void);
+    bool Undo(void);
 
-  inline void SetShape(wxShape *s) { shape = s; }
-  inline wxShape *GetShape(void) { return shape; }
-  inline wxShape *GetFromShape(void) { return fromShape; }
-  inline wxShape *GetToShape(void) { return toShape; }
-  inline wxClassInfo *GetShapeInfo(void) { return shapeInfo; }
-  inline bool GetSelected(void) { return selected; }
+    inline void SetShape(wxShape *s) { shape = s; }
+    inline wxShape *GetShape(void) { return shape; }
+    inline wxShape *GetFromShape(void) { return fromShape; }
+    inline wxShape *GetToShape(void) { return toShape; }
+    inline const wxClassInfo* GetShapeInfo(void) const { return shapeInfo; }
+    inline bool GetSelected(void) const { return selected; }
 
-  void RemoveLines(wxShape *shape);
+    void RemoveLines(wxShape *shape);
 };
 
 #endif

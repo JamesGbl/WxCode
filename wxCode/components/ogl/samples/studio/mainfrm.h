@@ -12,42 +12,43 @@
 #ifndef _STUDIO_MAINFRM_H_
 #define _STUDIO_MAINFRM_H_
 
-#include "wx/docmdi.h"
+class WXDLLIMPEXP_FWD_ADV wxSashLayoutWindow;
+class WXDLLIMPEXP_FWD_ADV wxSashEvent;
 
-class wxSashLayoutWindow;
-class wxSashEvent;
-
-class csFrame: public wxDocMDIParentFrame
+class csFrame : public wxDocMDIParentFrame
 {
-  public:
-    csFrame(wxDocManager *manager, wxFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style);
+   typedef wxDocMDIParentFrame base;
+public:
+    csFrame(wxDocManager*, wxFrame* parent, wxWindowID, const wxString& title, const wxPoint&, const wxSize&, long style);
 
-    void OnCloseWindow(wxCloseEvent& event);
-    void OnSize(wxSizeEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnNewWindow(wxCommandEvent& event);
-    void OnQuit(wxCommandEvent& event);
-    void OnSashDragPaletteWindow(wxSashEvent& event);
-    void OnSashDragProjectWindow(wxSashEvent& event);
-    void OnIdle(wxIdleEvent& event);
-    void OnHelp(wxCommandEvent& event);
-    void OnSettings(wxCommandEvent& event);
+protected:
+    void OnCloseWindow(wxCloseEvent&);
+    void OnSize(wxSizeEvent&);
+    void OnAbout(wxCommandEvent&);
+    void OnNewWindow(wxCommandEvent&);
+    void OnQuit(wxCommandEvent&);
+    void OnSashDragPaletteWindow(wxSashEvent&);
+    void OnSashDragProjectWindow(wxSashEvent&);
+    void OnIdle(wxIdleEvent&);
+    void OnHelp(wxCommandEvent&);
+    void OnSettings(wxCommandEvent&);
 
     // General handler for disabling items
-    void OnUpdateDisable(wxUpdateUIEvent& event);
-    void OnSaveUpdate(wxUpdateUIEvent& event);
+    void OnUpdateDisable(wxUpdateUIEvent&);
+    void OnSaveUpdate(wxUpdateUIEvent&);
 
-DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
-class csMDIChildFrame: public wxDocMDIChildFrame
+class csMDIChildFrame : public wxDocMDIChildFrame
 {
-  public:
-    csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style);
+    typedef wxDocMDIChildFrame base;
+public:
+    csMDIChildFrame(wxDocument*, wxView*, wxMDIParentFrame* parent, wxWindowID, const wxString& title, const wxPoint&, const wxSize&, long style);
 
-    void OnActivate(wxActivateEvent& event);
-
-DECLARE_EVENT_TABLE()
+protected:
+    void OnActivate(wxActivateEvent&);
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

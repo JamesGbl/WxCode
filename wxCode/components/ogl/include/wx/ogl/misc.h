@@ -24,26 +24,26 @@ extern wxList oglObjectCopyMapping;
 
 // Centres the given list of wxShapeTextLine strings in the given box
 // (changing the positions in situ). Doesn't actually draw into the DC.
-WXDLLIMPEXP_OGL void oglCentreText(wxDC& dc, wxList *text, double m_xpos, double m_ypos,
+WXDLLIMPEXP_OGL void oglCentreText(wxDC&, wxList *text, double m_xpos, double m_ypos,
                 double width, double height,
                 int formatMode = FORMAT_CENTRE_HORIZ | FORMAT_CENTRE_VERT);
 
 // Given a string, returns a list of strings that fit within the given
 // width of box. Height is ignored.
-WXDLLIMPEXP_OGL wxStringList* oglFormatText(wxDC& dc, const wxString& text, double width, double height, int formatMode = 0);
+WXDLLIMPEXP_OGL wxStringList* oglFormatText(wxDC&, const wxString& text, double width, double height, int formatMode = 0);
 
 // Centres the list of wxShapeTextLine strings, doesn't clip.
 // Doesn't actually draw into the DC.
-WXDLLIMPEXP_OGL void oglCentreTextNoClipping(wxDC& dc, wxList *text_list,
+WXDLLIMPEXP_OGL void oglCentreTextNoClipping(wxDC&, wxList *text_list,
                               double m_xpos, double m_ypos, double width, double height);
 
 // Gets the maximum width and height of the given list of wxShapeTextLines.
-WXDLLIMPEXP_OGL void oglGetCentredTextExtent(wxDC& dc, wxList *text_list,
+WXDLLIMPEXP_OGL void oglGetCentredTextExtent(wxDC&, wxList *text_list,
                               double m_xpos, double m_ypos, double width, double height,
                               double *actual_width, double *actual_height);
 
 // Actually draw the preformatted list of wxShapeTextLines.
-WXDLLIMPEXP_OGL void oglDrawFormattedText(wxDC& context, wxList *text_list,
+WXDLLIMPEXP_OGL void oglDrawFormattedText(wxDC&, wxList *text_list,
                        double m_xpos, double m_ypos, double width, double height,
                        int formatMode = FORMAT_CENTRE_HORIZ | FORMAT_CENTRE_VERT);
 

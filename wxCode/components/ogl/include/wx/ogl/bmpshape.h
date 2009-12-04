@@ -15,12 +15,12 @@
 
 class WXDLLIMPEXP_OGL wxBitmapShape: public wxRectangleShape
 {
- DECLARE_DYNAMIC_CLASS(wxBitmapShape)
- public:
-  wxBitmapShape();
-  ~wxBitmapShape();
+    DECLARE_DYNAMIC_CLASS(wxBitmapShape)
+public:
+    wxBitmapShape();
+    virtual ~wxBitmapShape();
 
-  void OnDraw(wxDC& dc);
+    virtual void OnDraw(wxDC&);
 
 #if wxUSE_PROLOGIO
   // I/O
@@ -28,21 +28,18 @@ class WXDLLIMPEXP_OGL wxBitmapShape: public wxRectangleShape
   void ReadAttributes(wxExpr *clause);
 #endif
 
-  // Does the copying for this object
-  void Copy(wxShape& copy);
+    // Does the copying for this object
+    void Copy(wxShape& copy);
 
-  void SetSize(double w, double h, bool recursive = true);
-  inline wxBitmap& GetBitmap() const { return (wxBitmap&) m_bitmap; }
-  void SetBitmap(const wxBitmap& bm);
-  inline void SetFilename(const wxString& f) { m_filename = f; };
-  inline wxString GetFilename() const { return m_filename; }
+    void SetSize(double w, double h, bool recursive = true);
+    inline wxBitmap& GetBitmap() const { return (wxBitmap&) m_bitmap; }
+    void SetBitmap(const wxBitmap& bm);
+    inline void SetFilename(const wxString& f) { m_filename = f; };
+    inline wxString GetFilename() const { return m_filename; }
 
 private:
-  wxBitmap      m_bitmap;
-  wxString      m_filename;
+    wxBitmap      m_bitmap;
+    wxString      m_filename;
 };
 
-#endif
-  // _OGL_BITMAP_H_
-
-
+#endif // _OGL_BITMAP_H_

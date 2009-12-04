@@ -31,7 +31,7 @@ csDiagram::~csDiagram()
 
 void csDiagram::Redraw(wxDC& dc)
 {
-    wxDiagram::Redraw(dc);
+    base::Redraw(dc);
 
     // Draw line crossings
     wxLineCrossings lineCrossings;
@@ -58,7 +58,7 @@ csEvtHandler::~csEvtHandler()
 // Copy any event handler data
 void csEvtHandler::CopyData(wxShapeEvtHandler& copy)
 {
-    wxShapeEvtHandler::CopyData(copy);
+    base::CopyData(copy);
 
     csEvtHandler& csCopy = (csEvtHandler&) copy;
     csCopy.m_label = m_label;

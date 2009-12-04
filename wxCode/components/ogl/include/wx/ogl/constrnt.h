@@ -12,7 +12,6 @@
 #ifndef _OGL_CONSTRNT_H_
 #define _OGL_CONSTRNT_H_
 
-
 /*
  * OGL Constraints
  *
@@ -24,7 +23,7 @@ class WXDLLIMPEXP_OGL wxOGLConstraintType: public wxObject
 public:
   wxOGLConstraintType(int type = 0, const wxString& name = wxEmptyString,
                       const wxString& phrase = wxEmptyString);
-  ~wxOGLConstraintType();
+  virtual ~wxOGLConstraintType();
 
 public:
   int           m_type;     // E.g. gyCONSTRAINT_CENTRED_VERTICALLY
@@ -54,7 +53,7 @@ extern wxList* wxOGLConstraintTypes;
 #define gyCONSTRAINT_MIDALIGNED_LEFT      14
 #define gyCONSTRAINT_MIDALIGNED_RIGHT     15
 
-class WXDLLIMPEXP_OGL wxOGLConstraint: public wxObject
+class WXDLLIMPEXP_OGL wxOGLConstraint : public wxObject
 {
  DECLARE_DYNAMIC_CLASS(wxOGLConstraint)
  public:
@@ -63,7 +62,7 @@ class WXDLLIMPEXP_OGL wxOGLConstraint: public wxObject
      m_constraintName = wxEmptyString; m_constraintId = 0;
      m_constrainingObject = NULL; }
   wxOGLConstraint(int type, wxShape *constraining, wxList& constrained);
-  ~wxOGLConstraint();
+  virtual ~wxOGLConstraint();
 
   // Returns true if anything changed
   bool Evaluate();
@@ -80,8 +79,8 @@ class WXDLLIMPEXP_OGL wxOGLConstraint: public wxObject
 
 };
 
-void OGLInitializeConstraintTypes();
-void OGLCleanUpConstraintTypes();
+extern void OGLInitializeConstraintTypes();
+extern void OGLCleanUpConstraintTypes();
 
 #endif
  // _OGL_CONSTRNT_H_

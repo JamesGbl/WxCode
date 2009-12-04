@@ -26,7 +26,7 @@ END_EVENT_TABLE()
 
 // What to do when a view is created. Creates actual
 // windows for displaying the view.
-bool DiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
+bool DiagramView::OnCreate(wxDocument* doc, long WXUNUSED(flags))
 {
   frame = GetMainFrame();
   canvas = GetMainFrame()->canvas;
@@ -37,11 +37,11 @@ bool DiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
   Activate(true);
 
   // Initialize the edit menu Undo and Redo items
-  doc->GetCommandProcessor()->SetEditMenu(((MyFrame *)frame)->editMenu);
+  doc->GetCommandProcessor()->SetEditMenu(((MyFrame*)frame)->editMenu);
   doc->GetCommandProcessor()->Initialize();
 
-  wxShapeCanvas *shapeCanvas = (wxShapeCanvas *)canvas;
-  DiagramDocument *diagramDoc = (DiagramDocument *)doc;
+  wxShapeCanvas *shapeCanvas = canvas;
+  DiagramDocument* diagramDoc = wxStaticCast(doc, DiagramDocument);
   shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
   diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
 
@@ -69,7 +69,7 @@ void DiagramView::OnDraw(wxDC *dc)
   // We need to adjust for the graphic size, a formula will be added
   float maxX = 900;
   float maxY = 700;
-  // A better way of find the maxium values would be to search through
+  // A better way of find the maximum values would be to search through
   // the linked list
 
   // Let's have at least 10 device units margin
@@ -196,7 +196,7 @@ void DiagramView::OnCut(wxCommandEvent& WXUNUSED(event))
 
   wxShape *theShape = FindSelectedShape();
   if (theShape)
-    doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, true, theShape));
+    doc->GetCommandProcessor()->Submit(new DiagramCommand(_("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, true, theShape));
 }
 
 void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
@@ -221,7 +221,7 @@ void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         dialog->Close();
 
         if (theBrush)
-          doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Change colour"), OGLEDIT_CHANGE_BACKGROUND_COLOUR, doc,
+          doc->GetCommandProcessor()->Submit(new DiagramCommand(_("Change colour"), OGLEDIT_CHANGE_BACKGROUND_COLOUR, doc,
             theBrush, theShape));
       }
 }
@@ -231,8 +231,8 @@ void DiagramView::OnEditLabel(wxCommandEvent& WXUNUSED(event))
       wxShape *theShape = FindSelectedShape();
       if (theShape)
       {
-        wxString newLabel = wxGetTextFromUser(wxT("Enter new label"), wxT("Shape Label"), ((MyEvtHandler *)theShape->GetEventHandler())->label);
-        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Edit label"), OGLEDIT_EDIT_LABEL, GetDocument(), newLabel, theShape));
+        wxString newLabel = wxGetTextFromUser(_("Enter new label"), _("Shape Label"), ((MyEvtHandler *)theShape->GetEventHandler())->label);
+        GetDocument()->GetCommandProcessor()->Submit(new DiagramCommand(_("Edit label"), OGLEDIT_EDIT_LABEL, GetDocument(), newLabel, theShape));
       }
 }
 

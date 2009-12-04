@@ -30,10 +30,10 @@ class WXDLLIMPEXP_OGL wxDividedShape: public wxRectangleShape
 
  public:
   wxDividedShape(double w = 0.0, double h = 0.0);
-  ~wxDividedShape();
+  virtual ~wxDividedShape();
 
-  void OnDraw(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
 
   void SetSize(double w, double h, bool recursive = true);
 

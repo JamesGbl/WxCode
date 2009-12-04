@@ -7,6 +7,8 @@
 #include "wx/toolbar.h"
 #include "wx/colordlg.h"
 #include "wx/stockitem.h"
+#include "wx/docview.h"
+#include "wx/cmdproc.h"
 
 #include <ctype.h>
 #include <stdlib.h>

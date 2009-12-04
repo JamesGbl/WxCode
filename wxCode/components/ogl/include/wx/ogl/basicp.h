@@ -19,7 +19,7 @@ class WXDLLIMPEXP_OGL wxShapeTextLine: public wxObject
  DECLARE_DYNAMIC_CLASS(wxShapeTextLine)
 public:
    wxShapeTextLine(double the_x = 0.0, double the_y = 0.0, const wxString& the_line = wxEmptyString);
-   ~wxShapeTextLine();
+   virtual ~wxShapeTextLine();
 
    inline double GetX() const { return m_x; }
    inline double GetY() const { return m_y; }
@@ -47,14 +47,14 @@ class WXDLLIMPEXP_OGL wxControlPoint: public wxRectangleShape
  public:
   wxControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0, double the_xoffset = 0.0,
     double the_yoffset = 0.0, int the_type = 0);
-  ~wxControlPoint();
+  virtual ~wxControlPoint();
 
-  void OnDraw(wxDC& dc);
-  void OnErase(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
-  void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnDraw(wxDC&);
+  virtual void OnErase(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
 
   bool GetAttachmentPosition(int attachment, double *x, double *y,
                                      int nth = 0, int no_arcs = 1, wxLineShape *line = NULL);
@@ -92,11 +92,11 @@ class WXDLLIMPEXP_OGL wxPolygonControlPoint: public wxControlPoint
  public:
   wxPolygonControlPoint(wxShapeCanvas *the_canvas = NULL, wxShape *object = NULL, double size = 0.0, wxRealPoint *vertex = NULL,
     double the_xoffset = 0.0, double the_yoffset = 0.0);
-  ~wxPolygonControlPoint();
+  virtual ~wxPolygonControlPoint();
 
-  void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
-  void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
-  void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnDragLeft(bool draw, double x, double y, int keys=0, int attachment = 0);
+  virtual void OnBeginDragLeft(double x, double y, int keys=0, int attachment = 0);
+  virtual void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
 
   // Calculate what new size would be, at end of resize
   virtual void CalculateNewSize(double x, double y);
@@ -121,15 +121,15 @@ public:
 
 class WXDLLIMPEXP_OGL wxShapeRegion: public wxObject
 {
- DECLARE_DYNAMIC_CLASS(wxShapeRegion)
+  DECLARE_DYNAMIC_CLASS(wxShapeRegion)
 
- public:
+public:
   // Constructor
   wxShapeRegion();
   // Copy constructor
   wxShapeRegion(wxShapeRegion& region);
   // Destructor
-  ~wxShapeRegion();
+  virtual ~wxShapeRegion();
 
   // Accessors
   inline void SetText(const wxString& s)
@@ -201,13 +201,14 @@ class WXDLLIMPEXP_OGL wxAttachmentPoint: public wxObject
  DECLARE_DYNAMIC_CLASS(wxAttachmentPoint)
 
 public:
-  inline wxAttachmentPoint()
+  wxAttachmentPoint()
   {
-    m_id = 0; m_x = 0.0; m_y = 0.0;
+    m_id = 0;
+    m_x = m_y = 0.0;
   }
-  inline wxAttachmentPoint(int id, double x, double y)
+  wxAttachmentPoint(int id, double x, double y)
   {
-    m_id = id; m_x = x; m_y = y;
+    m_id = id, m_x = x, m_y = y;
   }
 
 public:

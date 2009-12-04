@@ -13,9 +13,9 @@
 #define _OGL_LINES_H_
 
 
-class WXDLLIMPEXP_OGL wxLabelShape;
-class WXDLLIMPEXP_OGL wxPseudoMetaFile;
-class WXDLLIMPEXP_OGL wxLineControlPoint;
+class WXDLLIMPEXP_FWD_OGL wxLabelShape;
+class WXDLLIMPEXP_FWD_OGL wxPseudoMetaFile;
+class WXDLLIMPEXP_FWD_OGL wxLineControlPoint;
 /*
  * Arcs with multiple arrowheads
  *
@@ -43,14 +43,14 @@ class WXDLLIMPEXP_OGL wxLineControlPoint;
 #define LINE_ALIGNMENT_TO_NEXT_HANDLE     2
 #define LINE_ALIGNMENT_NONE               0
 
-class WXDLLIMPEXP_OGL wxArrowHead: public wxObject
+class WXDLLIMPEXP_OGL wxArrowHead : public wxObject
 {
- DECLARE_DYNAMIC_CLASS(wxArrowHead)
+    DECLARE_DYNAMIC_CLASS(wxArrowHead)
 
- public:
+public:
   wxArrowHead(WXTYPE type = 0, int end = 0, double size = 0.0, double dist = 0.0, const wxString& name = wxEmptyString, wxPseudoMetaFile *mf = NULL,
             long arrowId = -1);
-  ~wxArrowHead();
+  virtual ~wxArrowHead();
   wxArrowHead(wxArrowHead& toCopy);
 
   inline WXTYPE _GetType() const { return m_arrowType; }
@@ -92,25 +92,25 @@ class WXDLLIMPEXP_OGL wxLineShape: public wxShape
 
  public:
   wxLineShape();
-  ~wxLineShape();
+  virtual ~wxLineShape();
 
   // Called when a connected object has moved, to move the link to
   // correct position
   // moveControlPoints must be disabled when a control point is being
   // dragged.
-  void OnMoveLink(wxDC& dc, bool moveControlPoints = true);
-  bool OnMovePre(wxDC& dc, double x, double y, double old_x, double old_y, bool display = true);
-  void OnDraw(wxDC& dc);
-  void OnDrawContents(wxDC& dc);
-  void OnDrawControlPoints(wxDC& dc);
-  void OnEraseControlPoints(wxDC& dc);
-  void OnErase(wxDC& dc);
+  virtual void OnMoveLink(wxDC&, bool moveControlPoints = true);
+  virtual bool OnMovePre(wxDC&, double x, double y, double old_x, double old_y, bool display = true);
+  virtual void OnDraw(wxDC&);
+  virtual void OnDrawContents(wxDC&);
+  virtual void OnDrawControlPoints(wxDC&);
+  virtual void OnEraseControlPoints(wxDC&);
+  virtual void OnErase(wxDC&);
   virtual bool OnMoveControlPoint(int WXUNUSED(which), double WXUNUSED(x), double WXUNUSED(y)) { return false; }
-  virtual bool OnMoveMiddleControlPoint(wxDC& dc, wxLineControlPoint* lpt, const wxRealPoint& pt);
-  virtual bool OnLabelMovePre(wxDC& dc, wxLabelShape* labelShape, double x, double y, double old_x, double old_y, bool display);
-  void OnDrawOutline(wxDC& dc, double x, double y, double w, double h);
+  virtual bool OnMoveMiddleControlPoint(wxDC&, wxLineControlPoint* lpt, const wxRealPoint& pt);
+  virtual bool OnLabelMovePre(wxDC&, wxLabelShape* labelShape, double x, double y, double old_x, double old_y, bool display);
+  void OnDrawOutline(wxDC&, double x, double y, double w, double h);
   void GetBoundingBoxMin(double *w, double *h);
-  void FormatText(wxDC& dc, const wxString& s, int regionId = 0);
+  void FormatText(wxDC&, const wxString& s, int regionId = 0);
   virtual void SetEnds(double x1, double y1, double x2, double y2);
   virtual void GetEnds(double *x1, double *y1, double *x2, double *y2);
   inline virtual wxShape *GetFrom() { return m_from; }
@@ -120,7 +120,7 @@ class WXDLLIMPEXP_OGL wxLineShape: public wxShape
 
   virtual void SetFrom(wxShape *object);
   virtual void SetTo(wxShape *object);
-  virtual void DrawArrows(wxDC& dc);
+  virtual void DrawArrows(wxDC&);
 
   // Finds the x, y points at the two ends of the line.
   // This function can be used by e.g. line-routing routines to
@@ -129,10 +129,10 @@ class WXDLLIMPEXP_OGL wxLineShape: public wxShape
   void FindLineEndPoints(double *fromX, double *fromY, double *toX, double *toY);
 
   // Format one region at this position
-  void DrawRegion(wxDC& dc, wxShapeRegion *region, double x, double y);
+  void DrawRegion(wxDC&, wxShapeRegion *region, double x, double y);
 
   // Erase one region at this position
-  void EraseRegion(wxDC& dc, wxShapeRegion *region, double x, double y);
+  void EraseRegion(wxDC&, wxShapeRegion *region, double x, double y);
 
   // Get the reference point for a label. Region x and y
   // are offsets from this.
@@ -155,7 +155,7 @@ class WXDLLIMPEXP_OGL wxLineShape: public wxShape
 
   // Make a given number of control points
   virtual void MakeLineControlPoints(int n);
-  virtual wxNode *InsertLineControlPoint(wxDC* dc);
+  virtual wxNode *InsertLineControlPoint(wxDC*);
   virtual bool DeleteLineControlPoint();
   virtual void Initialise();
   inline wxList *GetLineControlPoints() { return m_lineControlPoints; }
@@ -230,7 +230,7 @@ class WXDLLIMPEXP_OGL wxLineShape: public wxShape
   wxArrowHead *FindArrowHead(long arrowId);
   bool DeleteArrowHead(int position, const wxString& name);
   bool DeleteArrowHead(long arrowId);
-  void DrawArrow(wxDC& dc, wxArrowHead *arrow, double xOffset, bool proportionalOffset);
+  void DrawArrow(wxDC&, wxArrowHead *arrow, double xOffset, bool proportionalOffset);
   inline void SetIgnoreOffsets(bool ignore) { m_ignoreArrowOffsets = ignore; }
   inline wxList& GetArrows() const { return (wxList&) m_arcArrows; }
 

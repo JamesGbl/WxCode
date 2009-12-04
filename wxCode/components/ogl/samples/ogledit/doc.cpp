@@ -25,10 +25,15 @@ DiagramDocument::~DiagramDocument(void)
 {
 }
 
+bool DiagramDocument::DeleteContents()
+{
+    m_diagram.DeleteAllShapes();
+    return base::DeleteContents();
+}
+
 bool DiagramDocument::OnCloseDocument(void)
 {
-    diagram.DeleteAllShapes();
-    return true;
+    return base::OnCloseDocument();
 }
 
 #if wxUSE_STD_IOSTREAM

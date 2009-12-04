@@ -9,6 +9,9 @@
 #include "wx/helpwin.h"
 #include "wx/colordlg.h"
 #include "wx/stockitem.h"
+#include "wx/docview.h"
+#include "wx/cmdproc.h"
+#include "wx/docmdi.h"
 
 #include <ctype.h>
 #include <stdlib.h>

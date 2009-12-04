@@ -360,7 +360,7 @@
   #define HS_DIAGCROSS        5
 #endif
 
-class WXDLLIMPEXP_OGL wxMetaRecord: public wxObject
+class WXDLLIMPEXP_OGL wxMetaRecord : public wxObject
 {
   public:
   int metaFunction;
@@ -380,7 +380,7 @@ class WXDLLIMPEXP_OGL wxMetaRecord: public wxObject
     metaFunction = fun; points = NULL; stringParam = NULL;
     param1 = 0;
   }
-  ~wxMetaRecord(void);
+  virtual ~wxMetaRecord(void);
 };
 
 class WXDLLIMPEXP_OGL wxXMetaFile: public wxObject
@@ -399,14 +399,14 @@ class WXDLLIMPEXP_OGL wxXMetaFile: public wxObject
   wxList gdiObjects; // List of wxMetaRecord objects created with Create...,
                      // referenced by position in list by SelectObject
   wxXMetaFile(const wxChar* file = NULL);
-  ~wxXMetaFile(void);
+  virtual ~wxXMetaFile(void);
 
   // After this is called, the metafile cannot be used for anything
   // since it is now owned by the clipboard.
   bool SetClipboard(int width = 0, int height = 0);
 
-  bool Play(wxDC *dc);
-  inline bool Ok(void) const { return ok; }
+  bool Play(wxDC*);
+  inline bool IsOk(void) const { return ok; }
   bool ReadFile(const wxChar *file);
 };
 

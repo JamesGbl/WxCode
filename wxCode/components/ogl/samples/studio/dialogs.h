@@ -12,7 +12,6 @@
 #ifndef _STUDIO_DIALOGS_H_
 #define _STUDIO_DIALOGS_H_
 
-#include "wx/wx.h"
 #include "wx/notebook.h"
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h

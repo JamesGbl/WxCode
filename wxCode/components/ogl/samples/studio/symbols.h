@@ -12,9 +12,6 @@
 #ifndef _STUDIO_SYMBOLS_H_
 #define _STUDIO_SYMBOLS_H_
 
-#include "wx/docview.h"
-#include "wx/string.h"
-
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
 /*
@@ -26,7 +23,7 @@ class csSymbol: public wxObject
 {
 public:
     csSymbol(const wxString& name, wxShape* shape);
-    ~csSymbol();
+    virtual ~csSymbol();
 
     inline void SetName(const wxString& name) { m_name = name; }
     inline wxString GetName() const { return m_name; }
@@ -50,7 +47,7 @@ class csSymbolDatabase: public wxObject
 {
 public:
     csSymbolDatabase();
-    ~csSymbolDatabase();
+    virtual ~csSymbolDatabase();
 
 // Accessors
     inline wxList& GetSymbols() const { return (wxList&) m_symbols; }
@@ -60,7 +57,7 @@ public:
     void ClearSymbols();
     csSymbol* FindSymbol(const wxString& name) const;
     csSymbol* FindSymbol(int toolId) const;
-    wxBitmap* CreateToolBitmap(csSymbol* symbol, const wxSize& sz);
+    wxBitmap* CreateToolBitmap(csSymbol* symbol, const wxSize&);
 
 protected:
     wxList          m_symbols;

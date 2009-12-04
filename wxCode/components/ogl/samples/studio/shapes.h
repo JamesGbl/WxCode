@@ -12,8 +12,6 @@
 #ifndef _STUDIO_SHAPES_H_
 #define _STUDIO_SHAPES_H_
 
-#include "wx/docview.h"
-#include "wx/string.h"
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 #include "wx/ogl/basicp.h"
 #include "wx/ogl/linesp.h"
@@ -25,30 +23,31 @@ class csDiagramDocument;
  * Override a few members for this application
  */
 
-class csDiagram: public wxDiagram
+class csDiagram : public wxDiagram
 {
+    typedef wxDiagram base;
 DECLARE_CLASS(csDiagram)
 public:
     csDiagram(csDiagramDocument* doc) { m_doc = doc; }
-    ~csDiagram();
+    virtual ~csDiagram();
 #if wxUSE_PROLOGIO
     bool OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
     bool OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
 #endif // wxUSE_PROLOGIO
 
     inline csDiagramDocument* GetDocument() const { return m_doc; }
-    virtual void Redraw(wxDC& dc);
+    virtual void Redraw(wxDC&);
 
 protected:
     csDiagramDocument* m_doc;
 };
 
-class wxDiagramClipboard: public wxDiagram
+class wxDiagramClipboard : public wxDiagram
 {
-DECLARE_DYNAMIC_CLASS(wxDiagramClipboard)
+    DECLARE_DYNAMIC_CLASS(wxDiagramClipboard)
 public:
     wxDiagramClipboard() {}
-    ~wxDiagramClipboard() {}
+    virtual ~wxDiagramClipboard() {}
 
     // Copy selection to clipboard
     bool Copy(wxDiagram* diagram);
@@ -58,7 +57,7 @@ public:
     // The offsets are used to place the shapes at a different position
     // from the original (for example, for duplicating shapes).
     bool Paste(wxDiagram* diagram, wxDC* dc = NULL,
-        int offsetX = 0, int offsetY = 0);
+        wxCoord offsetX = 0, wxCoord offsetY = 0);
 
 #ifdef __WXMSW__
     // Draw contents to a Windows metafile device context and bitmap, and then copy
@@ -74,28 +73,28 @@ public:
     // Override this to e.g. have the shape added through a Do/Undo command system.
     // By default, we'll just add it directly to the destination diagram, and
     // select the shape (if dc is non-NULL).
-    virtual bool OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxDC* dc);
+    virtual bool OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxDC*);
 
 protected:
     bool DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bool newIds,
-                    wxDC* dc, int offsetX = 0, int offsetY = 0);
+                    wxDC*, int offsetX = 0, int offsetY = 0);
 
 };
 
 class csDiagramCommand;
 
-class csDiagramClipboard: public wxDiagramClipboard
+class csDiagramClipboard : public wxDiagramClipboard
 {
-DECLARE_DYNAMIC_CLASS(csDiagramClipboard)
+    DECLARE_DYNAMIC_CLASS(csDiagramClipboard)
 public:
     csDiagramClipboard() { m_currentCmd = NULL; }
-    ~csDiagramClipboard() {}
+    virtual ~csDiagramClipboard() {}
 
     // Start/end copying
     virtual bool OnStartCopy(wxDiagram* diagramTo);
     virtual bool OnEndCopy(wxDiagram* diagramTo);
 
-    virtual bool OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxDC* dc);
+    virtual bool OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxDC*);
 
 protected:
     csDiagramCommand*   m_currentCmd;
@@ -113,49 +112,49 @@ protected:
 
 class csThinRectangleShape: public wxDrawnShape
 {
-DECLARE_DYNAMIC_CLASS(csThinRectangleShape)
+    DECLARE_DYNAMIC_CLASS(csThinRectangleShape)
 public:
     csThinRectangleShape();
 };
 
 class csWideRectangleShape: public wxDrawnShape
 {
-DECLARE_DYNAMIC_CLASS(csWideRectangleShape)
+    DECLARE_DYNAMIC_CLASS(csWideRectangleShape)
 public:
     csWideRectangleShape();
 };
 
 class csTriangleShape: public wxDrawnShape
 {
-DECLARE_DYNAMIC_CLASS(csTriangleShape)
+    DECLARE_DYNAMIC_CLASS(csTriangleShape)
 public:
     csTriangleShape();
 };
 
 class csSemiCircleShape: public wxDrawnShape
 {
-DECLARE_DYNAMIC_CLASS(csSemiCircleShape)
+    DECLARE_DYNAMIC_CLASS(csSemiCircleShape)
 public:
     csSemiCircleShape();
 };
 
 class csCircleShape: public wxCircleShape
 {
-DECLARE_DYNAMIC_CLASS(csCircleShape)
+    DECLARE_DYNAMIC_CLASS(csCircleShape)
 public:
     csCircleShape();
 };
 
-class csCircleShadowShape: public wxCircleShape
+class csCircleShadowShape : public wxCircleShape
 {
-DECLARE_DYNAMIC_CLASS(csCircleShadowShape)
+    DECLARE_DYNAMIC_CLASS(csCircleShadowShape)
 public:
     csCircleShadowShape();
 };
 
-class csOctagonShape: public wxPolygonShape
+class csOctagonShape : public wxPolygonShape
 {
-DECLARE_DYNAMIC_CLASS(csOctagonShape)
+    DECLARE_DYNAMIC_CLASS(csOctagonShape)
 public:
     csOctagonShape();
 
@@ -170,31 +169,31 @@ public:
 };
 
 // This is a transparent shape for drawing around other shapes.
-class csGroupShape: public wxRectangleShape
+class csGroupShape : public wxRectangleShape
 {
-DECLARE_DYNAMIC_CLASS(csGroupShape)
+    DECLARE_DYNAMIC_CLASS(csGroupShape)
 public:
     csGroupShape();
 
-    void OnDraw(wxDC& dc);
+    virtual void OnDraw(wxDC&);
     // Must modify the hit-test so it doesn't obscure shapes that are inside.
     bool HitTest(double x, double y, int* attachment, double* distance);
 };
 
 class csTextBoxShape: public wxRectangleShape
 {
-DECLARE_DYNAMIC_CLASS(csTextBoxShape)
+    DECLARE_DYNAMIC_CLASS(csTextBoxShape)
 public:
     csTextBoxShape();
 };
 
 class csLineShape: public wxLineShape
 {
-DECLARE_DYNAMIC_CLASS(csLineShape)
+    DECLARE_DYNAMIC_CLASS(csLineShape)
 public:
     csLineShape();
 
-    virtual bool OnMoveMiddleControlPoint(wxDC& dc, wxLineControlPoint* lpt, const wxRealPoint& pt);
+    virtual bool OnMoveMiddleControlPoint(wxDC&, wxLineControlPoint* lpt, const wxRealPoint& pt);
     wxLabelShape* OnCreateLabelShape(wxLineShape *parent = NULL, wxShapeRegion *region = NULL, double w = 0.0, double h = 0.0);
 };
 
@@ -204,9 +203,9 @@ public:
 
 class csLabelShape: public wxLabelShape
 {
-  DECLARE_DYNAMIC_CLASS(csLabelShape)
+    DECLARE_DYNAMIC_CLASS(csLabelShape)
 
- public:
+public:
   csLabelShape(wxLineShape *parent = NULL, wxShapeRegion *region = NULL, double w = 0.0, double h = 0.0);
 
   void OnEndDragLeft(double x, double y, int keys=0, int attachment = 0);
@@ -219,10 +218,11 @@ class csLabelShape: public wxLabelShape
 
 class csEvtHandler: public wxShapeEvtHandler
 {
- DECLARE_DYNAMIC_CLASS(csEvtHandler)
- public:
+    typedef wxShapeEvtHandler base;
+    DECLARE_DYNAMIC_CLASS(csEvtHandler)
+public:
   csEvtHandler(wxShapeEvtHandler *prev = NULL, wxShape *shape = NULL, const wxString& lab = wxEmptyString);
-  ~csEvtHandler();
+  virtual ~csEvtHandler();
 
   void OnLeftClick(double x, double y, int keys = 0, int attachment = 0);
   void OnRightClick(double x, double y, int keys = 0, int attachment = 0);
@@ -248,17 +248,17 @@ public:
   wxString m_label;
 };
 
-class ShapeEditMenu: public wxMenu
+class ShapeEditMenu : public wxMenu
 {
 public:
     ShapeEditMenu() {}
 
-    void OnCommand(wxCommandEvent& event);
-
-DECLARE_EVENT_TABLE()
+protected:
+    void OnCommand(wxCommandEvent&);
+    DECLARE_EVENT_TABLE()
 };
 
-extern void studioShapeEditProc(wxMenu& menu, wxCommandEvent& event);
+extern void studioShapeEditProc(wxMenu&, wxCommandEvent&);
 
 #endif
   // _STUDIO_SHAPES_H_

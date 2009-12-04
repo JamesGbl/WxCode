@@ -15,6 +15,8 @@
 #include "doc.h"
 #include "wx/ogl/ogl.h"
 
+class WXDLLIMPEXP_FWD_CORE wxDocMDIChildFrame;
+
 class csDiagramView;
 class csCanvas : public wxShapeCanvas
 {
@@ -25,12 +27,12 @@ DECLARE_CLASS(csCanvas)
   csCanvas(csDiagramView *view, wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxRETAINED);
-  ~csCanvas(void);
+  virtual ~csCanvas(void);
 
-  void DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2);
+  void DrawOutline(wxDC&, double x1, double y1, double x2, double y2);
 
-  void OnMouseEvent(wxMouseEvent& event);
-  void OnPaint(wxPaintEvent& event);
+  void OnMouseEvent(wxMouseEvent&);
+  void OnPaint(wxPaintEvent&);
 
   virtual void OnLeftClick(double x, double y, int keys = 0);
   virtual void OnRightClick(double x, double y, int keys = 0);
@@ -57,15 +59,14 @@ class csDiagramView : public wxView
    typedef wxView base;
    DECLARE_DYNAMIC_CLASS(csDiagramView)
 public:
-   csDiagramView(void) { canvas = NULL; frame = NULL; };
+   csDiagramView(void) { m_canvas = NULL, m_frame = NULL; };
    virtual ~csDiagramView(void);
 
-   bool OnCreate(wxDocument*, long flags);
-   void OnDraw(wxDC*);
-   void OnUpdate(wxView *sender, wxObject *hint = NULL);
-   bool OnClose(bool deleteWindow = true);
-   void OnSelectAll(wxCommandEvent&);
-
+   virtual bool OnCreate(wxDocument*, long flags);
+   virtual void OnDraw(wxDC*);
+   virtual void OnUpdate(wxView *sender, wxObject *hint = NULL);
+   virtual bool OnClose(bool deleteWindow = true);
+   
    csDiagramDocument* GetDocument();
 
    wxShape *FindFirstSelectedShape(void);
@@ -98,6 +99,8 @@ public:
   void SelectAll(bool select = true);
 
 // Event handlers
+protected:
+  void OnSelectAll(wxCommandEvent&);
   void OnCut(wxCommandEvent&);
   void OnCopy(wxCommandEvent&);
   void OnPaste(wxCommandEvent&);
@@ -117,23 +120,19 @@ public:
 // UI update handles
   void OnToggleArrowToolUpdate(wxUpdateUIEvent&);
   void OnEditPropertiesUpdate(wxUpdateUIEvent&);
-  void OnCutUpdate(wxUpdateUIEvent&);
-  void OnClearUpdate(wxUpdateUIEvent&);
-  void OnCopyUpdate(wxUpdateUIEvent&);
+  void OnNeedSelection(wxUpdateUIEvent&);
   void OnPasteUpdate(wxUpdateUIEvent&);
-  void OnDuplicateUpdate(wxUpdateUIEvent&);
   void OnAlignUpdate(wxUpdateUIEvent&);
   void OnNewLinePointUpdate(wxUpdateUIEvent&);
   void OnCutLinePointUpdate(wxUpdateUIEvent&);
   void OnStraightenLinesUpdate(wxUpdateUIEvent&);
   void OnUndoUpdate(wxUpdateUIEvent&);
   void OnRedoUpdate(wxUpdateUIEvent&);
-
-DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE()
 
 public:
-  wxMDIChildFrame*      frame;
-  csCanvas*     canvas;
+  wxDocMDIChildFrame* m_frame;
+  csCanvas*     m_canvas;
   wxList        m_selections;
 };
 

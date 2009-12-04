@@ -14,11 +14,6 @@
 
 #include "wx/ogl/basic.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
-
 class WXDLLIMPEXP_OGL wxDiagram: public wxObject
 {
  DECLARE_DYNAMIC_CLASS(wxDiagram)
@@ -32,9 +27,9 @@ public:
 
   inline wxShapeCanvas *GetCanvas() const { return m_diagramCanvas; }
 
-  virtual void Redraw(wxDC& dc);
-  virtual void Clear(wxDC& dc);
-  virtual void DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2);
+  virtual void Redraw(wxDC&);
+  virtual void Clear(wxDC&);
+  virtual void DrawOutline(wxDC&, double x1, double y1, double x2, double y2);
 
   // Add object to end of object list (if addAfter is NULL)
   // or just after addAfter.
@@ -66,7 +61,7 @@ public:
   inline int GetCount() const { return m_shapeList->GetCount(); }
 
   // Make sure all text that should be centred, is centred.
-  void RecentreAll(wxDC& dc);
+  void RecentreAll(wxDC&);
 
 #if wxUSE_PROLOGIO
   virtual bool SaveFile(const wxString& filename);
@@ -107,14 +102,14 @@ public:
     wxLineShape*    m_lineShape2;
 };
 
-class WXDLLIMPEXP_OGL wxLineCrossings: public wxObject
+class WXDLLIMPEXP_OGL wxLineCrossings : public wxObject
 {
 public:
     wxLineCrossings();
-    ~wxLineCrossings();
+    virtual ~wxLineCrossings();
 
     void FindCrossings(wxDiagram& diagram);
-    void DrawCrossings(wxDiagram& diagram, wxDC& dc);
+    void DrawCrossings(wxDiagram& diagram, wxDC&);
     void ClearCrossings();
 
 public:
