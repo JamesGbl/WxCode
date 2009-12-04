@@ -97,12 +97,12 @@ bool csApp::OnInit(void)
 
     ReadOptions();
 
-    wxOGLInitialize();
+    ::wxOGLInitialize();
 
     InitSymbols();
 
     //// Create a document manager
-    m_docManager = new wxDocManager;
+    m_docManager = new wxDocManager();
 
     //// Create a template relating drawing documents to their views
     (void) new wxDocTemplate(m_docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
@@ -343,14 +343,14 @@ void csApp::InitToolBar(wxToolBar* toolBar)
     toolBar->AddSeparator();
     toolBar->AddTool(wxID_PRINT, wxEmptyString, *bitmaps[6], wxNullBitmap, wxITEM_NORMAL, _("Print"));
     toolBar->AddSeparator();
-    toolBar->AddTool(wxID_COPY, wxEmptyString, *bitmaps[3], wxNullBitmap, wxITEM_NORMAL, _("Copy"));
-    toolBar->AddTool(wxID_CUT, wxEmptyString, *bitmaps[4], wxNullBitmap, wxITEM_NORMAL, _("Cut"));
-    toolBar->AddTool(wxID_PASTE, wxEmptyString, *bitmaps[5], wxNullBitmap, wxITEM_NORMAL, _("Paste"));
+    toolBar->AddTool(wxID_COPY, wxEmptyString, *bitmaps[3], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_COPY, wxSTOCK_NOFLAGS));
+    toolBar->AddTool(wxID_CUT, wxEmptyString, *bitmaps[4], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_CUT, wxSTOCK_NOFLAGS));
+    toolBar->AddTool(wxID_PASTE, wxEmptyString, *bitmaps[5], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_PASTE, wxSTOCK_NOFLAGS));
     toolBar->AddSeparator();
-    toolBar->AddTool(wxID_UNDO, wxEmptyString, *bitmaps[8], wxNullBitmap, wxITEM_NORMAL, _("Undo"));
-    toolBar->AddTool(wxID_REDO, wxEmptyString, *bitmaps[9], wxNullBitmap, wxITEM_NORMAL, _("Redo"));
+    toolBar->AddTool(wxID_UNDO, wxEmptyString, *bitmaps[8], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_UNDO, wxSTOCK_NOFLAGS));
+    toolBar->AddTool(wxID_REDO, wxEmptyString, *bitmaps[9], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_REDO, wxSTOCK_NOFLAGS));
     toolBar->AddSeparator();
-    toolBar->AddTool(wxID_HELP, wxEmptyString, *bitmaps[7], wxNullBitmap, wxITEM_NORMAL, _("Help"));
+    toolBar->AddTool(wxID_HELP, wxEmptyString, *bitmaps[7], wxNullBitmap, wxITEM_NORMAL, wxGetStockLabel(wxID_HELP, wxSTOCK_NOFLAGS));
 
     toolBar->Realize();
 
