@@ -10,6 +10,42 @@ JavaScript, Perl, Python, and many others. These properties make JSON an
 ideal data-interchange language.
 
 
+Prerequisites
+-------------
+
+In order to build this library you have to have a recent C++ compiler and
+the wxWidgets library version 2.8.4 or higher.
+If you use the development version of wxWidgets 2.9.x be sure to download
+the most recent one or, at least, rev >= 62562 (v 2.9.1).
+If you get compiler's errors related to the 'wxLongLongFmtSpec' macro that
+still use 'wxChar' then you have to upgrade to a new version of wxW 2.9
+
+The wxJSON library compiles fine on nearly all systems that can compile
+the wxWidgets library.
+You may have compiler's errors when trying to compile the test application
+using MS VC++ compiler. The errors are related to string constants like
+the following:
+
+	static const wxChar* text = 
+		_T("non-JSON text before top-level start object\n"
+		"{\n"
+		"   \"book\" :\n"
+		"    {\n"
+		"       \"title\"  : \"The title\",\n";
+
+The MS VC++ compiler does not like multiline strings like the above ones.
+I would have to use constructs like the following:
+
+	static const wxChar* text = 
+		_T("non-JSON text before top-level start object		\
+		{\\n												\
+		   \"book\" :\n
+	");
+		   
+I am sorry for this issue.
+
+
+
 Installation - win32
 --------------------
 
@@ -48,7 +84,7 @@ Installation - MinGW system
 The library does not compile on MingGW because the wxHashMap class's
 implementation has an issue when using forward declarations.
 To know the details of this failure see bug ID: 2807075.
-In order to compile on this system you have to uncomment the following
+In order to compile on this system you may have to uncomment the following
 line in the 'include/wx/json_defs,h' header file:
 
 wxJSON_USE_MINGW

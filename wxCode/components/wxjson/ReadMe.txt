@@ -37,9 +37,9 @@
  CHANGELOG
  ---------
  
- 0.1 - first version of wxJSON at wxCode
+ 0.1.0 - first version of wxJSON at wxCode
 
- 0.2 - this version adds full support for C/C++ comment lines
+ 0.2.0 - this version adds full support for C/C++ comment lines
        reading and writing
 
  0.2.1 this is a bug fix release (thanks to Jere, who reported the bugs):
@@ -119,7 +119,8 @@
  	wxString objects, the reader and the writer convert the string object to a
  	temporary UTF-8 memory-input/output-stream for processing
  	   
- 
+ 1.1.1 fixed bug # 2898794 (build errors on gcc) and bug #2909326 (error reading UTF-8
+    strings that contain unrepresentable chars in ANSI mode).
 
 
 
