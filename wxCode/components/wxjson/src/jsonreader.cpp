@@ -903,17 +903,20 @@ wxJSONReader::AddError( const wxString& fmt, wxChar c )
  message.
  The \c type parameter is one of the same constants that
  specify the parser's extensions.
+ If type is ZERO than the function always adds a warning
 */
 void
 wxJSONReader::AddWarning( int type, const wxString& msg )
 {
 	// if 'type' AND 'm_flags' == 1 than the extension is
 	// ON. Otherwise it is OFF anf the function calls AddError()
-	if ( ( type & m_flags ) == 0 )  {
-		AddError( msg );
-		return;
+	if ( type != 0 )	{
+		if ( ( type & m_flags ) == 0 )  {
+			AddError( msg );
+			return;
+		}
 	}
-
+	
 	wxString err;
 	err.Printf( _T( "Warning: line %d, col %d - %s"), m_lineNo, m_colNo, msg.c_str() );
 
@@ -1209,7 +1212,7 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 			if ( s.IsEmpty() )	{
 				int r = ConvertCharByChar( s, utf8Buff );	// return number of escaped sequences
 				if ( r > 0 )	{
-					AddError( _T( "The string value contains unrepresentable Unicode characters"));
+					AddWarning( 0, _T( "The string value contains unrepresentable Unicode characters"));
 				}
 			}
 #endif
@@ -1784,10 +1787,7 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
 	int result = 0;
 	char temp[16];	// the UTF-8 code-point
 	
-	while ( 1 )	{
-		if ( buff >= buffEnd )	{
-			break;
-		}
+	while ( buff < buffEnd )	{
 		temp[0] = *buff;	// the first UTF-8 code-unit
 		// compute the number of code-untis that make one UTF-8 code-point
 		int numBytes = NumBytes( *buff );
@@ -1799,9 +1799,9 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
 			temp[i] = *buff;	// the first UTF-8 code-unit
 			++buff;
 		}
-		if ( buff >= buffEnd )	{
-			break;
-		}
+		//if ( buff >= buffEnd )	{
+		//	break;
+		//}
 		// now convert 'temp' to a wide-character
 		wchar_t dst[10];
 		size_t outLength = wxConvUTF8.ToWChar( dst, 10, temp, numBytes );
