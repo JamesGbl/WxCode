@@ -135,15 +135,12 @@ void DiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
 
 void DiagramView::OnChangeFilename()
 {
-    //base::OnChangeFilename();
+    base::OnChangeFilename();
     wxWindow *win = GetFrame();
     if (!win) return;
 
-    wxDocument *doc = GetDocument();
-    if (!doc) return;
-
     win->SetLabel(wxString::Format(wxT("%s - %s"), 
-       doc->GetTitle().wx_str(),
+       win->GetLabel().wx_str(),
        wxGetApp().GetAppDisplayName().wx_str()
        ));
 }
