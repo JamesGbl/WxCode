@@ -39,6 +39,7 @@
       #ifdef __WXDEBUG__
          #pragma comment(lib, "wxbase28ud.lib")
          #pragma comment(lib, "wxmsw28ud_core.lib")
+         #pragma comment(lib, "wxbase28ud_xml.lib")
       #else
          #pragma comment(lib, "wxbase28u.lib")
          #pragma comment(lib, "wxbase28u_xml.lib")

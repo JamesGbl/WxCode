@@ -42,6 +42,7 @@
    #if wxUSE_UNICODE
       #ifdef __WXDEBUG__
          #pragma comment(lib, "wxbase28ud.lib")
+         #pragma comment(lib, "wxbase28ud_xml.lib")
          #pragma comment(lib, "wxmsw28ud_core.lib")
          #pragma comment(lib, "wxmsw28ud_adv.lib")
       #else
