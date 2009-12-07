@@ -350,7 +350,7 @@ void wxDiagram::ReadContainerGeometry(wxXmlNode* node)
     wxShape *image = NULL;//(wxShape *)clause->GetClientData();
     if (image && image->IsKindOf(CLASSINFO(wxCompositeShape)))
     {
-      wxCompositeShape *composite = (wxCompositeShape *)image;
+      //wxCompositeShape *composite = (wxCompositeShape *)image;
 
       // Find the list of divisions in the composite
       wxXmlNode* divisionExpr = xmlFindChild(clause, wxT("divisions"));

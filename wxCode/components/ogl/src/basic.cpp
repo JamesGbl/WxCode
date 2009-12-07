@@ -1852,7 +1852,7 @@ wxXmlNode* xmlFindChild(wxXmlNode* root, const wxString& childname, int id = wxN
    {
       if (node->GetName() == childname)
       {
-         long iVal;
+         long iVal = 0;
          if ( (id != wxNOT_FOUND) && node->GetAttribute(wxT("id"), wxEmptyString).ToLong(&iVal))
          {
             if (id != iVal) continue;
