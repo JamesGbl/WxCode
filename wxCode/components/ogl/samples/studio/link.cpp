@@ -53,6 +53,7 @@
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
+         #pragma comment(lib, "wxexpat.lib")
       #endif
    #else
       #ifdef __WXDEBUG__
@@ -64,8 +65,9 @@
          #pragma comment(lib, "wxbase28.lib")
          #pragma comment(lib, "wxmsw28_core.lib")
          #pragma comment(lib, "wxmsw28_adv.lib")
-/*
          #pragma comment(lib, "wxbase28_xml.lib")
+         #pragma comment(lib, "wxexpat.lib")
+/*
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
