@@ -2,7 +2,7 @@
 // Name:        drawn.cpp
 // Purpose:     wxDrawnShape
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: drawn.cpp,v 1.1 2007/03/28 15:15:57 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -10,10 +10,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
-
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
 
 #include "wx/ogl/ogl.h"
 

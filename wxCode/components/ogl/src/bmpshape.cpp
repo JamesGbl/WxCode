@@ -2,7 +2,7 @@
 // Name:        bmpshape.cpp
 // Purpose:     Bitmap shape class
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: bmpshape.cpp,v 1.1 2007/03/28 15:15:56 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -11,12 +11,7 @@
 
 #include "precomp.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
-
 
 /*
  * Bitmap object

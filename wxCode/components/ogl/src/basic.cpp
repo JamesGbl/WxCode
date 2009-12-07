@@ -2,7 +2,7 @@
 // Name:        basic.cpp
 // Purpose:     Basic OGL classes
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: basic.cpp,v 1.1 2007/03/28 15:15:56 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -11,12 +11,7 @@
 
 #include "precomp.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
-
 
 // Control point types
 // Rectangle and most other shapes
@@ -587,7 +582,7 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
   node = (wxNode*)stringList->GetFirst();
   while (node)
   {
-    wxChar *s = (wxChar *)node->GetData();
+    const wxChar *s = (const wxChar *)node->GetData();
     wxShapeTextLine *line = new wxShapeTextLine(0.0, 0.0, s);
     region->GetFormattedText().Append((wxObject *)line);
     node = node->GetNext();
@@ -781,7 +776,7 @@ int wxShape::GetRegionId(const wxString& name)
     node = node->GetNext();
     i ++;
   }
-  return -1;
+  return wxNOT_FOUND;
 }
 
 // Name all m_regions in all subimages recursively.
@@ -1667,30 +1662,29 @@ void wxShape::RemoveLine(wxLineShape *line)
   m_lines.DeleteObject(line);
 }
 
-#if wxUSE_PROLOGIO
-void wxShape::WriteAttributes(wxExpr *clause)
+void wxShape::WriteAttributes(wxXmlNode*clause) const
 {
-  clause->AddAttributeValueString(wxT("type"), GetClassInfo()->GetClassName());
-  clause->AddAttributeValue(wxT("id"), m_id);
+  clause->AddAttribute(wxT("type"), GetClassInfo()->GetClassName());
+  clause->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), m_id));
 
   if (m_pen)
   {
     int penWidth = m_pen->GetWidth();
     int penStyle = m_pen->GetStyle();
     if (penWidth != 1)
-      clause->AddAttributeValue(wxT("pen_width"), (long)penWidth);
+      clause->AddAttribute(wxT("pen_width"), wxString::Format(wxT("%d"), penWidth));
     if (penStyle != wxSOLID)
-      clause->AddAttributeValue(wxT("pen_style"), (long)penStyle);
+      clause->AddAttribute(wxT("pen_style"), wxString::Format(wxT("%d"), penStyle));
 
     wxString penColour = wxTheColourDatabase->FindName(m_pen->GetColour());
     if (penColour == wxEmptyString)
     {
       wxString hex(oglColourToHex(m_pen->GetColour()));
       hex = wxString(wxT("#")) + hex;
-      clause->AddAttributeValueString(wxT("pen_colour"), hex);
+      clause->AddAttribute(wxT("pen_colour"), hex);
     }
     else if (penColour != wxT("BLACK"))
-      clause->AddAttributeValueString(wxT("pen_colour"), penColour);
+      clause->AddAttribute(wxT("pen_colour"), penColour);
   }
 
   if (m_brush)
@@ -1701,88 +1695,90 @@ void wxShape::WriteAttributes(wxExpr *clause)
     {
       wxString hex(oglColourToHex(m_brush->GetColour()));
       hex = wxString(wxT("#")) + hex;
-      clause->AddAttributeValueString(wxT("brush_colour"), hex);
+      clause->AddAttribute(wxT("brush_colour"), hex);
     }
     else if (brushColour != wxT("WHITE"))
-      clause->AddAttributeValueString(wxT("brush_colour"), brushColour);
+      clause->AddAttribute(wxT("brush_colour"), brushColour);
 
     if (m_brush->GetStyle() != wxSOLID)
-      clause->AddAttributeValue(wxT("brush_style"), (long)m_brush->GetStyle());
+      clause->AddAttribute(wxT("brush_style"), wxString::Format(wxT("%d"), m_brush->GetStyle()));
   }
 
   // Output line ids
 
-  int n_lines = m_lines.GetCount();
-  if (n_lines > 0)
+  size_t n_lines = m_lines.GetCount();
+  if (n_lines)
   {
-    wxExpr *list = new wxExpr(wxExprList);
+    wxXmlNode* list = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("arcs"));
     wxNode *node = m_lines.GetFirst();
+    int i = 0;
     while (node)
     {
-      wxShape *line = (wxShape *)node->GetData();
-      wxExpr *id_expr = new wxExpr(line->GetId());
-      list->Append(id_expr);
+      wxShape *line = (wxShape*)node->GetData();
+      //wxExpr *id_expr = new wxExpr(line->GetId());
+      list->AddAttribute(wxString::Format(wxT("%d"), i), wxString::Format(wxT("%d"), line->GetId()));
       node = node->GetNext();
+      i++;
     }
-    clause->AddAttributeValue(wxT("arcs"), list);
+    clause->AddChild(list);
   }
 
   // Miscellaneous members
   if (m_attachmentMode != 0)
-    clause->AddAttributeValue(wxT("use_attachments"), (long)m_attachmentMode);
+    clause->AddAttribute(wxT("use_attachments"), wxString::Format(wxT("%d"), m_attachmentMode));
   if (m_sensitivity != OP_ALL)
-    clause->AddAttributeValue(wxT("sensitivity"), (long)m_sensitivity);
+    clause->AddAttribute(wxT("sensitivity"), wxString::Format(wxT("%d"), m_sensitivity));
   if (!m_spaceAttachments)
-    clause->AddAttributeValue(wxT("space_attachments"), (long)m_spaceAttachments);
+    clause->AddAttribute(wxT("space_attachments"), wxString::Format(wxT("%d"), m_spaceAttachments));
   if (m_fixedWidth)
-    clause->AddAttributeValue(wxT("fixed_width"), (long)m_fixedWidth);
+    clause->AddAttribute(wxT("fixed_width"), wxString::Format(wxT("%d"), m_fixedWidth));
   if (m_fixedHeight)
-    clause->AddAttributeValue(wxT("fixed_height"), (long)m_fixedHeight);
+    clause->AddAttribute(wxT("fixed_height"), wxString::Format(wxT("%d"), m_fixedHeight));
   if (m_shadowMode != SHADOW_NONE)
-    clause->AddAttributeValue(wxT("shadow_mode"), (long)m_shadowMode);
+    clause->AddAttribute(wxT("shadow_mode"), wxString::Format(wxT("%d"), m_shadowMode));
   if (m_centreResize != true)
-    clause->AddAttributeValue(wxT("centre_resize"), (long)0);
-  clause->AddAttributeValue(wxT("maintain_aspect_ratio"), (long) m_maintainAspectRatio);
+    clause->AddAttribute(wxT("centre_resize"), wxString::Format(wxT("%d"), 0));
+  clause->AddAttribute(wxT("maintain_aspect_ratio"), wxString::Format(wxT("%d"), m_maintainAspectRatio));
   if (m_highlighted != false)
-    clause->AddAttributeValue(wxT("hilite"), (long)m_highlighted);
+    clause->AddAttribute(wxT("hilite"), wxString::Format(wxT("%d"), m_highlighted));
 
   if (m_parent) // For composite objects
-    clause->AddAttributeValue(wxT("parent"), (long)m_parent->GetId());
+    clause->AddAttribute(wxT("parent"), wxString::Format(wxT("%d"), m_parent->GetId()));
 
   if (m_rotation != 0.0)
-    clause->AddAttributeValue(wxT("rotation"), m_rotation);
+    clause->AddAttribute(wxT("rotation"), wxString::Format(wxT("%g"), m_rotation));
 
   if (!this->IsKindOf(CLASSINFO(wxLineShape)))
   {
-    clause->AddAttributeValue(wxT("neck_length"), (long) m_branchNeckLength);
-    clause->AddAttributeValue(wxT("stem_length"), (long) m_branchStemLength);
-    clause->AddAttributeValue(wxT("branch_spacing"), (long) m_branchSpacing);
-    clause->AddAttributeValue(wxT("branch_style"), (long) m_branchStyle);
+    clause->AddAttribute(wxT("neck_length"), wxString::Format(wxT("%d"), m_branchNeckLength));
+    clause->AddAttribute(wxT("stem_length"), wxString::Format(wxT("%d"), m_branchStemLength));
+    clause->AddAttribute(wxT("branch_spacing"), wxString::Format(wxT("%d"), m_branchSpacing));
+    clause->AddAttribute(wxT("branch_style"), wxString::Format(wxT("%d"), m_branchStyle));
   }
 
   // Write user-defined attachment points, if any
-  if (m_attachmentPoints.GetCount() > 0)
+  if (m_attachmentPoints.GetCount())
   {
-    wxExpr *attachmentList = new wxExpr(wxExprList);
+    wxXmlNode* attachmentList = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("user_attachments"));
     wxNode *node = m_attachmentPoints.GetFirst();
     while (node)
     {
       wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
-      wxExpr *pointExpr = new wxExpr(wxExprList);
-      pointExpr->Append(new wxExpr((long)point->m_id));
-      pointExpr->Append(new wxExpr(point->m_x));
-      pointExpr->Append(new wxExpr(point->m_y));
-      attachmentList->Append(pointExpr);
+      wxXmlNode* pointExpr = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("point"));
+      pointExpr->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), point->m_id));
+      pointExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), point->m_x));
+      pointExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), point->m_y));
+      attachmentList->AddChild(pointExpr);
       node = node->GetNext();
     }
-    clause->AddAttributeValue(wxT("user_attachments"), attachmentList);
+    clause->AddChild(attachmentList);
   }
 
   // Write text regions
   WriteRegions(clause);
 }
 
-void wxShape::WriteRegions(wxExpr *clause)
+void wxShape::WriteRegions(wxXmlNode*clause) const
 {
   // Output regions as region1 = (...), region2 = (...), etc
   // and formatted text as text1 = (...), text2 = (...) etc.
@@ -1799,115 +1795,82 @@ void wxShape::WriteRegions(wxExpr *clause)
     // Original text and region attributes:
     // region1 = (regionName regionText x y width height minWidth minHeight proportionX proportionY
     //            formatMode fontSize fontFamily fontStyle fontWeight textColour)
-    wxExpr *regionExpr = new wxExpr(wxExprList);
-    regionExpr->Append(new wxExpr(wxExprString, region->m_regionName));
-    regionExpr->Append(new wxExpr(wxExprString, region->m_regionText));
+    wxXmlNode* regionExpr = new wxXmlNode(wxXML_ELEMENT_NODE, regionNameBuf);
+    regionExpr->AddAttribute(wxT("name"), region->m_regionName);
+    regionExpr->AddAttribute(wxT("text"), region->m_regionText);
 
-    regionExpr->Append(new wxExpr(region->m_x));
-    regionExpr->Append(new wxExpr(region->m_y));
-    regionExpr->Append(new wxExpr(region->GetWidth()));
-    regionExpr->Append(new wxExpr(region->GetHeight()));
+    regionExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), region->m_x));
+    regionExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), region->m_y));
+    regionExpr->AddAttribute(wxT("w"), wxString::Format(wxT("%d"), region->GetWidth()));
+    regionExpr->AddAttribute(wxT("h"), wxString::Format(wxT("%d"), region->GetHeight()));
 
-    regionExpr->Append(new wxExpr(region->m_minWidth));
-    regionExpr->Append(new wxExpr(region->m_minHeight));
-    regionExpr->Append(new wxExpr(region->m_regionProportionX));
-    regionExpr->Append(new wxExpr(region->m_regionProportionY));
+    regionExpr->AddAttribute(wxT("minw"), wxString::Format(wxT("%d"), region->m_minWidth));
+    regionExpr->AddAttribute(wxT("minh"), wxString::Format(wxT("%d"), region->m_minHeight));
+    regionExpr->AddAttribute(wxT("propx"), wxString::Format(wxT("%d"), region->m_regionProportionX));
+    regionExpr->AddAttribute(wxT("propy"), wxString::Format(wxT("%d"), region->m_regionProportionY));
 
-    regionExpr->Append(new wxExpr((long)region->m_formatMode));
+    regionExpr->AddAttribute(wxT("mode"), wxString::Format(wxT("%d"), region->m_formatMode));
 
-    regionExpr->Append(new wxExpr((long)(region->m_font ? region->m_font->GetPointSize() : 10)));
-    regionExpr->Append(new wxExpr((long)(region->m_font ? region->m_font->GetFamily() : wxDEFAULT)));
-    regionExpr->Append(new wxExpr((long)(region->m_font ? region->m_font->GetStyle() : wxDEFAULT)));
-    regionExpr->Append(new wxExpr((long)(region->m_font ? region->m_font->GetWeight() : wxNORMAL)));
-    regionExpr->Append(new wxExpr(wxExprString, region->m_textColour));
+    regionExpr->AddAttribute(wxT("pt"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetPointSize() : 10));
+    regionExpr->AddAttribute(wxT("family"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetFamily() : wxDEFAULT));
+    regionExpr->AddAttribute(wxT("style"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetStyle() : wxDEFAULT));
+    regionExpr->AddAttribute(wxT("weight"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetWeight() : wxNORMAL));
+    regionExpr->AddAttribute(wxT("clr"), wxString::Format(wxT("%d"), region->m_textColour));
 
     // New members for pen colour/style
-    regionExpr->Append(new wxExpr(wxExprString, region->m_penColour));
-    regionExpr->Append(new wxExpr((long)region->m_penStyle));
+    regionExpr->AddAttribute(wxT("penclr"), wxString::Format(wxT("%d"), region->m_penColour));
+    regionExpr->AddAttribute(wxT("penstyle"), wxString::Format(wxT("%d"), region->m_penStyle));
 
     // Formatted text:
     // text1 = ((x y string) (x y string) ...)
-    wxExpr *textExpr = new wxExpr(wxExprList);
+    wxXmlNode* textExpr = new wxXmlNode(wxXML_ELEMENT_NODE, textNameBuf);
 
     wxNode *textNode = region->m_formattedText.GetFirst();
     while (textNode)
     {
       wxShapeTextLine *line = (wxShapeTextLine *)textNode->GetData();
-      wxExpr *list2 = new wxExpr(wxExprList);
-      list2->Append(new wxExpr(line->GetX()));
-      list2->Append(new wxExpr(line->GetY()));
-      list2->Append(new wxExpr(wxExprString, line->GetText()));
-      textExpr->Append(list2);
+      wxXmlNode* list2 = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("text"));
+      list2->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), line->GetX()));
+      list2->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), line->GetY()));
+      list2->AddAttribute(wxT("text"), line->GetText());
+      textExpr->AddChild(list2);
       textNode = textNode->GetNext();
     }
 
     // Now add both attributes to the clause
-    clause->AddAttributeValue(regionNameBuf, regionExpr);
-    clause->AddAttributeValue(textNameBuf, textExpr);
+    clause->AddChild(regionExpr);
+    clause->AddChild(textExpr);
 
     node = node->GetNext();
     regionNo ++;
   }
 }
 
-void wxShape::ReadAttributes(wxExpr *clause)
+wxXmlNode* xmlFindChild(wxXmlNode* root, const wxString& childname, int id = wxNOT_FOUND)
 {
-  clause->GetAttributeValue(wxT("id"), m_id);
+   for (wxXmlNode* node = root->GetChildren(); node; node = node->GetNext())
+   {
+      if (node->GetName() == childname)
+      {
+         long iVal;
+         if ( (id != wxNOT_FOUND) && node->GetAttribute(wxT("id"), wxEmptyString).ToLong(&iVal))
+         {
+            if (id != iVal) continue;
+         }
+         return node;
+      }
+   }
+   return NULL;
+}
+
+void wxShape::ReadAttributes(wxXmlNode*clause)
+{
+  long iVal;
+  if (clause->GetAttribute(wxT("id"), wxEmptyString).ToLong(&iVal)) m_id = iVal;
   wxRegisterId(m_id);
 
-  clause->GetAttributeValue(wxT("x"), m_xpos);
-  clause->GetAttributeValue(wxT("y"), m_ypos);
-
-  // Input text strings (FOR COMPATIBILITY WITH OLD FILES ONLY. SEE REGION CODE BELOW.)
-  ClearText();
-  wxExpr *strings = clause->AttributeValue(wxT("text"));
-  if (strings && strings->Type() == wxExprList)
-  {
-    m_formatted = true;  // Assume text is formatted unless we prove otherwise
-    wxExpr *node = strings->value.first;
-    while (node)
-    {
-      wxExpr *string_expr = node;
-      double the_x = 0.0;
-      double the_y = 0.0;
-      wxString the_string = wxEmptyString;
-
-      // string_expr can either be a string, or a list of
-      // 3 elements: x, y, and string.
-      if (string_expr->Type() == wxExprString)
-      {
-        the_string = string_expr->StringValue();
-        m_formatted = false;
-      }
-      else if (string_expr->Type() == wxExprList)
-      {
-        wxExpr *first = string_expr->value.first;
-        wxExpr *second = first ? first->next : (wxExpr*) NULL;
-        wxExpr *third = second ? second->next : (wxExpr*) NULL;
-
-        if (first && second && third &&
-            (first->Type() == wxExprReal || first->Type() == wxExprInteger) &&
-            (second->Type() == wxExprReal || second->Type() == wxExprInteger) &&
-            third->Type() == wxExprString)
-          {
-            if (first->Type() == wxExprReal)
-              the_x = first->RealValue();
-            else the_x = (double)first->IntegerValue();
-
-            if (second->Type() == wxExprReal)
-              the_y = second->RealValue();
-            else the_y = (double)second->IntegerValue();
-
-            the_string = third->StringValue();
-          }
-      }
-      wxShapeTextLine *line =
-            new wxShapeTextLine(the_x, the_y, the_string);
-      m_text.Append(line);
-
-      node = node->next;
-    }
-  }
+  if (clause->GetAttribute(wxT("x"), wxEmptyString).ToLong(&iVal)) m_xpos = iVal;
+  if (clause->GetAttribute(wxT("y"), wxEmptyString).ToLong(&iVal)) m_ypos = iVal;
 
   wxString pen_string = wxEmptyString;
   wxString brush_string = wxEmptyString;
@@ -1916,66 +1879,32 @@ void wxShape::ReadAttributes(wxExpr *clause)
   int brush_style = wxSOLID;
   m_attachmentMode = ATTACHMENT_MODE_NONE;
 
-  clause->GetAttributeValue(wxT("pen_colour"), pen_string);
-  clause->GetAttributeValue(wxT("text_colour"), m_textColourName);
+  pen_string = clause->GetAttribute(wxT("pen_colour"), wxEmptyString);
+  m_textColourName = clause->GetAttribute(wxT("text_colour"), wxEmptyString);
 
   SetTextColour(m_textColourName);
 
-  clause->GetAttributeValue(wxT("region_name"), m_regionName);
+  m_regionName = clause->GetAttribute(wxT("region_name"), wxEmptyString);
 
-  clause->GetAttributeValue(wxT("brush_colour"), brush_string);
-  clause->GetAttributeValue(wxT("pen_width"), pen_width);
-  clause->GetAttributeValue(wxT("pen_style"), pen_style);
-  clause->GetAttributeValue(wxT("brush_style"), brush_style);
-
-  int iVal = (int) m_attachmentMode;
-  clause->GetAttributeValue(wxT("use_attachments"), iVal);
-  m_attachmentMode = iVal;
-
-  clause->GetAttributeValue(wxT("sensitivity"), m_sensitivity);
-
-  iVal = (int) m_spaceAttachments;
-  clause->GetAttributeValue(wxT("space_attachments"), iVal);
-  m_spaceAttachments = (iVal != 0);
-
-  iVal = (int) m_fixedWidth;
-  clause->GetAttributeValue(wxT("fixed_width"), iVal);
-  m_fixedWidth = (iVal != 0);
-
-  iVal = (int) m_fixedHeight;
-  clause->GetAttributeValue(wxT("fixed_height"), iVal);
-  m_fixedHeight = (iVal != 0);
-
-  clause->GetAttributeValue(wxT("format_mode"), m_formatMode);
-  clause->GetAttributeValue(wxT("shadow_mode"), m_shadowMode);
-
-  iVal = m_branchNeckLength;
-  clause->GetAttributeValue(wxT("neck_length"), iVal);
-  m_branchNeckLength = iVal;
-
-  iVal = m_branchStemLength;
-  clause->GetAttributeValue(wxT("stem_length"), iVal);
-  m_branchStemLength = iVal;
-
-  iVal = m_branchSpacing;
-  clause->GetAttributeValue(wxT("branch_spacing"), iVal);
-  m_branchSpacing = iVal;
-
-  clause->GetAttributeValue(wxT("branch_style"), m_branchStyle);
-
-  iVal = (int) m_centreResize;
-  clause->GetAttributeValue(wxT("centre_resize"), iVal);
-  m_centreResize = (iVal != 0);
-
-  iVal = (int) m_maintainAspectRatio;
-  clause->GetAttributeValue(wxT("maintain_aspect_ratio"), iVal);
-  m_maintainAspectRatio = (iVal != 0);
-
-  iVal = (int) m_highlighted;
-  clause->GetAttributeValue(wxT("hilite"), iVal);
-  m_highlighted = (iVal != 0);
-
-  clause->GetAttributeValue(wxT("rotation"), m_rotation);
+  brush_string = clause->GetAttribute(wxT("brush_colour"), wxEmptyString);
+  if (clause->GetAttribute(wxT("pen_width"), wxEmptyString).ToLong(&iVal)) pen_width = iVal;
+  if (clause->GetAttribute(wxT("pen_style"), wxEmptyString).ToLong(&iVal)) pen_style = iVal;
+  if (clause->GetAttribute(wxT("brush_style"), wxEmptyString).ToLong(&iVal)) brush_style = iVal;
+  if (clause->GetAttribute(wxT("use_attachments"), wxEmptyString).ToLong(&iVal)) m_attachmentMode = iVal;
+  if (clause->GetAttribute(wxT("sensitivity"), wxEmptyString).ToLong(&iVal)) m_sensitivity = iVal;
+  if (clause->GetAttribute(wxT("space_attachments"), wxEmptyString).ToLong(&iVal)) m_spaceAttachments = (iVal != 0);
+  if (clause->GetAttribute(wxT("fixed_width"), wxEmptyString).ToLong(&iVal)) m_fixedWidth = (iVal != 0);
+  if (clause->GetAttribute(wxT("fixed_height"), wxEmptyString).ToLong(&iVal)) m_fixedHeight = (iVal != 0);
+  if (clause->GetAttribute(wxT("format_mode"), wxEmptyString).ToLong(&iVal)) m_formatMode = iVal;
+  if (clause->GetAttribute(wxT("shadow_mode"), wxEmptyString).ToLong(&iVal)) m_shadowMode = iVal;
+  if (clause->GetAttribute(wxT("neck_length"), wxEmptyString).ToLong(&iVal)) m_branchNeckLength = iVal;
+  if (clause->GetAttribute(wxT("stem_length"), wxEmptyString).ToLong(&iVal)) m_branchStemLength = iVal;
+  if (clause->GetAttribute(wxT("branch_spacing"), wxEmptyString).ToLong(&iVal)) m_branchSpacing = iVal;
+  if (clause->GetAttribute(wxT("branch_style"), wxEmptyString).ToLong(&iVal)) m_branchStyle = iVal;
+  if (clause->GetAttribute(wxT("centre_resize"), wxEmptyString).ToLong(&iVal)) m_centreResize = (iVal != 0);
+  if (clause->GetAttribute(wxT("maintain_aspect_ratio"), wxEmptyString).ToLong(&iVal)) m_maintainAspectRatio = (iVal != 0);
+  if (clause->GetAttribute(wxT("hilite"), wxEmptyString).ToLong(&iVal)) m_highlighted = (iVal != 0);
+  if (clause->GetAttribute(wxT("rotation"), wxEmptyString).ToLong(&iVal)) m_rotation = iVal;
 
   if (pen_string == wxEmptyString)
     pen_string = wxT("BLACK");
@@ -2004,29 +1933,30 @@ void wxShape::ReadAttributes(wxExpr *clause)
   if (!m_brush)
     m_brush = wxWHITE_BRUSH;
 
-  int point_size = 10;
-  clause->GetAttributeValue(wxT("point_size"), point_size);
-  SetFont(oglMatchFont(point_size));
+  iVal = 10;
+  clause->GetAttribute(wxT("point_size"), wxEmptyString).ToLong(&iVal);
+  SetFont(oglMatchFont(iVal));
 
   // Read user-defined attachment points, if any
-  wxExpr *attachmentList = clause->AttributeValue(wxT("user_attachments"));
+  wxXmlNode *attachmentList = ::xmlFindChild(clause, wxT("user_attachments"));
   if (attachmentList)
   {
-    wxExpr *pointExpr = attachmentList->GetFirst();
-    while (pointExpr)
+    for (wxXmlNode* node = attachmentList->GetChildren(); node; node = node->GetNext())
     {
-      wxExpr *idExpr = pointExpr->Nth(0);
-      wxExpr *xExpr = pointExpr->Nth(1);
-      wxExpr *yExpr = pointExpr->Nth(2);
-      if (idExpr && xExpr && yExpr)
+      wxString idExpr = node->GetAttribute(wxT("id"), wxEmptyString);
+      wxString xExpr = node->GetAttribute(wxT("x"), wxEmptyString);
+      wxString yExpr = node->GetAttribute(wxT("y"), wxEmptyString);
+      if (idExpr.Length() && xExpr.Length() && yExpr.Length())
       {
-        wxAttachmentPoint *point = new wxAttachmentPoint;
-        point->m_id = (int)idExpr->IntegerValue();
-        point->m_x = xExpr->RealValue();
-        point->m_y = yExpr->RealValue();
-        m_attachmentPoints.Append((wxObject *)point);
+        wxAttachmentPoint* point = new wxAttachmentPoint();
+        idExpr.ToLong(&iVal);
+        point->m_id = iVal;
+        xExpr.ToLong(&iVal);
+        point->m_x = iVal;
+        yExpr.ToLong(&iVal);
+        point->m_y = iVal;
+        m_attachmentPoints.Append(point);
       }
-      pointExpr = pointExpr->GetNext();
     }
   }
 
@@ -2034,7 +1964,7 @@ void wxShape::ReadAttributes(wxExpr *clause)
   ReadRegions(clause);
 }
 
-void wxShape::ReadRegions(wxExpr *clause)
+void wxShape::ReadRegions(wxXmlNode*clause)
 {
   ClearRegions();
 
@@ -2044,14 +1974,14 @@ void wxShape::ReadRegions(wxExpr *clause)
   wxChar regionNameBuf[20];
   wxChar textNameBuf[20];
 
-  wxExpr *regionExpr;
-  wxExpr *textExpr = NULL;
+  wxXmlNode *regionExpr;
+  wxXmlNode *textExpr = NULL;
   wxSprintf(regionNameBuf, wxT("region%d"), regionNo);
   wxSprintf(textNameBuf, wxT("text%d"), regionNo);
 
   m_formatted = true;  // Assume text is formatted unless we prove otherwise
 
-  while ((regionExpr = clause->AttributeValue(regionNameBuf)) != NULL)
+  while (regionExpr = ::xmlFindChild(clause, regionNameBuf))
   {
     /*
      * Get the region information
@@ -2077,63 +2007,62 @@ void wxShape::ReadRegions(wxExpr *clause)
     wxString penColour = wxEmptyString;
     int penStyle = wxSOLID;
 
-    if (regionExpr->Type() == wxExprList)
+    //if (regionExpr->Type() == wxExprList)
     {
-      wxExpr *nameExpr = regionExpr->Nth(0);
-      wxExpr *textExpr = regionExpr->Nth(1);
-      wxExpr *xExpr = regionExpr->Nth(2);
-      wxExpr *yExpr = regionExpr->Nth(3);
-      wxExpr *widthExpr = regionExpr->Nth(4);
-      wxExpr *heightExpr = regionExpr->Nth(5);
-      wxExpr *minWidthExpr = regionExpr->Nth(6);
-      wxExpr *minHeightExpr = regionExpr->Nth(7);
-      wxExpr *propXExpr = regionExpr->Nth(8);
-      wxExpr *propYExpr = regionExpr->Nth(9);
-      wxExpr *formatExpr = regionExpr->Nth(10);
-      wxExpr *sizeExpr = regionExpr->Nth(11);
-      wxExpr *familyExpr = regionExpr->Nth(12);
-      wxExpr *styleExpr = regionExpr->Nth(13);
-      wxExpr *weightExpr = regionExpr->Nth(14);
-      wxExpr *colourExpr = regionExpr->Nth(15);
-      wxExpr *penColourExpr = regionExpr->Nth(16);
-      wxExpr *penStyleExpr = regionExpr->Nth(17);
+      wxString nameExpr = regionExpr->GetAttribute(wxT("name"), wxEmptyString);
+      wxString textExpr = regionExpr->GetAttribute(wxT("text"), wxEmptyString);
+      wxString xExpr =  regionExpr->GetAttribute(wxT("x"), wxEmptyString);
+      wxString yExpr =  regionExpr->GetAttribute(wxT("y"), wxEmptyString);
+      wxString widthExpr = regionExpr->GetAttribute(wxT("w"), wxEmptyString);
+      wxString heightExpr = regionExpr->GetAttribute(wxT("h"), wxEmptyString);
+      wxString minWidthExpr = regionExpr->GetAttribute(wxT("minw"), wxEmptyString);
+      wxString minHeightExpr = regionExpr->GetAttribute(wxT("minh"), wxEmptyString);
+      wxString propXExpr = regionExpr->GetAttribute(wxT("propx"), wxEmptyString);
+      wxString propYExpr = regionExpr->GetAttribute(wxT("propy"), wxEmptyString);
+      wxString formatExpr = regionExpr->GetAttribute(wxT("fmt"), wxEmptyString);
+      wxString sizeExpr = regionExpr->GetAttribute(wxT("size"), wxEmptyString);
+      wxString familyExpr = regionExpr->GetAttribute(wxT("family"), wxEmptyString);
+      wxString styleExpr = regionExpr->GetAttribute(wxT("style"), wxEmptyString);
+      wxString weightExpr = regionExpr->GetAttribute(wxT("weight"), wxEmptyString);
+      wxString colourExpr = regionExpr->GetAttribute(wxT("clr"), wxEmptyString);;
+      wxString penColourExpr = regionExpr->GetAttribute(wxT("penclr"), wxEmptyString);
+      wxString penStyleExpr = regionExpr->GetAttribute(wxT("pen_style"), wxEmptyString);
 
-      regionName = nameExpr->StringValue();
-      regionText = textExpr->StringValue();
+      regionName = nameExpr;
+      regionText = textExpr;
 
-      x = xExpr->RealValue();
-      y = yExpr->RealValue();
+      xExpr.ToDouble(&x);
+      yExpr.ToDouble(&y);
 
-      width = widthExpr->RealValue();
-      height = heightExpr->RealValue();
+      widthExpr.ToDouble(&width);
+      heightExpr.ToDouble(&height);
 
-      minWidth = minWidthExpr->RealValue();
-      minHeight = minHeightExpr->RealValue();
+      minWidthExpr.ToDouble(&minWidth);
+      minHeightExpr.ToDouble(&minHeight);
 
-      m_regionProportionX = propXExpr->RealValue();
-      m_regionProportionY = propYExpr->RealValue();
+      propXExpr.ToDouble(&m_regionProportionX);
+      propYExpr.ToDouble(&m_regionProportionY);
 
-      formatMode = (int) formatExpr->IntegerValue();
-      fontSize = (int)sizeExpr->IntegerValue();
-      fontFamily = (int)familyExpr->IntegerValue();
-      fontStyle = (int)styleExpr->IntegerValue();
-      fontWeight = (int)weightExpr->IntegerValue();
+      long iVal;
+      if (formatExpr.ToLong(&iVal)) formatMode = iVal;
+      if (sizeExpr.ToLong(&iVal)) fontSize = iVal;
+      if (familyExpr.ToLong(&iVal)) fontFamily = iVal;
+      if (styleExpr.ToLong(&iVal)) fontStyle = iVal;
+      if (weightExpr.ToLong(&iVal)) fontWeight = iVal;
 
-      if (colourExpr)
+      if (colourExpr.Length())
       {
-        regionTextColour = colourExpr->StringValue();
+        regionTextColour = colourExpr;
       }
       else
         regionTextColour = wxT("BLACK");
 
-      if (penColourExpr)
-        penColour = penColourExpr->StringValue();
-      if (penStyleExpr)
-        penStyle = (int)penStyleExpr->IntegerValue();
+      if (penColourExpr.Length()) penColour = penColourExpr;
+      if (penStyleExpr.ToLong(&iVal)) penStyle = iVal;
     }
     wxFont *font = wxTheFontList->FindOrCreateFont(fontSize, fontFamily, fontStyle, fontWeight);
 
-    wxShapeRegion *region = new wxShapeRegion;
+    wxShapeRegion* region = new wxShapeRegion();
     region->SetProportions(m_regionProportionX, m_regionProportionY);
     region->SetFont(font);
     region->SetSize(width, height);
@@ -2154,53 +2083,23 @@ void wxShape::ReadRegions(wxExpr *clause)
      * Get the formatted text strings
      *
      */
-    textExpr = clause->AttributeValue(textNameBuf);
-    if (textExpr && (textExpr->Type() == wxExprList))
+    textExpr = ::xmlFindChild(clause, textNameBuf);
+    if (textExpr)
     {
-      wxExpr *node = textExpr->value.first;
-      while (node)
+      for (wxXmlNode* node = textExpr->GetChildren(); node; node = node->GetNext())
       {
-        wxExpr *string_expr = node;
+        wxXmlNode*string_expr = node;
         double the_x = 0.0;
         double the_y = 0.0;
-        wxString the_string = wxEmptyString;
+        wxString the_string = string_expr->GetAttribute(wxT("text"), wxEmptyString);
+        m_formatted = string_expr->GetAttribute(wxT("x"), wxEmptyString).ToDouble(&the_x)
+                   && string_expr->GetAttribute(wxT("y"), wxEmptyString).ToDouble(&the_y);
 
-        // string_expr can either be a string, or a list of
-        // 3 elements: x, y, and string.
-        if (string_expr->Type() == wxExprString)
+        if (the_string.Length())
         {
-          the_string = string_expr->StringValue();
-          m_formatted = false;
-        }
-        else if (string_expr->Type() == wxExprList)
-        {
-          wxExpr *first = string_expr->value.first;
-          wxExpr *second = first ? first->next : (wxExpr*) NULL;
-          wxExpr *third = second ? second->next : (wxExpr*) NULL;
-
-          if (first && second && third &&
-              (first->Type() == wxExprReal || first->Type() == wxExprInteger) &&
-              (second->Type() == wxExprReal || second->Type() == wxExprInteger) &&
-              third->Type() == wxExprString)
-          {
-            if (first->Type() == wxExprReal)
-              the_x = first->RealValue();
-            else the_x = (double)first->IntegerValue();
-
-            if (second->Type() == wxExprReal)
-              the_y = second->RealValue();
-            else the_y = (double)second->IntegerValue();
-
-            the_string = third->StringValue();
-          }
-        }
-        if (the_string)
-        {
-          wxShapeTextLine *line =
-              new wxShapeTextLine(the_x, the_y, the_string);
+          wxShapeTextLine *line = new wxShapeTextLine(the_x, the_y, the_string);
           region->m_formattedText.Append(line);
         }
-        node = node->next;
       }
     }
 
@@ -2216,7 +2115,7 @@ void wxShape::ReadRegions(wxExpr *clause)
       !this->IsKindOf(CLASSINFO(wxLineShape)) && !this->IsKindOf(CLASSINFO(wxDividedShape)) &&
       !this->IsKindOf(CLASSINFO(wxCompositeShape)))
   {
-    wxShapeRegion *newRegion = new wxShapeRegion;
+    wxShapeRegion* newRegion = new wxShapeRegion();
     newRegion->SetName(wxT("0"));
     m_regions.Append((wxObject *)newRegion);
     if (m_text.GetCount() > 0)
@@ -2234,8 +2133,6 @@ void wxShape::ReadRegions(wxExpr *clause)
     }
   }
 }
-
-#endif
 
 void wxShape::Copy(wxShape& copy)
 {

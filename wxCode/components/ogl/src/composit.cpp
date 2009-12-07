@@ -2,7 +2,7 @@
 // Name:        composit.cpp
 // Purpose:     Composite OGL class
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: composit.cpp,v 1.1 2007/03/28 15:15:57 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -11,12 +11,7 @@
 
 #include "precomp.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
-
 
 #if wxUSE_PROLOGIO
 // Sometimes, objects need to access the whole database to

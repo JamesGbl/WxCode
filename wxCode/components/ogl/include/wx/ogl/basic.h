@@ -184,12 +184,12 @@ class WXDLLIMPEXP_OGL wxShapeEvtHandler: public wxObject, public wxClientDataCon
   wxShape*              m_handlerShape;
 };
 
-class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
+class WXDLLIMPEXP_OGL wxShape : public wxShapeEvtHandler
 {
- DECLARE_ABSTRACT_CLASS(wxShape)
+    typedef wxShapeEvtHandler base;
+DECLARE_ABSTRACT_CLASS(wxShape)
 
- public:
-
+public:
   wxShape(wxShapeCanvas *can = NULL);
   virtual ~wxShape();
   virtual void GetBoundingBoxMax(double *width, double *height);
@@ -212,6 +212,7 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   inline void SetParent(wxShape *p) { m_parent = p; }
   wxShape *GetTopAncestor();
   inline wxList& GetChildren() { return m_children; }
+  inline const wxList& GetChildren() const { return m_children; }
 
   virtual void OnDraw(wxDC&);
   virtual void OnDrawContents(wxDC&);
@@ -376,14 +377,21 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   virtual void ClearText(int regionId = 0);
   void RemoveLine(wxLineShape *line);
 
+  virtual void WriteAttributes(wxXmlNode*) const;
+  virtual void ReadAttributes(wxXmlNode*);
+
+  inline virtual void ReadConstraints(wxXmlNode*) { }
+  virtual void WriteRegions(wxXmlNode*) const;
+  virtual void ReadRegions(wxXmlNode*);
+
 #if wxUSE_PROLOGIO
   // I/O
-  virtual void WriteAttributes(wxExpr *clause);
+  virtual void WriteAttributes(wxExpr *clause) const;
   virtual void ReadAttributes(wxExpr *clause);
 
   // In case the object has constraints it needs to read in in a different pass
-  inline virtual void ReadConstraints(wxExpr *WXUNUSED(clause), wxExprDatabase *WXUNUSED(database)) { };
-  virtual void WriteRegions(wxExpr *clause);
+  inline virtual void ReadConstraints(wxExpr *WXUNUSED(clause), wxExprDatabase *WXUNUSED(database)) { }
+  virtual void WriteRegions(wxExpr *clause) const;
   virtual void ReadRegions(wxExpr *clause);
 #endif
 
@@ -563,10 +571,11 @@ class WXDLLIMPEXP_OGL wxShape: public wxShapeEvtHandler
   long                  m_branchStyle;
 };
 
-class WXDLLIMPEXP_OGL wxPolygonShape: public wxShape
+class WXDLLIMPEXP_OGL wxPolygonShape : public wxShape
 {
- DECLARE_DYNAMIC_CLASS(wxPolygonShape)
- public:
+   typedef wxShape base;
+DECLARE_DYNAMIC_CLASS(wxPolygonShape)
+public:
   wxPolygonShape();
   virtual ~wxPolygonShape();
 
@@ -610,10 +619,8 @@ class WXDLLIMPEXP_OGL wxPolygonShape: public wxShape
   // Recalculates the centre of the polygon
   virtual void CalculatePolygonCentre();
 
-#if wxUSE_PROLOGIO
-  void WriteAttributes(wxExpr *clause);
-  void ReadAttributes(wxExpr *clause);
-#endif
+  virtual void WriteAttributes(wxXmlNode*) const;
+  virtual void ReadAttributes(wxXmlNode*);
 
   int GetNumberOfAttachments() const;
   bool GetAttachmentPosition(int attachment, double *x, double *y,
@@ -643,10 +650,11 @@ class WXDLLIMPEXP_OGL wxPolygonShape: public wxShape
   double        m_originalHeight;
 };
 
-class WXDLLIMPEXP_OGL wxRectangleShape: public wxShape
+class WXDLLIMPEXP_OGL wxRectangleShape : public wxShape
 {
- DECLARE_DYNAMIC_CLASS(wxRectangleShape)
- public:
+   typedef wxShape base;
+DECLARE_DYNAMIC_CLASS(wxRectangleShape)
+public:
   wxRectangleShape(double w = 0.0, double h = 0.0);
   void GetBoundingBoxMin(double *w, double *h);
   bool GetPerimeterPoint(double x1, double y1,
@@ -657,10 +665,8 @@ class WXDLLIMPEXP_OGL wxRectangleShape: public wxShape
   void SetCornerRadius(double rad); // If > 0, rounded corners
   double GetCornerRadius() const { return m_cornerRadius; }
 
-#if wxUSE_PROLOGIO
-  void WriteAttributes(wxExpr *clause);
-  void ReadAttributes(wxExpr *clause);
-#endif
+  virtual void WriteAttributes(wxXmlNode*) const;
+  virtual void ReadAttributes(wxXmlNode*);
 
   int GetNumberOfAttachments() const;
   bool GetAttachmentPosition(int attachment, double *x, double *y,
@@ -679,26 +685,26 @@ protected:
   double m_cornerRadius;
 };
 
-class WXDLLIMPEXP_OGL wxTextShape: public wxRectangleShape
+class WXDLLIMPEXP_OGL wxTextShape : public wxRectangleShape
 {
- DECLARE_DYNAMIC_CLASS(wxTextShape)
- public:
+   typedef wxRectangleShape base;
+   DECLARE_DYNAMIC_CLASS(wxTextShape)
+public:
   wxTextShape(double width = 0.0, double height = 0.0);
 
   virtual void OnDraw(wxDC&);
 
-#if wxUSE_PROLOGIO
-    void WriteAttributes(wxExpr *clause);
-#endif
+  virtual void WriteAttributes(wxXmlNode*) const;
 
   // Does the copying for this object
   void Copy(wxShape& copy);
 };
 
-class WXDLLIMPEXP_OGL wxEllipseShape: public wxShape
+class WXDLLIMPEXP_OGL wxEllipseShape : public wxShape
 {
- DECLARE_DYNAMIC_CLASS(wxEllipseShape)
- public:
+   typedef wxShape base;
+DECLARE_DYNAMIC_CLASS(wxEllipseShape)
+public:
   wxEllipseShape(double w = 0.0, double h = 0.0);
 
   void GetBoundingBoxMin(double *w, double *h);
@@ -709,10 +715,8 @@ class WXDLLIMPEXP_OGL wxEllipseShape: public wxShape
   virtual void OnDraw(wxDC&);
   void SetSize(double x, double y, bool recursive = true);
 
-#if wxUSE_PROLOGIO
-  void WriteAttributes(wxExpr *clause);
-  void ReadAttributes(wxExpr *clause);
-#endif
+  virtual void WriteAttributes(wxXmlNode*) const;
+  virtual void ReadAttributes(wxXmlNode*);
 
   int GetNumberOfAttachments() const;
   bool GetAttachmentPosition(int attachment, double *x, double *y,

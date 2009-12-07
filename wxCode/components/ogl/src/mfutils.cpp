@@ -2,7 +2,7 @@
 // Name:        mfutils.cpp
 // Purpose:     Metafile utillities
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: mfutils.cpp,v 1.1 2007/03/28 15:15:57 frm Exp $
 // Copyright:   (c) Julian Smart

@@ -28,10 +28,8 @@ public:
     csDiagramDocument();
     virtual ~csDiagramDocument();
 
-#if wxUSE_PROLOGIO
   bool OnSaveDocument(const wxString& file);
   bool OnOpenDocument(const wxString& file);
-#endif // wxUSE_PROLOGIO
 
     inline wxDiagram *GetDiagram() { return &m_diagram; }
 

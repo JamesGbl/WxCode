@@ -39,9 +39,7 @@ bool DiagramDocument::OnCloseDocument(void)
 #if wxUSE_STD_IOSTREAM
 wxSTD ostream& DiagramDocument::SaveObject(wxSTD ostream& stream)
 {
-#if wxUSE_PROLOGIO
-
-    wxDocument::SaveObject(stream);
+    base::SaveObject(stream);
 
     char buf[400];
     (void) wxGetTempFileName("diag", buf);
@@ -51,16 +49,12 @@ wxSTD ostream& DiagramDocument::SaveObject(wxSTD ostream& stream)
 
     wxRemoveFile(buf);
 
-#endif
-
     return stream;
 }
 
 wxSTD istream& DiagramDocument::LoadObject(wxSTD istream& stream)
 {
-#if wxUSE_PROLOGIO
-
-    wxDocument::LoadObject(stream);
+    base::LoadObject(stream);
 
     char buf[400];
     (void) wxGetTempFileName("diag", buf);
@@ -70,8 +64,6 @@ wxSTD istream& DiagramDocument::LoadObject(wxSTD istream& stream)
     diagram.DeleteAllShapes();
     diagram.LoadFile(buf);
     wxRemoveFile(buf);
-
-#endif
 
     return stream;
 }
@@ -79,37 +71,31 @@ wxSTD istream& DiagramDocument::LoadObject(wxSTD istream& stream)
 
 wxOutputStream& DiagramDocument::SaveObject(wxOutputStream& stream)
 {
-#if wxUSE_PROLOGIO
-
-    wxDocument::SaveObject(stream);
+    base::SaveObject(stream);
     wxChar buf[400];
     (void) wxGetTempFileName(wxT("diag"), buf);
 
-    diagram.SaveFile(buf);
+    m_diagram.SaveFile(buf);
 
     wxTransferFileToStream(buf, stream);
 
     wxRemoveFile(buf);
-
-#endif
 
     return stream;
 }
 
 wxInputStream& DiagramDocument::LoadObject(wxInputStream& stream)
 {
-#if wxUSE_PROLOGIO
-    wxDocument::LoadObject(stream);
+    base::LoadObject(stream);
 
     wxChar buf[400];
     (void) wxGetTempFileName(wxT("diag"), buf);
 
     wxTransferStreamToFile(stream, buf);
 
-    diagram.DeleteAllShapes();
-    diagram.LoadFile(buf);
+    m_diagram.DeleteAllShapes();
+    m_diagram.LoadFile(buf);
     wxRemoveFile(buf);
-#endif
 
     return stream;
 }

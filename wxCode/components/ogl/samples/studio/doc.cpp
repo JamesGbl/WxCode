@@ -37,7 +37,6 @@ bool csDiagramDocument::OnCloseDocument()
     return base::OnCloseDocument();
 }
 
-#if wxUSE_PROLOGIO
 bool csDiagramDocument::OnSaveDocument(const wxString& file)
 {
   if (file == wxEmptyString)
@@ -45,14 +44,10 @@ bool csDiagramDocument::OnSaveDocument(const wxString& file)
 
   if (!m_diagram.SaveFile(file))
   {
-    wxString msgTitle;
-    if (wxTheApp->GetAppName() != wxEmptyString)
-        msgTitle = wxTheApp->GetAppName();
-    else
-        msgTitle = wxString(wxT("File error"));
-
-    (void)wxMessageBox(wxT("Sorry, could not open this file for saving."), msgTitle, wxOK | wxICON_EXCLAMATION,
-      GetDocumentWindow());
+    wxMessageBox(_("Sorry, could not open this file for saving."), 
+       wxGetApp().GetAppDisplayName(), 
+       wxOK | wxICON_EXCLAMATION, 
+       GetDocumentWindow());
     return false;
   }
 
@@ -66,16 +61,12 @@ bool csDiagramDocument::OnOpenDocument(const wxString& file)
   if (!OnSaveModified())
     return false;
 
-  wxString msgTitle;
-  if (wxTheApp->GetAppName() != wxEmptyString)
-    msgTitle = wxTheApp->GetAppName();
-  else
-    msgTitle = wxString(wxT("File error"));
-
   m_diagram.DeleteAllShapes();
   if (!m_diagram.LoadFile(file))
   {
-    (void)wxMessageBox(wxT("Sorry, could not open this file."), msgTitle, wxOK|wxICON_EXCLAMATION,
+    wxMessageBox(_("Sorry, could not open this file."), 
+       wxGetApp().GetAppDisplayName(), 
+       wxOK|wxICON_EXCLAMATION,
      GetDocumentWindow());
     return false;
   }
@@ -85,8 +76,6 @@ bool csDiagramDocument::OnOpenDocument(const wxString& file)
 
   return true;
 }
-#endif // wxUSE_PROLOGIO
-
 
 /*
  * Implementation of drawing command

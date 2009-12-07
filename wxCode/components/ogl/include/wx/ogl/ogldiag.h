@@ -63,22 +63,15 @@ public:
   // Make sure all text that should be centred, is centred.
   void RecentreAll(wxDC&);
 
-#if wxUSE_PROLOGIO
   virtual bool SaveFile(const wxString& filename);
   virtual bool LoadFile(const wxString& filename);
 
-  virtual void ReadNodes(wxExprDatabase& database);
-  virtual void ReadLines(wxExprDatabase& database);
-  virtual void ReadContainerGeometry(wxExprDatabase& database);
+  virtual void ReadNodes(wxXmlNode*);
+  virtual void ReadLines(wxXmlNode*);
+  virtual void ReadContainerGeometry(wxXmlNode*);
 
-  // Allow for modifying file
-  virtual bool OnDatabaseLoad(wxExprDatabase& db);
-  virtual bool OnDatabaseSave(wxExprDatabase& db);
-  virtual bool OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
-  virtual bool OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr);
-  virtual bool OnHeaderSave(wxExprDatabase& db, wxExpr& expr);
-  virtual bool OnHeaderLoad(wxExprDatabase& db, wxExpr& expr);
-#endif
+  virtual bool OnShapeLoad(wxXmlNode*, wxShape*);
+  virtual bool OnShapeSave(wxXmlNode*, const wxShape&);
 
 protected:
   wxShapeCanvas*        m_diagramCanvas;

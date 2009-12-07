@@ -2,7 +2,7 @@
 // Name:        divided.cpp
 // Purpose:     wxDividedShape class
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: divided.cpp,v 1.1 2007/03/28 15:15:57 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -11,12 +11,7 @@
 
 #include "precomp.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
-
 
 class wxDividedShapeControlPoint: public wxControlPoint
 {

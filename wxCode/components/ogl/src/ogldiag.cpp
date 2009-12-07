@@ -2,7 +2,7 @@
 // Name:        ogldiag.cpp
 // Purpose:     wxDiagram
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Troels K
 // Created:     12/07/98
 // RCS-ID:      $Id: ogldiag.cpp,v 1.1 2007/03/28 15:15:57 frm Exp $
 // Copyright:   (c) Julian Smart
@@ -11,17 +11,13 @@
 
 #include "precomp.h"
 
-#if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
-#endif
-
 #include "wx/ogl/ogl.h"
 
 
 IMPLEMENT_DYNAMIC_CLASS(wxDiagram, wxObject)
 
 // Object canvas
-wxDiagram::wxDiagram()
+wxDiagram::wxDiagram() : wxObject()
 {
   m_diagramCanvas = NULL;
   m_quickEditMode = false;
@@ -190,18 +186,14 @@ void wxDiagram::RecentreAll(wxDC& dc)
 }
 
 // Input/output
-#if wxUSE_PROLOGIO
 bool wxDiagram::SaveFile(const wxString& filename)
 {
   wxBeginBusyCursor();
 
-  wxExprDatabase *database = new wxExprDatabase;
+  wxXmlDocument doc;
 
-  // First write the diagram type
-  wxExpr *header = new wxExpr(wxT("diagram"));
-  OnHeaderSave(*database, *header);
-
-  database->Append(header);
+  wxXmlNode *root = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("diagram"));
+  doc.SetRoot(root);
 
   wxNode *node = m_shapeList->GetFirst();
   while (node)
@@ -210,121 +202,70 @@ bool wxDiagram::SaveFile(const wxString& filename)
 
     if (!shape->IsKindOf(CLASSINFO(wxControlPoint)))
     {
-      wxExpr *expr;
+      wxString expr;
       if (shape->IsKindOf(CLASSINFO(wxLineShape)))
-        expr = new wxExpr(wxT("line"));
+        expr = wxT("line");
        else
-        expr = new wxExpr(wxT("shape"));
+        expr = wxT("shape");
 
-      OnShapeSave(*database, *shape, *expr);
+      wxXmlNode* item = new wxXmlNode(wxXML_ELEMENT_NODE, expr);
+      OnShapeSave(item, *shape);
+      root->AddChild(item);
     }
     node = node->GetNext();
   }
-  OnDatabaseSave(*database);
-
-  wxString tempFile;
-  wxGetTempFileName(wxT("diag"), tempFile);
-  FILE* file = fopen(tempFile.mb_str(wxConvFile), "w");
-  if (! file)
-  {
-    wxEndBusyCursor();
-    delete database;
-    return false;
-  }
-
-  database->Write(file);
-  fclose(file);
-  delete database;
-
-/*
-  // Save backup
-  if (FileExists(filename))
-  {
-    char buf[400];
-#ifdef __X__
-    sprintf(buf, "%s.bak", filename);
-#endif
-#ifdef __WXMSW__
-    sprintf(buf, "_diagram.bak");
-#endif
-    if (FileExists(buf)) wxRemoveFile(buf);
-    if (!wxRenameFile(filename, buf))
-    {
-      wxCopyFile(filename, buf);
-      wxRemoveFile(filename);
-    }
-  }
-*/
-
-  // Copy the temporary file to the correct filename
-  if (!wxRenameFile(tempFile, filename))
-  {
-    wxCopyFile(tempFile, filename);
-    wxRemoveFile(tempFile);
-  }
-
+  bool ok = doc.Save(filename);
   wxEndBusyCursor();
-  return true;
+  return ok;
 }
+
+extern wxXmlNode* xmlFindChild(wxXmlNode* root, const wxString& childname, int id = wxNOT_FOUND);
 
 bool wxDiagram::LoadFile(const wxString& filename)
 {
   wxBeginBusyCursor();
 
-  wxExprDatabase database(wxExprInteger, wxT("id"));
-  if (!database.Read(filename))
+  wxXmlDocument doc;
+  bool ok = doc.Load(filename);
+  if (ok)
   {
-    wxEndBusyCursor();
-    return false;
+     DeleteAllShapes();
+
+     wxXmlNode* diagram = doc.GetRoot();
+     bool ok = diagram && (diagram->GetName() == wxT("diagram"));
+     if (ok)
+     {
+        for (wxXmlNode* node = diagram->GetChildren(); node; node = node->GetNext())
+        {
+          long id;
+          if (node->GetAttribute(wxT("id"), wxEmptyString).ToLong(&id)) ::wxRegisterId(id);
+        }
+
+        ReadNodes(doc.GetRoot());
+        ReadContainerGeometry(doc.GetRoot());
+        ReadLines(doc.GetRoot());
+     }
   }
-
-  DeleteAllShapes();
-
-  database.BeginFind();
-  wxExpr *header = database.FindClauseByFunctor(wxT("diagram"));
-
-  if (header)
-    OnHeaderLoad(database, *header);
-
-  // Scan through all clauses and register the ids
-  wxNode *node = database.GetFirst();
-  while (node)
-  {
-    wxExpr *clause = (wxExpr *)node->GetData();
-    long id = -1;
-    clause->GetAttributeValue(wxT("id"), id);
-    wxRegisterId(id);
-    node = node->GetNext();
-  }
-
-  ReadNodes(database);
-  ReadContainerGeometry(database);
-  ReadLines(database);
-
-  OnDatabaseLoad(database);
-
   wxEndBusyCursor();
-
-  return true;
+  return ok;
 }
 
-void wxDiagram::ReadNodes(wxExprDatabase& database)
+void wxDiagram::ReadNodes(wxXmlNode* node)
 {
   // Find and create the node images
-  database.BeginFind();
-  wxExpr *clause = database.FindClauseByFunctor(wxT("shape"));
-  while (clause)
+  for (wxXmlNode* clause = ::xmlFindChild(node, wxT("shape"));
+       clause;
+       clause = clause->GetNext())
   {
-    wxChar *type = NULL;
-    long parentId = -1;
+    long parentId = wxNOT_FOUND;
 
-    clause->AssignAttributeValue(wxT("type"), &type);
-    clause->AssignAttributeValue(wxT("parent"), &parentId);
+    wxString type = clause->GetAttribute(wxT("type"), wxEmptyString);
+    clause->GetAttribute(wxT("parent"), wxEmptyString).ToLong(&parentId);
     wxClassInfo *classInfo = wxClassInfo::FindClass(type);
     if (classInfo)
     {
       wxShape *shape = (wxShape *)classInfo->CreateObject();
-      OnShapeLoad(database, *shape, *clause);
+      OnShapeLoad(clause, shape);
 
       shape->SetCanvas(GetCanvas());
       shape->Show(true);
@@ -332,59 +273,51 @@ void wxDiagram::ReadNodes(wxExprDatabase& database)
       m_shapeList->Append(shape);
 
       // If child of composite, link up
-      if (parentId > -1)
+      if (parentId > wxNOT_FOUND)
       {
-        wxExpr *parentExpr = database.HashFind(wxT("shape"), parentId);
-        if (parentExpr && parentExpr->GetClientData())
+         wxXmlNode* parentExpr = ::xmlFindChild(node, wxT("shape"), parentId);
+        if (parentExpr)
         {
-          wxShape *parent = (wxShape *)parentExpr->GetClientData();
-          shape->SetParent(parent);
-          parent->GetChildren().Append(shape);
+          //wxShape *parent = (wxShape *)parentExpr->GetClientData();
+          //shape->SetParent(parent);
+          //parent->GetChildren().Append(shape);
         }
       }
-
-      clause->SetClientData(shape);
+      //clause->SetClientData(shape);
     }
-    if (type)
-      delete[] type;
-
-    clause = database.FindClauseByFunctor(wxT("shape"));
   }
-  return;
 }
 
-void wxDiagram::ReadLines(wxExprDatabase& database)
+void wxDiagram::ReadLines(wxXmlNode* node)
 {
-  database.BeginFind();
-  wxExpr *clause = database.FindClauseByFunctor(wxT("line"));
-  while (clause)
+  for (wxXmlNode* clause = ::xmlFindChild(node, wxT("line"));
+       clause;
+       clause = clause->GetNext())
   {
     wxString type;
-    long parentId = -1;
+    long parentId = wxNOT_FOUND;
 
-    clause->GetAttributeValue(wxT("type"), type);
-    clause->GetAttributeValue(wxT("parent"), parentId);
+    type = clause->GetAttribute(wxT("type"), wxEmptyString);
+    clause->GetAttribute(wxT("parent"), wxEmptyString).ToLong(&parentId);
     wxClassInfo *classInfo = wxClassInfo::FindClass(type);
     if (classInfo)
     {
       wxLineShape *shape = (wxLineShape *)classInfo->CreateObject();
       shape->Show(true);
 
-      OnShapeLoad(database, *shape, *clause);
+      OnShapeLoad(clause, shape);
       shape->SetCanvas(GetCanvas());
 
-      long image_to = -1; long image_from = -1;
-      clause->GetAttributeValue(wxT("to"), image_to);
-      clause->GetAttributeValue(wxT("from"), image_from);
+      long image_to = wxNOT_FOUND; long image_from = wxNOT_FOUND;
+      clause->GetAttribute(wxT("to"), wxEmptyString).ToLong(&image_to);
+      clause->GetAttribute(wxT("from"), wxEmptyString).ToLong(&image_from);
 
-      wxExpr *image_to_expr = database.HashFind(wxT("shape"), image_to);
-
+      wxXmlNode*image_to_expr = xmlFindChild(node, wxT("shape"), image_to);
       if (!image_to_expr)
       {
         // Error
       }
-      wxExpr *image_from_expr = database.HashFind(wxT("shape"), image_from);
-
+      wxXmlNode*image_from_expr = xmlFindChild(node, wxT("shape"), image_from);
       if (!image_from_expr)
       {
         // Error
@@ -392,42 +325,38 @@ void wxDiagram::ReadLines(wxExprDatabase& database)
 
       if (image_to_expr && image_from_expr)
       {
-        wxShape *image_to_object = (wxShape *)image_to_expr->GetClientData();
-        wxShape *image_from_object = (wxShape *)image_from_expr->GetClientData();
-
-        if (image_to_object && image_from_object)
+        //wxShape *image_to_object = (wxShape *)image_to_expr->GetClientData();
+        //wxShape *image_from_object = (wxShape *)image_from_expr->GetClientData();
+        //if (image_to_object && image_from_object)
         {
-          image_from_object->AddLine(shape, image_to_object, shape->GetAttachmentFrom(), shape->GetAttachmentTo());
+          //image_from_object->AddLine(shape, image_to_object, shape->GetAttachmentFrom(), shape->GetAttachmentTo());
         }
       }
-      clause->SetClientData(shape);
-
+      //clause->SetClientData(shape);
       m_shapeList->Append(shape);
     }
-
-    clause = database.FindClauseByFunctor(wxT("line"));
   }
 }
 
 // Containers have divisions that reference adjoining divisions,
 // so we need a separate pass to link everything up.
 // Also used by Symbol Library.
-void wxDiagram::ReadContainerGeometry(wxExprDatabase& database)
+void wxDiagram::ReadContainerGeometry(wxXmlNode* node)
 {
-  database.BeginFind();
-  wxExpr *clause = database.FindClauseByFunctor(wxT("shape"));
-  while (clause)
+  for (wxXmlNode* clause = ::xmlFindChild(node, wxT("shape"));
+       clause;
+       clause = clause->GetNext())
   {
-    wxShape *image = (wxShape *)clause->GetClientData();
+    wxShape *image = NULL;//(wxShape *)clause->GetClientData();
     if (image && image->IsKindOf(CLASSINFO(wxCompositeShape)))
     {
       wxCompositeShape *composite = (wxCompositeShape *)image;
-      wxExpr *divisionExpr = NULL;
 
       // Find the list of divisions in the composite
-      clause->GetAttributeValue(wxT("divisions"), &divisionExpr);
+      wxXmlNode* divisionExpr = xmlFindChild(clause, wxT("divisions"));
       if (divisionExpr)
       {
+         /*
         int i = 0;
         wxExpr *idExpr = divisionExpr->Nth(i);
         while (idExpr)
@@ -488,28 +417,15 @@ void wxDiagram::ReadContainerGeometry(wxExprDatabase& database)
           i ++;
           idExpr = divisionExpr->Nth(i);
         }
+          */
       }
     }
-
-    clause = database.FindClauseByFunctor(wxT("shape"));
   }
 }
 
-// Allow for modifying file
-bool wxDiagram::OnDatabaseLoad(wxExprDatabase& WXUNUSED(db))
+bool wxDiagram::OnShapeSave(wxXmlNode*expr, const wxShape& shape)
 {
-  return true;
-}
-
-bool wxDiagram::OnDatabaseSave(wxExprDatabase& WXUNUSED(db))
-{
-  return true;
-}
-
-bool wxDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
-{
-  shape.WriteAttributes(&expr);
-  db.Append(&expr);
+  shape.WriteAttributes(expr);
 
   if (shape.IsKindOf(CLASSINFO(wxCompositeShape)))
   {
@@ -517,8 +433,9 @@ bool wxDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
     while (node)
     {
       wxShape *childShape = (wxShape *)node->GetData();
-      wxExpr *childExpr = new wxExpr(wxT("shape"));
-      OnShapeSave(db, *childShape, *childExpr);
+      wxXmlNode* childExpr = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("shape"));
+      OnShapeSave(childExpr, *childShape);
+      expr->AddChild(childExpr);
       node = node->GetNext();
     }
   }
@@ -526,23 +443,11 @@ bool wxDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
   return true;
 }
 
-bool wxDiagram::OnShapeLoad(wxExprDatabase& WXUNUSED(db), wxShape& shape, wxExpr& expr)
+bool wxDiagram::OnShapeLoad(wxXmlNode*expr, wxShape* shape)
 {
-  shape.ReadAttributes(&expr);
+  shape->ReadAttributes(expr);
   return true;
 }
-
-bool wxDiagram::OnHeaderSave(wxExprDatabase& WXUNUSED(db), wxExpr& WXUNUSED(expr))
-{
-  return true;
-}
-
-bool wxDiagram::OnHeaderLoad(wxExprDatabase& WXUNUSED(db), wxExpr& WXUNUSED(expr))
-{
-  return true;
-}
-
-#endif
 
 void wxDiagram::SetCanvas(wxShapeCanvas *can)
 {
