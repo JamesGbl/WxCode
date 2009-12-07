@@ -28,13 +28,15 @@ public:
     csDiagramDocument();
     virtual ~csDiagramDocument();
 
-  bool OnSaveDocument(const wxString& file);
-  bool OnOpenDocument(const wxString& file);
+    virtual bool OnSaveDocument(const wxString& file);
+    virtual bool OnOpenDocument(const wxString& file);
 
-    inline wxDiagram *GetDiagram() { return &m_diagram; }
+    wxDiagram *GetDiagram() { return &m_diagram; }
 
     virtual bool OnCloseDocument();
     virtual bool DeleteContents();
+
+    virtual wxCommandProcessor *OnCreateCommandProcessor();
 
 protected:
     csDiagram         m_diagram;

@@ -105,6 +105,7 @@ public:
 
     virtual bool DeleteContents();
     virtual bool OnCloseDocument(void);
+    virtual wxCommandProcessor *OnCreateCommandProcessor();
 };
 
 /*

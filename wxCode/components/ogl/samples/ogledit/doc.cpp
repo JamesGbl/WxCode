@@ -25,6 +25,17 @@ DiagramDocument::~DiagramDocument(void)
 {
 }
 
+wxCommandProcessor* DiagramDocument::OnCreateCommandProcessor()
+{
+   wxCommandProcessor* cmdproc = base::OnCreateCommandProcessor();
+#if (wxVERSION_NUMBER < 2901)
+   // http://trac.wxwidgets.org/ticket/11512
+   cmdproc->SetUndoAccelerator(wxString::Format(wxT("\t%s"), wxAcceleratorEntry(wxACCEL_CTRL, 'Z').ToString().wx_str()));
+   cmdproc->SetRedoAccelerator(wxString::Format(wxT("\t%s"), wxAcceleratorEntry(wxACCEL_CTRL, 'Y').ToString().wx_str()));
+#endif
+   return cmdproc;
+}
+
 bool DiagramDocument::DeleteContents()
 {
     m_diagram.DeleteAllShapes();
@@ -406,7 +417,7 @@ void DiagramCommand::RemoveLines(wxShape *shape)
   while (node)
   {
     wxLineShape *line = (wxLineShape *)node->GetData();
-    doc->GetCommandProcessor()->Submit(new DiagramCommand(wxT("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, line->Selected(), line));
+    doc->GetCommandProcessor()->Submit(new DiagramCommand(_("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, line->Selected(), line));
 
     node = shape->GetLines().GetFirst();
   }

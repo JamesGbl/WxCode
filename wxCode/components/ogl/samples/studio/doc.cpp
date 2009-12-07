@@ -26,6 +26,17 @@ csDiagramDocument::~csDiagramDocument()
 {
 }
 
+wxCommandProcessor* csDiagramDocument::OnCreateCommandProcessor()
+{
+   wxCommandProcessor* cmdproc = base::OnCreateCommandProcessor();
+#if (wxVERSION_NUMBER < 2901)
+   // http://trac.wxwidgets.org/ticket/11512
+   cmdproc->SetUndoAccelerator(wxString::Format(wxT("\t%s"), wxAcceleratorEntry(wxACCEL_CTRL, 'Z').ToString().wx_str()));
+   cmdproc->SetRedoAccelerator(wxString::Format(wxT("\t%s"), wxAcceleratorEntry(wxACCEL_CTRL, 'Y').ToString().wx_str()));
+#endif
+   return cmdproc;
+}
+
 bool csDiagramDocument::DeleteContents()
 {
     m_diagram.DeleteAllShapes();
