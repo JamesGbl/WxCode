@@ -177,6 +177,10 @@ SOURCE=.\mainfrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\wxext.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\precomp.cpp
 # ADD CPP /Yc"precomp.h"
 # End Source File

@@ -233,6 +233,7 @@
 		<Unit filename="project.cpp" />
 		<Unit filename="shapes.cpp" />
 		<Unit filename="app.cpp" />
+		<Unit filename="wxext.cpp" />
 		<Unit filename="studio.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

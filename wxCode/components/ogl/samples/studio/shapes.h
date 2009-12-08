@@ -44,6 +44,7 @@ protected:
 
 class wxDiagramClipboard : public wxDiagram
 {
+    typedef wxDiagram base;
     DECLARE_DYNAMIC_CLASS(wxDiagramClipboard)
 public:
     wxDiagramClipboard() {}
@@ -85,6 +86,7 @@ class csDiagramCommand;
 
 class csDiagramClipboard : public wxDiagramClipboard
 {
+    typedef wxDiagramClipboard base;
     DECLARE_DYNAMIC_CLASS(csDiagramClipboard)
 public:
     csDiagramClipboard() { m_currentCmd = NULL; }
@@ -112,6 +114,7 @@ protected:
 
 class csThinRectangleShape: public wxDrawnShape
 {
+    typedef wxDrawnShape base;
     DECLARE_DYNAMIC_CLASS(csThinRectangleShape)
 public:
     csThinRectangleShape();
@@ -119,6 +122,7 @@ public:
 
 class csWideRectangleShape: public wxDrawnShape
 {
+    typedef wxDrawnShape base;
     DECLARE_DYNAMIC_CLASS(csWideRectangleShape)
 public:
     csWideRectangleShape();
@@ -126,6 +130,7 @@ public:
 
 class csTriangleShape: public wxDrawnShape
 {
+    typedef wxDrawnShape base;
     DECLARE_DYNAMIC_CLASS(csTriangleShape)
 public:
     csTriangleShape();
@@ -133,6 +138,7 @@ public:
 
 class csSemiCircleShape: public wxDrawnShape
 {
+    typedef wxDrawnShape base;
     DECLARE_DYNAMIC_CLASS(csSemiCircleShape)
 public:
     csSemiCircleShape();
@@ -140,6 +146,7 @@ public:
 
 class csCircleShape: public wxCircleShape
 {
+    typedef wxCircleShape base;
     DECLARE_DYNAMIC_CLASS(csCircleShape)
 public:
     csCircleShape();
@@ -147,6 +154,7 @@ public:
 
 class csCircleShadowShape : public wxCircleShape
 {
+    typedef wxCircleShape base;
     DECLARE_DYNAMIC_CLASS(csCircleShadowShape)
 public:
     csCircleShadowShape();
@@ -154,6 +162,7 @@ public:
 
 class csOctagonShape : public wxPolygonShape
 {
+    typedef wxPolygonShape base;
     DECLARE_DYNAMIC_CLASS(csOctagonShape)
 public:
     csOctagonShape();
@@ -171,6 +180,7 @@ public:
 // This is a transparent shape for drawing around other shapes.
 class csGroupShape : public wxRectangleShape
 {
+    typedef wxRectangleShape base;
     DECLARE_DYNAMIC_CLASS(csGroupShape)
 public:
     csGroupShape();
@@ -182,6 +192,7 @@ public:
 
 class csTextBoxShape: public wxRectangleShape
 {
+    typedef wxRectangleShape base;
     DECLARE_DYNAMIC_CLASS(csTextBoxShape)
 public:
     csTextBoxShape();
@@ -189,6 +200,7 @@ public:
 
 class csLineShape: public wxLineShape
 {
+    typedef wxLineShape base;
     DECLARE_DYNAMIC_CLASS(csLineShape)
 public:
     csLineShape();
@@ -203,8 +215,8 @@ public:
 
 class csLabelShape: public wxLabelShape
 {
+    typedef wxLabelShape base;
     DECLARE_DYNAMIC_CLASS(csLabelShape)
-
 public:
   csLabelShape(wxLineShape *parent = NULL, wxShapeRegion *region = NULL, double w = 0.0, double h = 0.0);
 
@@ -250,6 +262,7 @@ public:
 
 class ShapeEditMenu : public wxMenu
 {
+    typedef wxMenu base;
 public:
     ShapeEditMenu() {}
 

@@ -145,7 +145,7 @@ int FontSizeDialog(wxFrame *parent, int old_size)
     old_size = 10;
   wxString buf;
   buf << old_size;
-  wxString ans = wxGetTextFromUser(wxT("Enter point size"), wxT("Font size"), buf, parent);
+  wxString ans = wxGetTextFromUser(_("Enter point size"), _("Font size"), buf, parent);
   if (ans.Length() == 0)
     return 0;
 
@@ -153,7 +153,7 @@ int FontSizeDialog(wxFrame *parent, int old_size)
   ans.ToLong(&new_size);
   if ((new_size <= 0) || (new_size > 40))
   {
-    wxMessageBox(wxT("Invalid point size!"), wxT("Error"), wxOK);
+    wxMessageBox(_("Invalid point size!"), _("Error"), wxOK);
     return 0;
   }
   return new_size;

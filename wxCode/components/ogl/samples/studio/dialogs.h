@@ -16,8 +16,6 @@
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
-#if wxUSE_WX_RESOURCES
-
 /*
  * Label editing dialog (about to become obsolete)
  */
@@ -120,8 +118,6 @@ protected:
 
 DECLARE_EVENT_TABLE()
 };
-
-#endif // wxUSE_WX_RESOURCES
 
 #define ID_SHAPE_PROPERTY_NOTEBOOK    1000
 

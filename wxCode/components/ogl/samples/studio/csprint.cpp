@@ -178,8 +178,8 @@ bool wxDiagramClipboard::CopyToClipboard(double scale)
       delete newBitmap;
 
       wxChar buf[200];
-      wxSprintf(buf, wxT("Sorry, could not allocate clipboard bitmap (%dx%d)"), (maxX+10), (maxY+10));
-      wxMessageBox(buf, wxT("Clipboard copy problem"));
+      wxSprintf(buf, _("Sorry, could not allocate clipboard bitmap (%dx%d)"), (maxX+10), (maxY+10));
+      wxMessageBox(buf, _("Clipboard copy problem"));
       return false;
     }
 
@@ -259,7 +259,7 @@ bool csDiagramClipboard::OnStartCopy(wxDiagram* diagramTo)
     csDiagramDocument* doc = diagram->GetDocument();
     ((csDiagramView*)doc->GetFirstView())->SelectAll(false);
 
-    m_currentCmd = new csDiagramCommand(wxT("Paste"), doc);
+    m_currentCmd = new csDiagramCommand(_("Paste"), doc);
 
     return true;
 }

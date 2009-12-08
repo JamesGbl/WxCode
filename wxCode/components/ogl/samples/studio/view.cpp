@@ -833,66 +833,66 @@ void csCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
 {
     csEditorToolPalette *palette = wxGetApp().GetDiagramPalette();
 
-    if (palette->GetSelection() == PALETTE_ARROW)
+    switch (palette->GetSelection())
     {
-        GetView()->SelectAll(false);
-
-        wxClientDC dc(this);
-        PrepareDC(dc);
-
-        Redraw(dc);
-        return;
-    }
-
-    if (palette->GetSelection() == PALETTE_TEXT_TOOL)
-    {
-        wxString newLabel;
-
-#if wxUSE_WX_RESOURCES
-        // Ask for a label and create a new free-floating text region
-        csLabelEditingDialog* dialog = new csLabelEditingDialog(GetParent());
-
-        dialog->SetShapeLabel( wxEmptyString );
-        dialog->SetTitle(wxT("New text box"));
-        if (dialog->ShowModal() == wxID_CANCEL)
+        case PALETTE_ARROW:
         {
-            dialog->Destroy();
-            return;
+           GetView()->SelectAll(false);
+
+           wxClientDC dc(this);
+           PrepareDC(dc);
+
+           Redraw(dc);
+           return;
         }
+        case PALETTE_TEXT_TOOL:
+        {
+           wxString newLabel;
 
-        newLabel = dialog->GetShapeLabel();
-        dialog->Destroy();
-#endif // wxUSE_WX_RESOURCES
+           // Ask for a label and create a new free-floating text region
+           csLabelEditingDialog* dialog = new csLabelEditingDialog(GetParent());
 
-        wxShape* shape = new csTextBoxShape;
-        shape->AssignNewIds();
-        shape->SetEventHandler(new csEvtHandler(shape, shape, newLabel));
+           dialog->SetShapeLabel( wxEmptyString );
+           dialog->SetTitle(_("New text box"));
+           if (dialog->ShowModal() == wxID_CANCEL)
+           {
+               delete dialog;
+               return;
+           }
 
-        wxComboBox* comboBox = wxGetApp().GetPointSizeComboBox();
-        wxString str(comboBox->GetValue());
-        long pointSize;
-        str.ToLong( &pointSize );
+           newLabel = dialog->GetShapeLabel();
+           delete dialog;
+ 
+           wxShape* shape = new csTextBoxShape;
+           shape->AssignNewIds();
+           shape->SetEventHandler(new csEvtHandler(shape, shape, newLabel));
 
-        wxFont* newFont = wxTheFontList->FindOrCreateFont(pointSize,
-                shape->GetFont()->GetFamily(),
-                shape->GetFont()->GetStyle(),
-                shape->GetFont()->GetWeight(),
-                shape->GetFont()->GetUnderlined(),
-                shape->GetFont()->GetFaceName());
+           wxComboBox* comboBox = wxGetApp().GetPointSizeComboBox();
+           wxString str(comboBox->GetValue());
+           long pointSize;
+           str.ToLong( &pointSize );
 
-        shape->SetFont(newFont);
+           wxFont* newFont = wxTheFontList->FindOrCreateFont(pointSize,
+                   shape->GetFont()->GetFamily(),
+                   shape->GetFont()->GetStyle(),
+                   shape->GetFont()->GetWeight(),
+                   shape->GetFont()->GetUnderlined(),
+                   shape->GetFont()->GetFaceName());
 
-        shape->SetX(x);
-        shape->SetY(y);
+           shape->SetFont(newFont);
 
-        csDiagramCommand* cmd = new csDiagramCommand(_("Text box"),
-            (csDiagramDocument *)GetView()->GetDocument(),
-            new csCommandState(ID_CS_ADD_SHAPE, shape, NULL));
-        GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
+           shape->SetX(x);
+           shape->SetY(y);
 
-        palette->SetSelection(PALETTE_ARROW);
+           csDiagramCommand* cmd = new csDiagramCommand(_("Text box"),
+               (csDiagramDocument *)GetView()->GetDocument(),
+               new csCommandState(ID_CS_ADD_SHAPE, shape, NULL));
+           GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
 
-        return;
+           palette->SetSelection(PALETTE_ARROW);
+
+           return;
+        }
     }
 
     csSymbol* symbol = wxGetApp().GetSymbolDatabase()->FindSymbol(palette->GetSelection());

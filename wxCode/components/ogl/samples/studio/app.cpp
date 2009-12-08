@@ -12,6 +12,7 @@
 #include "precomp.h"
 
 #include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include "wxext.h"
 
 #include "app.h"
 #include "view.h"
@@ -48,11 +49,9 @@
     #include "ogl.xpm"
 #endif
 
-#define WXK_HELP WXK_F1
-
 IMPLEMENT_APP(csApp)
 
-csApp::csApp()
+csApp::csApp() : wxAppEx()
 {
     m_docManager = NULL;
     m_diagramPalette = NULL;
@@ -81,19 +80,14 @@ csApp::~csApp()
 // Initialise this in OnInit, not statically
 bool csApp::OnInit(void)
 {
-#if wxUSE_WX_RESOURCES
-    if (!wxResourceParseFile(wxT("studio_resources.wxr")))
-    {
-        wxMessageBox(wxT("Could not find or parse resource file: studio_resources.wxr"), wxT("Studio"));
-        return false;
-    }
-#endif
     SetAppName(wxT("oglstudio"));
     SetAppDisplayName(wxT("OGL Studio"));
+    wxFileSystem::AddHandler(new wxZipFSHandler);
+    bool ok = ::wxInitXRC();
 #if wxUSE_MS_HTML_HELP && !defined(__WXUNIVERSAL__)
-    m_helpController = new wxWinHelpController;
+    m_helpController = new wxWinHelpController();
 #else
-    m_helpController = new wxHtmlHelpController;
+    m_helpController = new wxHtmlHelpController();
 #endif
 
     m_helpController->Initialize(wxT("studio.hlp"));

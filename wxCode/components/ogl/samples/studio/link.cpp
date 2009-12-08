@@ -45,28 +45,36 @@
          #pragma comment(lib, "wxbase28ud_xml.lib")
          #pragma comment(lib, "wxmsw28ud_core.lib")
          #pragma comment(lib, "wxmsw28ud_adv.lib")
+         #pragma comment(lib, "wxmsw28ud_xrc.lib")
       #else
          #pragma comment(lib, "wxbase28u.lib")
          #pragma comment(lib, "wxbase28u_xml.lib")
          #pragma comment(lib, "wxmsw28u_core.lib")
          #pragma comment(lib, "wxmsw28u_adv.lib")
+         #pragma comment(lib, "wxmsw28u_xrc.lib")
+         #pragma comment(lib, "wxmsw28u_html.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
          #pragma comment(lib, "wxexpat.lib")
+         #pragma comment(lib, "wxzlib.lib")
       #endif
    #else
       #ifdef __WXDEBUG__
          #pragma comment(lib, "wxbase28d.lib")
          #pragma comment(lib, "wxmsw28d_core.lib")
          #pragma comment(lib, "wxmsw28d_adv.lib")
+         #pragma comment(lib, "wxmsw28d_xrc.lib")
          //#pragma comment(lib, "wxmsw28d_ogl.lib")
       #else
          #pragma comment(lib, "wxbase28.lib")
+         #pragma comment(lib, "wxbase28_xml.lib")
          #pragma comment(lib, "wxmsw28_core.lib")
          #pragma comment(lib, "wxmsw28_adv.lib")
-         #pragma comment(lib, "wxbase28_xml.lib")
+         #pragma comment(lib, "wxmsw28_xrc.lib")
+         #pragma comment(lib, "wxmsw28_html.lib")
          #pragma comment(lib, "wxexpat.lib")
+         #pragma comment(lib, "wxzlib.lib")
 /*
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")

@@ -896,6 +896,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\wxext.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -942,6 +946,10 @@
 			</File>
 			<File
 				RelativePath=".\view.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wxext.h"
 				>
 			</File>
 		</Filter>

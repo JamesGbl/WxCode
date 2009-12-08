@@ -226,14 +226,14 @@ void csEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int at
         lineShape->MakeLineControlPoints(2);
 
         if (haveArrow)
-            lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, wxT("Normal arrowhead"));
+            lineShape->AddArrow(ARROW_ARROW, ARROW_POSITION_MIDDLE, 10.0, 0.0, _("Normal arrowhead"));
 
         lineShape->SetFrom(GetShape());
         lineShape->SetTo(otherShape);
         lineShape->SetAttachments(attachment, new_attachment);
 
         canvas->GetView()->GetDocument()->GetCommandProcessor()->Submit(
-            new csDiagramCommand(wxT("Line"), (csDiagramDocument *)canvas->GetView()->GetDocument(),
+            new csDiagramCommand(_("Line"), wxStaticCast(canvas->GetView()->GetDocument(), csDiagramDocument),
                     new csCommandState(ID_CS_ADD_LINE, lineShape, NULL)));
   }
 }
@@ -391,7 +391,7 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
   newShape->SetX(xx);
   newShape->SetY(yy);
 
-  csDiagramCommand* cmd = new csDiagramCommand(wxT("Move"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
+  csDiagramCommand* cmd = new csDiagramCommand(_("Move"), wxStaticCast(canvas->GetView()->GetDocument(), csDiagramDocument),
                 new csCommandState(ID_CS_MOVE, newShape, GetShape()));
 
   // Move line points
@@ -401,18 +401,18 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
      wxShape* shape = (wxShape*) node->GetData();
      // Only move the line point(s) if both ends move too
      if (shape->IsKindOf(CLASSINFO(wxLineShape)) &&
-           ((wxLineShape*)shape)->GetTo()->Selected() && ((wxLineShape*)shape)->GetFrom()->Selected())
+           wxStaticCast(shape, wxLineShape)->GetTo()->Selected() && wxStaticCast(shape, wxLineShape)->GetFrom()->Selected())
      {
-        wxLineShape* lineShape = (wxLineShape*) shape;
+        wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
 
         if (lineShape->GetLineControlPoints()->GetCount() > 2)
         {
-            wxLineShape* newLineShape = (wxLineShape*) lineShape->CreateNewCopy();
+            wxLineShape* newLineShape = wxStaticCast(lineShape->CreateNewCopy(), wxLineShape);
 
             wxObjectList::compatibility_iterator node1 = newLineShape->GetLineControlPoints()->GetFirst();
             while (node1)
             {
-                wxRealPoint *point = (wxRealPoint *)node1->GetData();
+                wxRealPoint* point = (wxRealPoint*)node1->GetData();
                 point->x += offsetX;
                 point->y += offsetY;
                 node1 = node1->GetNext();
@@ -428,7 +428,7 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
   node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
   while (node)
   {
-     wxShape* shape = (wxShape*) node->GetData();
+     wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
      {
         wxShape* newShape2 = shape->CreateNewCopy();
@@ -445,12 +445,12 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
 void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, int keys, int attachment)
 {
   wxShape* shape = GetShape();
-  csCanvas *canvas = (csCanvas *)GetShape()->GetCanvas();
+  csCanvas *canvas = wxStaticCast(GetShape()->GetCanvas(), csCanvas);
 
   if (shape->IsKindOf(CLASSINFO(wxLineShape)))
   {
     // TODO: Do/Undo support for line operations
-    ((wxLineShape*)shape)->wxLineShape::OnSizingEndDragLeft(pt, x, y, keys, attachment);
+    wxStaticCast(shape, wxLineShape)->wxLineShape::OnSizingEndDragLeft(pt, x, y, keys, attachment);
 #if 0
         wxLineShape* lineShape = (wxLineShape*) shape;
 
@@ -518,11 +518,11 @@ void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, i
 
   if (newShape->IsKindOf(CLASSINFO(wxPolygonShape)))
   {
-    wxPolygonControlPoint* ppt = (wxPolygonControlPoint*) pt;
+    wxPolygonControlPoint* ppt = wxStaticCast(pt, wxPolygonControlPoint);
     newShape->SetSize(ppt->GetNewSize().x, ppt->GetNewSize().y);
 
-    ((wxPolygonShape *)newShape)->CalculateBoundingBox();
-    ((wxPolygonShape *)newShape)->CalculatePolygonCentre();
+    wxStaticCast(newShape, wxPolygonShape)->CalculateBoundingBox();
+    wxStaticCast(newShape, wxPolygonShape)->CalculatePolygonCentre();
     newShape->ResetControlPoints();
   }
   else
@@ -539,7 +539,7 @@ void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, i
     }
   }
 
-  csDiagramCommand* cmd = new csDiagramCommand(wxT("Size"), (csDiagramDocument*)canvas->GetView()->GetDocument(),
+  csDiagramCommand* cmd = new csDiagramCommand(_("Size"), wxStaticCast(canvas->GetView()->GetDocument(), csDiagramDocument),
                 new csCommandState(ID_CS_SIZE, newShape, shape));
 
   canvas->GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
@@ -556,16 +556,16 @@ void csEvtHandler::OnEndSize(double WXUNUSED(x), double WXUNUSED(y))
 
 void csEvtHandler::OnChangeAttachment(int attachment, wxLineShape* line, wxList& ordering)
 {
-    csCanvas *canvas = (csCanvas *)GetShape()->GetCanvas();
+    csCanvas *canvas = wxStaticCast(GetShape()->GetCanvas(), csCanvas);
 
     // We actually submit two different states: one to change the ordering, and another
     // to change the attachment for the line.
     // Problem. If we refresh after the attachment change, we'll get a flicker.
     // We really want to do both in a oner.
 
-    csDiagramCommand* cmd = new csDiagramCommand(wxT("Change attachment"), (csDiagramDocument*)canvas->GetView()->GetDocument());
+    csDiagramCommand* cmd = new csDiagramCommand(_("Change attachment"), wxStaticCast(canvas->GetView()->GetDocument(), csDiagramDocument));
 
-    wxLineShape* newLine = (wxLineShape*) line->CreateNewCopy();
+    wxLineShape* newLine = wxStaticCast(line->CreateNewCopy(), wxLineShape);
     if (line->GetTo() == GetShape())
         newLine->SetAttachmentTo(attachment);
     else
@@ -596,7 +596,7 @@ bool csEvtHandler::EditProperties()
     if (shape->IsKindOf(CLASSINFO(wxLineShape)))
         return false;
 
-    csDiagramView* view = ((csCanvas*)shape->GetCanvas())->GetView();
+    csDiagramView* view = wxStaticCast(shape->GetCanvas(), csCanvas)->GetView();
 
     wxPanel* attributeDialog;
     wxString attributeDialogName;
@@ -606,65 +606,64 @@ bool csEvtHandler::EditProperties()
     {
         attributeDialog = new csThinRectangleDialog;
         attributeDialogName = wxT("thin_rectangle");
-        title = wxT("Thin Rectangle Properties");
+        title = _("Thin Rectangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csWideRectangleShape)))
     {
         attributeDialog = new csWideRectangleDialog;
         attributeDialogName = wxT("wide_rectangle");
-        title = wxT("Wide Rectangle Properties");
+        title = _("Wide Rectangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csTriangleShape)))
     {
         attributeDialog = new csTriangleDialog;
         attributeDialogName = wxT("triangle");
-        title = wxT("Triangle Properties");
+        title = _("Triangle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csSemiCircleShape)))
     {
         attributeDialog = new csSemiCircleDialog;
         attributeDialogName = wxT("semi_circle");
-        title = wxT("Semicircle Properties");
+        title = _("Semicircle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csCircleShape)))
     {
         attributeDialog = new csCircleDialog;
         attributeDialogName = wxT("circle");
-        title = wxT("Circle Properties");
+        title = _("Circle Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csCircleShadowShape)))
     {
         attributeDialog = new csCircleShadowDialog;
         attributeDialogName = wxT("circle_shadow");
-        title = wxT("Circle Shadow Properties");
+        title = _("Circle Shadow Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csTextBoxShape)))
     {
         attributeDialog = new csTextBoxDialog;
         attributeDialogName = wxT("text_box");
-        title = wxT("Text Box Properties");
+        title = _("Text Box Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csGroupShape)))
     {
         attributeDialog = new csGroupDialog;
         attributeDialogName = wxT("group");
-        title = wxT("Group Properties");
+        title = _("Group Properties");
     }
     else if (shape->IsKindOf(CLASSINFO(csOctagonShape)))
     {
         attributeDialog = new csOctagonDialog;
         attributeDialogName = wxT("octagon");
-        title = wxT("Octagon Properties");
+        title = _("Octagon Properties");
     }
     else
     {
-        wxMessageBox(wxT("Unrecognised shape."), wxT("Studio"), wxICON_EXCLAMATION);
+        wxMessageBox(_("Unrecognised shape."), wxGetApp().GetAppDisplayName(), wxICON_EXCLAMATION);
         return false;
     }
 
     wxString newLabel(m_label);
 
-#if wxUSE_WX_RESOURCES
     csShapePropertiesDialog* dialog = new csShapePropertiesDialog(shape->GetCanvas()->GetParent(), title, attributeDialog, attributeDialogName);
     dialog->GetGeneralPropertiesDialog()->SetShapeLabel(m_label);
     if (dialog->ShowModal() == wxID_CANCEL)
@@ -675,16 +674,13 @@ bool csEvtHandler::EditProperties()
 
     newLabel = dialog->GetGeneralPropertiesDialog()->GetShapeLabel();
     dialog->Destroy();
-#else
-    wxUnusedVar(attributeDialog);
-#endif // wxUSE_WX_RESOURCES
 
     wxShape* newShape = shape->CreateNewCopy();
 
-    csEvtHandler* handler2 = (csEvtHandler *)newShape->GetEventHandler();
+    csEvtHandler* handler2 = wxStaticCast(newShape->GetEventHandler(), csEvtHandler);
     handler2->m_label = newLabel;
 
-    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(wxT("Edit properties"), (csDiagramDocument*) view->GetDocument(),
+    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(_("Edit properties"), wxStaticCast(view->GetDocument(), csDiagramDocument),
                 new csCommandState(wxID_PROPERTIES, newShape, shape)));
 
     return true;
@@ -694,7 +690,8 @@ bool csEvtHandler::EditProperties()
  * Diagram
  */
 
-#if wxUSE_PROLOGIO
+#ifdef skip
+
 bool csDiagram::OnShapeSave(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 {
   wxDiagram::OnShapeSave(db, shape, expr);
@@ -713,7 +710,8 @@ bool csDiagram::OnShapeLoad(wxExprDatabase& db, wxShape& shape, wxExpr& expr)
 
   return true;
 }
-#endif // wxUSE_PROLOGIO
+
+#endif
 
 IMPLEMENT_DYNAMIC_CLASS(csThinRectangleShape, wxDrawnShape)
 
@@ -978,7 +976,7 @@ csGroupShape::csGroupShape()
 
 void csGroupShape::OnDraw(wxDC& dc)
 {
-    wxRectangleShape::OnDraw(dc);
+    base::OnDraw(dc);
 }
 
 // Must modify the hit-test so it doesn't obscure shapes that are inside.
@@ -1021,7 +1019,7 @@ bool csGroupShape::HitTest(double x, double y, int* attachment, double* distance
 
 IMPLEMENT_DYNAMIC_CLASS(csTextBoxShape, wxRectangleShape)
 
-csTextBoxShape::csTextBoxShape()
+csTextBoxShape::csTextBoxShape() : wxRectangleShape()
 {
     SetPen(wxTRANSPARENT_PEN);
     SetBrush(wxTRANSPARENT_BRUSH);

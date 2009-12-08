@@ -19,8 +19,6 @@
 #include "mainfrm.h"
 #include "dialogs.h"
 
-#define WXK_HELP WXK_F1
-
 BEGIN_EVENT_TABLE(csFrame, wxDocMDIParentFrame)
     EVT_MENU(wxID_ABOUT, csFrame::OnAbout)
     EVT_MENU(wxID_EXIT, csFrame::OnQuit)
@@ -73,11 +71,9 @@ void csFrame::OnHelp(wxCommandEvent& WXUNUSED(event))
 
 void csFrame::OnSettings(wxCommandEvent& WXUNUSED(event))
 {
-#if wxUSE_WX_RESOURCES
     csSettingsDialog* dialog = new csSettingsDialog(this);
     /* int ret = */ dialog->ShowModal();
     dialog->Destroy();
-#endif // wxUSE_WX_RESOURCES
 }
 
 void csFrame::OnQuit(wxCommandEvent& WXUNUSED(event))

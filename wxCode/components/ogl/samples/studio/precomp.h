@@ -13,6 +13,8 @@
 #include "wx/cmdproc.h"
 #include "wx/docmdi.h"
 #include "wx/xml/xml.h"
+#include "wx/fs_zip.h"
+#include "wx/xrc/xmlres.h"
 
 #include <ctype.h>
 #include <stdlib.h>
