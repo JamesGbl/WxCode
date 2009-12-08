@@ -960,7 +960,7 @@ wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
 	char buffer[32];
 	wxJSONRefData* data = value.GetRefData();
 	wxASSERT( data );
-	snprintf( buffer, 32, "%f", data->m_value.m_valDouble );
+	snprintf( buffer, 32, "%.10g", data->m_value.m_valDouble );
 	size_t len = strlen( buffer );
 	os.Write( buffer, len );
 	if ( os.GetLastError() != wxSTREAM_NO_ERROR )	{
