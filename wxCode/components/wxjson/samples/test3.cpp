@@ -478,18 +478,14 @@ int Test4_5()
 }
 
 // test control characters
-// BUG: this test fails. The expected result is:
 // [
 //    "\u0001\u0003\u0005"
 // ]
-// but it is not: an empty string is printed. This is because the NULL byte at
-// the beginning cause the strlen() function to return a ZERO length when the
-// string is converted to a wxCharBuffer (either UTF-8 or ANSI)
 int Test4_6()
 {
 	wxJSONValue root;
 	wxString s;
-	s.Append( (wxChar) 0 );
+	s.Append( (wxChar) 1 );
 	s.Append( (wxChar) 3 );
 	s.Append( (wxChar) 5 );
 	root.Append( s );
@@ -501,9 +497,63 @@ int Test4_6()
 	TestCout( str );
 	TestCout( _T( "<-----------------\n"));
 
+	static const wxChar* expectedResult =
+	_T("[\n"
+	"   \"\\u0001\\u0003\\u0005\"\n"
+	"]\n" );
+
+	ASSERT( str == expectedResult );
+
 	return 0;
 }
 
+// test doubles
+int Test4_7()
+{
+	wxJSONValue root;
+	root.Append( 90.3 );
+	root.Append( 9.123456 );
+	root.Append( 10.123456789 );
+	root.Append( 0.1234 );
+	
+	wxString str;
+
+	wxJSONWriter wrt;
+	wrt.Write( root, str );
+	TestCout( str );
+	TestCout( _T( "<-----------------\n"));
+
+	static const wxChar* expectedResult =
+	_T("[\n"
+	"   90.3,\n"
+	"   9.123456,\n"
+	"   10.123456789,\n"
+	"   0.1234\n"
+	"]\n" );
+
+	ASSERT( str == expectedResult );
+
+	return 0;
+}
+
+// test the printf function
+int Test4_8()
+{
+	printf( "%f\n", 10.123456789 );
+	printf( "%.0f\n", 10.123456789 );
+	printf( "%.f\n", 0.123456789 );
+	printf( "%.10f\n", 10.123456789 );
+	printf( "%.10f\n", 10.123 );
+
+	printf( "\n" );
+	printf( "%g\n", 10.123456789 );
+	printf( "%.0g\n", 10.123456789 );
+	printf( "%.g\n", 0.123456789 );
+	printf( "%.20g\n", 10.123456789 );
+	printf( "%.10g\n", 10.123 );
+
+	return 0;
+}
 
 
 /*

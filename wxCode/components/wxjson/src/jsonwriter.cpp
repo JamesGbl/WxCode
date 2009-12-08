@@ -653,7 +653,7 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 		++writeBuff;		// point to the next byte
 		
 		// the escaped character
-		char escCh;
+		char escCh = 0;
 
 		// for every character we have to check if it is a character that
 		// needs to be escaped: note that characters that should be escaped
@@ -1010,7 +1010,7 @@ wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
 
 	int lastChar = WriteStringValue( os, key );
 	os.Write( " : ", 3 );
-	return 0;
+	return lastChar;
 }
 
 //! Write the invalid JSON value to the output stream.

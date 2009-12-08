@@ -71,6 +71,9 @@ extern int Test4_3();  // wxJSONWriter: writes empty, invalid and null objects
 extern int Test4_4();  // wxJSONWriter: an array of objects as root
 extern int Test4_5();  // wxJSONWriter: how much simple is wxJSON
 extern int Test4_6();  // wxJSONWriter: test control characters
+extern int Test4_7();  // wxJSONWriter: test writing double values
+extern int Test4_8();  // test the printf function
+
 
 //
 //		*********** test4.cpp ****************

@@ -308,7 +308,13 @@ int main( int argc, char* argv[] )
 		{
 			Test4_6, 3, _T( "wxJSONWriter: test control characters" )
 		},
-		{ 0 },{ 0 },{ 0 },
+		{
+			Test4_7, 3, _T( "wxJSONWriter: test an array of doubles" )
+		},
+		{
+			Test4_8, 3, _T( "test the printf function with doubles" )
+		},
+		{ 0 },
 		
 		// family #5		(test4.cpp)
 		{

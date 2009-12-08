@@ -2158,10 +2158,6 @@ wxJSONValue::GetInfo() const
  data, the function immediatly returns TRUE without doing a deep
  comparison which is, sure, useless.
  For further info see \ref json_internals_compare.
-
- \bug comparing negative INTs and UINTs that have the same bit patterns
- 	(for example -1 and (unsigned) -1 (all bits sets) returns TRUE
- 	instead of FALSE (see Test2_7() in 'samples/test1.cpp')
 */
 bool
 wxJSONValue::IsSameAs( const wxJSONValue& other ) const
@@ -2171,7 +2167,8 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 	bool r = false;
 
 	// some variables used in the switch statement
-	int size; wxJSONInternalMap::const_iterator it; int* usedElements;
+	int size;
+	wxJSONInternalMap::const_iterator it;
 
 	// get the referenced data for the two objects
 	wxJSONRefData* data = GetRefData();
@@ -2189,7 +2186,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 	if ( data->m_type != otherData->m_type )  {
 		// if the types are not compatible, returns false
 		// otherwise compares the compatible types: INT, UINT and DOUBLE
-		double val, otherVal;
+		double val;
 		switch ( data->m_type )  {
 			case wxJSONTYPE_INT :
 				if ( otherData->m_type == wxJSONTYPE_UINT )	{
