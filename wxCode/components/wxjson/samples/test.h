@@ -174,7 +174,9 @@ extern int Test13_7();  // test the wxJSONReader::Strto(u)ll function
 //		*********** test11.cpp ****************
 //
 // family #14: test the use of STL 
-extern int Test14_1();  // 
+extern int Test14_1();  //
+extern int Test14_2();  //
+extern int Test14_3();  //
 
 
 //

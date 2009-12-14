@@ -35,7 +35,7 @@
 #include "test.h"
 
 //
-// test writing to UTF8 streams
+// test if wxJSON_USE_STL is defined
 int Test14_1()
 {
 	TestCout( _T("Test if wxUSE_STL is defined: " ));
@@ -45,13 +45,68 @@ int Test14_1()
 	#endif
 	TestCout( r ? _T("TRUE") : _T("FALSE"));
 	TestCout( _T("\n"));
+	
+	r = false;
+	TestCout( _T("Test if wxJSON_USE_STL is defined: " ));
+	#if defined( wxJSON_USE_STL )
+		r = true;
+	#endif
+	TestCout( r ? _T("TRUE") : _T("FALSE"));
+	TestCout( _T("\n"));
+	
 	return 0;
 }
 
 
+// check the use of iterators (array)
+int Test14_2()
+{
+	wxJSONValue root;
+	root.Append( _T("first"));
+	root.Append( _T("second"));
+	root.Append( _T("third"));
+	root.Append( _T("fourth"));
+
+	const wxJSONInternalArray* array = root.AsArray();
+	ASSERT( array != 0 );
+	
+	/* the following does not work either if STL is or isn't enabled
+	wxJSONInternalArray::const_iterator iter;
+	for ( iter = array->begin(); iter != array->end(); iter++ )	{
+		const wxJSONValue& v = *iter;
+		TestCout( _T("value="));
+		TestCout( v.AsString() );
+		TestCout( _T("\n"));
+	}
+	*/
+	
+	return 0;
+}
+
+// check the use of iterators (key/value)
+int Test14_3()
+{
+	wxJSONValue root;
+	root[_T("first")] = 1;
+	root[_T("second")] = 2;
+	root[_T("third")] = 3;
+	root[_T("fourth")] = 4;
+	
+	// this works in both enabled and disabled STL
+	const wxJSONInternalMap* map = root.AsMap();
+	wxJSONInternalMap::const_iterator iter;
+	for ( iter = map->begin(); iter != map->end(); iter++ )	{
+		const wxJSONInternalMap::value_type& v = *iter;
+		TestCout( _T("key="));
+		TestCout( v.first );
+		TestCout( _T("\n"));
+	}
+	
+	return 0;
+}
 
 
-/*
+/
 {
 }
 */

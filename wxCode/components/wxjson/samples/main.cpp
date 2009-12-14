@@ -552,7 +552,13 @@ int main( int argc, char* argv[] )
 		{
 			Test14_1, 3, _T( "test the wxWidgets definitions and macros" )
 		},
-		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+		{
+			Test14_2, 3, _T( "test a JSON array type" )
+		},
+		{
+			Test14_3, 3, _T( "test a JSON key/value type" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// END OF TABLE
 		{0}
