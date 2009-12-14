@@ -89,7 +89,7 @@ typedef int (*TestFunc)();
 
 // max 10 tests for each family
 #define NUM_SUBTESTS	10
-#define NUM_TESTS	13
+#define NUM_TESTS	14
 
 
 // the test function's structure
@@ -542,6 +542,17 @@ int main( int argc, char* argv[] )
 		},
 		{ 0 },{ 0 },
 		
+
+		// family #14		(test11.cpp)
+		{
+			0,		// test #0: description of the family
+			3,		// m_auto (all)
+			_T( "test the use of STL for array and object types" )
+		},
+		{
+			Test14_1, 3, _T( "test the wxWidgets definitions and macros" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// END OF TABLE
 		{0}

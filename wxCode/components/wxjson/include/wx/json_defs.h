@@ -189,9 +189,13 @@
 
 
 //
-// force use of STL-style implementation of wxHashMap container
-// this is needed for compiling on MinGW
-// wxJSON_USE_MINGW
+// check if wxWidgets is compiled using --enable-stl in which case
+// we have to use different aproaches when declaring the array and
+// key/value containers (see the docs: wxJSON internals: array and hash_map
+#undef wxJSON_USE_STL
+#if defined( wxUSE_STL ) && wxUSE_STL == 1
+#define wxJSON_USE_STL
+#endif
 
 
 

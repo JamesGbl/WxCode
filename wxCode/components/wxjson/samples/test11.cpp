@@ -2,7 +2,7 @@
 
    test11.cpp
 
-    testing Unicode support in ANSI builds
+    test the use of STL
 
     Copyright (C) 2009  Luciano Cattani
 
@@ -38,7 +38,13 @@
 // test writing to UTF8 streams
 int Test14_1()
 {
-
+	TestCout( _T("Test if wxUSE_STL is defined: " ));
+	bool r = false;
+	#if defined( wxUSE_STL )
+		r = wxUSE_STL;
+	#endif
+	TestCout( r ? _T("TRUE") : _T("FALSE"));
+	TestCout( _T("\n"));
 	return 0;
 }
 

@@ -38,7 +38,7 @@
 class WXDLLIMPEXP_JSON wxJSONReader;
 class WXDLLIMPEXP_JSON wxJSONRefData;
 
-#if defined( wxJSON_USE_MINGW )
+#if defined( wxJSON_USE_STL )
 	// if compiling on MinGW we use the STL-style declaration of wxWidget's
 	// container classes 
 	class WXDLLIMPEXP_JSON wxJSONValue;
@@ -281,7 +281,7 @@ protected:
 };
 
 
-#if !defined( wxJSON_USE_MINGW )
+#if !defined( wxJSON_USE_STL )
 	// if using wxWidget's implementation of container classes we declare	
 	// the OBJARRAY are HASH_MAP _after_ the wxJSONValue is fully known
 	WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
