@@ -82,14 +82,14 @@ const wxChar *  wxWinServiceStatus :: FormatState ( const State &  state )
 {
    static const wxChar *   STATES   [] =
    {
-      "Unknown"         ,
-      "Stopped"         ,
-      "Start Pending"   ,
-      "Stop Pending"    ,
-      "Running"         ,
-      "Continue Pending",
-      "Pause Pending"   ,
-      "Paused"          ,
+      wxT ( "Unknown"           ),
+      wxT ( "Stopped"           ),
+      wxT ( "Start Pending"     ),
+      wxT ( "Stop Pending"      ),
+      wxT ( "Running"           ),
+      wxT ( "Continue Pending"  ),
+      wxT ( "Pause Pending"     ),
+      wxT ( "Paused"            ),
    };
    
    if ( ( state >= State_STOPPED ) ||
@@ -177,7 +177,7 @@ int  wxWinServiceApp :: OnRun ()
 {
    const static SERVICE_TABLE_ENTRY    ste   [] =
    {
-      { ""           , Main  },
+      { wxT ( ""    ), Main  },
       { 0            , 0     },
    };
       
@@ -265,7 +265,7 @@ void  wxWinServiceApp :: Install ( bool  create )
 
    if ( scm == 0 )
    {
-      wxLogError ( "Could not open Service Control Manager" );
+      wxLogError ( wxT ( "Could not open Service Control Manager" ) );
       
       return;
    }
@@ -281,7 +281,7 @@ void  wxWinServiceApp :: Install ( bool  create )
          :: CloseServiceHandle ( handle );
       }
       else
-         wxLogError ( "Could not install %s (%s)", servicename, name );
+         wxLogError ( wxT ( "Could not install %s (%s)" ), servicename, name );
    }
    else
    {
@@ -294,12 +294,12 @@ void  wxWinServiceApp :: Install ( bool  create )
          if ( :: DeleteService ( handle ) )
             wxLogMessage ( "Deleted '%s'", servicename );
          else
-            wxLogError   ( "Could not delete '%s'", servicename );
+            wxLogError   ( wxT ( "Could not delete '%s'" ), servicename );
             
          :: CloseServiceHandle ( handle );
       }
       else
-         wxLogError ( "Could not open Service '%s'", servicename );
+         wxLogError ( wxT ( "Could not open Service '%s'" ), servicename );
    }
 
    :: CloseServiceHandle   ( scm );
