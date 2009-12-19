@@ -184,6 +184,9 @@ wxJSONWriter::wxJSONWriter( int style, int indent, int step )
 		m_indent = 0;
 		m_step   = 0;
 	}
+	// set the default format string for doubles as
+	// 10 significant digits and suppress trailing ZEROes
+	SetDoubleFmtString( "%.10g") ;
 	
 #if !defined( wxJSON_USE_UNICODE )
 	// in ANSI builds we can suppress UTF-8 conversion for both the writer and the reader
@@ -274,6 +277,28 @@ wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
 	m_level = 0;
 	DoWrite( os, value, 0, false );
 }
+
+//! Set the format string for double values.
+/*!
+ This function sets the format string used for printing double values.
+ Double values are outputted to JSON text using the \b snprintf function
+ with a default format string of:
+ \code
+ 	%.10g
+ \endcode
+ which prints doubles with a precision of 10 decimal digits and suppressing
+ trailing ZEROes.
+ 
+ Note that the parameter is a pointer to \b char and not to \b wxChar. This
+ is because the JSON writer always procudes UTF-8 encoded text and decimal
+ digits in UTF-8 are made of only one UTF-8 code-unit (1 byte). 
+*/
+void
+wxJSONWriter::SetDoubleFmtString( const char* fmt )
+{
+	m_fmt = (char*) fmt;
+}
+
 
 
 //! Perform the real write operation.
@@ -960,7 +985,7 @@ wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
 	char buffer[32];
 	wxJSONRefData* data = value.GetRefData();
 	wxASSERT( data );
-	snprintf( buffer, 32, "%.10g", data->m_value.m_valDouble );
+	snprintf( buffer, 32, m_fmt, data->m_value.m_valDouble );
 	size_t len = strlen( buffer );
 	os.Write( buffer, len );
 	if ( os.GetLastError() != wxSTREAM_NO_ERROR )	{

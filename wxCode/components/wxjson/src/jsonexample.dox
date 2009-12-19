@@ -137,6 +137,19 @@ are: \b wxString, \b wxObjArray, \b wxHashMap, \b wxInputStream, \b wxOutputStre
 wxJSON does not depend on the \b std::string class nor on STL
 containers.
 
+If wxWdigets is configured with the \c --enable-stl flag then STL is
+available for both wxWdigets and wxJSON.
+In fact, if STL is enabled, the wxJSON \e array type and \e key/value type
+are implemented using STL containers.
+Otherwise, the wxWidegts' own implementation of container classes is used.
+Note that from the point of view of the wxJSON user, there is no difference
+in how JSON values are accessed (see \ref json_internals_array and \ref
+json_internals_map for details).
+
+wxJSON compiles and works (at least, it \e should work) against wxWidgets 2.8
+(minimum is wxW 2.8.4) and wxWidgets 2.9 (minimum is 2.9.1).
+
+
 The following three classes are defined in wxJSON:
 
 \li wxJSONValue this class holds the JSON value which can be 
@@ -197,21 +210,11 @@ JSON data-interchange format.
 All JSON specifications are implemented in this library plus
 some extensions in the writer and in the parser class.
 
-One of the most important features that is not present in this
-JSON implementation is \b iterators.
-Many other JSON implementations do provide iterators for the
-array and the object JSON types.
-I do not implement them because they need STL containers and I
-do not want the wxJSON library to depend on STL although
-there is a plan to let the user choose the container to be used:
-wxWidget's implementation or STL
-(see http://luccat.users.sourceforge.net/wxjson/newver_01.html#vers12).
-
 JSON data format is very stable. It is accredited to be
 stable forever or, at least, until programming languages 
 will be based on numbers, strings, booleans, structures and
 arrays.
-This version (1.1) is a stable release but there are plans to
+This version (1.2) is a stable release but there are plans to
 add some new features to the library
 (see http://luccat.users.sourceforge.net/wxjson/newver_01.html).
 Also, new versions of this library will be realesed in order to
@@ -221,7 +224,7 @@ keep \b wxJSON compatible with the new releases of \b wxWidgets.
 \section main_thanks Contributors
 
 Many thanks to Bryan Ashby, Robbie Groenewoudt, Alexander Stigsen,
-Andrejs Cainikovs, Piotr Likus and Kolya Kosenko
+Andrejs Cainikovs, Piotr Likus, Kolya Kosenko and Catalin
 for their help, hints, feedback.
 
 

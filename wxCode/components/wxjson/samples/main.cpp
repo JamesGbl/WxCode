@@ -640,6 +640,8 @@ int main( int argc, char* argv[] )
 				else	{
 					TestCout( _T("\nPerforming Subtest #" ));
 				}
+				TestCout( x );
+				TestCout( (wxChar) '.', false );
 				TestCout( y );
 				// print the description of the TEST
 				TestCout( _T( "\nDescription: "));

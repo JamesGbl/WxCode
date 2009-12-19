@@ -75,6 +75,7 @@ public:
 
 	void Write( const wxJSONValue& value, wxString& str );
 	void Write( const wxJSONValue& value, wxOutputStream& os );
+	void SetDoubleFmtString( const char* fmt );
 
 protected:
 
@@ -126,6 +127,9 @@ private:
 	
 	// Flag used in ANSI mode that controls UTF-8 conversion
 	bool  m_noUtf8;
+	
+	// The format string for printing doubles
+	char* m_fmt;
 };
 
 

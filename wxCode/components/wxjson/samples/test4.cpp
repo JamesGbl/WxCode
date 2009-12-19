@@ -188,7 +188,7 @@ int Test5_1()
 		"2147483657,"    // wxInt64 value=2147483657
 		"-2147483658,"   // wxInt64 value=-2147483658
 		"4294967405,"    // wxUint64 value=42944867405
-		"90.300000,"     // double value=90.30
+		"90.3,"          // double value=90.30
 		"true,"          // boolean value=TRUE
 		"false,"         // boolean value=FALSE
 		"null,"          // null value=NULL
@@ -229,7 +229,7 @@ int Test5_2()
 		"   2147483657,\n"	// wxInt64 value=2147483657
 		"   -2147483658,\n" 	// wxInt64 value=-2147483658
 		"   4294967405,\n"	// wxUint64 value=42944867405
-		"   90.300000,\n"	// double value=90.30
+		"   90.3,\n"	    // double value=90.30
 		"   true,\n"		// boolean value=TRUE
 		"   false,\n"		// boolean value=FALSE
 		"   null,\n"		// null value=NULL
@@ -271,7 +271,7 @@ int Test5_3()
 		"   2147483657,\t// wxInt64 value=2147483657\n"
 		"   -2147483658,\t// wxInt64 value=-2147483658\n"
 		"   4294967405,\t// wxUint64 value=42944867405\n"
-		"   90.300000,\t// double value=90.30\n"
+		"   90.3,\t// double value=90.30\n"
 		"   true,\t// boolean value=TRUE\n"
 		"   false,\t// boolean value=FALSE\n"
 		"   null,\t// null value=NULL\n"
@@ -314,7 +314,7 @@ int Test5_4()
 		"   2147483657,"    // wxInt64 value=2147483657
 		"   -2147483658,"   // wxInt64 value=-2147483658
 		"   4294967405,"    // wxUint64 value=42944867405
-		"   90.300000,"     // double value=90.30
+		"   90.3,"     // double value=90.30
 		"   true,"          // boolean value=TRUE
 		"   false,"         // boolean value=FALSE
 		"   null,"          // null value=NULL
@@ -357,7 +357,7 @@ int Test5_5()
 		"   2147483657,\n"	// wxInt64 value=2147483657
 		"   -2147483658,\n" 	// wxInt64 value=-2147483658
 		"   4294967405,\n"	// wxUint64 value=42944867405
-		"   90.300000,\n"	// double value=90.30
+		"   90.3,\n"	// double value=90.30
 		"   true,\n"		// boolean value=TRUE
 		"   false,\n"		// boolean value=FALSE
 		"   null,\n"		// null value=NULL
@@ -398,7 +398,7 @@ int Test5_6()
 		"   2147483657,\n"	// wxInt64 value=2147483657
 		"   -2147483658,\n" 	// wxInt64 value=-2147483658
 		"   4294967405,\n"	// wxUint64 value=42944867405
-		"   90.300000,\n"	// double value=90.30
+		"   90.3,\n"	// double value=90.30
 		"   true,\n"		// boolean value=TRUE
 		"   false,\n"		// boolean value=FALSE
 		"   null,\n"		// null value=NULL
@@ -542,7 +542,7 @@ int Test5_9()
 		"\t2147483657,\n"	// wxInt64 value=2147483657
 		"\t-2147483658,\n" 	// wxInt64 value=-2147483658
 		"\t4294967405,\n"	// wxUint64 value=42944867405
-		"\t90.300000,\n"	// double value=90.30
+		"\t90.3,\n"	// double value=90.30
 		"\ttrue,\n"		// boolean value=TRUE
 		"\tfalse,\n"		// boolean value=FALSE
 		"\tnull,\n"		// null value=NULL

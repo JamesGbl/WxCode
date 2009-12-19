@@ -17,8 +17,8 @@
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
 #define wxJSON_MAJOR          1
-#define wxJSON_MINOR          1
-#define wxJSON_RELEASE        1
+#define wxJSON_MINOR          2
+#define wxJSON_RELEASE        0
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
