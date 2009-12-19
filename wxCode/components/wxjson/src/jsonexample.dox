@@ -1,7 +1,7 @@
 
 /*! \mainpage wxJSON - The wxWidgets implementation of JSON 
 
-<center><b>version 1.1</b></center>
+<center><b>version 1.2</b></center>
 
 <center>http://luccat.users.sourceforge.net/wxjson/</center>
 
@@ -164,7 +164,7 @@ Pages related to this documentation:
 
 \li \ref wxjson_tutorial.
 \li \ref pg_json_internals
-\li \ref wxjson_whatsnew
+\li \ref wxjson_whatsnew12
 
 \section main_install Installation
 

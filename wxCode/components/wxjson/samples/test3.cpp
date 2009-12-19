@@ -552,6 +552,18 @@ int Test4_8()
 	printf( "%.20g\n", 10.123456789 );
 	printf( "%.10g\n", 10.123 );
 
+	printf( "\n" );
+	printf( "fmt=f: %f\n", 0.1 );
+	printf( "fmt=g: %g\n", 0.1 );
+	printf( "fmt=.0g: %.0g\n", 0.1 );
+	printf( "fmt=.g: %.g\n", 0.1 );
+	printf( "fmt=.20g: %.20g\n", 0.1 );
+	printf( "fmt=.10g: %.10g\n", 0.1 );
+
+	wxString s;
+	s.Printf( _T("%f"), 0.1 );
+	TestCout( _T("wxString::Printf(%f); "));
+	TestCout( s );	 
 	return 0;
 }
 

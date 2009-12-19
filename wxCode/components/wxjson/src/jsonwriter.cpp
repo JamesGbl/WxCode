@@ -30,10 +30,14 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  The ctor accepts some parameters which can be used to 
  change the style of the output.
  The default output is in human-readable format that uses a three-space
- indentation for object / array sub-items.
+ indentation for object / array sub-items and separates every
+ value with a linefeed character.
 
- Here is an example on how to use this class:
 
+ \par Examples
+
+ Using the default writer constructor
+ 
  \code
    // construct the JSON value object and add values to it
    wxJSONValue root;
@@ -44,13 +48,30 @@ static const wxChar* writerTraceMask = _T("traceWriter");
    wxString     str;
 
    // construct a JSON writer: use the default writer's settings
-   wxJSONWriter jsw;
+   wxJSONWriter writer;
 
    // call the writer's Write() memberfunction
-   jsw.Write( root, str );
+   writer.Write( root, str );
  \endcode
 
- \par output objects
+
+ To write a JSON value object using a four-spaces indentation and forcing all
+ comment strings to apear before the value they refer to, use the following code:
+ \code
+  wxJSONWriter writer( wxJSONWRITER_STYLED |   // want a styled output
+                wxJSONWRITER_WRITE_COMMENTS |  // want comments in the document
+                wxJSONWRITER_COMMENTS_BEFORE,  // force comments before value
+                0,                             // initial indentation
+                4);                            // indentation step
+  writer.Write( value, document );
+ \endcode
+
+ The following code construct a JSON writer that produces the most compact
+ text output but it is hard to read by humans:
+
+ \code  wxJSONWriter writer( wxJSONWRITER_NONE );  writer.Write( value, document ); \endcode
+
+ \par The two types of output objects
 
  You can write JSON text to two different kind of objects:
 
@@ -64,11 +85,18 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  In Unicode builds, the JSON text output in the string contains
  wide characters which encoding format is platform dependent: UCS-2 in
  Windows, UCS-4 in GNU/Linux.
+ Starting from wxWidgets version 2.9 the internal encoding for Unicode
+ builds in linux/unix systems is UTF-8.
 
  When writing to a stream object, the JSON text output is always
  encoded in UTF-8 in both ANSI and Unicode builds.
+ In ANSI builds the user may want to suppress UTF-8 encoding so
+ that the JSON text can be stored in ANSI format.
+ Note that this is not valid JSON text unless all characters written
+ to the JSON text document are in the US-ASCII character ser (0x00..0x7F).
+ To know more read \ref wxjson_tutorial_unicode_ansi
 
- \par efficiency
+ \par Efficiency
 
  In versions up to 1.0 the JSON writer wrote every character to the
  output object (the string or the stream).
@@ -76,10 +104,16 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  UTF-8 when writing to streams but we have to note that only string values
  have to be actually converted.
  Special JSON characters, numbers and literals do not need the conversion
- because for characters in the US-ASCII plane (0x00-0x7F)
- no conversion is needed as they only take one byte.
+ because they lay in the US-ASCII plane (0x00-0x7F)
+ and no conversion is needed as the UTF-8 encoding is the same as US-ASCII.
 
  For more info about the unicode topic see \ref wxjson_tutorial_unicode.
+ 
+ \par The problem of writing doubles
+ 
+ You can customize the ouput of doubles by specifing  the format string
+ that has to be used by the JSON writer class. To know more about this issue
+ read \ref wxjson_tutorial_write_doubles
 */
 
 //! Ctor.
@@ -145,34 +179,12 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 		values to the stream thus producing ANSI text output; only meaningfull in
 		ANSI builds, this flag is simply ignored in Unicode builds.
 
+
  Note that for the style wxJSONWRITER_NONE the JSON text output is a bit
  different from that of old 0.x versions although it is syntactically equal.
  If you rely on the old JSON output formatting read the following page
  \ref wxjson_tutorial_style_none.
  To know more about the writer's styles see \ref wxjson_tutorial_style
-
- \b Examples
-
- To write a JSON value object using a four-spaces indentation and forcing all
- comment strings to apear before the value they refer to, use the following code:
- \code
-  wxJSONWriter writer( wxJSONWRITER_STYLED |   // want a styled output
-                wxJSONWRITER_WRITE_COMMENTS |  // want comments in the document
-                wxJSONWRITER_COMMENTS_BEFORE,  // force comments before value
-                0,                             // initial indentation
-                4);                            // indentation step
-  writer.Write( value, document );
- \endcode
-
- The following code construct a JSON writer that produces hard-to-read
- output: indentation is suppressed and no comment lines are written
- and the values in the JSON text are not separated by LF.
-
- \code
-  wxJSONWriter writer( wxJSONWRITER_NO_LINEFEEDS );
-  writer.Write( value, document );
- \endcode
-
 */
 wxJSONWriter::wxJSONWriter( int style, int indent, int step )
 {

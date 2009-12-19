@@ -17,6 +17,7 @@ connection.
 \li \ref wxjson_tutorial_ex3
 \li \ref wxjson_tutorial_get
 \li \ref wxjson_tutorial_read_numbers
+\li \ref wxjson_tutorial_write_doubles
 \li \ref wxjson_tutorial_comment
 \li \ref wxjson_tutorial_unicode
 \li \ref wxjson_tutorial_style
@@ -897,6 +898,37 @@ read as a signed integer regardless its original type.
 You can use a special writer's flag in order to force the wxJSON
 library to recognize unsigned JSON values written to JSON text.
 See \ref wxjson_tutorial_style_unsigned for more info.
+
+
+\section wxjson_tutorial_write_doubles Writing doubles to JSON text output
+
+There is an issue when you have to write double values to a decimal
+representation. You know that some fractional values such as, for example,
+1/10 cannot be exactly represented in binary so when you write
+such values to a text representation there are rounding and/or
+truncating problems.
+The output you have depends on the format string used. This is an
+example using variuos format strings for printing the value of \b 1/10.
+\code
+  Format string      Output
+  -------------      ------
+  %f                  0.100000
+  %g                  0.1
+  %.0g                0.1
+  %.g:                0.1
+  %.20g               0.10000000000000000555
+  %.10g               0.1
+\endcode
+
+The wxJSON writer class has a function that allows you to set the format
+string for prinitng double values. The function is called wxJSONWriter::SetDoubleFmtString
+and sets the format string for the JSON writer object it is called for.
+If not specified, the default format string for the writer is:
+
+\code
+  %.10g
+\endcode
+which specifies a precision of 10 decimal digits and suppress trailing ZEROes.
 
 
 

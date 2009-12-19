@@ -1,0 +1,23 @@
+/*! \page wxjson_whatsnew12 What's new in version 1.2
+
+
+
+\section json_ver12_cleanup Code cleanup and 
+
+
+
+\section json_ver12_stl Compatible with STL-enabled wxWdigets' builds
+
+
+
+\section json_ver12_doubles Implemented a custom format string for writing doubles
+
+
+
+
+
+
+
+
+*/
+

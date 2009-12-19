@@ -111,26 +111,26 @@
 
 
  1.0.2 a bug-fix release: fixed bug #2795247 (wxJSONwriter does not escape control characters
- 	(r 960)	fixed the bug - see the Bug Tracker on sf.net
+       (r 960) fixed the bug - see the Bug Tracker on sf.net
  	
  	
  1.1.0 this release is a rewriting of the wxJSONReader and wxJSONWriter class which now 
- 	process JSON text input / output only in UTF-8 format. If I/O is from / to
- 	wxString objects, the reader and the writer convert the string object to a
- 	temporary UTF-8 memory-input/output-stream for processing
+       process JSON text input / output only in UTF-8 format. If I/O is from / to
+       wxString objects, the reader and the writer convert the string object to a
+       temporary UTF-8 memory-input/output-stream for processing
  	   
  1.1.1 fixed bug # 2898794 (build errors on gcc) and bug #2909326 (error reading UTF-8
-    strings that contain unrepresentable chars in ANSI mode).
+       strings that contain unrepresentable chars in ANSI mode).
 
 
- 1.2.0 fixed bug ID 2910776 (error writing double values)
-       fixed bug ID 2898794 (error and warnings in building wxJSON)
-       implemented the use of STL if wxWidgets is compiled using --enable-stl
-       
-       TODO: implement the precision format string when writing doubles
-             document the issue when writing doubles
-             document the STL version of containers and iterators (see Test #14)
-             use spaces for indentation and fix line-ending confusion
+ 1.2.0 (r 1147)fixed bug ID 2910776 (error writing double values)
+       (r 1146)fixed bug ID 2898794 (error and warnings in building wxJSON)
+       (r 1150)implemented the use of STL if wxWidgets is compiled using --enable-stl
+       (r 1152) implement the precision format string when writing doubles
+       document the issue when writing doubles
+       document the STL version of containers and iterators (see Test #14)
+       code cleanup
+       use spaces for indentation and fix line-ending confusion
 
 
 

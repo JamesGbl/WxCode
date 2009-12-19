@@ -851,16 +851,23 @@ wxJSONValue::AsDouble() const
 /*!
  The function returns a string representation of the value
  stored in the JSON object.
- All value types are converted to a string but the actual
- string depends on the type:
+ All value types are converted to a string by this function
+ and returned as a string:
 
- For integer and double, the string is the string representation of
- the numerical value in decimal notation.
- For booleans the string returned is \b true or \b false.
- If the value is a NULL value the \b null literal string is returned.
+ \li For integer the string is the string representation of
+	the numerical value in decimal notation; the function uses the
+	\b wxString::Printf() function for the conversion
+	 
+ \li for doubles, the value is converted to a string using the
+ 	\b wxString::Printf("%.10g") function; the format string specifies
+ 	a precision of ten decimal digits and suppress trailing ZEROes
+ 	
+ \li for booleans the string returned is: \b true or \b false.
+ 
+ \li if the value is a NULL value the \b null literal string is returned.
 
- If the value is of type wxJSONTYPE_INVALID, the literal string \b &lt;invalid&gt;
- is returned. Note that this is NOT a valid JSON text.
+ \li if the value is of type wxJSONTYPE_INVALID, the literal string \b &lt;invalid&gt;
+	is returned. Note that this is NOT a valid JSON text.
 
  If the value is an array or map, the returned string is the number of
  elements is the array/object enclosed in the JSON special characters that
@@ -904,7 +911,7 @@ wxJSONValue::AsString() const
 			#endif
 			break;
 		case wxJSONTYPE_DOUBLE :
-			s.Printf( _T("%f"), data->m_value.m_valDouble );
+			s.Printf( _T("%.10g"), data->m_value.m_valDouble );
 			break;
 		case wxJSONTYPE_BOOL :
 			s.assign( ( data->m_value.m_valBool ?
