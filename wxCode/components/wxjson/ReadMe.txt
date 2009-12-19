@@ -127,10 +127,9 @@
        (r 1146)fixed bug ID 2898794 (error and warnings in building wxJSON)
        (r 1150)implemented the use of STL if wxWidgets is compiled using --enable-stl
        (r 1152) implement the precision format string when writing doubles
-       document the issue when writing doubles
+       (r 1153) document the issue when writing doubles
        document the STL version of containers and iterators (see Test #14)
-       code cleanup
-       use spaces for indentation and fix line-ending confusion
+       code cleanup, use spaces for indentation and fix line-ending confusion
 
 
 

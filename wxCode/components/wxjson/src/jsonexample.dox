@@ -127,6 +127,13 @@ These are examples of JSON arrays:
 \endcode
 
 
+\section main_pre Prerequisites of wxJSON
+
+wxJSON compiles and works (at least, it \e should work) on wxWidgets 2.8
+(minimum is wxW 2.8.4) and wxWidgets 2.9 (minimum is 2.9.1).
+
+
+
 \section main_classes The JSON implementation for wxWidgets
 
 The wxJSON library is a JSON implementation for wxWidgets and it is composed
@@ -137,17 +144,16 @@ are: \b wxString, \b wxObjArray, \b wxHashMap, \b wxInputStream, \b wxOutputStre
 wxJSON does not depend on the \b std::string class nor on STL
 containers.
 
-If wxWdigets is configured with the \c --enable-stl flag then STL is
+Starting from version 1.2 the \b wxJSON library compiles also
+if wxWdigets is configured with the \c --enable-stl flag then STL is
 available for both wxWdigets and wxJSON.
 In fact, if STL is enabled, the wxJSON \e array type and \e key/value type
 are implemented using STL containers.
 Otherwise, the wxWidegts' own implementation of container classes is used.
-Note that from the point of view of the wxJSON user, there is no difference
-in how JSON values are accessed (see \ref json_internals_array and \ref
-json_internals_map for details).
-
-wxJSON compiles and works (at least, it \e should work) against wxWidgets 2.8
-(minimum is wxW 2.8.4) and wxWidgets 2.9 (minimum is 2.9.1).
+Note that from the point of view of the wxJSON user, the actual implementation
+is totally transparent: JSON values are accessed in the same way in both
+implementations.
+To know more read \ref json_internals_array and \ref json_internals_map.
 
 
 The following three classes are defined in wxJSON:

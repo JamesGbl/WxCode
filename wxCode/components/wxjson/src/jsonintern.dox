@@ -603,6 +603,10 @@ representation of the JSON array-type.
 Use the wxJSONValue::Item, wxJSONValue::ItemAt and the
 subscript operator for retreiving array's values.
 
+If wxWidgest was built using the \c --enable-stl flag then
+this type is implemented as a STL \b std::vector type
+but the actual implementation used by wxWdigets is totally
+transparent for the user.
 
 \section json_internals_map The map of key/value pairs.
 
@@ -636,6 +640,11 @@ There is no need for the application to access the internal
 representation of the JSON hashmap-type.
 Use the wxJSONValue::Item(const wxString&), wxJSONValue::ItemAt
 and the subscript operator for retreiving hashmap's values.
+
+If wxWidgest was built using the \c --enable-stl flag then
+this type is implemented as a STL \b std::vector type
+but the actual implementation used by wxWdigets is totally
+transparent for the user.
 
 
 \section json_internals_compare The comparison function and operator

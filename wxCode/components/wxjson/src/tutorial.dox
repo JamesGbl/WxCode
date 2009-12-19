@@ -156,6 +156,32 @@ explained in the following code fragment:
   }
 \endcode
 
+You can also use iterators to get all key/value objects in a JSON
+value, provided that the value (that may also be the root value) is
+of type key/value.
+This is an example:
+\code
+{
+	wxJSONValue root;
+	root[_T("first")] = 1;
+	root[_T("second")] = 2;
+	root[_T("third")] = 3;
+	root[_T("fourth")] = 4;
+	
+	// the following works in both enabled and disabled STL
+	
+	const wxJSONInternalMap* map = root.AsMap();
+	wxASSERT( map );	// check that the type is correct
+	
+	wxJSONInternalMap::const_iterator iter;
+	for ( iter = map->begin(); iter != map->end(); iter++ )	{
+		const wxJSONInternalMap::value_type& v = *iter;
+		// 'v.first' is the key
+		// 'v.second' is the wxJSONValue object
+	}
+}
+\endcode	
+
 The wxJSONReader class's constructor has some parameters that control
 how much error-tolerant should the parser be. By default, the parser
 is very tolerant about non fatal errors which are reported as \e warnings.
