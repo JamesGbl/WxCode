@@ -108,7 +108,7 @@ void wxMenuCmd::Update()
 #elif defined( __WXGTK__ )
 
     // on GTK, the SetAccel() function doesn't have any effect...	   
-    m_pItem->SetText(newtext);
+    m_pItem->SetItemLabel(newtext);
 
 #ifdef __WXGTK20__
 
