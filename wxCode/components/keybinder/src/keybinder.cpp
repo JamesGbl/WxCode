@@ -329,7 +329,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
     default:
 
         // ASCII chars...
-        if (wxIsalnum(keyCode))
+        if (keyCode < 256 && wxIsalnum(keyCode))
         {
             res << (wxChar)keyCode;
             break;
@@ -1120,8 +1120,9 @@ bool wxKeyConfigPanel::Create(wxWindow* parent,
         HasFlag(wxKEYBINDER_SHOW_APPLYBUTTON) != 0);
 
     // set the final sizer as window's sizer
-    SetSizer(main);
-    main->SetSizeHints(this);
+//    SetSizer(main);
+//    main->SetSizeHints(this);
+    SetSizerAndFit(main);
 
     // set up the controls: the user of the panel must call one of the
     // ImportXXXX() functions to enable the use of the panel !!!!
@@ -1150,7 +1151,7 @@ void wxKeyConfigPanel::BuildCtrls()
 
         // use a wxTreeCtrl to show the commands hierarchy
         m_pCommandsTree = new wxTreeCtrl(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
-                                    wxDefaultSize, wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
+                                         wxDefaultSize, wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
     } else {
 
         // use a combobox + a listbox
@@ -1559,7 +1560,7 @@ wxKeyProfileArray wxKeyConfigPanel::GetProfiles() const
 void wxKeyConfigPanel::UpdateButtons()
 {
     wxKBLogDebug(wxT("wxKeyConfigPanel::UpdateButtons"));
-    wxString str;
+    wxString str = wxT("None");
 
     // is the remove button to be enabled ?
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
@@ -1581,7 +1582,6 @@ void wxKeyConfigPanel::UpdateButtons()
 
         } else {
 
-            str = wxT("None");
             m_pCurrCmd = NULL;
         }
     }
