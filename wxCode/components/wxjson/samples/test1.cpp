@@ -229,7 +229,7 @@ int Test1_3()
 		_T( "10" ),		// arr[3]
 		_T( "20" ),		// arr[4]
 		_T( "true" ),		// arr[5]
-		_T( "10.200000" ),	// arr[6]
+		_T( "10.2" ),	// arr[6]
 		_T( "This is a static C string" ),	// arr[7]
 		_T( "wxString 1" ),			// arr[8]
 		_T( "32777" ),				// arr[9]

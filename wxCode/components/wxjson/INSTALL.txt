@@ -79,15 +79,6 @@ After you have copied or moved the file, type:
 
 > test.exe
 
-Installation - MinGW system
----------------------------
-The library does not compile on MingGW because the wxHashMap class's
-implementation has an issue when using forward declarations.
-To know the details of this failure see bug ID: 2807075.
-In order to compile on this system you may have to uncomment the following
-line in the 'include/wx/json_defs,h' header file:
-
-wxJSON_USE_MINGW
 
 
 Installation - unix

@@ -988,6 +988,11 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
  This function uses the \n snprintf function to get the US-ASCII
  representation of the integer and simply copy it to the output stream.
  Returns -1 on stream errors or ZERO if no errors.
+ 
+ Note that writing a double to a decimal ASCII representation could
+ lay to unexpected results depending on the format string used in the
+ conversion.
+ See SetDoubleFmtString for details.
 */
 int
 wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
@@ -1073,22 +1078,6 @@ wxJSONWriter::WriteInvalid( wxOutputStream& os )
 	int lastChar = 0;
 	os.Write( "<invalid JSON value>", 9 );
 	return lastChar;
-}
-
-//! Writes an error string to the output JSON text (not used)
-/*!
- The function just writes the provided string prepended with
- the \b ERROR word to the output JSON text.
- This could be usefull for signalling errors but not much
- reliable if the error occurs for the stream itself
-*/
-int
-wxJSONWriter::WriteError( const wxString& err )
-{
-	wxString s( _T( "ERROR: "));
-	s.append( err );
-	// WriteString( s )	// does not compile
-	return 0;
 }
 
 //! Writes the separator between values

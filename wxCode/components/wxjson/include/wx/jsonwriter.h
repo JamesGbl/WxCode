@@ -79,7 +79,6 @@ public:
 
 protected:
 
-	//int  DoWrite( const wxJSONValue& value, const wxString* key, bool comma );
 	int  DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxString* key, bool comma );
 	int  WriteIndent( wxOutputStream& os );
 	int  WriteIndent( wxOutputStream& os, int num );
@@ -94,15 +93,11 @@ protected:
 	int  WriteBoolValue( wxOutputStream& os, const wxJSONValue& v );
 	int  WriteDoubleValue( wxOutputStream& os, const wxJSONValue& v );
 
-	// int  WritePrimitiveValue( wxOutputStream& os, const wxJSONValue& value );
 	int  WriteInvalid( wxOutputStream& os );
 	int  WriteSeparator( wxOutputStream& os );
 
 	int  WriteKey( wxOutputStream& os, const wxString& key );
 	int  WriteComment( wxOutputStream& os, const wxJSONValue& value, bool indent );
-
-	// int  WriteComment( const wxJSONValue& value, bool indent );
-	// int  WriteChar( wxOutputStream& os, wxChar ch );
 
 	int  WriteError( const wxString& err );
 

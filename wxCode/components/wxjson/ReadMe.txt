@@ -37,9 +37,9 @@
  CHANGELOG
  ---------
  
- 0.1.0 - first version of wxJSON at wxCode
+ 0.1.0 first version of wxJSON at wxCode
 
- 0.2.0 - this version adds full support for C/C++ comment lines
+ 0.2.0 this version adds full support for C/C++ comment lines
        reading and writing
 
  0.2.1 this is a bug fix release (thanks to Jere, who reported the bugs):
@@ -128,7 +128,8 @@
        (r 1150)implemented the use of STL if wxWidgets is compiled using --enable-stl
        (r 1152) implement the precision format string when writing doubles
        (r 1153) document the issue when writing doubles
-       document the STL version of containers and iterators (see Test #14)
+       (r 1154) document the STL version of containers and iterators (see Test #14)
+       (r 1157) modified bakefile output: only build the wxJSON library
        code cleanup, use spaces for indentation and fix line-ending confusion
 
 

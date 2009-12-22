@@ -338,8 +338,7 @@ wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )
 int
 wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
 {
-	// construct a temporary wxJSONValue that will be passed
-	// to DoRead() if val == 0 - note that it will be deleted on exit
+	// if val == 0 the 'temp' JSON value will be passed to DoRead()
 	wxJSONValue temp;
 	m_level    = 0;
 	m_depth    = 0;
@@ -1095,8 +1094,13 @@ wxJSONReader::SkipComment( wxInputStream& is )
     
  \li in ANSI builds the conversion may fail because of the presence of
     unrepresentable characters in the current locale. In this case,
-    the function just \b copies the UTF-8 buffer to the \b wxString
-    object using the \b wxString::From8BitData fucntion.
+    the default behaviour is to perform a char-by-char conversion; every
+    char that cannot be represented in the current locale is stored as
+    \e unicode \e escaped \e sequence
+   
+ \li in ANSI builds, if the reader is constructed with the wxJSONREADER_NOUTF8_STREAM
+ 	then no conversion takes place and the UTF-8 temporary buffer is simply
+ 	\b copied to the \b wxString object 
     
  The string is, finally, stored in the provided wxJSONValue argument
  provided that it is empty or it contains a string value.
@@ -1180,14 +1184,14 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
 		}
 	}
 
-	// now convert the temporary UTF-8 buffer to a wxString object in one step.
-	// in ANSI builds chek if UTF-8 conversion is disabled
+	// if UTF-8 conversion is disabled (ANSI builds only) we just copy the
+	// bit data to a wxString object
 	wxString s;
 	if ( m_noUtf8 )	{
 		s = wxString::From8BitData( (const char*) utf8Buff.GetData(), utf8Buff.GetDataLen());
 	}
 	else	{
-		// UTF-8 conversion is not disabled
+		// perform UTF-8 conversion
 		// first we check that the UTF-8 buffer is correct, i.e. it contains valid
 		// UTF-8 code points.
 		// this works in both ANSI and Unicode builds.

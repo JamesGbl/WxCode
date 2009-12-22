@@ -73,10 +73,6 @@ wxJSONRefData::wxJSONRefData()
 	wxLogTrace( traceMask, _T("(%s) JSON refData ctor progr=%d"),
 				__PRETTY_FUNCTION__, m_progr);
 #endif
-	// try the wxLogTrace.using char (this works)
-	//wxLogTrace( traceMask, _T("(%s) JSON refData ctor progr=%d"),
-	//			__PRETTY_FUNCTION__, m_progr);
-
 }
 
 // Dtor - does nothing
@@ -1041,7 +1037,7 @@ wxJSONValue::AsULong() const
 	wxJSON_ASSERT( data );
 	unsigned long int ul = (unsigned long) data->m_value.VAL_UINT;
 
-	wxJSON_ASSERT( IsULong());  // exapnds only in debug builds
+	wxJSON_ASSERT( IsULong());  // expands only in debug builds
 	return ul;
 }
 
@@ -2288,8 +2284,6 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 		case wxJSONTYPE_CSTRING :
 			s1 = wxString( data->m_value.m_valCString );
 			s2 = wxString( otherData->m_value.m_valCString );
-			// i = strcmp( m_value.m_valCString, other.m_value.m_valCString );
-			// i = wcscmp( m_value.m_valCString, other.m_value.m_valCString );
 			if ( s1 != s2 )  {
 				r = false;
 			}
@@ -2339,7 +2333,6 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 			}
 			// for every key calls itself on the value found in
 			// the other object. if 'key' does no exist, returns FALSE
-			// wxJSONInternalMap::const_iterator it;
 			for ( it = data->m_valMap.begin(); it != data->m_valMap.end(); it++ )  {
 				wxString key = it->first;
 				wxLogTrace( compareTraceMask, _T("(%s) Comparing map object - key=%s"),
@@ -2356,7 +2349,6 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
 		default :
 			// should never happen
 			wxFAIL_MSG( _T("wxJSONValue::IsSameAs() unexpected wxJSONType"));
-			// wxJSON_ASSERT( 0 );
 			break;
 	}
 	return r;
@@ -2783,13 +2775,6 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 	// allocate a new instance of wxJSONRefData using the default
 	// ctor; we cannot use the copy ctor of a wxJSONRefData
 	wxJSONRefData* data = new wxJSONRefData();
-
-	// wxObjectRefData is private and cannot be accessed by this
-	// wxJSONValue class - but we need to set the reference counter
-	// to 1 so we cannot simply use the default copy ctor of 
-	// wxJSONRefData* data = new wxJSONRefData( *other );
-	// wxJSONRefData structure.
-	//data->m_count = 1;
 
 	// copy the referenced data structure's data members
 	data->m_type       = other->m_type;
