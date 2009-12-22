@@ -42,18 +42,6 @@ dnl ### begin block 20_COND_PLATFORM_MACOSX_1_USE_SOVERSION_1[wxjson.bkl] ###
         COND_PLATFORM_MACOSX_1_USE_SOVERSION_1=""
     fi
     AC_SUBST(COND_PLATFORM_MACOSX_1_USE_SOVERSION_1)
-dnl ### begin block 20_COND_PLATFORM_MAC_0[wxjson.bkl] ###
-    COND_PLATFORM_MAC_0="#"
-    if test "x$PLATFORM_MAC" = "x0" ; then
-        COND_PLATFORM_MAC_0=""
-    fi
-    AC_SUBST(COND_PLATFORM_MAC_0)
-dnl ### begin block 20_COND_PLATFORM_MAC_1[wxjson.bkl] ###
-    COND_PLATFORM_MAC_1="#"
-    if test "x$PLATFORM_MAC" = "x1" ; then
-        COND_PLATFORM_MAC_1=""
-    fi
-    AC_SUBST(COND_PLATFORM_MAC_1)
 dnl ### begin block 20_COND_PLATFORM_OS2_1[wxjson.bkl] ###
     COND_PLATFORM_OS2_1="#"
     if test "x$PLATFORM_OS2" = "x1" ; then
