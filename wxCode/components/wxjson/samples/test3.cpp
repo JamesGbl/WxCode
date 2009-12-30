@@ -563,7 +563,24 @@ int Test4_8()
 	wxString s;
 	s.Printf( _T("%f"), 0.1 );
 	TestCout( _T("wxString::Printf(%f); "));
-	TestCout( s );	 
+	TestCout( s );
+
+	s.Printf( _T("%g"), 0.1 );
+	TestCout( _T("\nwxString::Printf(%g); "));
+	TestCout( s );
+
+	s.Printf( _T("%.g"), 0.1 );
+	TestCout( _T("\nwxString::Printf(%.g); "));
+	TestCout( s );
+
+	s.Printf( _T("%.20g"), 0.1 );
+	TestCout( _T("\nwxString::Printf(%.20g); "));
+	TestCout( s );
+
+	s.Printf( _T("%.10g"), 0.1 );
+	TestCout( _T("\nwxString::Printf(%.10g); "));
+	TestCout( s );
+	
 	return 0;
 }
 
