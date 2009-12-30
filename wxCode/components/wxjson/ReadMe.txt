@@ -123,14 +123,15 @@
        strings that contain unrepresentable chars in ANSI mode).
 
 
- 1.2.0 (r 1147)fixed bug ID 2910776 (error writing double values)
-       (r 1146)fixed bug ID 2898794 (error and warnings in building wxJSON)
-       (r 1150)implemented the use of STL if wxWidgets is compiled using --enable-stl
+ 1.2.0 (r 1147) fixed bug ID 2910776 (error writing double values)
+       (r 1146) fixed bug ID 2898794 (error and warnings in building wxJSON)
+       (r 1150) implemented the use of STL if wxWidgets is compiled using --enable-stl
        (r 1152) implement the precision format string when writing doubles
        (r 1153) document the issue when writing doubles
        (r 1154) document the STL version of containers and iterators (see Test #14)
        (r 1157) modified bakefile output: only build the wxJSON library
-       code cleanup, use spaces for indentation and fix line-ending confusion
+       (r 1158) code cleanup: removed commented out code, unused symbols and macros..
+       use spaces for indentation and fix line-ending confusion
 
 
 

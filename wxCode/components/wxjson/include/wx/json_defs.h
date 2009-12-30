@@ -122,7 +122,7 @@
 #endif
 
 #if !defined( LLONG_MIN )
-  #define LLONG_MIN     -9223372036854775808    
+  #define LLONG_MIN     -9223372036854775808
 #endif
 
 
@@ -163,7 +163,7 @@
 // unless the wxJSON_NOABORT_ASSERT is defined
 #define wxJSON_NOABORT_ASSERT
 #if defined( wxJSON_NOABORT_ASSERT )
-  #define wxJSON_ASSERT( cond )	
+  #define wxJSON_ASSERT( cond )
 #else
   #define wxJSON_ASSERT( cond )		wxASSERT( cond );
 #endif
@@ -196,10 +196,6 @@
 #if defined( wxUSE_STL ) && wxUSE_STL == 1
 #define wxJSON_USE_STL
 #endif
-
-
-
-
 
 
 

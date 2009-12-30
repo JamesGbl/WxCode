@@ -1,21 +1,114 @@
 /*! \page wxjson_whatsnew12 What's new in version 1.2
 
 
+This version is mainly a code cleanup, bug fix and compilation's errors fix.
 
-\section json_ver12_cleanup Code cleanup and 
+\li \ref json_ver12_cleanup
+\li \ref json_ver12_stl
+\li \ref json_ver12_doubles
+
+
+\section json_ver12_cleanup Code cleanup
+
+In this version I made some cleanup of:
+
+\li unused code, functions and static data
+\li commented-out code
+\li line-ending confusion: all lines now ends with the unix-style
+	ending character: LF
+\li replaced the TAB char for indentation with 4-spaces as stated by the
+	wxWidgets' coding guidelines
 
 
 
 \section json_ver12_stl Compatible with STL-enabled wxWdigets' builds
 
+There was a problem in compiling wxJSON if wxWdigets is built using the
+
+\code
+  --enable-stl
+\endcode
+
+flag. The problem is related to the declaration of the \c wxJSONInternalMap
+type which represents the container of key/value pairs.
+The declaration of such a type is:
+
+\code
+  class WXDLLIMPEXP_JSON wxJSONInternalMap;   // forward declaration
+  
+  class WXDLLIMPEXP_JSON wxJSONValue
+  {
+    ...
+	// this is the reason of the forward declaration
+	const wxJSONInternalMap* AsMap() const;
+	...
+  };
+
+  WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+\endcode
+
+The code declares a hasp map container of \e strings as the \e key and \e wxJSONValue as
+the value. If wxWidgets is built without STL enabled the above code compiles
+fine.
+
+Otherwise, a compile error occurs due to the redeclaration of the
+\c wxJSONInternalMap type.
+This happen because the wxWidgets' implementation of hashmaps relies on 
+the \b std::hash_map STL container if STL is enabled.
+The above code is wrong if using STL for the map container.
+The correct code, when using STL is the following:
+
+\code
+  WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+  // the above is similar to:
+  // typedef std::hash_map<wxString, wxJSONValue>  wxJSONInternalMap;
+  
+  class WXDLLIMPEXP_JSON wxJSONValue
+  {
+    ...
+	const wxJSONInternalMap* AsMap() const;
+	...
+  };
+
+\endcode
+
+In this version, the \b wxJSON library checks if STL is enabled in wxWidgets and
+conditionally compiles the library so that no compilation error occurs.  
 
 
-\section json_ver12_doubles Implemented a custom format string for writing doubles
+\section json_ver12_doubles Issues when writing doubles
 
+There is an issue in the wxJSONWriter class when a JSON value of type \b double
+is written to the JSON text representation.
+The writer relies on the \b snprintf function to write a text representation of
+the double as a string of decimal digits.
 
+You may also know that some decimal fractional number cannot be exactly represented
+in binary format (and viceversa).
+For example, the decimal fraction \b 1/10 cannot be representated correctly in
+binary.
+The problem is that when writing that number to JSON text you may get one
+of the following:
 
+\code
+  0.1
+  0.100000
+  0.10000000000000000555
+\endcode
 
+depending on the precision flags used in the format string.
+For this reason, the wxJSON writer uses a default format string of:
 
+\code
+  %.10g
+\endcode
+
+which specifies a precision of ten significant decimal digits suppressing
+trailing ZEROes.
+You can modify the format string using the \C wxJSONWriter::SetDoubleFmtString
+member function.
+The format string set by this function is used for all JSON text generated
+by the wxJSON writer object for which the function was called.
 
 
 
