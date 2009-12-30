@@ -131,7 +131,7 @@
        (r 1154) document the STL version of containers and iterators (see Test #14)
        (r 1157) modified bakefile output: only build the wxJSON library
        (r 1158) code cleanup: removed commented out code, unused symbols and macros..
-       use spaces for indentation and fix line-ending confusion
+       (r 1159) use spaces for indentation and fix line-ending confusion
 
 
 
