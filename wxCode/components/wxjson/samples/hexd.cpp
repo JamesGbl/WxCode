@@ -109,6 +109,7 @@ int main( int argc, char* argv[] )
       }
       PrintHexRow( len, buffer );
     }
+    close( fd );
   }  // continue for all files
 
   return 0;
