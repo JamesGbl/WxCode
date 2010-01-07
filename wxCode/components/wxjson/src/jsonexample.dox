@@ -76,7 +76,8 @@ JSON handles data. There are the following data types in JSON:
 \li arrays: an array is an ordered collection of values
 
 \li binary buffers: this is a \b wxJSON extension to the JSON syntax and
-    let the user store binary memory buffers in JSON values.
+    let the user store binary memory buffers in JSON values. To know more
+    about this topic read \ref wxjson_tutorial_memorybuff
 
 
 JSON is built on two structures:

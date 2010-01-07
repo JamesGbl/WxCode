@@ -733,12 +733,13 @@ Example:
   bool r = v1.IsSameAs( v2 );  // returns FALSE
 \endcode
 
-The comparison function compares different numeric types
-by promoting them to \b double an then comparing the double
-values.
-In this way the function correctly handles this situation:
+The comparison function takes care of the sign of integer types
+and correctly handles values that apear equal in memory but that
+express different values as for example:
 
 \code
+  // 'v1' and 'v2' have the same representation in memory (all bits
+  // set) but the expressed values are totally different
   wxJSONValue v1( -1 );            // this is -1
   wxJSONValue v2( (unsigned) -1);  // this is 4.294.967.296
   bool r = v1.IsSameAs( v2 );      // returns FALSE

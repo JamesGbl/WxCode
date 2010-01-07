@@ -1025,7 +1025,7 @@ Because the \e memory \e buffer is not valid JSON text, you have to use the spec
 By default, the wxJSONWriter will write a wxJSONValue that contains a binary buffer type
 as an array of INTs thus producing valid JSON text output.
 If you want to write the special binary buffer type which will be recognized by the reader,
-you have to use the special wxJSONWRITER_MEMORYBUFF writer's flag when constructing it.
+you have to use the special \c wxJSONWRITER_MEMORYBUFF writer's flag.
 Note that other JSON implementations will fail to read such a text.
 
 Care has to be taken when dealing with \b wxMemoryBuffer objects: this is a fast

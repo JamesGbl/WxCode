@@ -133,6 +133,9 @@
        (r 1158) code cleanup: removed commented out code, unused symbols and macros..
        (r 1159) use spaces for indentation and fix line-ending confusion
 
+ 1.3.0 (r 1164) implemented the wxJSONValue new data type: memory buffers
+                implemented the writing of the new data type
+                implemented the reading of the new data type
 
 
 BUGS
