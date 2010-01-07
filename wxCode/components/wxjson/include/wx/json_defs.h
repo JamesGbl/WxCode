@@ -161,7 +161,7 @@
 //
 // define the wxJSON_ASSERT() macro to expand to wxASSERT()
 // unless the wxJSON_NOABORT_ASSERT is defined
-#define wxJSON_NOABORT_ASSERT
+// #define wxJSON_NOABORT_ASSERT
 #if defined( wxJSON_NOABORT_ASSERT )
   #define wxJSON_ASSERT( cond )
 #else
@@ -197,6 +197,11 @@
 #define wxJSON_USE_STL
 #endif
 
+//
+// defines the MIN and MAX macro for numeric arguments
+// note that the safest way to define such functions is using templates
+#define MIN(a,b)    a < b ? a : b
+#define MAX(a,b)    a > b ? a : b
 
 
 #endif // _WX_JSON_DEFS_H_

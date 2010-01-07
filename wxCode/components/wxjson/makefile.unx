@@ -175,6 +175,7 @@ all: $(LIB_LIBUNI) $(LIB_LIBANSI) testuni.bin testansi.bin
 # this is only usefull for the author
 tarball:
 	tar -cvzf wxJSON-$(VERSION).tar.gz          \
+		--exclude *~		\
 		--exclude *.o		\
 		--exclude *.oa		\
 		--exclude CVS*		\

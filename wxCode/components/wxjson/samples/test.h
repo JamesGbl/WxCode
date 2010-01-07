@@ -182,7 +182,12 @@ extern int Test14_3();  //
 //
 //		*********** test12.cpp ****************
 //
-// family #
+// family #15: test the new JSON type: memory buffer
+extern int Test15_1();  // test equal operator of wxMemoryBuffer
+extern int Test15_2();  // test ctors, copy ctors, assignment op etc.
+extern int Test15_3();  // test the conversion static functions
+extern int Test15_4();  // test the comparison static functions
+
 
 //
 //		*********** test13.cpp ****************

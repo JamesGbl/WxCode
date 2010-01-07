@@ -75,6 +75,9 @@ JSON handles data. There are the following data types in JSON:
 
 \li arrays: an array is an ordered collection of values
 
+\li binary buffers: this is a \b wxJSON extension to the JSON syntax and
+    let the user store binary memory buffers in JSON values.
+
 
 JSON is built on two structures:
 
@@ -220,7 +223,7 @@ JSON data format is very stable. It is accredited to be
 stable forever or, at least, until programming languages 
 will be based on numbers, strings, booleans, structures and
 arrays.
-This version (1.2) is a stable release but there are plans to
+This version (1.3) is a stable release but there are plans to
 add some new features to the library
 (see http://luccat.users.sourceforge.net/wxjson/newver_01.html).
 Also, new versions of this library will be realesed in order to

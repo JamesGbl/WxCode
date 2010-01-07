@@ -105,7 +105,7 @@ For this reason, the wxJSON writer uses a default format string of:
 
 which specifies a precision of ten significant decimal digits suppressing
 trailing ZEROes.
-You can modify the format string using the \C wxJSONWriter::SetDoubleFmtString
+You can modify the format string using the \c wxJSONWriter::SetDoubleFmtString
 member function.
 The format string set by this function is used for all JSON text generated
 by the wxJSON writer object for which the function was called.

@@ -18,6 +18,7 @@ connection.
 \li \ref wxjson_tutorial_get
 \li \ref wxjson_tutorial_read_numbers
 \li \ref wxjson_tutorial_write_doubles
+\li \ref wxjson_tutorial_memorybuff
 \li \ref wxjson_tutorial_comment
 \li \ref wxjson_tutorial_unicode
 \li \ref wxjson_tutorial_style
@@ -957,6 +958,81 @@ If not specified, the default format string for the writer is:
 which specifies a precision of 10 decimal digits and suppress trailing ZEROes.
 
 
+\section wxjson_tutorial_memorybuff Storing binary memory buffers
+
+You know that JSON is a text-based data interchange format but the word \e data refers
+especially to program variables and not other kind of data.
+JSON is not suitable for exchanging binary data such as audio, video, image or complex
+ documents and it should not because it was not developed for that purpose.
+The goals of JSON are: simple, human-readable, fast and compact.
+On the other hand, there may be some particular situations in which a program should
+store and/or transmit small amount of binary data such as a small GIF image (for example
+a logo), a 1- or 2-seconds sound or a tiny memory buffer.
+
+In these situations, JSON is very limited: you cannot use JSON strings to store binary
+data because they are converted to UTF-8, the only possible solution is to use an array
+of numbers. For example, if we want to store a simple GIF image we can write something
+like the following:
+\code
+    {
+        "image" :	{
+            "type"   : "gif",
+            "width"  : 160,
+            "height" : 160,
+            "data"   : [ 32, 160, 255, 47, 89, 47, 123, 85, ... ]
+        }
+    }
+\endcode
+The above may be a solution but it consumes a lot of space because for every byte in the buffer
+we need 3-4 characters. Also, the program has to convert the buffer into an array of INTs
+when writing the JSON text and to convert it back when reading the stream.
+\b wxJSON introduces another JSON data type as an extension of the JSON syntax:
+the binary buffer data type. In order to maintain the text-based format,
+the binary buffer is encoded as a string of two hexadecimal digits for every byte and it is
+enclosed in single quotes. The above example will look like the following:
+\code
+    {
+        "image" :	{
+            "type"   : "gif",
+            "width"  : 160,
+            "height" : 160,
+            "data"   : '20A0FF2F592F7B55...'
+        }
+    }
+\endcode
+The reader will store such a type in a \b wxMemoryBuffer object and the wxJSONValue class will
+have functions to return it and to construct and assign it:
+\code
+    // construct a binary buffer JSON value
+    wxJSONValue( const wxMemoryBuffer& mem );
+    wxJSONValue( const void* mem, size_t size );
+
+    // get the value as a memory buffer
+    bool           wxJSONValue::IsMemBuffer();
+    bool           wxJSONValue::AsMemBuffer( wxMemoryBuffer& buff );
+    wxMemoryBuffer wxJSONValue::AsMemBuffer();
+
+    // assign to a wxJSONValue object a memory buffer
+    wxMemoryBuffer buff;
+    wxJSONvalue v;
+    v = buff;
+\endcode
+
+
+Because the \e memory \e buffer is not valid JSON text, you have to use the special
+\c wxJSONREADER_MEMORYBUFF flag in order to read such type otherwise an error is reported.
+
+By default, the wxJSONWriter will write a wxJSONValue that contains a binary buffer type
+as an array of INTs thus producing valid JSON text output.
+If you want to write the special binary buffer type which will be recognized by the reader,
+you have to use the special wxJSONWRITER_MEMORYBUFF writer's flag when constructing it.
+Note that other JSON implementations will fail to read such a text.
+
+Care has to be taken when dealing with \b wxMemoryBuffer objects: this is a fast
+helper class that uses reference counting when copying or assigning memory buffer
+objects but the class is not a \e copy-on-write structure: changes made to one
+object affects all other copies made from it. See the \b wxWidgets' documentation for
+more info about this class.
 
 \section wxjson_tutorial_comment Using comment lines in wxJSON
 

@@ -67,7 +67,8 @@ enum wxJSONType {
     wxJSONTYPE_ULONG,      /*!< the object contains an unsigned 32-bit integer  */
     wxJSONTYPE_UINT64,     /*!< the object contains an unsigned 64-bit integer  */
     wxJSONTYPE_SHORT,      /*!< the object contains a 16-bit integer            */
-    wxJSONTYPE_USHORT      /*!< the object contains a 16-bit unsigned integer   */
+    wxJSONTYPE_USHORT,     /*!< the object contains a 16-bit unsigned integer   */
+    wxJSONTYPE_MEMORYBUFF  /*!< the object contains a binary memory buffer   */
 };
 
 // the comment position: every value only has one comment position
@@ -110,6 +111,8 @@ public:
     wxJSONValue( double d );
     wxJSONValue( const wxChar* str );     // assume static ASCIIZ strings
     wxJSONValue( const wxString& str );
+    wxJSONValue( const wxMemoryBuffer& buff );
+    wxJSONValue( const void* buff, size_t len );
     wxJSONValue( const wxJSONValue& other );
     virtual ~wxJSONValue();
 
@@ -135,6 +138,7 @@ public:
     bool IsCString() const;
     bool IsArray() const;
     bool IsObject() const;
+    bool IsMemoryBuff() const;
 
     // function for retireving the value as ...
     int            AsInt() const;
@@ -167,6 +171,8 @@ public:
     bool        AsDouble( double& d ) const;
     bool        AsString( wxString& str ) const;
     bool        AsCString( wxChar* ch ) const;
+    wxMemoryBuffer AsMemoryBuff() const;
+    bool        AsMemoryBuff( wxMemoryBuffer& buff ) const;
 
     const wxJSONInternalMap*   AsMap() const;
     const wxJSONInternalArray* AsArray() const;
@@ -193,6 +199,8 @@ public:
     wxJSONValue& Append( double d );
     wxJSONValue& Append( const wxChar* str );
     wxJSONValue& Append( const wxString& str );
+    wxJSONValue& Append( const wxMemoryBuffer& buff );
+    wxJSONValue& Append( const void* buff, size_t len );
     bool         Remove( int index );
     bool         Remove( const wxString& key );
     void         Clear();
@@ -222,6 +230,8 @@ public:
     wxJSONValue& operator = ( double d );
     wxJSONValue& operator = ( const wxChar* str );
     wxJSONValue& operator = ( const wxString& str );
+    wxJSONValue& operator = ( const wxMemoryBuffer& buff );
+    // wxJSONValue& operator = ( const void* buff, size_t len ); cannot be declared
     wxJSONValue& operator = ( const wxJSONValue& value );
 
     // get the value or a default value
@@ -248,7 +258,13 @@ public:
     wxJSONRefData*   SetType( wxJSONType type );
     int              GetLineNo() const;
     void             SetLineNo( int num );
+
+    // public static functions: mainly used for debugging
     static  wxString TypeToString( wxJSONType type );
+    static  wxString MemoryBuffToString( const wxMemoryBuffer& buff, size_t len = -1 );
+    static  wxString MemoryBuffToString( const void* buff, size_t len );
+    static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const wxMemoryBuffer& buff2 );
+    static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const void* buff2 );
 
 protected:
     wxJSONValue*  Find( unsigned index ) const;
@@ -378,6 +394,8 @@ public:
     //! The JSON object value.
     wxJSONInternalMap   m_valMap;
 
+    //! The memory buffer object
+    wxMemoryBuffer      m_memBuff;
 
     //! The position of the comment line(s), if any.
     /*!
