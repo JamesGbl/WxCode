@@ -10,6 +10,7 @@
    #if wxUSE_UNICODE
       #ifdef __WXDEBUG__
          #pragma comment(lib, "wxbase29ud.lib")
+         #pragma comment(lib, "wxbase29ud_xml.lib")
          #pragma comment(lib, "wxmsw29ud_core.lib")
       #else
          #pragma comment(lib, "wxbase29u.lib")
