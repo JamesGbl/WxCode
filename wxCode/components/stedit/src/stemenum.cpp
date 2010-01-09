@@ -358,6 +358,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     if (!menu) menu = new wxMenu();
     bool add_sep = false;
 
+    if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_UNDOREDO) && !HasMenuOptionType(STE_MENU_READONLY))
+    {
+        if (add_sep) menu->AppendSeparator();
+
+        menu->Append(MenuItem(menu, wxID_UNDO, wxEmptyString, _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
+        menu->Append(MenuItem(menu, wxID_REDO, wxEmptyString, _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
+        add_sep = true;
+    }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_CUTCOPYPASTE))
     {
         if (!HasMenuOptionType(STE_MENU_READONLY))
@@ -415,14 +423,6 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         if (add_sep) menu->AppendSeparator();
 
         menu->Append(ID_STE_GOTO_LINE, _("&Go To..."), _("Goto line number"));
-        add_sep = true;
-    }
-    if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_UNDOREDO) && !HasMenuOptionType(STE_MENU_READONLY))
-    {
-        if (add_sep) menu->AppendSeparator();
-
-        menu->Append(MenuItem(menu, wxID_UNDO, wxEmptyString, _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
-        menu->Append(MenuItem(menu, wxID_REDO, wxEmptyString, _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY) && !HasMenuOptionType(STE_MENU_READONLY))
