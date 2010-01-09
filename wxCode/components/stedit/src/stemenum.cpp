@@ -390,7 +390,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         add_sep = true;
     }
     if (add_sep) menu->AppendSeparator();
-    menu->Append(wxID_SELECTALL, wxEmptyString, _("Selects entire document"));
+    menu->Append(wxID_SELECTALL, _("Select &All"), _("Selects entire document"));
     add_sep = true;
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_LINE))
     {
