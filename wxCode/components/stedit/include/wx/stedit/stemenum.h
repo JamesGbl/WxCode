@@ -392,6 +392,7 @@ private:
 #define wxART_STEDIT_REPLACE        wxART_MAKE_ART_ID(wxART_STEDIT_REPLACE)
 #define wxART_STEDIT_UNDO           wxART_MAKE_ART_ID(wxART_STEDIT_UNDO)
 #define wxART_STEDIT_REDO           wxART_MAKE_ART_ID(wxART_STEDIT_REDO)
+#define wxART_STEDIT_CLEAR          wxART_MAKE_ART_ID(wxART_STEDIT_CLEAR)
 
 // Art for each preference dialog page
 #define wxART_STEDIT_PREFDLG_VIEW       wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_VIEW)

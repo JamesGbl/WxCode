@@ -362,12 +362,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_UNDO, wxEmptyString, _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
-        menu->Append(MenuItem(menu, wxID_REDO, wxEmptyString, _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
+        menu->Append(MenuItem(menu, wxID_UNDO, wxGetStockLabel(wxID_UNDO), _("Undo last operation"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_UNDO)));
+        menu->Append(MenuItem(menu, wxID_REDO, wxGetStockLabel(wxID_REDO), _("Redo last undo"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REDO)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_CUTCOPYPASTE))
     {
+        if (add_sep) menu->AppendSeparator();
+
         if (!HasMenuOptionType(STE_MENU_READONLY))
             menu->Append(MenuItem(menu, wxID_CUT,  wxGetStockLabel(wxID_CUT), _("Cut selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CUT)));
         menu->Append(MenuItem(menu, wxID_COPY,  wxGetStockLabel(wxID_COPY), _("Copy selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_COPY)));
@@ -382,10 +384,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
 
         // FIXME - ID_STE_PREF_SELECTION_MODE remmed out since I can't make it work in GTK
         //menu->AppendCheckItem(ID_STE_PREF_SELECTION_MODE, _("Rectan&gular Selection"), _("Rectangular selections for cut/copy/paste"));
-        menu->Append(wxID_SELECTALL, wxEmptyString, _("Selects entire document"));
+
+        menu->Append(MenuItem(menu, wxID_CLEAR, wxGetStockLabel(wxID_DELETE), _("Delete selection"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CLEAR)));
 
         add_sep = true;
     }
+    if (add_sep) menu->AppendSeparator();
+    menu->Append(wxID_SELECTALL, wxEmptyString, _("Selects entire document"));
+    add_sep = true;
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_LINE))
     {
         if (add_sep) menu->AppendSeparator();
@@ -1109,6 +1115,7 @@ bool wxSTEditorMenuManager::DoSetTextItem(wxMenu *menu, wxMenuBar *menuBar,
 #include "../art/replace.xpm"
 #include "../art/undo.xpm"
 #include "../art/redo.xpm"
+#include "../art/cross.xpm"
 
 #define ART(artid, xpmRc) \
     if (id == (artid)) return wxBitmap(xpmRc##_xpm);
@@ -1134,6 +1141,7 @@ wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
     ART(wxART_STEDIT_REPLACE,        replace)
     ART(wxART_STEDIT_UNDO,           undo)
     ART(wxART_STEDIT_REDO,           redo)
+    ART(wxART_STEDIT_CLEAR,          cross)
 
     return wxNullBitmap;
 }

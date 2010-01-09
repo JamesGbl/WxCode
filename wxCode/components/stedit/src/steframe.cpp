@@ -136,6 +136,7 @@ static const AcceleratorArray& getaccelerator()
       array.Add(wxGetStockAcceleratorEx(wxID_UNDO));
       array.Add(wxGetStockAcceleratorEx(wxID_REDO));
       array.Add(wxGetStockAcceleratorEx(wxID_SAVEAS));
+      array.Add(wxGetStockAcceleratorEx(wxID_CLEAR));
 
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
       array.Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));
