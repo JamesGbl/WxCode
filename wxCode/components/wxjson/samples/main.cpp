@@ -579,7 +579,10 @@ int main( int argc, char* argv[] )
 		{
 			Test15_4, 3, _T( "test the comparison static functions" )
 		},
-		{ 0 },{ 0 },{ 0 },{ 0 },{ 0 },
+		{
+			Test15_5, 3, _T( "test the writer for memory buffer types" )
+		},
+		{ 0 },{ 0 },{ 0 },{ 0 },
 
 		// END OF TABLE
 		{0}

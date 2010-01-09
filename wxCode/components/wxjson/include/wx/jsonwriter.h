@@ -32,23 +32,6 @@
 #include "json_defs.h"
 #include "jsonval.h"
 
-
-// The 'style' flags for the writer
-//
-// BIT= 11 10 9 8 7 6 5 4 3 2 1 0
-//       |  | | | | | | | | | | |
-//       |  | | | | | | | | | |  -> 1=styled (indentation), 0=not styled (other bits ignored)
-//       |  | | | | | | | | |  ---> 0=do not write comments, 1=write comments
-//       |  | | | | | | | |  -----> 1=force comments to be written before.the value
-//       |  | | | | | | |  -------> 1=forcecomments to be written after the value
-//       |  | | | | | |  ---------> 0=do not split strings, 1=split strings
-//       |  | | | | |  -----------> 1=do not add linefeeds between values (STYLED only)
-//       |  | | | |  -------------> 1=escape the solidus '/' character
-//       |  | | |  ---------------> 1=multiline string (LF and TAB not escaped)
-//       |  | |  -----------------> 1=prepend a plus (+) sign to unsigned integers
-//       |  |  -------------------> 1=use tabs for indentation
-//       |   ---------------------> 1= do not add indentation (STYLED only)
-//        ------------------------> 1= ANSI: do not convert to UTF-8
 enum {
     wxJSONWRITER_NONE            = 0,
     wxJSONWRITER_STYLED          = 1,
@@ -63,6 +46,7 @@ enum {
     wxJSONWRITER_TAB_INDENT         = 512,
     wxJSONWRITER_NO_INDENTATION     = 1024,
     wxJSONWRITER_NOUTF8_STREAM      = 2048,
+    wxJSONWRITER_MEMORYBUFF         = 4096
 };
 
 // class declaration
@@ -92,6 +76,7 @@ protected:
     int  WriteUIntValue( wxOutputStream& os, const wxJSONValue& v );
     int  WriteBoolValue( wxOutputStream& os, const wxJSONValue& v );
     int  WriteDoubleValue( wxOutputStream& os, const wxJSONValue& v );
+    int  WriteMemoryBuff( wxOutputStream& os, const wxMemoryBuffer& buff );
 
     int  WriteInvalid( wxOutputStream& os );
     int  WriteSeparator( wxOutputStream& os );

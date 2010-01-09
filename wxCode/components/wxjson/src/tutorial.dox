@@ -1034,6 +1034,39 @@ objects but the class is not a \e copy-on-write structure: changes made to one
 object affects all other copies made from it. See the \b wxWidgets' documentation for
 more info about this class.
 
+
+\subsection wxjson_tutorial_memorybuff_ints Writing and reading binary buffers as array of INTs     
+
+The \e memory \e buffer type is not a valid JSON type: it is a \b wxJSON extension.
+If you want to store binary buffers in the JSON value objects but still
+want to produce only valid JSON text output, you only have to construct
+a wxJSONWriter object without specifying the \c wxJSONWRITER_MEMORYBUFF flag.
+
+The writer writes the memory buffer type as an array af INTs and this is
+the default behaviour. Example:
+
+\code
+    [ 32, 160, 255, 47, 89, 47, 123, 85 ]
+\endcode
+
+When you read such a text, the reader stores the array of INTs as an array of
+INTs, of course.
+The \b wxJSON library provides a helper function to convert an array of INTs
+to a memory buffer object:
+
+\code
+  static wxMemoryBuffer wxJSONValue::ArrayToMemoryBuff( const wxJSONValue& value );
+\endcode
+
+The difference between writing a binary buffer as an array of INTs or as the new
+\b wxJSON type is that when you write buffers as the new type the wxJSONReader
+automatically detects such text as a \e memory \e buffer and stores it as a
+\b wxMemoryBuffer object.
+When array of INTs is used for the output, it is the user's responsability to
+convert the array of INT type to a memory buffer object.
+
+
+
 \section wxjson_tutorial_comment Using comment lines in wxJSON
 
 Comments are not supported by the JSON syntax specifications but

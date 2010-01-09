@@ -265,6 +265,7 @@ public:
     static  wxString MemoryBuffToString( const void* buff, size_t len );
     static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const wxMemoryBuffer& buff2 );
     static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const void* buff2 );
+    static wxMemoryBuffer ArrayToMemoryBuff( const wxJSONValue& value );
 
 protected:
     wxJSONValue*  Find( unsigned index ) const;

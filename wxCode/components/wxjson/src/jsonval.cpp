@@ -3109,6 +3109,49 @@ wxJSONValue::CompareMemoryBuff( const wxMemoryBuffer& buff1, const void* buff2 )
 }
 
 
+//! Converts an array of INTs to a memory buffer
+/*!
+ This static function converts an array of INTs stored in a wxJSONvalue object
+ into a memory buffer object.
+ The wxJSONvalue object passed as parameter must be of type ARRAY and must contain
+ INT types whose values are between 0 and 255.
+
+ Every element of the array si converted to a BYTE value and appended to the returned
+ wxMemoryBuffer object. The following rules apply in the conversion:
+ \li if \c value is not an ARRAY type, an empty memory buffer is returned
+ \li if the \c value array contains elements of type other than INT, those
+	elements are ignored
+ \li if the \c value array contains elements of type INT which value is outside the
+	range 0..255, those elements are ignored
+ \li if the \c value array contains only ignored elements an empty wxMemoryBuffer
+	object is returned.
+
+ This function can be used to get a memory buffer object from valid JSON text.
+ Please note that the wxJSONReader cannot know which array of INTs represent a binary
+ memory buffer unless you use the \b wxJSON \e memory \e buffer extension in the writer and
+ in the reader.
+*/
+wxMemoryBuffer
+wxJSONValue::ArrayToMemoryBuff( const wxJSONValue& value )
+{
+    wxMemoryBuffer buff;
+    if ( value.IsArray() )  {
+        int len = value.Size();
+        for ( int i = 0; i < len; i++ )  {
+            short int byte; unsigned char c;
+            // we do not use opertaor [] because it is not const
+            // bool r = value[i].AsShort( byte );
+            bool r = value.ItemAt(i).AsShort( byte );
+            if ( r && ( byte >= 0 && byte <= 255 ) )  {
+                c = (unsigned char) byte;
+                buff.AppendByte( c );
+            }
+        }
+    }
+    return buff;
+}
+
+
 /*************************************************************************
 
             64-bits integer support
