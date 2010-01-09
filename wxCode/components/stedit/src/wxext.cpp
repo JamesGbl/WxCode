@@ -66,8 +66,9 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
         STOCKITEM(wxID_FORWARD,              wxACCEL_ALT , WXK_RIGHT)
         STOCKITEM(wxID_HELP,                 wxACCEL_NORMAL, WXK_HELP)
         STOCKITEM(wxID_REPLACE,              wxACCEL_CMD,'H')
-        STOCKITEM(wxID_EXIT,                 wxACCEL_CTRL, 'Q')
-        STOCKITEM(wxID_CLOSE,                wxACCEL_CTRL, 'W')
+        STOCKITEM(wxID_EXIT,                 wxACCEL_CMD, 'Q')
+        STOCKITEM(wxID_CLOSE,                wxACCEL_CMD, 'W')
+        STOCKITEM(wxID_CLEAR,                wxACCEL_NORMAL, WXK_DELETE)
         default:
             //if (id == wxXRCID_GOTO) ret.Set(wxACCEL_CTRL,'G',id);
             //else
