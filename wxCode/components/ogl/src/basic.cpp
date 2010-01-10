@@ -1665,7 +1665,7 @@ void wxShape::RemoveLine(wxLineShape *line)
 void wxShape::WriteAttributes(wxXmlNode*clause) const
 {
   clause->AddAttribute(wxT("type"), GetClassInfo()->GetClassName());
-  clause->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), m_id));
+  clause->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), (int)m_id));
 
   if (m_pen)
   {
@@ -1716,7 +1716,7 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
     {
       wxShape *line = (wxShape*)node->GetData();
       //wxExpr *id_expr = new wxExpr(line->GetId());
-      list->AddAttribute(wxString::Format(wxT("%d"), i), wxString::Format(wxT("%d"), line->GetId()));
+      list->AddAttribute(wxString::Format(wxT("%d"), i), wxString::Format(wxT("%d"), (int)line->GetId()));
       node = node->GetNext();
       i++;
     }
@@ -1743,7 +1743,7 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
     clause->AddAttribute(wxT("hilite"), wxString::Format(wxT("%d"), m_highlighted));
 
   if (m_parent) // For composite objects
-    clause->AddAttribute(wxT("parent"), wxString::Format(wxT("%d"), m_parent->GetId()));
+    clause->AddAttribute(wxT("parent"), wxString::Format(wxT("%d"), (int)m_parent->GetId()));
 
   if (m_rotation != 0.0)
     clause->AddAttribute(wxT("rotation"), wxString::Format(wxT("%g"), m_rotation));
@@ -1753,7 +1753,7 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
     clause->AddAttribute(wxT("neck_length"), wxString::Format(wxT("%d"), m_branchNeckLength));
     clause->AddAttribute(wxT("stem_length"), wxString::Format(wxT("%d"), m_branchStemLength));
     clause->AddAttribute(wxT("branch_spacing"), wxString::Format(wxT("%d"), m_branchSpacing));
-    clause->AddAttribute(wxT("branch_style"), wxString::Format(wxT("%d"), m_branchStyle));
+    clause->AddAttribute(wxT("branch_style"), wxString::Format(wxT("%d"), (int)m_branchStyle));
   }
 
   // Write user-defined attachment points, if any
@@ -1766,8 +1766,8 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
       wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
       wxXmlNode* pointExpr = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("point"));
       pointExpr->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), point->m_id));
-      pointExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), point->m_x));
-      pointExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), point->m_y));
+      pointExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), point->m_x));
+      pointExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), point->m_y));
       attachmentList->AddChild(pointExpr);
       node = node->GetNext();
     }
@@ -1799,15 +1799,15 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
     regionExpr->AddAttribute(wxT("name"), region->m_regionName);
     regionExpr->AddAttribute(wxT("text"), region->m_regionText);
 
-    regionExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), region->m_x));
-    regionExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), region->m_y));
-    regionExpr->AddAttribute(wxT("w"), wxString::Format(wxT("%d"), region->GetWidth()));
-    regionExpr->AddAttribute(wxT("h"), wxString::Format(wxT("%d"), region->GetHeight()));
+    regionExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), region->m_x));
+    regionExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), region->m_y));
+    regionExpr->AddAttribute(wxT("w"), wxString::Format(wxT("%g"), region->GetWidth()));
+    regionExpr->AddAttribute(wxT("h"), wxString::Format(wxT("%g"), region->GetHeight()));
 
-    regionExpr->AddAttribute(wxT("minw"), wxString::Format(wxT("%d"), region->m_minWidth));
-    regionExpr->AddAttribute(wxT("minh"), wxString::Format(wxT("%d"), region->m_minHeight));
-    regionExpr->AddAttribute(wxT("propx"), wxString::Format(wxT("%d"), region->m_regionProportionX));
-    regionExpr->AddAttribute(wxT("propy"), wxString::Format(wxT("%d"), region->m_regionProportionY));
+    regionExpr->AddAttribute(wxT("minw"), wxString::Format(wxT("%g"), region->m_minWidth));
+    regionExpr->AddAttribute(wxT("minh"), wxString::Format(wxT("%g"), region->m_minHeight));
+    regionExpr->AddAttribute(wxT("propx"), wxString::Format(wxT("%g"), region->m_regionProportionX));
+    regionExpr->AddAttribute(wxT("propy"), wxString::Format(wxT("%g"), region->m_regionProportionY));
 
     regionExpr->AddAttribute(wxT("mode"), wxString::Format(wxT("%d"), region->m_formatMode));
 
@@ -1815,10 +1815,10 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
     regionExpr->AddAttribute(wxT("family"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetFamily() : wxDEFAULT));
     regionExpr->AddAttribute(wxT("style"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetStyle() : wxDEFAULT));
     regionExpr->AddAttribute(wxT("weight"), wxString::Format(wxT("%d"), region->m_font ? region->m_font->GetWeight() : wxNORMAL));
-    regionExpr->AddAttribute(wxT("clr"), wxString::Format(wxT("%d"), region->m_textColour));
+    regionExpr->AddAttribute(wxT("clr"), region->m_textColour);
 
     // New members for pen colour/style
-    regionExpr->AddAttribute(wxT("penclr"), wxString::Format(wxT("%d"), region->m_penColour));
+    regionExpr->AddAttribute(wxT("penclr"), region->m_penColour);
     regionExpr->AddAttribute(wxT("penstyle"), wxString::Format(wxT("%d"), region->m_penStyle));
 
     // Formatted text:
@@ -1830,8 +1830,8 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
     {
       wxShapeTextLine *line = (wxShapeTextLine *)textNode->GetData();
       wxXmlNode* list2 = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("text"));
-      list2->AddAttribute(wxT("x"), wxString::Format(wxT("%d"), line->GetX()));
-      list2->AddAttribute(wxT("y"), wxString::Format(wxT("%d"), line->GetY()));
+      list2->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), line->GetX()));
+      list2->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), line->GetY()));
       list2->AddAttribute(wxT("text"), line->GetText());
       textExpr->AddChild(list2);
       textNode = textNode->GetNext();
