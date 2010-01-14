@@ -98,6 +98,7 @@
 					<Add library="libwxmsw28d_adv.a" />
 					<Add library="libwxmsw28d_core.a" />
 					<Add library="libwxbase28d.a" />
+					<Add library="libwxbase28d_xml.a" />
 					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)" />
 				</Linker>
 			</Target>
