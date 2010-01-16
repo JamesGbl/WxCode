@@ -188,6 +188,7 @@ extern int Test15_2();  // test ctors, copy ctors, assignment op etc.
 extern int Test15_3();  // test the conversion static functions
 extern int Test15_4();  // test the comparison static functions
 extern int Test15_5();  // test the writer for memory buffer types
+extern int Test15_6();  // test the reader for memory buffer types
 
 
 //

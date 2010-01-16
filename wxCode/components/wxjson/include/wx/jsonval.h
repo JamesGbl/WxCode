@@ -206,6 +206,7 @@ public:
     void         Clear();
     bool         Cat( const wxChar* str );
     bool         Cat( const wxString& str );
+    bool         Cat( const wxMemoryBuffer& buff );
 
     // retrieve an item
     wxJSONValue& Item( unsigned index );

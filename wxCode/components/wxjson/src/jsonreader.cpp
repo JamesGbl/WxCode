@@ -695,6 +695,12 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
                 m_next    = 0;
                 break;
 
+            case '\'' :
+                ch = ReadMemoryBuff( is, value );  // read a memory buffer type
+                m_current = &value;
+                m_next    = 0;
+                break;
+
             case ':' :   // key / value separator
                 m_current = &value;
                 m_current->SetLineNo( m_lineNo );
@@ -1826,6 +1832,106 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
     }        // end while
     return result;
 }
+
+//! Read a memory buffer type
+/*!
+ This function is called by DoRead() when the single-quote character is
+ encontered which starts a \e memory \e buffer type.
+ This type is a \b wxJSON extension so the function emits a warning
+ when such a type encontered.
+ If the reader is constructed without the \c wxJSONREADER_MEMORYBUFF flag
+ then the warning becomes an error.
+ To know more about this JSON syntax extension read \ref wxjson_tutorial_memorybuff
+
+ @param is the input stream
+ @param val the JSON value that will hold the memory buffer value
+ @return the last char read or -1 in case of EOF
+*/
+
+union byte
+{
+    unsigned char c[2];
+    short int b;
+};
+
+int
+wxJSONReader::ReadMemoryBuff( wxInputStream& is, wxJSONValue& val )
+{
+    static const wxChar* membuffError = _T("the \'memory buffer\' type contains %d invalid digits" );
+
+    AddWarning( wxJSONREADER_MEMORYBUFF, _T( "the \'memory buffer\' type is not valid JSON text" ));
+
+    wxMemoryBuffer buff;
+    int ch = 0; int errors = 0;
+    unsigned char byte = 0;
+    while ( ch >= 0 ) {
+        ch = ReadChar( is );
+        if ( ch < 0 )  {
+            break;
+        }
+        if ( ch == '\'' )  {
+            break;
+        }
+        // the conversion is done two chars at a time
+        unsigned char c1 = (unsigned char) ch;
+        ch = ReadChar( is );
+        if ( ch < 0 )  {
+            break;
+        }
+        unsigned char c2 = (unsigned char) ch;
+        c1 -= '0';
+        c2 -= '0';
+        if ( c1 > 9 )  {
+            c1 -= 7;
+        }
+        if ( c2 > 9 )  {
+            c2 -= 7;
+        }
+        if ( c1 > 15 )  {
+            ++errors;
+        }
+        else if ( c2 > 15 )  {
+            ++errors;
+        }
+        else {
+            byte = (c1 * 16) + c2;
+            buff.AppendByte( byte );
+        }
+    }   // end while
+
+    if ( errors > 0 )  {
+        wxString err;
+        err.Printf( membuffError, errors );
+        AddError( err );
+    }
+
+
+    // now assign the memory buffer object to the JSON-value 'value'
+    // must check that:
+    //   'value'  is invalid OR
+    //   'value'  is a memory buffer; concatenate it
+    if ( !val.IsValid() )   {
+        wxLogTrace( traceMask, _T("(%s) assigning the memory buffer to value"), __PRETTY_FUNCTION__ );
+        val = buff ;
+    }
+    else if ( val.IsMemoryBuff() )  {
+        wxLogTrace( traceMask, _T("(%s) concatenate memory buffer to value"), __PRETTY_FUNCTION__ );
+        val.Cat( buff );
+    }
+    else  {
+        AddError( _T( "Memory buffer value cannot follow another value") );
+    }
+
+    // store the input text's line number when the string was stored in 'val'
+    val.SetLineNo( m_lineNo );
+
+    // read the next char after the closing quotes and returns it
+    if ( ch >= 0 )  {
+        ch = ReadChar( is );
+    }
+    return ch;
+}
+
 
 
 

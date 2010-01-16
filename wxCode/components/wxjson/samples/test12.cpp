@@ -337,9 +337,8 @@ int Test15_4()
 //	MEMORYBUFF
 //	MEMORYBUFF & STYLED
 //	MEMORYBUFF & STYLED & SPLIT_STRING
-int Test15_5()
-{
-	static const char mem[] = {
+
+static const char mem[] = {
 		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,
 		29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,
 		54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,
@@ -353,6 +352,9 @@ int Test15_5()
 		189,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,
 		198,199,200
     };
+
+int Test15_5()
+{
 
 	wxJSONValue root;
 	root.Append( mem, 5 );
@@ -399,6 +401,90 @@ int Test15_5()
 	TestCout( s );
 
 	return 0;
+}
+
+
+// test the READER - we try to read various memory buffers from JSON text
+int Test15_6()
+{
+    // the following text contains an arrat of:
+    //
+    //  0: an array of 5 INTs
+    //  1: an array of 19 INTs
+    //  2: an array of 20 INTs
+    //  3: an array of 200 INTs
+    //  4. an empty array
+    //  5. a memory buffer of 200 bytes
+    //  6. a memory buffer of 20 bytes
+    //  7. a memory buffer of 45 bytes
+    //  8. a memory buffer of ZERO bytes (empty buffer))
+
+    static const wxChar* json = _T("\n"
+        "[\n"
+        "   [0,1,2,3,4],      // 0: 5-bytes array of INTs\n"
+        "   [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],       // 1: 19 bytes array of INTs\n"
+        "   [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],    // 2: 20 bytes array of INTs\n"
+        "   // 3: a 200 bytes array of INTs\n"
+        "   [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,"
+        "21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,"
+        "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,"
+        "71,72,73,74,75,76,77,78,89,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,"
+        "96,97,98,99,100,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,"
+        "115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,"
+        "134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,"
+        "153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,"
+        "172,173,174,175,176,177,178,189,180,181,182,183,184,185,186,187,188,189,190,"
+        "191,192,193,194,195,196,197,198,199],\n"
+        "   [],      // 4: and empty array of INTs\n"
+
+        "   // 5: a 200 bytes memory buffer\n"
+        "   \'000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F2021222324252627\',\n"
+        "   \'000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20"
+        "2122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445"
+        "464748494A4B4C4D4E59505152535455565758595A5B5C5D5E5F60616263646465666768696A6B6C6D6E6F"
+        "707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F90"
+        "9192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0"
+        "B1B2BDB4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6\',\n"
+
+        "   \'000102030405060708090A0B0C0D0E0F1011121314\',  // 6. 20 bytes\n"
+        "   \'000102030405060708090A0B0C0D0E0F10111213\'\n"
+        "         \'1415161718191A1B1C1D1E1F2021222324252627\'\n"
+        "         \'28292A2B2C\',       // 7. 45 bytes\n"
+        "   ''  // 8: an empty memory buffer\n"
+    "]\n" );
+
+    wxJSONReader reader( wxJSONREADER_TOLERANT | wxJSONREADER_MEMORYBUFF );
+    wxString text( json );
+    wxJSONValue root( wxJSONTYPE_INVALID );
+    int numErrors = reader.Parse( text, &root );
+
+    // now construct the 9 wxMemoryBuffer objects that are the expected results
+    size_t sizes[] = { 5, 19, 20, 200, 0, 200, 20, 45, 0 };
+
+    // expected result mem buffers
+    wxMemoryBuffer mb[9];
+    for ( int i = 0; i < 9; i++ )   {
+        if ( sizes[i] > 0 ) {
+            mb[i].AppendData( mem, sizes[i] );
+        }
+    }
+
+    // now checks that wxMemoryBuffers in the JSON array items 4-8
+    // are equal to expected results memory buffers
+    for ( int i = 5; i < 9; i++ )   {
+        TestCout( _T("Testing item no. "));
+        TestCout( i, true );
+        wxMemoryBuffer b;
+        bool r = root[i].AsMemoryBuff( b );
+        ASSERT( r );
+        int r2 = wxJSONValue::CompareMemoryBuff( b, mb[i] );
+        ASSERT( r2 == 0 );
+    }
+
+    // now converts array of INTs items 0-4 in wxMemoryBuffer objects
+    // and checks that they are the same as expected results memory buffers
+    
+    return 0;
 }
 
 

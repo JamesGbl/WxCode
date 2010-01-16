@@ -44,6 +44,7 @@ enum {
     wxJSONREADER_MULTISTRING     = 16,
     wxJSONREADER_COMMENTS_AFTER  = 32,
     wxJSONREADER_NOUTF8_STREAM   = 64,
+    wxJSONREADER_MEMORYBUFF      = 128,
 
     wxJSONREADER_TOLERANT        = wxJSONREADER_ALLOW_COMMENTS | wxJSONREADER_CASE |
                                  wxJSONREADER_MISSING | wxJSONREADER_MULTISTRING,
@@ -94,7 +95,8 @@ protected:
     int  ReadUES(  wxInputStream& is, char* uesBuffer );
     int  AppendUES( wxMemoryBuffer& utf8Buff, const char* uesBuffer );
     int  NumBytes( char ch );
-    int ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer );
+    int  ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer );
+    int  ReadMemoryBuff( wxInputStream& is, wxJSONValue& val );
 
     //! Flag that control the parser behaviour,
     int  m_flags;

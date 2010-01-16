@@ -906,6 +906,9 @@ wxJSONValue::AsDouble() const
 
  \li if the value is of type wxJSONTYPE_INVALID, the literal string \b &lt;invalid&gt;
     is returned. Note that this is NOT a valid JSON text.
+ 
+ \li if the value is of type wxJSONTYPE_MEMORYBUFF the length of the binary buffer
+    is returned enclosed in brackets
 
  If the value is an array or map, the returned string is the number of
  elements is the array/object enclosed in the JSON special characters that
@@ -966,6 +969,9 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_OBJECT :
             s.Printf( _T("{%d}"), size );
+            break;
+        case wxJSONTYPE_MEMORYBUFF :
+            s.Printf( _T("(%u)"), data->m_memBuff.GetDataLen() );
             break;
         default :
             s.assign( _T( "wxJSONValue::AsString(): Unknown JSON type \'"));
@@ -1614,6 +1620,30 @@ wxJSONValue::Cat( const wxString& str )
     }
     return r;
 }
+
+//! Concatenate a memory buffer to this memory buffer object.
+/*!
+ The function concatenates \c buff to the \b wxMemoryBuffer object contained
+ in this object and returns TRUE if the operation is succefull.
+ If the value stored in this value is not a memory buffer object
+ the function does nothing and returns FALSE.
+*/
+bool
+wxJSONValue::Cat( const wxMemoryBuffer& buff )
+{
+    wxJSONRefData* data = GetRefData();
+    wxJSON_ASSERT( data );
+
+    bool r = false;
+    if ( data->m_type == wxJSONTYPE_MEMORYBUFF )  {
+        wxJSONRefData* data = COW();
+        wxJSON_ASSERT( data );
+        data->m_memBuff.AppendData( buff.GetData(), buff.GetDataLen());
+        r = true;
+    }
+    return r;
+}
+
 
 //! \overload Cat( const wxString& )
 bool

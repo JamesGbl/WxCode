@@ -930,8 +930,9 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
         wxCharBuffer cb = s.ToUTF8();
         const char* cbData = cb.data();
         len = strlen( cbData );
-        wxASSERT( len <= 32 );
+        wxASSERT( len < 32 );
         memcpy( buffer, cbData, len );
+        buffer[len] = 0;
     #endif
 #else
     snprintf( buffer, 32, "%ld", data->m_value.m_valLong );
@@ -983,9 +984,9 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
         wxCharBuffer cb = s.ToUTF8();
         const char* cbData = cb.data();
         len = strlen( cbData );
-        wxASSERT( len <= 32 );
+        wxASSERT( len < 32 );
         memcpy( buffer, cbData, len );
-
+        buffer[len] = 0;
     #endif
 #else
     snprintf( buffer, 32, "%lu", data->m_value.m_valULong );

@@ -582,7 +582,10 @@ int main( int argc, char* argv[] )
 		{
 			Test15_5, 3, _T( "test the writer for memory buffer types" )
 		},
-		{ 0 },{ 0 },{ 0 },{ 0 },
+		{
+			Test15_6, 3, _T( "test the reader for memory buffer types" )
+		},
+		{ 0 },{ 0 },{ 0 },
 
 		// END OF TABLE
 		{0}
