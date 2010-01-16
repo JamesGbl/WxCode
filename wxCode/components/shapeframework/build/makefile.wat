@@ -242,7 +242,7 @@ WXSF_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
 	$(VAR_8) -wx -i=..\include -dWXMAKINGDLL_WXSF -i=..\src -i=.\src &
-	-dWXMAKINGDLL_WXXS $(CPPFLAGS) $(CXXFLAGS)
+	-dWXMAKINGDLL_WXXS -dWXMAKINGDLL_WXSF $(CPPFLAGS) $(CXXFLAGS)
 WXSF_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ArrowBase.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_BitmapShape.obj &
@@ -309,6 +309,7 @@ SFSAMPLE2_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(VAR_8) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 SFSAMPLE2_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleCanvas.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2App.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2Main.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wx_pch.obj
@@ -746,6 +747,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample1_wxSF.res :  .AUTODEPEN
 	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\wxSFSample1 $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleCanvas.obj :  .AUTODEPEND ..\samples\wxSFSample2\SampleCanvas.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(SFSAMPLE2_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleShape.obj :  .AUTODEPEND ..\samples\wxSFSample2\SampleShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(SFSAMPLE2_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2App.obj :  .AUTODEPEND ..\samples\wxSFSample2\wxSFSample2App.cpp

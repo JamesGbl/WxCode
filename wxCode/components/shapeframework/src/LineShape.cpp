@@ -600,6 +600,8 @@ void wxSFLineShape::OnHandle(wxSFShapeHandle& handle)
     default:
         break;
     }
+	
+	wxSFShapeBase::OnHandle( handle );
 }
 
 void wxSFLineShape::OnEndHandle(wxSFShapeHandle& handle)
@@ -634,13 +636,15 @@ void wxSFLineShape::OnEndHandle(wxSFShapeHandle& handle)
                 break;
         }
     }
+	
+	wxSFShapeBase::OnEndHandle(handle);
 }
 
 void wxSFLineShape::OnBeginDrag(const wxPoint& pos)
 {
-	wxUnusedVar( pos );
-	
 	m_nPrevPosition = GetAbsolutePosition();
+	
+	wxSFShapeBase::OnBeginDrag(pos);
 }
 
 void wxSFLineShape::OnLeftDoubleClick(const wxPoint& pos)
@@ -793,7 +797,8 @@ void wxSFLineShape::DrawCompleteLine(wxDC& dc)
 
 int wxSFLineShape::GetHitLinesegment(const wxPoint& pos)
 {
-    if(!GetBoundingBox().Inflate(10, 10).Contains(pos))return -1;
+    //if(!GetBoundingBox().Inflate(10, 10).Contains(pos))return -1;
+    if(!GetBoundingBox().Contains(pos))return -1;
 
     double a, b, c, d;
     wxRealPoint ptSrc, ptTrg;
@@ -806,8 +811,7 @@ int wxSFLineShape::GetHitLinesegment(const wxPoint& pos)
 		
 		// calculate line segment bounding box
         lsBB = wxRect(Conv2Point(ptSrc), Conv2Point(ptTrg));
-//        if( (i > 0) && ((i + 1) < m_lstPoints.GetCount()) )lsBB.Inflate(10);
-        lsBB.Inflate(10);
+        lsBB.Inflate(2);
 
         // convert line segment to its parametric form
         a = ptTrg.y - ptSrc.y;
@@ -816,7 +820,7 @@ int wxSFLineShape::GetHitLinesegment(const wxPoint& pos)
 
         // calculate distance of the line and give point
         d = (a*pos.x + b*pos.y + c)/sqrt(a*a + b*b);
-        if((abs((int)d) <= 10) && lsBB.Contains(pos)) return (int)i;		
+        if((abs((int)d) <= 5) && lsBB.Contains(pos)) return (int)i;		
 	}
 
     return -1;

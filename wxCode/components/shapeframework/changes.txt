@@ -1,3 +1,24 @@
+Changes in version 1.9.1 beta (2010-01-15):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.3.1:
+  - IDs of child items which aren't created directly by the serializer are now properly set by xsSerializable::AddChild() function.
+  - Fixed function wxXmlSerializer::GetNewId().
+  - Minor code clean-up.
+
+- Fixed mismatch in allocation and deallocation in wxSFScaledDC::DoDrawLines() function (patch by ettlmartin a.k.a orbitcowboy).
+- Implemented new events used in shapes (emited from shapes and redirected to shape canvas). The new events are: wxEVT_SF_SHAPE_LEFT_DOWN,
+  wxEVT_SF_SHAPE_LEFT_DCLICK, wxEVT_SF_SHAPE_RIGHT_DOWN, wxEVT_SF_SHAPE_RIGHT_DCLICK, wxEVT_SF_SHAPE_MOUSE_ENTER, wxEVT_SF_SHAPE_MOUSE_OVER,
+  wxEVT_SF_SHAPE_MOUSE_LEAVE, wxEVT_SF_SHAPE_HANDLE_BEGIN, wxEVT_SF_SHAPE_HANDLE, wxEVT_SF_SHAPE_HANDLE_END, wxEVT_SF_SHAPE_DRAG_BEGIN,
+  wxEVT_SF_SHAPE_DRAG, wxEVT_SF_SHAPE_DRAG_END, wxEVT_SF_SHAPE_KEYDOWN, wxEVT_SF_SHAPE_CHILD_DROP. Also new event classes are available:
+  wxSFShapeMouseEvent, wxSFShapeHandleEvent, wxSFShapeKeyEvent and wxSFShapeChildDropEvent.
+- Added new shape style sfsEMIT_EVENTS which enables emitting of shape events.
+- Added new function wxSFDiagramManager::CreateConnection(long srcId, long trgId, wxClassInfo *lineInfo, bool saveState = true) which
+  allows user to define also connection type (instead of hardcoded "wxSFLineShape" in its first version). The original function is
+  still available.
+- Updated wxSFSample1 and wxSFSample2 sample projects to demonstrate new library's functionality.
+- Slightly tuned sensivity for searching of a line under the cursor.
+- Fixed function wxSFDiagramManager::GetAssignedConnections(); shapes with ID equal to -1 will not be examined.
+
 Changes in version 1.9.0 beta (2009-11-1):
 --------------------------------------------
 - Switched to use wxXmlSerializer 1.3.0:

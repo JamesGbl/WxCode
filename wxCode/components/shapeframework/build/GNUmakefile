@@ -43,7 +43,7 @@ LDFLAGS ?=
 # Location and arguments of wx-config script 
 WX_CONFIG ?= wx-config
 
-# Port of the wx library to build against [gtk1,gtk2,msw,x11,motif,mgl,mac,dfb]
+# Port of the wx library to build against [gtk1,gtk2,msw,x11,motif,mgl,osx_cocoa,osx_carbon,dfb]
 WX_PORT ?= $(shell $(WX_CONFIG) --selected-config | cut -d '-' -f 1)
 
 # Use DLL build of wx library to use? [0,1]
@@ -120,8 +120,8 @@ WXSF_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsf_lib_PropertyIO.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsf_lib_XmlSerializer.o
 WXSF_DLL_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include -DWXMAKINGDLL_WXSF \
-	-I../src -I./src -DWXMAKINGDLL_WXXS -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+	-I../src -I./src -DWXMAKINGDLL_WXXS -DWXMAKINGDLL_WXSF -fPIC -DPIC \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXSF_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsf_dll_ArrowBase.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsf_dll_BitmapShape.o \
@@ -182,6 +182,7 @@ SFSAMPLE2_CXXFLAGS = $(VAR) $(VAR_9) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 SFSAMPLE2_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_SampleCanvas.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_SampleShape.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_wxSFSample2App.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_wxSFSample2Main.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_wx_pch.o
@@ -692,6 +693,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample1_wx_pch.o: ../samples/wxSFSampl
 	$(CXX) -c -o $@ $(SFSAMPLE1_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_SampleCanvas.o: ../samples/wxSFSample2/SampleCanvas.cpp
+	$(CXX) -c -o $@ $(SFSAMPLE2_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_SampleShape.o: ../samples/wxSFSample2/SampleShape.cpp
 	$(CXX) -c -o $@ $(SFSAMPLE2_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/sfsample2_wxSFSample2App.o: ../samples/wxSFSample2/wxSFSample2App.cpp

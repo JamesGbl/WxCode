@@ -114,8 +114,8 @@ WXSF_DLL_CXXFLAGS = /MD$(VAR_23) /DWIN32 $(____WX_SHARED) \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
 	$(VAR_20) $(VAR_22) \
 	/Fd..\lib\vc_$(____wxsf_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsf.pdb \
-	/W4 /I..\include /DWXMAKINGDLL_WXSF /I..\src /I.\src /DWXMAKINGDLL_WXXS /GR \
-	/EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/W4 /I..\include /DWXMAKINGDLL_WXSF /I..\src /I.\src /DWXMAKINGDLL_WXXS \
+	/DWXMAKINGDLL_WXSF /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXSF_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ArrowBase.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_BitmapShape.obj \
@@ -189,6 +189,7 @@ SFSAMPLE2_CXXFLAGS = /MD$(VAR_23) /DWIN32 $(____WX_SHARED) \
 	/D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 SFSAMPLE2_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleCanvas.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleShape.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2App.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2Main.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wx_pch.obj
@@ -764,6 +765,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample1_wxSF.res: ..\samples\wx
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleCanvas.obj: ..\samples\wxSFSample2\SampleCanvas.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SFSAMPLE2_CXXFLAGS) ..\samples\wxSFSample2\SampleCanvas.cpp
+
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_SampleShape.obj: ..\samples\wxSFSample2\SampleShape.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(SFSAMPLE2_CXXFLAGS) ..\samples\wxSFSample2\SampleShape.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\sfsample2_wxSFSample2App.obj: ..\samples\wxSFSample2\wxSFSample2App.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SFSAMPLE2_CXXFLAGS) ..\samples\wxSFSample2\wxSFSample2App.cpp

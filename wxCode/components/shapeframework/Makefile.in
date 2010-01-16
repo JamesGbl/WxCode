@@ -94,7 +94,8 @@ WXSF_LIB_OBJECTS =  \
 	wxsf_lib_PropertyIO.o \
 	wxsf_lib_XmlSerializer.o
 WXSF_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXSF -I../src -I./src \
-	-DWXMAKINGDLL_WXXS $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	-DWXMAKINGDLL_WXXS -DWXMAKINGDLL_WXSF $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXSF_DLL_OBJECTS =  \
 	wxsf_dll_ArrowBase.o \
 	wxsf_dll_BitmapShape.o \
@@ -154,6 +155,7 @@ SFSAMPLE1_OBJECTS =  \
 SFSAMPLE2_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 SFSAMPLE2_OBJECTS =  \
 	sfsample2_SampleCanvas.o \
+	sfsample2_SampleShape.o \
 	sfsample2_wxSFSample2App.o \
 	sfsample2_wxSFSample2Main.o \
 	sfsample2_wx_pch.o \
@@ -716,6 +718,9 @@ sfsample1_wxSF_rc.o: $(srcdir)/samples/wxSFSample1/wxSF.rc
 
 sfsample2_SampleCanvas.o: $(srcdir)/samples/wxSFSample2/SampleCanvas.cpp
 	$(CXXC) -c -o $@ $(SFSAMPLE2_CXXFLAGS) $(srcdir)/samples/wxSFSample2/SampleCanvas.cpp
+
+sfsample2_SampleShape.o: $(srcdir)/samples/wxSFSample2/SampleShape.cpp
+	$(CXXC) -c -o $@ $(SFSAMPLE2_CXXFLAGS) $(srcdir)/samples/wxSFSample2/SampleShape.cpp
 
 sfsample2_wxSFSample2App.o: $(srcdir)/samples/wxSFSample2/wxSFSample2App.cpp
 	$(CXXC) -c -o $@ $(SFSAMPLE2_CXXFLAGS) $(srcdir)/samples/wxSFSample2/wxSFSample2App.cpp
