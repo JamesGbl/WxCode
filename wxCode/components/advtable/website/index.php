@@ -20,7 +20,26 @@
   <div class="center">
     <?php writeScreenshotLink("wxadvtable1.png", "Demo application screenshot"); ?>
   </div>
-
+  
+  <br/><?php write_h1("Features"); ?>
+  <ol>
+  	<li>Composite rows/columns.<br><img src="comprows.png"></li>
+  	<li>Built-in sorting support.</li>
+  	<li>Flexible rendering and editing support.</li>
+  	<li>Flexible data access model.</li>
+  	<li>Dynamic row/columns add/removal.</li>
+  	<li>Visual features like: highlight modes, cell attributes, etc.</li>
+  	<li>Everything is easily configurable: you can change row/column label font, color, alignment, size, etc.<br>You can set font, color, etc attributes to any cell.</li>
+  	<li>MCV (Model-Controller-View) design.</li>
+  </ol>
+  
+  <br/><?php write_h1("Advantages from wxGrid (standard wxWidgets table control)"); ?>
+  <ol>
+  	<li>Support of composite rows/columns.</li>
+  	<li>Sorting.</li>
+  	<li>MCV (Model-Controller-View) design.</li>
+  </ol>
+  
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
        see the ReadMe.txt file at wxCode\template... -->
   <br/><?php write_h1("Documentation"); ?>
