@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "wxFilterCtrl";
+      $subdir = "filterctrl";
       require("compwebsite.inc.php");
   ?>
 
@@ -43,7 +43,6 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
   </div>
 
 
