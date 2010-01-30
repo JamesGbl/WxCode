@@ -581,6 +581,9 @@ public:
     wxColour     GetBackgroundColour() const { return m_area->GetBackgroundColour(); }
     virtual bool SetBackgroundColour( const wxColour &colour );
 
+    //Set the background colour for the plot area (i. e. limited by axes)
+    virtual bool SetAreaBackgroundColour( const wxColour &colour );
+
     // Get/Set the colour of the grid lines in the plot area, default grey
     wxColour GetGridColour() const { return m_area->GetForegroundColour(); }
     void     SetGridColour( const wxColour &colour );

@@ -825,6 +825,16 @@ bool wxPlotCtrl::SetBackgroundColour( const wxColour &colour )
     m_xAxis->SetBackgroundColour(colour);
     m_yAxis->SetBackgroundColour(colour);
     wxWindow::SetBackgroundColour(colour);
+    m_xAxisDrawer->SetBackgroundBrush(colour);
+    m_yAxisDrawer->SetBackgroundBrush(colour);
+
+    Redraw(wxPLOTCTRL_REDRAW_EVERYTHING);
+    return true;
+}
+bool wxPlotCtrl::SetAreaBackgroundColour( const wxColour &colour )
+{
+    wxCHECK_MSG(colour.Ok(), false, wxT("invalid colour"));
+    m_area->SetBackgroundColour(colour);
 
     Redraw(wxPLOTCTRL_REDRAW_EVERYTHING);
     return true;

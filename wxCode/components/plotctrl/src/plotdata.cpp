@@ -1601,11 +1601,11 @@ void wxPlotData::OffsetXY( double offsetX, double offsetY, int start_index, int 
 
 void wxPlotData::ScaleX( double scale, double offset, int start_index, int end_index )
 {
-    ScaleXY(scale, 0, offset, 0, start_index, end_index);
+    ScaleXY(scale, 1, offset, 0, start_index, end_index);
 }
 void wxPlotData::ScaleY( double scale, double offset, int start_index, int end_index )
 {
-    ScaleXY(0, scale, 0, offset, start_index, end_index);
+    ScaleXY(1, scale, 0, offset, start_index, end_index);
 }
 void wxPlotData::ScaleXY(double scaleX, double scaleY, double offsetX, double offsetY,
                          int start_index, int end_index )
