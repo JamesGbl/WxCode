@@ -926,6 +926,10 @@ SOURCE=..\src\stesplit.cpp
 
 SOURCE=..\src\stestyls.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\src\wxext.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -1001,6 +1005,10 @@ SOURCE=..\include\wx\stedit\stestyls.h
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\wx24defs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\wxext.h
 # End Source File
 # End Group
 # End Target
