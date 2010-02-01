@@ -52,9 +52,9 @@ csFrame::csFrame(wxDocManager* manager, wxFrame *parent, wxWindowID id, const wx
 
     size_t i = 0;
     entries[i++].Set(wxACCEL_NORMAL,  WXK_HELP,        wxID_HELP);
-    entries[i++].Set(wxACCEL_CTRL,   'O',            wxID_OPEN);
-    entries[i++].Set(wxACCEL_CTRL,   'N',            wxID_NEW);
-    entries[i++].Set(wxACCEL_CTRL,   'P',            wxID_PRINT);
+    entries[i++].Set(wxACCEL_CMD,   'O',            wxID_OPEN);
+    entries[i++].Set(wxACCEL_CMD,   'N',            wxID_NEW);
+    entries[i++].Set(wxACCEL_CMD,   'P',            wxID_PRINT);
 
     wxASSERT(i == WXSIZEOF(entries));
     wxAcceleratorTable accel(WXSIZEOF(entries), entries);
@@ -233,29 +233,29 @@ csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame
 
     // Usual editing functions
     entries[i++].Set(wxACCEL_NORMAL,  WXK_DELETE,     wxID_CLEAR);
-    entries[i++].Set(wxACCEL_CTRL,    'X',            wxID_CUT);
-    entries[i++].Set(wxACCEL_CTRL,    'C',            wxID_COPY);
+    entries[i++].Set(wxACCEL_CMD,    'X',            wxID_CUT);
+    entries[i++].Set(wxACCEL_CMD,    'C',            wxID_COPY);
     entries[i++].Set(wxACCEL_SHIFT,   WXK_INSERT,     wxID_PASTE);
-    entries[i++].Set(wxACCEL_CTRL,    'V',            wxID_PASTE);
-    entries[i++].Set(wxACCEL_CTRL,    'A',            wxID_SELECTALL);
+    entries[i++].Set(wxACCEL_CMD,    'V',            wxID_PASTE);
+    entries[i++].Set(wxACCEL_CMD,    'A',            wxID_SELECTALL);
 
     // Undo/redo
-    entries[i++].Set(wxACCEL_CTRL,    'Z',            wxID_UNDO);
-    entries[i++].Set(wxACCEL_CTRL,    'Y',            wxID_REDO);
+    entries[i++].Set(wxACCEL_CMD,    'Z',            wxID_UNDO);
+    entries[i++].Set(wxACCEL_CMD,    'Y',            wxID_REDO);
 
     // Other
     entries[i++].Set(wxACCEL_NORMAL,  WXK_RETURN,     wxID_PROPERTIES);
     entries[i++].Set(wxACCEL_ALT,     WXK_RETURN,     wxID_PROPERTIES);
-    entries[i++].Set(wxACCEL_CTRL,   'D',            wxID_DUPLICATE);
-    entries[i++].Set(wxACCEL_NORMAL,  WXK_HELP,        wxID_HELP);
+    entries[i++].Set(wxACCEL_CMD,   'D',             wxID_DUPLICATE);
+    entries[i++].Set(wxACCEL_NORMAL,  WXK_HELP,       wxID_HELP);
 
     // File handling
-    entries[i++].Set(wxACCEL_CTRL,   'S',            wxID_SAVE);
-    entries[i++].Set(wxACCEL_NORMAL,  WXK_F12,       wxID_SAVEAS);
-    entries[i++].Set(wxACCEL_CTRL,   'O',            wxID_OPEN);
-    entries[i++].Set(wxACCEL_CTRL,   'N',            wxID_NEW);
-    entries[i++].Set(wxACCEL_CTRL,   'P',            wxID_PRINT);
-    entries[i++].Set(wxACCEL_CTRL,   'W',            wxID_CLOSE);
+    entries[i++].Set(wxACCEL_CMD,   'S',            wxID_SAVE);
+    entries[i++].Set(wxACCEL_CMD | wxACCEL_SHIFT, 'S', wxID_SAVEAS);
+    entries[i++].Set(wxACCEL_CMD,   'O',            wxID_OPEN);
+    entries[i++].Set(wxACCEL_CMD,   'N',            wxID_NEW);
+    entries[i++].Set(wxACCEL_CMD,   'P',            wxID_PRINT);
+    entries[i++].Set(wxACCEL_CMD,   'W',            wxID_CLOSE);
 
     wxASSERT(i == WXSIZEOF(entries));
     wxAcceleratorTable accel(WXSIZEOF(entries), entries);

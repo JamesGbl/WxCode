@@ -66,24 +66,24 @@ bool MyApp::OnInit(void)
     menu->Append(wxID_OPEN);
     menu->Append(wxID_CLOSE, wxString::Format(wxT("%s\t%s"), 
        wxGetStockLabel(wxID_CLOSE).wx_str(),
-       wxAcceleratorEntry(wxACCEL_CTRL, 'W').ToString().wx_str()
+       wxAcceleratorEntry(wxACCEL_CMD, 'W').ToString().wx_str()
        ));
     menu->Append(wxID_SAVE);
     menu->Append(wxID_SAVEAS);
     menu->AppendSeparator();
     menu->Append(wxID_PRINT, wxString::Format(wxT("%s\t%s"), 
        wxGetStockLabel(wxID_PRINT).wx_str(),
-       wxAcceleratorEntry(wxACCEL_CTRL, 'P').ToString().wx_str()
+       wxAcceleratorEntry(wxACCEL_CMD, 'P').ToString().wx_str()
        ));
     menu->Append(wxID_PRINT_SETUP, _("Print &Setup..."));
     menu->Append(wxID_PREVIEW, wxString::Format(wxT("%s\t%s"), 
        wxString(_("Print Pre&view")).wx_str(),
-       wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'P').ToString().wx_str()
+       wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'P').ToString().wx_str()
        ));
     menu->AppendSeparator();
     menu->Append(wxID_EXIT, wxString::Format(wxT("%s\t%s"), 
        wxGetStockLabel(wxID_EXIT).wx_str(),
-       wxAcceleratorEntry(wxACCEL_CTRL, 'Q').ToString().wx_str()
+       wxAcceleratorEntry(wxACCEL_CMD, 'Q').ToString().wx_str()
        ));
     menu_bar->Append(menu, wxGetStockLabel(wxID_FILE));
     // A nice touch: a history of files visited. Use this menu.
