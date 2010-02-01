@@ -44,7 +44,6 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\contrib\include;..\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__;__WX__"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -119,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\contrib\include;..\include"
-				PreprocessorDefinitions="_LIB;__WXDEBUG__;WXUSINGDLL"
+				PreprocessorDefinitions="__WXDEBUG__;WXUSINGDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -196,7 +195,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\contrib\include;..\include"
-				PreprocessorDefinitions="_LIB;__WXDEBUG__;WXUSINGDLL"
+				PreprocessorDefinitions="__WXDEBUG__;WXUSINGDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -274,7 +273,6 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\contrib\include;..\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__;__WX__"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -404,6 +402,10 @@
 				RelativePath="..\include\wx\stedit\wx24defs.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\wxext.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"
@@ -450,10 +452,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stedit.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\wxext.cpp"
 				>
 			</File>
 			<File
@@ -510,6 +508,10 @@
 			</File>
 			<File
 				RelativePath="..\src\stestyls.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\wxext.cpp"
 				>
 			</File>
 		</Filter>
