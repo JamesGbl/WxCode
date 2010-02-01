@@ -13,6 +13,7 @@
 
 #include "wx/stedit/stemenum.h"
 #include "wx/stedit/stedit.h"
+#include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - a holding place for menu generating code
@@ -212,16 +213,16 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
 
     if (HasToolbarToolType(STE_TOOLBAR_FILE_NEW))
     {
-        tb->AddTool(wxID_NEW,    _("New"), STE_ARTBMP(wxART_STEDIT_NEW), wxNullBitmap, wxITEM_NORMAL, _("New"), _("Clear editor for new file"));
+        tb->AddTool(wxID_NEW, wxGetStockLabelEx(wxID_NEW, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_NEW), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_NEW, wxSTOCK_PLAINTEXT), _("Clear editor for new file"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_FILE_OPEN))
     {
-        tb->AddTool(wxID_OPEN,   _("Open..."), STE_ARTBMP(wxART_STEDIT_OPEN), wxNullBitmap, wxITEM_NORMAL, _("Open..."), _("Open a file to edit"));
+        tb->AddTool(wxID_OPEN, wxGetStockLabelEx(wxID_OPEN, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_OPEN), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_OPEN, wxSTOCK_PLAINTEXT), _("Open a file to edit"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_FILE_SAVE))
     {
-        tb->AddTool(wxID_SAVE,   _("Save"),       STE_ARTBMP(wxART_STEDIT_SAVE), wxNullBitmap, wxITEM_NORMAL, _("Save"), _("Save current file"));
-        tb->AddTool(wxID_SAVEAS, _("Save as..."), STE_ARTBMP(wxART_STEDIT_SAVEAS), wxNullBitmap, wxITEM_NORMAL, _("Save as..."), _("Save to a specific filename..."));
+        tb->AddTool(wxID_SAVE,   wxGetStockLabelEx(wxID_SAVE  , wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_SAVE  ), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_SAVE  , wxSTOCK_PLAINTEXT), _("Save current file"));
+        tb->AddTool(wxID_SAVEAS, wxGetStockLabelEx(wxID_SAVEAS, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_SAVEAS), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_SAVEAS, wxSTOCK_PLAINTEXT), _("Save to a specific filename"));
         tb->EnableTool(wxID_SAVE, false);
 
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
@@ -233,23 +234,23 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_CUTCOPYPASTE))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_CUT,    _("Cut"),   STE_ARTBMP(wxART_STEDIT_CUT), wxNullBitmap, wxITEM_NORMAL, _("Cut"), _("Cut selected text"));
-        tb->AddTool(wxID_COPY,   _("Copy"),  STE_ARTBMP(wxART_STEDIT_COPY), wxNullBitmap, wxITEM_NORMAL, _("Copy"), _("Copy selected text"));
-        tb->AddTool(wxID_PASTE,  _("Paste"), STE_ARTBMP(wxART_STEDIT_PASTE), wxNullBitmap, wxITEM_NORMAL, _("Paste"), _("Paste text at cursor"));
+        tb->AddTool(wxID_CUT,    wxGetStockLabelEx(wxID_CUT  , wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_CUT  ), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_CUT  , wxSTOCK_PLAINTEXT), _("Cut selected text"));
+        tb->AddTool(wxID_COPY,   wxGetStockLabelEx(wxID_COPY , wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_COPY ), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_COPY , wxSTOCK_PLAINTEXT), _("Copy selected text"));
+        tb->AddTool(wxID_PASTE,  wxGetStockLabelEx(wxID_PASTE, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_PASTE), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_PASTE, wxSTOCK_PLAINTEXT), _("Paste text at cursor"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_UNDOREDO))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_UNDO,   _("Undo"), STE_ARTBMP(wxART_STEDIT_UNDO), wxNullBitmap, wxITEM_NORMAL, _("Undo"), _("Undo last editing"));
-        tb->AddTool(wxID_REDO,   _("Redo"), STE_ARTBMP(wxART_STEDIT_REDO), wxNullBitmap, wxITEM_NORMAL, _("Redo"), _("Redo last undo"));
+        tb->AddTool(wxID_UNDO, wxGetStockLabelEx(wxID_UNDO, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_UNDO), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_UNDO, wxSTOCK_PLAINTEXT), _("Undo last editing"));
+        tb->AddTool(wxID_REDO, wxGetStockLabelEx(wxID_REDO, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_REDO), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_REDO, wxSTOCK_PLAINTEXT), _("Redo last undo"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDREPLACE))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
         tb->AddTool(ID_STE_FIND_DOWN, _("Search direction"), STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_CHECK, _("Search direction"), _("Search direction for next occurance in document"));
-        tb->AddTool(wxID_FIND,        _("Find..."),    STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, _("Find..."), _("Find text in document..."));
+        tb->AddTool(wxID_FIND,        wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT), _("Find text in document..."));
         tb->AddTool(ID_STE_FIND_NEXT, _("Find next"),  STE_ARTBMP(wxART_STEDIT_FINDNEXT), wxNullBitmap, wxITEM_NORMAL, _("Find next"), _("Find next occurance in document"));
-        tb->AddTool(ID_STE_REPLACE,   _("Replace..."), STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, _("Replace..."), _("Replace text in document"));
+        tb->AddTool(ID_STE_REPLACE,   wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), _("Replace text in document"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
     {
@@ -285,7 +286,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_OPEN))
     {
-        menu->Append(MenuItem(menu, wxID_OPEN, wxGetStockLabel(wxID_OPEN), _("Open file..."), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_OPEN)));
+        menu->Append(MenuItem(menu, wxID_OPEN, wxGetStockLabelEx(wxID_OPEN), _("Open file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_OPEN)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_CLOSE) && HasMenuOptionType(STE_MENU_FRAME))
@@ -302,9 +303,9 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_SAVE,   wxGetStockLabel(wxID_SAVE), _("Save current file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVE)));
+        menu->Append(MenuItem(menu, wxID_SAVE, wxGetStockLabel(wxID_SAVE), _("Save current file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVE)));
         menu->Enable(wxID_SAVE, false);
-        menu->Append(MenuItem(menu, wxID_SAVEAS, wxEmptyString, _("Save as file..."), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVEAS)));
+        menu->Append(MenuItem(menu, wxID_SAVEAS, wxEmptyString, _("Save as file"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVEAS)));
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
         {
             menu->Append(MenuItem(menu, ID_STN_SAVE_ALL, _("Save A&ll"), _("Save all files"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVEALL)));
@@ -316,7 +317,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, ID_STE_EXPORT,   _("Expor&t..."), _("Export to file..."), wxITEM_NORMAL));
+        menu->Append(MenuItem(menu, ID_STE_EXPORT, _("Expor&t..."), _("Export to file"), wxITEM_NORMAL));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_PROPERTY))
@@ -331,7 +332,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
         if (add_sep) menu->AppendSeparator();
 
         menu->Append(MenuItem(menu, wxID_PRINT,              wxEmptyString, _("Print current document"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINT)));
-        menu->Append(MenuItem(menu, wxID_PREVIEW,            _("Print pre&view..."), _("Print preview of the current document"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW)));
+        menu->Append(MenuItem(menu, wxID_PREVIEW,            wxGetStockLabel(wxID_PREVIEW), _("Print preview of the current document"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW)));
         menu->Append(MenuItem(menu, wxID_PRINT_SETUP,        _("Printer set&up..."), _("Setup the printer"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINTSETUP)));
         menu->Append(MenuItem(menu, ID_STE_PRINT_PAGE_SETUP, _("Printer pa&ge setup..."), _("Setup the printout page"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINTPAGESETUP)));
         menu->Append(MenuItem(menu, ID_STE_PRINT_OPTIONS,    _("Printer options..."), _("Set other printout options"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW)));
@@ -390,7 +391,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         add_sep = true;
     }
     if (add_sep) menu->AppendSeparator();
-    menu->Append(wxID_SELECTALL, _("Select &All"), _("Selects entire document"));
+    menu->Append(wxID_SELECTALL, wxGetStockLabelEx(wxID_SELECTALL), _("Selects entire document"));
     add_sep = true;
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_LINE))
     {
@@ -417,11 +418,11 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_FIND, _("&Find..."), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
+        menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
         menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
         menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward"), _("Search forward/reverse in document"));
         if (!HasMenuOptionType(STE_MENU_READONLY))
-            menu->Append(MenuItem(menu, ID_STE_REPLACE,   _("R&eplace..."), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
+            menu->Append(MenuItem(menu, ID_STE_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_GOTOLINE))

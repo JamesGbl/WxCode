@@ -178,6 +178,69 @@ wxString wxGetAccelText(int flags, int keyCode)
    return str;
 }
 
+wxString wxGetStockLabelEx(wxWindowID id, long flags)
+{
+#define STOCKITEM(stockid, label) \
+     case stockid:                 \
+         stockLabel = label;       \
+         break;
+
+   wxString stockLabel;
+   switch (id)
+   {
+      STOCKITEM(wxID_OPEN,      _("&Open..."))    // with ellipsis
+      STOCKITEM(wxID_SELECTALL, _("Select &All")) // with ampersand
+      STOCKITEM(wxID_FIND,      _("&Find..."))    // with ellipsis
+      STOCKITEM(wxID_REPLACE,   _("Rep&lace...")) // with ellipsis
+      default:
+         break;
+   }
+#undef STOCKITEM
+   if (stockLabel.Length())
+   {
+       if ( !(flags & wxSTOCK_WITH_MNEMONIC) )
+       {
+           stockLabel = wxStripMenuCodes(stockLabel);
+       }
+#if (wxVERSION_NUMBER >= 2900)
+       if ( (flags & wxSTOCK_FOR_BUTTON) == wxSTOCK_FOR_BUTTON)
+       {
+           wxString baseLabel;
+           if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
+               stockLabel = baseLabel;
+
+           wxASSERT_MSG( !(flags & wxSTOCK_WITH_ACCELERATOR),
+                           wxT("button labels never use accelerators"));
+       }
+#else 
+       // handled below
+#endif
+   }
+   else
+   {
+      stockLabel = wxGetStockLabel(id, flags);
+   }
+#if (wxVERSION_NUMBER < 2900)
+   if ( (flags & wxSTOCK_FOR_BUTTON) == wxSTOCK_FOR_BUTTON)
+   {
+      wxString baseLabel;
+      if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
+         stockLabel = baseLabel;
+
+      wxASSERT_MSG( !(flags & wxSTOCK_WITH_ACCELERATOR),
+                     wxT("button labels never use accelerators"));
+   }
+#endif
+   if (flags & wxSTOCK_PLAINTEXT)
+   {
+      wxString baseLabel;
+      if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
+         stockLabel = baseLabel;
+      stockLabel = wxStripMenuCodes(stockLabel);
+   }
+   return stockLabel;
+}
+
 wxString wxGetAccelText(const wxAcceleratorEntry& accel)
 {
    return wxGetAccelText(accel.GetFlags(), (enum wxKeyCode)accel.GetKeyCode());
