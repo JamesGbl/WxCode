@@ -2554,7 +2554,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     // Edit menu items
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,  CanSave());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, CanCut());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !GetReadOnly());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
@@ -2646,7 +2646,19 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         // Edit menu items ----------------------------------------------------
         case wxID_CUT            : Cut();   return true;
         case wxID_COPY           : Copy();  return true;
-        case wxID_CLEAR          : Clear();  return true;
+        case wxID_CLEAR          : 
+            if (CanCut())
+            {
+                Clear();  
+            }
+            else
+            {
+               // simulate key press
+               wxKeyEvent event;
+               event.m_keyCode = WXK_DELETE;
+               wxStyledTextCtrl::OnKeyDown(event);
+            }
+            return true;
         case ID_STE_COPY_PRIMARY :
         {
             bool is_opened = wxTheClipboard->IsOpened();
