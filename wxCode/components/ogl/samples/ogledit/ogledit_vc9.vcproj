@@ -63,6 +63,7 @@
 				ObjectFile=".\vc9_mswu\ogledit/"
 				ProgramDataBaseFileName="vc9_mswu\ogledit.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -160,6 +161,7 @@
 				ObjectFile=".\vc9_msw\ogledit/"
 				ProgramDataBaseFileName="vc9_msw\ogledit.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -256,6 +258,7 @@
 				ObjectFile=".\vc9_mswddll\ogledit/"
 				ProgramDataBaseFileName="vc9_mswddll\ogledit.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -356,6 +359,7 @@
 				ObjectFile=".\vc9_mswuddll\ogledit/"
 				ProgramDataBaseFileName="vc9_mswuddll\ogledit.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool

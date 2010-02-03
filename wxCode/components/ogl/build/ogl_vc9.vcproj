@@ -61,6 +61,7 @@
 				ObjectFile=".\vc9_mswddll\ogl/"
 				ProgramDataBaseFileName="..\lib\vc9_dll\wxmsw28d_ogl_vc_custom.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -155,6 +156,7 @@
 				ObjectFile=".\vc9_mswu\ogl/"
 				ProgramDataBaseFileName="..\lib\vc9_lib\wxmsw28u_ogl.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -230,6 +232,7 @@
 				ObjectFile=".\vc9_msw\ogl/"
 				ProgramDataBaseFileName="..\lib\vc9_lib\wxmsw28_ogl.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -311,6 +314,7 @@
 				ObjectFile=".\vc9_mswuddll\ogl/"
 				ProgramDataBaseFileName="..\lib\vc9_dll\wxmsw28ud_ogl_vc_custom.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool

@@ -63,6 +63,7 @@
 				ObjectFile=".\vc9_mswuddll\studio/"
 				ProgramDataBaseFileName="vc9_mswuddll\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -149,7 +150,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd,$(WXWIN)\include,..\include,..\..\include"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\..\include"
 				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -162,6 +163,7 @@
 				ObjectFile=".\vc9_mswddll\studio/"
 				ProgramDataBaseFileName="vc9_mswddll\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -249,7 +251,7 @@
 				AdditionalOptions="/EHsc "
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw,$(WXWIN)\include,..\..\include"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\..\include"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -261,6 +263,7 @@
 				ObjectFile=".\vc9_msw\studio/"
 				ProgramDataBaseFileName="vc9_msw\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -358,6 +361,7 @@
 				ObjectFile=".\vc9_mswu\studio/"
 				ProgramDataBaseFileName="vc9_mswu\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
