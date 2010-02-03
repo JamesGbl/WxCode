@@ -1,5 +1,5 @@
 // wxext.h
-// Copyright (c) 2006-2009 by Troels K. All rights reserved.
+// Copyright (c) 2006-2010 by Troels K. All rights reserved.
 // License: wxWindows Library Licence, Version 3.1 - see LICENSE.txt
 
 #define WXK_HELP       WXK_F1
