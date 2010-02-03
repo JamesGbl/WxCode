@@ -55,7 +55,7 @@
 				ObjectFile=".\vc9_msw/"
 				ProgramDataBaseFileName="vc9_msw\StEdit.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -130,7 +130,7 @@
 				ObjectFile=".\vc9_mswd/"
 				ProgramDataBaseFileName="vc9_mswd\StEdit.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -207,7 +207,7 @@
 				ObjectFile=".\vc9_mswd/"
 				ProgramDataBaseFileName="vc9_mswd\StEdit.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -284,7 +284,7 @@
 				ObjectFile=".\vc9_msw/"
 				ProgramDataBaseFileName="vc9_msw\StEdit.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
