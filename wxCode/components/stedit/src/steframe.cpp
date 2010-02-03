@@ -184,6 +184,8 @@ static const AcceleratorArray& getaccelerator()
       array.Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F6, ID_STE_BOOKMARK_LAST));
       array.Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F4, ID_STE_BOOKMARK_CLEAR));
 
+      //array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
+
 #ifdef __UNIX__
       array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
 #endif // __UNIX__
