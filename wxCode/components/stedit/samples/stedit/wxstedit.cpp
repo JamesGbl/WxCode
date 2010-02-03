@@ -311,7 +311,7 @@ bool wxStEditApp::OnInit()
 
     // ------------------------------------------------------------------------
     m_frame = new wxSTEditorFrame( NULL, wxID_ANY, wxT("wxStEditor"),
-                                   wxDefaultPosition, wxSize(500,400));
+                                   wxDefaultPosition, wxSize(800,600));
 
     // must call this if you want any of the options, else blank frame
     m_frame->CreateOptions(steOptions);
