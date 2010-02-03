@@ -1,5 +1,5 @@
 // link.cpp
-// Copyright (c) 2009 by Troels K. All rights reserved.
+// Copyright (c) 2009-2010 by Troels K. All rights reserved.
 // License: wxWindows
 
 #ifdef _MSC_VER
