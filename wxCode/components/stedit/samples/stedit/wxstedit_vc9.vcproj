@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="wxStEdit"
-	ProjectGUID="{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}"
+	ProjectGUID="{454588D4-0EE4-45FD-AEAE-C772D3FA470F}"
 	RootNamespace="wxStEdit"
 	TargetFrameworkVersion="0"
 	>
@@ -58,11 +58,12 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_mswddll\studio/studio.pch"
+				PrecompiledHeaderFile=".\vc9_mswddll/stedit.pch"
 				AssemblerListingLocation=".\vc9_mswddll\studio/"
 				ObjectFile=".\vc9_mswddll\studio/"
 				ProgramDataBaseFileName="vc9_mswddll\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -118,7 +119,7 @@
 		<Configuration
 			Name="DLL Debug|Win32"
 			OutputDirectory=".\vc9_mswddll"
-			IntermediateDirectory=".\vc9_mswddll\studio"
+			IntermediateDirectory=".\vc9_mswddll"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -157,11 +158,12 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_mswddll\studio/studio.pch"
+				PrecompiledHeaderFile=".\vc9_mswddll/stedit.pch"
 				AssemblerListingLocation=".\vc9_mswddll\studio/"
 				ObjectFile=".\vc9_mswddll\studio/"
 				ProgramDataBaseFileName="vc9_mswddll\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -217,7 +219,7 @@
 		<Configuration
 			Name="Static Release|Win32"
 			OutputDirectory=".\vc9_msw"
-			IntermediateDirectory=".\vc9_msw\studio"
+			IntermediateDirectory=".\vc9_msw"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -256,11 +258,12 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_msw\studio/studio.pch"
+				PrecompiledHeaderFile=".\vc9_msw/stedit.pch"
 				AssemblerListingLocation=".\vc9_msw\studio/"
 				ObjectFile=".\vc9_msw\studio/"
 				ProgramDataBaseFileName="vc9_msw\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -353,11 +356,12 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile=".\vc9_msw\studio/studio.pch"
+				PrecompiledHeaderFile=".\vc9_msw/stedit.pch"
 				AssemblerListingLocation=".\vc9_msw\studio/"
 				ObjectFile=".\vc9_msw\studio/"
 				ProgramDataBaseFileName="vc9_msw\studio.pdb"
 				WarningLevel="4"
+				SuppressStartupBanner="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
