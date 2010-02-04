@@ -202,15 +202,12 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
        {
            stockLabel = wxStripMenuCodes(stockLabel);
        }
-#if (wxVERSION_NUMBER >= 2900)
-       if ( (flags & wxSTOCK_FOR_BUTTON) == wxSTOCK_FOR_BUTTON)
+#if (wxVERSION_NUMBER >= 2901)
+       if (flags & wxSTOCK_WITHOUT_ELLIPSIS)
        {
            wxString baseLabel;
            if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
                stockLabel = baseLabel;
-
-           wxASSERT_MSG( !(flags & wxSTOCK_WITH_ACCELERATOR),
-                           wxT("button labels never use accelerators"));
        }
 #else 
        // handled below
@@ -220,24 +217,14 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
    {
       stockLabel = wxGetStockLabel(id, flags);
    }
-#if (wxVERSION_NUMBER < 2900)
-   if ( (flags & wxSTOCK_FOR_BUTTON) == wxSTOCK_FOR_BUTTON)
+#if (wxVERSION_NUMBER < 2901)
+   if (flags & wxSTOCK_WITHOUT_ELLIPSIS)
    {
       wxString baseLabel;
       if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
          stockLabel = baseLabel;
-
-      wxASSERT_MSG( !(flags & wxSTOCK_WITH_ACCELERATOR),
-                     wxT("button labels never use accelerators"));
    }
 #endif
-   if (flags & wxSTOCK_PLAINTEXT)
-   {
-      wxString baseLabel;
-      if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
-         stockLabel = baseLabel;
-      stockLabel = wxStripMenuCodes(stockLabel);
-   }
    return stockLabel;
 }
 

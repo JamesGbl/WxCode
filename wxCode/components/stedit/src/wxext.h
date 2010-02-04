@@ -26,10 +26,11 @@ WXDLLIMPEXP_STEDIT void wxMenu_Fixup(wxMenuBar*, const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT void wxMenu_Fixup(wxMenu   *, const AcceleratorArray&);
 
 #ifdef _WX_STOCKITEM_H_
-#if (wxVERSION_NUMBER < 2900)
-#define wxSTOCK_FOR_BUTTON (4 | wxSTOCK_WITH_MNEMONIC)
+#if (wxVERSION_NUMBER < 2901)
+#define wxSTOCK_WITHOUT_ELLIPSIS 4
+#define wxSTOCK_FOR_BUTTON (wxSTOCK_WITH_MNEMONIC | wxSTOCK_WITHOUT_ELLIPSIS)
 #endif
-#define wxSTOCK_PLAINTEXT 8 // trac.wxwidgets.org/ticket/11683
+#define wxSTOCK_PLAINTEXT wxSTOCK_WITHOUT_ELLIPSIS
 WXDLLIMPEXP_STEDIT wxString wxGetStockLabelEx(wxWindowID, long flags = wxSTOCK_WITH_MNEMONIC);
 #endif
 
