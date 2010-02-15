@@ -63,7 +63,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPrefPageData : public wxObject
 {
 public:
     wxSTEditorPrefPageData();
-    wxSTEditorPrefPageData(const wxSTEditorPrefPageData& prefData)
+    wxSTEditorPrefPageData(const wxSTEditorPrefPageData& prefData) : wxObject()
         { Ref(prefData); }
     wxSTEditorPrefPageData(const wxSTEditorPrefs& prefs,
                            const wxSTEditorStyles& styles,
