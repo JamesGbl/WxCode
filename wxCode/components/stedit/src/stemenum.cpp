@@ -31,6 +31,7 @@ void wxSTEditorMenuManager::CreateForSinglePage()
     m_menuOptionTypes  = 0;
     m_menuItemTypes[STE_MENU_FILE_MENU]     = STE_MENU_FILE_DEFAULT;
     m_menuItemTypes[STE_MENU_EDIT_MENU]     = STE_MENU_EDIT_DEFAULT;
+    m_menuItemTypes[STE_MENU_SEARCH_MENU]   = STE_MENU_SEARCH_DEFAULT;
     m_menuItemTypes[STE_MENU_TOOLS_MENU]    = STE_MENU_TOOLS_DEFAULT;
     m_menuItemTypes[STE_MENU_VIEW_MENU]     = STE_MENU_VIEW_DEFAULT;
     m_menuItemTypes[STE_MENU_BOOKMARK_MENU] = STE_MENU_BOOKMARK_DEFAULT;
@@ -39,11 +40,13 @@ void wxSTEditorMenuManager::CreateForSinglePage()
     m_menuItemTypes[STE_MENU_HELP_MENU]     = STE_MENU_HELP_DEFAULT;
     m_toolBarToolTypes = STE_TOOLBAR_TOOLS;
 }
+
 void wxSTEditorMenuManager::CreateForNotebook()
 {
     m_menuOptionTypes  = STE_MENU_NOTEBOOK;
     m_menuItemTypes[STE_MENU_FILE_MENU]     = STE_MENU_FILE_DEFAULT;
     m_menuItemTypes[STE_MENU_EDIT_MENU]     = STE_MENU_EDIT_DEFAULT;
+    m_menuItemTypes[STE_MENU_SEARCH_MENU]   = STE_MENU_SEARCH_DEFAULT;
     m_menuItemTypes[STE_MENU_TOOLS_MENU]    = STE_MENU_TOOLS_DEFAULT;
     m_menuItemTypes[STE_MENU_VIEW_MENU]     = STE_MENU_VIEW_DEFAULT;
     m_menuItemTypes[STE_MENU_BOOKMARK_MENU] = STE_MENU_BOOKMARK_DEFAULT;
@@ -62,6 +65,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
 
     wxMenu *fileMenu     = GetMenuItemTypes(STE_MENU_FILE_MENU)     != 0 ? CreateFileMenu()     : NULL;
     wxMenu *editMenu     = GetMenuItemTypes(STE_MENU_EDIT_MENU)     != 0 ? CreateEditMenu()     : NULL;
+    wxMenu *searchMenu   = GetMenuItemTypes(STE_MENU_SEARCH_MENU)   != 0 ? CreateSearchMenu()   : NULL;
     wxMenu *toolsMenu    = GetMenuItemTypes(STE_MENU_TOOLS_MENU)    != 0 ? CreateToolsMenu()    : NULL;
     wxMenu *viewMenu     = GetMenuItemTypes(STE_MENU_VIEW_MENU)     != 0 ? CreateViewMenu()     : NULL;
     wxMenu *bookmarkMenu = GetMenuItemTypes(STE_MENU_BOOKMARK_MENU) != 0 ? CreateBookmarkMenu() : NULL;
@@ -71,21 +75,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
 
     if (fileMenu)
     {
-        menu->Append(ID_STE_MENU_FILE, _("&File"), fileMenu);
+        menu->Append(ID_STE_MENU_FILE, wxGetStockLabel(wxID_FILE), fileMenu);
         add_sep = true;
     }
 
     if (editMenu)
     {
         if (add_sep) menu->AppendSeparator();
-        menu->Append(ID_STE_MENU_EDIT, _("&Edit"), editMenu);
-        add_sep = true;
-    }
-
-    if (toolsMenu)
-    {
-        if (add_sep) menu->AppendSeparator();
-        menu->Append(ID_STE_MENU_TOOLS, _("&Tools"), toolsMenu);
+        menu->Append(ID_STE_MENU_EDIT, wxGetStockLabel(wxID_EDIT), editMenu);
         add_sep = true;
     }
 
@@ -93,6 +90,20 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
         menu->Append(ID_STE_MENU_VIEW, _("&View"), viewMenu);
+        add_sep = true;
+    }
+
+    if (searchMenu)
+    {
+        if (add_sep) menu->AppendSeparator();
+        menu->Append(ID_STE_MENU_SEARCH, _("&Search"), searchMenu);
+        add_sep = true;
+    }
+
+    if (toolsMenu)
+    {
+        if (add_sep) menu->AppendSeparator();
+        menu->Append(ID_STE_MENU_TOOLS, _("&Tools"), toolsMenu);
         add_sep = true;
     }
 
@@ -106,7 +117,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
     if (prefMenu)
     {
         if (add_sep) menu->AppendSeparator();
-        menu->Append(ID_STE_MENU_PREF, _("&Preferences"), prefMenu);
+        menu->Append(ID_STE_MENU_PREF, wxGetStockLabel(wxID_PREFERENCES), prefMenu);
         add_sep = true;
     }
 
@@ -119,7 +130,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
     if (helpMenu)
     {
         if (add_sep) menu->AppendSeparator();
-        menu->Append(ID_STE_MENU_HELP, _("&Help"), helpMenu);
+        menu->Append(ID_STE_MENU_HELP, wxGetStockLabel(wxID_HELP), helpMenu);
     }
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
@@ -182,6 +193,7 @@ bool wxSTEditorMenuManager::CreateMenuBar(wxMenuBar *menuBar, bool for_frame) co
 
     wxMenu *fileMenu     = GetMenuItemTypes(STE_MENU_FILE_MENU)     != 0 ? CreateFileMenu()     : NULL;
     wxMenu *editMenu     = GetMenuItemTypes(STE_MENU_EDIT_MENU)     != 0 ? CreateEditMenu()     : NULL;
+    wxMenu *searchMenu   = GetMenuItemTypes(STE_MENU_SEARCH_MENU)   != 0 ? CreateSearchMenu()   : NULL;
     wxMenu *toolsMenu    = GetMenuItemTypes(STE_MENU_TOOLS_MENU)    != 0 ? CreateToolsMenu()    : NULL;
     wxMenu *viewMenu     = GetMenuItemTypes(STE_MENU_VIEW_MENU)     != 0 ? CreateViewMenu()     : NULL;
     wxMenu *bookmarkMenu = GetMenuItemTypes(STE_MENU_BOOKMARK_MENU) != 0 ? CreateBookmarkMenu() : NULL;
@@ -190,14 +202,15 @@ bool wxSTEditorMenuManager::CreateMenuBar(wxMenuBar *menuBar, bool for_frame) co
     wxMenu *helpMenu     = GetMenuItemTypes(STE_MENU_HELP_MENU)     != 0 ? CreateHelpMenu()     : NULL;
 
 
-    if (fileMenu)     menuBar->Append(fileMenu,     _("&File"));
-    if (editMenu)     menuBar->Append(editMenu,     _("&Edit"));
-    if (toolsMenu)    menuBar->Append(toolsMenu,    _("&Tools"));
+    if (fileMenu)     menuBar->Append(fileMenu,     wxGetStockLabel(wxID_FILE));
+    if (editMenu)     menuBar->Append(editMenu,     wxGetStockLabel(wxID_EDIT));
     if (viewMenu)     menuBar->Append(viewMenu,     _("&View"));
+    if (searchMenu)   menuBar->Append(searchMenu,   _("&Search"));
+    if (toolsMenu)    menuBar->Append(toolsMenu,    _("&Tools"));
     if (bookmarkMenu) menuBar->Append(bookmarkMenu, _("&Bookmarks"));
-    if (prefMenu)     menuBar->Append(prefMenu,     _("&Preferences"));
+    if (prefMenu)     menuBar->Append(prefMenu,     wxGetStockLabel(wxID_PREFERENCES));
     if (windowMenu)   menuBar->Append(windowMenu,   _("&Window"));
-    if (helpMenu)     menuBar->Append(helpMenu,     _("&Help"));
+    if (helpMenu)     menuBar->Append(helpMenu,     wxGetStockLabel(wxID_HELP));
 
     // reset the frame bit if it wasn't set
     if (!was_set_frame)
@@ -275,8 +288,7 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
 
 wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu();
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_NEW))
@@ -346,8 +358,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -355,8 +366,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 
 wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu();
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_UNDOREDO) && !HasMenuOptionType(STE_MENU_READONLY))
@@ -414,24 +424,6 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         menu->Append(ID_STE_MENU_LINE, _("L&ine Editing"), m);
         add_sep = true;
     }
-    if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_FINDREPLACE))
-    {
-        if (add_sep) menu->AppendSeparator();
-
-        menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
-        menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
-        menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward"), _("Search forward/reverse in document"));
-        if (!HasMenuOptionType(STE_MENU_READONLY))
-            menu->Append(MenuItem(menu, ID_STE_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
-        add_sep = true;
-    }
-    if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_GOTOLINE))
-    {
-        if (add_sep) menu->AppendSeparator();
-
-        menu->Append(ID_STE_GOTO_LINE, _("&Go To..."), _("Goto line number"));
-        add_sep = true;
-    }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY) && !HasMenuOptionType(STE_MENU_READONLY))
     {
         if (add_sep) menu->AppendSeparator();
@@ -447,10 +439,41 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         add_sep = true;
     }
 
-    if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
+    if ( (menu_ == NULL) && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
+    }
+
+    return menu;
+}
+
+wxMenu *wxSTEditorMenuManager::CreateSearchMenu(wxMenu *menu_) const
+{
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
+    bool add_sep = false;
+
+    if (HasMenuItemType(STE_MENU_SEARCH_MENU, STE_MENU_SEARCH_FINDREPLACE))
+    {
+        if (add_sep) menu->AppendSeparator();
+
+        menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
+        menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
+        menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward"), _("Search forward/reverse in document"));
+        if (!HasMenuOptionType(STE_MENU_READONLY))
+            menu->Append(MenuItem(menu, ID_STE_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
+        add_sep = true;
+    }
+    if (HasMenuItemType(STE_MENU_SEARCH_MENU, STE_MENU_SEARCH_GOTOLINE))
+    {
+        if (add_sep) menu->AppendSeparator();
+
+        menu->Append(ID_STE_GOTO_LINE, _("&Go To..."), _("Goto line number"));
+        add_sep = true;
+    }
+
+    if ((menu_ == NULL) && menu && (menu->GetMenuItemCount() == 0))
+    {
+        wxDELETE(menu);
     }
 
     return menu;
@@ -462,8 +485,7 @@ wxMenu *wxSTEditorMenuManager::CreateToolsMenu(wxMenu *menu_) const
     if (HasMenuOptionType(STE_MENU_READONLY))
         return menu_;
 
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_TOOLS_MENU, STE_MENU_TOOLS_CASE))
@@ -530,8 +552,7 @@ wxMenu *wxSTEditorMenuManager::CreateToolsMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -539,8 +560,7 @@ wxMenu *wxSTEditorMenuManager::CreateToolsMenu(wxMenu *menu_) const
 
 wxMenu *wxSTEditorMenuManager::CreateViewMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_VIEW_MENU, STE_MENU_VIEW_WRAP))
@@ -609,8 +629,7 @@ wxMenu *wxSTEditorMenuManager::CreateViewMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -622,7 +641,7 @@ wxMenu *wxSTEditorMenuManager::CreateBookmarkMenu(wxMenu *menu_) const
 
     if (HasMenuItemType(STE_MENU_BOOKMARK_MENU, STE_MENU_BOOKMARK_DEFAULT))
     {
-        if (!menu) menu = new wxMenu;
+        if (menu == NULL) menu = new wxMenu;
         menu->Append(MenuItem(menu, ID_STE_BOOKMARK_TOGGLE, _("&Toggle bookmark"), _("Toggle a bookmark on cursor line"), wxITEM_NORMAL, STE_ARTBMP(wxART_ADD_BOOKMARK)));
         menu->AppendSeparator();
         menu->Append(MenuItem(menu, ID_STE_BOOKMARK_FIRST,    _("&First bookmark"),    _("Goto first bookmark"), wxITEM_NORMAL, STE_ARTBMP(wxART_GO_UP)));
@@ -638,8 +657,7 @@ wxMenu *wxSTEditorMenuManager::CreateBookmarkMenu(wxMenu *menu_) const
 
 wxMenu *wxSTEditorMenuManager::CreatePreferenceMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_DLG))
@@ -677,8 +695,7 @@ wxMenu *wxSTEditorMenuManager::CreatePreferenceMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -686,8 +703,7 @@ wxMenu *wxSTEditorMenuManager::CreatePreferenceMenu(wxMenu *menu_) const
 
 wxMenu *wxSTEditorMenuManager::CreateWindowMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
 
     if (HasMenuItemType(STE_MENU_WINDOW_MENU, STE_MENU_WINDOW_SPLIT))
@@ -721,8 +737,7 @@ wxMenu *wxSTEditorMenuManager::CreateWindowMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -730,8 +745,7 @@ wxMenu *wxSTEditorMenuManager::CreateWindowMenu(wxMenu *menu_) const
 
 wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
 
     if (HasMenuOptionType(STE_MENU_FRAME) && HasMenuItemType(STE_MENU_HELP_MENU, STE_MENU_HELP_ABOUT))
     {
@@ -740,8 +754,7 @@ wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;
@@ -749,8 +762,7 @@ wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
 
 wxMenu* wxSTEditorMenuManager::CreateInsertCharsMenu(wxMenu *menu_, int types)
 {
-    wxMenu *menu = menu_;
-    if (!menu) menu = new wxMenu;
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
 
     if (STE_HASBIT(types, STE_MENU_INSERTCHARS_CHARS))
     {
@@ -781,8 +793,7 @@ wxMenu* wxSTEditorMenuManager::CreateInsertCharsMenu(wxMenu *menu_, int types)
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;

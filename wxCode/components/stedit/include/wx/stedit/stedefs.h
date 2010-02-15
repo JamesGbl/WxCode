@@ -436,6 +436,7 @@ enum
 
     ID_STE_MENU_FILE,           // id of the File menu
     ID_STE_MENU_EDIT,           // id of the Edit menu
+    ID_STE_MENU_SEARCH,         // id of the Search menu
     ID_STE_MENU_TOOLS,          // id of the Tools menu
     ID_STE_MENU_VIEW,           // id of the View menu
     ID_STE_MENU_BOOKMARK,       // id of the Bookmark menu

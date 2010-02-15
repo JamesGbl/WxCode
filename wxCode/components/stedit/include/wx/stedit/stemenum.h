@@ -51,12 +51,13 @@ enum STE_MenuType
 {
     STE_MENU_FILE_MENU     = 0, // File menu (open, close, save...)
     STE_MENU_EDIT_MENU     = 1, // Edit menu (cut, copy, paste...)
-    STE_MENU_TOOLS_MENU    = 2, // Tools menu (indent...)
-    STE_MENU_VIEW_MENU     = 3, // View menu (wrap, guides, margin...)
-    STE_MENU_BOOKMARK_MENU = 4, // Bookmarks menu (toggle, add, delete...)
-    STE_MENU_PREFS_MENU    = 5, // Preferences menu (use tabs, indent...)
-    STE_MENU_WINDOW_MENU   = 6, // Window menu (split, show windows...)
-    STE_MENU_HELP_MENU     = 7  // Help menu (about...)
+    STE_MENU_VIEW_MENU     = 2, // View menu (wrap, guides, margin...)
+    STE_MENU_SEARCH_MENU   = 3, // Search menu (find, replace, goto...)
+    STE_MENU_TOOLS_MENU    = 4, // Tools menu (indent...)
+    STE_MENU_BOOKMARK_MENU = 5, // Bookmarks menu (toggle, add, delete...)
+    STE_MENU_PREFS_MENU    = 6, // Preferences menu (use tabs, indent...)
+    STE_MENU_WINDOW_MENU   = 7, // Window menu (split, show windows...)
+    STE_MENU_HELP_MENU     = 8  // Help menu (about...)
 };
 
 // Menu items to create in wxSTEditorMenuManager::CreateFileMenu
@@ -78,12 +79,18 @@ enum STE_EditMenuItemType
 {
     STE_MENU_EDIT_CUTCOPYPASTE  = 0x00000001, // cut/copy/paste/select all
     STE_MENU_EDIT_LINE          = 0x00000002, // cut/copy... line editing
-    STE_MENU_EDIT_FINDREPLACE   = 0x00000004, // find/replace
-    STE_MENU_EDIT_GOTOLINE      = 0x00000008, // goto line
     STE_MENU_EDIT_UNDOREDO      = 0x00000010, // undo/redo item
     STE_MENU_EDIT_READONLY      = 0x00000020, // readonly item
     STE_MENU_EDIT_COMPLETEWORD  = 0x00000040, // complete word item
-    STE_MENU_EDIT_DEFAULT       = STE_MENU_EDIT_CUTCOPYPASTE|STE_MENU_EDIT_LINE|STE_MENU_EDIT_FINDREPLACE|STE_MENU_EDIT_GOTOLINE|STE_MENU_EDIT_UNDOREDO|STE_MENU_EDIT_COMPLETEWORD
+    STE_MENU_EDIT_DEFAULT       = STE_MENU_EDIT_CUTCOPYPASTE|STE_MENU_EDIT_LINE|STE_MENU_EDIT_UNDOREDO|STE_MENU_EDIT_COMPLETEWORD
+};
+
+// Menu items to create in wxSTEditorMenuManager::CreateSearchMenu
+enum STE_SearchMenuItemType
+{
+    STE_MENU_SEARCH_FINDREPLACE = 0x00000001, // find/replace
+    STE_MENU_SEARCH_GOTOLINE    = 0x00000002, // goto line
+    STE_MENU_SEARCH_DEFAULT     = STE_MENU_SEARCH_FINDREPLACE | STE_MENU_SEARCH_GOTOLINE
 };
 
 // Menu items to create in wxSTEditorMenuManager::CreateToolsMenu
@@ -186,6 +193,7 @@ public:
     wxSTEditorMenuManager(int menuOptionTypes, // = 0 or STE_MENU_NOTEBOOK,
                           int fileMenuItemTypes     = STE_MENU_FILE_DEFAULT,
                           int editMenuItemTypes     = STE_MENU_EDIT_DEFAULT,
+                          int searchMenuItemTypes   = STE_MENU_SEARCH_DEFAULT,
                           int toolsMenuItemTypes    = STE_MENU_TOOLS_DEFAULT,
                           int viewMenuItemTypes     = STE_MENU_VIEW_DEFAULT,
                           int bookmarkMenuItemTypes = STE_MENU_BOOKMARK_DEFAULT,
@@ -198,6 +206,7 @@ public:
         m_menuOptionTypes = menuOptionTypes;
         m_menuItemTypes[STE_MENU_FILE_MENU]     = fileMenuItemTypes;
         m_menuItemTypes[STE_MENU_EDIT_MENU]     = editMenuItemTypes;
+        m_menuItemTypes[STE_MENU_SEARCH_MENU]   = searchMenuItemTypes;
         m_menuItemTypes[STE_MENU_TOOLS_MENU]    = toolsMenuItemTypes;
         m_menuItemTypes[STE_MENU_VIEW_MENU]     = viewMenuItemTypes;
         m_menuItemTypes[STE_MENU_BOOKMARK_MENU] = bookmarkMenuItemTypes;
@@ -279,6 +288,8 @@ public:
     virtual wxMenu* CreateToolsMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_ViewMenuItemType
     virtual wxMenu* CreateViewMenu(wxMenu *menu = NULL) const;
+    // Create menu items where menu_types = enum STE_SearchMenuItemType
+    virtual wxMenu* CreateSearchMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_BookmarkMenuItemType
     virtual wxMenu* CreateBookmarkMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_PrefMenuItemType
