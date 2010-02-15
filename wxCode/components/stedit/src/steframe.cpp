@@ -140,39 +140,39 @@ static const AcceleratorArray& getaccelerator()
 
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
       array.Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'W', ID_STN_CLOSE_PAGE));
-      array.Add(wxAcceleratorEntry(wxACCEL_ALT, 'S', ID_STN_SAVE_ALL));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'W', ID_STN_CLOSE_PAGE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'A', ID_STN_SAVE_ALL));
       
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'V', ID_STE_PASTE_RECT));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'V', ID_STE_PASTE_RECT));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'L', ID_STS_SPLIT_HORIZ));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'T', ID_STS_SPLIT_VERT));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'L', ID_STS_SPLIT_HORIZ));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'T', ID_STS_SPLIT_VERT));
 
-      //array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'R', ID_STE_PREF_SELECTION_MODE));
+      //array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'R', ID_STE_PREF_SELECTION_MODE));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'L', ID_STE_LINE_CUT));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'T', ID_STE_LINE_COPY));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'L', ID_STE_LINE_CUT));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'T', ID_STE_LINE_COPY));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'L', ID_STE_LINE_DELETE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'T', ID_STE_LINE_TRANSPOSE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'D', ID_STE_LINE_DUPLICATE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'L', ID_STE_LINE_DELETE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'T', ID_STE_LINE_TRANSPOSE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'D', ID_STE_LINE_DUPLICATE));
 
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F3, ID_STE_FIND_NEXT));
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F2, ID_STE_FIND_DOWN));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'H', ID_STE_REPLACE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'G', ID_STE_GOTO_LINE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, ' ', ID_STE_COMPLETEWORD));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'H', ID_STE_REPLACE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'G', ID_STE_GOTO_LINE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, ' ', ID_STE_COMPLETEWORD));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'U', ID_STE_UPPERCASE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'U', ID_STE_LOWERCASE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'U', ID_STE_UPPERCASE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'U', ID_STE_LOWERCASE));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'J', ID_STE_LINES_JOIN));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'K', ID_STE_LINES_SPLIT));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'J', ID_STE_LINES_JOIN));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'K', ID_STE_LINES_SPLIT));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_ALT, 'W', ID_STE_TRAILING_WHITESPACE));
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'W', ID_STE_REMOVE_CHARSAROUND));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_ALT, 'W', ID_STE_TRAILING_WHITESPACE));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'W', ID_STE_REMOVE_CHARSAROUND));
 
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL, 'I', ID_STE_INSERT_TEXT));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'I', ID_STE_INSERT_TEXT));
 
       array.Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F8, ID_STN_WIN_PREVIOUS));
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F8, ID_STN_WIN_NEXT));
@@ -187,7 +187,7 @@ static const AcceleratorArray& getaccelerator()
       //array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
 
 #ifdef __UNIX__
-      array.Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
 #endif // __UNIX__
    }
    return array;
@@ -201,7 +201,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 
     if (steMM && GetOptions().HasFrameOption(STF_CREATE_MENUBAR))
     {
-        wxMenuBar *menuBar = GetMenuBar() != NULL ? GetMenuBar() : new wxMenuBar(wxMB_DOCKABLE);
+        wxMenuBar *menuBar = GetMenuBar() ? GetMenuBar() : new wxMenuBar(wxMB_DOCKABLE);
         steMM->CreateMenuBar(menuBar, true);
 
         if (menuBar)
