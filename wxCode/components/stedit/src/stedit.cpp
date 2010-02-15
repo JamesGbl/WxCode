@@ -464,19 +464,15 @@ void wxSTEditor::OnKeyDown(wxKeyEvent& event)
     switch ( event.GetKeyCode() )
     {
         case WXK_ESCAPE:
-        {
-            bool has_sel = GetSelectionStart() != GetSelectionEnd();
-
-            if (has_sel)
+            if (HasSelection())
             {
-                SetSelection(GetCurrentPos() , GetCurrentPos());
+                RemoveSelection();
             }
             else
             {
                 event.Skip();
             }
             break;
-        }
         case WXK_INSERT : // already have ID_STE_SELECT_RECT for Alt-Shift-P
             if (event.AltDown() && event.ShiftDown())
             {

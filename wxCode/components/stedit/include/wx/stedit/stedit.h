@@ -234,6 +234,17 @@ public :
     // Get the row/col representation of the position
     bool PositionToXY(long pos, long *x, long *y);
 
+#if (wxVERSION_NUMBER < 2900)
+    bool HasSelection()
+    {
+        return (GetSelectionStart() != GetSelectionEnd());
+    }
+    void RemoveSelection()
+    {
+        SetSelection(GetCurrentPos() , GetCurrentPos());
+    }
+#endif
+
     // ------------------------------------------------------------------------
     // Convenience functions - other useful functions
 
