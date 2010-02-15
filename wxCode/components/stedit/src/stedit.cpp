@@ -467,23 +467,29 @@ void wxSTEditor::OnKeyDown(wxKeyEvent& event)
         {
             bool has_sel = GetSelectionStart() != GetSelectionEnd();
 
-            // note: Clear() actually deletes the selected text
             if (has_sel)
+            {
                 SetSelection(GetCurrentPos() , GetCurrentPos());
-
-            event.Skip(); // always allow default processing
+            }
+            else
+            {
+                event.Skip();
+            }
             break;
         }
         case WXK_INSERT : // already have ID_STE_SELECT_RECT for Alt-Shift-P
-        {
             if (event.AltDown() && event.ShiftDown())
+            {
                 PasteRectangular();
+            }
             else
+            {
                 event.Skip();
-
+            }
             break;
-        }
-        default : event.Skip(); break;
+        default:
+            event.Skip();
+            break;
     }
 }
 
