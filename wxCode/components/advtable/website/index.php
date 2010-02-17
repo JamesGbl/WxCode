@@ -24,7 +24,7 @@
   <br/><?php write_h1("Features"); ?>
   <ol>
   	<li>Composite rows/columns.<br><img src="comprows.png"></li>
-  	<li>Highlight mode.<br><img src="highlighs.png"></li>
+  	<li>Highlight mode.<br><img src="highlight.png"></li>
   	<li>Built-in sorting support.</li>
   	<li>Flexible rendering and editing support.</li>
   	<li>Flexible data access model.</li>
@@ -40,7 +40,7 @@
   <ol>
   	<li>Support of composite rows/columns.</li>
   	<li>Built-in sorting support.</li>
-  	<li>Highlight mode.<br><img src="highlighs.png"></li>
+  	<li>Highlight mode.<br><img src="highlight.png"></li>
   	<li>Clean MCV (Model-Controller-View) design.</li>
   	<li>Flexible data access model.</li>
   </ol>
