@@ -4,18 +4,17 @@
  
  Website: http://wxcode.sourceforge.net/components/advtable
  Author: Moskvichev Andrey V. (email: mab [at] smtp [dot] ru)
- Version: 1.4 
+ Version: 1.5 
  Description:
- wxAdvTable is table component (like wxGrid) designed with 
- simplicity and flexibility in mind.
+ wxAdvTable is advanced table component designed with flexibility in mind.
  It has many advanced features like: 
   - composite rows/columns
   - built-in sorting support
+  - clean MCV (Model-Controller-View) design
   - flexible rendering and editing support
   - flexible data access model
   - dynamic row/columns add/removal
   - visual features like: highlight modes, cell attributes, etc
-  - MCV (Model-Controller-View) design
  
  	Composite row/columns.
  wxAdvTable uses composite rows and columns. Composite means one row/column
@@ -127,7 +126,7 @@
  wxAdvTable events are hdrCell click, move, resize events:
  wxEVT_ADVTABLE_HDRCELL_LEFT_CLICK, wxEVT_ADVTABLE_HDRCELL_RIGHT_CLICK,
  wxEVT_ADVTABLE_HDRCELL_LEFT_DCLICK, wxEVT_ADVTABLE_HDRCELL_RIGHT_DCLICK,
- wxEVT_ADVTABLE_HDRCELL_SIZE, wxEVT_ADVTABLE_HDRCELL_MOVE.
+ wxEVT_ADVTABLE_HDRCELL_SIZE, wxEVT_ADVTABLE_HDRCELL_MOVE, wxEVT_ADVTABLE_HDRCELL_SORT.
 
  Because wxAdvTable rows/columns can be composite, wxGrid events for
  rows/columns cannot be used. 
@@ -150,8 +149,8 @@
 
  When building on a Linux/GNU-based system, type
 
-  cd build
-  make -f GNUmakefile
+  ./configure
+  make
 
  to build against the default build of wxWidgets (the one listed as 'default' 
  by wx-config --list). Type "./configure --help" for more info.
@@ -161,6 +160,16 @@
  ChangeLog
  ---------
  
+ 1.5:
+      What's new:
+       - ScrollToCell method was added
+       - added gradient header cells drawing mode to wxAdvDefaultHdrCellRenderer
+       - added wxEVT_ADVTABLE_HDRCELL_SORT event, fired when sorting row/column changed
+       - keys handling and focus bugfixes
+       - scrolling bugfixes
+       - dll export bugfixes
+       - documentation updated
+       
  1.4:
       What's new:
        - three state sorting: ascending, descending, nosorting 
@@ -198,17 +207,20 @@
        	
  1.0 - first version of wxAdvTable at wxCode
  
+ Future plans:
+       - Perl and Python bindings
+       - Rows/columns drag move
+       - add filtering support
+       - resize code optimization
+       - add bitmap data type
+	    
  Known issues:
- 	   - choices editor on Windows (tm) looks ugly
-       - lack of Perl and Python bindings
-       - lack of filtering
-       - sorting code must be rewritten
-       - resize code must be optimized
+       - choices editor on Windows (tm) looks ugly
        - keys up/down/left/right/page up/page down must move cell focus
          and also scroll table if needed
-       - TODO: make posible to save wxAdvTable to Excel (tm) or OpenOffice document 
+       - make posible to save wxAdvTable to Excel (tm) or OpenOffice document 
          workbook.
        - tested only on wxMSW-2.8.9 (Windows XP(tm) SP2 mingw) and wxGTK-2.8.8 (Gentoo Linux x86_64 gcc),
          if someone can test on other wxWidgets ports, please let me know
        - bugs with keydown handling on wxGTK
- 
+

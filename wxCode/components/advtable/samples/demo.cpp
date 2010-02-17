@@ -4,7 +4,7 @@
 // Author:      Moskvichev Andrey V.
 // Created:     2008/10/09
 // RCS-ID:      $Id: wxAdvTable.h,v 1.3 2008/10/09 16:42:58 frm Exp $
-// Copyright:   (c) 2008-2009 Moskvichev A.V.
+// Copyright:   (c) 2008-2010 Moskvichev A.V.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -12,8 +12,7 @@
 #include <wx/aui/aui.h>
 #include <wx/aboutdlg.h>
 
-const wxString appVersion = wxT("1.4");
-const wxString appName = wxT("wxAdvTable demo 1.4");
+const wxChar *appVersion = wxT("1.5");
 
 /*
  * TODO:
@@ -447,7 +446,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame()
-: wxFrame(NULL, wxID_ANY, appName, wxDefaultPosition, wxSize(1100, 800))
+: wxFrame(NULL, wxID_ANY, wxString::Format(wxT("wxAdvTable demo %s"), appVersion), wxDefaultPosition, wxSize(1100, 800))
 {
 	wxAuiManager *auiManager = new wxAuiManager(this);
 
@@ -549,7 +548,7 @@ void MainFrame::OnAbout(wxCommandEvent &ev)
 	about.SetName(wxT("wxAdvTable demo"));
 	about.SetVersion(appVersion);
 	about.SetDescription(wxT("This demo shows wxAdvTable features"));
-	about.SetCopyright(wxT("Copyright (C) 2008-2009 Moskvichev Andrey V."));
+	about.SetCopyright(wxT("Copyright (C) 2008-2010 Moskvichev Andrey V."));
 
 	wxAboutBox(about);
 }

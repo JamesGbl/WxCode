@@ -3,7 +3,7 @@
 // Purpose: wxAdvTable builder application implementation
 // Author:	Moskvichev Andrey V.
 // Created:	20.09.2009
-// Copyright:	(c) 2009 Moskvichev Andrey V.
+// Copyright:	(c) 2009-2010 Moskvichev Andrey V.
 // Licence:	wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 

@@ -24,20 +24,25 @@
   <br/><?php write_h1("Features"); ?>
   <ol>
   	<li>Composite rows/columns.<br><img src="comprows.png"></li>
+  	<li>Highlight mode.<br><img src="highlighs.png"></li>
   	<li>Built-in sorting support.</li>
   	<li>Flexible rendering and editing support.</li>
   	<li>Flexible data access model.</li>
+  	<li>Full documented source code.</li>
   	<li>Dynamic row/columns add/removal.</li>
-  	<li>Visual features like: highlight modes, cell attributes, etc.</li>
+  	<li>Various visual features.</li>
+  	<li>Various built-in data types, and renderers and editors for them.</li>
   	<li>Everything is easily configurable: you can change row/column label font, color, alignment, size, etc.<br>You can set font, color, etc attributes to any cell.</li>
-  	<li>MCV (Model-Controller-View) design.</li>
+  	<li>Clean MCV (Model-Controller-View) design.</li>
   </ol>
   
   <br/><?php write_h1("Advantages from wxGrid (standard wxWidgets table control)"); ?>
   <ol>
   	<li>Support of composite rows/columns.</li>
-  	<li>Sorting.</li>
-  	<li>MCV (Model-Controller-View) design.</li>
+  	<li>Built-in sorting support.</li>
+  	<li>Highlight mode.<br><img src="highlighs.png"></li>
+  	<li>Clean MCV (Model-Controller-View) design.</li>
+  	<li>Flexible data access model.</li>
   </ol>
   
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
@@ -60,6 +65,13 @@
 
     
 	<br/><?php write_h1("Future enhancements"); ?>
+	<ol>
+		<li>Perl and Python bindings.</li>
+		<li>Rows/columns move by drag.</li>
+		<li>Add filtering support.</li>
+		<li>Resize code optimization.</li>
+		<li>Add bitmap data type.</li>
+	</ol>
   <p>None. To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
     
   <br/><?php require("footer.inc.php"); ?>
