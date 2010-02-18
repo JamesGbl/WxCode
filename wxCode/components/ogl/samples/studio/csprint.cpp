@@ -173,7 +173,7 @@ bool wxDiagramClipboard::CopyToClipboard(double scale)
 
     // Set to a bitmap memory DC
     wxBitmap *newBitmap = new wxBitmap((int)(maxX + 10), (int)(maxY + 10));
-    if (!newBitmap->Ok())
+    if (!newBitmap->IsOk())
     {
       delete newBitmap;
 

@@ -31,7 +31,7 @@ wxBitmapShape::~wxBitmapShape()
 
 void wxBitmapShape::OnDraw(wxDC& dc)
 {
-  if (!m_bitmap.Ok())
+  if (!m_bitmap.IsOk())
     return;
 
   int x, y;
@@ -42,7 +42,7 @@ void wxBitmapShape::OnDraw(wxDC& dc)
 
 void wxBitmapShape::SetSize(double w, double h, bool WXUNUSED(recursive))
 {
-  if (m_bitmap.Ok())
+  if (m_bitmap.IsOk())
   {
     w = m_bitmap.GetWidth();
     h = m_bitmap.GetHeight();
@@ -87,7 +87,7 @@ void wxBitmapShape::Copy(wxShape& copy)
 void wxBitmapShape::SetBitmap(const wxBitmap& bm)
 {
   m_bitmap = bm;
-  if (m_bitmap.Ok())
+  if (m_bitmap.IsOk())
     SetSize(m_bitmap.GetWidth(), m_bitmap.GetHeight());
 }
 
