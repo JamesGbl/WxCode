@@ -65,6 +65,8 @@ const int wxAdvHdrCell::defaultSpacing         = 5;
 const int wxAdvHdrCell::defaultAlignVertical   = wxALIGN_CENTER_VERTICAL;
 const int wxAdvHdrCell::defaultAlignHorizontal = wxALIGN_CENTER_HORIZONTAL;
 
+static const wxChar *modelDateFormat = wxT("%X %x");
+
 size_t wxAdvHdrCell::GetDecompCellCount(wxAdvHdrCell *cells, size_t numCells)
 {
 	size_t count = 0;
@@ -357,6 +359,11 @@ wxAdvTableDataModel::~wxAdvTableDataModel()
 double wxAdvTableDataModel::GetCellValueAsDouble(size_t WXUNUSED(row), size_t WXUNUSED(col))
 {
 	return 0;
+}
+
+void wxAdvTableDataModel::SetCellValueAsDateTime(size_t row, size_t col, wxDateTime &dt)
+{
+	SetCellValue(row, col, dt.Format(modelDateFormat));
 }
 
 wxDateTime wxAdvTableDataModel::GetCellValueAsDateTime(size_t WXUNUSED(row), size_t WXUNUSED(col))
@@ -905,7 +912,7 @@ void wxAdvDateTimeCellRenderer::Draw(wxAdvTable *table, wxDC &dc, wxRect rc, wxS
 {
 	// XXX overhead
 	wxDateTime dt;
-	dt.ParseFormat(value.c_str(), wxT("%x %X"));
+	dt.ParseFormat(value.c_str(), modelDateFormat);
 
 	value = dt.Format(m_format.c_str());
 
@@ -1039,7 +1046,7 @@ void wxAdvCellEditor::EndEditing()
 BEGIN_EVENT_TABLE(wxAdvStringCellEditor, wxEvtHandler)
 	EVT_TEXT_ENTER(wxID_ANY, wxAdvStringCellEditor::OnTextEnter)
 	EVT_KILL_FOCUS(wxAdvStringCellEditor::OnKillFocus)
-	//EVT_KEY_DOWN(wxAdvStringCellEditor::OnTextKeydown)
+	EVT_KEY_DOWN(wxAdvStringCellEditor::OnTextKeydown)
 END_EVENT_TABLE()
 
 wxAdvStringCellEditor::wxAdvStringCellEditor(wxAdvTable *table)
@@ -1264,7 +1271,7 @@ void wxAdvDateTimeCellEditor::DoActivate()
 	wxString value = GetValue();
 
 	wxDateTime dtValue;
-	wxCHECK_RET(dtValue.ParseFormat(value.c_str(), wxT("%x %X")) != NULL, wxT("Error parsing datetime value"));
+	wxCHECK_RET(dtValue.ParseFormat(value.c_str(), modelDateFormat) != NULL, wxT("Error parsing datetime value"));
 
 	m_datePicker->SetValue(dtValue);
 
@@ -1277,13 +1284,13 @@ void wxAdvDateTimeCellEditor::DoDeactivate()
 {
 	m_datePicker->Show(false);
 
-	wxString value = m_datePicker->GetValue().Format(wxT("%x %X"));
+	wxString value = m_datePicker->GetValue().Format(modelDateFormat);
 	SetNewValue(value);
 }
 
 void wxAdvDateTimeCellEditor::OnDateChanged(wxDateEvent &WXUNUSED(ev))
 {
-	wxString value = m_datePicker->GetValue().Format(wxT("%x %X"));
+	wxString value = m_datePicker->GetValue().Format(modelDateFormat);
 	SetNewValue(value);
 }
 
@@ -1384,7 +1391,10 @@ wxAdvCellAttribute::~wxAdvCellAttribute()
 // Sorters
 //
 
-class SortHelper // XXX dirty hack! used to implement sorters
+/**
+ * Internal class. Don't use it in applications.
+ */
+class SortHelper // used to implement sorters
 {
 public:
 	SortHelper(const SortHelper &o)

@@ -697,6 +697,14 @@ public:
 	virtual double GetCellValueAsDouble(size_t row, size_t col);
 
 	/**
+	 * Sets cell value as date/time value.
+	 * @param row row index
+	 * @param col column index
+	 * @param dt date cell value
+	 */
+	void SetCellValueAsDateTime(size_t row, size_t col, wxDateTime &dt);
+
+	/**
 	 * Returns cell value as wxDateTime.
 	 * NOTE: not all values can be accessed this way.
 	 * @param row row index
@@ -1902,7 +1910,7 @@ private:
  * <ol>
  *  <li>composite rows/columns</li>
  *  <li>sorting and filtering</li>
- *  <li>MCV design (designed after Java(tm) JTable classes).
+ *  <li>Clean MCV design.
  *   Data accessed through wxAdvTableModel, rendered by wxAdvCellRenderer, edited by wxAdvCellEditor
  *  <li>rows/columns dynamic add/remove support</li>
  *  <li>TODO: add printing support</li>

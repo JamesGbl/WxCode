@@ -25,7 +25,7 @@
   <ol>
   	<li>Composite rows/columns.<br><img src="comprows.png"></li>
   	<li>Highlight mode.<br><img src="highlight.png"></li>
-  	<li>Built-in sorting support.</li>
+  	<li>Built-in sorting support for different data types (integer, string, date, choice, etc).</li>
   	<li>Flexible rendering and editing support.</li>
   	<li>Flexible data access model.</li>
   	<li>Full documented source code.</li>

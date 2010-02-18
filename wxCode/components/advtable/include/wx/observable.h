@@ -9,17 +9,17 @@
 #include <vector>
 
 /**
- * This template defines Observable object pattern.
+ * This template defines Observable object design pattern.
  */
 template<class O> class Observable {
 public:
 	typedef O Observer;
 	typename std::vector<O*>::iterator OIt;
 
-	Observable() 
+	Observable()
 	{
 	}
-	
+
 	void AddObserver(O *_observer)
 	{
 		for (typename std::vector<O*>::iterator it = observers.begin();
@@ -40,7 +40,7 @@ public:
 			}
 		}
 	}
-	
+
 protected:
 	std::vector<O*> observers;
 };
