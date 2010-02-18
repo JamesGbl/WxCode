@@ -327,23 +327,23 @@ wxString wxSTEditorOptions::FixConfigPath(const wxString& path, bool add_sep)
 
 void wxSTEditorOptions::LoadConfig(wxConfigBase &config)
 {
-    if (HasConfigOption(STE_CONFIG_PREFS) && GetEditorPrefs().Ok())
+    if (HasConfigOption(STE_CONFIG_PREFS) && GetEditorPrefs().IsOk())
         GetEditorPrefs().LoadConfig(config, GetConfigPath(STE_OPTION_CFGPATH_PREFS));
-    if (HasConfigOption(STE_CONFIG_STYLES) && GetEditorStyles().Ok())
+    if (HasConfigOption(STE_CONFIG_STYLES) && GetEditorStyles().IsOk())
         GetEditorStyles().LoadConfig(config, GetConfigPath(STE_OPTION_CFGPATH_STYLES));
-    if (HasConfigOption(STE_CONFIG_LANGS) && GetEditorLangs().Ok())
+    if (HasConfigOption(STE_CONFIG_LANGS) && GetEditorLangs().IsOk())
         GetEditorLangs().LoadConfig(config, GetConfigPath(STE_OPTION_CFGPATH_LANGS));
 }
 void wxSTEditorOptions::SaveConfig(wxConfigBase &config)
 {
-    if (HasConfigOption(STE_CONFIG_PREFS) && GetEditorPrefs().Ok())
+    if (HasConfigOption(STE_CONFIG_PREFS) && GetEditorPrefs().IsOk())
         GetEditorPrefs().SaveConfig(config, GetConfigPath(STE_OPTION_CFGPATH_PREFS));
-    if (HasConfigOption(STE_CONFIG_STYLES) && GetEditorStyles().Ok())
+    if (HasConfigOption(STE_CONFIG_STYLES) && GetEditorStyles().IsOk())
         GetEditorStyles().SaveConfig(config, GetConfigPath(STE_OPTION_CFGPATH_STYLES));
-    if (HasConfigOption(STE_CONFIG_LANGS) && GetEditorLangs().Ok())
+    if (HasConfigOption(STE_CONFIG_LANGS) && GetEditorLangs().IsOk())
         GetEditorLangs().SaveConfig(config, GetConfigPath(STE_OPTION_CFGPATH_LANGS));
 
-    if (GetEditorPrefs().Ok() || GetEditorStyles().Ok() || GetEditorLangs().Ok())
+    if (GetEditorPrefs().IsOk() || GetEditorStyles().IsOk() || GetEditorLangs().IsOk())
         config.Flush(true); // what is current only?
 }
 

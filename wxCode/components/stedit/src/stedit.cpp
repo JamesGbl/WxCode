@@ -216,9 +216,9 @@ wxSTEditor::~wxSTEditor()
     GetSTERefData()->RemoveEditor(this);
 
     // don't destroy prefs since we may be a refed editor, remove us though
-    if (GetEditorPrefs().Ok())  GetEditorPrefs().RemoveEditor(this);
-    if (GetEditorStyles().Ok()) GetEditorStyles().RemoveEditor(this);
-    if (GetEditorLangs().Ok())  GetEditorLangs().RemoveEditor(this);
+    if (GetEditorPrefs().IsOk())  GetEditorPrefs().RemoveEditor(this);
+    if (GetEditorStyles().IsOk()) GetEditorStyles().RemoveEditor(this);
+    if (GetEditorLangs().IsOk())  GetEditorLangs().RemoveEditor(this);
 
     // if we're a refed editor, release the document
     if (GetRefData()->GetRefCount() > 1)
@@ -234,9 +234,9 @@ bool wxSTEditor::Destroy()
     GetSTERefData()->RemoveEditor(this);
 
     // don't destroy prefs since we may be a refed editor, remove us though
-    if (GetEditorPrefs().Ok())  GetEditorPrefs().RemoveEditor(this);
-    if (GetEditorStyles().Ok()) GetEditorStyles().RemoveEditor(this);
-    if (GetEditorLangs().Ok())  GetEditorLangs().RemoveEditor(this);
+    if (GetEditorPrefs().IsOk())  GetEditorPrefs().RemoveEditor(this);
+    if (GetEditorStyles().IsOk()) GetEditorStyles().RemoveEditor(this);
+    if (GetEditorLangs().IsOk())  GetEditorLangs().RemoveEditor(this);
 
     return wxStyledTextCtrl::Destroy();
 }
@@ -252,9 +252,9 @@ void wxSTEditor::RefEditor(wxSTEditor *origEditor)
                 (origEditor->GetRefData() != GetRefData()), wxT("Invalid editor to ref"));
 
     // remove us from the prefs, if any
-    if (GetEditorPrefs().Ok())  GetEditorPrefs().RemoveEditor(this);
-    if (GetEditorStyles().Ok()) GetEditorStyles().RemoveEditor(this);
-    if (GetEditorLangs().Ok())  GetEditorLangs().RemoveEditor(this);
+    if (GetEditorPrefs().IsOk())  GetEditorPrefs().RemoveEditor(this);
+    if (GetEditorStyles().IsOk()) GetEditorStyles().RemoveEditor(this);
+    if (GetEditorLangs().IsOk())  GetEditorLangs().RemoveEditor(this);
 
     // remove us from current refData
     GetSTERefData()->RemoveEditor(this);
@@ -268,16 +268,16 @@ void wxSTEditor::RefEditor(wxSTEditor *origEditor)
     GetSTERefData()->AddEditor(this);
 
     // register us into the prefs, if any
-    if (GetEditorStyles().Ok()) GetEditorStyles().RegisterEditor(this);
-    if (GetEditorPrefs().Ok())  GetEditorPrefs().RegisterEditor(this);
-    if (GetEditorLangs().Ok())  GetEditorLangs().RegisterEditor(this);
+    if (GetEditorStyles().IsOk()) GetEditorStyles().RegisterEditor(this);
+    if (GetEditorPrefs().IsOk())  GetEditorPrefs().RegisterEditor(this);
+    if (GetEditorLangs().IsOk())  GetEditorLangs().RegisterEditor(this);
 }
 
 void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
 {
     STE_INITRETURN
 
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
     {
         if (GetEditorPrefs().GetPrefBool(STE_PREF_HIGHLIGHT_BRACES))
             DoBraceMatch();
@@ -557,7 +557,7 @@ void wxSTEditor::OnSTCCharAdded(wxStyledTextEvent &event)
     //wxPrintf(wxT("Char added %d '%c'\n"), int(c), c);
 
     // Change this if support for mac files with \r is needed
-    if ((c == wxT('\n')) && GetEditorPrefs().Ok() &&
+    if ((c == wxT('\n')) && GetEditorPrefs().IsOk() &&
          GetEditorPrefs().GetPrefBool(STE_PREF_AUTOINDENT))
     {
         const int line = GetCurrentLine();
@@ -669,7 +669,7 @@ void wxSTEditor::OnSTCMarginDClick(wxStyledTextEvent &event)
     const int line = LineFromPosition(event.GetPosition());
 
     if ((event.GetMargin() == STE_MARGIN_MARKER) &&
-        GetEditorPrefs().Ok() &&
+        GetEditorPrefs().IsOk() &&
         GetEditorPrefs().GetPrefBoolByID(ID_STE_PREF_BOOKMARK_DCLICK))
     {
         // See similiar code for ID_STE_BOOKMARK_TOGGLE
@@ -1540,7 +1540,7 @@ bool wxSTEditor::ShowConvertEOLModeDialog()
 
     int choice = dialog.GetSelection();
 
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
         GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_EOL_MODE, choice);
     else
         SetEOLMode(choice);
@@ -1560,7 +1560,7 @@ bool wxSTEditor::ShowSetZoomDialog()
         return false;
 
     int val = numDlg.GetValue();
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
         GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_ZOOM, val);
     else
         SetZoom(val);
@@ -1574,7 +1574,7 @@ enum { noPPC, ppcStart, ppcMiddle, ppcEnd, ppcDummy };
 
 int wxSTEditor::IsLinePreprocessorCondition(const wxString &line)
 {
-    if (!GetEditorLangs().Ok() || line.IsEmpty())
+    if (!GetEditorLangs().IsOk() || line.IsEmpty())
         return noPPC;
 
     const wxString preprocessorSymbol = GetEditorLangs().GetPreprocessorSymbol(GetLanguageId());
@@ -1656,7 +1656,7 @@ bool wxSTEditor::FindMatchingPreprocCondPosition(
     wxString line;
     int status;
 
-    if (!GetEditorLangs().Ok())
+    if (!GetEditorLangs().IsOk())
         return false;
 
     // Get current line
@@ -1728,7 +1728,7 @@ bool wxSTEditor::DoFindMatchingBracePosition(int &braceAtCaret, int &braceOpposi
 
     int ste_languageID = GetLanguageId();
 
-    int bracesStyle = GetEditorLangs().Ok() && GetEditorLangs().HasLanguage(ste_languageID)
+    int bracesStyle = GetEditorLangs().IsOk() && GetEditorLangs().HasLanguage(ste_languageID)
                          ? GetEditorLangs().GetBracesStyle(ste_languageID) : 10;
     int lexLanguage = GetLexer();
     int bracesStyleCheck = bracesStyle; // FIXME what is this?
@@ -1843,7 +1843,7 @@ void wxSTEditor::DoBraceMatch() {
         }
 
         // they only get hilighted when SetIndentationGuides is set true
-        if (GetEditorPrefs().Ok() && GetEditorPrefs().GetPrefInt(STE_PREF_INDENT_GUIDES))
+        if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefInt(STE_PREF_INDENT_GUIDES))
             SetHighlightGuide(wxMin(columnAtCaret, columnOpposite));
     }
 }
@@ -1881,7 +1881,7 @@ size_t wxSTEditor::DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString
 {
     wxSTEditorLangs langs(GetEditorLangs());
     int lang_n = GetLanguageId();
-    if (!langs.Ok() || !langs.HasLanguage(lang_n)) return 0;
+    if (!langs.IsOk() || !langs.HasLanguage(lang_n)) return 0;
 
     size_t n, count = 0, keyword_count = langs.GetKeyWordsCount(lang_n);
     for (n = 0; n < keyword_count; n++)
@@ -2086,7 +2086,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     if (ok)
     {
         ClearAll();
-        if (GetEditorPrefs().Ok() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
+        if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
             SetLanguage(fileName);
 
         const size_t buf_len = wxMin(1024*1024, (size_t)stream_len);
@@ -2236,10 +2236,10 @@ bool wxSTEditor::LoadFile( const wxString &fileName_,
     }
 
     ClearAll();
-    if (GetEditorPrefs().Ok() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
+    if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
         SetLanguage( fileName );
 
-    int load_flags = GetEditorPrefs().Ok() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
+    int load_flags = GetEditorPrefs().IsOk() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
 
     // use streams method to allow loading unicode files
     wxFileInputStream stream(fileName);
@@ -2303,7 +2303,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         return false;
     }
 
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
     {
         if (GetEditorPrefs().GetPrefBool(STE_PREF_SAVE_REMOVE_WHITESP))
             RemoveTrailingWhitespace(0, -1);
@@ -2361,7 +2361,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
 
     ClearAll();
     EmptyUndoBuffer();
-    if (GetEditorPrefs().Ok() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
+    if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
         SetLanguage( title );
 
     SetFileName(title, true);
@@ -2608,7 +2608,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_INDENT_WIDTH, wxString::Format(_("Set indent wi&dth (%d)..."), GetIndent()));
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_EOL_MODE,     _("&EOL Mode (")+EOLModeStrings[GetEOLMode()].BeforeFirst(wxT(' '))+wxT(")..."));
 
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
         GetEditorPrefs().UpdateMenuToolItems(menu, menuBar, toolBar);
 }
 
@@ -2679,7 +2679,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_PASTE_RECT     : PasteRectangular(); return true;
         case ID_STE_PREF_SELECTION_MODE    :
         {
-            if (GetEditorPrefs().Ok())
+            if (GetEditorPrefs().IsOk())
             {
                 GetEditorPrefs().SetPrefInt(STE_PREF_SELECTION_MODE,
                     event.IsChecked() ? wxSTC_SEL_RECTANGLE : wxSTC_SEL_STREAM);
@@ -2838,7 +2838,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         // Preference menu items ----------------------------------------------
         case ID_STE_PREFERENCES :
         {
-            if (GetEditorPrefs().Ok() || GetEditorStyles().Ok() || GetEditorLangs().Ok())
+            if (GetEditorPrefs().IsOk() || GetEditorStyles().IsOk() || GetEditorLangs().IsOk())
             {
                 wxSTEditorPrefPageData editorData(GetEditorPrefs(),
                                                   GetEditorStyles(),
@@ -2862,7 +2862,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                           0, 255, this);
             if (val >= 0)
             {
-                if (GetEditorPrefs().Ok())
+                if (GetEditorPrefs().IsOk())
                     GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_EDGE_COLUMN, val);
                 else
                     SetEdgeColumn(val);
@@ -2878,7 +2878,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                           0, 255, this);
             if (val >= 0)
             {
-                if (GetEditorPrefs().Ok())
+                if (GetEditorPrefs().IsOk())
                     GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_TAB_WIDTH, val);
                 else
                     SetTabWidth(val);
@@ -2893,7 +2893,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                           0, 255, this);
             if (val >= 0)
             {
-                if (GetEditorPrefs().Ok())
+                if (GetEditorPrefs().IsOk())
                     GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_INDENT_WIDTH, val);
                 else
                     SetIndent(val);
@@ -2909,7 +2909,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
 
             if ((val != -1) && (val != eol_mode))
             {
-                if (GetEditorPrefs().Ok())
+                if (GetEditorPrefs().IsOk())
                     GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_EOL_MODE, val);
                 else
                     SetEOLMode(val);
@@ -2928,7 +2928,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
     }
 
     // check if wxSTEditorPref knows this id
-    if ( GetEditorPrefs().Ok() && (win_id >= ID_STE_PREF__FIRST) &&
+    if ( GetEditorPrefs().IsOk() && (win_id >= ID_STE_PREF__FIRST) &&
                                   (win_id <= ID_STE_PREF__LAST))
     {
         GetEditorPrefs().SetPrefBoolByID(win_id, event.IsChecked());
@@ -3562,7 +3562,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
     wxPrintPreview *preview = new wxPrintPreview(new wxSTEditorPrintout(this),
                                                  new wxSTEditorPrintout(this),
                                                  &printDialogData);
-    if (!preview->Ok())
+    if (!preview->IsOk())
     {
         delete preview;
 
@@ -3590,7 +3590,7 @@ bool wxSTEditor::ShowPrintSetupDialog()
     wxPrintData *printData = wxSTEditorPrintout::GetPrintData(true);
 
     // Nah, these are separate things
-    //if (GetEditorPrefs().Ok())
+    //if (GetEditorPrefs().IsOk())
     //    printData->SetColour(GetEditorPrefs().GetPrefInt(STE_PREF_PRINTCOLOURMODE) != wxSTC_PRINT_BLACKONWHITE);
 
     wxPrintDialogData printDialogData(*printData);
@@ -3629,7 +3629,7 @@ bool wxSTEditor::ShowPrintOptionsDialog()
 
     if (dialog.ShowModal() == wxID_OK)
     {
-        if (GetEditorPrefs().Ok())
+        if (GetEditorPrefs().IsOk())
         {
             GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_PRINT_COLOURMODE,    dialog.GetPrintColourMode(), false);
             GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_PRINT_MAGNIFICATION, dialog.GetPrintMagnification(), false);
@@ -3671,17 +3671,17 @@ bool wxSTEditor::SetLanguage(int lang)
 
     int n, editRefCount = GetSTERefData()->GetEditorCount();
 
-    if (GetEditorStyles().Ok())
+    if (GetEditorStyles().IsOk())
     {
         for (n = 0; n < editRefCount; n++)
             GetEditorStyles().UpdateEditor(GetSTERefData()->GetEditor(n));
     }
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
     {
         for (n = 0; n < editRefCount; n++)
             GetEditorPrefs().UpdateEditor(GetSTERefData()->GetEditor(n));
     }
-    if (GetEditorLangs().Ok())
+    if (GetEditorLangs().IsOk())
     {
         for (n = 0; n < editRefCount; n++)
             GetEditorLangs().UpdateEditor(GetSTERefData()->GetEditor(n));
@@ -3696,7 +3696,7 @@ bool wxSTEditor::SetLanguage(const wxString &filePath)
     int lang = -1;
 
     // use current langs or default if none
-    if (GetEditorLangs().Ok())
+    if (GetEditorLangs().IsOk())
         lang = GetEditorLangs().FindLanguageByFilename(filePath);
     else
         lang = wxSTEditorLangs(true).FindLanguageByFilename(filePath);
@@ -3722,12 +3722,12 @@ wxSTEditorPrefs& wxSTEditor::GetEditorPrefs()
 }
 void wxSTEditor::RegisterPrefs(const wxSTEditorPrefs& prefs)
 {
-    if (GetEditorPrefs().Ok())
+    if (GetEditorPrefs().IsOk())
     {
         GetEditorPrefs().RemoveEditor(this);
         GetEditorPrefs().Destroy();
     }
-    if (!prefs.Ok())
+    if (!prefs.IsOk())
         return;
 
     GetEditorPrefs().Create(prefs);
@@ -3744,12 +3744,12 @@ wxSTEditorStyles& wxSTEditor::GetEditorStyles()
 }
 void wxSTEditor::RegisterStyles(const wxSTEditorStyles& styles)
 {
-    if (GetEditorStyles().Ok())
+    if (GetEditorStyles().IsOk())
     {
         GetEditorStyles().RemoveEditor(this);
         GetEditorStyles().Destroy();
     }
-    if (!styles.Ok())
+    if (!styles.IsOk())
         return;
 
     GetEditorStyles().Create(styles);
@@ -3766,12 +3766,12 @@ wxSTEditorLangs& wxSTEditor::GetEditorLangs()
 }
 void wxSTEditor::RegisterLangs(const wxSTEditorLangs& langs)
 {
-    if (GetEditorLangs().Ok())
+    if (GetEditorLangs().IsOk())
     {
         GetEditorLangs().RemoveEditor(this);
         GetEditorLangs().Destroy();
     }
-    if (!langs.Ok())
+    if (!langs.IsOk())
         return;
 
     GetEditorLangs().Create(langs);

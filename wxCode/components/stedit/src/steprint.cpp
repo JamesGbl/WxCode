@@ -116,7 +116,7 @@ wxSTEditorPrintout::wxSTEditorPrintout(wxSTEditor *editor,
     // You cannot show this dialog later if this is used in a wxPrintPreview.
     //   It leads to a crash in MSW in the paint handler for the preview,
     //   probably something to do with having two modal dialogs.
-    if (sm_warn_on_font_scale && m_editor->GetEditorStyles().Ok())
+    if (sm_warn_on_font_scale && m_editor->GetEditorStyles().IsOk())
     {
         wxClientDC dc(m_editor);
         wxFont font = m_editor->GetEditorStyles().GetFont(STE_STYLE_DEFAULT);
@@ -156,8 +156,8 @@ bool wxSTEditorPrintout::OnBeginDocument(int startPage, int endPage)
 
     // this defaults to wysiwyg for linenumbers if no prefs
     bool has_linenums    = (m_margin0_width != 0) && (m_editor->GetMarginType(STE_MARGIN_0) == wxSTC_MARGIN_NUMBER);
-    bool linenums_never  = prefs.Ok() && (prefs.GetPrefInt(STE_PREF_PRINT_LINENUMBERS) == STE_PRINT_LINENUMBERS_NEVER);
-    bool linenums_always = prefs.Ok() && (prefs.GetPrefInt(STE_PREF_PRINT_LINENUMBERS) == STE_PRINT_LINENUMBERS_ALWAYS);
+    bool linenums_never  = prefs.IsOk() && (prefs.GetPrefInt(STE_PREF_PRINT_LINENUMBERS) == STE_PRINT_LINENUMBERS_NEVER);
+    bool linenums_always = prefs.IsOk() && (prefs.GetPrefInt(STE_PREF_PRINT_LINENUMBERS) == STE_PRINT_LINENUMBERS_ALWAYS);
 
     if (!linenums_never && (has_linenums || linenums_always))
     {
@@ -379,7 +379,7 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
         SetPrintColourMode(edit->GetPrintColourMode());
         SetPrintWrapMode(edit->GetPrintWrapMode() == wxSTC_WRAP_WORD);
         wxSTEditorPrefs prefs = edit->GetEditorPrefs();
-        if (prefs.Ok())
+        if (prefs.IsOk())
             SetPrintLinenumbers(prefs.GetPrefInt(STE_PREF_PRINT_LINENUMBERS));
         else
             SetPrintLinenumbers(STE_PRINT_LINENUMBERS_DEFAULT);

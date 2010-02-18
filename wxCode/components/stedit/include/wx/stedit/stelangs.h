@@ -55,7 +55,7 @@ public:
     wxSTEditorLangs(bool create = false) { if (create) Create(); }
     wxSTEditorLangs(const wxSTEditorLangs &langs) { Create(langs); }
     virtual ~wxSTEditorLangs() {}
-    bool Ok() const { return m_refData != NULL; }
+    bool IsOk() const { return m_refData != NULL; }
     bool Create();                                // (re)create as new
     bool Create(const wxSTEditorLangs &other);    // make a Refed copy of other
     void Copy(const wxSTEditorLangs &other);      // make a full copy

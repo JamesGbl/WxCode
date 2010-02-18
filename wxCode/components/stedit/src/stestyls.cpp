@@ -153,7 +153,7 @@ void wxSTEditorStyles::Init()
 
 int wxSTEditorStyles::wxColourToInt(const wxColour& c) const
 {
-    wxCHECK_MSG(c.Ok(), 0, wxT("Invalid colour in wxSTEditorStyles::wxColourToInt"));
+    wxCHECK_MSG(c.IsOk(), 0, wxT("Invalid colour in wxSTEditorStyles::wxColourToInt"));
 #if STE_COLOURS_BBGGRR
     return (int(c.Blue())<<16) | (int(c.Green())<<8) | (int(c.Red()));
 #else
@@ -188,8 +188,8 @@ bool wxSTEditorStyles::Create(const wxSTEditorStyles &styles)
 
 void wxSTEditorStyles::Copy(const wxSTEditorStyles &other)
 {
-    wxCHECK_RET(other.Ok(), wxT("Styles not created"));
-    if (!Ok()) Create();
+    wxCHECK_RET(other.IsOk(), wxT("Styles not created"));
+    if (!IsOk()) Create();
     if (*this == other) return;
     wxSTEditorStyles_RefData *otherStyleData = (wxSTEditorStyles_RefData *)other.GetRefData();
     M_STYLEDATA->m_pairArrayStyles = otherStyleData->m_pairArrayStyles;
@@ -197,21 +197,21 @@ void wxSTEditorStyles::Copy(const wxSTEditorStyles &other)
 
 void wxSTEditorStyles::Reset()
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     wxSTEditorStyles defStyles(true);
     Copy(defStyles);
 }
 
 bool wxSTEditorStyles::IsEqualTo(const wxSTEditorStyles &styles) const
 {
-    wxCHECK_MSG(Ok() && styles.Ok(), false, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk() && styles.IsOk(), false, wxT("Styles not created"));
     wxSTEditorStyles_RefData *otherStyleData = (wxSTEditorStyles_RefData *)styles.GetRefData();
     return (M_STYLEDATA->m_pairArrayStyles == otherStyleData->m_pairArrayStyles);
 }
 
 int wxSTEditorStyles::GetStyleIndex(const wxString &name) const
 {
-    wxCHECK_MSG(Ok(), wxNOT_FOUND, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxNOT_FOUND, wxT("Styles not created"));
     size_t n, count = M_STYLEDATA->m_pairArrayStyles.GetCount();
     for (n = 0; n < count; n++)
     {
@@ -225,7 +225,7 @@ int wxSTEditorStyles::GetStyleIndex(const wxString &name) const
 wxArrayInt wxSTEditorStyles::GetStylesArray(bool get_all_styles) const
 {
     wxArrayInt styles;
-    wxCHECK_MSG(Ok(), styles, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), styles, wxT("Styles not created"));
 
     size_t n, count = M_STYLEDATA->m_pairArrayStyles.GetCount();
     for (n = 0; n < count; n++)
@@ -242,13 +242,13 @@ wxArrayInt wxSTEditorStyles::GetStylesArray(bool get_all_styles) const
 
 int wxSTEditorStyles::FindNthStyle(int style_n) const
 {
-    wxCHECK_MSG(Ok(), wxNOT_FOUND, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxNOT_FOUND, wxT("Styles not created"));
     return M_STYLEDATA->m_pairArrayStyles.Index(style_n);
 }
 
 wxSTEditorStyle* wxSTEditorStyles::GetStyle(int style_n) const
 {
-    wxCHECK_MSG(Ok(), NULL, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), NULL, wxT("Styles not created"));
     int n = FindNthStyle(style_n);
 
     if (n != wxNOT_FOUND)
@@ -262,7 +262,7 @@ wxSTEditorStyle* wxSTEditorStyles::GetStyle(int style_n) const
 wxSTEditorStyle* wxSTEditorStyles::GetStyleUseDefault(int style_n,
                                                       int use_default_type) const
 {
-    wxCHECK_MSG(Ok(), NULL, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), NULL, wxT("Styles not created"));
     wxSTEditorStyle *steStyle = GetStyle(style_n);
     if (steStyle == NULL) return NULL;
 
@@ -294,7 +294,7 @@ int wxSTEditorStyles::GetBackgroundColourInt(int style_n, bool use_default) cons
 }
 wxFont wxSTEditorStyles::GetFont(int style_n, bool use_default) const
 {
-    wxCHECK_MSG(Ok(), wxFont(STE_DEF_FONTSIZE, wxMODERN, wxNORMAL, wxNORMAL), wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxFont(STE_DEF_FONTSIZE, wxMODERN, wxNORMAL, wxNORMAL), wxT("Styles not created"));
 /*
     wxFont *f = wxTheFontList->FindOrCreateFont(
                 GetSize(style_n, use_default),
@@ -304,7 +304,7 @@ wxFont wxSTEditorStyles::GetFont(int style_n, bool use_default) const
                 GetUnderlined(style_n, use_default),
                 GetFaceName(style_n, use_default));
 
-    if (!f || !f->Ok())
+    if (!f || !f->IsOk())
         return wxFont(STE_DEF_FONTSIZE, wxMODERN, wxNORMAL, wxNORMAL);
 
     return wxFont(*f);
@@ -317,7 +317,7 @@ wxFont wxSTEditorStyles::GetFont(int style_n, bool use_default) const
                 GetUnderlined(style_n, use_default),
                 GetFaceName(style_n, use_default));
 
-    if (!font.Ok())  // oops this font works though
+    if (!font.IsOk())  // oops this font works though
         return wxFont(STE_DEF_FONTSIZE, wxMODERN, wxNORMAL, wxNORMAL);
 
     return font;
@@ -373,7 +373,7 @@ int wxSTEditorStyles::GetStyleUsage(int style_n) const
 
 bool wxSTEditorStyles::SetStyle( int style_n, const wxSTEditorStyle& steStyle )
 {
-    wxCHECK_MSG(Ok(), false, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), false, wxT("Styles not created"));
     return s_STE_PairArrayStyles.Add(style_n, steStyle);
 }
 
@@ -421,8 +421,8 @@ void wxSTEditorStyles::SetBackgroundColourInt(int style_n, int colour)
 }
 void wxSTEditorStyles::SetFont(int style_n, const wxFont &font)
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
-    wxCHECK_RET(font.Ok(), wxT("Invalid font"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
+    wxCHECK_RET(font.IsOk(), wxT("Invalid font"));
 
     SetFaceName(style_n, font.GetFaceName());
     SetSize(style_n, font.GetPointSize());
@@ -454,7 +454,7 @@ void wxSTEditorStyles::SetFontAttr(int style_n, int ste_font_attr)
 
 void wxSTEditorStyles::SetCase(int style_n, int lcase)
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     int steCase = -1;
 
     switch (lcase)
@@ -477,7 +477,7 @@ void wxSTEditorStyles::SetCase(int style_n, int lcase)
 
 void wxSTEditorStyles::SetUseDefault(int style_n, int mask, bool use_default)
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     int def = GetUseDefault(style_n);
     def = use_default ? (def | mask) : (def & (~mask));
     wxSTEditorStyle* steStyle = GetStyle(style_n);
@@ -487,7 +487,7 @@ void wxSTEditorStyles::SetUseDefault(int style_n, int mask, bool use_default)
 
 bool wxSTEditorStyles::RemoveStyle(int style_n)
 {
-    wxCHECK_MSG(Ok(), false, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), false, wxT("Styles not created"));
     return M_STYLEDATA->m_pairArrayStyles.Remove(style_n);
 }
 
@@ -561,7 +561,7 @@ bool wxSTEditorStyles::SetFoldMarkerStyle(int fold_style)
 
 void wxSTEditorStyles::AppendAddedInitStyles()
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     size_t n, count = s_STE_PairArrayStyles.GetCount();
     for (n = 0; n < count; n++)
     {
@@ -575,7 +575,7 @@ void wxSTEditorStyles::SetEditorStyle( int stc_style, int ste_style,
                                        wxSTEditor *editor,
                                        bool force) const
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     wxCHECK_RET(HasStyle(ste_style), wxT("Invalid STE style"));
     wxCHECK_RET(editor, wxT("Invalid editor"));
 
@@ -620,7 +620,7 @@ void wxSTEditorStyles::SetEditorStyle( int stc_style, int ste_style,
 
 void wxSTEditorStyles::UpdateEditor( wxSTEditor *editor )
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     wxCHECK_RET(editor, wxT("Invalid editor"));
 
     // Start with default and then the fixed Scintilla styles, 32-37
@@ -684,7 +684,7 @@ void wxSTEditorStyles::UpdateEditor( wxSTEditor *editor )
     }
 
     // try to set fold flags, if the fold style is invalid, this does nothing
-    if (editor->GetEditorPrefs().Ok())
+    if (editor->GetEditorPrefs().IsOk())
         SetFoldMarkerStyle(editor->GetEditorPrefs().GetPrefInt(STE_PREF_FOLDMARGIN_STYLE));
 
     // now set all the marker styles, if any
@@ -706,7 +706,7 @@ void wxSTEditorStyles::UpdateEditor( wxSTEditor *editor )
 wxString wxSTEditorStyles::LoadConfig( wxConfigBase &config,
                                        const wxString &configPath )
 {
-    wxCHECK_MSG(Ok(), wxEmptyString, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxEmptyString, wxT("Styles not created"));
     wxString oldConfigPath = config.GetPath();
     wxString group = wxSTEditorOptions::FixConfigPath(configPath, false);
     config.SetPath(group);
@@ -755,7 +755,7 @@ wxString wxSTEditorStyles::LoadConfig( wxConfigBase &config,
 
 wxString wxSTEditorStyles::ParseConfigLine(const wxString &key, const wxString &value)
 {
-    wxCHECK_MSG(Ok(), wxEmptyString, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxEmptyString, wxT("Styles not created"));
     wxString errorMsg;
 
     wxString name = key;
@@ -904,7 +904,7 @@ wxString wxSTEditorStyles::ParseConfigLine(const wxString &key, const wxString &
 
 wxString wxSTEditorStyles::CreateConfigLine(int n) const
 {
-    wxCHECK_MSG(Ok(), wxEmptyString, wxT("Styles not created"));
+    wxCHECK_MSG(IsOk(), wxEmptyString, wxT("Styles not created"));
     wxString line; // = wxString::Format(wxT("type:%d,"), n);
 
     if (GetStyleUses(n, STE_STYLE_USES_FORECOLOUR))
@@ -940,7 +940,7 @@ void wxSTEditorStyles::SaveConfig( wxConfigBase &config,
                                    const wxString &configPath,
                                    int flags ) const
 {
-    wxCHECK_RET(Ok(), wxT("Styles not created"));
+    wxCHECK_RET(IsOk(), wxT("Styles not created"));
     wxString key = wxSTEditorOptions::FixConfigPath(configPath, true);
 
     wxArrayInt stylesArray = GetStylesArray(true);

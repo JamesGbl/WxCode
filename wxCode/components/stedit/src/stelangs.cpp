@@ -4945,8 +4945,8 @@ bool wxSTEditorLangs::Create(const wxSTEditorLangs &other)
 
 void wxSTEditorLangs::Copy(const wxSTEditorLangs &other)
 {
-    wxCHECK_RET(other.Ok(), wxT("Langs not created"));
-    if (!Ok()) Create();
+    wxCHECK_RET(other.IsOk(), wxT("Langs not created"));
+    if (!IsOk()) Create();
     if (*this == other) return;
 
     wxSTEditorLangs_RefData *otherLangData = (wxSTEditorLangs_RefData *)other.GetRefData();
@@ -4959,7 +4959,7 @@ void wxSTEditorLangs::Copy(const wxSTEditorLangs &other)
 
 void wxSTEditorLangs::Reset()
 {
-    wxCHECK_RET(Ok(), wxT("Langs not created"));
+    wxCHECK_RET(IsOk(), wxT("Langs not created"));
     M_LANGDATA->m_userFilePatterns.Clear();
     M_LANGDATA->m_userStyles.Clear();
     M_LANGDATA->m_userKeyWords.Clear();
@@ -4967,7 +4967,7 @@ void wxSTEditorLangs::Reset()
 
 bool wxSTEditorLangs::IsEqualTo(const wxSTEditorLangs &langs) const
 {
-    wxCHECK_MSG(Ok() && langs.Ok(), false, wxT("Langs not created"));
+    wxCHECK_MSG(IsOk() && langs.IsOk(), false, wxT("Langs not created"));
     wxSTEditorLangs_RefData *otherLangData = (wxSTEditorLangs_RefData *)langs.GetRefData();
 
     if ((M_LANGDATA->m_langs.GetCount() != otherLangData->m_langs.GetCount()) ||
@@ -4987,14 +4987,14 @@ bool wxSTEditorLangs::IsEqualTo(const wxSTEditorLangs &langs) const
 
 int wxSTEditorLangs::AddLanguage(STE_Language* lang)
 {
-    wxCHECK_MSG(Ok() && lang, -1, wxT("Langs not created"));
+    wxCHECK_MSG(IsOk() && lang, -1, wxT("Langs not created"));
     M_LANGDATA->m_langs.Add(lang);
     return M_LANGDATA->m_langs.GetCount() - 1;
 }
 
 size_t wxSTEditorLangs::GetCount() const
 {
-    wxCHECK_MSG(Ok(), 0, wxT("Langs not created"));
+    wxCHECK_MSG(IsOk(), 0, wxT("Langs not created"));
     return M_LANGDATA->m_langs.GetCount();
 }
 
@@ -5002,7 +5002,7 @@ int wxSTEditorLangs::FindLanguageByFilename(const wxString& fileName_) const
 {
     int fallback = STE_LANG_NULL;
 
-    wxCHECK_MSG(Ok(), fallback, wxT("Langs not created"));
+    wxCHECK_MSG(IsOk(), fallback, wxT("Langs not created"));
 
     wxString fileName = fileName_;
     if (fileName_.Find(wxFILE_SEP_PATH) != wxNOT_FOUND)
@@ -5044,7 +5044,7 @@ int wxSTEditorLangs::FindLanguageByFilename(const wxString& fileName_) const
 
 STE_Language* wxSTEditorLangs::GetLanguage(size_t lang_n) const
 {
-    wxCHECK_MSG(Ok(), NULL, wxT("Langs not created"));
+    wxCHECK_MSG(IsOk(), NULL, wxT("Langs not created"));
     wxCHECK_MSG(lang_n<GetCount(), NULL, wxT("Invalid language index"));
     return ((STE_Language *)(M_LANGDATA->m_langs.Item(lang_n)));
 }
@@ -5342,7 +5342,7 @@ void wxSTEditorLangs::SetUserKeyWords(size_t lang_n, size_t word_n, const wxStri
 void wxSTEditorLangs::LoadConfig( wxConfigBase &config,
                                   const wxString &configPath )
 {
-    wxCHECK_RET(Ok(), wxT("Langs not created"));
+    wxCHECK_RET(IsOk(), wxT("Langs not created"));
     wxString group = wxSTEditorOptions::FixConfigPath(configPath, false);
     wxString key   = wxSTEditorOptions::FixConfigPath(configPath, true);
 
@@ -5385,7 +5385,7 @@ void wxSTEditorLangs::SaveConfig( wxConfigBase &config,
                                   const wxString &configPath,
                                   int WXUNUSED(flags) ) const
 {
-    wxCHECK_RET(Ok(), wxT("Langs not created"));
+    wxCHECK_RET(IsOk(), wxT("Langs not created"));
     wxString key = wxSTEditorOptions::FixConfigPath(configPath, true);
 
     for (size_t lang_n = 0; lang_n < GetCount(); lang_n++)
@@ -5433,7 +5433,7 @@ void wxSTEditorLangs::SaveConfig( wxConfigBase &config,
 
 void wxSTEditorLangs::UpdateEditor( wxSTEditor *editor )
 {
-    wxCHECK_RET(Ok(), wxT("Langs not created"));
+    wxCHECK_RET(IsOk(), wxT("Langs not created"));
     wxCHECK_RET(editor, wxT("Invalid wxSTEditor"));
 
     int lang_n = editor->GetLanguageId();
@@ -5443,9 +5443,9 @@ void wxSTEditorLangs::UpdateEditor( wxSTEditor *editor )
 
     // initialize settings
     wxSTEditorPrefs stePrefs = editor->GetEditorPrefs();
-    bool syntax_enable = stePrefs.Ok() ? stePrefs.GetPrefBool(STE_PREF_HIGHLIGHT_SYNTAX) : true;
+    bool syntax_enable = stePrefs.IsOk() ? stePrefs.GetPrefBool(STE_PREF_HIGHLIGHT_SYNTAX) : true;
     wxSTEditorStyles steStyles = editor->GetEditorStyles();
-    if (!steStyles.Ok())
+    if (!steStyles.IsOk())
         return;
 
     size_t style_n, style_count = GetStyleCount(lang_n);

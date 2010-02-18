@@ -129,9 +129,9 @@ wxSTEditorExporter::wxSTEditorExporter(wxSTEditor* editor)
     m_steLangs  = editor->GetEditorLangs();
 
     // we need something... just create them
-    if (!m_stePrefs.Ok())  m_stePrefs.Create();
-    if (!m_steStyles.Ok()) m_steStyles.Create();
-    if (!m_steLangs.Ok())  m_steLangs.Create();
+    if (!m_stePrefs.IsOk())  m_stePrefs.Create();
+    if (!m_steStyles.IsOk()) m_steStyles.Create();
+    if (!m_steLangs.IsOk())  m_steLangs.Create();
 }
 
 bool wxSTEditorExporter::ExportToFile(int file_format, const wxString& fileName,
@@ -262,7 +262,7 @@ public:
 
 void StyleDefinition::Create(const wxSTEditorStyles& styles, int ste_style)
 {
-    wxCHECK_RET(styles.Ok(), wxT("Invalid styles"));
+    wxCHECK_RET(styles.IsOk(), wxT("Invalid styles"));
     font       = wx2stc(styles.GetFaceName(ste_style));
     size       = styles.GetSize(ste_style);
     fore       = wx2stc(wxString::Format(wxT("#%06X"), styles.GetForegroundColourInt(ste_style)));

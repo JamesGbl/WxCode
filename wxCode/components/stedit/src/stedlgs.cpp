@@ -108,7 +108,7 @@ wxSTEditorPrefDialogPagePrefs::wxSTEditorPrefDialogPagePrefs( const wxSTEditorPr
                                                               wxWindowID winid )
                               : wxSTEditorPrefDialogPageBase(editorPrefData, prefData, parent, winid)
 {
-    wxCHECK_RET(editorPrefData.GetPrefs().Ok(), wxT("Invalid preferences"));
+    wxCHECK_RET(editorPrefData.GetPrefs().IsOk(), wxT("Invalid preferences"));
 
     // The IDs are from wxDesigner, may be out of order, use lookup table
     m_prefsToIds.Alloc(STE_PREF__MAX);
@@ -365,7 +365,7 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
 {
     Init();
     wxSTEditorStyles steStyles(GetPrefData().GetStyles());
-    wxCHECK_RET(steStyles.Ok(), wxT("Invalid styles")); // langs may be NULL
+    wxCHECK_RET(steStyles.IsOk(), wxT("Invalid styles")); // langs may be NULL
 
     wxSTERecursionGuard guard(m_rGuard_setting_style);
 
@@ -430,7 +430,7 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
     m_fontBackButton    = (wxButton  *)FindWindow(ID_STEDLG_FONTBACK_BUTTON);
 
     m_langChoice->Clear();
-    if (GetPrefData().GetLangs().Ok())
+    if (GetPrefData().GetLangs().IsOk())
     {
         wxSTEditorLangs steLangs(GetPrefData().GetLangs());
         m_langChoice->Append(_("Show all styles"));
@@ -518,7 +518,7 @@ void wxSTEditorPrefDialogPageStyles::FillStyleEditor(wxSTEditor* editor)
     wxArrayInt langStyles;
     int lang_n = -1;
 
-    if (steLangs.Ok() && m_langChoice->IsShown() && (m_langChoice->GetSelection() != 0))
+    if (steLangs.IsOk() && m_langChoice->IsShown() && (m_langChoice->GetSelection() != 0))
     {
         lang_n = (long)m_langChoice->GetClientData(m_langChoice->GetSelection());
         count = steLangs.GetStyleCount(lang_n);
@@ -542,7 +542,7 @@ void wxSTEditorPrefDialogPageStyles::FillStyleEditor(wxSTEditor* editor)
         {
             wxString text = steStyles.GetStyleName(langStyles[n]);
 
-            if (steLangs.Ok() && (lang_n >= 0))
+            if (steLangs.IsOk() && (lang_n >= 0))
             {
                 text += wxString(wxT(' '), m_style_max_len - text.Len());
                 text += steLangs.GetStyleDescription(lang_n, n);
@@ -903,7 +903,7 @@ void wxSTEditorPrefDialogPageStyles::SetControlValues()
     //   note: could use own wxSTEditorLangs, but if editor doesn't have one
     //         the user can't change it anyway so pretend not to know what styles are used.
     wxSTEditorLangs steLangs(GetPrefData().GetLangs());
-    if (steLangs.Ok() && (m_last_language_ID != GetPrefData().GetLanguageId()))
+    if (steLangs.IsOk() && (m_last_language_ID != GetPrefData().GetLanguageId()))
     {
         m_last_language_ID = GetPrefData().GetLanguageId();
         m_styleEditor->MarkerDeleteAll(1);
@@ -998,8 +998,8 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
                                                              wxWindowID winid )
                               :wxSTEditorPrefDialogPageBase(editorPrefData, prefData, parent, winid)
 {
-    wxCHECK_RET(GetPrefData().GetLangs().Ok(), wxT("Invalid languages"));
-    wxCHECK_RET(GetPrefData().GetStyles().Ok(), wxT("Invalid styles"));
+    wxCHECK_RET(GetPrefData().GetLangs().IsOk(), wxT("Invalid languages"));
+    wxCHECK_RET(GetPrefData().GetStyles().IsOk(), wxT("Invalid styles"));
 
     wxSTEditorLangs  steLangs(GetPrefData().GetLangs());
     wxSTEditorStyles steStyles(GetPrefData().GetStyles());
@@ -1332,15 +1332,15 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     m_prefData.SetLanguageId(m_editorPrefData.GetLanguageId());
     m_prefData.SetOptions(m_editorPrefData.GetOptions());
 
-    wxCHECK_MSG(m_editorPrefData.GetPrefs().Ok() ||
-                m_editorPrefData.GetStyles().Ok() ||
-                m_editorPrefData.GetLangs().Ok(), false, wxT("At least one page must be added."));
+    wxCHECK_MSG(m_editorPrefData.GetPrefs().IsOk() ||
+                m_editorPrefData.GetStyles().IsOk() ||
+                m_editorPrefData.GetLangs().IsOk(), false, wxT("At least one page must be added."));
 
-    if (m_editorPrefData.GetPrefs().Ok())
+    if (m_editorPrefData.GetPrefs().IsOk())
         m_prefData.GetPrefs().Copy(m_editorPrefData.GetPrefs());
-    if (m_editorPrefData.GetStyles().Ok())
+    if (m_editorPrefData.GetStyles().IsOk())
         m_prefData.GetStyles().Copy(m_editorPrefData.GetStyles());
-    if (m_editorPrefData.GetLangs().Ok())
+    if (m_editorPrefData.GetLangs().IsOk())
         m_prefData.GetLangs().Copy(m_editorPrefData.GetLangs());
 
     m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_VIEW));
@@ -1359,7 +1359,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
                                 0); //wxNB_MULTILINE);
     m_noteBook->SetImageList(m_imageList);
 
-    if (GetPrefData().GetPrefs().Ok())
+    if (GetPrefData().GetPrefs().IsOk())
     {
         wxSTEditorPrefDialogPagePrefs *page = NULL;
 
@@ -1407,14 +1407,14 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
         }
     }
 
-    if (GetPrefData().GetStyles().Ok() && GetPrefData().HasOption(STE_PREF_PAGE_SHOW_STYLES))
+    if (GetPrefData().GetStyles().IsOk() && GetPrefData().HasOption(STE_PREF_PAGE_SHOW_STYLES))
     {
         m_noteBook->AddPage(
             new wxSTEditorPrefDialogPageStyles(GetEditorPrefData(), GetPrefData(), m_noteBook, -1),
                             _("Styles"), false, 6);
     }
 
-    if (GetPrefData().GetLangs().Ok() && GetPrefData().GetStyles().Ok() &&
+    if (GetPrefData().GetLangs().IsOk() && GetPrefData().GetStyles().IsOk() &&
         GetPrefData().HasOption(STE_PREF_PAGE_SHOW_LANGS))
     {
         m_noteBook->AddPage(
@@ -1476,11 +1476,11 @@ void wxSTEditorPrefDialog::OnApply(wxCommandEvent &event)
         GetEditorPrefData().GetEditor()->GetSTERefData()->m_steLang_id = GetEditorPrefData().GetLanguageId();
         //GetEditorPrefData().GetEditor()->SetLanguage(GetEditorPrefData().GetLanguageId());
 
-    if (GetEditorPrefData().GetStyles().Ok())
+    if (GetEditorPrefData().GetStyles().IsOk())
         GetEditorPrefData().GetStyles().UpdateAllEditors();
-    if (GetEditorPrefData().GetPrefs().Ok())
+    if (GetEditorPrefData().GetPrefs().IsOk())
         GetEditorPrefData().GetPrefs().UpdateAllEditors();
-    if (GetEditorPrefData().GetLangs().Ok())
+    if (GetEditorPrefData().GetLangs().IsOk())
         GetEditorPrefData().GetLangs().UpdateAllEditors();
 }
 
@@ -1580,7 +1580,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
     SET_STATTEXT(ID_STEPROP_FILEACCESSED_TEXT, dtAccessed.IsValid() ? dtAccessed.Format() : wxT("<Unknown>"));
     SET_STATTEXT(ID_STEPROP_FILECREATED_TEXT,  dtCreated.IsValid()  ? dtCreated.Format()  : wxT("<Unknown>"));
 
-    SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, edit->GetEditorLangs().Ok() ? edit->GetEditorLangs().GetName(edit->GetLanguageId()) : wxT("<Unknown>"));
+    SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, edit->GetEditorLangs().IsOk() ? edit->GetEditorLangs().GetName(edit->GetLanguageId()) : wxT("<Unknown>"));
 
     SET_STATTEXT(ID_STEPROP_NUMLINES_TEXT, wxString::Format(wxT("%d"), edit->GetLineCount()));
     SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), edit->GetTextLength()));

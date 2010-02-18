@@ -102,7 +102,7 @@ public:
     wxSTEditorStyles(bool create = false) { Init(); if (create) Create(); }
     wxSTEditorStyles(const wxSTEditorStyles &styles) { Init(); Create(styles); }
     virtual ~wxSTEditorStyles() {}
-    bool Ok() const { return m_refData != NULL; }
+    bool IsOk() const { return m_refData != NULL; }
     bool Create();                                  // (re)create as new
     bool Create(const wxSTEditorStyles &other);     // make a Refed copy of other
     //bool Create(wxSTEditor *editor);              // can't get styles from Scintilla

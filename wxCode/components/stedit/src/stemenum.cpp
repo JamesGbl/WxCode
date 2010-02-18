@@ -965,7 +965,7 @@ wxMenuItem *wxSTEditorMenuManager::MenuItem(wxMenu *menu, wxWindowID win_id,
                                      wxItemKind kind, const wxBitmap &bitmap) const
 {
     wxMenuItem *item = new wxMenuItem(menu, win_id, text, help, kind);
-    if (bitmap.Ok())
+    if (bitmap.IsOk())
         item->SetBitmap(bitmap);
     return item;
 }
@@ -1189,7 +1189,7 @@ wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
 
 
 #if wxUSE_IMAGE
-    if (bmp.Ok())
+    if (bmp.IsOk())
     {
         // fit into transparent image with desired size hint from the client
         if (reqSize == wxDefaultSize)

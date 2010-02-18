@@ -23,7 +23,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPrefBase : public wxObject
 public:
     wxSTEditorPrefBase() : wxObject() {}
     virtual ~wxSTEditorPrefBase() {}
-    bool Ok() const { return m_refData != NULL; }
+    bool IsOk() const { return m_refData != NULL; }
 
     // Get the number of editors that this class manages
     size_t GetEditorCount() const;
@@ -93,7 +93,7 @@ public:
     wxSTEditorPrefs(bool create=false) { Init(); if (create) Create(); }
     wxSTEditorPrefs(const wxSTEditorPrefs &prefs) { Init(); Create(prefs); }
     virtual ~wxSTEditorPrefs() {}
-    bool Ok() const { return m_refData != NULL; }
+    bool IsOk() const { return m_refData != NULL; }
     bool Create();                                   // (re)create as new with default vals
     bool Create(const wxSTEditorPrefs &other); // make a Refed copy of other
     bool Create(wxSTEditor *editor);           // initialize from editor values (doesn't modify editor)

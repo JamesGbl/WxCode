@@ -24,25 +24,25 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPrefBase, wxObject)
 
 size_t wxSTEditorPrefBase::GetEditorCount() const
 {
-    wxCHECK_MSG(Ok(), 0, wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_MSG(IsOk(), 0, wxT("wxSTEditorPrefBase not created"));
     return M_BASEDATA->m_editors.GetCount();
 }
 
 int wxSTEditorPrefBase::FindEditor(wxSTEditor* editor) const
 {
-    wxCHECK_MSG(Ok(), wxNOT_FOUND, wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_MSG(IsOk(), wxNOT_FOUND, wxT("wxSTEditorPrefBase not created"));
     return M_BASEDATA->m_editors.Index(editor);
 }
 
 wxSTEditor *wxSTEditorPrefBase::GetEditor(size_t n) const
 {
-    wxCHECK_MSG(Ok(), NULL, wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_MSG(IsOk(), NULL, wxT("wxSTEditorPrefBase not created"));
     return (wxSTEditor*)M_BASEDATA->m_editors[n];
 }
 
 void wxSTEditorPrefBase::UpdateAllEditors()
 {
-    wxCHECK_RET(Ok(), wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_RET(IsOk(), wxT("wxSTEditorPrefBase not created"));
     size_t n, count = GetEditorCount();
     for (n = 0; n < count; n++)
     {
@@ -53,7 +53,7 @@ void wxSTEditorPrefBase::UpdateAllEditors()
 
 void wxSTEditorPrefBase::RegisterEditor(wxSTEditor *editor, bool update_now)
 {
-    wxCHECK_RET(Ok(), wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_RET(IsOk(), wxT("wxSTEditorPrefBase not created"));
     wxCHECK_RET(editor, wxT("Invalid editor"));
 
     // not an error, just let them do it to avoid having to check
@@ -65,7 +65,7 @@ void wxSTEditorPrefBase::RegisterEditor(wxSTEditor *editor, bool update_now)
 }
 void wxSTEditorPrefBase::RemoveEditor(wxSTEditor *editor)
 {
-    wxCHECK_RET(Ok(), wxT("wxSTEditorPrefBase not created"));
+    wxCHECK_RET(IsOk(), wxT("wxSTEditorPrefBase not created"));
     wxCHECK_RET(editor, wxT("Invalid editor"));
 
     // not an error, if not found allows for this to be called in destructor
@@ -382,8 +382,8 @@ bool wxSTEditorPrefs::Create(wxSTEditor *editor)
 
 void wxSTEditorPrefs::Copy(const wxSTEditorPrefs &other)
 {
-    wxCHECK_RET(other.Ok(), wxT("Prefs not created"));
-    if (!Ok()) Create();
+    wxCHECK_RET(other.IsOk(), wxT("Prefs not created"));
+    if (!IsOk()) Create();
     if (*this == other) return;
     wxSTEditorPref_RefData *otherPrefData = (wxSTEditorPref_RefData*)other.GetRefData();
     M_PREFDATA->m_prefs = otherPrefData->m_prefs;
@@ -391,13 +391,13 @@ void wxSTEditorPrefs::Copy(const wxSTEditorPrefs &other)
 
 void wxSTEditorPrefs::Reset()
 {
-    wxCHECK_RET(Ok(), wxT("Prefs not created"));
+    wxCHECK_RET(IsOk(), wxT("Prefs not created"));
     Create();
 }
 
 bool wxSTEditorPrefs::IsEqualTo(const wxSTEditorPrefs &prefs) const
 {
-    wxCHECK_MSG(Ok() && prefs.Ok(), false, wxT("Prefs not created"));
+    wxCHECK_MSG(IsOk() && prefs.IsOk(), false, wxT("Prefs not created"));
     const wxArrayString& prefArray = M_PREFDATA->m_prefs;
     const wxArrayString& otherPrefArray = ((wxSTEditorPref_RefData*)prefs.GetRefData())->m_prefs;
     if (prefArray.GetCount() != otherPrefArray.GetCount()) return false;
@@ -412,20 +412,20 @@ bool wxSTEditorPrefs::IsEqualTo(const wxSTEditorPrefs &prefs) const
 
 size_t wxSTEditorPrefs::GetPrefCount() const
 {
-    wxCHECK_MSG(Ok(), 0, wxT("Prefs not created"));
+    wxCHECK_MSG(IsOk(), 0, wxT("Prefs not created"));
     return M_PREFDATA->m_prefs.GetCount();
 }
 
 wxString wxSTEditorPrefs::GetPref(size_t pref_n) const
 {
-    wxCHECK_MSG(Ok(), wxEmptyString, wxT("Prefs not created"));
+    wxCHECK_MSG(IsOk(), wxEmptyString, wxT("Prefs not created"));
     wxCHECK_MSG(pref_n < GetPrefCount(), wxEmptyString,
                 wxT("Invalid pref id in wxSTEditorPrefs::GetPrefInt"));
     return M_PREFDATA->m_prefs[pref_n];
 }
 bool wxSTEditorPrefs::SetPref(size_t pref_n, const wxString& value, bool update)
 {
-    wxCHECK_MSG(Ok(), false, wxT("Prefs not created"));
+    wxCHECK_MSG(IsOk(), false, wxT("Prefs not created"));
     wxCHECK_MSG(pref_n < GetPrefCount(), false,
                 wxT("Invalid pref id in wxSTEditorPrefs::SetPref"));
     M_PREFDATA->m_prefs[pref_n] = value;
@@ -461,7 +461,7 @@ bool wxSTEditorPrefs::SetPrefInt(size_t pref_n, int value, bool update)
 
 void wxSTEditorPrefs::UpdateEditor(wxSTEditor *editor)
 {
-    wxCHECK_RET(Ok(), wxT("Prefs not created"));
+    wxCHECK_RET(IsOk(), wxT("Prefs not created"));
     wxCHECK_RET(editor, wxT("Invalid wxSTEditor"));
 
     // STE_PREF_SYNTAXHILIGHT  done in langs
@@ -535,7 +535,7 @@ void wxSTEditorPrefs::UpdateEditor(wxSTEditor *editor)
     }
 
     // try to set fold margin styles, the styles will try as well
-    if (!HasPrefFlag(STE_PREF_FOLDMARGIN_STYLE, STE_PREF_FLAG_IGNORE) && editor->GetEditorStyles().Ok())
+    if (!HasPrefFlag(STE_PREF_FOLDMARGIN_STYLE, STE_PREF_FLAG_IGNORE) && editor->GetEditorStyles().IsOk())
         editor->GetEditorStyles().SetFoldMarkerStyle(GetPrefInt(STE_PREF_FOLDMARGIN_STYLE));
 
     UPEDIT(STE_PREF_BUFFERED_DRAW, GetBufferedDraw, SetBufferedDraw, GetPrefBool)
@@ -570,7 +570,7 @@ void wxSTEditorPrefs::UpdateEditor(wxSTEditor *editor)
     if ((margin0_width < 0) || (margin1_width < 0) || (margin2_width < 0))
     {
         if ((M_PREFDATA->m_lineNumberAutoWidth < 1) ||
-            !editor->GetEditorStyles().Ok() ||
+            !editor->GetEditorStyles().IsOk() ||
             (editor->GetEditorStyles().CreateConfigLine(STE_STYLE_LINENUMBER) !=
              M_PREFDATA->m_lineNumberStyle))
         {
@@ -614,7 +614,7 @@ void wxSTEditorPrefs::UpdateEditor(wxSTEditor *editor)
 void wxSTEditorPrefs::UpdateMenuToolItems(wxMenu *menu, wxMenuBar *menuBar,
                                           wxToolBar *toolBar)
 {
-    wxCHECK_RET(Ok(), wxT("Prefs not created"));
+    wxCHECK_RET(IsOk(), wxT("Prefs not created"));
     if (!menu && !menuBar && !toolBar) return;
 
     STE_MM::DoCheckItem(menu, menuBar, toolBar, MENU_IDVAL(ID_STE_PREF_VIEW_EOL));
@@ -634,7 +634,7 @@ void wxSTEditorPrefs::UpdateMenuToolItems(wxMenu *menu, wxMenuBar *menuBar,
 void wxSTEditorPrefs::LoadConfig( wxConfigBase &config,
                                   const wxString &configPath )
 {
-    wxCHECK_RET(Ok(), wxT("Prefs not created"));
+    wxCHECK_RET(IsOk(), wxT("Prefs not created"));
     wxString key = wxSTEditorOptions::FixConfigPath(configPath, true);
 
     long val = 0;
@@ -661,7 +661,7 @@ void wxSTEditorPrefs::SaveConfig( wxConfigBase &config,
                                   const wxString &configPath,
                                   int flags ) const
 {
-    wxCHECK_RET(Ok(), wxT("Prefs not created"));
+    wxCHECK_RET(IsOk(), wxT("Prefs not created"));
     wxString key = wxSTEditorOptions::FixConfigPath(configPath, true);
 
     size_t pref_n, pref_count = GetPrefCount();

@@ -307,7 +307,7 @@ private:
 // wxSTEditorPrefDialog
 //
 // A dialog to show notebook pages for the prefs, styles, langs. They can be
-// !Ok which will not make that page shown, but at least one must be valid.
+// !IsOk which will not make that page shown, but at least one must be valid.
 //
 // If the parent is derived from a wxSTEditor then you can change the
 // language of the editor.

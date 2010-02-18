@@ -276,12 +276,12 @@ public:
     void SetDefaultFileExtensions( const wxString& fileExt ) { SetOption(STE_OPTION_DEFAULT_FILEEXTS, fileExt); }
 
     // -----------------------------------------------------------------------
-    // Get the prefs/styles/langs to use in the editors (may be !Ok())
+    // Get the prefs/styles/langs to use in the editors (may be !IsOk())
     wxSTEditorPrefs&  GetEditorPrefs() const;
     wxSTEditorStyles& GetEditorStyles() const;
     wxSTEditorLangs&  GetEditorLangs() const;
 
-    // Set the prefs/styles/langs to use in the editors (may be !Ok())
+    // Set the prefs/styles/langs to use in the editors (may be !IsOk())
     void SetEditorPrefs(const wxSTEditorPrefs& prefs);
     void SetEditorStyles(const wxSTEditorStyles& styles);
     void SetEditorLangs(const wxSTEditorLangs& langs);
