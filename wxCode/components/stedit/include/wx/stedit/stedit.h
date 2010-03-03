@@ -360,6 +360,13 @@ public :
     // Simple dialog to goto a particular line in the text
     bool ShowGotoLineDialog();
 
+    bool GetViewNonPrint()
+    {
+       return GetViewEOL() && (wxSTC_WS_INVISIBLE != GetViewWhiteSpace());
+    }
+
+    void ToggleNonPrint();
+
     // ------------------------------------------------------------------------
     // Load/Save methods
 

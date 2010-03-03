@@ -562,6 +562,7 @@ wxMenu *wxSTEditorMenuManager::CreateViewMenu(wxMenu *menu_) const
 {
     wxMenu *menu = menu_ ? menu_ : new wxMenu();
     bool add_sep = false;
+    wxMenu* submenu;
 
     if (HasMenuItemType(STE_MENU_VIEW_MENU, STE_MENU_VIEW_WRAP))
     {
@@ -572,37 +573,38 @@ wxMenu *wxSTEditorMenuManager::CreateViewMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->AppendCheckItem(ID_STE_PREF_VIEW_EOL,        _("Show &EOL"), _("Show end of line symbols"));
-        menu->AppendCheckItem(ID_STE_PREF_VIEW_WHITESPACE, _("Show whi&tespace"), _("Show whitespace using symbols"));
+        menu->AppendCheckItem(ID_STE_VIEW_NONPRINT,   _("&Nonprinting Characters"), _("Show end of line symbols and whitespace"));
+        menu->AppendCheckItem(ID_STE_PREF_VIEW_EOL,        _("&EOL"), _("Show end of line symbols"));
+        menu->AppendCheckItem(ID_STE_PREF_VIEW_WHITESPACE, _("Whi&tespace"), _("Show whitespace using symbols"));
 
         menu->AppendSeparator();
 
-        wxMenu *guideMenu = new wxMenu;
-        guideMenu->AppendCheckItem(ID_STE_PREF_INDENT_GUIDES,   _("Show indent &guides"), _("Show indentation column guides"));
-        guideMenu->AppendCheckItem(ID_STE_PREF_EDGE_MODE,       _("Show l&ong line guide"), _("Show column guide for long lines"));
-        guideMenu->Append(ID_STE_PREF_EDGE_COLUMN,              _("Set long l&ine guide column..."), _("Set column long line guide..."));
-        menu->Append(ID_STE_MENU_GUIDES, _("&Guides"), guideMenu);
+        submenu = new wxMenu();
+        submenu->AppendCheckItem(ID_STE_PREF_INDENT_GUIDES,   _("Show indent &guides"), _("Show indentation column guides"));
+        submenu->AppendCheckItem(ID_STE_PREF_EDGE_MODE,       _("Show l&ong line guide"), _("Show column guide for long lines"));
+        submenu->Append(ID_STE_PREF_EDGE_COLUMN,              _("Set long l&ine guide column..."), _("Set column long line guide..."));
+        menu->Append(ID_STE_MENU_GUIDES, _("&Guides"), submenu);
 
         menu->AppendSeparator();
 
-        wxMenu *marginMenu = new wxMenu;
-        marginMenu->AppendCheckItem(ID_STE_PREF_VIEW_LINEMARGIN, _("Show &line number margin"), _("Show line number margin"));
-        marginMenu->AppendCheckItem(ID_STE_PREF_VIEW_MARKERMARGIN, _("Show &marker margin"), _("Show a margin for markers"));
-        marginMenu->AppendCheckItem(ID_STE_PREF_VIEW_FOLDMARGIN, _("Show &folding margin"), _("Show code folding margin"));
-        menu->Append(ID_STE_MENU_MARGINS, _("&Margins"), marginMenu);
+        submenu = new wxMenu();
+        submenu->AppendCheckItem(ID_STE_PREF_VIEW_LINEMARGIN, _("Show &line number margin"), _("Show line number margin"));
+        submenu->AppendCheckItem(ID_STE_PREF_VIEW_MARKERMARGIN, _("Show &marker margin"), _("Show a margin for markers"));
+        submenu->AppendCheckItem(ID_STE_PREF_VIEW_FOLDMARGIN, _("Show &folding margin"), _("Show code folding margin"));
+        menu->Append(ID_STE_MENU_MARGINS, _("&Margins"), submenu);
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_VIEW_MENU, STE_MENU_VIEW_FOLD))
     {
         if (add_sep) menu->AppendSeparator();
 
-        wxMenu *foldsMenu = new wxMenu;
-        foldsMenu->Append(ID_STE_FOLDS_TOGGLE_CURRENT, _("To&ggle current fold"), _("Toggle the current fold level"));
-        foldsMenu->Append(ID_STE_FOLDS_COLLAPSE_LEVEL, _("&Collapse folds below level..."), _("Collapse all folds below the level in document"));
-        foldsMenu->Append(ID_STE_FOLDS_EXPAND_LEVEL,   _("E&xpand folds above level..."), _("Expand all folds above the level in document"));
-        foldsMenu->Append(ID_STE_FOLDS_COLLAPSE_ALL,   _("&Collapse all folds"), _("Collapse all folds in document"));
-        foldsMenu->Append(ID_STE_FOLDS_EXPAND_ALL,     _("E&xpand all folds"), _("Expand all folds in document"));
-        menu->Append(ID_STE_MENU_FOLDING, _("&Folding"), foldsMenu);
+        submenu = new wxMenu();
+        submenu->Append(ID_STE_FOLDS_TOGGLE_CURRENT, _("To&ggle current fold"), _("Toggle the current fold level"));
+        submenu->Append(ID_STE_FOLDS_COLLAPSE_LEVEL, _("&Collapse folds below level..."), _("Collapse all folds below the level in document"));
+        submenu->Append(ID_STE_FOLDS_EXPAND_LEVEL,   _("E&xpand folds above level..."), _("Expand all folds above the level in document"));
+        submenu->Append(ID_STE_FOLDS_COLLAPSE_ALL,   _("&Collapse all folds"), _("Collapse all folds in document"));
+        submenu->Append(ID_STE_FOLDS_EXPAND_ALL,     _("E&xpand all folds"), _("Expand all folds in document"));
+        menu->Append(ID_STE_MENU_FOLDING, _("&Folding"), submenu);
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_VIEW_MENU, STE_MENU_VIEW_HILIGHT))

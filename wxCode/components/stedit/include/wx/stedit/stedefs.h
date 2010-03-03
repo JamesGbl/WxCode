@@ -335,6 +335,7 @@ enum
     ID_STE_INSERT_TEXT,
     ID_STE_COLUMNIZE,
     // View Menu items  -------------------------------------------------------
+    ID_STE_VIEW_NONPRINT,
     //ID_STE_PREF_WRAPLINES
     //ID_STE_PREF_VIEWEOL
     //ID_STE_PREF_VIEWWHITESPACE

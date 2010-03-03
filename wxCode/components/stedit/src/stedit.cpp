@@ -1526,6 +1526,13 @@ bool wxSTEditor::ShowColumnizeDialog()
     return true;
 }
 
+void wxSTEditor::ToggleNonPrint()
+{
+   bool view = !GetViewNonPrint();
+   GetEditorPrefs().SetPrefBoolByID(ID_STE_PREF_VIEW_EOL, view);
+   GetEditorPrefs().SetPrefBoolByID(ID_STE_PREF_VIEW_WHITESPACE, view);
+}
+
 bool wxSTEditor::ShowConvertEOLModeDialog()
 {
     int eol_mode = GetEOLMode();
@@ -2602,6 +2609,9 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
 
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_ZOOM,
                           wxString::Format(_("&Scale font size (%d)..."), GetZoom()));
+    STE_MM::DoCheckItem(menu, menuBar, toolBar, ID_STE_VIEW_NONPRINT, GetViewNonPrint());
+    //STE_MM::DoCheckItem(menu, menuBar, toolBar, ID_STE_PREF_VIEW_EOL, GetViewEOL());
+    //STE_MM::DoCheckItem(menu, menuBar, toolBar, ID_STE_PREF_VIEW_WHITESPACE, (wxSTC_WS_INVISIBLE != GetViewWhiteSpace()) ? true : false);
 
     // Pref menu items
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_TAB_WIDTH,    wxString::Format(_("Set tab &width (%d)..."), GetTabWidth()));
@@ -2758,6 +2768,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_TABS_TO_SPACES  : ConvertTabsToSpaces(true); return true;
         case ID_STE_SPACES_TO_TABS  : ConvertTabsToSpaces(false); return true;
         case ID_STE_CONVERT_EOL     : ShowConvertEOLModeDialog(); return true;
+        case ID_STE_VIEW_NONPRINT   : ToggleNonPrint(); return true;
 
         case ID_STE_TRAILING_WHITESPACE : RemoveTrailingWhitespace(); return true;
         case ID_STE_REMOVE_CHARSAROUND : RemoveCharsAroundPos(); return true;
