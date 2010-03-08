@@ -349,6 +349,7 @@ void wxSTEditorOptions::SaveConfig(wxConfigBase &config)
 
 void wxSTEditorOptions::LoadFileConfig( wxConfigBase &config)
 {
+    const wxString oldpath = config.GetPath();
     wxFileHistory *fileHistory = GetFileHistory();
     if (!fileHistory)
         return;
@@ -358,20 +359,14 @@ void wxSTEditorOptions::LoadFileConfig( wxConfigBase &config)
     if (config.Read(key, &value) && wxDirExists(value))
         SetDefaultFilePath(value);
 
-    int n = 1;
-    key = configPath + wxString::Format(wxT("/file%d"), n);
-    while ((int(n-1) < fileHistory->GetMaxFiles()) && config.Read(key, &value) && (!value.IsEmpty()))
-    {
-        //value.Trim(false).Trim(true);
-        if (!value.IsEmpty() && wxFileExists(value))
-            fileHistory->AddFileToHistory(value);
-
-        key = configPath + wxString::Format(wxT("/file%d"), ++n);
-        value.Clear();
-    }
+    config.SetPath(configPath);
+    fileHistory->Load(config);
+    config.SetPath(oldpath);
 }
+
 void wxSTEditorOptions::SaveFileConfig(wxConfigBase &config)
 {
+    const wxString oldpath = config.GetPath();
     wxFileHistory *fileHistory = GetFileHistory();
     if (!fileHistory)
         return;
@@ -379,7 +374,7 @@ void wxSTEditorOptions::SaveFileConfig(wxConfigBase &config)
     wxString configPath = FixConfigPath(GetConfigPath(STE_OPTION_CFGPATH_FILEHISTORY), false);
     config.Write(configPath+wxT("/LastDir"), GetDefaultFilePath());
 
-    int n, count = fileHistory->GetCount();
-    for (n = 0; n < count; n++)
-        config.Write(configPath + wxString::Format(wxT("/file%d"), n+1), fileHistory->GetHistoryFile(n));
+    config.SetPath(configPath);
+    fileHistory->Save(config);
+    config.SetPath(oldpath);
 }
