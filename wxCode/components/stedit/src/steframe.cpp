@@ -215,13 +215,25 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
             if (GetOptions().HasFrameOption(STF_CREATE_FILEHISTORY) && !GetOptions().GetFileHistory())
             {
                 // if has file open then we can use wxFileHistory to save them
-                wxMenu *menu = NULL;
-                if (menuBar->FindItem(wxID_OPEN, &menu))
+                wxMenu* menu = NULL;
+                wxMenuItem* item = menuBar->FindItem(wxID_OPEN, &menu);
+                if (item)
                 {
-                    GetOptions().SetFileHistory(new wxFileHistory(9), false);
-                    GetOptions().GetFileHistory()->UseMenu(menu);
-                    if (config)
-                        GetOptions().LoadFileConfig(*config);
+                    for (size_t i = 0; i < menu->GetMenuItemCount(); i++)
+                    {
+                       if (menu->GetMenuItems().Item(i)->GetData() == item)
+                       {
+                          wxMenu* submenu = new wxMenu();
+                          menu->Insert(i + 1, wxID_ANY, _("Open &Recent"), submenu);
+                          GetOptions().SetFileHistory(new wxFileHistory(9), false);
+                          GetOptions().GetFileHistory()->UseMenu(submenu);
+                          if (config)
+                          {
+                              GetOptions().LoadFileConfig(*config);
+                          }
+                          break;
+                       }
+                    }
                 }
             }
 
