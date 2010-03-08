@@ -355,7 +355,7 @@ void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
     //if ((wxFileConfig*)wxConfigBase::Get(false))
     //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
 
-    wxMessageBox(msg, _("About editor"), wxOK|wxICON_INFORMATION, parent);
+    wxMessageBox(msg, wxGetStockLabelEx(wxID_ABOUT, wxSTOCK_PLAINTEXT), wxOK|wxICON_INFORMATION, parent);
 }
 
 void wxSTEditorFrame::UpdateAllItems()
