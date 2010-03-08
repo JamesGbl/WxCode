@@ -135,7 +135,7 @@ bool wxStEditApp::OnInit()
 
     // For this simple editor we'll basicly use the defaults for everything
     //  (we reset it in cmd line parser to use either a single editor or notebook)
-    wxSTEditorOptions steOptions(STE_DEFAULT_OPTIONS);
+    wxSTEditorOptions steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS);
 
     // =======================================================================
     // A sample of things that you might do to change the behavior
@@ -305,13 +305,13 @@ bool wxStEditApp::OnInit()
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
 
     // ------------------------------------------------------------------------
-    // load the prefs/style/langs from the config, if we're using one
-    if (wxConfigBase::Get(false))
-        steOptions.LoadConfig(*wxConfigBase::Get(false));
-
-    // ------------------------------------------------------------------------
     m_frame = new wxSTEditorFrame( NULL, wxID_ANY, wxT("wxStEditor"),
                                    wxDefaultPosition, wxSize(800,600));
+
+    // ------------------------------------------------------------------------
+    // load the prefs/style/langs from the config, if we're using one
+    if (m_frame->GetConfigBase())
+        steOptions.LoadConfig(*m_frame->GetConfigBase());
 
     // must call this if you want any of the options, else blank frame
     m_frame->CreateOptions(steOptions);
