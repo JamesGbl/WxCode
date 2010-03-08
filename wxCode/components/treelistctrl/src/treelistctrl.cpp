@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.110 2009-09-20 20:08:38 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.111 2010-03-08 19:02:37 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -580,7 +580,7 @@ public:
     void OnMouse( wxMouseEvent &event );
     void OnIdle( wxIdleEvent &event );
     void OnScroll(wxScrollWinEvent& event);
-    void OnCaptureLost(wxMouseCaptureLostEvent &event) { ;; }
+    void OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event)) { ;; }
 
     // implementation helpers
     int GetColumnCount() const
@@ -3077,7 +3077,7 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
     int text_w = 0, text_h = 0;
     dc.GetTextExtent( item->GetText(GetMainColumn()).size() > 0
             ? item->GetText(GetMainColumn())
-            : " ",  // dummy text to avoid zero height and no highlight width
+            : _T(" "),  // dummy text to avoid zero height and no highlight width
         &text_w, &text_h );
 
     // determine background and show it
@@ -4063,7 +4063,7 @@ void wxTreeListMainWindow::CalculateSize (wxTreeListItem *item, wxDC &dc) {
     dc.SetFont (GetItemFont (item));
     dc.GetTextExtent (item->GetText(m_main_column).size() > 0
             ? item->GetText (m_main_column)
-            : " ",  // blank to avoid zero height and no highlight width
+            : _T(" "),  // blank to avoid zero height and no highlight width
         &text_w, &text_h);
     // restore normal font
     dc.SetFont (m_normalFont);
