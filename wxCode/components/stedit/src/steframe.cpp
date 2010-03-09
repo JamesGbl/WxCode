@@ -750,7 +750,8 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     {
         case ID_STE_SHOW_FULLSCREEN :
         {
-            long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION;
+            //long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION;
+            long style = wxFULLSCREEN_ALL;
             ShowFullScreen(event.IsChecked(), style);
             return true;
         }
