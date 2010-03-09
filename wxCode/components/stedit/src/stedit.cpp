@@ -2545,7 +2545,10 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
         STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REDO, event.GetStateValue(STE_CANREDO));
 
     if (event.HasStateChange(STE_CANFIND))
+    {
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_NEXT, event.GetStateValue(STE_CANFIND));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_PREV, event.GetStateValue(STE_CANFIND));
+    }
 }
 
 void wxSTEditor::UpdateAllItems()
@@ -2580,6 +2583,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_DUPLICATE, !readonly);
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_NEXT, CanFind());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_PREV, CanFind());
     STE_MM::DoCheckItem( menu, menuBar, toolBar, ID_STE_FIND_DOWN, GetFindDown());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_REPLACE,   !readonly);
 
@@ -2716,6 +2720,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_LINE_DUPLICATE : LineDuplicate(); return true;
 
         case wxID_FIND        : ShowFindReplaceDialog(true, true); return true;
+        case ID_STE_FIND_PREV :
         case ID_STE_FIND_NEXT :
         {
             // try our parents (stenotebook) to see if they can handle it
@@ -2725,6 +2730,10 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             event.SetFindString(GetFindString());
             int orig_flags = GetFindFlags();
             int flags = orig_flags & ~(STE_FR_FINDALL | STE_FR_BOOKMARKALL);
+            if (win_id == ID_STE_FIND_PREV)
+            {
+               flags = STE_SETBIT(flags, wxFR_DOWN, !(flags & wxFR_DOWN));
+            }
             event.SetFlags(flags);
             if (!GetParent()->GetEventHandler()->ProcessEvent(event))
                 FindString(GetFindString(), GetCurrentPos(), -1, flags);

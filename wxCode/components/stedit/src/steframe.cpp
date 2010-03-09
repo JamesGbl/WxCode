@@ -158,6 +158,7 @@ static const AcceleratorArray& getaccelerator()
       array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'D', ID_STE_LINE_DUPLICATE));
 
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F3, ID_STE_FIND_NEXT));
+      array.Add(wxAcceleratorEntry(wxACCEL_SHIFT , WXK_F3, ID_STE_FIND_PREV));
       array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F2, ID_STE_FIND_DOWN));
       array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'H', ID_STE_REPLACE));
       array.Add(wxAcceleratorEntry(wxACCEL_CMD, 'G', ID_STE_GOTO_LINE));

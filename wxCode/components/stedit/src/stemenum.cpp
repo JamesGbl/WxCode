@@ -260,9 +260,10 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDREPLACE))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(ID_STE_FIND_DOWN, _("Search direction"), STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_CHECK, _("Search direction"), _("Search direction for next occurance in document"));
+        //tb->AddTool(ID_STE_FIND_DOWN, _("Search direction"), STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_CHECK, _("Search direction"), _("Search direction for next occurance in document"));
         tb->AddTool(wxID_FIND,        wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT), _("Find text in document..."));
-        tb->AddTool(ID_STE_FIND_NEXT, _("Find next"),  STE_ARTBMP(wxART_STEDIT_FINDNEXT), wxNullBitmap, wxITEM_NORMAL, _("Find next"), _("Find next occurance in document"));
+        tb->AddTool(ID_STE_FIND_NEXT, _("Find next"),  STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_NORMAL, _("Find next"), _("Find next occurance in document"));
+        tb->AddTool(ID_STE_FIND_PREV, _("Find previous"),  STE_ARTBMP(wxART_STEDIT_FINDUP), wxNullBitmap, wxITEM_NORMAL, _("Find previous"), _("Find previous occurance in document"));
         tb->AddTool(ID_STE_REPLACE,   wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), _("Replace text in document"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
@@ -458,6 +459,7 @@ wxMenu *wxSTEditorMenuManager::CreateSearchMenu(wxMenu *menu_) const
 
         menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
         menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
+        menu->Append(MenuItem(menu, ID_STE_FIND_PREV, _("Find &Previous"),   _("Find previous occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDUP)));
         menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward"), _("Search forward/reverse in document"));
         if (!HasMenuOptionType(STE_MENU_READONLY))
             menu->Append(MenuItem(menu, ID_STE_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
@@ -1125,7 +1127,7 @@ bool wxSTEditorMenuManager::DoSetTextItem(wxMenu *menu, wxMenuBar *menuBar,
 #include "../art/find.xpm"
 #include "../art/findnext.xpm"
 #include "../art/finddown.xpm"
-//#include "../art/findup.xpm"
+#include "../art/findup.xpm"
 #include "../art/replace.xpm"
 #include "../art/undo.xpm"
 #include "../art/redo.xpm"
@@ -1151,6 +1153,7 @@ wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
     ART(wxART_STEDIT_PASTE,          paste)
     ART(wxART_STEDIT_FIND,           find)
     ART(wxART_STEDIT_FINDNEXT,       findnext)
+    ART(wxART_STEDIT_FINDUP,         findup)
     ART(wxART_STEDIT_FINDDOWN,       finddown)
     ART(wxART_STEDIT_REPLACE,        replace)
     ART(wxART_STEDIT_UNDO,           undo)
