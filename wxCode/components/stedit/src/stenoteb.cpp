@@ -697,7 +697,7 @@ bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &ex
                                  GetOptions().GetDefaultFilePath(),
                                  wxEmptyString, extensions,
                                  wxFD_OPEN);
-
+        fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
         if (fileDialog.ShowModal() == wxID_OK)
             fileName = fileDialog.GetPath();
         else
@@ -750,7 +750,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
                                  GetOptions().GetDefaultFilePath(),
                                  wxEmptyString, extensions,
                                  wxFD_OPEN | wxFD_MULTIPLE );
-
+        fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
         if (fileDialog.ShowModal() == wxID_OK)
             fileDialog.GetPaths(filePaths);
         else

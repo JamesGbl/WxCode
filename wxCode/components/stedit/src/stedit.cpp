@@ -62,14 +62,19 @@ const wxString EOLModeStrings[] =
     wxT("LF (Unix)")
 };
 
+#define wxALL_FILES_PATTERN_DISPLAY wxT("*")
+
 wxString STE_DefaultFileName( wxT("untitled.txt") );
-wxString STE_DefaultFileExtensions( wxT("Any file (*)|*|")
-                                    wxT("Text file (*.txt)|*.txt|")
-                                    wxT("C/C++ file (*.c;*.cpp;*.cxx)|*.c;*.cpp;*.cxx|")
-                                    wxT("H file (*.h)|*.h|")
-                                    wxT("Html file (*.htm;*.html)|*.htm;*.html|")
-                                    wxT("Lua file (*.lua)|*.lua|")
-                                    wxT("Python file (*.py)|*.py") );
+wxString STE_DefaultFileExtensions( 
+                                    wxT("Text Files (txt text)|*.txt;*.text|")
+                                    wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx|")
+                                    wxT("H Files (h)|*.h|")
+                                    wxT("Html Files (htm html)|*.htm;*.html|")
+                                    wxT("XML Files (xml)|*.xml|")
+                                    wxT("Lua Files (lua)|*.lua|")
+                                    wxT("Python Files (py)|*.py|") 
+                                    wxT("All Files (")wxALL_FILES_PATTERN_DISPLAY wxT(")|")wxALL_FILES_PATTERN
+                                    );
 
 //-----------------------------------------------------------------------------
 // wxSTEditorData - data that the styled text editor shares with refed ones
