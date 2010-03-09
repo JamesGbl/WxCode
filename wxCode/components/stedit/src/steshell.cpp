@@ -361,7 +361,7 @@ void wxSTEditorShell::OnKeyDown(wxKeyEvent &event)
 
             // goto the end of the line and store the line for the history
             LineEnd();
-            if (!promptText.IsEmpty())
+            if (promptText.Length())
                 AddHistoryLine(promptText, true);
 
             // just send the event, the receiver can do what they like

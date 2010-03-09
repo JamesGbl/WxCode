@@ -1910,9 +1910,9 @@ void wxSTEditorInsertTextDialog::OnButton(wxCommandEvent& event)
             sm_radioID   = GetSelectedRadioId();
             sm_spinValue = m_col;
 
-            if (!m_prependString.IsEmpty())
+            if (m_prependString.Length())
                 wxSTEPrependArrayString(m_prependString, sm_prependValues, 10);
-            if (!m_appendString.IsEmpty())
+            if (m_appendString.Length())
                 wxSTEPrependArrayString(m_appendString, sm_appendValues, 10);
 
             break;
@@ -1936,7 +1936,7 @@ void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
         default : break;
     }
 
-    if (!c.IsEmpty())  // this must have been for the m_insertMenu
+    if (c.Length())  // this must have been for the m_insertMenu
     {
         wxComboBox* cBox = (wxComboBox*)m_insertMenu->GetClientData();
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));

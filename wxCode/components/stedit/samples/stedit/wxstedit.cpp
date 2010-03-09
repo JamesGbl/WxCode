@@ -258,7 +258,7 @@ bool wxStEditApp::OnInit()
                 }
 
                 // use the specified config file, if it's still set
-                if ( !configFile.IsEmpty() )
+                if ( configFile.Length() )
                 {
                     wxFileConfig *config = new wxFileConfig(wxT(STE_APPDISPLAYNAME), wxT("wxWidgets"),
                                                             configFile, wxEmptyString,

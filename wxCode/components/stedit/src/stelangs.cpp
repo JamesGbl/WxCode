@@ -5058,7 +5058,7 @@ wxString wxSTEditorLangs::GetFilePattern(size_t lang_n, bool get_default) const
     if (!get_default)
     {
         wxString userFilePatterns = GetUserFilePattern(lang_n);
-        if (!userFilePatterns.IsEmpty()) return userFilePatterns;
+        if (userFilePatterns.Length()) return userFilePatterns;
     }
 
     return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->filePattern) : wxString();
@@ -5161,7 +5161,7 @@ wxString wxSTEditorLangs::GetKeyWords(size_t lang_n, size_t word_n, bool get_def
     if (!get_default)
     {
         wxString userWords = GetUserKeyWords(lang_n, word_n);
-        if (!words.IsEmpty() && !userWords.IsEmpty())
+        if (words.Length() && userWords.Length())
             words += wxT(" ");
 
         words += userWords;
@@ -5333,7 +5333,7 @@ void wxSTEditorLangs::SetUserKeyWords(size_t lang_n, size_t word_n, const wxStri
         else
             M_LANGDATA->m_userKeyWords.Add(lang_n*1000+word_n, words);
     }
-    else if (!is_default && !words.IsEmpty())
+    else if (!is_default && words.Length())
     {
         M_LANGDATA->m_userKeyWords.Add(lang_n*1000+word_n, words);
     }
@@ -5423,7 +5423,7 @@ void wxSTEditorLangs::SaveConfig( wxConfigBase &config,
             value   = GetUserKeyWords(lang_n, word_n);
             keyName = keyBase + wxString::Format(wxT("/Keyword_%d"), word_n);
 
-            if (!value.IsEmpty())
+            if (value.Length())
                 config.Write(keyName, value);
             else if (config.HasEntry(keyName))
                 config.DeleteEntry(keyName);
@@ -5514,34 +5514,34 @@ void LangConfig()
         for (i = 0; i < langs.GetKeyWordsCount(n); i++)
             config->Write(keyName + wxString::Format(wxT("Keyword%d"), i), langs.GetKeyWords(n, i));
 
-        if (!langs.GetBlockStart(n).IsEmpty())
+        if (langs.GetBlockStart(n).Length())
             config->Write(keyName + wxT("BlockStart"),         langs.GetBlockStart(n));
-        if (!langs.GetBlockEnd(n).IsEmpty())
+        if (langs.GetBlockEnd(n).Length())
             config->Write(keyName + wxT("BlockEnd"),           langs.GetBlockEnd(n));
 
-        if (!langs.GetPreprocessorSymbol(n).IsEmpty())
+        if (langs.GetPreprocessorSymbol(n).Length())
             config->Write(keyName + wxT("PreprocessorSymbol"), langs.GetPreprocessorSymbol(n));
-        if (!langs.GetPreprocessorStart(n).IsEmpty())
+        if (langs.GetPreprocessorStart(n).Length())
             config->Write(keyName + wxT("PreprocessorStart"),  langs.GetPreprocessorStart(n));
-        if (!langs.GetPreprocessorMid(n).IsEmpty())
+        if (langs.GetPreprocessorMid(n).Length())
             config->Write(keyName + wxT("PreprocessorMid"),    langs.GetPreprocessorMid(n));
-        if (!langs.GetPreprocessorEnd(n).IsEmpty())
+        if (langs.GetPreprocessorEnd(n).Length())
             config->Write(keyName + wxT("PreprocessorEnd"),    langs.GetPreprocessorEnd(n));
 
         if (langs.HasComments(n))
         {
             config->Write(keyName + wxT("CommentBlockAtLineStart"),    langs.GetCommentBlockAtLineStart(n));
-            if (!langs.GetCommentBlock(n).IsEmpty())
+            if (langs.GetCommentBlock(n).Length())
                 config->Write(keyName + wxT("CommentBlock"),    langs.GetCommentBlock(n));
-            if (!langs.GetCommentBoxStart(n).IsEmpty())
+            if (langs.GetCommentBoxStart(n).Length())
                 config->Write(keyName + wxT("CommentBoxStart"),    langs.GetCommentBoxStart(n));
-            if (!langs.GetCommentBoxMiddle(n).IsEmpty())
+            if (langs.GetCommentBoxMiddle(n).Length())
                 config->Write(keyName + wxT("CommentBoxMiddle"),    langs.GetCommentBoxMiddle(n));
-            if (!langs.GetCommentBoxEnd(n).IsEmpty())
+            if (langs.GetCommentBoxEnd(n).Length())
                 config->Write(keyName + wxT("CommentBoxEnd"),    langs.GetCommentBoxEnd(n));
-            if (!langs.GetCommentStreamStart(n).IsEmpty())
+            if (langs.GetCommentStreamStart(n).Length())
                 config->Write(keyName + wxT("CommentStreamStart"),    langs.GetCommentStreamStart(n));
-            if (!langs.GetCommentStreamEnd(n).IsEmpty())
+            if (langs.GetCommentStreamEnd(n).Length())
                 config->Write(keyName + wxT("CommentStreamEnd"),    langs.GetCommentStreamEnd(n));
         }
 

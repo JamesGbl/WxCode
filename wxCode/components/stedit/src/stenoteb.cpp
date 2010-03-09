@@ -689,7 +689,7 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
 bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &extensions_)
 {
     wxString fileName = fileName_;
-    wxString extensions = !extensions_.IsEmpty() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
     if (fileName.IsEmpty())
     {
@@ -739,7 +739,7 @@ bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &ex
 bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
                                     const wxString &extensions_)
 {
-    wxString extensions = !extensions_.IsEmpty() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
     wxArrayString filePaths;
     if (filePaths_)
         filePaths = *filePaths_;

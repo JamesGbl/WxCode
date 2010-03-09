@@ -2023,12 +2023,12 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
             wxString extension = wxSTEditorExporter::GetExtension(file_format);
             wxString wildcards = wxSTEditorExporter::GetWildcards(file_format) + wxT("|All files (*)|*");
 
-            if (!fileName.IsEmpty())
+            if (fileName.Length())
             {
                 wxFileName fn(fileName);
                 fileName = fn.GetFullName();
                 wxString fileNamePath = fn.GetPath();
-                if (!fileNamePath.IsEmpty())
+                if (fileNamePath.Length())
                     path = fileNamePath;
             }
 
@@ -2036,7 +2036,7 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
                                        extension, wildcards,
                                        wxFD_SAVE, this );
 
-            if (!fileName.IsEmpty())
+            if (fileName.Length())
             {
                 if (((wxCheckBox*)FindWindow(ID_STEDLG_EXPORT_EXTENSION_CHECKBOX))->IsChecked())
                     fileName = wxFileDialogBase::AppendExtension(fileName,

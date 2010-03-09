@@ -729,7 +729,7 @@ wxString wxSTEditorStyles::LoadConfig( wxConfigBase &config,
     }
 
 
-    if (!errorMsg.IsEmpty())
+    if (errorMsg.Length())
     {
         wxString msg = _("Error loading editor config data, would you like to repair it?\n\n") + errorMsg;
 

@@ -338,10 +338,10 @@ void wxSTEditor::UpdateCanDo(bool send_event)
         SetStateSingle(STE_CANSAVE, !HasState(STE_CANSAVE));
         state_change |= STE_CANSAVE;
     }
-    if (CanFind() != (GetFindReplaceData() && !GetFindString().IsEmpty()))
+    if (CanFind() != (GetFindReplaceData() && GetFindString().Length()))
     {
         // just reset it to unknown
-        SetStateSingle(STE_CANFIND, GetFindReplaceData() && !GetFindString().IsEmpty());
+        SetStateSingle(STE_CANFIND, GetFindReplaceData() && GetFindString().Length());
         state_change |= STE_CANFIND;
     }
 
@@ -1604,7 +1604,7 @@ int wxSTEditor::IsLinePreprocessorCondition(const wxString &line)
     while (wxIsspace(*currChar) && *currChar)
         currChar++;
 
-    if (!preprocessorSymbol.IsEmpty() && (*currChar == preprocessorSymbol))
+    if (preprocessorSymbol.Length() && (*currChar == preprocessorSymbol))
     {
         currChar++;
         while (wxIsspace(*currChar) && *currChar)
@@ -1936,11 +1936,11 @@ bool wxSTEditor::StartAutoComplete() {
 
         wxString root = line.Mid(startword, current - startword);
 
-        if (!root.IsEmpty()) {
+        if (root.Length()) {
                 //wxString words; //= apis.GetNearestWords(root.wx_str(), root.length(),
                                   //  autoCompleteIgnoreCase, calltipParametersStart[0]);
                 wxString words = GetAutoCompleteKeyWords(root);
-                if (!words.IsEmpty()) {
+                if (words.Length()) {
                         //EliminateDuplicateWords(words);
                         AutoCompShow(root.Length(), words);
                 }
@@ -2202,14 +2202,14 @@ bool wxSTEditor::LoadFile( const wxString &fileName_,
         return false;
 
     wxString fileName = fileName_;
-    wxString extensions = !extensions_.IsEmpty() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
     if (fileName.IsEmpty())
     {
         fileName = GetFileName();
         wxString path;
 
-        if (!fileName.IsEmpty())
+        if (fileName.Length())
         {
             wxFileName fn(fileName);
             path     = fn.GetPath();
@@ -2272,10 +2272,10 @@ bool wxSTEditor::LoadFile( const wxString &fileName_,
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
     wxString fileName = GetFileName();
-    wxString extensions = !extensions_.IsEmpty() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
     // if not a valid filename or it wasn't loaded from disk - force dialog
-    if (!fileName.IsEmpty())
+    if (fileName.Length())
     {
         wxFileName fName(fileName);
         if (!fName.IsOk())
@@ -2289,12 +2289,12 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     {
         wxString path = GetOptions().GetDefaultFilePath();
 
-        if (!fileName.IsEmpty())
+        if (fileName.Length())
         {
             wxFileName fn(fileName);
             fileName = fn.GetFullName();
             wxString fileNamePath = fn.GetPath();
-            if (!fileNamePath.IsEmpty())
+            if (fileNamePath.Length())
                 path = fileNamePath;
         }
 
@@ -3236,7 +3236,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
 void wxSTEditor::SetFindString(const wxString &findString, bool send_evt)
 {
     GetFindReplaceData()->SetFindString(findString);
-    if (!findString.IsEmpty())
+    if (findString.Length())
         GetFindReplaceData()->AddFindString(findString);
 
     if (send_evt && (s_findString != findString))

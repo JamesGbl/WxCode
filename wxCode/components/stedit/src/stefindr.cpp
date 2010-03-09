@@ -452,7 +452,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
     m_findReplaceData->SetFlags(event.GetFlags());
 
     m_findReplaceData->SetFindString(event.GetFindString());
-    if (!event.GetFindString().IsEmpty())
+    if (event.GetFindString().Length())
         m_findReplaceData->AddFindString(event.GetFindString());
 
     if ( HasFlag(wxFR_REPLACEDIALOG) &&
@@ -616,7 +616,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
         default : break;
     }
 
-    if (!c.IsEmpty()) // this must have been for the m_insertMenu
+    if (c.Length()) // this must have been for the m_insertMenu
     {
         wxComboBox* cBox = (wxComboBox*)m_insertMenu->GetClientData();
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
