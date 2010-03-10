@@ -3,7 +3,7 @@
  ---------------------
 
  Website: http://wxcode.sourceforge.net/components/wxxml2
- Version: 1.8
+ Version: 1.9
 
  Description:
  A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and
@@ -36,6 +36,9 @@
  1.9
      - fixed a problem in the build system which appeared when compiling
        in Unicode mode under Windows (reported by Kevin Colwell).
+     - updated wxXml2 to build against wxWidgets 2.9.x
+     - removed "thirdparty" folder in favour of the "deps" one which contains
+       precompiled binaries (compiled with MSVC on x86)
 
  1.8
 

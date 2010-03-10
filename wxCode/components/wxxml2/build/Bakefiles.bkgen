@@ -8,21 +8,8 @@
 
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
 
-
     <!-- wxXml2-specific: -->
-
-    <input>
-        wxxml2.bkl
-        ../thirdparty/build/thirdparty.bkl
-        ../thirdparty/libxml2/build/libxml2.bkl
-        ../thirdparty/libiconv/build/iconv.bkl
-    </input>
-
-    <!-- see the readme to understand why UNIX makefiles are not generated;
-         msvc6prj is disabled because it does not support <subproject> tags -->
-    <del-formats
-        files="../thirdparty/build/*.bkl,../thirdparty/libxml2/build/*.bkl,../thirdparty/libiconv/build/*.bkl">
-        autoconf,msvc6prj,msvs2003prj,msvs2005prj,msvs2008prj
-    </del-formats>
+    <input>wxxml2.bkl</input>
+    <del-formats>msvc6prj</del-formats>     <!-- too old for us -->
 
 </bakefile-gen>

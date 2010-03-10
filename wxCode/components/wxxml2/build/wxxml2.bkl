@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <makefile>
 
+    <set var="WX_UNICODE">1</set>
+    <set var="WX_MONOLITHIC">0</set>
+    <set var="SHARED">0</set>
+    <set var="USE_UNSTABLE_VERSION">1</set>
     <include file="presets/wxcode.bkl" once="1"/>
 
 
@@ -13,51 +17,17 @@
     <!-- The dependencies... -->
     <!-- =================== -->
 
-    <!-- on win32 we will always (at first I put an option to disable this
+    <!-- on windows we will always (at first I put an option to disable this
          but that made the build system more complex and probably wasn't very
          useful at all) use the libxml2 & iconv placed in the thirdparty folder -->
     <!-- on unix instead we will use the system-installed libxml2 & iconv libs -->
-    <set var="LIBXML2_DIR">$(SRCDIR)$(DIRSEP)thirdparty$(DIRSEP)libxml2</set>
-    <set var="ICONV_DIR">$(SRCDIR)$(DIRSEP)thirdparty$(DIRSEP)libiconv</set>
-
-    <if cond="FORMAT_SUPPORTS_ACTIONS=='1' and FORMAT not in [ 'autoconf', 'gnu' ]">
-
-        <!-- conversion from WX_DEBUG to BUILD options -->
-        <set var="BUILD_EQUIVALENT">
-            <if cond="WX_DEBUG=='1'">debug</if>
-            <if cond="WX_DEBUG=='0'">release</if>
-        </set>
-        <smart-subproject id="thirdparty">
-            <dependency-of>all</dependency-of>
-            <dir>$(SRCDIR)/thirdparty/build</dir>
-            <set-makeargs>
-                 SHARED="$(WX_SHARED)" UNICODE="$(WX_UNICODE)"
-                 BUILD="$(BUILD_EQUIVALENT)" ICONV_DIR="..$(DIRSEP)..$(DIRSEP)libiconv"
-            </set-makeargs>
-        </smart-subproject>
-
-        <!-- to make things easier for the user of wxXml2, we now copy the libiconv
-             & libxml2 libraries in our ..\lib folder; since this target makes sense
-             only on win32 we can safely use platform-dependent commands... -->
-        <action id="setupdep">
-            <depends>thirdparty</depends>
-            <command>-copy $(LIBXML2_DIR)\lib\*.lib ..\lib</command>
-            <command>-copy $(ICONV_DIR)\lib\*.lib ..\lib</command>
-            <command>-copy $(LIBXML2_DIR)\lib\*.dll ..\lib</command>
-            <command>-copy $(ICONV_DIR)\lib\*.dll ..\lib</command>
-            <clean-files>$(SRCDIR)\lib\*.lib</clean-files>
-            <clean-files>$(SRCDIR)\lib\*.dll</clean-files>
-        </action>
-    </if>
-    <if cond="FORMAT_SUPPORTS_ACTIONS=='0' or FORMAT in [ 'autoconf', 'gnu' ]">
-        <phony id="setupdep"/>        <!-- msvc6prj does not support subprojects ! 
-                                           see install doc for more info about using MSVC6prj -->
-    </if>
-
-
-
-    <!-- The wxXml2 lib/dll  -->
-    <!-- =================== -->
+    <set var="LIBXML2_DIR">
+        <if cond="WX_DEBUG=='0'">$(SRCDIR)/deps/lib/release</if>
+        <if cond="WX_DEBUG=='1'">$(SRCDIR)/deps/lib/debug</if>       
+    </set>
+    <!-- <set var="ICONV_DIR">
+        $(SRCDIR)$(DIRSEP)deps$(DIRSEP)iconv
+    </set> -->
 
     <!-- Be sure to include this line in your projects which use the
          libxml2 library: otherwise you'll get "undefined references to __xmlFree"
@@ -69,10 +39,11 @@
 
     <template id="xmlbasic">
         <if cond="FORMAT not in ['autoconf']">
-            <depends>setupdep</depends>
-            <stdlib>$(LIBXML2_DIR)</stdlib>
-            <stdlib>$(ICONV_DIR)</stdlib>
+            <!-- <stdlib>$(LIBXML2_DIR)</stdlib> -->
+        <!--    <stdlib>$(ICONV_DIR)</stdlib> -->
         <!--    <define>$(STATIC_DEF)</define>  -->
+            <include>$(SRCDIR)/deps/include</include>
+            <lib-path>$(LIBXML2_DIR)</lib-path>
         </if>
     </template>
 
@@ -82,6 +53,11 @@
         <if cond="FORMAT!='mingw' and FORMAT!='autoconf' and FORMAT!='gnu'"><sys-lib>libxml2</sys-lib></if>
         <if cond="FORMAT!='autoconf' and FORMAT!='gnu'"><sys-lib>iconv</sys-lib></if>
     </define-tag>
+
+
+
+    <!-- The wxXml2 lib/dll  -->
+    <!-- =================== -->
 
     <!-- the wxXml2 library -->
     <lib id="wxxml2_lib" template="wxcode-lib,xmlbasic" cond="WX_SHARED=='0'"/>

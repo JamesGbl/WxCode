@@ -276,7 +276,7 @@ public:
     //! Returns a string with the libxml2 library version used when
     //! this source was compiled.
     static wxString GetLibxml2Version()
-        { return wxT(LIBXML_DOTTED_VERSION); }
+        { return wxS(LIBXML_DOTTED_VERSION); }
 
     //! Checks the compiled library version against the include one.
     //! If something is wrong, a warning or a fatal error is generated.
@@ -823,7 +823,7 @@ public:        // operators
 public:        // create, load & save
 
     //! Creates a new empty XML document with the given version.
-    bool Create(const wxString &version = wxT("1.0"));
+    bool Create(const wxString &version = wxS("1.0"));
 
     //! Parses the data from the given wxInputStream. See #Load().
     bool Load(wxInputStream &stream, wxString *pErr = NULL);
@@ -835,12 +835,12 @@ public:        // create, load & save
 
     //! Saves the XML data in the given stream with the given encoding.
     //! Returns the number of bytes written: -1 if there were errors.
-    int Save(wxOutputStream &stream, const wxString &encoding = wxT("UTF-8"),
+    int Save(wxOutputStream &stream, const wxString &encoding = wxS("UTF-8"),
                 long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
     //! Saves the document as XML or XHTML file in the given encoding format.
     //! Returns TRUE on success.
-    bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"),
+    bool Save(const wxString &filename, const wxString &encoding = wxS("UTF-8"),
                 long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
 
@@ -1313,7 +1313,7 @@ public:        // getters
 
     //! Returns the n-th child named 'name', or wxXml2EmptyNode if it doesn't exist.
     wxXml2Node Get(const wxString &name, int n = 0)    const
-        { return Find(name, wxT(""), n); }
+        { return Find(name, wxS(""), n); }
 
     //! Sets the name of this node.
     void SetName(const wxString &name)

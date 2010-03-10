@@ -126,7 +126,7 @@ protected:
     //! Linked objects won't be deleted by the constructor.
     void Link(bool linking = TRUE)
         { wxASSERT_MSG(m_bLinked != linking || linking == FALSE,
-          wxT("Cannot link this node another time; already linked !!"));
+          wxS("Cannot link this node another time; already linked !!"));
           m_bLinked = linking; }
 
 public:

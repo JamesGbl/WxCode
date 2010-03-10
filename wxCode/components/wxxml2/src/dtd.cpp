@@ -65,12 +65,12 @@ void wxXml2HelpWrapper::DestroyIfUnlinked()
     if (!m_bLinked) {
 
         Destroy();
-        wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"),
+        wxLogDebug(wxS("%s::DestroyIfUnlinked - destroyed"),
             GetClassInfo()->GetClassName());
 
     } else {
 
-        wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
+        wxLogDebug(wxS("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
             GetClassInfo()->GetClassName());
     }
 }
@@ -248,7 +248,7 @@ void wxXml2Enumeration::Create(const wxString &name, const wxXml2Enumeration &ne
 
 void wxXml2Enumeration::Create(const wxString &list)
 {
-    wxStringTokenizer tknzr(list, wxT("|"));
+    wxStringTokenizer tknzr(list, wxS("|"));
     if (!tknzr.HasMoreTokens()) return;
 
     Create(tknzr.GetNextToken(), wxXml2EmptyEnumeration);
@@ -367,7 +367,7 @@ static int XMLDTDRead(void *ctx, char *buffer, int len)
 bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 {
     if (stream.GetSize() <= 0) {
-        if (pErr) *pErr = wxT("Invalid size");
+        if (pErr) *pErr = wxS("Invalid size");
         return FALSE;
     }
 
@@ -418,7 +418,7 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 static int XMLDTDWrite(void *context, const char *buffer, int len)
 {
     wxOutputStream *stream = (wxOutputStream *)context;
-    wxASSERT_MSG(stream && stream->IsOk(), wxT("Invalid stream"));
+    wxASSERT_MSG(stream && stream->IsOk(), wxS("Invalid stream"));
     int written = 0;
 
     // even if our m_dtd->doc pointer is NULL, xmlNodeDumpOutput
@@ -584,7 +584,7 @@ bool wxXml2DTD::LoadFullDTD(wxString *perr)
     // let me know if you need this feature.
     //wxASSERT(0);
     if (perr)
-        *perr = wxT("PUBLIC DTD loading not supported.");
+        *perr = wxS("PUBLIC DTD loading not supported.");
 
     return FALSE;
 }
