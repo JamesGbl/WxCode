@@ -13,7 +13,7 @@
         ../thirdparty/curl/build/curl.bkl
     </input>
 
-
+    <del-formats>msvc6prj</del-formats>
     <del-formats files="../thirdparty/curl/build/curl.bkl">
         autoconf
     </del-formats>

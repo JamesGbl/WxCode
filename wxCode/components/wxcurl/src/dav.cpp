@@ -104,8 +104,8 @@ bool wxCurlDAV::Propfind(wxInputStream& buffer, const wxString& szRemoteLoc /*= 
 
 		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_arrHeaders.Add(wxT("Depth: 1"));
-		m_arrHeaders.Add(wxT("Content-Type: text/xml; charset=\"utf-8\""));
+		m_arrHeaders.Add(wxS("Depth: 1"));
+		m_arrHeaders.Add(wxS("Content-Type: text/xml; charset=\"utf-8\""));
 
 		SetHeaders();
 
@@ -150,7 +150,7 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 
 		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_arrHeaders.Add(wxT("Content-Type: text/xml; charset=\"utf-8\""));
+		m_arrHeaders.Add(wxS("Content-Type: text/xml; charset=\"utf-8\""));
 
 		SetHeaders();
 
@@ -184,10 +184,10 @@ bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 	{
 		SetCurlHandleToDefaults(szRemoteLocSrc);
 
-		m_arrHeaders.Add(wxT("Destination: ") + szRemoteLocDest);
+		m_arrHeaders.Add(wxS("Destination: ") + szRemoteLocDest);
 		
 		if(!bOverwrite)
-			m_arrHeaders.Add(wxT("Overwrite: F"));
+			m_arrHeaders.Add(wxS("Overwrite: F"));
 
 		SetHeaders();
 
@@ -214,10 +214,10 @@ bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 	{
 		SetCurlHandleToDefaults(szRemoteLocSrc);
 
-		m_arrHeaders.Add(wxT("Destination: ") + szRemoteLocDest);
+		m_arrHeaders.Add(wxS("Destination: ") + szRemoteLocDest);
 		
 		if(!bOverwrite)
-			m_arrHeaders.Add(wxT("Overwrite: F"));
+			m_arrHeaders.Add(wxS("Overwrite: F"));
 
 		SetHeaders();
 

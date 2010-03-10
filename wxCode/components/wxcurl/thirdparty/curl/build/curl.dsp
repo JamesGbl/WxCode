@@ -43,12 +43,12 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
-# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d _DEBUG
-# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d _DEBUG
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Gm /I "..\include" /I "..\lib" /Zi /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Gm /I "..\include" /I "..\lib" /Zi /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "CURL_LDAP_WIN" /d "BUILDING_LIBCURL" /d _DEBUG
+# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "CURL_LDAP_WIN" /d "BUILDING_LIBCURL" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -68,12 +68,12 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
-# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d NDEBUG
-# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d NDEBUG
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "CURL_LDAP_WIN" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "CURL_LDAP_WIN" /d "BUILDING_LIBCURL" /d NDEBUG
+# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "CURL_LDAP_WIN" /d "BUILDING_LIBCURL" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -93,8 +93,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_STATICLIB" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_STATICLIB" /c
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Gm /I "..\include" /I "..\lib" /Zi /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_LDAP_WIN" /D "CURL_STATICLIB" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Gm /I "..\include" /I "..\lib" /Zi /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_LDAP_WIN" /D "CURL_STATICLIB" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -116,8 +116,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_LDAP_WIN" /D "CURL_STATICLIB" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_LDAP_WIN" /D "CURL_STATICLIB" /D "NDEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -153,6 +153,26 @@ SOURCE=..\lib\content_encoding.c
 # Begin Source File
 
 SOURCE=..\lib\cookie.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_addrinfo.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_memrchr.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_rand.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_sspi.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_threads.c
 # End Source File
 # Begin Source File
 
@@ -248,6 +268,10 @@ SOURCE=..\lib\if2ip.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\imap.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\inet_ntop.c
 # End Source File
 # Begin Source File
@@ -257,6 +281,10 @@ SOURCE=..\lib\inet_pton.c
 # Begin Source File
 
 SOURCE=..\lib\krb4.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\krb5.c
 # End Source File
 # Begin Source File
 
@@ -288,11 +316,43 @@ SOURCE=..\lib\netrc.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\nonblock.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\nss.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\nwos.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\parsedate.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\pingpong.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\pop3.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\progress.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\qssl.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\rawstr.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\rtsp.c
 # End Source File
 # Begin Source File
 
@@ -312,7 +372,23 @@ SOURCE=..\lib\share.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\slist.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\smtp.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\socks.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\socks_gssapi.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\socks_sspi.c
 # End Source File
 # Begin Source File
 
@@ -392,14 +468,6 @@ SOURCE=..\lib\arpa_telnet.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\lib\base64.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\lib\ca-bundle.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\lib\config-amigaos.h
 # End Source File
 # Begin Source File
@@ -408,11 +476,23 @@ SOURCE=..\lib\config-mac.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\config-os400.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\config-riscos.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\config-symbian.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\config-tpf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\config-vxworks.h
 # End Source File
 # Begin Source File
 
@@ -437,6 +517,50 @@ SOURCE=..\lib\cookie.h
 # Begin Source File
 
 SOURCE=..\include\curl\curl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_addrinfo.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_base64.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_ldap.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_md5.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_memory.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_memrchr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_rand.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_sspi.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\curl_threads.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\curl\curlbuild.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\curl\curlrules.h
 # End Source File
 # Begin Source File
 
@@ -516,7 +640,7 @@ SOURCE=..\lib\if2ip.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\lib\inet_ntoa_r.h
+SOURCE=..\lib\imap.h
 # End Source File
 # Begin Source File
 
@@ -532,23 +656,11 @@ SOURCE=..\lib\krb4.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\lib\ldap.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\lib\llist.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\lib\md5.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\lib\memdebug.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\lib\memory.h
 # End Source File
 # Begin Source File
 
@@ -568,11 +680,39 @@ SOURCE=..\lib\netrc.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\nonblock.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\nssg.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\parsedate.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\lib\pingpong.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\pop3.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\lib\progress.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\qssl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\rawstr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\rtsp.h
 # End Source File
 # Begin Source File
 
@@ -581,6 +721,10 @@ SOURCE=..\lib\select.h
 # Begin Source File
 
 SOURCE=..\lib\sendf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\setup-os400.h
 # End Source File
 # Begin Source File
 
@@ -593,6 +737,14 @@ SOURCE=..\lib\setup_once.h
 # Begin Source File
 
 SOURCE=..\lib\share.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\slist.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\lib\smtp.h
 # End Source File
 # Begin Source File
 
@@ -661,6 +813,10 @@ SOURCE=..\lib\timeval.h
 # Begin Source File
 
 SOURCE=..\lib\transfer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\curl\typecheck-gcc.h
 # End Source File
 # Begin Source File
 

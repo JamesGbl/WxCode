@@ -8,7 +8,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2009, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -23,9 +23,19 @@
  *
  * $Id$
  ***************************************************************************/
+
+
+/****************************************************************************
+ * FILE unique setup
+ ***************************************************************************/
+struct FILEPROTO {
+  char *path; /* the path we operate on */
+  char *freepath; /* pointer to the allocated block we must free, this might
+                     differ from the 'path' pointer */
+  int fd;     /* open file descriptor to read from! */
+};
+
 #ifndef CURL_DISABLE_FILE
-CURLcode Curl_file(struct connectdata *, bool *done);
-CURLcode Curl_file_done(struct connectdata *, CURLcode, bool premature);
-CURLcode Curl_file_connect(struct connectdata *);
+extern const struct Curl_handler Curl_handler_file;
 #endif
 #endif

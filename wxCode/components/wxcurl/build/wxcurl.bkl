@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <makefile>
 
+    <set var="WX_UNICODE">1</set>
+    <set var="WX_MONOLITHIC">0</set>
+    <set var="SHARED">0</set>
+    <set var="USE_UNSTABLE_VERSION">1</set>
     <include file="presets/wxcode.bkl" once="1"/>
 
 
@@ -55,13 +59,16 @@
 
 
 
-    <!-- The sample of wxCurl -->
-    <!-- ==================== -->
+    <!-- The samples of wxCurl -->
+    <!-- ===================== -->
 
     <template id="curlsample" template="curlbasic">
         <!-- lib list: -->
         <library>wxcurl_lib</library>
         <curlib/>
+        
+        <sys-lib>ws2_32</sys-lib>
+        <sys-lib>wldap32</sys-lib>
 
         <wx-lib>xrc</wx-lib>
         <wx-lib>html</wx-lib>

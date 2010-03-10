@@ -320,7 +320,7 @@ bool wxCurlFTP::MkDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 	{
 		wxString str(szRemoteLoc);
 		if(str.Last() != '/')
-			str += wxT("/");
+			str += wxS("/");
 
         SetCurlHandleToDefaults(str);
 
@@ -341,19 +341,19 @@ bool wxCurlFTP::RmDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 	if(m_pCURL)
 	{
         wxString str(szRemoteLoc);
-		if(str.Last() != wxT('/'))
-			str += wxT("/");
+		if(str.Last() != wxS('/'))
+			str += wxS("/");
         SetCurlHandleToDefaults(str);
 
         wxString url(GetURL());
-		m_szCurrFullPath = url.Left(url.Len() - 1).BeforeLast(wxT('/'));
-		m_szCurrFullPath += wxT("/");
-		m_szCurrFilename = url.Left(url.Len() - 1).AfterLast(wxT('/'));
+		m_szCurrFullPath = url.Left(url.Len() - 1).BeforeLast(wxS('/'));
+		m_szCurrFullPath += wxS("/");
+		m_szCurrFilename = url.Left(url.Len() - 1).AfterLast(wxS('/'));
 
 		if(m_szCurrFilename.IsEmpty())
 			return false;
 
-		AppendPostQuote(wxT("RMD ") + m_szCurrFilename, true);
+		AppendPostQuote(wxS("RMD ") + m_szCurrFilename, true);
 
 		SetCurlHandleQuoteOpts();
 		SetOpt(CURLOPT_NOBODY, TRUE);
@@ -379,13 +379,13 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
         wxString url(GetURL());
 		m_szCurrFullPath = url.BeforeLast('/');
-		m_szCurrFullPath += wxT("/");
+		m_szCurrFullPath += wxS("/");
 		m_szCurrFilename = url.AfterLast('/');
 
 		if(m_szCurrFilename.IsEmpty())
 			return RmDir(szRemoteLoc);
 
-		AppendPostQuote(wxT("DELE ") + m_szCurrFilename, true);
+		AppendPostQuote(wxS("DELE ") + m_szCurrFilename, true);
 
 		SetCurlHandleQuoteOpts();
 		SetOpt(CURLOPT_NOBODY, TRUE);
@@ -412,14 +412,14 @@ bool wxCurlFTP::Rename(const wxString& szRemoteLocName,
 
         wxString url(GetURL());
 		m_szCurrFullPath = url.BeforeLast('/');
-		m_szCurrFullPath += wxT("/");
+		m_szCurrFullPath += wxS("/");
 		m_szCurrFilename = url.AfterLast('/');
 
 		if(m_szCurrFilename.IsEmpty())
 			return false;
 
-		AppendPostQuote(wxT("RNFR ") + m_szCurrFilename, true);
-		AppendPostQuote(wxT("RNTO ") + szRemoteLocName);
+		AppendPostQuote(wxS("RNFR ") + m_szCurrFilename, true);
+		AppendPostQuote(wxS("RNTO ") + szRemoteLocName);
 
 		SetCurlHandleQuoteOpts();
 		SetOpt(CURLOPT_NOBODY, TRUE);

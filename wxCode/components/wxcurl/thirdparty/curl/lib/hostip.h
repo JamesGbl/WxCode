@@ -1,5 +1,5 @@
-#ifndef __HOSTIP_H
-#define __HOSTIP_H
+#ifndef HEADER_CURL_HOSTIP_H
+#define HEADER_CURL_HOSTIP_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -7,7 +7,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2006, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2010, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -25,52 +25,23 @@
 
 #include "setup.h"
 #include "hash.h"
+#include "curl_addrinfo.h"
 
-#if (defined(NETWARE) && defined(__NOVELL_LIBC__))
+#ifdef HAVE_SETJMP_H
+#include <setjmp.h>
+#endif
+
+#ifdef NETWARE
 #undef in_addr_t
-#define in_addr_t uint32_t
+#define in_addr_t unsigned long
 #endif
 
 /*
- * Setup comfortable CURLRES_* defines to use in the host*.c sources.
+ * Comfortable CURLRES_* definitions are included from setup.h
  */
 
 #ifdef USE_ARES
-#define CURLRES_ASYNCH
-#define CURLRES_ARES
-#endif
-
-#ifdef USE_THREADING_GETHOSTBYNAME
-#define CURLRES_ASYNCH
-#define CURLRES_THREADED
-#endif
-
-#ifdef USE_THREADING_GETADDRINFO
-#define CURLRES_ASYNCH
-#define CURLRES_THREADED
-#endif
-
-#ifdef ENABLE_IPV6
-#define CURLRES_IPV6
-#else
-#define CURLRES_IPV4
-#endif
-
-#if defined(CURLRES_IPV4) || defined(CURLRES_ARES)
-#if !defined(HAVE_GETHOSTBYNAME_R) || defined(CURLRES_ASYNCH)
-/* If built for ipv4 and missing gethostbyname_r(), or if using async name
-   resolve, we need the Curl_addrinfo_copy() function (which itself needs the
-   Curl_he2ai() function)) */
-#define CURLRES_ADDRINFO_COPY
-#endif
-#endif /* IPv4/ares-only */
-
-#ifndef CURLRES_ASYNCH
-#define CURLRES_SYNCH
-#endif
-
-#ifndef USE_LIBIDN
-#define CURLRES_IDN
+#include <ares_version.h>
 #endif
 
 /* Allocate enough memory to hold the full name information structs and
@@ -85,31 +56,14 @@
 
 #ifdef CURLRES_ARES
 #define CURL_ASYNC_SUCCESS ARES_SUCCESS
+#if ARES_VERSION >= 0x010500
+/* c-ares 1.5.0 or later, the callback proto is modified */
+#define HAVE_CARES_CALLBACK_TIMEOUTS 1
+#endif
 #else
 #define CURL_ASYNC_SUCCESS CURLE_OK
 #define ares_cancel(x) do {} while(0)
 #define ares_destroy(x) do {} while(0)
-#endif
-
-/*
- * Curl_addrinfo MUST be used for all name resolved info.
- */
-#ifdef CURLRES_IPV6
-typedef struct addrinfo Curl_addrinfo;
-#else
-/* OK, so some ipv4-only include tree probably have the addrinfo struct, but
-   to work even on those that don't, we provide our own look-alike! */
-struct Curl_addrinfo {
-  int                   ai_flags;
-  int                   ai_family;
-  int                   ai_socktype;
-  int                   ai_protocol;
-  socklen_t             ai_addrlen;   /* Follow rfc3493 struct addrinfo */
-  char                 *ai_canonname;
-  struct sockaddr      *ai_addr;
-  struct Curl_addrinfo *ai_next;
-};
-typedef struct Curl_addrinfo Curl_addrinfo;
 #endif
 
 struct addrinfo;
@@ -117,14 +71,20 @@ struct hostent;
 struct SessionHandle;
 struct connectdata;
 
-void Curl_global_host_cache_init(void);
+/*
+ * Curl_global_host_cache_init() initializes and sets up a global DNS cache.
+ * Global DNS cache is general badness. Do not use. This will be removed in
+ * a future version. Use the share interface instead!
+ *
+ * Returns a struct curl_hash pointer on success, NULL on failure.
+ */
+struct curl_hash *Curl_global_host_cache_init(void);
 void Curl_global_host_cache_dtor(void);
-struct curl_hash *Curl_global_host_cache_get(void);
-
-#define Curl_global_host_cache_use(__p) ((__p)->set.global_dns_cache)
 
 struct Curl_dns_entry {
   Curl_addrinfo *addr;
+  /* timestamp == 0 -- entry not in hostcache
+     timestamp != 0 -- entry is in hostcache */
   time_t timestamp;
   long inuse;      /* use-counter, make very sure you decrease this
                       when you're done using the address you received */
@@ -138,11 +98,15 @@ struct Curl_dns_entry {
  * use, or we'll leak memory!
  */
 /* return codes */
+#define CURLRESOLV_TIMEDOUT -2
 #define CURLRESOLV_ERROR    -1
 #define CURLRESOLV_RESOLVED  0
 #define CURLRESOLV_PENDING   1
 int Curl_resolv(struct connectdata *conn, const char *hostname,
                 int port, struct Curl_dns_entry **dnsentry);
+int Curl_resolv_timeout(struct connectdata *conn, const char *hostname,
+                        int port, struct Curl_dns_entry **dnsentry,
+                        long timeoutms);
 
 /*
  * Curl_ipvalid() checks what CURL_IPRESOLVE_* requirements that might've
@@ -183,9 +147,6 @@ void Curl_resolv_unlock(struct SessionHandle *data,
 /* for debugging purposes only: */
 void Curl_scan_cache_used(void *user, void *ptr);
 
-/* free name info */
-void Curl_freeaddrinfo(Curl_addrinfo *freeaddr);
-
 /* make a new dns cache and return the handle */
 struct curl_hash *Curl_mk_dnscache(void);
 
@@ -195,14 +156,7 @@ void Curl_hostcache_prune(struct SessionHandle *data);
 /* Return # of adresses in a Curl_addrinfo struct */
 int Curl_num_addresses (const Curl_addrinfo *addr);
 
-#ifdef CURLDEBUG
-void curl_dofreeaddrinfo(struct addrinfo *freethis,
-                         int line, const char *source);
-int curl_dogetaddrinfo(const char *hostname, const char *service,
-                       struct addrinfo *hints,
-                       struct addrinfo **result,
-                       int line, const char *source);
-#ifdef HAVE_GETNAMEINFO
+#if defined(CURLDEBUG) && defined(HAVE_GETNAMEINFO)
 int curl_dogetnameinfo(GETNAMEINFO_QUAL_ARG1 GETNAMEINFO_TYPE_ARG1 sa,
                        GETNAMEINFO_TYPE_ARG2 salen,
                        char *host, GETNAMEINFO_TYPE_ARG46 hostlen,
@@ -210,30 +164,19 @@ int curl_dogetnameinfo(GETNAMEINFO_QUAL_ARG1 GETNAMEINFO_TYPE_ARG1 sa,
                        GETNAMEINFO_TYPE_ARG7 flags,
                        int line, const char *source);
 #endif
-#endif
 
-/* This is the callback function that is used when we build with asynch
-   resolve, ipv4 */
-CURLcode Curl_addrinfo4_callback(void *arg,
-                                 int status,
-                                 struct hostent *hostent);
-/* This is the callback function that is used when we build with asynch
-   resolve, ipv6 */
-CURLcode Curl_addrinfo6_callback(void *arg,
-                                 int status,
-                                 struct addrinfo *ai);
+/* IPv4 threadsafe resolve function used for synch and asynch builds */
+Curl_addrinfo *Curl_ipv4_resolve_r(const char * hostname, int port);
 
-
-/* [ipv4/ares only] Creates a Curl_addrinfo struct from a numerical-only IP
-   address */
-Curl_addrinfo *Curl_ip2addr(in_addr_t num, const char *hostname, int port);
-
-/* [ipv4/ares only] Curl_he2ai() converts a struct hostent to a Curl_addrinfo chain
-   and returns it */
-Curl_addrinfo *Curl_he2ai(const struct hostent *, int port);
-
-/* Clone a Curl_addrinfo struct, works protocol independently */
-Curl_addrinfo *Curl_addrinfo_copy(const void *orig, int port);
+/*
+ * Curl_addrinfo_callback() is used when we build with any asynch specialty.
+ * Handles end of async request processing. Inserts ai into hostcache when
+ * status is CURL_ASYNC_SUCCESS. Twiddles fields in conn to indicate async
+ * request completed wether successfull or failed.
+ */
+CURLcode Curl_addrinfo_callback(struct connectdata *conn,
+                                int status,
+                                Curl_addrinfo *ai);
 
 /*
  * Curl_printable_address() returns a printable version of the 1st address
@@ -265,7 +208,13 @@ void Curl_destroy_thread_data(struct Curl_async *async);
 #define CURL_INADDR_NONE INADDR_NONE
 #endif
 
-
-
-
+#ifdef HAVE_SIGSETJMP
+/* Forward-declaration of variable defined in hostip.c. Beware this
+ * is a global and unique instance. This is used to store the return
+ * address that we can jump back to from inside a signal handler.
+ * This is not thread-safe stuff.
+ */
+extern sigjmp_buf curl_jmpenv;
 #endif
+
+#endif /* HEADER_CURL_HOSTIP_H */

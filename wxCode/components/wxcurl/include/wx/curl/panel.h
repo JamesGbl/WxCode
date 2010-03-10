@@ -58,12 +58,12 @@ public:
                                   const wxPoint& pos = wxDefaultPosition,
                                   const wxSize& size = wxDefaultSize,
                                   long style = wxCCSP_DEFAULT_STYLE,
-                                  const wxString& name = wxT("connsettingspanel"))
+                                  const wxString& name = wxS("connsettingspanel"))
         { Create(parent, id, msg, pos, size, style, name); }
 
     bool Create(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString &msg = wxEmptyString,
                 const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-                long style = wxCCSP_DEFAULT_STYLE, const wxString& name = wxT("connsettingspanel"));
+                long style = wxCCSP_DEFAULT_STYLE, const wxString& name = wxS("connsettingspanel"));
 
 
     //! Sets all user-defined options of this panel into the given curl object.

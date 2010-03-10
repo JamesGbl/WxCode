@@ -212,7 +212,7 @@ public:
 
     wxCurlDownloadDialog(const wxString &url,
                         wxOutputStream *out,
-                        const wxString& title = wxT("Downloading..."),
+                        const wxString& title = wxS("Downloading..."),
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
@@ -221,7 +221,7 @@ public:
 
     bool Create(const wxString &url,
                 wxOutputStream *out,
-                const wxString& title = wxT("Downloading..."),
+                const wxString& title = wxS("Downloading..."),
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
@@ -254,7 +254,7 @@ public:
 
     wxCurlUploadDialog(const wxString &url,
                         wxInputStream *in,
-                        const wxString& title = wxT("Uploading..."),
+                        const wxString& title = wxS("Uploading..."),
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
@@ -263,7 +263,7 @@ public:
 
     bool Create(const wxString &url,
                 wxInputStream *in,
-                const wxString& title = wxT("Uploading..."),
+                const wxString& title = wxS("Uploading..."),
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
@@ -297,7 +297,7 @@ public:
                                    long style = wxCCSP_DEFAULT_STYLE)
         { Create(title, message, parent, style); }
 
-    bool Create(const wxString& title = wxT("Connection settings..."),
+    bool Create(const wxString& title = wxS("Connection settings..."),
                 const wxString& message = wxEmptyString,
                 wxWindow *parent = NULL,
                 long style = wxCCSP_DEFAULT_STYLE);

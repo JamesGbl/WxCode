@@ -243,7 +243,7 @@ wxString wxCurlProgressBaseEvent::GetHumanReadableSpeed(const wxString &invalid,
         return invalid;
 
     wxULongLong ull((wxULongLong_t)speed);
-    return wxFileName::GetHumanReadableSize(ull, invalid, precision) + wxT("/s");
+    return wxFileName::GetHumanReadableSize(ull, invalid, precision) + wxS("/s");
 }
 
 
@@ -565,7 +565,7 @@ void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
     if (m_bVerbose && error != CURLE_OK)
     {
         // dump the error if needed:
-        wxLogDebug(wxT("[wxCURL] %hs"), (const char*)m_szLastError);
+        wxLogDebug(wxS("[wxCURL] %hs"), (const char*)m_szLastError);
     }
 }
 
@@ -793,7 +793,7 @@ void wxCurlBase::SetCurlHandleToDefaults(const wxString& relativeURL)
 
         if(!wxCURL_BUF_ISEMPTY(m_szUsername) || !wxCURL_BUF_ISEMPTY(m_szPassword))
         {
-            wxString str = wxCURL_BUF2STRING(m_szUsername) + wxT(":") + wxCURL_BUF2STRING(m_szPassword);
+            wxString str = wxCURL_BUF2STRING(m_szUsername) + wxS(":") + wxCURL_BUF2STRING(m_szPassword);
 
             m_szUserPass = wxCURL_STRING2BUF(str);
             SetStringOpt(CURLOPT_USERPWD, m_szUserPass);
@@ -818,7 +818,7 @@ void wxCurlBase::SetCurlHandleToDefaults(const wxString& relativeURL)
 
         if(m_bUseProxy && (!wxCURL_BUF_ISEMPTY(m_szProxyUsername) || !wxCURL_BUF_ISEMPTY(m_szProxyPassword)))
         {
-            wxString str = wxCURL_BUF2STRING(m_szProxyUsername) + wxT(":") + wxCURL_BUF2STRING(m_szProxyPassword);
+            wxString str = wxCURL_BUF2STRING(m_szProxyUsername) + wxS(":") + wxCURL_BUF2STRING(m_szProxyPassword);
 
             m_szProxyUserPass = wxCURL_STRING2BUF(str);
             SetStringOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass);

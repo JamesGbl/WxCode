@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2006, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2009, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -31,12 +31,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
 
 #ifdef WIN32
 #include <time.h>
@@ -59,8 +53,9 @@
 #ifdef HAVE_NET_IF_H
 #include <net/if.h>
 #endif
+#ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
-#include <signal.h>
+#endif
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -81,6 +76,7 @@
 #include "progress.h"
 #include "strequal.h"
 #include "dict.h"
+#include "rawstr.h"
 
 #define _MPRINTF_REPLACE /* use our functions only */
 #include <curl/mprintf.h>
@@ -88,27 +84,55 @@
 /* The last #include file should be: */
 #include "memdebug.h"
 
-static char *unescape_word(struct SessionHandle *data, char *inp)
+
+/*
+ * Forward declarations.
+ */
+
+static CURLcode dict_do(struct connectdata *conn, bool *done);
+
+/*
+ * DICT protocol handler.
+ */
+
+const struct Curl_handler Curl_handler_dict = {
+  "DICT",                               /* scheme */
+  ZERO_NULL,                            /* setup_connection */
+  dict_do,                              /* do_it */
+  ZERO_NULL,                            /* done */
+  ZERO_NULL,                            /* do_more */
+  ZERO_NULL,                            /* connect_it */
+  ZERO_NULL,                            /* connecting */
+  ZERO_NULL,                            /* doing */
+  ZERO_NULL,                            /* proto_getsock */
+  ZERO_NULL,                            /* doing_getsock */
+  ZERO_NULL,                            /* perform_getsock */
+  ZERO_NULL,                            /* disconnect */
+  PORT_DICT,                            /* defport */
+  PROT_DICT                             /* protocol */
+};
+
+static char *unescape_word(struct SessionHandle *data, const char *inputbuff)
 {
   char *newp;
   char *dictp;
   char *ptr;
   int len;
-  unsigned char byte;
+  char byte;
   int olen=0;
 
-  newp = curl_easy_unescape(data, inp, 0, &len);
+  newp = curl_easy_unescape(data, inputbuff, 0, &len);
   if(!newp)
     return NULL;
 
-  dictp = malloc(len*2 + 1); /* add one for terminating zero */
+  dictp = malloc(((size_t)len)*2 + 1); /* add one for terminating zero */
   if(dictp) {
     /* According to RFC2229 section 2.2, these letters need to be escaped with
        \[letter] */
     for(ptr = newp;
-        (byte = (unsigned char)*ptr) != 0;
+        (byte = *ptr) != 0;
         ptr++) {
-      if ((byte <= 32) || (byte == 127) ||
+      if((byte <= 32) || (byte == 127) ||
           (byte == '\'') || (byte == '\"') || (byte == '\\')) {
         dictp[olen++] = '\\';
       }
@@ -121,7 +145,7 @@ static char *unescape_word(struct SessionHandle *data, char *inp)
   return dictp;
 }
 
-CURLcode Curl_dict(struct connectdata *conn, bool *done)
+static CURLcode dict_do(struct connectdata *conn, bool *done)
 {
   char *word;
   char *eword;
@@ -134,8 +158,8 @@ CURLcode Curl_dict(struct connectdata *conn, bool *done)
   struct SessionHandle *data=conn->data;
   curl_socket_t sockfd = conn->sock[FIRSTSOCKET];
 
-  char *path = data->reqdata.path;
-  curl_off_t *bytecount = &data->reqdata.keep.bytecount;
+  char *path = data->state.path;
+  curl_off_t *bytecount = &data->req.bytecount;
 
   *done = TRUE; /* unconditionally */
 
@@ -143,34 +167,35 @@ CURLcode Curl_dict(struct connectdata *conn, bool *done)
     /* AUTH is missing */
   }
 
-  if (strnequal(path, DICT_MATCH, sizeof(DICT_MATCH)-1) ||
-      strnequal(path, DICT_MATCH2, sizeof(DICT_MATCH2)-1) ||
-      strnequal(path, DICT_MATCH3, sizeof(DICT_MATCH3)-1)) {
+  if(Curl_raw_nequal(path, DICT_MATCH, sizeof(DICT_MATCH)-1) ||
+      Curl_raw_nequal(path, DICT_MATCH2, sizeof(DICT_MATCH2)-1) ||
+      Curl_raw_nequal(path, DICT_MATCH3, sizeof(DICT_MATCH3)-1)) {
 
     word = strchr(path, ':');
-    if (word) {
+    if(word) {
       word++;
       database = strchr(word, ':');
-      if (database) {
+      if(database) {
         *database++ = (char)0;
         strategy = strchr(database, ':');
-        if (strategy) {
+        if(strategy) {
           *strategy++ = (char)0;
           nthdef = strchr(strategy, ':');
-          if (nthdef) {
-            *nthdef++ = (char)0;
+          if(nthdef) {
+            *nthdef = (char)0;
           }
         }
       }
     }
 
-    if ((word == NULL) || (*word == (char)0)) {
-      failf(data, "lookup word is missing");
+    if((word == NULL) || (*word == (char)0)) {
+      infof(data, "lookup word is missing");
+      word=(char *)"default";
     }
-    if ((database == NULL) || (*database == (char)0)) {
+    if((database == NULL) || (*database == (char)0)) {
       database = (char *)"!";
     }
-    if ((strategy == NULL) || (*strategy == (char)0)) {
+    if((strategy == NULL) || (*strategy == (char)0)) {
       strategy = (char *)".";
     }
 
@@ -201,27 +226,28 @@ CURLcode Curl_dict(struct connectdata *conn, bool *done)
     if(result)
       return result;
   }
-  else if (strnequal(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
-           strnequal(path, DICT_DEFINE2, sizeof(DICT_DEFINE2)-1) ||
-           strnequal(path, DICT_DEFINE3, sizeof(DICT_DEFINE3)-1)) {
+  else if(Curl_raw_nequal(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
+           Curl_raw_nequal(path, DICT_DEFINE2, sizeof(DICT_DEFINE2)-1) ||
+           Curl_raw_nequal(path, DICT_DEFINE3, sizeof(DICT_DEFINE3)-1)) {
 
     word = strchr(path, ':');
-    if (word) {
+    if(word) {
       word++;
       database = strchr(word, ':');
-      if (database) {
+      if(database) {
         *database++ = (char)0;
         nthdef = strchr(database, ':');
-        if (nthdef) {
-          *nthdef++ = (char)0;
+        if(nthdef) {
+          *nthdef = (char)0;
         }
       }
     }
 
-    if ((word == NULL) || (*word == (char)0)) {
-      failf(data, "lookup word is missing");
+    if((word == NULL) || (*word == (char)0)) {
+      infof(data, "lookup word is missing");
+      word=(char *)"default";
     }
-    if ((database == NULL) || (*database == (char)0)) {
+    if((database == NULL) || (*database == (char)0)) {
       database = (char *)"!";
     }
 
@@ -253,12 +279,12 @@ CURLcode Curl_dict(struct connectdata *conn, bool *done)
   else {
 
     ppath = strchr(path, '/');
-    if (ppath) {
+    if(ppath) {
       int i;
 
       ppath++;
       for (i = 0; ppath[i]; i++) {
-        if (ppath[i] == ':')
+        if(ppath[i] == ':')
           ppath[i] = ' ';
       }
       result = Curl_sendf(sockfd, conn,

@@ -37,9 +37,9 @@
 wxCurlProtocol wxCurlBaseThread::GetProtocolFromURL(const wxString &url)
 {
     // I'm sure this check could be done in a better way...
-    if (url.StartsWith(wxT("http:")) || url.StartsWith(wxT("https:")))
+    if (url.StartsWith(wxS("http:")) || url.StartsWith(wxS("https:")))
         return wxCP_HTTP;
-    if (url.StartsWith(wxT("ftp:")) || url.StartsWith(wxT("ftps:")))
+    if (url.StartsWith(wxS("ftp:")) || url.StartsWith(wxS("ftps:")))
         return wxCP_FTP;
     return wxCP_INVALID;
 }
@@ -61,7 +61,7 @@ wxCurlBase *wxCurlBaseThread::CreateHandlerFor(wxCurlProtocol prot)
 
 wxCurlThreadError wxCurlBaseThread::SetURL(const wxString &url)
 {
-    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxT("Cannot use this function after the tranfer has begun"));
+    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxS("Cannot use this function after the tranfer has begun"));
 
     // which protocol is required by given url?
     wxCurlProtocol curr = GetProtocolFromURL(url);
@@ -93,7 +93,7 @@ wxCurlThreadError wxCurlBaseThread::SetURL(const wxString &url)
 void wxCurlBaseThread::OnExit()
 {
     if (m_pCurl->IsVerbose())
-        wxLogDebug(wxT("wxCurlBaseThread - exiting"));
+        wxLogDebug(wxS("wxCurlBaseThread - exiting"));
 }
 
 bool wxCurlBaseThread::TestDestroy()
@@ -162,7 +162,7 @@ size_t wxCurlDownloadThreadOutputFilter::OnSysWrite(const void *buffer, size_t b
     if (m_thread->TestDestroy())
     {
         if (m_thread->m_pCurl->IsVerbose())
-            wxLogDebug(wxT("[wxCURL] a wxCurlDownloadThread has been aborted - ignore following message:"));
+            wxLogDebug(wxS("[wxCURL] a wxCurlDownloadThread has been aborted - ignore following message:"));
 
         // returning a size != bufsize we tell libcurl to stop the tranfer
         // and thus the wxCurlBase::Perform() call done (indirectly) by wxCurlDownloadThread::Entry()
@@ -182,7 +182,7 @@ size_t wxCurlDownloadThreadOutputFilter::OnSysWrite(const void *buffer, size_t b
 
 wxCurlThreadError wxCurlDownloadThread::SetOutputStream(wxOutputStream *out)
 {
-    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxT("Cannot use this function after the transfer has begun"));
+    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxS("Cannot use this function after the transfer has begun"));
 
     if (!out)
     {
@@ -192,7 +192,7 @@ wxCurlThreadError wxCurlDownloadThread::SetOutputStream(wxOutputStream *out)
             // NOTE: by default we create a wxFileOutputStream and not e.g. a wxMemoryOutputStream
             //       because the downloaded file may be quite large and thus we don't want to
             //       eat lots of RAM. Also, the hard disk should be fast enough for any download.
-            m_output.SetStream( new wxFileOutputStream(wxFileName::CreateTempFileName(wxT("download"))) );
+            m_output.SetStream( new wxFileOutputStream(wxFileName::CreateTempFileName(wxS("download"))) );
             if (!m_output.IsOk())
                 return wxCTE_NO_VALID_STREAM;
         }
@@ -211,7 +211,7 @@ wxCurlThreadError wxCurlDownloadThread::SetOutputStream(wxOutputStream *out)
 
 wxCurlThreadError wxCurlDownloadThread::Download()
 {
-    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxT("Cannot use this function after the transfer has begun"));
+    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxS("Cannot use this function after the transfer has begun"));
 
     // create & run this thread
     wxCurlThreadError ret;
@@ -244,7 +244,7 @@ void *wxCurlDownloadThread::Entry()
     //       context by the m_output's OnSysWrite function which in turn is
     //       called from libcurl whenever some new data arrives
     if (m_pCurl->IsVerbose())
-        wxLogDebug(wxT("wxCurlDownloadThread - downloading from %s"), m_url.c_str());
+        wxLogDebug(wxS("wxCurlDownloadThread - downloading from %s"), m_url.c_str());
     switch (m_protocol)
     {
         case wxCP_HTTP:
@@ -271,7 +271,7 @@ size_t wxCurlUploadThreadInputFilter::OnSysRead(void *buffer, size_t bufsize)
     if (m_thread->TestDestroy())
     {
         if (m_thread->m_pCurl->IsVerbose())
-            wxLogDebug(wxT("[wxCURL] a wxCurlUploadThread has been aborted - ignore following message:"));
+            wxLogDebug(wxS("[wxCURL] a wxCurlUploadThread has been aborted - ignore following message:"));
 
         // returning a size != bufsize we tell libcurl to stop the tranfer
         // and thus the wxCurlBase::Perform() call done (indirectly) by wxCurlUploadThread::Entry()
@@ -291,7 +291,7 @@ size_t wxCurlUploadThreadInputFilter::OnSysRead(void *buffer, size_t bufsize)
 
 wxCurlThreadError wxCurlUploadThread::SetInputStream(wxInputStream *in)
 {
-    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxT("Cannot use this function after the transfer has begun"));
+    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxS("Cannot use this function after the transfer has begun"));
 
     m_input.SetStream(in);
 
@@ -304,7 +304,7 @@ wxCurlThreadError wxCurlUploadThread::SetInputStream(wxInputStream *in)
 
 wxCurlThreadError wxCurlUploadThread::Upload()
 {
-    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxT("Cannot use this function after the tranfer has begun"));
+    wxCHECK_MSG(!IsAlive(), wxCTE_NO_RESOURCE, wxS("Cannot use this function after the tranfer has begun"));
 
     // create & run this thread
     wxCurlThreadError ret;
@@ -337,7 +337,7 @@ void *wxCurlUploadThread::Entry()
     //       context by the m_output's OnSysWrite function which in turn is
     //       called from libcurl whenever some new data arrives
     if (m_pCurl->IsVerbose())
-        wxLogDebug(wxT("wxCurlUploadThread - uploading to %s"), m_url.c_str());
+        wxLogDebug(wxS("wxCurlUploadThread - uploading to %s"), m_url.c_str());
     switch (m_protocol)
     {
         case wxCP_HTTP:

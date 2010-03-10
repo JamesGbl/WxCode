@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxPutTextDialog::wxPutTextDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("put_text_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("put_text_dialog"));
 
 	SetSize(400, -1);
 
@@ -91,15 +91,15 @@ void wxPutTextDialog::OnPut(wxCommandEvent& WXUNUSED(event))
 
 		if((szDest == m_szDefaultDest))
 		{
-			wxMessageBox(wxT("Please change the destination location."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the destination location."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the username or password."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if(szData.IsEmpty())
 		{
-			wxMessageBox(wxT("Please enter some data into the data control."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please enter some data into the data control."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -108,10 +108,10 @@ void wxPutTextDialog::OnPut(wxCommandEvent& WXUNUSED(event))
 
 			if(http.Put(szData.ToAscii(), szData.Len() * sizeof(char), wxEmptyString))
 			{
-					szResponse = wxT("SUCCESS!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
 
 					if(m_pRespCtrl)
@@ -119,12 +119,12 @@ void wxPutTextDialog::OnPut(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-					szResponse = wxT("FAILURE!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("FAILURE!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetErrorString();
 
 					if(m_pRespCtrl)

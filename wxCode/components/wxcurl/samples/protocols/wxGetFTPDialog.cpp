@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxGetFTPDialog::wxGetFTPDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("get_ftp_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("get_ftp_dialog"));
 
 	SetSize(400,400);
 

@@ -55,7 +55,7 @@ extern "C"
 
 void *wxCurlSizeQueryThread::Entry()
 {
-    wxLogDebug(wxT("wxSizeCacherThread::Entry - caching file sizes"));
+    wxLogDebug(wxS("wxSizeCacherThread::Entry - caching file sizes"));
 
     wxMemoryOutputStream os;
     bool allok = true;
@@ -95,7 +95,7 @@ void *wxCurlSizeQueryThread::Entry()
         wxPostEvent(GetEvtHandler(), ev);
     }
 
-    wxLogDebug(wxT("wxSizeCacherThread::Entry - caching of file sizes completed"));
+    wxLogDebug(wxS("wxSizeCacherThread::Entry - caching of file sizes completed"));
     return (void *)allok;
 }
 

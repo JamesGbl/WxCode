@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxDeleteDialog::wxDeleteDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("delete_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("delete_dialog"));
 
 	SetSize(400, -1);
 
@@ -90,11 +90,11 @@ void wxDeleteDialog::OnDelete(wxCommandEvent& WXUNUSED(event))
 
 		if((szDele == m_szDefaultDele))
 		{
-			wxMessageBox(wxT("Please change the DELETE location."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the DELETE location."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the username or password."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -103,10 +103,10 @@ void wxDeleteDialog::OnDelete(wxCommandEvent& WXUNUSED(event))
 
 			if(http.Delete())
 			{
-					szResponse = wxT("SUCCESS!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
 
 					if(m_pResponseCtrl)
@@ -114,12 +114,12 @@ void wxDeleteDialog::OnDelete(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-					szResponse = wxT("FAILURE!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("FAILURE!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetErrorString();
 
 					if(m_pResponseCtrl)

@@ -86,15 +86,15 @@ bool wxCurlTransferDialog::Create(const wxString &url, const wxString& title, co
     // save&check our style
     m_nStyle = style;
     wxASSERT_MSG(HasFlag(wxCTDS_AUTO_CLOSE) || HasFlag(wxCTDS_CAN_ABORT),
-             wxT("If both these flags are missing the user will be unable to close the dialog window!"));
+             wxS("If both these flags are missing the user will be unable to close the dialog window!"));
 
     // do we need to use wxCurlConnectionSettingsDialog?
     bool needsConnSettings = HasFlag(wxCTDS_CONN_SETTINGS_AUTH) ||
                              HasFlag(wxCTDS_CONN_SETTINGS_PORT) ||
                              HasFlag(wxCTDS_CONN_SETTINGS_PROXY);
     wxASSERT_MSG(!needsConnSettings || HasFlag(wxCTDS_CAN_START),
-             wxT("the connection settings may only be changed before the transfer starts; if wxCTDS_CAN_START ")
-             wxT("is missing the user will be unable to use the connection settings button!"));
+             wxS("the connection settings may only be changed before the transfer starts; if wxCTDS_CAN_START ")
+             wxS("is missing the user will be unable to use the connection settings button!"));
 
     // set up our controls
     CreateControls(url, message, sizeLabel, bitmap);
@@ -297,7 +297,7 @@ void wxCurlTransferDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
         wxString currsize = ev->GetHumanReadableTransferredBytes(),
                 totalsize = ev->GetHumanReadableTotalBytes();
         m_pSize->SetLabel(
-            wxString::Format(wxT("%s / %s  (%0.1f%%)"),
+            wxString::Format(wxS("%s / %s  (%0.1f%%)"),
                                 currsize.c_str(), totalsize.c_str(), ev->GetPercent()));
     }
 
@@ -313,7 +313,7 @@ bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBa
             return true;        // ignore this
 
         case wxCTE_NO_RESOURCE:
-            wxLogError(wxT("Insufficient resources for correct execution of the program."));
+            wxLogError(wxS("Insufficient resources for correct execution of the program."));
             break;
 
         case wxCTE_ALREADY_RUNNING:
@@ -321,7 +321,7 @@ bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBa
             break;
 
         case wxCTE_INVALID_PROTOCOL:
-            wxLogError(wxT("The URL '%s' uses an unsupported protocol."), url.c_str());
+            wxLogError(wxS("The URL '%s' uses an unsupported protocol."), url.c_str());
             break;
 
         case wxCTE_NO_VALID_STREAM:
@@ -333,10 +333,10 @@ bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBa
 
         case wxCTE_CURL_ERROR:
             {
-                wxString err = wxT("unknown");
+                wxString err = wxS("unknown");
                 if (p->GetCurlSession())
                     err = p->GetCurlSession()->GetErrorString();
-                wxLogError(wxT("Network error: %s"), err.c_str());
+                wxLogError(wxS("Network error: %s"), err.c_str());
             }
             break;
     }
@@ -383,7 +383,7 @@ void wxCurlTransferDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
 
 void wxCurlTransferDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
 {
-    ev.SetText(m_pThread->IsAlive() ? wxT("Abort") : wxT("Close"));
+    ev.SetText(m_pThread->IsAlive() ? wxS("Abort") : wxS("Close"));
 }
 
 void wxCurlTransferDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
@@ -394,17 +394,17 @@ void wxCurlTransferDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
     {
         if (HandleCurlThreadError(m_pThread->Pause(), m_pThread))
         {
-            FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Resume"));
+            FindWindowById(PauseResumeButtonId)->SetLabel(wxS("Resume"));
 
             if (m_pSpeed)
-                m_pSpeed->SetLabel(wxT("0 (transfer paused)"));
+                m_pSpeed->SetLabel(wxS("0 (transfer paused)"));
         }
     }
     else
     {
         if (HandleCurlThreadError(m_pThread->Resume(), m_pThread))
         {
-            FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Pause"));
+            FindWindowById(PauseResumeButtonId)->SetLabel(wxS("Pause"));
         }
     }
 }
@@ -416,7 +416,7 @@ void wxCurlTransferDialog::OnPauseResumeUpdateUI(wxUpdateUIEvent &ev)
 
 void wxCurlTransferDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxCTDS_CAN_START));
+    //wxASSERT(HasFlag(wxCTDS_CAN_START));      // OnStart() must be usable also from RunModal() when !HasFlag(wxCTDS_CAN_START)
 
     wxCurlThreadError err = m_pThread->StartTransfer();
     if (err != wxCTE_NO_ERROR)
@@ -463,7 +463,7 @@ void wxCurlTransferDialog::OnConnSettingsUpdateUI(wxUpdateUIEvent &ev)
 
 void wxCurlTransferDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
 {
-    wxLogDebug(wxT("wxCurlTransferDialog::OnEndPerform"));
+    wxLogDebug(wxS("wxCurlTransferDialog::OnEndPerform"));
 
     // in case the very last transfer update event was skipped because
     // of our anti-flickering label update policy, force the update with
@@ -485,7 +485,7 @@ void wxCurlTransferDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
     if (retCode == wxCDRF_FAILED)
     {
         // show the user a message...
-        wxLogError(wxT("The transfer failed: %s (%s)"),
+        wxLogError(wxS("The transfer failed: %s (%s)"),
                    m_pThread->GetCurlSession()->GetErrorString().c_str(),
                    m_pThread->GetCurlSession()->GetDetailedErrorString().c_str());
     }
@@ -498,7 +498,7 @@ void wxCurlTransferDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
         SetReturnCode(retCode);     // will exit later in OnAbort()
 
         if (m_pSpeed)
-            m_pSpeed->SetLabel(wxT("0 (transfer completed)"));
+            m_pSpeed->SetLabel(wxS("0 (transfer completed)"));
     }
 }
 

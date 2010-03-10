@@ -1,0 +1,51 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxcurl", "wxcurl_vc2003_wxcurl.vcproj", "{AEACE039-26A7-5BAC-8A86-B332A78914A1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "protocols", "wxcurl_vc2003_protocols.vcproj", "{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1} = {AEACE039-26A7-5BAC-8A86-B332A78914A1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dialogs", "wxcurl_vc2003_dialogs.vcproj", "{A0999991-3E88-592B-A452-3E946843666F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1} = {AEACE039-26A7-5BAC-8A86-B332A78914A1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Static Release|Win32 = Static Release|Win32
+		Static Debug|Win32 = Static Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.Static Release|Win32.Build.0 = Static Release|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{AEACE039-26A7-5BAC-8A86-B332A78914A1}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.Static Release|Win32.Build.0 = Static Release|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{A41C331C-9CEC-5533-B0D7-DF68EFDDB21C}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.Static Release|Win32.Build.0 = Static Release|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{A0999991-3E88-592B-A452-3E946843666F}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+

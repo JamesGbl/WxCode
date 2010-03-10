@@ -227,7 +227,7 @@ bool wxCurlHTTP::Trace(const wxString& szRemoteFile /*= wxEmptyString*/)
     {
         SetCurlHandleToDefaults(szRemoteFile);
 
-        m_arrHeaders.Add(wxT("Content-type: message/http"));
+        m_arrHeaders.Add(wxS("Content-type: message/http"));
 
         SetHeaders();
 

@@ -55,7 +55,7 @@ END_EVENT_TABLE()
 
 wxGetFileDialog::wxGetFileDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("get_file_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("get_file_dialog"));
 
 	SetSize(400, -1);
 
@@ -104,11 +104,11 @@ void wxGetFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 
 		if((szSrc == m_szDefaultSrc) || (szDest == m_szDefaultDest))
 		{
-			wxMessageBox(wxT("Please change the source and destination locations."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the source and destination locations."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxS("Please change the username or password."), wxS("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -117,10 +117,10 @@ void wxGetFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 
 			if(http.Get(szDest))
 			{
-					szResponse = wxT("SUCCESS!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
 
 					if(m_pRespCtrl)
@@ -132,12 +132,12 @@ void wxGetFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-					szResponse = wxT("FAILURE!\n\n");
-					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+					szResponse = wxS("FAILURE!\n\n");
+					szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetResponseBody();
-					szResponse += wxT("\n\n");
+					szResponse += wxS("\n\n");
 					szResponse += http.GetErrorString();
 
 					if(m_pRespCtrl)
@@ -149,8 +149,8 @@ void wxGetFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 
 void wxGetFileDialog::OnBrowseDest(wxCommandEvent& WXUNUSED(event))
 {
-	wxFileDialog dlg(this, wxT("Choose a file"), wxEmptyString, wxEmptyString, 
-                     wxT("All files (*.*)|*.*"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+	wxFileDialog dlg(this, wxS("Choose a file"), wxEmptyString, wxEmptyString, 
+                     wxS("All files (*.*)|*.*"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
 	if(dlg.ShowModal()==wxID_OK)
 	{

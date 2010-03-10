@@ -180,15 +180,15 @@ IMPLEMENT_APP(MyApp)
 // the application class
 // ----------------------------------------------------------------------------
 
-// wxT('Main program') equivalent: the program execution "starts" here
+// wxS('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
     // create the main application window
-    MyFrame *frame = new MyFrame(_T("Minimal wxWindows App"));
+    MyFrame *frame = new MyFrame(wxS("Minimal wxCURL App"));
 
 #ifdef __WXDEBUG__
     // create an useful log window
-    wxLogWindow *pwindow = new wxLogWindow(frame, wxT("Log messages from wxCURL"));
+    wxLogWindow *pwindow = new wxLogWindow(frame, wxS("Log messages from wxCURL"));
     pwindow->GetFrame()->Move(50, 50+350);
     pwindow->GetFrame()->SetSize(800, 300);
 #endif
@@ -224,56 +224,56 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
+    helpMenu->Append(Minimal_About, wxS("&About...\tF1"), wxS("Show about dialog"));
 
     m_menuFile = new wxMenu;
 #ifdef __WXDEBUG__
-    m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));
+    m_menuFile->AppendCheckItem(Minimal_Verbose, wxS("Be verbose"), wxS("Does something only in debug builds!"));
     m_menuFile->Check(Minimal_Verbose, true);
     m_menuFile->AppendSeparator();
 #endif
-    m_menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
+    m_menuFile->Append(Minimal_Quit, wxS("E&xit\tAlt-X"), wxS("Quit this program"));	
 
     m_menuTransferDlg = new wxMenu;
-    m_menuTransferDlg->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Elapsed_time, wxS("Show elapsed time"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Estimated_time, wxS("Show estimated total time"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Remaining_time, wxS("Show estimated remaining time"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Speed, wxS("Show transfer speed"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Size, wxS("Show how much was transferred so far"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Url, wxS("Show the URL of the transfer"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsAuth, _T("Allow the user to change authentication settings"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsPort, _T("Allow the user to change port for the transfer"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsProxy, _T("Allow the user to change proxy settings"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsAuth, wxS("Allow the user to change authentication settings"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsPort, wxS("Allow the user to change port for the transfer"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsProxy, wxS("Allow the user to change proxy settings"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
-    m_menuTransferDlg->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_abort, wxS("Transfer can be aborted"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_start, wxS("Transfer do not start automatically"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_pause, wxS("Transfer can be paused"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Auto_close, wxS("Auto-close dialog at completion"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Bitmap, wxS("Show bitmap in the dialog"));
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
-    m_menuTransferDlg->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
+    m_menuTransferDlg->Append(Minimal_CheckAll, wxS("Check all"), wxS("check all previous menu items"));    
+    m_menuTransferDlg->Append(Minimal_UnCheckAll, wxS("Uncheck all"), wxS("uncheck all previous menu items"));    
     m_menuTransferDlg->AppendSeparator();
-    m_menuTransferDlg->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));  
-    m_menuTransferDlg->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
+    m_menuTransferDlg->Append(Minimal_Download, wxS("Download dialog..."), wxS("Shows wxCurlDownloadDialog."));  
+    m_menuTransferDlg->Append(Minimal_Upload, wxS("Upload dialog..."), wxS("Shows wxCurlUploadDialog."));
 
     m_menuConnSettingsDlg = new wxMenu;
-    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Authentication, _T("Show authentication fields"));
-    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Port, _T("Show port field"));
-    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Proxy, _T("Show proxy fields"));
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Authentication, wxS("Show authentication fields"));
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Port, wxS("Show port field"));
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Proxy, wxS("Show proxy fields"));
     m_menuConnSettingsDlg->AppendSeparator();
-    m_menuConnSettingsDlg->Append(Minimal_ConnSettings, _T("Connection settings..."), _T("Shows wxCurlConnectionSettingsDialog."));
+    m_menuConnSettingsDlg->Append(Minimal_ConnSettings, wxS("Connection settings..."), wxS("Shows wxCurlConnectionSettingsDialog."));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(m_menuFile, _T("&File"));
-    menuBar->Append(m_menuTransferDlg, _T("&Transfer dialogs"));
-    menuBar->Append(m_menuConnSettingsDlg, _T("&Connection settings dialog"));
-    menuBar->Append(helpMenu, _T("&Help"));
+    menuBar->Append(m_menuFile, wxS("&File"));
+    menuBar->Append(m_menuTransferDlg, wxS("&Transfer dialogs"));
+    menuBar->Append(m_menuConnSettingsDlg, wxS("&Connection settings dialog"));
+    menuBar->Append(helpMenu, wxS("&Help"));
 
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
@@ -282,7 +282,7 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
     CreateStatusBar(2);
-    SetStatusText(_T("Welcome to wxWindows!"));
+    SetStatusText(wxS("Welcome to wxWindows!"));
 #endif // wxUSE_STATUSBAR
 
     // start with all possible styles checked
@@ -333,9 +333,9 @@ void MyFrame::LogResult(wxCurlDialogReturnFlag flag)
 {
     switch (flag)
     {
-        case wxCDRF_SUCCESS: wxLogMessage(wxT("Transfer was successful!")); break;
-        case wxCDRF_USER_ABORTED: wxLogMessage(wxT("Transfer has been user-aborted.")); break;
-        case wxCDRF_FAILED: wxLogMessage(wxT("Transfer was failed - you should have already been advised.")); break;
+        case wxCDRF_SUCCESS: wxLogMessage(wxS("Transfer was successful!")); break;
+        case wxCDRF_USER_ABORTED: wxLogMessage(wxS("Transfer has been user-aborted.")); break;
+        case wxCDRF_FAILED: wxLogMessage(wxS("Transfer was failed - you should have already been advised.")); break;
     }
 }
 
@@ -352,8 +352,8 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
-    msg.Printf( wxT("This is a little demonstration of wxCurl dialogs by Francesco Montorsi.\n"));
-    wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
+    msg.Printf( wxS("This is a little demonstration of wxCurl dialogs by Francesco Montorsi.\n"));
+    wxMessageBox(msg, wxS("About Minimal"), wxOK | wxICON_INFORMATION, this);
 }
 
 void MyFrame::OnCheckAll(wxCommandEvent& event)
@@ -364,9 +364,16 @@ void MyFrame::OnCheckAll(wxCommandEvent& event)
 
 void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
 {
+    if (!m_menuTransferDlg->IsChecked(Minimal_Can_abort) && 
+        !m_menuTransferDlg->IsChecked(Minimal_Auto_close))
+    {
+        wxLogError(wxS("Cannot create the download dialog instance if both 'Auto close' and 'Can abort' menu items are not checked"));
+        return;
+    }
+
     wxString url = wxGetTextFromUser(
-                      wxT("Please the enter the URL of the resource to download:"), wxT("Type an URL"),
-                      wxT("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
+                      wxS("Please the enter the URL of the resource to download:"), wxS("Type an URL"),
+                      wxS("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
     if (url.empty())
         return;     // user hit cancel
 
@@ -374,10 +381,10 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
-    wxFileOutputStream fos(wxT("downloaded_stuff"));
+    wxFileOutputStream fos(wxS("downloaded_stuff"));
     wxCurlDownloadDialog dlg(url, &fos,
-                             wxT("Download dialog title"),
-                             wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
+                             wxS("Download dialog title"),
+                             wxS("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
                              GetTransferStyle());
@@ -393,26 +400,33 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     {
         fos.Close();
 
-        int reply = wxMessageBox(wxT("Do you want to open the downloaded file with your default browser?"),
-                                 wxT("Open it?"), wxYES_NO, this);
+        int reply = wxMessageBox(wxS("Do you want to open the downloaded file with your default browser?"),
+                                 wxS("Open it?"), wxYES_NO, this);
         if (reply == wxYES)
-            wxLaunchDefaultBrowser(wxT("downloaded_stuff"));
+            wxLaunchDefaultBrowser(wxS("downloaded_stuff"));
     }
 }
 
 void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
 {
-    wxFileDialog dlg(this, wxT("Choose a file to upload"), wxT(""), wxT(""), 
-                     wxT("All files (*.*)|*.*"), wxFD_OPEN);
+    if (!m_menuTransferDlg->IsChecked(Minimal_Can_abort) && 
+        !m_menuTransferDlg->IsChecked(Minimal_Auto_close))
+    {
+        wxLogError(wxS("Cannot create the download dialog instance if both 'Auto close' and 'Can abort' menu items are not checked"));
+        return;
+    }
+
+    wxFileDialog dlg(this, wxS("Choose a file to upload"), wxS(""), wxS(""), 
+                     wxS("All files (*.*)|*.*"), wxFD_OPEN);
 
     if (dlg.ShowModal()!=wxID_OK)
         return;
 
     wxString file = dlg.GetPath();
     wxString url = wxGetTextFromUser(
-                      wxT("Please the enter the URL where the previously-selected file should go:"),
-                      wxT("Type an URL"),
-                      wxT("http://"), this);
+                      wxS("Please the enter the URL where the previously-selected file should go:"),
+                      wxS("Type an URL"),
+                      wxS("http://"), this);
     if (url.empty())
         return;     // user hit cancel
 
@@ -420,15 +434,15 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
     if (!is.IsOk())
         return;
 
-    wxLogDebug(wxT("Going to upload %d bytes"), is.GetSize());
+    wxLogDebug(wxS("Going to upload %d bytes"), is.GetSize());
 
     wxBitmap bmp;
     if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
     wxCurlUploadDialog dlg2(url, &is,
-                             wxT("Upload dialog title"),
-                             wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
+                             wxS("Upload dialog title"),
+                             wxS("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
                              GetTransferStyle());
@@ -443,16 +457,16 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnConnSettings(wxCommandEvent& WXUNUSED(event))
 {
     wxCurlConnectionSettingsDialog 
-        dlg(wxT("Connection settings"),
-            wxT("Your message goes here..."),
+        dlg(wxS("Connection settings"),
+            wxS("Your message goes here..."),
             this, GetConnSettingsStyle());
 
     wxCurlBase curl;
     dlg.RunModal(&curl);
 
-    wxLogMessage(wxT("Summary of the connection settings:\nUsername is '%s'\nPassword is '%s'\n")
-                 wxT("Port is '%d'\nUse proxy is '%d'\nProxy host is '%s'\nProxy username is '%s'\n")
-                 wxT("Proxy password is '%s'\nProxy port is '%d'"),
+    wxLogMessage(wxS("Summary of the connection settings:\nUsername is '%s'\nPassword is '%s'\n")
+                 wxS("Port is '%d'\nUse proxy is '%d'\nProxy host is '%s'\nProxy username is '%s'\n")
+                 wxS("Proxy password is '%s'\nProxy port is '%d'"),
                  curl.GetUsername().c_str(), curl.GetPassword().c_str(), curl.GetPort(),
                  (int)curl.UseProxy(), curl.GetProxyHost().c_str(), curl.GetProxyUsername().c_str(),
                  curl.GetProxyPassword().c_str(), curl.GetProxyPort());

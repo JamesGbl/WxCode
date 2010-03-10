@@ -116,7 +116,7 @@ public:     // setters
     //! and wxCurlDownloadEvent/wxCurlUploadEvents will be posted.
     void SetEvtHandler(wxEvtHandler *handler, int id = wxID_ANY)
         {
-            wxCHECK_RET(!IsAlive(), wxT("Cannot use this function after the tranfer has begun"));
+            wxCHECK_RET(!IsAlive(), wxS("Cannot use this function after the tranfer has begun"));
             m_pHandler=handler; m_nId=id;
         }
 
@@ -252,7 +252,7 @@ public:     // public API
     wxOutputStream *GetOutputStream() const
         {
             wxCHECK_MSG(!IsRunning(), NULL,
-                        wxT("You cannot access the output stream while the thread is running!"));
+                        wxS("You cannot access the output stream while the thread is running!"));
             return m_output.GetRealStream();
         }
 
@@ -351,7 +351,7 @@ public:     // public API
     wxInputStream *GetInputStream() const
         {
             wxCHECK_MSG(!IsRunning(), NULL,
-                        wxT("You cannot access the output stream while the thread is running!"));
+                        wxS("You cannot access the output stream while the thread is running!"));
             return m_input.GetRealStream();
         }
 

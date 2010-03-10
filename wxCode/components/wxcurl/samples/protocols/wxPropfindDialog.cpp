@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxPropfindDialog::wxPropfindDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("propfind_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("propfind_dialog"));
 
 	SetSize(400,400);
 
@@ -99,10 +99,10 @@ void wxPropfindDialog::OnPropfind(wxCommandEvent& WXUNUSED(event))
 
 		if(dav.Propfind())
 		{
-			szResponse = wxT("SUCCESS!\n\n");
-			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
+			szResponse = wxS("SUCCESS!\n\n");
+			szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 			szResponse += dav.GetResponseHeader();
-			szResponse += wxT("\n\n");
+			szResponse += wxS("\n\n");
 			szResponse += dav.GetResponseBody();
 
 			if(m_pTextCtrl)
@@ -110,12 +110,12 @@ void wxPropfindDialog::OnPropfind(wxCommandEvent& WXUNUSED(event))
 		}
 		else
 		{
-			szResponse = wxT("FAILURE!\n\n");
-			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
+			szResponse = wxS("FAILURE!\n\n");
+			szResponse += wxString::Format(wxS("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 			szResponse += dav.GetResponseHeader();
-			szResponse += wxT("\n\n");
+			szResponse += wxS("\n\n");
 			szResponse += dav.GetResponseBody();
-			szResponse += wxT("\n\n");
+			szResponse += wxS("\n\n");
 			szResponse += dav.GetErrorString();
 
 			if(m_pTextCtrl)

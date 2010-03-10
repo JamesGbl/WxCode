@@ -117,7 +117,7 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
         gs->AddStretchSpacer(1);
         gs->AddStretchSpacer(1);
 
-        m_pPort->SetValue(wxT("-1"));
+        m_pPort->SetValue(wxS("-1"));
     }
 
     // column 1 contains the text controls:
@@ -127,9 +127,9 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
     // proxy options
     if (HasFlag(wxCCSP_PROXY_OPTIONS))
     {
-        wxSizer* proxy = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Proxy settings"));
+        wxSizer* proxy = new wxStaticBoxSizer(wxVERTICAL, this, wxS("Proxy settings"));
 
-        m_pProxyCheckBox = new wxCheckBox(this, UseProxy, wxT("Use proxy"));
+        m_pProxyCheckBox = new wxCheckBox(this, UseProxy, wxS("Use proxy"));
         m_pProxyCheckBox->SetValue(false);
         proxy->Add(m_pProxyCheckBox, 0, wxLEFT|wxTOP, BORDER);
 
@@ -138,7 +138,7 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
         m_pProxyUsername = AddSizerRow(gs, _("Proxy username:"));
         m_pProxyPassword = AddSizerRow(gs, _("Proxy password:"));
         m_pProxyPort = AddSizerRow(gs, _("Proxy port:"), false);
-        m_pProxyPort->SetValue(wxT("-1"));
+        m_pProxyPort->SetValue(wxS("-1"));
         proxy->Add(gs, 0, wxGROW|wxALL, BORDER);
 
         // column 1 contains the text controls:

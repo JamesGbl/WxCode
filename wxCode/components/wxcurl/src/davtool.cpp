@@ -119,7 +119,7 @@ bool wxCurlDAVTool::GetDAVFs(wxArrayDAVFs& fs, const wxString& szRemoteLoc /*= w
 				// Strip Past First "Multistatus" tag...
 				while(pNode)
 				{
-					if(pNode->GetName().Find(wxT("multistatus")) != -1)
+					if(pNode->GetName().Find(wxS("multistatus")) != -1)
 					{
 						pNode = pNode->GetChildren();
 						break;
@@ -135,7 +135,7 @@ bool wxCurlDAVTool::GetDAVFs(wxArrayDAVFs& fs, const wxString& szRemoteLoc /*= w
 
 					wxString szName = pNode->GetName();
 
-					if(pNode->GetName().Find(wxT("response")) != -1)
+					if(pNode->GetName().Find(wxS("response")) != -1)
 					{
 						if(ParseResponseXml(fsItem, pNode))
 							fs.Add(fsItem);
@@ -242,7 +242,7 @@ wxString wxCurlDAVTool::GetContentType(const wxString& szRemoteLoc /*= wxEmptySt
 
 bool wxCurlDAVTool::ParseResponseXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 {
-	if(pNode->GetName().Find(wxT("response")) != -1)
+	if(pNode->GetName().Find(wxS("response")) != -1)
 	{
 		wxXmlNode* pChild = pNode->GetChildren();
 
@@ -251,7 +251,7 @@ bool wxCurlDAVTool::ParseResponseXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 		while(pChild)
 		{
-			if(pChild->GetName().Find(wxT("href")) != -1)
+			if(pChild->GetName().Find(wxS("href")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 
@@ -269,7 +269,7 @@ bool wxCurlDAVTool::ParseResponseXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 			if(!bParsedPropstat)
 			{
-				if(pChild->GetName().Find(wxT("propstat")) != -1)
+				if(pChild->GetName().Find(wxS("propstat")) != -1)
 				{
 					bParsedPropstat = ParsePropstatXml(fsItem, pChild);
 				}
@@ -286,7 +286,7 @@ bool wxCurlDAVTool::ParseResponseXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 bool wxCurlDAVTool::ParsePropstatXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 {
-	if(pNode->GetName().Find(wxT("propstat")) != -1)
+	if(pNode->GetName().Find(wxS("propstat")) != -1)
 	{
 		wxXmlNode* pChild = pNode->GetChildren();
 
@@ -295,7 +295,7 @@ bool wxCurlDAVTool::ParsePropstatXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 		while(pChild)
 		{
-			if(pChild->GetName().Find(wxT("status")) != -1)
+			if(pChild->GetName().Find(wxS("status")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 
@@ -313,7 +313,7 @@ bool wxCurlDAVTool::ParsePropstatXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 				}
 			}
 
-			if(pChild->GetName().Find(wxT("prop")) != -1)
+			if(pChild->GetName().Find(wxS("prop")) != -1)
 			{
 				bParsedProps = ParsePropsXml(fsItem, pChild);
 			}
@@ -329,7 +329,7 @@ bool wxCurlDAVTool::ParsePropstatXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 {
-	if(pNode->GetName().Find(wxT("prop")) != -1)
+	if(pNode->GetName().Find(wxS("prop")) != -1)
 	{
 		wxXmlNode* pChild = pNode->GetChildren();
 
@@ -340,7 +340,7 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 
 		while(pChild)
 		{
-			if(pChild->GetName().Find(wxT("creationdate")) != -1)
+			if(pChild->GetName().Find(wxS("creationdate")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 
@@ -350,7 +350,7 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 					{
 						wxString szVal = pText->GetContent();
 
-						fsItem.m_dtCreationDate.ParseFormat(szVal, wxT("%Y-%m-%dT%H:%M:%S"));
+						fsItem.m_dtCreationDate.ParseFormat(szVal, wxS("%Y-%m-%dT%H:%M:%S"));
 						bFoundCreationDate = true;
 					}
 
@@ -358,7 +358,7 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 				}
 			}
 
-			if(pChild->GetName().Find(wxT("getlastmodified")) != -1)
+			if(pChild->GetName().Find(wxS("getlastmodified")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 
@@ -376,7 +376,7 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 				}
 			}
 
-			if(pChild->GetName().Find(wxT("getcontentlength")) != -1)
+			if(pChild->GetName().Find(wxS("getcontentlength")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 
@@ -394,7 +394,7 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 				}
 			}
 
-			if(pChild->GetName().Find(wxT("getcontenttype")) != -1)
+			if(pChild->GetName().Find(wxS("getcontenttype")) != -1)
 			{
 				wxXmlNode* pText = pChild->GetChildren();
 

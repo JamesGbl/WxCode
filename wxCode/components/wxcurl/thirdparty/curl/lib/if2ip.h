@@ -24,7 +24,7 @@
  ***************************************************************************/
 #include "setup.h"
 
-extern char *Curl_if2ip(const char *interf, char *buf, int buf_size);
+extern char *Curl_if2ip(int af, const char *interf, char *buf, int buf_size);
 
 #ifdef __INTERIX
 #include <sys/socket.h>
@@ -50,7 +50,6 @@ struct ifreq {
 
 /* This define was added by Daniel to avoid an extra #ifdef INTERIX in the
    C code. */
-#define ifr_dstaddr ifr_addr
 
 #define ifr_name ifr_ifrn.ifrn_name /* interface name */
 #define ifr_addr ifr_ifru.ifru_addr /* address */

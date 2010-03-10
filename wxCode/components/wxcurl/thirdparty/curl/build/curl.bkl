@@ -63,7 +63,7 @@
     <!--                          TEMPLATES                         -->
     <!--                                                            -->   
     
-    <set var="LIBCURL_VERSION">7.16.1</set>
+    <set var="LIBCURL_VERSION">7.20.0</set>
     
     <set-srcdir>..</set-srcdir>
     <set var="BUILDDIR">$(FORMAT)</set>
@@ -101,6 +101,8 @@
         <if cond="FORMAT=='mingw'">
             <libname>curl</libname>
         </if>
+        
+        <define>CURL_LDAP_WIN</define>
   
         <!-- add all sources found in our subfolders -->
         <sources>$(fileList('lib/*.c'))</sources>
@@ -114,7 +116,7 @@
 
 
     <!--                                                            -->
-    <!--                  LIBXML2 LIBRARY TARGET                    -->
+    <!--                  LIBCURL LIBRARY TARGET                    -->
     <!--                                                            -->  
 
     <lib id="libcurl_lib" template="curl" cond="WX_SHARED=='0'"/>

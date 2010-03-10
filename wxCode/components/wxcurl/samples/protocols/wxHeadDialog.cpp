@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxHeadDialog::wxHeadDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("head_dialog"));
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("head_dialog"));
 
 	SetSize(400,400);
 
