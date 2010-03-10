@@ -7,7 +7,6 @@
 		<border>10</border>
 		<flag>wxALL|wxGROW</flag>
 		<object class="wxFlexGridSizer">
-			<rows>4</rows>
 			<cols>1</cols>
 			<vgap>10</vgap>
 			<hgap>10</hgap>

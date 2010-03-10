@@ -6,7 +6,6 @@
 		<centered>1</centered>
 		<object class="wxFlexGridSizer">
 			<cols>1</cols>
-			<rows>2</rows>
 			<vgap>10</vgap>
 			<hgap>10</hgap>
 			<growablecols>0</growablecols>
@@ -26,6 +25,7 @@
 						</object>
 					</object>
 					<object class="sizeritem">
+                        <flag>wxALL|wxGROW</flag>
 						<object class="wxButton" name="file_menu_options">
 							<label>Options...</label>
 						</object>
