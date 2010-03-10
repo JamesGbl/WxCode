@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxxml2", "wxxml2_vc2003_wxxml2.vcproj", "{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minimal", "wxxml2_vc2003_minimal.vcproj", "{3DA23043-C06D-58F3-9D16-278B54615FA4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22} = {B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Static Release|Win32 = Static Release|Win32
+		Static Debug|Win32 = Static Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.Static Release|Win32.Build.0 = Static Release|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{B4E2EDB4-D3C5-5F1D-92EC-7334C540AA22}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.Static Release|Win32.Build.0 = Static Release|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{3DA23043-C06D-58F3-9D16-278B54615FA4}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+

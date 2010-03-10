@@ -1,0 +1,39 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxxml2", "wxxml2_vc2008_wxxml2.vcproj", "{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minimal", "wxxml2_vc2008_minimal.vcproj", "{03D752C5-553F-5E46-897B-361E8B27636D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B} = {99BDD817-D445-56C5-B90F-9FCFB9B23E4B}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Static Release|Win32 = Static Release|Win32
+		Static Debug|Win32 = Static Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.Static Release|Win32.Build.0 = Static Release|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{99BDD817-D445-56C5-B90F-9FCFB9B23E4B}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.Static Release|Win32.Build.0 = Static Release|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{03D752C5-553F-5E46-897B-361E8B27636D}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+
