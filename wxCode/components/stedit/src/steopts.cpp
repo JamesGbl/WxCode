@@ -282,6 +282,14 @@ void wxSTEditorOptions::SetNotebookPopupMenu(wxMenu* menu, bool is_static)
     STEO_REFDATA->m_notebookPopupMenu_static = is_static;
 }
 
+/*static*/ void wxSTEditorOptions::RegisterIds()
+{
+   for (long i = ID_STE__FIRST; i <= ID_STE__LAST; i++)
+   {
+      wxRegisterId(i);
+   }
+}
+
 void wxSTEditorOptions::SetClientObject( wxClientData *data )
 {
     wxCHECK_RET(STEO_REFDATA, wxT("invalid wxSTEditorOptions"));

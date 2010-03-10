@@ -136,6 +136,7 @@ bool wxStEditApp::OnInit()
     // For this simple editor we'll basicly use the defaults for everything
     //  (we reset it in cmd line parser to use either a single editor or notebook)
     wxSTEditorOptions steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS);
+    wxSTEditorOptions::RegisterIds();
 
     // =======================================================================
     // A sample of things that you might do to change the behavior

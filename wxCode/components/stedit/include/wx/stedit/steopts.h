@@ -349,6 +349,10 @@ public:
     static void SetGlobalDefaultFileExtensions(const wxString& fileExt) { STE_DefaultFileExtensions = fileExt; }
 
     // -----------------------------------------------------------------------
+    // Register wxStEdits menu id's so that they do not collide with the id's of the calling app
+    static void RegisterIds();
+
+    // -----------------------------------------------------------------------
     // Load/Save the config for the prefs/styles/langs, see CFGPATH options
 
     // Get the full path of the path_option_n STE_OPTION_CFGPATH_XXX where the
