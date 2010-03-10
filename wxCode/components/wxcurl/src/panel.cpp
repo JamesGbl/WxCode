@@ -34,6 +34,10 @@
     #endif
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/checkbox.h>
 #include <wx/filename.h>
 #include <wx/statline.h>

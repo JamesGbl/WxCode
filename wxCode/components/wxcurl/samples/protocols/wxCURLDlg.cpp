@@ -15,6 +15,11 @@
 #ifndef WX_PRECOMP
 	#include "wx/wx.h"
 #endif
+
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/xrc/xmlres.h>
 
 #include "wxCURLApp.h"
@@ -101,8 +106,7 @@ END_EVENT_TABLE()
 wxCURLDialog::wxCURLDialog(const wxString& title, const wxPoint& WXUNUSED(pos),
                            const wxSize& WXUNUSED(size))
 {
-	if (!wxXmlResource::Get()->LoadDialog(this, NULL, wxS("main_dialog")))
-        wxExit();
+	wxASSERT(wxXmlResource::Get()->LoadDialog(this, NULL, wxS("main_dialog")));
 
 	SetTitle(title);
 

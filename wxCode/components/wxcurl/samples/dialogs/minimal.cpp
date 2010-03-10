@@ -30,6 +30,10 @@
     #include "wx/wx.h"
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 // ----------------------------------------------------------------------------
 // resources
 // ----------------------------------------------------------------------------
@@ -39,7 +43,6 @@
 #if !defined(__WXMSW__) && !defined(__WXPM__)
     #include "mondrian.xpm"
 #endif
-
 
 #include "wx/filename.h"
 #include "wx/wfstream.h"

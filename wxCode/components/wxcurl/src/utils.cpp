@@ -21,6 +21,10 @@
     #include <wx/log.h>
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include "wx/curl/utils.h"
 #include "wx/curl/http.h"
 #include "wx/curl/ftp.h"
@@ -85,6 +89,7 @@ void *wxCurlSizeQueryThread::Entry()
             break;
 
             default:
+                sz = (unsigned long)-1;
                 wxFAIL;
         }
 

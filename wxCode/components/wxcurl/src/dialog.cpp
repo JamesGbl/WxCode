@@ -34,6 +34,10 @@
     #endif
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 #include <wx/statline.h>
@@ -160,15 +164,15 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
         wxBoxSizer* downloading = new wxBoxSizer(wxHORIZONTAL);
 
         wxStaticText *st = new wxStaticText( this, wxID_STATIC, _("URL:") );
-        st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
+        wxFont boldFont(st->GetFont());
+        boldFont.SetWeight(wxFONTWEIGHT_BOLD);
+        st->SetFont(boldFont);
         downloading->Add(st, 0, wxRIGHT|wxTOP|wxALIGN_CENTER_VERTICAL, BORDER);
 
-        m_pURL = new wxTextCtrl( this, wxID_STATIC, _("URL"), wxDefaultPosition,
-                                wxSize(MINWIDTH, -1), wxTE_CENTRE|wxTE_READONLY|wxNO_BORDER );
-        m_pURL->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
-        m_pURL->SetValue(url);
-
+        m_pURL = new wxStaticText( this, wxID_STATIC, url, wxDefaultPosition,
+                                   wxSize(MINWIDTH, -1), wxST_ELLIPSIZE_MIDDLE);
         downloading->Add(m_pURL, 1, wxALIGN_CENTER_VERTICAL|wxTOP, BORDER);
+
         main->Add(downloading, 0, wxGROW|wxLEFT|wxRIGHT, OUTER_BORDER);
         main->AddSpacer(5);
     }

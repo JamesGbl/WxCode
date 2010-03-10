@@ -23,6 +23,10 @@
 	#include "wx/wx.h"
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/mstream.h>
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>

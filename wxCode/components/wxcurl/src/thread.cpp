@@ -21,6 +21,10 @@
     #include <wx/log.h>
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 
@@ -94,6 +98,8 @@ void wxCurlBaseThread::OnExit()
 {
     if (m_pCurl->IsVerbose())
         wxLogDebug(wxS("wxCurlBaseThread - exiting"));
+
+    wxDELETE(m_pCurl);
 }
 
 bool wxCurlBaseThread::TestDestroy()
@@ -251,7 +257,7 @@ void *wxCurlDownloadThread::Entry()
             return (void*)wx_static_cast(wxCurlHTTP*, m_pCurl)->Get(m_output, m_url);
 
         case wxCP_FTP:
-            return (void*)wx_static_cast(wxCurlHTTP*, m_pCurl)->Get(m_output, m_url);
+            return (void*)wx_static_cast(wxCurlFTP*, m_pCurl)->Get(m_output, m_url);
     }
 
     return NULL;
@@ -344,7 +350,7 @@ void *wxCurlUploadThread::Entry()
             return (void*)wx_static_cast(wxCurlHTTP*, m_pCurl)->Put(m_input, m_url);
 
         case wxCP_FTP:
-            return (void*)wx_static_cast(wxCurlHTTP*, m_pCurl)->Put(m_input, m_url);
+            return (void*)wx_static_cast(wxCurlFTP*, m_pCurl)->Put(m_input, m_url);
     }
 
     return NULL;

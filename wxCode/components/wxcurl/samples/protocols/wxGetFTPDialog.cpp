@@ -20,6 +20,10 @@
 	#include "wx/wx.h"
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <wx/xrc/xmlres.h>
 
 #include <wx/curl/ftp.h>
@@ -52,7 +56,7 @@ END_EVENT_TABLE()
 
 wxGetFTPDialog::wxGetFTPDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, wxS("get_ftp_dialog"));
+	wxASSERT(wxXmlResource::Get()->LoadDialog(this, pParent, wxS("get_ftp_dialog")));
 
 	SetSize(400,400);
 

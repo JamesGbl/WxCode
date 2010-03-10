@@ -185,7 +185,7 @@ protected:
 
 protected:      // controls
 
-    wxTextCtrl* m_pURL;
+    wxStaticText* m_pURL;
     wxStaticText* m_pSpeed;
     wxStaticText* m_pSize;
     wxGauge* m_pGauge;

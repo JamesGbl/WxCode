@@ -19,11 +19,16 @@
     #include "wx/wx.h"
 #endif
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
+#endif
+
 #include <stdio.h>
 #include <stdarg.h>
 
 #include <wx/curl/base.h>
 #include <wx/filename.h>
+
 
 //////////////////////////////////////////////////////////////////////
 // Constants
@@ -69,28 +74,28 @@ extern "C"
         switch (info)
         {
             case CURLINFO_TEXT:
-                szVerboseMessage = wxString(_T("Text: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("Text: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_HEADER_IN:
-                szVerboseMessage = wxString(_T("Header in: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("Header in: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_HEADER_OUT:
-                szVerboseMessage = wxString(_T("Header out: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("Header out: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_DATA_IN:
-                szVerboseMessage = wxString(_T("Data in: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("Data in: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_DATA_OUT:
-                szVerboseMessage = wxString(_T("Data out: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("Data out: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_END:
-                szVerboseMessage = wxString(_T("End: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("End: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_SSL_DATA_IN:
-                szVerboseMessage = wxString(_T("SSL Data in: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("SSL Data in: ")) + szMessage + wxS("\n");
                 break;
             case CURLINFO_SSL_DATA_OUT:
-                szVerboseMessage = wxString(_T("SSL Data out: ")) + szMessage + _T("\n");
+                szVerboseMessage = wxString(wxS("SSL Data out: ")) + szMessage + wxS("\n");
                 break;
         }
 
