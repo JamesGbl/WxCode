@@ -112,11 +112,11 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 			testform[0].value = szValue.c_str();
 			testform[1].option = CURLFORM_END;
 
-			if(!http.AddForm(false, _T(wxS("firstname")), testform))
+			if (!http.AddForm(false, wxS("firstname"), testform))
 				return;*/
 
-			if(http.Post(szData.ToAscii(), szData.Len()))
-//			if(http.Post())
+			if (http.Post(szData.ToAscii(), szData.Len()))
+//			if (http.Post())
 			{
 				wxMemoryOutputStream outStream;
 

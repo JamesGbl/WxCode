@@ -373,7 +373,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
 
     wxString url = wxGetTextFromUser(
                       wxS("Please the enter the URL of the resource to download:"), wxS("Type an URL"),
-                      wxS("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
+                      wxS("http://downloads.sourceforge.net/project/wxcode/wxCode%20CVS/wxCode%20CVS%20repository/wxCode.tar.bz2"), this);
     if (url.empty())
         return;     // user hit cancel
 

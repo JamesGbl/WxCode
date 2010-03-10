@@ -96,10 +96,10 @@ bool wxCurlDAVTool::GetDAVFs(wxArrayDAVFs& fs, const wxString& szRemoteLoc /*= w
 {
 	wxArrayString arrProps;
 
-	arrProps.Add(_T("creationdate"));
-	arrProps.Add(_T("getlastmodified"));
-	arrProps.Add(_T("getcontentlength"));
-	arrProps.Add(_T("getcontenttype"));
+	arrProps.Add(wxS("creationdate"));
+	arrProps.Add(wxS("getlastmodified"));
+	arrProps.Add(wxS("getcontentlength"));
+	arrProps.Add(wxS("getcontenttype"));
 
 	if(Propfind(arrProps, szRemoteLoc))
 	{

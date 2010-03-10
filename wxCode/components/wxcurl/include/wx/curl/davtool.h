@@ -37,8 +37,8 @@ public:
 				const wxString& szContentType	);
 	~wxCurlDAVFs();
 
-	bool IsDirectory() const			{ return m_szContentType == _T("httpd/unix-directory"); }
-	bool IsOK() const					{ return m_szStatus.Right(6) == _T("200 OK"); }
+	bool IsDirectory() const			{ return m_szContentType == wxS("httpd/unix-directory"); }
+	bool IsOK() const					{ return m_szStatus.Right(6) == wxS("200 OK"); }
 
 	wxString GetHREF() const			{ return m_szHREF; }
 

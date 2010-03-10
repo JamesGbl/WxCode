@@ -125,7 +125,7 @@ wxStaticText *wxCurlTransferDialog::AddSizerRow(wxSizer *sz, const wxString &nam
 {
     // the static text
     wxStaticText *st = new wxStaticText( this, wxID_STATIC, name, wxDefaultPosition, wxDefaultSize );
-    st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, _T("")));
+    st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
 
     // the value
     wxStaticText *ret = new wxStaticText( this, wxID_STATIC, _("Not available"),
@@ -160,7 +160,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
         wxBoxSizer* downloading = new wxBoxSizer(wxHORIZONTAL);
 
         wxStaticText *st = new wxStaticText( this, wxID_STATIC, _("URL:") );
-        st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, _T("")));
+        st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
         downloading->Add(st, 0, wxRIGHT|wxTOP|wxALIGN_CENTER_VERTICAL, BORDER);
 
         m_pURL = new wxTextCtrl( this, wxID_STATIC, _("URL"), wxDefaultPosition,
@@ -178,7 +178,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
 
     // speed & size row
     if (HasFlag(wxCTDS_SPEED))
-        m_pSpeed = AddSizerRow(leftcolumn, _T("Speed:"));
+        m_pSpeed = AddSizerRow(leftcolumn, wxS("Speed:"));
     if (HasFlag(wxCTDS_SIZE))
         m_pSize = AddSizerRow(leftcolumn, sizeLabel);
 
@@ -187,11 +187,11 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
 
     // the time rows
     if (HasFlag(wxCTDS_ELAPSED_TIME))
-        m_pElapsedTime = AddSizerRow(leftcolumn, _T("Elapsed time:"));
+        m_pElapsedTime = AddSizerRow(leftcolumn, wxS("Elapsed time:"));
     if (HasFlag(wxCTDS_ESTIMATED_TIME))
-        m_pEstimatedTime = AddSizerRow(leftcolumn, _T("Estimated total time:"));
+        m_pEstimatedTime = AddSizerRow(leftcolumn, wxS("Estimated total time:"));
     if (HasFlag(wxCTDS_REMAINING_TIME))
-        m_pRemainingTime = AddSizerRow(leftcolumn, _T("Estimated remaining time:"));
+        m_pRemainingTime = AddSizerRow(leftcolumn, wxS("Estimated remaining time:"));
 
     if (bitmap.IsOk())
     {
@@ -519,7 +519,7 @@ bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlTransferDialog::Create(url, title, message, _T("Downloaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, wxS("Downloaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler
@@ -567,7 +567,7 @@ bool wxCurlUploadDialog::Create(const wxString &url, wxInputStream *in,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlTransferDialog::Create(url, title, message, _T("Uploaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, wxS("Uploaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler

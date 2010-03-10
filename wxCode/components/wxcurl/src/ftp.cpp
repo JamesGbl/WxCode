@@ -103,7 +103,7 @@ bool wxCurlFTP::UsePortOption() const
 	return m_bUsePortOption;
 }
 
-void wxCurlFTP::SetPortParam(const wxString& szParam /*= _T("-")*/)
+void wxCurlFTP::SetPortParam(const wxString& szParam /*= wxS("-")*/)
 {
 	m_szPortParam = wxCURL_STRING2BUF(szParam);
 }

@@ -213,7 +213,7 @@ wxTimeSpan wxCurlProgressBaseEvent::GetElapsedTime() const
 wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedTime() const
 {
     double nBytesPerSec = GetSpeed();
-    if (nBytesPerSec == 0)
+    if (nBytesPerSec == 0 || wxIsNaN(nBytesPerSec))
         return wxTimeSpan(0);       // avoid division by zero
 
     // compute remaining seconds; here we assume that the current
@@ -239,7 +239,7 @@ wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedRemainingTime() const
 wxString wxCurlProgressBaseEvent::GetHumanReadableSpeed(const wxString &invalid, int precision) const
 {
     double speed = GetSpeed();
-    if (speed == 0)
+    if (speed == 0 || wxIsNaN(speed))
         return invalid;
 
     wxULongLong ull((wxULongLong_t)speed);

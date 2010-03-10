@@ -132,11 +132,11 @@ void wxCURLDialog::OnClose(wxCloseEvent& WXUNUSED(event))
 
 void wxCURLDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox(_T("This application is a proof-of-concept application\n")
-				 _T("for using LibCURL to issue a sub-set of WebDAV\n")
-				 _T("commands to an HTTP server.\n\n")
-				 _T("Casey O'Donnell, caseyodonnell@hotmail.com"),
-				 _T("About wxCURL..."), wxICON_INFORMATION|wxOK, this);
+	wxMessageBox(wxS("This application is a proof-of-concept application\n")
+				 wxS("for using LibCURL to issue a sub-set of WebDAV\n")
+				 wxS("commands to an HTTP server.\n\n")
+				 wxS("Casey O'Donnell, caseyodonnell@hotmail.com"),
+				 wxS("About wxCURL..."), wxICON_INFORMATION|wxOK, this);
 }
 
 void wxCURLDialog::OnGet(wxCommandEvent& WXUNUSED(event))

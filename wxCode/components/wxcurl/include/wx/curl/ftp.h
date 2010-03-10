@@ -58,7 +58,7 @@ public:
 	void		UsePortOption(const bool& bUsePort);
 	bool		UsePortOption() const;
 
-	void		SetPortParam(const wxString& szParam = _T("-"));
+	void		SetPortParam(const wxString& szParam = wxS("-"));
 	wxString	GetPortParam() const;
 
 	// MDA - Get/Set EPRT Use

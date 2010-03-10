@@ -255,28 +255,28 @@ wxString wxCurlDAV::ConstructPropfindXml(const wxArrayString& arrTags)
 {
 	wxString szXml;
 
-	szXml += _T("<?xml version=\"1.0\" encoding=\"utf-8\" ?>") _T("\n");
-	szXml += _T("<D:propfind xmlns:D=\"DAV:\">") _T("\n");
+	szXml += wxS("<?xml version=\"1.0\" encoding=\"utf-8\" ?>") wxS("\n");
+	szXml += wxS("<D:propfind xmlns:D=\"DAV:\">") wxS("\n");
 
 	if(arrTags.Count() > 0)
 	{
-		szXml += _T("\t") _T("<D:prop>") _T("\n");
+		szXml += wxS("\t") wxS("<D:prop>") wxS("\n");
 	
 		for(unsigned int i = 0; i < arrTags.Count(); i++)
 		{
-			szXml += _T("\t\t") _T("<D:");
+			szXml += wxS("\t\t") wxS("<D:");
 			szXml += arrTags[i];
-			szXml += _T("/>") _T("\n");
+			szXml += wxS("/>") wxS("\n");
 		}
 
-		szXml += _T("\t") _T("</D:prop>") _T("\n");
+		szXml += wxS("\t") wxS("</D:prop>") wxS("\n");
 	}
 	else
 	{
-		szXml += _T("\t") _T("<D:allprop/>") _T("\n");
+		szXml += wxS("\t") wxS("<D:allprop/>") wxS("\n");
 	}
 
-	szXml += _T("</D:propfind>") _T("\n");
+	szXml += wxS("</D:propfind>") wxS("\n");
 
 	return szXml;
 }
