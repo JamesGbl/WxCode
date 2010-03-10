@@ -333,8 +333,10 @@ enum
     ID_STE_CONVERT_EOL,
     ID_STE_TRAILING_WHITESPACE,
     ID_STE_REMOVE_CHARSAROUND,
-    ID_STE_INSERT_TEXT,
     ID_STE_COLUMNIZE,
+    // Insert Menu items  -------------------------------------------------------
+    ID_STE_INSERT_TEXT,
+    ID_STE_INSERT_DATETIME,
     // View Menu items  -------------------------------------------------------
     ID_STE_VIEW_NONPRINT,
     //ID_STE_PREF_WRAPLINES
@@ -440,6 +442,7 @@ enum
     ID_STE_MENU_EDIT,           // id of the Edit menu
     ID_STE_MENU_SEARCH,         // id of the Search menu
     ID_STE_MENU_TOOLS,          // id of the Tools menu
+    ID_STE_MENU_INSERT,         // id of the Insert menu
     ID_STE_MENU_VIEW,           // id of the View menu
     ID_STE_MENU_BOOKMARK,       // id of the Bookmark menu
     ID_STE_MENU_PREF,           // id of the Preferences menu

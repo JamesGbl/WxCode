@@ -54,10 +54,11 @@ enum STE_MenuType
     STE_MENU_VIEW_MENU     = 2, // View menu (wrap, guides, margin...)
     STE_MENU_SEARCH_MENU   = 3, // Search menu (find, replace, goto...)
     STE_MENU_TOOLS_MENU    = 4, // Tools menu (indent...)
-    STE_MENU_BOOKMARK_MENU = 5, // Bookmarks menu (toggle, add, delete...)
-    STE_MENU_PREFS_MENU    = 6, // Preferences menu (use tabs, indent...)
-    STE_MENU_WINDOW_MENU   = 7, // Window menu (split, show windows...)
-    STE_MENU_HELP_MENU     = 8  // Help menu (about...)
+    STE_MENU_INSERT_MENU   = 5, // Insert menu (Time Date...)
+    STE_MENU_BOOKMARK_MENU = 6, // Bookmarks menu (toggle, add, delete...)
+    STE_MENU_PREFS_MENU    = 7, // Preferences menu (use tabs, indent...)
+    STE_MENU_WINDOW_MENU   = 8, // Window menu (split, show windows...)
+    STE_MENU_HELP_MENU     = 9  // Help menu (about...)
 };
 
 // Menu items to create in wxSTEditorMenuManager::CreateFileMenu
@@ -102,9 +103,16 @@ enum STE_ToolsMenuItemType
     STE_MENU_TOOLS_TABS_SP   = 0x00000008, // tabs to spaces and reverse
     STE_MENU_TOOLS_EOL       = 0x00000010, // convert EOL
     STE_MENU_TOOLS_WHITE     = 0x00000020, // remove trailing whitespace and at cursor
-    STE_MENU_TOOLS_INSERT    = 0x00000040, // insert text dialog
     STE_MENU_TOOLS_COLUMNIZE = 0x00000080, // columnize selected text
-    STE_MENU_TOOLS_DEFAULT   = STE_MENU_TOOLS_CASE|STE_MENU_TOOLS_INDENT|STE_MENU_TOOLS_JOINSPLIT|STE_MENU_TOOLS_TABS_SP|STE_MENU_TOOLS_EOL|STE_MENU_TOOLS_WHITE|STE_MENU_TOOLS_INSERT|STE_MENU_TOOLS_COLUMNIZE
+    STE_MENU_TOOLS_DEFAULT   = STE_MENU_TOOLS_CASE|STE_MENU_TOOLS_INDENT|STE_MENU_TOOLS_JOINSPLIT|STE_MENU_TOOLS_TABS_SP|STE_MENU_TOOLS_EOL|STE_MENU_TOOLS_WHITE|STE_MENU_TOOLS_COLUMNIZE
+};
+
+// Menu items to create in wxSTEditorMenuManager::CreateInsertMenu
+enum STE_InsertMenuItemType
+{
+    STE_MENU_INSERT_TEXT      = 0x00000001, // insert text dialog
+    STE_MENU_INSERT_DATETIME  = 0x00000002, // find/replace
+    STE_MENU_INSERT_DEFAULT   = STE_MENU_INSERT_TEXT | STE_MENU_INSERT_DATETIME
 };
 
 // Menu items to create in wxSTEditorMenuManager::CreateViewMenu
@@ -195,6 +203,7 @@ public:
                           int editMenuItemTypes     = STE_MENU_EDIT_DEFAULT,
                           int searchMenuItemTypes   = STE_MENU_SEARCH_DEFAULT,
                           int toolsMenuItemTypes    = STE_MENU_TOOLS_DEFAULT,
+                          int insertMenuItemTypes   = STE_MENU_INSERT_DEFAULT,
                           int viewMenuItemTypes     = STE_MENU_VIEW_DEFAULT,
                           int bookmarkMenuItemTypes = STE_MENU_BOOKMARK_DEFAULT,
                           int prefsMenuItemTypes    = STE_MENU_PREFS_DEFAULT,
@@ -208,6 +217,7 @@ public:
         m_menuItemTypes[STE_MENU_EDIT_MENU]     = editMenuItemTypes;
         m_menuItemTypes[STE_MENU_SEARCH_MENU]   = searchMenuItemTypes;
         m_menuItemTypes[STE_MENU_TOOLS_MENU]    = toolsMenuItemTypes;
+        m_menuItemTypes[STE_MENU_INSERT_MENU]   = insertMenuItemTypes;
         m_menuItemTypes[STE_MENU_VIEW_MENU]     = viewMenuItemTypes;
         m_menuItemTypes[STE_MENU_BOOKMARK_MENU] = bookmarkMenuItemTypes;
         m_menuItemTypes[STE_MENU_PREFS_MENU]    = prefsMenuItemTypes;
@@ -290,6 +300,8 @@ public:
     virtual wxMenu* CreateViewMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_SearchMenuItemType
     virtual wxMenu* CreateSearchMenu(wxMenu *menu = NULL) const;
+    // Create menu items where menu_types = enum STE_InsertMenuItemType
+    virtual wxMenu* CreateInsertMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_BookmarkMenuItemType
     virtual wxMenu* CreateBookmarkMenu(wxMenu *menu = NULL) const;
     // Create menu items where menu_types = enum STE_PrefMenuItemType

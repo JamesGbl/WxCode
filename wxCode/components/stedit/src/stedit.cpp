@@ -2788,6 +2788,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_REMOVE_CHARSAROUND : RemoveCharsAroundPos(); return true;
 
         case ID_STE_INSERT_TEXT : ShowInsertTextDialog(); return true;
+        case ID_STE_INSERT_DATETIME: ReplaceSelection(wxDateTime::Now().Format()); return true;
 
         case ID_STE_COLUMNIZE : ShowColumnizeDialog(); return true;
 

@@ -67,6 +67,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
     wxMenu *editMenu     = GetMenuItemTypes(STE_MENU_EDIT_MENU)     != 0 ? CreateEditMenu()     : NULL;
     wxMenu *searchMenu   = GetMenuItemTypes(STE_MENU_SEARCH_MENU)   != 0 ? CreateSearchMenu()   : NULL;
     wxMenu *toolsMenu    = GetMenuItemTypes(STE_MENU_TOOLS_MENU)    != 0 ? CreateToolsMenu()    : NULL;
+    wxMenu *insertMenu   = GetMenuItemTypes(STE_MENU_INSERT_MENU)   != 0 ? CreateInsertMenu()   : NULL;
     wxMenu *viewMenu     = GetMenuItemTypes(STE_MENU_VIEW_MENU)     != 0 ? CreateViewMenu()     : NULL;
     wxMenu *bookmarkMenu = GetMenuItemTypes(STE_MENU_BOOKMARK_MENU) != 0 ? CreateBookmarkMenu() : NULL;
     wxMenu *prefMenu     = GetMenuItemTypes(STE_MENU_PREFS_MENU)    != 0 ? CreatePreferenceMenu() : NULL;
@@ -104,6 +105,13 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
         menu->Append(ID_STE_MENU_TOOLS, _("&Tools"), toolsMenu);
+        add_sep = true;
+    }
+
+    if (insertMenu)
+    {
+        if (add_sep) menu->AppendSeparator();
+        menu->Append(ID_STE_MENU_INSERT, _("&Insert"), insertMenu);
         add_sep = true;
     }
 
@@ -195,6 +203,7 @@ bool wxSTEditorMenuManager::CreateMenuBar(wxMenuBar *menuBar, bool for_frame) co
     wxMenu *editMenu     = GetMenuItemTypes(STE_MENU_EDIT_MENU)     != 0 ? CreateEditMenu()     : NULL;
     wxMenu *searchMenu   = GetMenuItemTypes(STE_MENU_SEARCH_MENU)   != 0 ? CreateSearchMenu()   : NULL;
     wxMenu *toolsMenu    = GetMenuItemTypes(STE_MENU_TOOLS_MENU)    != 0 ? CreateToolsMenu()    : NULL;
+    wxMenu *insertMenu   = GetMenuItemTypes(STE_MENU_INSERT_MENU)   != 0 ? CreateInsertMenu()   : NULL;
     wxMenu *viewMenu     = GetMenuItemTypes(STE_MENU_VIEW_MENU)     != 0 ? CreateViewMenu()     : NULL;
     wxMenu *bookmarkMenu = GetMenuItemTypes(STE_MENU_BOOKMARK_MENU) != 0 ? CreateBookmarkMenu() : NULL;
     wxMenu *prefMenu     = GetMenuItemTypes(STE_MENU_PREFS_MENU)    != 0 ? CreatePreferenceMenu() : NULL;
@@ -207,6 +216,7 @@ bool wxSTEditorMenuManager::CreateMenuBar(wxMenuBar *menuBar, bool for_frame) co
     if (viewMenu)     menuBar->Append(viewMenu,     _("&View"));
     if (searchMenu)   menuBar->Append(searchMenu,   _("&Search"));
     if (toolsMenu)    menuBar->Append(toolsMenu,    _("&Tools"));
+    if (insertMenu)   menuBar->Append(insertMenu,   _("&Insert"));
     if (bookmarkMenu) menuBar->Append(bookmarkMenu, _("&Bookmarks"));
     if (prefMenu)     menuBar->Append(prefMenu,     wxGetStockLabel(wxID_PREFERENCES));
     if (windowMenu)   menuBar->Append(windowMenu,   _("&Window"));
@@ -537,19 +547,38 @@ wxMenu *wxSTEditorMenuManager::CreateToolsMenu(wxMenu *menu_) const
         menu->Append(ID_STE_REMOVE_CHARSAROUND, _("Remove w&hitespace at cursor"), _("Remove whitespace before and after cursor"));
         add_sep = true;
     }
-    if (HasMenuItemType(STE_MENU_TOOLS_MENU, STE_MENU_TOOLS_INSERT))
-    {
-        if (add_sep) menu->AppendSeparator();
-
-        menu->Append(ID_STE_INSERT_TEXT, _("I&nsert text..."), _("Prepend, Append, or insert text at column..."));
-        add_sep = true;
-    }
     if (HasMenuItemType(STE_MENU_TOOLS_MENU, STE_MENU_TOOLS_COLUMNIZE))
     {
         if (add_sep) menu->AppendSeparator();
 
         menu->Append(ID_STE_COLUMNIZE, _("&Columnize..."), _("Reformat selected lines in columns..."));
         add_sep = true;
+    }
+
+    if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
+    {
+        wxDELETE(menu);
+    }
+
+    return menu;
+}
+
+wxMenu *wxSTEditorMenuManager::CreateInsertMenu(wxMenu *menu_) const
+{
+    // all of these modify the document
+    if (HasMenuOptionType(STE_MENU_READONLY))
+        return menu_;
+
+    wxMenu *menu = menu_ ? menu_ : new wxMenu();
+
+    if (HasMenuItemType(STE_MENU_INSERT_MENU, STE_MENU_INSERT_TEXT))
+    {
+        menu->Append(ID_STE_INSERT_TEXT, _("I&nsert text..."), _("Prepend, Append, or insert text at column..."));
+    }
+
+    if (HasMenuItemType(STE_MENU_INSERT_MENU, STE_MENU_INSERT_DATETIME))
+    {
+        menu->Append(ID_STE_INSERT_DATETIME, _("Insert &date and time"), _("Insert date and time"));
     }
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
