@@ -187,6 +187,7 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
     {
         SetCurlHandleToDefaults(szRemoteFile);
 
+        SetHeaders();
         iSize = buffer.GetSize();
 
         if(iSize == (~(size_t)0))	// wxCurlHTTP does not know how to upload unknown length streams.
@@ -199,6 +200,7 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
 
         if(Perform())
         {
+            ResetHeaders();
             return IsResponseOk();
         }
     }
@@ -290,11 +292,13 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
     {
         SetCurlHandleToDefaults(szRemoteFile);
 
+        SetHeaders();
         SetOpt(CURLOPT_HTTPGET, TRUE);
         SetStreamWriteFunction(buffer);
 
         if(Perform())
         {
+            ResetHeaders();
             return IsResponseOk();
         }
     }
