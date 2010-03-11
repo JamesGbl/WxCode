@@ -23,7 +23,7 @@
 					<object class="sizeritem">
 						<flag>wxALL|wxGROW</flag>
 						<object class="wxTextCtrl" name="dele_text_ctrl">
-							<value>ftp://www.server.org/folder/delete.txt</value>
+							<value>ftp://ftp.wxwidgets.org/pub/Daily__Makefiles/MD5SUM</value>
 						</object>
 					</object>
 					<object class="sizeritem">

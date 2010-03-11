@@ -36,7 +36,7 @@
 					<object class="sizeritem">
 						<flag>wxALL|wxGROW</flag>
 						<object class="wxTextCtrl" name="source_text_ctrl">
-							<value>ftp://</value>
+							<value>ftp://ftp.wxwidgets.org/pub/Daily__Makefiles/MD5SUM</value>
 						</object>
 					</object>
 					<object class="sizeritem">
