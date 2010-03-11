@@ -376,7 +376,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
 
     wxString url = wxGetTextFromUser(
                       wxS("Please the enter the URL of the resource to download:"), wxS("Type an URL"),
-                      wxS("http://downloads.sourceforge.net/project/wxcode/wxCode%20CVS/wxCode%20CVS%20repository/wxCode.tar.bz2"), this);
+                      wxS("http://docs.wxwidgets.org/trunk/index.html"), this);
     if (url.empty())
         return;     // user hit cancel
 
@@ -384,7 +384,13 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
-    wxFileOutputStream fos(wxS("downloaded_stuff"));
+    wxString extension = url.AfterLast('.');
+    if (extension.length() >= 2 || extension.length() <= 4)
+        extension = wxS(".") + extension;
+    else
+        extension = wxEmptyString;
+
+    wxFileOutputStream fos(wxS("downloaded_stuff") + extension);
     wxCurlDownloadDialog dlg(url, &fos,
                              wxS("Download dialog title"),
                              wxS("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
@@ -399,14 +405,14 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     wxCurlDialogReturnFlag flag = dlg.RunModal();
     LogResult(flag);
 
-    if (flag == wxCDRF_SUCCESS && fos.GetLength() < 10000)
+    if (flag == wxCDRF_SUCCESS)
     {
         fos.Close();
 
         int reply = wxMessageBox(wxS("Do you want to open the downloaded file with your default browser?"),
                                  wxS("Open it?"), wxYES_NO, this);
         if (reply == wxYES)
-            wxLaunchDefaultBrowser(wxS("downloaded_stuff"));
+            wxLaunchDefaultBrowser(wxS("downloaded_stuff") + extension);
     }
 }
 
