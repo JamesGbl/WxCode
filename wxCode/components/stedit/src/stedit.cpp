@@ -2604,6 +2604,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_CONVERT_EOL,     !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_TRAILING_WHITESPACE, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_INSERT_TEXT,     !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_INSERT_DATETIME, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COLUMNIZE,       !readonly && sel_lines);
 
     // View menu items
