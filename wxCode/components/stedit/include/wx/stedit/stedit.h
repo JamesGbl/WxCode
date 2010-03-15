@@ -678,6 +678,8 @@ public :
     //   if add_keywords then also add the keywords from the langs
     bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
 
+    bool CopyPath();
+
     // ------------------------------------------------------------------------
     // Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
     //   extra_long is the state values.

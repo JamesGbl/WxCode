@@ -450,6 +450,14 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         add_sep = true;
     }
 
+    if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_COPYPATH))
+    {
+        if (add_sep) menu->AppendSeparator();
+
+        menu->Append(ID_STE_COPYPATH, _("Copy &path"), _("Copy full path to clipboard"));
+        add_sep = true;
+    }
+
     if ( (menu_ == NULL) && menu && (menu->GetMenuItemCount() == 0))
     {
         wxDELETE(menu);

@@ -2056,6 +2056,17 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
         return true;
 }
 
+bool wxSTEditor::CopyPath()
+{
+   bool ok = wxTheClipboard->Open();
+   if (ok)
+   {
+      ok = wxTheClipboard->SetData(new wxTextDataObject(GetFileName()));
+      wxTheClipboard->Close();
+   }
+   return ok;
+}
+
 wxString wxSTEditor::GetFileName() const
 {
     return GetSTERefData()->m_fileName;
@@ -2762,6 +2773,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_READONLY : SetReadOnly(event.IsChecked()); return true;
 
         case ID_STE_COMPLETEWORD : StartAutoCompleteWord(false, true); return true;
+        case ID_STE_COPYPATH     : CopyPath(); return true;
 
         // Tools menu items ---------------------------------------------------
         case ID_STE_UPPERCASE   : UpperCase(); /* CmdKeyExecute(wxSTC_CMD_UPPERCASE); */ return true;

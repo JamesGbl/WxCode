@@ -321,6 +321,7 @@ enum
     //wxID_REDO,
     ID_STE_READONLY,
     ID_STE_COMPLETEWORD,
+    ID_STE_COPYPATH,
     // Tools menu items -------------------------------------------------------
     ID_STE_UPPERCASE,
     ID_STE_LOWERCASE,
