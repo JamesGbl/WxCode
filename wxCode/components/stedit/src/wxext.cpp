@@ -192,6 +192,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
       STOCKITEM(wxID_SELECTALL, _("Select &All")) // with ampersand
       STOCKITEM(wxID_FIND,      _("&Find..."))    // with ellipsis
       STOCKITEM(wxID_REPLACE,   _("Rep&lace...")) // with ellipsis
+      STOCKITEM(wxID_REVERT,    _("Re&vert..."))
       default:
          break;
    }

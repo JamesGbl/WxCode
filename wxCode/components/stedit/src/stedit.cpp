@@ -2205,12 +2205,18 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     return ok;
 }
 
-bool wxSTEditor::LoadFile( const wxString &fileName_,
-                           const wxString &extensions_ )
+
+bool wxSTEditor::LoadFile(const wxString &fileName, const wxString &extensions)
 {
-    if (GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) &&
-         (QuerySaveIfModified(true) == wxCANCEL))
+    return LoadFile(fileName, extensions, true);
+}
+
+bool wxSTEditor::LoadFile(const wxString &fileName_, const wxString &extensions_, bool noise)
+{
+    if (noise && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) && (QuerySaveIfModified(true) == wxCANCEL))
+    {
         return false;
+    }
 
     wxString fileName = fileName_;
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
@@ -2390,6 +2396,18 @@ bool wxSTEditor::NewFile( const wxString &title_ )
     SetFileName(title, true);
     UpdateCanDo(true);
     return true;
+}
+
+bool wxSTEditor::Revert()
+{
+   bool ok = (wxYES == wxMessageBox(_("Discard changes and load last saved version ?"),
+                          wxMessageBoxCaptionStr,
+                          wxYES_NO | wxICON_QUESTION, this));
+   if (ok)
+   {
+      ok = LoadFile(GetFileName(), wxEmptyString, false);
+   }
+   return ok;
 }
 
 bool wxSTEditor::ShowExportDialog()
@@ -2581,8 +2599,9 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
 
     // Edit menu items
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,  CanSave());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT, IsModified() && GetFileModificationTime().IsValid());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !GetReadOnly());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
@@ -2666,6 +2685,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case wxID_OPEN   : LoadFile(); return true;
         case wxID_SAVE   : SaveFile(false); return true;
         case wxID_SAVEAS : SaveFile(true); return true;
+        case wxID_REVERT : Revert(); return true;
 
         case ID_STE_EXPORT : ShowExportDialog(); return true;
 

@@ -334,6 +334,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
             menu->Append(MenuItem(menu, ID_STN_SAVE_ALL, _("Save A&ll"), _("Save all files"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVEALL)));
             menu->Enable(ID_STN_SAVE_ALL, false);
         }
+        menu->Append(MenuItem(menu, wxID_REVERT, wxGetStockLabelEx(wxID_REVERT), _("Revert to saved version of the file"), wxITEM_NORMAL));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_EXPORT))

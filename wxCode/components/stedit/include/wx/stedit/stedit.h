@@ -395,6 +395,10 @@ public :
     //   See wxSTEditorExporter
     bool ShowExportDialog();
 
+    bool LoadFile( const wxString &filename, const wxString &extensions, bool noise);
+
+    bool Revert();
+
     // If IsModified show a message box asking if the user wants to save the file
     //   returns wxYES, wxNO, wxCANCEL, if the user does wxYES then file is
     //   automatically saved if save_file, wxCANCEL implies that the user wants
