@@ -3,10 +3,11 @@
  -------------------
  
  Website: http://wxcode.sourceforge.net/components/libircclient
- Author: Name Surname
+ Author: Andrea Zanellato
  Version: 1.0 
  Description:
- [description of this component]
+ A libircclient wrapper to be used directly with wxWidgets through wxEvtHandler and wxThread classes. 
+ With this component it is possible to attach an IRC client session to an event handler (as well to any of its derived object; for example a wxPanel GUI object).
  
  
 
