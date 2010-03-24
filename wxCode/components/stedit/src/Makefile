@@ -68,6 +68,7 @@ LN_S      = ln -s
 # Source files, objects to link
 
 OBJECTS = \
+    precomp.o \
     stedit.o \
     stedlgs.o \
     stedlgs_wdr.o \
@@ -82,7 +83,8 @@ OBJECTS = \
     steprint.o \
     stesplit.o \
     steshell.o \
-    stestyls.o
+    stestyls.o \
+    wxext.o
 
 DEPFILES := $(OBJECTS:.o=.d)
 
