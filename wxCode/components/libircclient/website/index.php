@@ -69,7 +69,7 @@ newcomp->Show();
        see the ReadMe.txt file at wxCode\template... -->
   <br/><?php write_h1("Documentation"); ?>
   <p>The documentation for this component is available online
-  <a href="../../docs/MYCOMPSUBDIR/">here</a>.</p>
+  <a href="../../docs/libircclient/">here</a>.</p>
 
 
 	<br/><?php write_h1("Known bugs"); ?>
