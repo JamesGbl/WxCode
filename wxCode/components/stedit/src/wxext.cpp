@@ -3,7 +3,7 @@
 // Purpose:     wxWidgets extensions
 // Author:      Troels K
 // Created:     2009-11-11
-// RCS-ID:      
+// RCS-ID:
 // Copyright:   (c) John Labenski, Troels K
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ wxString wxMenuItem_GetText(const wxMenuItem* item)
 {
    wxString str = item->GetItemLabel();
 #ifdef __WXGTK__
-   str.Replace(wxString('_'), wxString('&'));
+   str.Replace(wxString(wxT('_')), wxString(wxT('&')));
 #endif
    return str;
 }
@@ -210,7 +210,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
            if ( stockLabel.EndsWith(wxT("..."), &baseLabel) )
                stockLabel = baseLabel;
        }
-#else 
+#else
        // handled below
 #endif
    }
