@@ -679,7 +679,7 @@ void MyFrame::OnSaveAdv(wxCommandEvent& WXUNUSED(event))
         wxS("If you see a greek ALPHA, BETA and GAMMA characters, it means that you are ")
         wxS("using a viewer which supports the Unicode standard."));
 
-    wxString greekstring = wxS("\x3B1\x3B2\x3B3");
+    wxString greekstring = wxS("\u03B1\u03B2\u03B3");
     root.AddTextChild(wxS("textchild"), greekstring);
 #endif
 
