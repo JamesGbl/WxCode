@@ -62,17 +62,10 @@ wxXml2ElemContent wxXml2EmptyElemContent(NULL);
 
 void wxXml2HelpWrapper::DestroyIfUnlinked()
 {
-    if (!m_bLinked) {
-
+    if (!m_bLinked)
         Destroy();
-        wxLogDebug(wxS("%s::DestroyIfUnlinked - destroyed"),
-            GetClassInfo()->GetClassName());
-
-    } else {
-
-        wxLogDebug(wxS("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
-            GetClassInfo()->GetClassName());
-    }
+    //else:
+    // NOT destroyed (because linked!)
 }
 
 

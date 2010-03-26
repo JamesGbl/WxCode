@@ -94,12 +94,8 @@ void wxXml2::RestoreLastIndentMode()
 
 void wxXml2Wrapper::DestroyIfUnlinked()
 {
-    if (IsNonEmpty() == FALSE) {
-
-        wxLogDebug(wxS("%s::DestroyIfUnlinked - nothing to destroy (empty)"),
-            GetClassInfo()->GetClassName());
+    if (IsNonEmpty() == FALSE)
         return;
-    }
 
     DecRefCount();
     int refcount = GetRefCount();
@@ -118,19 +114,12 @@ void wxXml2Wrapper::DestroyIfUnlinked()
         // and no wrappers are embedding it, then we can safely
         // destroy it.
         Destroy();
-        wxLogDebug(wxS("%s::DestroyIfUnlinked - destroyed"),
-            GetClassInfo()->GetClassName());
 
     } else {
 
         // the memory associated with this property will be freed
         // by the node which owns this object or by another wrapper
         SetAsEmpty();
-
-        wxLogDebug(wxS("%s::DestroyIfUnlinked - NOT destroyed (because %s)"),
-            GetClassInfo()->GetClassName(),
-            (!unlinked ? wxS("linked") :
-                    wxString::Format(wxS("refcount is %d"), refcount).c_str()));
     }
 }
 
