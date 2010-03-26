@@ -163,7 +163,7 @@ wxString wxGetAccelText(int flags, int keyCode)
       case WXK_HOME           : str+=_("Home"   ); break;
       case WXK_END            : str+=_("End"    ); break;
       case WXK_RETURN         : str+=_("Return" ); break;
-      case WXK_DELETE         : str+=_("Delete" ); break;
+      case WXK_DELETE         : str+=_("Del" ); break;
       case WXK_NUMPAD_ADD     : str+=_("Num+"   ); break;
       case WXK_NUMPAD_SUBTRACT: str+=_("Num-"   ); break;
       default:
