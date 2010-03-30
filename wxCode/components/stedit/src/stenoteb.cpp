@@ -696,7 +696,7 @@ bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &ex
         wxFileDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  wxEmptyString, extensions,
-                                 wxFD_OPEN);
+                                 wxFD_DEFAULT_STYLE_OPEN);
         fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
         if (fileDialog.ShowModal() == wxID_OK)
             fileName = fileDialog.GetPath();
@@ -749,7 +749,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
         wxFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  wxEmptyString, extensions,
-                                 wxFD_OPEN | wxFD_MULTIPLE );
+                                 wxFD_DEFAULT_STYLE_OPEN | wxFD_MULTIPLE );
         fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
         if (fileDialog.ShowModal() == wxID_OK)
             fileDialog.GetPaths(filePaths);
