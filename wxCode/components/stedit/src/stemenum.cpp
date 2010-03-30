@@ -365,7 +365,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     if (HasMenuOptionType(STE_MENU_FRAME))
     {
         if (add_sep) menu->AppendSeparator();
-        menu->Append(MenuItem(menu, wxID_EXIT, wxEmptyString, _("Exit editor"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_EXIT)));
+        menu->Append(MenuItem(menu, wxID_EXIT, wxGetStockLabelEx(wxID_EXIT), _("Exit editor"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_EXIT)));
     }
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
