@@ -2034,7 +2034,7 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
 
             fileName = wxFileSelector( _("Export to file"), path, fileName,
                                        extension, wildcards,
-                                       wxFD_SAVE, this );
+                                       wxFD_DEFAULT_STYLE_SAVE, this );
 
             if (fileName.Length())
             {
