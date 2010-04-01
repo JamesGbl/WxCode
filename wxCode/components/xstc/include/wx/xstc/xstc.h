@@ -40,10 +40,6 @@
 
 #include "util.h"
 
-#ifndef XSTC_NO_CONFIG
-  #include <wx/config.h>
-#endif //XSTC_NO_CONFIG
-
 #include <wx/version.h>
 #include <wx/ffile.h>
 #include <wx/string.h>
@@ -55,6 +51,7 @@
 #ifndef XSTC_NO_CONFIG
  #include <wx/gdicmn.h>
  #include <wx/colour.h>
+ #include <wx/confbase.h>
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_KEYS
@@ -1994,8 +1991,8 @@ WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
     /**
     \brief the color database that XSTC uses for name to color
 
-    \detailed this is not readily useable and GetColorDbase() must be called first
-              that way unneded memory is not allocated. remember is name strings are used
+    \detailed this is not readily useable and SetColorDbase() must be called first
+              that way unneded memory is not allocated. remember if name strings are used
               then color setting will fail on those entries when this is not initialized.
               the user can add entries as they wish, because a pointer is passed with the
               function call.
