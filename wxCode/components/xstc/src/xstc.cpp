@@ -138,6 +138,14 @@ XSTC_CLASS(parent, id, pos, size, style, name)
 	ResetStyle();
 	SetProperty(wxT("fold"), wxT("1"));
 	SetPasteConvertEndings(true);
+	
+#ifdef __WXMSW__ //initialize the editor to the current platform EOL
+	SetEOLMode(wxSCI_EOL_CRLF);
+#elif __WXMAC__ //mac
+	SetEOLMode(wxSCI_EOL_CR);
+#else //linux
+	SetEOLMode(wxSCI_EOL_LF);
+#endif
 }
 
 XSTC::~XSTC()
