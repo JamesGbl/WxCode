@@ -4117,7 +4117,11 @@ static STE_LexerStyles STE_LexerStyles_STE_LANG_FORTH[STE_LexerStyles_STE_LANG_F
     { STE_STYLE_LABEL,          wxSTC_FORTH_LOCALE,      "Locale" }, // 11
 };
 
+#if (wxVERSION_NUMBER < 2901)
 #define STE_LexerStyles_STE_LANG_ERLANG_COUNT 15
+#else
+#define STE_LexerStyles_STE_LANG_ERLANG_COUNT 14
+#endif
 static STE_LexerStyles STE_LexerStyles_STE_LANG_ERLANG[STE_LexerStyles_STE_LANG_ERLANG_COUNT] = {
     // Lexical states for SCLEX_ERLANG
     { STE_STYLE_DEFAULT,    wxSTC_ERLANG_DEFAULT,       "White space" }, // 0
@@ -4132,7 +4136,9 @@ static STE_LexerStyles STE_LexerStyles_STE_LANG_ERLANG[STE_LexerStyles_STE_LANG_
     { STE_STYLE_CHARACTER,  wxSTC_ERLANG_CHARACTER,     "Character" }, // 9
     { STE_STYLE_SCRIPT,     wxSTC_ERLANG_MACRO,         "Macro" }, // 10
     { STE_STYLE_LABEL,      wxSTC_ERLANG_RECORD,        "Record" }, // 11
+#if (wxVERSION_NUMBER < 2901)
     { STE_STYLE_DELIMITER,  wxSTC_ERLANG_SEPARATOR,     "Separator" }, // 12
+#endif
     { STE_STYLE_LABEL,      wxSTC_ERLANG_NODE_NAME,     "Node name" }, // 13
     { STE_STYLE_UNDEFINED,  wxSTC_ERLANG_UNKNOWN,       "Parse error" }, // 31
 };
