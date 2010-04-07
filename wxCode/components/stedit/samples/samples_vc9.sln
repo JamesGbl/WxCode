@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StEditLib", "..\build\steditlib_vc9.vcproj", "{56DF0743-9B33-4A6D-B484-A808AFE09A07}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxStEdit", "stedit\wxstedit_vc9.vcproj", "{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxStEdit", "stedit\wxstedit_vc9.vcproj", "{454588D4-0EE4-45FD-AEAE-C772D3FA470F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07} = {56DF0743-9B33-4A6D-B484-A808AFE09A07}
 	EndProjectSection
@@ -24,14 +24,14 @@ Global
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Release|Win32.Build.0 = Static Release|Win32
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Unicode Release|Win32.ActiveCfg = Static Unicode Release|Win32
 		{56DF0743-9B33-4A6D-B484-A808AFE09A07}.Static Unicode Release|Win32.Build.0 = Static Unicode Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Release|Win32.ActiveCfg = Static Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Release|Win32.Build.0 = Static Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Unicode Release|Win32.ActiveCfg = Static Unicode Release|Win32
-		{BDFBEEF8-C36F-4B21-8E11-BAE0896CE83B}.Static Unicode Release|Win32.Build.0 = Static Unicode Release|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.DLL Unicode Debug|Win32.ActiveCfg = DLL Unicode Debug|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.DLL Unicode Debug|Win32.Build.0 = DLL Unicode Debug|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.Static Release|Win32.Build.0 = Static Release|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.Static Unicode Release|Win32.ActiveCfg = Static Unicode Release|Win32
+		{454588D4-0EE4-45FD-AEAE-C772D3FA470F}.Static Unicode Release|Win32.Build.0 = Static Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
