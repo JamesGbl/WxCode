@@ -900,7 +900,7 @@ wxString wxSTEditorStyles::ParseConfigLine(const wxString &key, const wxString &
 //Default_text=fore:0x000000,back:0xFFFFFF,face:courier,size:12,bold:0,italic:0,underline:0,eol:0,hotspot:0,case:0 [style:0 only for indicators]
 
 #define BOOL_CFG(val) ((val) ? wxString(wxT("1")) : wxString(wxT("0")))
-#define DEF_CFG(mask) (GetUsesDefault(n, mask) ? wxString(wxT("*")) : wxString(wxT("")))
+#define DEF_CFG(mask) wxString(GetUsesDefault(n, mask) ? wxDEFAULT_ASTERISK : wxEmptyString)
 
 wxString wxSTEditorStyles::CreateConfigLine(int n) const
 {

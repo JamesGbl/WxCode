@@ -13,3 +13,4 @@
 #define wxFD_DEFAULT_STYLE_SAVE (wxFD_SAVE | wxFD_OVERWRITE_PROMPT) // http://trac.wxwidgets.org/ticket/11866
 
 #define wxMODIFIED_ASTERISK wxT("*")
+#define wxDEFAULT_ASTERISK  wxT("*")
