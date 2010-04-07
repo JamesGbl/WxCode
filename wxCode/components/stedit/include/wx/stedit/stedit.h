@@ -377,7 +377,7 @@ public :
     //  The fileName is used only for the message on error
     //  flags is STE_LoadFileType
     bool LoadInputStream(wxInputStream& stream, const wxString &fileName,
-                         int flags = STE_LOAD_QUERY_UNICODE);
+                         int flags = STE_LOAD_QUERY_UNICODE, wxWindow* parent = NULL);
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
     //   if using wxFileSelector then if extensions is wxEmptyString use

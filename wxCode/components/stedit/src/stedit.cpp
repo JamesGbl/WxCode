@@ -2084,25 +2084,11 @@ void wxSTEditor::SetFileName(const wxString &fileName, bool send_event)
 
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                                  const wxString &fileName,
-                                 int flags)
+                                 int flags,
+                                 wxWindow* parent)
 {
-    wxWindow* parent = this;
-
     bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
-
-    // We only need to find a suitable parent for the dialog if we may show one
-    //  Note: If the dialog parent is not shown, the dialog isn't modal in MSW.
-    //        This may happen when loading files before showing this.
-    if ((flags == STE_LOAD_QUERY_UNICODE) || !noerrdlg)
-    {
-        while (parent && !parent->IsShown())
-            parent = parent->GetParent();
-
-        // didn't find a suitable parent, use toplevel window of app
-        if (!parent)
-            parent = wxTheApp->GetTopWindow();
-    }
 
     const wxFileOffset stream_len = stream.GetLength();
     bool ok = (stream_len <= 40000000);
