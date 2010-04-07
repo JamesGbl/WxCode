@@ -439,7 +439,7 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
         if ( steMM && !steMM->HasEnabledEditorItems())
             steMM->EnableEditorItems(true, NULL, GetMenuBar(), GetToolBar());
 
-        wxString modified = editor->IsModified() ? wxT("*") : wxT("");
+        const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
         title += wxT(" - ") + editor->GetFileName() + modified;
     }
     else
@@ -627,7 +627,7 @@ void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
 
     if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED) )
     {
-        wxString modified = editor->IsModified() ? wxT("*") : wxT("");
+        const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
         SetTitle(m_titleBase + wxT(" - ") + event.GetString() + modified);
 
         UpdateFileTreeCtrl();

@@ -325,7 +325,7 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
             nPage = n_pages;
     }
 
-    wxString modified = splitter->GetEditor() && splitter->GetEditor()->IsModified() ? wxT("*") : wxT("");
+    const wxString modified = (splitter->GetEditor() && splitter->GetEditor()->IsModified()) ? wxMODIFIED_ASTERISK : wxEmptyString;
     if (n_pages < 1)
         bSelect = true;
     if (nPage < int(n_pages))
@@ -650,7 +650,7 @@ void wxSTEditorNotebook::OnSTEState(wxSTEditorEvent &event)
             int page = FindEditorPage(editor);
             if (page >= 0) // if < 0 then not in notebook (or at least yet)
             {
-                wxString modified = editor->GetModify() ? wxT("*") : wxT("");
+                const wxString modified = editor->GetModify() ? wxMODIFIED_ASTERISK : wxEmptyString;
                 SetPageText(page, FileNameToTabName(event.GetString()) + modified);
                 SortTabs(GetOptions().GetNotebookOptions());
             }
