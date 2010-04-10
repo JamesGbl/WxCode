@@ -121,7 +121,7 @@ bool wxStEditApp::OnInit()
 {
     SetAppName(STE_APPNAME);
 #if (wxVERSION_NUMBER >= 2900)
-    SetAppDisplayName(wxT(STE_APPDISPLAYNAME));
+    SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
     ::wxLocale_Init(&m_locale, STE_APPNAME);
     //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_GERMAN);
