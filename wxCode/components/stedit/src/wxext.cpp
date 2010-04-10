@@ -263,5 +263,51 @@ void wxMenu_Fixup(wxMenu* menu, const AcceleratorArray& array)
    }
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// wxPreviewFrameEx
+
+wxPreviewFrameEx::wxPreviewFrameEx(wxPrintPreviewBase* preview,
+                wxWindow *parent,
+                const wxString& title,
+                const wxPoint& pos,
+                const wxSize& size,
+                long style,
+                const wxString& name) 
+   : wxPreviewFrame(preview, parent, title, pos, size, style, name)
+{
+}
+
+BEGIN_EVENT_TABLE(wxPreviewFrameEx, wxPreviewFrame)
+#if (wxVERSION_NUMBER < 2900)
+    EVT_CHAR_HOOK(wxPreviewFrameEx::OnKeyDown)
+#endif
+END_EVENT_TABLE()
+
+bool wxPreviewFrameEx::Destroy()
+{
+   bool ok = base::Destroy();
+   if (ok && GetParent())
+   {
+      GetParent()->Raise();
+   }
+   return ok;
+}
+
+#if (wxVERSION_NUMBER < 2900)
+// trac.wxwidgets.org/ticket/8570
+void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
+{
+   switch (event.GetKeyCode())
+   {
+      case WXK_ESCAPE:
+         Close();
+         break;
+      default:
+         event.Skip();
+         break;
+   }
+}
+#endif
+
 #endif // wxUSE_ACCEL
 

@@ -47,6 +47,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
+#include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // Global data
@@ -3616,7 +3617,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
         return false;
     }
 
-    wxPreviewFrame *frame = new wxPreviewFrame(preview, this, _("Print Preview"));
+    wxPreviewFrame *frame = new wxPreviewFrameEx(preview, this, _("Print Preview"));
 
     wxRect rect = wxGetClientDisplayRect();
     rect.Intersect(wxRect(rect.x, rect.y, 600, 700));
