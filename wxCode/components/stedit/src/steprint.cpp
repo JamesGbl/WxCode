@@ -254,7 +254,11 @@ void wxSTEditorPrintout::GetPageInfo(int *minPage, int *maxPage,
     int lines  = m_editor->GetLineCount();
     int pages  = 1;
     m_pages.Clear();
-    wxProgressDialog progDialog(_("Formatting printout"), _("Page 1 of ?"));
+    
+    wxWindow* parent = wxWindow::FindFocus();
+
+    // Use the default wxPD_APP_MODAL flag, or using the frame window or NULL as parent, will mess up the z-order when displaying wxPreviewFrame
+    wxProgressDialog progDialog(_("Formatting printout"), _("Page 1 of ?"), 100, parent, wxPD_AUTO_HIDE);
 
     while (pos < length)
     {
