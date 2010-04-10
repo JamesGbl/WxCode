@@ -119,12 +119,12 @@ IMPLEMENT_APP(wxStEditApp)
 
 bool wxStEditApp::OnInit()
 {
-    SetAppName(wxT(STE_APPNAME));
+    SetAppName(STE_APPNAME);
 #if (wxVERSION_NUMBER >= 2900)
     SetAppDisplayName(wxT(STE_APPDISPLAYNAME));
 #endif
-    ::wxLocale_Init(&m_locale, wxT(STE_APPNAME));
-    //::wxLocale_Init(&m_locale, wxT(STE_APPNAME), wxLANGUAGE_GERMAN);
+    ::wxLocale_Init(&m_locale, STE_APPNAME);
+    //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_GERMAN);
 
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically
@@ -261,7 +261,7 @@ bool wxStEditApp::OnInit()
                 // use the specified config file, if it's still set
                 if ( configFile.Length() )
                 {
-                    wxFileConfig *config = new wxFileConfig(wxT(STE_APPDISPLAYNAME), wxT("wxWidgets"),
+                    wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
                                                             configFile, wxEmptyString,
                                                             wxCONFIG_USE_RELATIVE_PATH);
                     wxConfigBase::Set((wxConfigBase*)config);
@@ -274,7 +274,7 @@ bool wxStEditApp::OnInit()
             else
             {
                 // Always use a wxFileConfig since I don't care for registry entries.
-                wxFileConfig *config = new wxFileConfig(wxT(STE_APPDISPLAYNAME), wxT("wxWidgets"));
+                wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"));
                 wxConfigBase::Set((wxConfigBase*)config);
             }
 
@@ -322,8 +322,8 @@ bool wxStEditApp::OnInit()
 
     menu->Append(wxID_ABOUT, _("&About..."), _("About this program"));
     // Add our help dialogs
-    menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), wxT(STE_APPDISPLAYNAME)));
-    menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), wxT(STE_APPDISPLAYNAME)));
+    menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
+    menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
     m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
@@ -480,7 +480,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         case ID_SHOW_HELP :
         {
             wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
-               wxString::Format(_("Help for %s"), wxT(STE_APPDISPLAYNAME)),
+               wxString::Format(_("Help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
             if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm)))
@@ -496,7 +496,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         case ID_SHOW_README :
         {
             wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
-               wxString::Format(_("Programming help for %s"), wxT(STE_APPDISPLAYNAME)),
+               wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
             if (htmlWin->SetPage(::stc2wx((const char*)readme_htm)))
