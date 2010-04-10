@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
+#include "wx/aboutdlg.h"
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
@@ -51,6 +52,14 @@ void wxSTEditorFrame::Init()
     m_sideSplitterWin2 = NULL;
 }
 
+static wxIcon wxArtProvider_Icon(const char* const* xpm_data)
+{
+    wxBitmap bmp(xpm_data);
+    wxIcon icon;
+    icon.CopyFromBitmap(bmp);
+    return icon;
+}
+
 bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
                              const wxString& title,
                              const wxPoint& pos, const wxSize& size,
@@ -63,13 +72,9 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
         return false;
 
     // Set the frame's icons
-    wxBitmap bmp(pencil16_xpm);
-    wxIcon icon;
-    icon.CopyFromBitmap(bmp);
-    wxIconBundle iconBundle(icon);
-    bmp = wxBitmap(pencil32_xpm);
-    icon.CopyFromBitmap(bmp);
-    iconBundle.AddIcon(icon);
+    wxIconBundle iconBundle;
+    iconBundle.AddIcon(::wxArtProvider_Icon(pencil16_xpm));
+    iconBundle.AddIcon(::wxArtProvider_Icon(pencil32_xpm));
     SetIcons(iconBundle);
 
     return true;
@@ -352,14 +357,22 @@ void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
     msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
                 wxT("Using the Scintilla editor, http://www.scintilla.org\n")
                 wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
-                wxT("Written by John Labenski, Otto Wyss.\n\n")
-                wxT("Compiled with %s."), wxVERSION_STRING);
+                wxT("\n")
+                wxT("Compiled with %s.\n"), wxVERSION_STRING);
 
     // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
     //if ((wxFileConfig*)wxConfigBase::Get(false))
     //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
 
-    wxMessageBox(msg, wxGetStockLabelEx(wxID_ABOUT, wxSTOCK_PLAINTEXT), wxOK|wxICON_INFORMATION, parent);
+   wxAboutDialogInfo info;
+   info.SetName(STE_APPDISPLAYNAME);
+   info.SetDescription(msg);
+   info.SetWebSite(wxT("wxcode.sourceforge.net/showcomp.php?name=wxStEdit"));
+   info.SetLicense(wxT("wxWindows"));
+   info.AddDeveloper(wxT("John Labenski"));
+   info.AddDeveloper(wxT("Otto Wyss"));
+   info.SetIcon(::wxArtProvider_Icon(pencil32_xpm));
+   ::wxAboutBox(info, parent);
 }
 
 void wxSTEditorFrame::UpdateAllItems()

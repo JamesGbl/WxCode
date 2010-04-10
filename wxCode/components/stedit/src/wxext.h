@@ -63,4 +63,11 @@ protected:
 };
 #endif
 
+#if defined(_WX_ABOUTDLG_H_) && (wxVERSION_NUMBER < 2900)
+inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent))
+{
+   wxAboutBox(info);
+}
+#endif
+
 #endif // __WXEXT_H__
