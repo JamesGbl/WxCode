@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.111 2010-03-08 19:02:37 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.112 2010-04-11 17:42:14 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -3855,6 +3855,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             Toggle (item);
         }
 
+/*
         // is there a selection change ? normally left and right down-click
         //  change selection, but there are special cases:
         if (maySelect && (
@@ -3863,6 +3864,27 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             ((event.LeftUp() || event.RightUp()) && item != NULL && item->IsSelected() && item != m_curItem)
             // normal clicks, act already on button down
          || ((event.LeftDown() || event.RightDown()) && (item == NULL || ! item->IsSelected()))
+        )) {
+*/
+        // left & right button click on item change selection; normally on click
+        // down, but to allow drag-and-drop click up is considered if item is
+        // already selected
+        if (maySelect && (
+            // special case 0: CONTROL key used to toggle, always select on down
+            //  and never on up
+            (event.ControlDown() && (event.LeftDown() || event.RightDown()))
+         ||
+            (! event.ControlDown() && (
+            // special case 1: down click and item is already selected, no change
+                (
+                    (event.LeftDown() || event.RightDown())
+                 && (item == NULL || ! item->IsSelected())
+                ) || (
+            // special case 2: up left-click and item is already selected, change
+                    event.LeftUp()
+                 && (item != NULL && item->IsSelected())
+                )
+            ))
         )) {
 
             bSkip = false;
