@@ -219,7 +219,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         {
             SetMenuBar(menuBar);
             ::wxSetAcceleratorTable(this, ::getaccelerator());
-            ::wxMenu_Fixup(menuBar, ::getaccelerator());
+            ::wxMenu_SetAccelText(menuBar, ::getaccelerator());
 
             if (GetOptions().HasFrameOption(STF_CREATE_FILEHISTORY) && !GetOptions().GetFileHistory())
             {
@@ -265,7 +265,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         if (GetOptions().HasEditorOption(STE_CREATE_POPUPMENU))
         {
             wxMenu* menu = steMM->CreateEditorPopupMenu();
-            ::wxMenu_Fixup(menu, ::getaccelerator());
+            ::wxMenu_SetAccelText(menu, ::getaccelerator());
             GetOptions().SetEditorPopupMenu(menu, false);
         }
         if (GetOptions().HasSplitterOption(STS_CREATE_POPUPMENU))

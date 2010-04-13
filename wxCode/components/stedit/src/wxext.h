@@ -27,8 +27,8 @@ WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 
 WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&);
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
-WXDLLIMPEXP_STEDIT void wxMenu_Fixup(wxMenuBar*, const AcceleratorArray&);
-WXDLLIMPEXP_STEDIT void wxMenu_Fixup(wxMenu   *, const AcceleratorArray&);
+WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
+WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
 
 #ifdef _WX_STOCKITEM_H_
 #if (wxVERSION_NUMBER < 2901)

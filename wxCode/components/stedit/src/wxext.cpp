@@ -106,7 +106,7 @@ wxString wxMenuItem_GetText(const wxMenuItem* item)
 
 #define ACCELSTR_SEP "   "
 
-bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, bool append)
+static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, bool append = true)
 {
    wxString str = wxMenuItem_GetText(item);
    wxString ch_sep = wxT("\t");
@@ -236,31 +236,45 @@ wxString wxGetAccelText(const wxAcceleratorEntry& accel)
    return wxGetAccelText(accel.GetFlags(), (enum wxKeyCode)accel.GetKeyCode());
 }
 
-void wxMenu_Fixup(wxMenuBar* menu, const AcceleratorArray& array)
+void wxMenu_SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
 {
-   const size_t count = array.GetCount();
-   for (size_t i = 0; i < count; i++)
+   size_t count = menubar->GetMenuCount();
+   for (size_t j = 0; j < count; j++)
    {
-      const wxAcceleratorEntry& entry = array.Item(i);
-      wxMenuItem* item = menu->FindItem(entry.GetCommand());
-      if (item)
+      wxMenu* menu = menubar->GetMenu(j);
+      wxMenu_SetAccelText(menu, accel);
+   }
+}
+
+static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxAcceleratorEntry& entry)
+{
+   return wxMenuItem_SetAccelText(item, wxGetAccelText(entry));
+}
+
+static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
+{
+   for (wxMenuItemList::compatibility_iterator node = menu->GetMenuItems().GetFirst();
+        node;
+        node = node->GetNext())
+   {
+      wxMenuItem* item = node->GetData();
+      if (item->IsSubMenu())
       {
-         wxMenuItem_SetAccelText(item, wxGetAccelText(entry), true);
+         wxMenu_SetAccelText(item->GetSubMenu(), accel);
+      }
+      else if (item->GetId() == accel.GetCommand())
+      {
+         wxMenuItem_SetAccelText(item, accel);
       }
    }
 }
 
-void wxMenu_Fixup(wxMenu* menu, const AcceleratorArray& array)
+void wxMenu_SetAccelText(wxMenu* menu, const AcceleratorArray& array)
 {
-   const size_t count = array.GetCount();
-   for (size_t i = 0; i < count; i++)
+   for (size_t i = 0; i < array.GetCount(); i++)
    {
-      const wxAcceleratorEntry& entry = array.Item(i);
-      wxMenuItem* item = menu->FindItem(entry.GetCommand());
-      if (item)
-      {
-         wxMenuItem_SetAccelText(item, wxGetAccelText(entry), true);
-      }
+      const wxAcceleratorEntry& accel = array.Item(i);
+      wxMenu_SetAccelText(menu, accel);
    }
 }
 
