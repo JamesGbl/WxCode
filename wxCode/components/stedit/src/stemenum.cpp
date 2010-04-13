@@ -792,7 +792,7 @@ wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
 
     if (HasMenuOptionType(STE_MENU_FRAME) && HasMenuItemType(STE_MENU_HELP_MENU, STE_MENU_HELP_ABOUT))
     {
-        wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, _("&About..."), _("About this program"));
+        wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
         item->SetBitmap(wxBitmap(pencil16_xpm));
         menu->Append(item);
     }

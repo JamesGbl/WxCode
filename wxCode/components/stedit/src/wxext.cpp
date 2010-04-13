@@ -188,6 +188,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
    wxString stockLabel;
    switch (id)
    {
+      STOCKITEM(wxID_ABOUT,     _("&About..."))   // with ellipsis
       STOCKITEM(wxID_OPEN,      _("&Open..."))    // with ellipsis
       STOCKITEM(wxID_SELECTALL, _("Select &All")) // with ampersand
       STOCKITEM(wxID_FIND,      _("&Find..."))    // with ellipsis
