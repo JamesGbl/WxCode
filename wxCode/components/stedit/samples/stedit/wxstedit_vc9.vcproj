@@ -39,11 +39,11 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\vc9_mswddll/studio.tlb"
+				TypeLibraryName=".\vc9_mswddll/wxstedit.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL;wxUSE_NO_MANIFEST=1"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include"
 			/>
@@ -81,10 +81,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswddll/studio.exe"
+				OutputFile=".\vc9_mswddll/wxstedit.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\..\lib\vc9_dll"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\vc9_mswddll/wxstedit.pdb"
 				SubSystem="2"
@@ -97,6 +97,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -104,7 +105,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\vc9_mswddll/studio.bsc"
+				OutputFile=".\vc9_mswddll/wxstedit.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -139,11 +140,11 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\vc9_mswddll/studio.tlb"
+				TypeLibraryName=".\vc9_mswddll/wxstedit.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -171,7 +172,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL;wxUSE_NO_MANIFEST=1"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include"
 			/>
@@ -184,7 +185,7 @@
 				OutputFile=".\vc9_mswddll/wxstedit.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\..\lib\vc9_dll"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\vc9_mswddll/wxstedit.pdb"
 				SubSystem="2"
@@ -204,7 +205,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\vc9_mswddll/studio.bsc"
+				OutputFile=".\vc9_mswddll/wxstedit.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -243,7 +244,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\vc9_msw/studio.tlb"
+				TypeLibraryName=".\vc9_msw/wxstedit.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -270,6 +271,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="wxUSE_NO_MANIFEST=1"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include"
 			/>
@@ -301,7 +303,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\vc9_msw/studio.bsc"
+				OutputFile=".\vc9_msw/wxstedit.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -341,7 +343,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\vc9_msw/studio.tlb"
+				TypeLibraryName=".\vc9_msw/wxstedit.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -368,6 +370,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="wxUSE_NO_MANIFEST=1"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include"
 			/>
@@ -399,7 +402,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\vc9_msw/studio.bsc"
+				OutputFile=".\vc9_msw/wxstedit.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
