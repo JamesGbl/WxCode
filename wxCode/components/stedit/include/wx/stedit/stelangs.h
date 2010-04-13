@@ -77,7 +77,7 @@ public:
     size_t GetCount() const;
 
     // Find what language has the extension, returns STE_LANG_NULL if unknown
-    int FindLanguageByFilename(const wxString& fileName) const;
+    int FindLanguageByFilename(const wxFileName&) const;
 
     // Is this language set (else it's NULL), lang_n is enum STE_LangTypes
     bool HasLanguage(size_t lang_n) const { return GetLanguage(lang_n) != NULL; }

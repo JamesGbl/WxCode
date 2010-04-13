@@ -214,7 +214,7 @@ public:
     wxWindow* m_window;             // should be a wxSTEditorSplitter
     bool m_modified;                // is it modified
     wxString m_root;                // root leaf in the treectrl
-    wxString m_fileName;            // filename of the page
+    wxFileName m_fileName;          // filename of the page
     wxArrayString m_treePath;       // path to the tree item, without root item
 };
 

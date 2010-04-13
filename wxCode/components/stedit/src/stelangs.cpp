@@ -5004,15 +5004,15 @@ size_t wxSTEditorLangs::GetCount() const
     return M_LANGDATA->m_langs.GetCount();
 }
 
-int wxSTEditorLangs::FindLanguageByFilename(const wxString& fileName_) const
+int wxSTEditorLangs::FindLanguageByFilename(const wxFileName& fileName_) const
 {
     int fallback = STE_LANG_NULL;
 
     wxCHECK_MSG(IsOk(), fallback, wxT("Langs not created"));
 
-    wxString fileName = fileName_;
-    if (fileName_.Find(wxFILE_SEP_PATH) != wxNOT_FOUND)
-        fileName = fileName_.AfterLast(wxFILE_SEP_PATH);
+    wxString fileName = fileName_.GetFullPath();
+    if (fileName.Find(wxFILE_SEP_PATH) != wxNOT_FOUND)
+        fileName = fileName.AfterLast(wxFILE_SEP_PATH);
 
     wxFileName wxFN(fileName);
     wxString name = wxFN.GetName().Lower();

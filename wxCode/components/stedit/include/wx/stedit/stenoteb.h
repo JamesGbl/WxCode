@@ -83,7 +83,7 @@ public:
     void SetMaxPageCount(size_t count) { m_stn_max_page_count = count; }
 
     // strip the path off the wxSTEditor::GetFileName to use as tab name
-    wxString FileNameToTabName(const wxString& fileName) const;
+    wxString FileNameToTabName(const wxFileName&) const;
 
     // Delete a page and if query_save_if_modified & modified call
     //   wxSTEditor::QuerySaveIfModified()

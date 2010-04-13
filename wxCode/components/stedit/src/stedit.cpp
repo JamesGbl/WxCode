@@ -347,7 +347,7 @@ void wxSTEditor::UpdateCanDo(bool send_event)
     }
 
     if (send_event && (state_change != 0))
-        SendEvent(wxEVT_STE_STATE_CHANGED, state_change, GetState(), GetFileName());
+       SendEvent(wxEVT_STE_STATE_CHANGED, state_change, GetState(), GetFileName().GetFullPath());
 }
 
 void wxSTEditor::OnMouseWheel(wxMouseEvent& event)
@@ -709,7 +709,7 @@ void wxSTEditor::OnSetFocus(wxFocusEvent &event)
         parent = parent->GetParent();
     }
 
-    SendEvent(wxEVT_STE_SET_FOCUS, 0, GetState(), GetFileName(), false);
+    SendEvent(wxEVT_STE_SET_FOCUS, 0, GetState(), GetFileName().GetFullPath(), false);
 }
 void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
 {
@@ -2059,32 +2059,32 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
 
 bool wxSTEditor::CopyPath()
 {
-   bool ok = wxTheClipboard->Open();
-   if (ok)
-   {
-      ok = wxTheClipboard->SetData(new wxTextDataObject(GetFileName()));
-      wxTheClipboard->Close();
-   }
-   return ok;
+    bool ok = wxTheClipboard->Open();
+    if (ok)
+    {
+        ok = wxTheClipboard->SetData(new wxTextDataObject(GetFileName().GetFullPath()));
+        wxTheClipboard->Close();
+    }
+    return ok;
 }
 
-wxString wxSTEditor::GetFileName() const
+wxFileName wxSTEditor::GetFileName() const
 {
     return GetSTERefData()->m_fileName;
 }
 
-void wxSTEditor::SetFileName(const wxString &fileName, bool send_event)
+void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
 {
     if (GetSTERefData()->m_fileName != fileName)
     {
         GetSTERefData()->m_fileName = fileName;
         if (send_event)
-            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), fileName);
+            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), fileName.GetFullPath());
     }
 }
 
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
-                                 const wxString &fileName,
+                                 const wxFileName& fileName,
                                  int flags,
                                  wxWindow* parent)
 {
@@ -2193,55 +2193,53 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
 }
 
 
-bool wxSTEditor::LoadFile(const wxString &fileName, const wxString &extensions)
+bool wxSTEditor::LoadFile(const wxFileName& fileName, const wxString &extensions)
 {
     return LoadFile(fileName, extensions, true);
 }
 
-bool wxSTEditor::LoadFile(const wxString &fileName_, const wxString &extensions_, bool noise)
+bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool noise)
 {
     if (noise && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) && (QuerySaveIfModified(true) == wxCANCEL))
     {
         return false;
     }
 
-    wxString fileName = fileName_;
+    wxFileName fileName = fileName_;
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
-    if (fileName.IsEmpty())
+    if (fileName.GetFullPath().IsEmpty())
     {
         fileName = GetFileName();
         wxString path;
 
-        if (fileName.Length())
+        if (fileName.GetFullPath().Length())
         {
             wxFileName fn(fileName);
-            path     = fn.GetPath();
-            fileName = fn.GetFullName();
+            path     = fileName.GetPath();
+            fileName = wxFileName(wxEmptyString, fileName.GetFullName());
         }
         else
             path = GetOptions().GetDefaultFilePath();
 
-        fileName = wxFileSelector(_("Open file"), path, fileName,
+        fileName = wxFileSelector(_("Open file"), path, fileName.GetFullPath(),
                                   wxEmptyString, extensions,
                                   wxFD_DEFAULT_STYLE_OPEN, this);
 
-        if (fileName.IsEmpty())
+        if (fileName.GetFullPath().IsEmpty())
             return false;
     }
 
-    if (!wxFileExists(fileName))
+    if (!fileName.FileExists())
         return false;
 
-    wxFileName fName(fileName);
-    if (!fName.IsAbsolute())
-        fName.MakeAbsolute();
+    if (!fileName.IsAbsolute())
+        fileName.MakeAbsolute();
 
-    fileName = fName.GetFullPath();
-    GetOptions().SetDefaultFilePath(fName.GetPath(wxPATH_GET_VOLUME));
+    GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
 
     wxStructStat statstr;
-    wxStat( fileName, &statstr );
+    wxStat( fileName.GetFullPath(), &statstr );
 
     if (statstr.st_size > 40000000)
     {
@@ -2258,7 +2256,7 @@ bool wxSTEditor::LoadFile(const wxString &fileName_, const wxString &extensions_
     int load_flags = GetEditorPrefs().IsOk() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
 
     // use streams method to allow loading unicode files
-    wxFileInputStream stream(fileName);
+    wxFileInputStream stream(fileName.GetFullPath());
     bool ok = stream.IsOk();
     if (ok)
         ok = LoadInputStream(stream, fileName, load_flags);
@@ -2266,7 +2264,7 @@ bool wxSTEditor::LoadFile(const wxString &fileName_, const wxString &extensions_
     if (!ok)
         return false;
 
-    SetFileModificationTime(fName.GetModificationTime());
+    SetFileModificationTime(fileName.GetModificationTime());
     SetFileName(fileName, true);
     UpdateCanDo(true);
 
@@ -2275,11 +2273,11 @@ bool wxSTEditor::LoadFile(const wxString &fileName_, const wxString &extensions_
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
-    wxString fileName = GetFileName();
+    wxFileName fileName = GetFileName();
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
     // if not a valid filename or it wasn't loaded from disk - force dialog
-    if (fileName.Length())
+    if (fileName.GetFullPath().Length())
     {
         wxFileName fName(fileName);
         if (!fName.IsOk())
@@ -2289,32 +2287,35 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
             use_dialog = true;
     }
 
-    if (fileName.IsEmpty() || use_dialog)
+    if (fileName.GetFullPath().IsEmpty() || use_dialog)
     {
         wxString path = GetOptions().GetDefaultFilePath();
 
-        if (fileName.Length())
+        if (fileName.GetFullPath().Length())
         {
             wxFileName fn(fileName);
-            fileName = fn.GetFullName();
+            fileName = wxFileName(wxEmptyString, fn.GetFullName());
             wxString fileNamePath = fn.GetPath();
             if (fileNamePath.Length())
                 path = fileNamePath;
         }
 
-        fileName = wxFileSelector( _("Save file"), path, fileName,
+        fileName = wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
                                    wxEmptyString, extensions,
                                    wxFD_DEFAULT_STYLE_SAVE, this );
 
-        if (fileName.IsEmpty()) return false;
+        if (fileName.GetFullPath().IsEmpty())
+        {
+            return false;
+        }
     }
 
     // FIXME check for write permission wxAccess - access
 
-    wxFile file(fileName, wxFile::write);
+    wxFile file(fileName.GetFullPath(), wxFile::write);
     if (!file.IsOpened())
     {
-        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.wx_str()),
+        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath().wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , this);
         return false;
     }
@@ -2400,7 +2401,7 @@ bool wxSTEditor::Revert()
 bool wxSTEditor::ShowExportDialog()
 {
     wxSTEditorExportDialog dialog(this);
-    wxString fileName = GetFileName();
+    wxFileName fileName = GetFileName();
     int file_format   = dialog.GetFileFormat();
     fileName = dialog.FileNameExtChange(fileName, file_format);
     dialog.SetFileName(fileName);
@@ -2423,7 +2424,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     bool sendEvents = m_sendEvents;
     m_sendEvents = false; // block focus when dialog closes
 
-    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), GetFileName().wx_str()),
+    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), GetFileName().GetFullPath().wx_str()),
                            _("Unsaved changes"),
                            style|wxCENTRE|wxICON_QUESTION, this);
 
@@ -2444,7 +2445,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
 bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
 {
     // do we currently have a valid filename and datetime from loading?
-    if (GetFileName().IsEmpty()) return false;
+    if (GetFileName().GetFullPath().IsEmpty()) return false;
     if (!GetFileModificationTime().IsValid()) return false;
 
     wxLogNull nullLog; // no errors, we handle them ourselves
@@ -2461,7 +2462,8 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         // oops, file is gone, just tell them
         if (show_reload_dialog)
         {
-            wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."),  GetFileName().wx_str()),
+            wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."), 
+                           GetFileName().GetFullPath().wx_str()),
                           _("File removed from disk"),
                           wxOK | wxICON_EXCLAMATION, this);
         }
@@ -2475,7 +2477,8 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
 
     if (altered && show_reload_dialog)
     {
-        int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"), GetFileName().wx_str()),
+        int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"),
+                                    GetFileName().GetFullPath().wx_str()),
                                 _("File changed on disk"),
                                 wxYES_NO | wxICON_QUESTION, this);
         if (ret == wxYES)
@@ -2519,7 +2522,7 @@ void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
     if (popupMenu)
     {
         UpdateItems(popupMenu);
-        if (!SendEvent(wxEVT_STE_POPUPMENU, 0, GetState(), GetFileName()))
+        if (!SendEvent(wxEVT_STE_POPUPMENU, 0, GetState(), GetFileName().GetFullPath()))
         {
             PopupMenu(popupMenu);
         }
@@ -3284,7 +3287,7 @@ void wxSTEditor::SetFindFlags(long flags, bool send_evt)
     if (send_evt && (s_findFlags != flags))
     {
         s_findFlags = flags;
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName());
+        SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
     }
 }
 
@@ -3737,7 +3740,7 @@ bool wxSTEditor::SetLanguage(int lang)
     return true;
 }
 
-bool wxSTEditor::SetLanguage(const wxString &filePath)
+bool wxSTEditor::SetLanguage(const wxFileName &filePath)
 {
     int lang = -1;
 

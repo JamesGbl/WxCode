@@ -544,7 +544,7 @@ void wxSTEditorFrame::UpdateFileTreeCtrl()
             steTreeData.m_fileName = noteBook->GetPageText(n);
 
             steTreeData.m_treePath.Add(steTreeData.m_root);
-            steTreeData.m_treePath.Add(steTreeData.m_fileName);
+            steTreeData.m_treePath.Add(steTreeData.m_fileName.GetFullPath());
         }
 
         wxTreeItemId id; // initially null
@@ -636,7 +636,7 @@ wxString wxSTEditorFrame::MakeTitle(wxSTEditor* editor)
 {
      const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
      return wxString::Format(wxT("%s - %s"),
-        (editor->GetFileName() + modified).wx_str(),
+        (editor->GetFileName().GetFullPath() + modified).wx_str(),
         m_titleBase.wx_str());
 }
 

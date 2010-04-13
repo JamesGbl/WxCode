@@ -1556,20 +1556,19 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
 {
     wxSTEditorPropertiesSizer(this, true, true);
 
-    wxString fileName = edit->GetFileName();
+    wxFileName fileName = edit->GetFileName();
 
     wxTextCtrl *textCtrl = (wxTextCtrl*)FindWindow(ID_STEPROP_FILENAME_TEXTCTRL);
-    textCtrl->SetValue(fileName);
+    textCtrl->SetValue(fileName.GetFullPath());
 
-    wxFileName fName(fileName);
-    bool exists = fName.FileExists();
+    bool exists = fileName.FileExists();
 
     wxStructStat statstr;
     wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
     if (exists)
     {
-        wxStat(fileName, &statstr);
-        fName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
+        wxStat(fileName.GetFullPath(), &statstr);
+        fileName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
         SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, wxString::Format(wxT("%ld bytes"), (long)statstr.st_size));
     }
     else
@@ -1663,7 +1662,7 @@ void wxSTEditorWindowsDialog::UpdateListBox()
         wxString text = wxString::Format(wxT("%3d : "), n+1);
         // they can stick in different windows in notebook if they like
         if (editor)
-            m_listBox->Append(text+editor->GetFileName());
+            m_listBox->Append(text+editor->GetFileName().GetFullPath());
         else
             m_listBox->Append(text+m_notebook->GetPageText(n));
     }

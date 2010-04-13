@@ -114,7 +114,7 @@ public:
     // implementation
     wxArrayPtrVoid m_editors;       // editors that share this data
 
-    wxString     m_fileName;        // current filename for the editor
+    wxFileName   m_fileName;        // current filename for the editor
     wxDateTime   m_modifiedTime;    // file modification time, else invalid
     wxTreeItemId m_treeItemId;      // the treeitem if tracked in a wxTreeCtrl
 
@@ -371,18 +371,18 @@ public :
     // Load/Save methods
 
     // Can/Should this document be saved (has valid filename and is modified)
-    bool CanSave() { return GetModify() && GetFileName().Length(); }
+    bool CanSave() { return GetModify() && GetFileName().GetFullPath().Length(); }
 
     // Load a file from the wxInputStream (probably a wxFileInputStream)
     //  The fileName is used only for the message on error
     //  flags is STE_LoadFileType
-    bool LoadInputStream(wxInputStream& stream, const wxString &fileName,
+    bool LoadInputStream(wxInputStream& stream, const wxFileName&,
                          int flags = STE_LOAD_QUERY_UNICODE, wxWindow* parent = NULL);
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
     //   if using wxFileSelector then if extensions is wxEmptyString use
     //   GetOptions().GetDefaultFileExtensions() else the ones supplied
-    virtual bool LoadFile( const wxString &filename = wxEmptyString,
+    virtual bool LoadFile( const wxFileName& fileName = wxFileName(),
                            const wxString &extensions = wxEmptyString );
     // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector
     virtual bool SaveFile( bool use_dialog = true,
@@ -395,7 +395,7 @@ public :
     //   See wxSTEditorExporter
     bool ShowExportDialog();
 
-    bool LoadFile( const wxString &filename, const wxString &extensions, bool noise);
+    bool LoadFile( const wxFileName&, const wxString &extensions, bool noise);
 
     bool Revert();
 
@@ -409,8 +409,8 @@ public :
     virtual int QuerySaveIfModified(bool save_file, int style = wxYES_NO|wxCANCEL);
 
     // Get/Set the current filename, including path
-    wxString GetFileName() const;
-    void SetFileName(const wxString &fileName, bool send_event = false);
+    wxFileName GetFileName() const;
+    void SetFileName(const wxFileName&, bool send_event = false);
 
     // If there's a valid filename, return false if it's modification time is
     //   before the current doc's times if the time is valid.
@@ -548,7 +548,7 @@ public :
     // Setup colouring and lexing based on wxSTEditorLangs type
     bool SetLanguage(int lang);
     // Setup colouring and lexing based on wxSTEditorLangs::GetFilePattern()
-    bool SetLanguage(const wxString &filename);
+    bool SetLanguage(const wxFileName&);
     // What language are we using, the index into wxSTEditorLangs
     //   This may or may not match wxSTC::GetLexer since
     //   different languages may use the same lexer. (Java uses CPP lexer)
@@ -750,8 +750,8 @@ public:
     void SetStateChange(int stateChange) { SetInt(stateChange); }
     void SetStateValues(int stateValues) { SetExtraLong(stateValues); }
 
-    wxString GetFileName() const { return GetString(); }
-    void SetFileName( const wxString& fileName ) { SetString( fileName ); }
+    wxFileName GetFileName() const { return wxFileName(GetString()); }
+    void SetFileName( const wxFileName& fileName ) { SetString( fileName.GetFullPath() ); }
 
     wxSTEditor* GetEditor() const { return wxDynamicCast(GetEventObject(), wxSTEditor); }
 

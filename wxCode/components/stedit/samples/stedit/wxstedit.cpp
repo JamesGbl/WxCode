@@ -43,6 +43,8 @@
 #include "wx/stc/private.h" // stc2wx()
 #endif
 
+#include "wx/filename.h"
+
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
 #include "../../art/pencil16.xpm"

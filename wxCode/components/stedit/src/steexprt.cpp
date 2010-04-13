@@ -134,14 +134,14 @@ wxSTEditorExporter::wxSTEditorExporter(wxSTEditor* editor)
     if (!m_steLangs.IsOk())  m_steLangs.Create();
 }
 
-bool wxSTEditorExporter::ExportToFile(int file_format, const wxString& fileName,
+bool wxSTEditorExporter::ExportToFile(int file_format, const wxFileName& fileName,
                                       bool overwrite_prompt, bool msg_on_error)
 {
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
 
-    if (overwrite_prompt && wxFileExists(fileName))
+    if (overwrite_prompt && fileName.FileExists())
     {
-        int overw = wxMessageBox(wxString::Format(_("Overwrite file : '%s'?\n"), fileName.wx_str()),
+        int overw = wxMessageBox(wxString::Format(_("Overwrite file : '%s'?\n"), fileName.GetFullPath().wx_str()),
                            _("Export error"),
                            wxOK|wxCANCEL|wxCENTRE|wxICON_QUESTION, m_editor);
 
@@ -164,7 +164,7 @@ bool wxSTEditorExporter::ExportToFile(int file_format, const wxString& fileName,
 
     if (!ret && msg_on_error)
     {
-         wxMessageBox(wxString::Format(_("Unable to export to file : '%s'.\n"), fileName.wx_str()),
+        wxMessageBox(wxString::Format(_("Unable to export to file : '%s'.\n"), fileName.GetFullPath().wx_str()),
                      _("Export error"),
                      wxOK|wxCENTRE|wxICON_ERROR, m_editor);
     }
@@ -367,7 +367,8 @@ void GetRTFStyleChange(char *delta, char *last, char *current) { // \f0\fs20\cf0
     strcpy(last, current);
 }
 
-bool wxSTEditorExporter::SaveToRTF(const wxString& saveName, int start, int end) {
+bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int end)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
     wxBusyCursor busy;
 
@@ -412,8 +413,9 @@ bool wxSTEditorExporter::SaveToRTF(const wxString& saveName, int start, int end)
     if (tabSize == 0)
         tabSize = 4;
 
-    FILE *fp = fopen(wx2stc(saveName), "wt");
-    if (fp) {
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
+    if (fp)
+    {
         char styles[STYLE_DEFAULT + 1][MAX_STYLEDEF];
         char fonts[STYLE_DEFAULT + 1][MAX_FONTDEF];
         char colors[STYLE_DEFAULT + 1][MAX_COLORDEF];
@@ -565,7 +567,8 @@ bool wxSTEditorExporter::SaveToRTF(const wxString& saveName, int start, int end)
 
 //---------- Save to HTML ----------
 
-bool wxSTEditorExporter::SaveToHTMLCSS(const wxString& saveName) {
+bool wxSTEditorExporter::SaveToHTMLCSS(const wxFileName& saveName)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
     wxBusyCursor busy;
 
@@ -600,7 +603,7 @@ bool wxSTEditorExporter::SaveToHTMLCSS(const wxString& saveName) {
     }
     styleIsUsed[STYLE_DEFAULT] = true;
 
-    FILE *fp = fopen(wx2stc(saveName), "wt");
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
     if (fp) {
         fputs("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n", fp);
         fputs("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n", fp);
@@ -973,7 +976,8 @@ inline void getPDFRGB(char* pdfcolour, const char* stylecolour) {
     }
 }
 
-bool wxSTEditorExporter::SaveToPDF(const wxString& saveName) {
+bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
     wxBusyCursor busy;
 
@@ -1374,8 +1378,9 @@ bool wxSTEditorExporter::SaveToPDF(const wxString& saveName) {
     }
     delete []buffer;
 
-    FILE *fp = fopen(wx2stc(saveName), "wb");
-    if (!fp) {
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wb"));
+    if (!fp)
+    {
         // couldn't open the file for saving, issue an error message
         //FIXME SString msg = LocaliseMessage("Could not save file '^0'.", filePath.AsFileSystem());
         //WindowMessageBox(wSciTE, msg, MB_OK | MB_ICONWARNING);
@@ -1480,7 +1485,8 @@ static void defineTexStyle(StyleDefinition &style, FILE* fp, int istyle) {
     fputc('\n', fp);
 }
 
-bool wxSTEditorExporter::SaveToTEX(const wxString& saveName) {
+bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
     wxBusyCursor busy;
 
@@ -1506,8 +1512,9 @@ bool wxSTEditorExporter::SaveToTEX(const wxString& saveName) {
     }
     styleIsUsed[STYLE_DEFAULT] = true;
 
-    FILE *fp = fopen(wx2stc(saveName), "wt");
-    if (fp) {
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
+    if (fp)
+    {
         fputs("\\documentclass[a4paper]{article}\n"
               "\\usepackage[a4paper,margin=2cm]{geometry}\n"
               "\\usepackage[T1]{fontenc}\n"
@@ -1537,7 +1544,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxString& saveName) {
 
         fputs("\\begin{document}\n\n", fp);
         fprintf(fp, "Source File: %s\n\n\\noindent\n\\tiny{\n",
-            static_cast<const char *>(wx2stc(saveName))); //FIXME titleFullPath ? filePath.AsFileSystem() : filePath.Name().AsFileSystem()));
+            saveName.GetFullPath().mb_str()); //FIXME titleFullPath ? filePath.AsFileSystem() : filePath.Name().AsFileSystem()));
 
         int styleCurrent = m_editor->GetStyleAt(0);
 
@@ -1614,7 +1621,8 @@ bool wxSTEditorExporter::SaveToTEX(const wxString& saveName) {
 
 //---------- Save to XML ----------
 
-bool wxSTEditorExporter::SaveToXML(const wxString& saveName) {
+bool wxSTEditorExporter::SaveToXML(const wxFileName& saveName)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
     wxBusyCursor busy;
 
@@ -1658,10 +1666,10 @@ bool wxSTEditorExporter::SaveToXML(const wxString& saveName) {
 
     //WindowAccessor acc(wEditor.GetID(), props) ;
 
-    FILE *fp = fopen(wx2stc(saveName), "wt");
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
 
-    if (fp) {
-
+    if (fp)
+    {
         bool collapseSpaces = 1; //(props.GetInt("export.xml.collapse.spaces", 1) == 1) ;
         bool collapseLines  = 1; //(props.GetInt("export.xml.collapse.lines", 1) == 1) ;
 
@@ -1669,7 +1677,7 @@ bool wxSTEditorExporter::SaveToXML(const wxString& saveName) {
 
         fputs("<document xmlns='http://www.scintila.org/scite.rng'", fp) ;
         fprintf(fp, " filename='%s'",
-            static_cast<const char *>(wx2stc(saveName))); //FIXME filePath.Name().AsFileSystem())) ;
+            saveName.GetFullPath().mb_str()); //FIXME filePath.Name().AsFileSystem())) ;
         fprintf(fp, " type='%s'", "unknown") ;
         fprintf(fp, " version='%s'", "1.0") ;
         fputs(">\n", fp) ;
@@ -1794,11 +1802,13 @@ bool wxSTEditorExporter::SaveToXML(const wxString& saveName) {
     return true;
 }
 
-bool wxSTEditorExporter::SaveToHTML(const wxString& saveName) {
+bool wxSTEditorExporter::SaveToHTML(const wxFileName& saveName)
+{
     wxCHECK_MSG(m_editor, false, wxT("Invalid editor"));
 
-    FILE *fp = fopen(wx2stc(saveName), "wt");
-    if (fp) {
+    FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
+    if (fp)
+    {
         fputs(wx2stc(RenderAsHTML()), fp);
         fclose(fp);
     } else {
@@ -1849,7 +1859,7 @@ wxString wxSTEditorExporter::RenderAsHTML()
     wxBusyCursor busy;
 
     bool wysiwyg = false; // FIXME
-    wxString fileName = m_editor->GetFileName();
+    wxFileName fileName = m_editor->GetFileName();
 
     m_editor->Colourise(0, -1);
 
@@ -1868,7 +1878,7 @@ wxString wxSTEditorExporter::RenderAsHTML()
     // write the header
     htmlString << wxT("<HEAD>\n");
     htmlString << wxT("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=iso-8859-1\">\n");
-    htmlString << wxT("  <TITLE>") + fileName + wxT("</TITLE>\n");
+    htmlString << wxT("  <TITLE>") + fileName.GetFullPath() + wxT("</TITLE>\n");
     htmlString << wxT("</HEAD>\n");
 
     // write the body
@@ -1967,14 +1977,15 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
     bmpButton->SetBitmapLabel(STE_ARTBMP(wxART_STEDIT_OPEN));
 }
 
-wxString wxSTEditorExportDialog::GetFileName() const
+wxFileName wxSTEditorExportDialog::GetFileName() const
 {
     return m_fileNameCombo->GetValue();
 }
-void wxSTEditorExportDialog::SetFileName(const wxString& fileName)
+
+void wxSTEditorExportDialog::SetFileName(const wxFileName& fileName)
 {
-    wxSTEPrependComboBoxString(fileName, 10, m_fileNameCombo);
-    m_fileNameCombo->SetValue(fileName);
+    wxSTEPrependComboBoxString(fileName.GetFullPath(), 10, m_fileNameCombo);
+    m_fileNameCombo->SetValue(fileName.GetFullPath());
     m_fileNameCombo->SetInsertionPointEnd();
     m_fileNameCombo->SetSelection(-1, -1);   // select all
 }
@@ -1987,12 +1998,11 @@ void wxSTEditorExportDialog::SetFileFormat(int file_format)
     m_fileFormatChoice->SetSelection(file_format);
 }
 
-wxString wxSTEditorExportDialog::FileNameExtChange(const wxString& fileName, int file_format) const
+wxFileName wxSTEditorExportDialog::FileNameExtChange(const wxFileName& fileName, int file_format) const
 {
     wxFileName fName(fileName);
-    wxString path = fName.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR);
-    wxString name = fName.GetName();
-    return path + name + wxT(".") + wxSTEditorExporter::GetExtension(file_format);
+    fName.SetExt(wxSTEditorExporter::GetExtension(file_format));
+    return fName;
 }
 
 void wxSTEditorExportDialog::OnChoice(wxCommandEvent& event)
@@ -2018,28 +2028,30 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
         case ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON :
         {
             int file_format    = GetFileFormat();
-            wxString fileName  = GetFileName();
+            wxFileName fileName  = GetFileName();
             wxString path      = wxGetCwd();
             wxString extension = wxSTEditorExporter::GetExtension(file_format);
-            wxString wildcards = wxSTEditorExporter::GetWildcards(file_format) + wxT("|All files (*)|*");
+            wxString wildcards = wxSTEditorExporter::GetWildcards(file_format) + _("|All files (*)|*");
 
-            if (fileName.Length())
+            if (fileName.GetFullPath().Length())
             {
                 wxFileName fn(fileName);
-                fileName = fn.GetFullName();
+                fileName = wxFileName(wxEmptyString, fn.GetFullName());
                 wxString fileNamePath = fn.GetPath();
                 if (fileNamePath.Length())
+                {
                     path = fileNamePath;
+                }
             }
 
-            fileName = wxFileSelector( _("Export to file"), path, fileName,
+            fileName = wxFileSelector( _("Export to file"), path, fileName.GetFullPath(),
                                        extension, wildcards,
                                        wxFD_DEFAULT_STYLE_SAVE, this );
 
-            if (fileName.Length())
+            if (fileName.GetFullPath().Length())
             {
-                if (((wxCheckBox*)FindWindow(ID_STEDLG_EXPORT_EXTENSION_CHECKBOX))->IsChecked())
-                    fileName = wxFileDialogBase::AppendExtension(fileName,
+                if (wxStaticCast(FindWindow(ID_STEDLG_EXPORT_EXTENSION_CHECKBOX), wxCheckBox)->IsChecked())
+                   fileName = wxFileDialogBase::AppendExtension(fileName.GetFullPath(),
                                                                  extension);
                 SetFileName(fileName);
             }
@@ -2048,7 +2060,7 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
         }
         case wxID_OK :
         {
-            wxSTEPrependArrayString(GetFileName(), sm_fileNames, 10);
+            wxSTEPrependArrayString(GetFileName().GetFullPath(), sm_fileNames, 10);
             sm_file_format = GetFileFormat();
             break;
         }

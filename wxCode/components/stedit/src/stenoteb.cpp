@@ -105,11 +105,11 @@ void wxSTEditorNotebook::CreateOptions(const wxSTEditorOptions& options)
         GetOptions().SetNotebookPopupMenu(steMM->CreateNotebookPopupMenu(), false);
 }
 
-wxString wxSTEditorNotebook::FileNameToTabName(const wxString& fileName) const
+wxString wxSTEditorNotebook::FileNameToTabName(const wxFileName& fileName) const
 {
-    wxString name = wxFILE_SEP_PATH+fileName;
+    wxString name = wxFILE_SEP_PATH+fileName.GetFullPath();
 #ifdef __WXMSW__
-    name.Replace(wxT("&"), wxT("&&")); // TROELS TRK
+    name.Replace(wxT("&"), wxT("&&"));
 #endif
     return name.AfterLast(wxFILE_SEP_PATH);
 }

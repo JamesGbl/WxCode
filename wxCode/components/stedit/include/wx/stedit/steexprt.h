@@ -36,21 +36,21 @@ public:
     wxSTEditorExporter(wxSTEditor* editor);
 
     // these are taken from SciTE src/Exporters.cxx
-    bool SaveToRTF(const wxString& saveName, int start = 0, int end = -1);
-    bool SaveToHTMLCSS(const wxString& saveName);
-    bool SaveToPDF(const wxString& saveName);
-    bool SaveToTEX(const wxString& saveName);
-    bool SaveToXML(const wxString& saveName);
+    bool SaveToRTF(const wxFileName&, int start = 0, int end = -1);
+    bool SaveToHTMLCSS(const wxFileName&);
+    bool SaveToPDF(const wxFileName&);
+    bool SaveToTEX(const wxFileName&);
+    bool SaveToXML(const wxFileName&);
 
     // Get a HTML representation of the text, w/ styles
     //  code originally from wxHatch by Chris Elliott
     wxString RenderAsHTML();
-    bool SaveToHTML(const wxString& saveName);
+    bool SaveToHTML(const wxFileName&);
 
     // Export to the file_format (enum STE_Export_Type) to the given fileName
     //  if !overwrite_prompt don't ask to overwrite
     //  if !msg_on_error don't show an error message on failure (write error)
-    bool ExportToFile(int file_format, const wxString& fileName,
+    bool ExportToFile(int file_format, const wxFileName&,
                       bool overwrite_prompt, bool msg_on_error);
 
     static wxString GetExtension(int file_format); // see enum STE_Export_Type
@@ -83,8 +83,8 @@ public:
                            const wxString& title = _("Export file"),
                            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
 
-    wxString GetFileName() const;
-    void SetFileName(const wxString& fileName);
+    wxFileName GetFileName() const;
+    void SetFileName(const wxFileName&);
 
     int  GetFileFormat() const;                    // see enum STE_Export_Type
     void SetFileFormat(int file_format);
@@ -95,7 +95,7 @@ public:
     void OnChoice(wxCommandEvent& event);
     void OnButton(wxCommandEvent& event);
 
-    wxString FileNameExtChange(const wxString& fileName, int file_format) const;
+    wxFileName FileNameExtChange(const wxFileName&, int file_format) const;
 
     wxChoice   *m_fileFormatChoice;
     wxComboBox *m_fileNameCombo;
