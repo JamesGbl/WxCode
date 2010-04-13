@@ -45,6 +45,7 @@
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
+#include "../../art/pencil16.xpm"
 
 #include "wx/cmdline.h"
 #include "wx/config.h"
@@ -320,7 +321,10 @@ bool wxStEditApp::OnInit()
     // Get the "Help" menu
     wxMenu* menu = new wxMenu; //m_frame->GetMenuBar()->GetMenu(m_frame->GetMenuBar()->GetMenuCount()-1);
 
-    menu->Append(wxID_ABOUT, _("&About..."), _("About this program"));
+    wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, _("&About..."), _("About this program"));
+    item->SetBitmap(wxBitmap(pencil16_xpm));
+    menu->Append(item);
+
     // Add our help dialogs
     menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
     menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
@@ -337,7 +341,7 @@ bool wxStEditApp::OnInit()
     m_frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
-    m_frame->GetMenuBar()->Append(menu, wxT("&Help"));
+    m_frame->GetMenuBar()->Append(menu, _("&Help"));
 
     // ------------------------------------------------------------------------
     // handle loading the files

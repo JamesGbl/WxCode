@@ -14,6 +14,7 @@
 #include "wx/stedit/stemenum.h"
 #include "wx/stedit/stedit.h"
 #include "wxext.h"
+#include "../art/pencil16.xpm"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - a holding place for menu generating code
@@ -791,7 +792,9 @@ wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
 
     if (HasMenuOptionType(STE_MENU_FRAME) && HasMenuItemType(STE_MENU_HELP_MENU, STE_MENU_HELP_ABOUT))
     {
-        menu->Append(wxID_ABOUT, _("&About..."), _("About this program"));
+        wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, _("&About..."), _("About this program"));
+        item->SetBitmap(wxBitmap(pencil16_xpm));
+        menu->Append(item);
     }
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
