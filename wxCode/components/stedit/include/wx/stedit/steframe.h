@@ -127,6 +127,7 @@ public:
     // Title is "titleBase - [*] editor fileName", * used to denote modified
     wxString GetTitleBase() const { return m_titleBase; }
     void SetTitleBase( const wxString& titleBase ) { m_titleBase = titleBase; }
+    wxString MakeTitle(wxSTEditor*);
 
     // Show the about dialog, called for wxID_ABOUT
     static void ShowAboutDialog(wxWindow* parent);
