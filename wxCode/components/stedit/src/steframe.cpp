@@ -758,12 +758,26 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     {
         if (GetOptions().GetFileHistory())
         {
-            wxString fileName = GetOptions().GetFileHistory()->GetHistoryFile(win_id-wxID_FILE1);
-
+            wxFileName fileName = GetOptions().GetFileHistory()->GetHistoryFile(win_id-wxID_FILE1);
+            bool ok;
+            
             if (GetEditorNotebook())
-                GetEditorNotebook()->LoadFile(fileName);
+            {
+                ok = GetEditorNotebook()->LoadFile(fileName);
+            }
             else if (editor)
-                editor->LoadFile(fileName);
+            {
+                ok = editor->LoadFile(fileName);
+            }
+            else
+            {
+                ok = false;
+            }
+            if (!ok)
+            {
+               wxMessageBox(wxString::Format(_("Error opening file: '%s'"), fileName.GetFullPath().wx_str()),
+                        STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
+            }
         }
 
         return true;

@@ -209,7 +209,7 @@ int wxSTEditorNotebook::FindEditorPage(wxSTEditor *editor)
     return wxNOT_FOUND;
 }
 
-int wxSTEditorNotebook::FindEditorPageByFileName(const wxString& filename)
+int wxSTEditorNotebook::FindEditorPageByFileName(const wxFileName& filename)
 {
     size_t n, count = GetPageCount();
     for (n = 0; n < count; n++)
@@ -686,12 +686,12 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
     return false;
 }
 
-bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &extensions_)
+bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_)
 {
-    wxString fileName = fileName_;
+    wxFileName fileName = fileName_;
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
-    if (fileName.IsEmpty())
+    if (fileName.GetFullPath().IsEmpty())
     {
         wxFileDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
@@ -704,20 +704,11 @@ bool wxSTEditorNotebook::LoadFile( const wxString &fileName_, const wxString &ex
             return false;
     }
 
-    bool ok = false;
-
-    if (!wxFileExists(fileName))
-    {
-        wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
-        wxCHECK_MSG(splitter, false, wxT("Invalid splitter"));
-        splitter->GetEditor()->NewFile(fileName);
-        ok = InsertEditorSplitter(-1, splitter, true);
-    }
-    else
+    bool ok = fileName.FileExists();
+    if (ok)
     {
         // load the file from disk and only load it once
-        wxFileName fName(fileName);
-        GetOptions().SetDefaultFilePath(fName.GetPath(wxPATH_GET_VOLUME));
+        GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
 
         int page = FindEditorPageByFileName(fileName);
         if (page != wxNOT_FOUND)

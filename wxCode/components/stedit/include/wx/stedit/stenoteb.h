@@ -65,7 +65,7 @@ public:
     // Find the page that this editor is in or -1 for none
     int FindEditorPage(wxSTEditor *editor);
     // Find the page who's editor has this filename or id, returns first found or -1 for not found.
-    int FindEditorPageByFileName(const wxString& filename);
+    int FindEditorPageByFileName(const wxFileName&);
     int FindEditorPageById(wxWindowID win_id);
 
     // Insert a blank wxSTEditorSplitter into the notebook
@@ -99,7 +99,7 @@ public:
     // Add a new page with the given name, if name is "" popup dialog to ask name
     virtual bool NewPage( const wxString& title = wxEmptyString );
     // Load a single file into a new page, if fileName is empty use wxFileSelector
-    virtual bool LoadFile( const wxString &fileName,
+    virtual bool LoadFile( const wxFileName&,
                            const wxString &extensions = wxEmptyString );
     // Load file(s) into new page(s), if filenames is NULL, use wxFileDialog
     virtual bool LoadFiles( wxArrayString *fileNames = NULL,
