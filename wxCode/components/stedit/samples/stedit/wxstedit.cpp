@@ -307,7 +307,7 @@ bool wxStEditApp::OnInit()
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
 
     // ------------------------------------------------------------------------
-    m_frame = new wxSTEditorFrame( NULL, wxID_ANY, wxT("wxStEditor"),
+    m_frame = new wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
                                    wxDefaultPosition, wxSize(800,600));
 
     // ------------------------------------------------------------------------
