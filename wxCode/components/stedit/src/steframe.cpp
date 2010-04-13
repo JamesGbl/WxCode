@@ -772,31 +772,11 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     switch (win_id)
     {
         case ID_STE_SHOW_FULLSCREEN :
-        {
-            //long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION;
-            long style = wxFULLSCREEN_ALL;
-            ShowFullScreen(event.IsChecked(), style);
+            ShowFullScreen(event.IsChecked());
             return true;
-        }
         case ID_STF_SHOW_SIDEBAR :
-        {
-            if (GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
-            {
-                if (event.IsChecked())
-                {
-                    if (!GetSideSplitter()->IsSplit())
-                    {
-                        GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 100);
-                        GetSideNotebook()->Show(true);
-                    }
-                }
-                else if (GetSideSplitter()->IsSplit())
-                    GetSideSplitter()->Unsplit(m_sideSplitterWin1);
-            }
-
-            UpdateAllItems();
+            ShowSidebar(event.IsChecked());
             return true;
-        }
         case wxID_EXIT :
         {
             if (GetEditorNotebook())
@@ -819,6 +799,33 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     }
 
     return false;
+}
+
+void wxSTEditorFrame::ShowFullScreen(bool on)
+{
+    //long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION;
+    long style = wxFULLSCREEN_ALL;
+    wxFrame::ShowFullScreen(on, style);
+}
+
+void wxSTEditorFrame::ShowSidebar(bool on)
+{
+    if (GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
+    {
+        if (on)
+        {
+            if (!GetSideSplitter()->IsSplit())
+            {
+                GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 100);
+                GetSideNotebook()->Show(true);
+            }
+        }
+        else if (GetSideSplitter()->IsSplit())
+        {
+            GetSideSplitter()->Unsplit(m_sideSplitterWin1);
+        }
+        UpdateAllItems();
+    }
 }
 
 void wxSTEditorFrame::OnClose( wxCloseEvent &event )

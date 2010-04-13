@@ -132,6 +132,9 @@ public:
     // Show the about dialog, called for wxID_ABOUT
     static void ShowAboutDialog(wxWindow* parent);
 
+    void ShowFullScreen(bool on);
+    void ShowSidebar(bool on);
+
     // Load/Save the config for showing sidebar and frame size
     //   See also wxSTEditorOptions for paths and internal saving config.
     void LoadConfig( wxConfigBase &config,

@@ -412,7 +412,7 @@ bool wxStEditApp::OnInit()
         if (steOptions.HasFrameOption(STF_CREATE_NOTEBOOK) && fileNames.GetCount())
             m_frame->GetEditorNotebook()->LoadFiles( &fileNames );
     }
-
+    //m_frame->ShowSidebar(false);
     m_frame->Show(true);
 
     // filenames had *, ? or other junk so we didn't load them
