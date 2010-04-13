@@ -779,7 +779,7 @@ wxMenu *wxSTEditorMenuManager::CreateWindowMenu(wxMenu *menu_) const
     }
 
     if (add_sep) menu->AppendSeparator();
-    menu->Append(ID_STN_CLOSE_PAGE, _("Cl&ose"));
+    menu->Append(ID_STN_CLOSE_PAGE, _("&Close"));
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {

@@ -2381,7 +2381,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
     if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
         SetLanguage( title );
 
-    SetFileName(title, true);
+    SetFileName(wxFileName(title), true);
     UpdateCanDo(true);
     return true;
 }
