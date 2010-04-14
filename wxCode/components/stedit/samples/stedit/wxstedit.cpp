@@ -413,7 +413,7 @@ bool wxStEditApp::OnInit()
             m_frame->GetEditorNotebook()->LoadFiles( &fileNames );
     }
     //m_frame->ShowSidebar(false);
-    //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX;
+    //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX; // trac.wxwidgets.org/ticket/11947
     m_frame->Show(true);
 
     // filenames had *, ? or other junk so we didn't load them
