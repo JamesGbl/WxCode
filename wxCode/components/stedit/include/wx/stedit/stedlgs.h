@@ -319,16 +319,14 @@ public:
     wxSTEditorPrefDialog() : wxDialog() { Init(); }
     wxSTEditorPrefDialog( const wxSTEditorPrefPageData& editorPrefData,
                           wxWindow *parent, wxWindowID win_id,
-                          const wxString& title = _("Editor Preferences"),
                           long style = wxDEFAULT_DIALOG_STYLE,
                           const wxString& name = wxT("wxSTEditorPrefDialog")) : wxDialog()
     {
         Init();
-        Create(editorPrefData, parent, win_id, title, style, name);
+        Create(editorPrefData, parent, win_id, style, name);
     }
     bool Create( const wxSTEditorPrefPageData& editorPrefData,
                  wxWindow *parent, wxWindowID win_id = wxID_ANY,
-                 const wxString& title = _("Editor Preferences"),
                  long style = wxDEFAULT_DIALOG_STYLE,
                  const wxString& name = wxT("wxSTEditorPrefDialog"));
 
@@ -425,7 +423,6 @@ class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog: public wxDialog
 {
 public:
     wxSTEditorInsertTextDialog(wxWindow* parent,
-                               const wxString& title = _("Insert Text"),
                                long style = wxDEFAULT_DIALOG_STYLE);
 
     virtual ~wxSTEditorInsertTextDialog();
@@ -490,7 +487,6 @@ class WXDLLIMPEXP_STEDIT wxSTEditorColumnizeDialog : public wxDialog
 {
 public:
     wxSTEditorColumnizeDialog(wxWindow* parent,
-                              const wxString& title = _("Columnize Text"),
                               long style = wxDEFAULT_DIALOG_STYLE|
                                            wxRESIZE_BORDER|wxMAXIMIZE_BOX);
 

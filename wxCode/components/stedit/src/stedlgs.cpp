@@ -1322,10 +1322,9 @@ void wxSTEditorPrefDialog::Init()
 
 bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
                                    wxWindow *parent, wxWindowID win_id,
-                                   const wxString& title,
                                    long style, const wxString& name )
 {
-    if (!wxDialog::Create(parent, win_id, title, wxDefaultPosition, wxDefaultSize, style, name))
+    if (!wxDialog::Create(parent, win_id, _("Editor Preferences"), wxDefaultPosition, wxDefaultSize, style, name))
         return false;
 
     //LangConfig();
@@ -1779,12 +1778,11 @@ void wxSTEditorInsertTextDialog::Init()
 }
 
 wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
-                                                       const wxString& title,
                                                        long style)
                            :wxDialog()
 {
     Init();
-    wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, style);
+    wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style);
 
     m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
                                         wxDefaultPosition, wxSize(400, 200));
@@ -2058,12 +2056,11 @@ void wxSTEditorColumnizeDialog::Init()
 }
 
 wxSTEditorColumnizeDialog::wxSTEditorColumnizeDialog(wxWindow* parent,
-                                                     const wxString& title,
                                                      long style)
                           :wxDialog()
 {
     Init();
-    wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, style);
+    wxDialog::Create(parent, wxID_ANY, _("Columnize Text"), wxDefaultPosition, wxDefaultSize, style);
 
     m_testEditor = new wxSTEditor(this, ID_STEDLG_COLUMNIZE_EDITOR,
                                         wxDefaultPosition, wxSize(400, 200));

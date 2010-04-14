@@ -1957,12 +1957,11 @@ void wxSTEditorExportDialog::Init()
 }
 
 wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
-                                               const wxString& title,
                                                long style)
                        :wxDialog()
 {
     Init();
-    wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, style);
+    wxDialog::Create(parent, wxID_ANY, _("Export file"), wxDefaultPosition, wxDefaultSize, style);
 
     wxSTEditorExportSizer(this, true, true);
 
