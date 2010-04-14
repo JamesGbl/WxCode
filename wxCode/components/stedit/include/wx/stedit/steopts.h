@@ -351,6 +351,7 @@ public:
     // -----------------------------------------------------------------------
     // Register wxStEdits menu id's so that they do not collide with the id's of the calling app
     static void RegisterIds();
+    static wxPathFormat m_path_display_format;
 
     // -----------------------------------------------------------------------
     // Load/Save the config for the prefs/styles/langs, see CFGPATH options

@@ -290,6 +290,8 @@ void wxSTEditorOptions::SetNotebookPopupMenu(wxMenu* menu, bool is_static)
    }
 }
 
+/*static*/ wxPathFormat wxSTEditorOptions::m_path_display_format = wxPATH_NATIVE;
+
 void wxSTEditorOptions::SetClientObject( wxClientData *data )
 {
     wxCHECK_RET(STEO_REFDATA, wxT("invalid wxSTEditorOptions"));

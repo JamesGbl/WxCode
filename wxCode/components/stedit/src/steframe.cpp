@@ -634,9 +634,10 @@ void wxSTEditorFrame::OnSTEPopupMenu(wxSTEditorEvent &event)
 
 wxString wxSTEditorFrame::MakeTitle(wxSTEditor* editor)
 {
-     const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
-     return wxString::Format(wxT("%s - %s"),
-        (editor->GetFileName().GetFullPath() + modified).wx_str(),
+    wxFileName filename = editor->GetFileName() ;
+    const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
+    return wxString::Format(wxT("%s - %s"),
+        (filename.GetFullPath(wxSTEditorOptions::m_path_display_format) + modified).wx_str(),
         m_titleBase.wx_str());
 }
 
@@ -775,7 +776,8 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             }
             if (!ok)
             {
-               wxMessageBox(wxString::Format(_("Error opening file: '%s'"), fileName.GetFullPath().wx_str()),
+               wxMessageBox(wxString::Format(_("Error opening file: '%s'"), 
+                              fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                         STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
             }
         }

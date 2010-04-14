@@ -2315,7 +2315,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     wxFile file(fileName.GetFullPath(), wxFile::write);
     if (!file.IsOpened())
     {
-        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath().wx_str()),
+        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , this);
         return false;
     }
@@ -2424,7 +2424,8 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     bool sendEvents = m_sendEvents;
     m_sendEvents = false; // block focus when dialog closes
 
-    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), GetFileName().GetFullPath().wx_str()),
+    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), 
+                                 GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                            _("Unsaved changes"),
                            style|wxCENTRE|wxICON_QUESTION, this);
 
@@ -2463,7 +2464,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         if (show_reload_dialog)
         {
             wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."), 
-                           GetFileName().GetFullPath().wx_str()),
+                           GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                           _("File removed from disk"),
                           wxOK | wxICON_EXCLAMATION, this);
         }
@@ -2478,7 +2479,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
     if (altered && show_reload_dialog)
     {
         int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"),
-                                    GetFileName().GetFullPath().wx_str()),
+                                    GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                                 _("File changed on disk"),
                                 wxYES_NO | wxICON_QUESTION, this);
         if (ret == wxYES)
