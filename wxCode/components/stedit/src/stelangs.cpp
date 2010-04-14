@@ -5057,7 +5057,7 @@ STE_Language* wxSTEditorLangs::GetLanguage(size_t lang_n) const
 
 wxString wxSTEditorLangs::GetName(size_t lang_n) const
 {
-    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->name) : wxString();
+    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->name) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetFilePattern(size_t lang_n, bool get_default) const
 {
@@ -5067,7 +5067,7 @@ wxString wxSTEditorLangs::GetFilePattern(size_t lang_n, bool get_default) const
         if (userFilePatterns.Length()) return userFilePatterns;
     }
 
-    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->filePattern) : wxString();
+    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->filePattern) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetUserFilePattern(size_t lang_n) const
 {
@@ -5151,7 +5151,7 @@ int wxSTEditorLangs::SciToSTEStyle(size_t lang_n, int sci_style) const
 wxString wxSTEditorLangs::GetStyleDescription(size_t lang_n, size_t style_n) const
 {
     wxCHECK_MSG(style_n<GetStyleCount(lang_n), wxEmptyString, wxT("Invalid language style type"));
-    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->styles[style_n].description) : wxString();
+    return GetLanguage(lang_n) ? stc2wx(GetLanguage(lang_n)->styles[style_n].description) : wxEmptyString;
 }
 
 size_t wxSTEditorLangs::GetKeyWordsCount(size_t lang_n) const
@@ -5190,11 +5190,11 @@ bool wxSTEditorLangs::HasBlock(size_t lang_n) const
 }
 wxString wxSTEditorLangs::GetBlockStart(size_t lang_n) const
 {
-    return HasBlock(lang_n) ? stc2wx(GetLanguage(lang_n)->block->start) : wxString();
+    return HasBlock(lang_n) ? stc2wx(GetLanguage(lang_n)->block->start) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetBlockEnd(size_t lang_n) const
 {
-    return HasBlock(lang_n) ? stc2wx(GetLanguage(lang_n)->block->end) : wxString();
+    return HasBlock(lang_n) ? stc2wx(GetLanguage(lang_n)->block->end) : wxEmptyString;
 }
 int wxSTEditorLangs::GetBlockStartSTCStyle(size_t lang_n) const
 {
@@ -5211,19 +5211,19 @@ bool wxSTEditorLangs::HasPreprocessor(size_t lang_n) const
 }
 wxString wxSTEditorLangs::GetPreprocessorSymbol(size_t lang_n) const
 {
-    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->symbol) : wxString();
+    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->symbol) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetPreprocessorStart(size_t lang_n) const
 {
-    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxStart) : wxString();
+    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxStart) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetPreprocessorMid(size_t lang_n) const
 {
-    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxMiddle) : wxString();
+    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxMiddle) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetPreprocessorEnd(size_t lang_n) const
 {
-    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxEnd) : wxString();
+    return HasPreprocessor(lang_n) ? stc2wx(GetLanguage(lang_n)->preproc->boxEnd) : wxEmptyString;
 }
 
 bool wxSTEditorLangs::HasComments(size_t lang_n) const
@@ -5236,27 +5236,27 @@ int wxSTEditorLangs::GetCommentBlockAtLineStart(size_t lang_n) const
 }
 wxString wxSTEditorLangs::GetCommentBlock(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->block) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->block) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetCommentBoxStart(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxStart) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxStart) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetCommentBoxMiddle(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxMiddle) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxMiddle) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetCommentBoxEnd(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxEnd) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->boxEnd) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetCommentStreamStart(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->streamStart) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->streamStart) : wxEmptyString;
 }
 wxString wxSTEditorLangs::GetCommentStreamEnd(size_t lang_n) const
 {
-    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->streamEnd) : wxString();
+    return HasComments(lang_n) ? stc2wx(GetLanguage(lang_n)->comment->streamEnd) : wxEmptyString;
 }
 
 int wxSTEditorLangs::GetBracesStyle(size_t lang_n) const
