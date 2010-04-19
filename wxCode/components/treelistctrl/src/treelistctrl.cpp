@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.112 2010-04-11 17:42:14 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.113 2010-04-19 15:19:51 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -161,7 +161,7 @@ public:
     int GetWidth() const { return m_total_col_width; }
 
     // column manipulation
-    int GetColumnCount() const { return m_columns.GetCount(); }
+    int GetColumnCount() const { return (int)m_columns.GetCount(); }
 
     void AddColumn (const wxTreeListColumnInfo& colInfo);
 
@@ -809,7 +809,7 @@ public:
             m_text[column] = text;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
+            for (int i = (int)m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
             m_text[column] = text;
         }
     }
@@ -822,7 +822,7 @@ public:
             m_col_images[column] = image;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
+            for (int i = (int)m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
             m_col_images[column] = image;
         }
     }
@@ -2205,7 +2205,7 @@ wxTreeItemId wxTreeListMainWindow::GetLastChild (const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
     // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = ((long*)&cookie);
-    (*pIndex) = children.Count();
+    (*pIndex) = (long)children.Count();
     return (!children.IsEmpty())? wxTreeItemId(children.Last()): wxTreeItemId();
 }
 
@@ -2613,6 +2613,7 @@ void wxTreeListMainWindow::UnselectAllChildren (wxTreeListItem *item) {
         item->SetHilight (false);
         RefreshLine (item);
         if (item == m_selectItem) m_selectItem = (wxTreeListItem*)NULL;
+        if (item != m_curItem) m_lastOnSame = false;  // selection change, so reset edit marker
     }
     if (item->HasChildren()) {
         wxArrayTreeListItems& children = item->GetChildren();
@@ -3840,10 +3841,44 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
         // double click is ignored
         mayDoubleClick = false;
     }
+    // selection conditions --remember also that selection exludes editing
+    if (maySelect) maySelect = mayClick;  // yes, select/unselect requires a click
+    if (maySelect) {
+
+        // multiple selection mode complicates things, sometimes we
+        //  select on button-up instead of down:
+        if (HasFlag(wxTR_MULTIPLE)) {
+
+            // CONTROL/SHIFT key used, don't care about anything else, will
+            //  toggle on key down
+            if (event.ControlDown() || event.ShiftDown()) {
+                maySelect = maySelect && (event.LeftDown() || event.RightDown());
+                m_lastOnSame = false;  // prevent editing when keys are used
+
+            // already selected item: to allow drag or contextual menu for multiple
+            //  items, we only select/unselect on click-up --and only on LEFT
+            // click, right is reserved for contextual menu
+            } else if ((item != NULL && item->IsSelected())) {
+                maySelect = maySelect && event.LeftUp();
+
+            // non-selected items: select on click-down like simple select (so
+            //  that a right-click contextual menu may be chained)
+            } else {
+                maySelect = maySelect && (event.LeftDown() || event.RightDown());
+            }
+
+        // single-select is simply on left or right click-down
+        } else {
+            maySelect = maySelect && (event.LeftDown() || event.RightDown());
+        }
+    }
 
 
 // HANDLE SIMPLE-CLICKS (selection change, contextual menu)
     if (mayClick) {
+
+        // 2nd left-click on an item might trigger edit
+        if (event.LeftDown()) m_lastOnSame = (item == m_curItem);
 
         // left-click on haircross is expand (and no select)
         if (bCrosshair && event.LeftDown()) {
@@ -3855,37 +3890,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             Toggle (item);
         }
 
-/*
-        // is there a selection change ? normally left and right down-click
-        //  change selection, but there are special cases:
-        if (maySelect && (
-            // click on already selected item: to allow drag of multiple items,
-            //  change selection on button up
-            ((event.LeftUp() || event.RightUp()) && item != NULL && item->IsSelected() && item != m_curItem)
-            // normal clicks, act already on button down
-         || ((event.LeftDown() || event.RightDown()) && (item == NULL || ! item->IsSelected()))
-        )) {
-*/
-        // left & right button click on item change selection; normally on click
-        // down, but to allow drag-and-drop click up is considered if item is
-        // already selected
-        if (maySelect && (
-            // special case 0: CONTROL key used to toggle, always select on down
-            //  and never on up
-            (event.ControlDown() && (event.LeftDown() || event.RightDown()))
-         ||
-            (! event.ControlDown() && (
-            // special case 1: down click and item is already selected, no change
-                (
-                    (event.LeftDown() || event.RightDown())
-                 && (item == NULL || ! item->IsSelected())
-                ) || (
-            // special case 2: up left-click and item is already selected, change
-                    event.LeftUp()
-                 && (item != NULL && item->IsSelected())
-                )
-            ))
-        )) {
+        if (maySelect) {
 
             bSkip = false;
 
@@ -3910,11 +3915,6 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 EnsureVisible (item);
                 m_curItem = item;
             }
-
-        // no selection change, then we might edit
-        } else {
-            if (event.LeftDown())
-                m_lastOnSame = (item == m_curItem);
         }
 
         // generate click & menu events
@@ -3933,7 +3933,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             SendEvent(0, item, &nevent);
         }
 
-        // if 2nd left click finishes on same item, will edit it
+        //  if 2nd left click finishes on same item, will edit it
         if (m_lastOnSame && event.LeftUp()) {
             if ((item == m_curItem) && (m_curColumn != -1) &&
                 (m_owner->GetHeaderWindow()->IsColumnEditable (m_curColumn)) &&
@@ -4216,7 +4216,7 @@ void wxTreeListMainWindow::RefreshSelectedUnder (wxTreeListItem *item) {
     }
 
     const wxArrayTreeListItems& children = item->GetChildren();
-    long count = children.GetCount();
+    long count = (long)children.GetCount();
     for (long n = 0; n < count; n++ ) {
         RefreshSelectedUnder (children[n]);
     }
