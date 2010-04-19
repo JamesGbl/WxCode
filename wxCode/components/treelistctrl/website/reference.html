@@ -227,6 +227,7 @@ wxImageList
 <p><b>
 <a href="#wxtreelistctrlconstr">wxTreeListCtrl::wxTreeListCtrl</a><br>
 <a href="#topic2">wxTreeListCtrl::~wxTreeListCtrl</a><br>
+<a href="#wxtreelistctrladdcolumn">wxTreeListCtrl::AddColumn</a><br>
 <a href="#wxtreelistctrladdroot">wxTreeListCtrl::AddRoot</a><br>
 <a href="#wxtreelistctrlappenditem">wxTreeListCtrl::AppendItem</a><br>
 <a href="#wxtreelistctrlassignbuttonsimagelist">wxTreeListCtrl::AssignButtonsImageList</a><br>
@@ -247,6 +248,12 @@ wxImageList
 <a href="#wxtreelistctrlgetitemrect">wxTreeListCtrl::GetBoundingRect</a><br>
 <a href="#wxtreelistctrlgetbuttonsimagelist">wxTreeListCtrl::GetButtonsImageList</a><br>
 <a href="#wxtreelistctrlgetchildrencount">wxTreeListCtrl::GetChildrenCount</a><br>
+<a href="#wxtreelistctrlgetcolumn">wxTreeListCtrl::GetColumn</a><br>
+<a href="#wxtreelistctrlgetcolumnalignment">wxTreeListCtrl::GetColumnAlignment</a><br>
+<a href="#wxtreelistctrlgetcolumncount">wxTreeListCtrl::GetColumnCount</a><br>
+<a href="#wxtreelistctrlgetcolumnimage">wxTreeListCtrl::GetColumnImage</a><br>
+<a href="#wxtreelistctrlgetcolumntext">wxTreeListCtrl::GetColumnText</a><br>
+<a href="#wxtreelistctrlgetcolumnwidth">wxTreeListCtrl::GetColumnWidth</a><br>
 <a href="#wxtreelistctrlgetcount">wxTreeListCtrl::GetCount</a><br>
 <a href="#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</a><br>
 <a href="#wxtreelistctrlgetfirstvisibleitem">wxTreeListCtrl::GetFirstVisibleItem</a><br>
@@ -255,6 +262,7 @@ wxImageList
 <a href="#wxtreelistctrlgetindent">wxTreeListCtrl::GetIndent</a><br>
 <a href="#wxtreelistctrlgetitembackgroundcolour">wxTreeListCtrl::GetItemBackgroundColour</a><br>
 <a href="#wxtreelistctrlgetitemdata">wxTreeListCtrl::GetItemData</a><br>
+<a href="#wxtreelistctrlgetitembold">wxTreeListCtrl::GetItemBold</a><br>
 <a href="#wxtreelistctrlgetitemfont">wxTreeListCtrl::GetItemFont</a><br>
 <a href="#wxtreelistctrlgetitemimage">wxTreeListCtrl::GetItemImage</a><br>
 <a href="#wxtreelistctrlgetitemparent">wxTreeListCtrl::GetItemParent</a><br>
@@ -262,6 +270,7 @@ wxImageList
 <a href="#wxtreelistctrlgetitemtextcolour">wxTreeListCtrl::GetItemTextColour</a><br>
 <a href="#wxtreelistctrlgetlastchild">wxTreeListCtrl::GetLastChild</a><br>
 <a href="#wxtreelistctrlgetlinespacing">wxTreeListCtrl::GetLineSpacing</a><br>
+<a href="#wxtreelistctrlgetmaincolumn">wxTreeListCtrl::GetMainColumn</a><br>
 <a href="#wxtreelistctrlgetmainwindow">wxTreeListCtrl::GetMainWindow</a><br>
 <a href="#wxtreelistctrlgetnext">wxTreeListCtrl::GetNext</a><br>
 <a href="#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</a><br>
@@ -280,8 +289,10 @@ wxImageList
 <a href="#wxtreelistctrlgetwindowstyleflag">wxTreeListCtrl::GetWindowStyleFlag</a><br>
 <a href="#wxtreelistctrlhaschildren">wxTreeListCtrl::HasChildren</a><br>
 <a href="#wxtreelistctrlhittest">wxTreeListCtrl::HitTest</a><br>
+<a href="#wxtreelistctrlinsertcolumn">wxTreeListCtrl::InsertColumn</a><br>
 <a href="#wxtreelistctrlinsertitem">wxTreeListCtrl::InsertItem</a><br>
 <a href="#wxtreelistctrlisbold">wxTreeListCtrl::IsBold</a><br>
+<a href="#wxtreelistctrliscolumnshown">wxTreeListCtrl::IsColumnShown</a><br>
 <a href="#wxtreelistctrlisexpanded">wxTreeListCtrl::IsExpanded</a><br>
 <a href="#wxtreelistctrlisselected">wxTreeListCtrl::IsSelected</a><br>
 <a href="#wxtreelistctrlisvisible">wxTreeListCtrl::IsVisible</a><br>
@@ -290,7 +301,14 @@ wxImageList
 <a href="#wxtreelistctrlongetitemtext">wxTreeListCtrl::OnGetItemText</a><br>
 <a href="#wxtreelistctrlprependitem">wxTreeListCtrl::PrependItem</a><br>
 <a href="#wxtreelistctrlrefresh">wxTreeListCtrl::Refresh</a><br>
+<a href="#wxtreelistctrlremovecolumn">wxTreeListCtrl::RemoveColumn</a><br>
 <a href="#wxtreelistctrlsetbackgroundcolour">wxTreeListCtrl::SetBackgroundColour</a><br>
+<a href="#wxtreelistctrlsetcolumn">wxTreeListCtrl::SetColumn</a><br>
+<a href="#wxtreelistctrlsetcolumnalignment">wxTreeListCtrl::SetColumnAlignment</a><br>
+<a href="#wxtreelistctrlsetcolumnimage">wxTreeListCtrl::SetColumnImage</a><br>
+<a href="#wxtreelistctrlsetcolumntext">wxTreeListCtrl::SetColumnText</a><br>
+<a href="#wxtreelistctrlsetcolumnwidth">wxTreeListCtrl::SetColumnWidth</a><br>
+<a href="#wxtreelistctrlsetmaincolumn">wxTreeListCtrl::SetMainColumn</a><br>
 <a href="#wxtreelistctrlsetdragitem">wxTreeListCtrl::SetDragItem</a><br>
 <a href="#wxtreelistctrlsetfocus">wxTreeListCtrl::SetFocus</a><br>
 <a href="#wxtreelistctrlsetfont">wxTreeListCtrl::SetFont</a><br>
@@ -309,31 +327,15 @@ wxImageList
 <a href="#wxtreelistctrlsetitemimage">wxTreeListCtrl::SetItemImage</a><br>
 <a href="#wxtreelistctrlsetitemtext">wxTreeListCtrl::SetItemText</a><br>
 <a href="#wxtreelistctrlsetitemtextcolour">wxTreeListCtrl::SetItemTextColour</a><br>
+<a href="#wxtreelistctrlsetitemtooltip">wxTreeListCtrl::SetItemToolTip</a><br>
 <a href="#wxtreelistctrlsetindent">wxTreeListCtrl::SetLineSpacing</a><br>
 <a href="#wxtreelistctrlsetstateimagelist">wxTreeListCtrl::SetStateImageList</a><br>
+<a href="#wxtreelistctrlsettooltip">wxTreeListCtrl::SetToolTip</a><br>
+<a href="#wxtreelistctrlshowcolumn">wxTreeListCtrl::ShowColumn</a><br>
 <a href="#wxtreelistctrlsortchildren">wxTreeListCtrl::SortChildren</a><br>
 <a href="#wxtreelistctrltoggle">wxTreeListCtrl::Toggle</a><br>
 <a href="#wxtreelistctrlunselect">wxTreeListCtrl::Unselect</a><br>
 <a href="#wxtreelistctrlunselectall">wxTreeListCtrl::UnselectAll</a><br>
-<a href="#wxtreelistctrladdcolumn">wxTreeListCtrl::AddColumn</a><br>
-<a href="#wxtreelistctrlgetcolumn">wxTreeListCtrl::GetColumn</a><br>
-<a href="#wxtreelistctrlgetcolumnalignment">wxTreeListCtrl::GetColumnAlignment</a><br>
-<a href="#wxtreelistctrlgetcolumncount">wxTreeListCtrl::GetColumnCount</a><br>
-<a href="#wxtreelistctrlgetcolumnimage">wxTreeListCtrl::GetColumnImage</a><br>
-<a href="#wxtreelistctrlgetcolumntext">wxTreeListCtrl::GetColumnText</a><br>
-<a href="#wxtreelistctrlgetcolumnwidth">wxTreeListCtrl::GetColumnWidth</a><br>
-<a href="#wxtreelistctrlgetmaincolumn">wxTreeListCtrl::GetMainColumn</a><br>
-<a href="#wxtreelistctrlinsertcolumn">wxTreeListCtrl::InsertColumn</a><br>
-<a href="#wxtreelistctrliscolumnshown">wxTreeListCtrl::IsColumnShown</a><br>
-<a href="#wxtreelistctrlremovecolumn">wxTreeListCtrl::RemoveColumn</a><br>
-<a href="#wxtreelistctrlsetcolumn">wxTreeListCtrl::SetColumn</a><br>
-<a href="#wxtreelistctrlsetcolumnalignment">wxTreeListCtrl::SetColumnAlignment</a><br>
-<a href="#wxtreelistctrlsetcolumnimage">wxTreeListCtrl::SetColumnImage</a><br>
-<a href="#wxtreelistctrlsetcolumntext">wxTreeListCtrl::SetColumnText</a><br>
-<a href="#wxtreelistctrlsetcolumnwidth">wxTreeListCtrl::SetColumnWidth</a><br>
-<a href="#wxtreelistctrlsetmaincolumn">wxTreeListCtrl::SetMainColumn</a><br>
-<a href="#wxtreelistctrlshowcolumn">wxTreeListCtrl::ShowColumn</a><br>
-<a href="#wxtreelistctrlgetitembold">wxTreeListCtrl::GetItemBold</a><br>
 </b></p>
 
 <hr>
@@ -1593,6 +1595,23 @@ Sets the colour of the item's text.
 </p>
 
 <hr>
+<a name="wxtreelistctrlsetitemtooltip"></a>
+<h3>wxTreeListCtrl::SetItemToolTip</h3>
+<p>
+<b>void</b> <b>SetItemToolTip</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> tip</i>)
+</p>
+<p>
+Sets the tooltip for a specific item; "" (empty string) to disable.
+Note that calling this method disables display of the global tooltip for times until <a href="#wxtreelistctrlsettooltip">SetToolTip</a> is called again.
+</p>
+<p>
+<b>See also</b>
+</p>
+<p>
+<a href="#wxtreelistctrlsettooltip">SetToolTip</a>
+</p>
+
+<hr>
 <a name="wxtreelistctrlsetindent"></a>
 <h3>wxTreeListCtrl::SetLineSpacing</h3>
 <p>
@@ -1619,6 +1638,23 @@ See also <a href="#wxtreelistctrlassignstateimagelist">AssignStateImageList</a>.
 </p>
 <p>
 Sets the mode flags associated with the display of the tree list control. The new mode takes effect immediately.
+</p>
+
+<hr>
+<a name="wxtreelistctrlsettooltip"></a>
+<h3>wxTreeListCtrl::SetToolTip</h3>
+<p>
+<b>void</b> <b>SetToolTip</b> (<b>const wxString&amp;</b><i> tip</i>)
+</p>
+<p>
+set general tooltip displayed for header and blank area.
+This tooltip is <strong>not</strong> shown for individual items if <a href="#wxtreelistctrlsetitemtooltip">SetItemToolTip</a> was called at least once.
+</p>
+<p>
+<b>See also</b>
+</p>
+<p>
+<a href="#wxtreelistctrlsetitemtooltip">SetItemToolTip</a>.
 </p>
 
 <hr>
