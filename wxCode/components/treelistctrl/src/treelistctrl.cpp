@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.113 2010-04-19 15:19:51 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.114 2010-04-19 17:47:12 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -45,6 +45,7 @@
 #endif
 #include <wx/apptrait.h>
 #include <wx/dcbuffer.h>
+#include <wx/tooltip.h>
 
 #ifdef __WXMAC__
 #include "wx/mac/private.h"
@@ -60,7 +61,7 @@
 class  wxTreeListItem;
 
 #if !wxCHECK_VERSION(2, 5, 0)
-WX_DEFINE_ARRAY(wxTreeListItem *, wxArrayTreeListItems);
+2WX_DEFINE_ARRAY(wxTreeListItem *, wxArrayTreeListItems);
 #else
 WX_DEFINE_ARRAY_PTR(wxTreeListItem *, wxArrayTreeListItems);
 #endif
@@ -313,6 +314,10 @@ public:
     void AssignImageList(wxImageList *imageList);
     void AssignStateImageList(wxImageList *imageList);
     void AssignButtonsImageList(wxImageList *imageList);
+
+    void SetToolTip(const wxString& tip);
+    void SetToolTip(wxToolTip *tip);
+    void SetItemToolTip(const wxTreeItemId& item, const wxString &tip);
 
     // Functions to work with tree ctrl items.
 
@@ -657,6 +662,10 @@ protected:
     wxTimer             *m_findTimer;
     wxString             m_findStr;
 
+    bool                 m_isItemToolTip;  // true if individual item tooltips were set (disable global tooltip)
+    wxString             m_toolTip;  // global tooltip
+    wxTreeListItem      *m_toolTipItem;  // item whose tip is currently shown (NULL==global, -1==not displayed)
+
     // the common part of all ctors
     void Init();
 
@@ -667,10 +676,10 @@ protected:
                               int image, int selectedImage,
                               wxTreeItemData *data);
     void DoDeleteItem (wxTreeListItem *item);
+    void SetCurrentItem(wxTreeListItem *item);
     bool HasButtons(void) const
         { return (m_imageListButtons) || HasFlag (wxTR_TWIST_BUTTONS|wxTR_HAS_BUTTONS); }
 
-protected:
     void CalculateLineHeight();
     int  GetLineHeight(wxTreeListItem *item) const;
     void PaintLevel( wxTreeListItem *item, wxDC& dc, int level, int &y,
@@ -684,10 +693,8 @@ protected:
 
     void RefreshSubtree (wxTreeListItem *item);
     void RefreshLine (wxTreeListItem *item);
-
     // redraw all selected items
     void RefreshSelected();
-
     // RefreshSelected() recursive helper
     void RefreshSelectedUnder (wxTreeListItem *item);
 
@@ -760,7 +767,7 @@ class  wxTreeListItem
 {
 public:
     // ctors & dtor
-    wxTreeListItem() { m_data = NULL; }
+    wxTreeListItem() { m_data = NULL; m_toolTip = NULL; }
     wxTreeListItem( wxTreeListMainWindow *owner,
                     wxTreeListItem *parent,
                     const wxArrayString& text,
@@ -798,6 +805,8 @@ public:
 
     wxTreeItemData *GetData() const { return m_data; }
 
+    const wxString * GetToolTip() const  {  return m_toolTip;  }
+
     // returns the current image for the item (depending on its
     // selected/expanded/whatever state)
     int GetCurrentImage() const;
@@ -828,6 +837,15 @@ public:
     }
 
     void SetData(wxTreeItemData *data) { m_data = data; }
+
+    void SetToolTip(const wxString &tip) {
+        if (m_toolTip) {
+            delete m_toolTip; m_toolTip = NULL;
+        }
+        if (tip.length() > 0) {
+            m_toolTip = new wxString(tip);
+        }
+    }
 
     void SetHasPlus(bool has = true) { m_hasPlus = has; }
 
@@ -915,19 +933,21 @@ private:
     // since there can be very many of these, we save size by chosing
     // the smallest representation for the elements and by ordering
     // the members to avoid padding.
-    wxArrayString      m_text;    // labels to be rendered for item
+    wxArrayString        m_text;    // labels to be rendered for item
 
-    wxTreeItemData     *m_data;         // user-provided data
+    wxTreeItemData      *m_data;         // user-provided data
+
+    wxString            *m_toolTip;
 
     wxArrayTreeListItems m_children; // list of children
-    wxTreeListItem  *m_parent;       // parent of this item
+    wxTreeListItem      *m_parent;       // parent of this item
 
-    wxTreeItemAttr     *m_attr;         // attributes???
+    wxTreeItemAttr      *m_attr;         // attributes???
 
     // tree ctrl images for the normal, selected, expanded and
     // expanded+selected states
     short               m_images[wxTreeItemIcon_Max];
-    wxArrayShort m_col_images; // images for the various columns (!= main)
+    wxArrayShort        m_col_images; // images for the various columns (!= main)
 
     // main column item positions
     wxCoord             m_x;            // (virtual) offset from left (vertical line)
@@ -1586,6 +1606,7 @@ wxTreeListItem::wxTreeListItem (wxTreeListMainWindow *owner,
     m_images[wxTreeItemIcon_SelectedExpanded] = NO_IMAGE;
 
     m_data = data;
+    m_toolTip = NULL;
     m_x = 0;
     m_y = 0;
     m_text_x = 0;
@@ -1608,6 +1629,7 @@ wxTreeListItem::wxTreeListItem (wxTreeListMainWindow *owner,
 
 wxTreeListItem::~wxTreeListItem() {
     delete m_data;
+    if (m_toolTip) delete m_toolTip;
     if (m_ownsAttr) delete m_attr;
 
     wxASSERT_MSG( m_children.IsEmpty(), _T("please call DeleteChildren() before destructor"));
@@ -1865,6 +1887,10 @@ void wxTreeListMainWindow::Init() {
                          m_normalFont.GetUnderlined(),
                          m_normalFont.GetFaceName(),
                          m_normalFont.GetEncoding());
+
+    m_toolTip.clear();
+    m_toolTipItem = (wxTreeListItem *)-1;  // no tooltip displayed
+    m_isItemToolTip = false;  // so far no item-specific tooltip
 }
 
 bool wxTreeListMainWindow::Create (wxTreeListCtrl *parent,
@@ -1982,6 +2008,25 @@ void wxTreeListMainWindow::SetWindowStyle (const long styles) {
     m_windowStyle = styles;
     m_dirty = true;
 }
+
+void wxTreeListMainWindow::SetToolTip(const wxString& tip) {
+    m_isItemToolTip = false;
+    m_toolTip = tip;
+    m_toolTipItem = (wxTreeListItem *)-1;  // no tooltip displayed (force refresh)
+}
+void wxTreeListMainWindow::SetToolTip(wxToolTip *tip) {
+    m_isItemToolTip = false;
+    m_toolTip = (tip == NULL) ? wxString() : tip->GetTip();
+    m_toolTipItem = (wxTreeListItem *)-1;  // no tooltip displayed (force refresh)
+}
+
+void wxTreeListMainWindow::SetItemToolTip(const wxTreeItemId& item, const wxString &tip) {
+    wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
+    m_isItemToolTip = true;
+    ((wxTreeListItem*) item.m_pItem)->SetToolTip(tip);
+    m_toolTipItem = (wxTreeListItem *)-1;  // no tooltip displayed (force refresh)
+}
+
 
 //-----------------------------------------------------------------------------
 // functions to work with tree items
@@ -2375,6 +2420,8 @@ wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
 #else
         wxTreeItemIdValue cookie = 0;
 #endif
+        // TODO: suspect that deleting and recreating a root can leave a number of members dangling
+        //  (here m_curItem should actually be set via SetCurrentItem() )
         m_curItem = (wxTreeListItem*)GetFirstChild (m_rootItem, cookie).m_pItem;
     }
     return m_rootItem;
@@ -2446,7 +2493,7 @@ void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
 void wxTreeListMainWindow::DeleteRoot() {
     if (! m_rootItem) return;
 
-    m_curItem = (wxTreeListItem*)NULL;
+    SetCurrentItem((wxTreeListItem*)NULL);
     m_selectItem = (wxTreeListItem*)NULL;
     m_shiftItem = (wxTreeListItem*)NULL;
 
@@ -2493,12 +2540,12 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     // NOTE: this might be slighty inefficient when deleting a whole tree
     //  but has the advantage that all deletion side-effects are handled here
     if (item == m_curItem) {
-        m_curItem = item->GetItemParent();
+        SetCurrentItem(item->GetItemParent());
         if (m_curItem) {
             wxArrayTreeListItems& siblings = m_curItem->GetChildren();
             size_t index = siblings.Index (item);
             wxASSERT (index != (size_t)wxNOT_FOUND); // I'm not a child of my parent?
-            m_curItem = index < siblings.Count()-1 ? siblings[index+1]: (wxTreeListItem*)NULL;
+            SetCurrentItem(index < siblings.Count()-1 ? siblings[index+1]: (wxTreeListItem*)NULL);
         }
     }
     // don't stay with invalid m_shiftItem: reset it to NULL
@@ -2522,6 +2569,21 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     // delete item itself
     SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, item);
     delete item;
+}
+
+
+// ----------------------------------------------------------------------------
+
+void wxTreeListMainWindow::SetCurrentItem(wxTreeListItem *item) {
+wxTreeListItem *old_item;
+
+    old_item = m_curItem; m_curItem = item;
+
+    // change of item, redraw previous
+    if (old_item != NULL && old_item != item) {
+        RefreshLine(old_item);
+    }
+
 }
 
 // ----------------------------------------------------------------------------
@@ -3455,7 +3517,6 @@ void wxTreeListMainWindow::OnPaint (wxPaintEvent &WXUNUSED(event)) {
 }
 
 void wxTreeListMainWindow::OnSetFocus (wxFocusEvent &event) {
-
     m_hasFocus = true;
     RefreshSelected();
     if (m_curItem) RefreshLine (m_curItem);
@@ -3481,14 +3542,14 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
     bool curItemSet = false;
     if (!m_curItem) {
         if (! GetRootItem().IsOk()) return;
-        m_curItem = (wxTreeListItem*)GetRootItem().m_pItem;
+        SetCurrentItem((wxTreeListItem*)GetRootItem().m_pItem);
         if (HasFlag(wxTR_HIDE_ROOT)) {
 #if !wxCHECK_VERSION(2, 5, 0)
             long cookie = 0;
 #else
             wxTreeItemIdValue cookie = 0;
 #endif
-            m_curItem = (wxTreeListItem*)GetFirstChild (m_curItem, cookie).m_pItem;
+            SetCurrentItem((wxTreeListItem*)GetFirstChild (m_curItem, cookie).m_pItem);
         }
         SelectItem(m_curItem, (wxTreeItemId*)NULL, true);  // unselect others
         curItemSet = true;
@@ -3671,7 +3732,7 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
         }
         EnsureVisible (newItem);
         wxTreeListItem *oldItem = m_curItem;
-        m_curItem = (wxTreeListItem*)newItem.m_pItem; // make the new item the current item
+        SetCurrentItem((wxTreeListItem*)newItem.m_pItem); // make the new item the current item
         RefreshLine (oldItem);
     }
 
@@ -3728,9 +3789,17 @@ bool wxTreeListMainWindow::GetBoundingRect (const wxTreeItemId& itemId, wxRect& 
 /* **** */
 
 void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
+
+// validate
     if (!item.IsOk()) return;
     if (!((column >= 0) && (column < GetColumnCount()))) return;
 
+// cancel any editing
+    if (m_editControl) {
+        m_editControl->EndEdit(true);  // cancelled
+    }
+
+// prepare edit (position)
     m_editItem = (wxTreeListItem*) item.m_pItem;
 
     wxTreeEvent te( wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT, 0 );
@@ -3771,10 +3840,7 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
     x = dc.LogicalToDeviceX (x);
     y = dc.LogicalToDeviceY (y);
 
-    // cancel any editing
-    if (m_editControl) {
-        m_editControl->EndEdit(true);  // cancelled
-    }
+// now do edit (change state, show control)
     m_editCol = column;  // only used in OnRenameAccept()
     m_editControl = new wxEditTextCtrl (this, -1, &m_editAccept, &m_editRes,
                                                this, m_editItem->GetText (column),
@@ -3810,9 +3876,6 @@ bool bSkip = true;
     if (m_owner->GetEventHandler()->ProcessEvent(event)) return; // handled (and not skipped) in user code
     if (!m_rootItem) return;
 
-    // set focus if window clicked
-    if (event.LeftDown() || event.MiddleDown() || event.RightDown()) SetFocus();
-
 
 // ---------- DETERMINE EVENT ----------
 /*
@@ -3841,6 +3904,8 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
         // double click is ignored
         mayDoubleClick = false;
     }
+    // double click only if simple click
+    if (mayDoubleClick) mayDoubleClick = mayClick;
     // selection conditions --remember also that selection exludes editing
     if (maySelect) maySelect = mayClick;  // yes, select/unselect requires a click
     if (maySelect) {
@@ -3874,7 +3939,44 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
     }
 
 
-// HANDLE SIMPLE-CLICKS (selection change, contextual menu)
+// ----------  GENERAL ACTIONS  ----------
+
+    // set focus if window clicked
+    if (event.LeftDown() || event.MiddleDown() || event.RightDown()) SetFocus();
+
+    // tooltip change ?
+    if (item != m_toolTipItem) {
+
+        // not over an item, use global tip
+        if (item == NULL) {
+            m_toolTipItem = NULL;
+            wxScrolledWindow::SetToolTip(m_toolTip);
+
+        // over an item
+        } else {
+            const wxString *tip = item->GetToolTip();
+
+            // is there an item-specific tip ?
+            if (tip) {
+                m_toolTipItem = item;
+                wxScrolledWindow::SetToolTip(*tip);
+
+            // no item tip, but we are in item-specific mode (SetItemToolTip()
+            //  was called after SetToolTip() )
+            } else if (m_isItemToolTip) {
+                m_toolTipItem = item;
+                wxScrolledWindow::SetToolTip(wxString());
+
+            // no item tip, display global tip instead; item change ignored
+            } else if (m_toolTipItem != NULL) {
+                m_toolTipItem = NULL;
+                wxScrolledWindow::SetToolTip(m_toolTip);
+            }
+        }
+    }
+
+
+// ----------  HANDLE SIMPLE-CLICKS  (selection change, contextual menu) ----------
     if (mayClick) {
 
         // 2nd left-click on an item might trigger edit
@@ -3891,7 +3993,6 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
         }
 
         if (maySelect) {
-
             bSkip = false;
 
             // set / remember item at shift down before current item gets changed
@@ -3910,10 +4011,9 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
 
             // check is selection change is not vetoed
             if (SelectItem(item, m_shiftItem, unselect_others)) {
-
                 // make the new item the current item
                 EnsureVisible (item);
-                m_curItem = item;
+                SetCurrentItem(item);
             }
         }
 
@@ -3933,7 +4033,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             SendEvent(0, item, &nevent);
         }
 
-        //  if 2nd left click finishes on same item, will edit it
+        // if 2nd left click finishes on same item, will edit it
         if (m_lastOnSame && event.LeftUp()) {
             if ((item == m_curItem) && (m_curColumn != -1) &&
                 (m_owner->GetHeaderWindow()->IsColumnEditable (m_curColumn)) &&
@@ -3948,7 +4048,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
 
 
 // ----------  HANDLE DOUBLE-CLICKS  ----------
-    if (mayClick && mayDoubleClick && event.LeftDClick()) {
+    if (mayDoubleClick && event.LeftDClick()) {
 
         bSkip = false;
 
@@ -4915,3 +5015,15 @@ wxString wxTreeListCtrl::OnGetItemText( wxTreeItemData* WXUNUSED(item), long WXU
     return wxEmptyString;
 }
 
+void wxTreeListCtrl::SetToolTip(const wxString& tip) {
+    m_header_win->SetToolTip(tip);
+    m_main_win->SetToolTip(tip);
+}
+void wxTreeListCtrl::SetToolTip(wxToolTip *tip) {
+    m_header_win->SetToolTip(tip);
+    m_main_win->SetToolTip(tip);
+}
+
+void wxTreeListCtrl::SetItemToolTip(const wxTreeItemId& item, const wxString &tip) {
+    m_main_win->SetItemToolTip(item, tip);
+}
