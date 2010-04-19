@@ -3,7 +3,7 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.32 2009-09-20 19:34:44 pgriddev Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.33 2010-04-19 17:55:52 pgriddev Exp $
 // Copyright:   (c) 2004-2008 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -32,6 +32,7 @@
 #include <wx/textdlg.h>  // text input dialog
 #include <wx/image.h>    // image support
 #include <wx/imaglist.h> // image list support
+#include <wx/tooltip.h>
 
 //! wxCode headers
 #include "wx/treelistctrl.h" // wxTreeListCtrl control
@@ -102,6 +103,7 @@ enum {
     myID_ATTRBOLDFONT,
     myID_ATTRFONTSTYLE,
     myID_ATTRITEMIMAGE,
+    myID_ATTRITEMTOOLTIP,
     myID_SETALIGNMENT,
     myID_SETALIGNLEFT,
     myID_SETALIGNCENTER,
@@ -239,6 +241,7 @@ public:
     void OnBoldFont (wxCommandEvent &event);
     void OnFontStyle (wxCommandEvent &event);
     void OnItemImage (wxCommandEvent &event);
+    void OnItemToolTip (wxCommandEvent &event);
     void OnAlignment (wxCommandEvent &event);
     void OnButtonsNormals (wxCommandEvent &event);
     void OnButtonsTwister (wxCommandEvent &event);
@@ -452,6 +455,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_ATTRBOLDFONT,       AppFrame::OnBoldFont)
     EVT_MENU (myID_ATTRFONTSTYLE,      AppFrame::OnFontStyle)
     EVT_MENU (myID_ATTRITEMIMAGE,      AppFrame::OnItemImage)
+    EVT_MENU (myID_ATTRITEMTOOLTIP,    AppFrame::OnItemToolTip)
     EVT_MENU (myID_SETALIGNLEFT,       AppFrame::OnAlignment)
     EVT_MENU (myID_SETALIGNCENTER,     AppFrame::OnAlignment)
     EVT_MENU (myID_SETALIGNRIGHT,      AppFrame::OnAlignment)
@@ -511,7 +515,7 @@ END_EVENT_TABLE ()
 
 
 AppFrame::AppFrame (const wxString &title)
-        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(760,560),
+        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(1004,748),
                     wxDEFAULT_FRAME_STYLE ) {
 
     // set icon and background
@@ -572,6 +576,8 @@ AppFrame::AppFrame (const wxString &title)
     m_treelist->SetColumnEditable (2, true);
     m_treelist->SetColumnAlignment (2, wxALIGN_CENTER);
     FillTree();
+    m_treelist->SetToolTip(_("this is the global tip"));
+    wxToolTip::SetDelay(750);  // 3/4 of a second
 
 #if wxUSE_LOG
     sizerTop->Add(logWin, 1,  wxEXPAND | wxGROW, 5);
@@ -684,6 +690,16 @@ void AppFrame::OnItemImage (wxCommandEvent &WXUNUSED(event)) {
                                    _("Get number"), m_treelist->GetItemImage (c));
     if (num < 0) return;
     m_treelist->SetItemImage (c, wxTreeItemIcon_Normal, num);
+}
+
+void AppFrame::OnItemToolTip (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId c = m_treelist->GetSelection();
+    wxString tip = wxGetTextFromUser (_(""), _("Enter tooltip"), _(""));
+    if (c.IsOk()) {
+        m_treelist->SetItemToolTip (c, tip);
+    } else {
+        m_treelist->SetToolTip (tip);
+    }
 }
 
 void AppFrame::OnAlignment (wxCommandEvent &event) {
@@ -880,6 +896,7 @@ void AppFrame::OnGetPrev (wxCommandEvent &event) {
 void AppFrame::OnTreeGeneric (wxTreeEvent &event) {
 const wxChar *name;
 
+// log event name
     if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_DRAG) {
         name = _("wxEVT_COMMAND_TREE_BEGIN_DRAG");
     } else
@@ -946,12 +963,26 @@ const wxChar *name;
     {
         name = _("BUG,unexpected");
     }
-
     wxLogMessage(_("TREE    type=<%s (%d)>    item=<%X> label=<%s> col=<%d> isOK=%s    keycode=<%d> point=<%d, %d> isEditCancelled=<%s>"),
         name, event.GetEventType(),
         (unsigned int)(event.GetItem().m_pItem), event.GetLabel().c_str(), event.GetInt(), event.GetItem().IsOk() ? _("true") : _("false"),
         event.GetKeyCode(), event.GetPoint().x, event.GetPoint().y, event.IsEditCancelled() ? _("true") : _("false")
     );
+
+// log state: selection
+    if ((m_treelist->GetWindowStyle() & wxTR_MULTIPLE) != 0) {
+        wxString sSel = _("");
+        wxArrayTreeItemIds aId;
+        for (unsigned int i=0; i<m_treelist->GetSelections(aId); i++) {
+            wxString s;
+            s.Printf("%X ", (unsigned int)(aId[i].m_pItem));
+            sSel += s;
+        }
+        wxLogMessage(_("selected: ") + sSel);
+    } else {
+        wxTreeItemId id = m_treelist->GetSelection();
+        wxLogMessage(_("selection: %X"), (unsigned int)(id.IsOk() ? id.m_pItem : 0));
+    }
 
     event.Skip();  // safer, and necessary for default behavior of double-click
 }
@@ -960,6 +991,7 @@ const wxChar *name;
 void AppFrame::OnMouseGeneric(wxMouseEvent &event) {
 const wxChar *name;
 
+// log event name
     if (event.GetEventType() == wxEVT_LEFT_DOWN) {
         name = _("wxEVT_LEFT_DOWN");
     } else
@@ -967,7 +999,7 @@ const wxChar *name;
         name = _("wxEVT_LEFT_UP");
     } else
     if (event.GetEventType() == wxEVT_LEFT_DCLICK) {
-        name = _("wxEVT_LEFT_DCLICK");
+        name = _("wxEVT _LEFT_DCLICK");
     } else
     if (event.GetEventType() == wxEVT_MIDDLE_DOWN) {
         name = _("wxEVT_MIDDLE_DOWN");
@@ -1002,7 +1034,6 @@ const wxChar *name;
     {
         name = _("BUG,unexpected");
     }
-
     wxLogMessage(_("MOUSE    type=<%s (%d)>    point=(%d, %d)"),
         name, event.GetEventType(),
         event.GetX(), event.GetY()
@@ -1047,6 +1078,7 @@ void AppFrame::CreateMenu () {
     menuAttr->AppendCheckItem (myID_ATTRBOLDFONT, _("Bold font"));
     menuAttr->Append (myID_ATTRFONTSTYLE, _("Font style ..."));
     menuAttr->Append (myID_ATTRITEMIMAGE, _("Item image ..."));
+    menuAttr->Append (myID_ATTRITEMTOOLTIP, _("Tooltip ..."));
 
     // Alignment submenu
     wxMenu *menuAlign = new wxMenu;
@@ -1194,6 +1226,7 @@ END_EVENT_TABLE();
 
 void MyTreeListCtrl::OnMouseGeneric(wxMouseEvent &event) {
 const char *name;
+wxString message = "";
 
     if (event.GetEventType() == wxEVT_LEFT_DOWN) {
         name = _("wxEVT_LEFT_DOWN");
@@ -1241,6 +1274,9 @@ const char *name;
         name, event.GetEventType(),
         event.GetX(), event.GetY()
     );
+    if (message.length() > 0) {
+        wxLogMessage(message);
+    }
 
     event.Skip();
 }
