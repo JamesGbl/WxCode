@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.35 2008-07-28 13:55:12 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.36 2010-04-19 17:49:41 pgriddev Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -132,6 +132,9 @@ extern WXDLLEXPORT const wxChar* wxTreeListCtrlNameStr;
 
 class WXDLLEXPORT wxTreeListCtrl : public wxControl
 {
+friend class wxTreeListHeaderWindow;
+friend class wxTreeListMainWindow;
+friend class wxTreeListItem;
 public:
     // creation
     // --------
@@ -200,6 +203,9 @@ public:
     void AssignStateImageList(wxImageList *imageList);
     void AssignButtonsImageList(wxImageList *imageList);
 
+    void SetToolTip(const wxString& tip);
+    void SetToolTip (wxToolTip *tip);
+    void SetItemToolTip(const wxTreeItemId& item, const wxString &tip);
 
     // Functions to work with columns
 
@@ -517,20 +523,20 @@ public:
     void SetDragItem (const wxTreeItemId& item = (wxTreeItemId*)NULL);
 
 
-    wxTreeListHeaderWindow* GetHeaderWindow() const
-        { return m_header_win; }
-
-    wxTreeListMainWindow* GetMainWindow() const
-        { return m_main_win; }
-
     virtual wxSize DoGetBestSize() const;
 
 protected:
     // header window, responsible for column visualization and manipulation
-    wxTreeListHeaderWindow* m_header_win;
+    wxTreeListHeaderWindow* GetHeaderWindow() const
+        { return m_header_win; }
+    wxTreeListHeaderWindow* m_header_win;  // future cleanup: make private or remove GetHeaderWindow()
 
     // main window, the "true" tree ctrl
-    wxTreeListMainWindow* m_main_win;
+    wxTreeListMainWindow* GetMainWindow() const
+        { return m_main_win; }
+    wxTreeListMainWindow* m_main_win;  // future cleanup: make private or remove GetMainWindow()
+
+    int GetHeaderHeight() const { return m_headerHeight; }
 
     void CalculateAndSetHeaderHeight();
     void DoHeaderLayout();
