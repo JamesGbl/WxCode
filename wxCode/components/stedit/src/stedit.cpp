@@ -2691,17 +2691,14 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case wxID_CUT            : Cut();   return true;
         case wxID_COPY           : Copy();  return true;
         case wxID_CLEAR          : 
-            if (CanCut())
+            if (!HasSelection())
             {
-                Clear();  
+               // simulate default Del key behaviour
+               long pos = GetCurrentPos();
+               CharRight(); // move right, jumping to next line if at cr+lf
+               SetSelection(pos, GetCurrentPos());
             }
-            else
-            {
-               // simulate key press
-               wxKeyEvent event;
-               event.m_keyCode = WXK_DELETE;
-               wxStyledTextCtrl::OnKeyDown(event);
-            }
+            Clear();  
             return true;
         case ID_STE_COPY_PRIMARY :
         {
