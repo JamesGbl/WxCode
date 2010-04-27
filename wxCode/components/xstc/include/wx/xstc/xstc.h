@@ -1801,8 +1801,8 @@ WXDLLIMPEXP_XSTC bool usekeys;
               this won't work too well cus the program doesn't have eyes, but
               its workth a try.
     */
-WXDLLIMPEXP_XSTC wxString colorstyle; //this is for the fold marker coloring and to programmically determing
-                         //if/what the setting is
+WXDLLIMPEXP_XSTC wxString colorstyle; //this is for the fold marker coloring and to programmically determine
+                                      //if/what the setting is
     /**
     \brief color of the edge column
 
