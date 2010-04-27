@@ -4026,6 +4026,57 @@ this->FoldColors();
 #ifndef XSTC_NO_CONFIG
 void XSTC::ConfigStyle(wxString style)
 {//loads setting for XSTC specific variables
+//if the style is one of the built in types call that function instead
+	if(style == wxT("null"))
+	{
+		ResetStyle();
+		return;
+	}
+	
+	if(style == wxT("dark"))
+	{
+		DarkStyle();
+		return;
+	}
+	
+	if(style == wxT("vistudio"))
+	{
+		VisualStudioStyle();
+		return;
+	}
+	
+	if(style == wxT("classic"))
+	{
+		ClassicStyle();
+		return;
+	}
+	
+	if(style == wxT("borland"))
+	{
+		BorlandStyle();
+		return;
+	}
+	
+	if(style == wxT("jeff"))
+	{
+		JeffStyle();
+		return;
+	}
+	
+	if(style == wxT("zenburn"))
+	{
+		ZenburnStyle();
+		return;
+	}
+	
+	if(style == wxT("matrix"))
+	{
+		MatrixStyle();
+		return;
+	}
+	
+
+
    wxString colorval, colorstr, temp, path = wxT("XSTC/COLOR/COLORSTYLE/") + style.Upper() + wxT("/");
    wxColour color = wxNullColour, black = *wxBLACK, white = *wxWHITE;
    int r=0;//, g=0, b=0;
