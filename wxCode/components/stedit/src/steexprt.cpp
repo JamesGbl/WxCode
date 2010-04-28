@@ -141,7 +141,7 @@ bool wxSTEditorExporter::ExportToFile(int file_format, const wxFileName& fileNam
 
     if (overwrite_prompt && fileName.FileExists())
     {
-        int overw = wxMessageBox(wxString::Format(_("Overwrite file : '%s'?\n"), 
+        int overw = wxMessageBox(wxString::Format(_("Overwrite file : '%s'?\n"),
                                     fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                            _("Export error"),
                            wxOK|wxCANCEL|wxCENTRE|wxICON_QUESTION, m_editor);
@@ -165,7 +165,7 @@ bool wxSTEditorExporter::ExportToFile(int file_format, const wxFileName& fileNam
 
     if (!ret && msg_on_error)
     {
-        wxMessageBox(wxString::Format(_("Unable to export to file : '%s'.\n"), 
+        wxMessageBox(wxString::Format(_("Unable to export to file : '%s'.\n"),
                            fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                      _("Export error"),
                      wxOK|wxCENTRE|wxICON_ERROR, m_editor);
@@ -1546,7 +1546,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
 
         fputs("\\begin{document}\n\n", fp);
         fprintf(fp, "Source File: %s\n\n\\noindent\n\\tiny{\n",
-            saveName.GetFullPath().mb_str()); //FIXME titleFullPath ? filePath.AsFileSystem() : filePath.Name().AsFileSystem()));
+            (const char*)saveName.GetFullPath().mb_str()); //FIXME titleFullPath ? filePath.AsFileSystem() : filePath.Name().AsFileSystem()));
 
         int styleCurrent = m_editor->GetStyleAt(0);
 
@@ -1679,7 +1679,7 @@ bool wxSTEditorExporter::SaveToXML(const wxFileName& saveName)
 
         fputs("<document xmlns='http://www.scintila.org/scite.rng'", fp) ;
         fprintf(fp, " filename='%s'",
-            saveName.GetFullPath().mb_str()); //FIXME filePath.Name().AsFileSystem())) ;
+            (const char*)saveName.GetFullPath().mb_str()); //FIXME filePath.Name().AsFileSystem())) ;
         fprintf(fp, " type='%s'", "unknown") ;
         fprintf(fp, " version='%s'", "1.0") ;
         fputs(">\n", fp) ;

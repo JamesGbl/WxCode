@@ -20,7 +20,7 @@ WXRELEASE  := $(shell $(WXCONFIG) --release)
 
 WXCXX      := $(shell $(WXCONFIG) --cxx)
 WXCXXFLAGS := $(shell $(WXCONFIG) --cxxflags)
-WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,core,base)
+WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,adv,core,base)
 
 WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
 
