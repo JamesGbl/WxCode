@@ -302,14 +302,14 @@ void MD5Transform(unsigned int buf[4], unsigned int const in[16])
 
 wxString wxMD5::GetMD5(const wxString &string)
 {
-    int lenght = string.Len();
-    //wxStringBuffer buf(string, lenght);
+    wxCharBuffer buffer = string.mb_str(wxConvUTF8);
+        // convert the string from the internal Unicode representation to UTF8
 
     MD5_CTX ctx;
     char tmp[40];		// MD5 are fixed sized to 32 chars
 
     MD5Init(&ctx);
-    MD5Update(&ctx, (const unsigned char*)string.GetData(), lenght*sizeof(wxChar));
+    MD5Update(&ctx, (const unsigned char*)buffer.data(), buffer.length());
     MD5End(&ctx, tmp);
 
     return wxString(tmp, wxConvUTF8);
