@@ -148,7 +148,7 @@ bool wxCheckedListCtrl::GetItem(wxListItem& info) const
 #ifdef __WXDEBUG__
 
 	wxASSERT_MSG((int)m_stateList.GetCount() == (int)GetItemCount(),
-					wxT("Something wrong ! See InsertItem()"));
+					wxS("Something wrong ! See InsertItem()"));
 
 	// read info by image index
 	bool imagecheck = (info.m_image == wxCLC_CHECKED_IMGIDX) ||
@@ -156,9 +156,9 @@ bool wxCheckedListCtrl::GetItem(wxListItem& info) const
 	bool imageenabled = (info.m_image == wxCLC_CHECKED_IMGIDX) ||
 						(info.m_image == wxCLC_UNCHECKED_IMGIDX);
 	wxASSERT_MSG((checked && imagecheck) || (!checked && !imagecheck),
-		wxT("This is item has checked state but it's shown as unchecked (or viceversa)"));
+		wxS("This is item has checked state but it's shown as unchecked (or viceversa)"));
 	wxASSERT_MSG((enabled && imageenabled) || (!enabled && !imageenabled),
-		wxT("This is item has enabled state but it's shown as disabled (or viceversa)"));
+		wxS("This is item has enabled state but it's shown as disabled (or viceversa)"));
 #endif
 
 	return TRUE;
@@ -226,9 +226,9 @@ long wxCheckedListCtrl::InsertItem(wxListItem &info)
 	info.SetBackgroundColour(GetBgColourFromAdditionalState(additionalstate));
 
 	int itemcount = GetItemCount();
-	wxASSERT_MSG(info.m_itemId <= itemcount, wxT("Invalid index !"));
+	wxASSERT_MSG(info.m_itemId <= itemcount, wxS("Invalid index !"));
 	wxASSERT_MSG((int)m_stateList.GetCount() == (int)GetItemCount(),
-					wxT("Something wrong !"));
+					wxS("Something wrong !"));
 	if (info.m_itemId == itemcount) {
 
 		// we are adding a new item at the end of the list

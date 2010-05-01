@@ -62,7 +62,7 @@ class wxGauge;
 
 
 //! The ID of the XML webupdate resource script.
-#define wxWUD_XMLSCRIPT_ID				wxT("XMLSCRIPT")
+#define wxWUD_XMLSCRIPT_ID				wxS("XMLSCRIPT")
 
 //! The ID of the threads
 #define wxWUD_INSTALL_THREAD_ID         654321

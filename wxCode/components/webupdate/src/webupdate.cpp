@@ -64,9 +64,9 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackageArray);
 
 
 // global objects
-wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
-wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
-wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxT("invalid"));
+wxWebUpdateDownload wxEmptyWebUpdateDownload(wxS("invalid"));
+wxWebUpdatePackage wxEmptyWebUpdatePackage(wxS("invalid"));
+wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxS("invalid"));
 int wxWebUpdateAction::m_nExecResult = 0;
 
 
@@ -79,7 +79,7 @@ int wxWebUpdateAction::m_nExecResult = 0;
 void wxUninitializeWebUpdate()
 {
     // remove the singleton objects
-    wxLogAdvMsg(wxT("wxUninitializeWebUpdate - deleting the WebUpdate installer"));
+    wxLogAdvMsg(wxS("wxUninitializeWebUpdate - deleting the WebUpdate installer"));
     wxWebUpdateInstaller *old = wxWebUpdateInstaller::Set(NULL);
     if (old) delete old;
 }
@@ -87,13 +87,13 @@ void wxUninitializeWebUpdate()
 bool wxIsFileProtocol(const wxString &uri)
 {
     // file: is the signature of a file URI...
-    return uri.StartsWith(wxT("file:"));
+    return uri.StartsWith(wxS("file:"));
 }
 
 bool wxIsHTTPProtocol(const wxString &uri)
 {
     // http: is the signature of a file URI...
-    return uri.StartsWith(wxT("http:"));
+    return uri.StartsWith(wxS("http:"));
 }
 
 bool wxIsWebProtocol(const wxString &uri)
@@ -109,7 +109,7 @@ bool wxIsWebProtocol(const wxString &uri)
 //! \code
 //!     wxInputStream *in;
 //!         {
-//!     wxURL url(wxT("http://www.google.com"));
+//!     wxURL url(wxS("http://www.google.com"));
 //!     in = url.GetInputStream();
 //!     }
 //!     in->Read(somewhere, somebytes);
@@ -120,7 +120,7 @@ bool wxIsWebProtocol(const wxString &uri)
 //! \code
 //!     wxInputStream *in;
 //!         {
-//!     in = new wxURLInputStream(wxT("http://www.google.com"));
+//!     in = new wxURLInputStream(wxS("http://www.google.com"));
 //!     }
 //!     in->Read(somewhere, somebytes);
 //! \endcode
@@ -157,16 +157,16 @@ protected:
     bool InitStream() {
         if (m_url.GetError() != wxURL_NOERR) {
             m_lasterror = wxSTREAM_READ_ERROR;
-            wxLogDebug(wxT("wxURLInputStream - error with given URL..."));
+            wxLogDebug(wxS("wxURLInputStream - error with given URL..."));
             return FALSE;
         }
 
-        wxLogDebug(wxT("wxURLInputStream - no URL parsing errors..."));
+        wxLogDebug(wxS("wxURLInputStream - no URL parsing errors..."));
 
         m_url.GetProtocol().SetTimeout(30);         // 30 sec are much better rather than 10 min !!!
-        wxLogDebug(wxT("wxURLInputStream - calling wxURL::GetInputStream"));
+        wxLogDebug(wxS("wxURLInputStream - calling wxURL::GetInputStream"));
         m_pStream = m_url.GetInputStream();
-        wxLogDebug(wxT("wxURLInputStream - call was successful"));
+        wxLogDebug(wxS("wxURLInputStream - call was successful"));
         Synch();
 
         return IsOk();
@@ -248,14 +248,14 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
     if (wxIsFileProtocol(uri)) {
 
         // we can handle file:// protocols ourselves
-        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxFileInputStream"));
+        wxLogAdvMsg(wxS("wxGetInputStreamFromURI - using wxFileInputStream"));
         wxURI u(uri);
         in = new wxFileInputStream(u.GetPath());
 
     } else {
 
 #if wxUSE_HTTPENGINE_FIXME_FIXME
-        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
+        wxLogAdvMsg(wxS("wxGetInputStreamFromURI - using wxHTTPBuilder"));
         in = new wxSafeHTTPEngineInputStream(uri,
                 wxDownloadThread::m_proxy, wxDownloadThread::m_auth);
 
@@ -271,14 +271,14 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
         // just to help debugging....
         if (wxDownloadThread::m_proxy.m_bUseProxy)
-            wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the proxy settings"));
+            wxLogAdvMsg(wxS("wxGetInputStreamFromURI - using the proxy settings"));
         if (wxDownloadThread::m_auth.m_authType != wxHTTPAuthSettings::wxHTTP_AUTH_NONE)
-            wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the basic authentication settings"));
+            wxLogAdvMsg(wxS("wxGetInputStreamFromURI - using the basic authentication settings"));
 #else
 
         // we won't directly use wxURL because it must be alive together with
         // the wxInputStream it generates... wxURLInputStream solves this problem
-        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));
+        wxLogAdvMsg(wxS("wxGetInputStreamFromURI - using wxURL"));
         in = new wxURLInputStream(uri);
 #endif
     }
@@ -288,15 +288,15 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 unsigned long wxGetSizeOfURI(const wxString &uri)
 {
-    wxLogDebug(wxT("wxGetSizeOfURI - getting size of [") + uri + wxT("]"));
+    wxLogDebug(wxS("wxGetSizeOfURI - getting size of [") + uri + wxS("]"));
     wxInputStream *is = wxGetInputStreamFromURI(uri);
     if (is == NULL) {
-        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+        wxLogDebug(wxS("wxGetSizeOfURI - aborting; invalid URL !"));
         return 0;
     }
 
     if (!is->IsOk()) {
-        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+        wxLogDebug(wxS("wxGetSizeOfURI - aborting; invalid URL !"));
         delete is;          // be sure to avoid leaks
         return 0;
     }
@@ -343,7 +343,7 @@ void wxWebUpdateLog::DoLog(wxLogLevel level, const wxChar *msg, time_t time)
         // declass this message to User Message Level
         DoLogDecoratedString(wxLOG_UsrMsg, wxEmptyString);
         DoLogDecoratedString(wxLOG_UsrMsg, msg);
-        DoLogDecoratedString(wxLOG_UsrMsg, wxString(wxT('-'), wxStrlen(msg)));
+        DoLogDecoratedString(wxLOG_UsrMsg, wxString(wxS('-'), wxStrlen(msg)));
         DoLogDecoratedString(wxLOG_UsrMsg, wxEmptyString);
         break;
 
@@ -366,7 +366,7 @@ void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
             wxString msg(str);
 
             // remove the name of the function which generated this message
-            msg = msg.AfterFirst(wxT('-'));
+            msg = msg.AfterFirst(wxS('-'));
             msg.Trim(FALSE);
             msg.Trim(TRUE);
 
@@ -375,7 +375,7 @@ void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
             msg = wxString(c, 1).MakeUpper() + msg.Remove(0, 1);
 
             // don't put the timestamp... user messages must be kept short & easy to read
-            m_pTextCtrl->AppendText(wxT("-> ") + msg + wxT("\n"));
+            m_pTextCtrl->AppendText(wxS("-> ") + msg + wxS("\n"));
         }
         // don't break here
 
@@ -384,9 +384,9 @@ void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
         // adv messages go in the log file, if present
         if (m_txtFile.IsOpened()) {
 
-            wxString prefix(wxT(" ") + time);
+            wxString prefix(wxS(" ") + time);
             wxString msg(str);
-            msg.Replace(wxT("\n"), wxT("\n") + wxString(wxT(' '), prefix.Len()));
+            msg.Replace(wxS("\n"), wxS("\n") + wxString(wxS(' '), prefix.Len()));
             m_txtFile.AddLine(prefix + msg);
         }
 
@@ -422,6 +422,8 @@ void wxWebUpdateLog::StopFileLog()
     m_txtFile.Close();
 }
 
+#if !wxCHECK_VERSION(2,9,0)
+
 // generic log function
 extern void wxVLogGeneric(wxLogLevel level, const wxChar *szFormat, va_list argptr);
 
@@ -439,7 +441,7 @@ IMPLEMENT_LOG_FUNCTION(AdvMsg)
 IMPLEMENT_LOG_FUNCTION(NewSection)
 //IMPLEMENT_LOG_FUNCTION(Info)
 
-
+#endif
 
 
 
@@ -456,7 +458,7 @@ wxWebUpdateLocalXMLScript::wxWebUpdateLocalXMLScript(const wxString &strURI)
 
 wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxXmlNode *package) const
 {
-    if (!package || package->GetName() != wxT("local-package")) return NULL;
+    if (!package || package->GetName() != wxS("local-package")) return NULL;
     wxString packagename = wxWebUpdateXMLScript::GetPackageID(package);
 
     // parse this package
@@ -464,7 +466,7 @@ wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxXmlNode *
     wxXmlNode *child = package->GetChildren();
     while (child) {
 
-        if (child->GetName() == wxT("version")) {
+        if (child->GetName() == wxS("version")) {
 
             // get the version string
             ver = wxWebUpdateXMLScript::GetNodeContent(child);
@@ -489,7 +491,7 @@ wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxString &p
     bool matches = FALSE;
     while (package && !matches) {
 
-        while (package && package->GetName() != wxT("local-package"))
+        while (package && package->GetName() != wxS("local-package"))
             package = package->GetNext();
         if (!package) return NULL;          // could not found other PACKAGE tags in this script !
 
@@ -512,7 +514,7 @@ wxWebUpdateLocalPackageArray wxWebUpdateLocalXMLScript::GetAllPackages() const
 
     while (package) {
 
-        if (package->GetName() == wxT("local-package")) {
+        if (package->GetName() == wxS("local-package")) {
 
             // add the package
             wxWebUpdateLocalPackage *toadd = GetPackage(package);
@@ -549,58 +551,58 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
     // NOTE: this has to be done *before* processing the XML file since this info
     //       is used by ::SetRemoteScriptURI
     m_strLocalURI = uri;
-    wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
+    wxWebUpdateInstaller::Get()->SetKeywordValue(wxS("localxml"), uri);
 
     // save also the folders
     wxFileName f(wxFileSystem::URLToFileName(m_strLocalURI));
-    wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"),
+    wxWebUpdateInstaller::Get()->SetKeywordValue(wxS("localdir"),
                         f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
 
     // start processing the XML file
     wxXmlNode *child = GetRoot()->GetChildren();
     while (child) {
 
-        if (child->GetName() == wxT("appname")) {
+        if (child->GetName() == wxS("appname")) {
 
             // save the name of the app using WebUpdate
             m_strAppName = wxWebUpdateXMLScript::GetNodeContent(child);
-            wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("appname"), m_strAppName);
+            wxWebUpdateInstaller::Get()->SetKeywordValue(wxS("appname"), m_strAppName);
 
-        } else if (child->GetName() == wxT("xrc")) {
+        } else if (child->GetName() == wxS("xrc")) {
 
             // save the name of the XRC file to use
             m_strXRC = wxWebUpdateInstaller::Get()->DoSubstitution(
                                     wxWebUpdateXMLScript::GetNodeContent(child));
 
-        } else if (child->GetName() == wxT("res")) {
+        } else if (child->GetName() == wxS("res")) {
 
             // save the name of the XRC resource to use
             m_strXRCRes = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
                                     wxWebUpdateXMLScript::GetNodeContent(child));
 
-        } else if (child->GetName() == wxT("savelog")) {
+        } else if (child->GetName() == wxS("savelog")) {
 
             // save the log file ?
             m_bSaveLog = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
-                                    wxWebUpdateXMLScript::GetNodeContent(child)) == wxT("1");
+                                    wxWebUpdateXMLScript::GetNodeContent(child)) == wxS("1");
 
-        } else if (child->GetName() == wxT("restart")) {
+        } else if (child->GetName() == wxS("restart")) {
 
             // restart the updated application ?
             m_bRestart = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
-                                    wxWebUpdateXMLScript::GetNodeContent(child)) == wxT("1");
+                                    wxWebUpdateXMLScript::GetNodeContent(child)) == wxS("1");
 
-        } else if (child->GetName() == wxT("appfile")) {
+        } else if (child->GetName() == wxS("appfile")) {
 
             // save the filename of the program to update
             m_strAppFile = wxWebUpdateInstaller::Get()->DoSubstitution(
                                     wxWebUpdateXMLScript::GetNodeContent(child));
 
-    } else if (child->GetName() == wxT("remoteuri")) {
+    } else if (child->GetName() == wxS("remoteuri")) {
 
             SetRemoteScriptURI(wxWebUpdateXMLScript::GetNodeContent(child));
 
-        } else if (child->GetName() == wxT("keywords")) {
+        } else if (child->GetName() == wxS("keywords")) {
 
             // this should be a comma separed list of pairs:  key=value
             int count = wxWebUpdateInstaller::Get()->ParsePairValueList(
@@ -642,7 +644,7 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
             // using the folder containing the local XML script
             // as the folder used to solve the relative path.
             wxFileName currdir(m_strLocalURI);
-            wxASSERT_MSG(currdir.IsAbsolute(), wxT("Invalid local URI"));
+            wxASSERT_MSG(currdir.IsAbsolute(), wxS("Invalid local URI"));
             fn.MakeAbsolute(currdir.GetPath());
         }
 
@@ -651,16 +653,16 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
     }
 
     // save the URI of the remote XML script.
-    wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotexml"), m_strRemoteURI);
+    wxWebUpdateInstaller::Get()->SetKeywordValue(wxS("remotexml"), m_strRemoteURI);
 
     wxFileName f(wxFileSystem::FileNameToURL(m_strRemoteURI));
-    wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotedir"),
+    wxWebUpdateInstaller::Get()->SetKeywordValue(wxS("remotedir"),
                         f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
 }
 
 bool wxWebUpdateLocalXMLScript::IsOk() const
 {
-    if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate"))
+    if (!GetRoot() || GetRoot()->GetName() != wxS("webupdate"))
         return FALSE;
     return TRUE;
 }
@@ -696,32 +698,32 @@ wxXmlNode *wxCreateElemTextNode(wxXmlNode *prev, const wxString &name, const wxS
 wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 {
     // the webupdate root
-    wxXmlNode *webupdate = wxCreateElemNode(wxT("webupdate"));
-    webupdate->AddProperty(new wxXmlProperty(wxT("version"),
+    wxXmlNode *webupdate = wxCreateElemNode(wxS("webupdate"));
+    webupdate->AddAttribute(new wxXmlAttribute(wxS("version"),
                                 wxWebUpdateInstaller::Get()->GetVersion(), NULL));
 
     // set the appname
-    wxXmlNode *appname = wxCreateElemTextNode(wxT("appname"), m_strAppName);
+    wxXmlNode *appname = wxCreateElemTextNode(wxS("appname"), m_strAppName);
     webupdate->AddChild(appname);       // link this node as child of webupdate
 
     // set all other children nodes
-    wxXmlNode *appfile = wxCreateElemTextNode(appname, wxT("appfile"), m_strAppFile);
-    wxXmlNode *xrc = wxCreateElemTextNode(appfile, wxT("xrc"), m_strXRC);
-    wxXmlNode *res = wxCreateElemTextNode(xrc, wxT("res"), m_strXRCRes);
-    wxXmlNode *restart = wxCreateElemTextNode(res, wxT("restart"), m_bRestart ? wxT("1") : wxT("0"));
-    wxXmlNode *savelog = wxCreateElemTextNode(restart, wxT("savelog"), m_bSaveLog ? wxT("1") : wxT("0"));
+    wxXmlNode *appfile = wxCreateElemTextNode(appname, wxS("appfile"), m_strAppFile);
+    wxXmlNode *xrc = wxCreateElemTextNode(appfile, wxS("xrc"), m_strXRC);
+    wxXmlNode *res = wxCreateElemTextNode(xrc, wxS("res"), m_strXRCRes);
+    wxXmlNode *restart = wxCreateElemTextNode(res, wxS("restart"), m_bRestart ? wxS("1") : wxS("0"));
+    wxXmlNode *savelog = wxCreateElemTextNode(restart, wxS("savelog"), m_bSaveLog ? wxS("1") : wxS("0"));
 
     // set the remote URI
-    wxXmlNode *uri = wxCreateElemTextNode(savelog, wxT("remoteuri"),
+    wxXmlNode *uri = wxCreateElemTextNode(savelog, wxS("remoteuri"),
         m_strRemoteURIOriginal.IsEmpty() ? m_strRemoteURI : m_strRemoteURIOriginal);
 
     // set the keywords
     wxString content;
     for (int i=0; i < (int)m_arrNames.GetCount(); i++)
-        content += m_arrNames[i] + wxT("=") + m_arrValues[i] + wxT(",");
+        content += m_arrNames[i] + wxS("=") + m_arrValues[i] + wxS(",");
     if (!content.IsEmpty())
         content.RemoveLast();       // remove the last comma
-    wxXmlNode *keywords = wxCreateElemTextNode(wxT("keywords"), content);
+    wxXmlNode *keywords = wxCreateElemTextNode(wxS("keywords"), content);
     uri->SetNext(keywords);
 
     return webupdate;
@@ -744,12 +746,12 @@ void wxWebUpdateLocalXMLScript::SetPackageArray(const wxWebUpdateLocalPackageArr
     for (int i=0; i < (int)arr.GetCount(); i++) {
 
         // create the local-package tag with its ID property
-        wxXmlNode *lp = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("local-package"),
-                                        wxEmptyString, new wxXmlProperty(wxT("id"),
+        wxXmlNode *lp = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxS("local-package"),
+                                        wxEmptyString, new wxXmlAttribute(wxS("id"),
                                     arr[i].GetName(), NULL), NULL);
 
         // create its VERSION subtag
-        lp->AddChild(wxCreateElemTextNode(wxT("version"), arr[i].GetVersion()));
+        lp->AddChild(wxCreateElemTextNode(wxS("version"), arr[i].GetVersion()));
 
         // set the parent
         lp->SetParent(webupdate);
@@ -765,7 +767,7 @@ void wxWebUpdateLocalXMLScript::SetPackageArray(const wxWebUpdateLocalPackageArr
 
 bool wxWebUpdateLocalXMLScript::Save() const
 {
-    wxASSERT_MSG(!m_strLocalURI.IsEmpty(), wxT("Invalid filename !"));
+    wxASSERT_MSG(!m_strLocalURI.IsEmpty(), wxS("Invalid filename !"));
     return wxXmlDocument::Save(m_strLocalURI);
 }
 
@@ -789,8 +791,8 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
     runev.SetInt(flags);
 
     // our app should process this event...
-    wxLogAdvMsg(wxT("wxWebUpdateAction::wxExecute - sending to wxTheApp the command [")
-                    + runev.GetString() + wxT("]"));
+    wxLogAdvMsg(wxS("wxWebUpdateAction::wxExecute - sending to wxTheApp the command [")
+                    + runev.GetString() + wxS("]"));
 
     // to understand when the wxApp object has executed the command, we need
     // a wxCondition and we also need to pass it to the wxApp using the event
@@ -833,8 +835,8 @@ bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
     // check platform ID using regexp
     wxRegEx our(m_strID);
     if (!our.IsValid()) {
-        wxLogDebug(wxT("wxWebUpdatePlatform::Matches - [") + m_strID +
-                    wxT("] is a malformed regular expression !"));
+        wxLogDebug(wxS("wxWebUpdatePlatform::Matches - [") + m_strID +
+                    wxS("] is a malformed regular expression !"));
         return FALSE;       // syntax error !
     }
 
@@ -846,9 +848,9 @@ bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
 wxString wxWebUpdatePlatform::GetAsString() const
 {
     // concatenate all our info
-    return GetPortIdName(GetPortId(), false) + wxT(" - ") + 
+    return GetPortIdName(GetPortId(), false) + wxS(" - ") + 
            GetArchName(GetArchitecture()) +
-           wxT(" - ") + m_strID;
+           wxS(" - ") + m_strID;
 }
 
 // static
@@ -1007,7 +1009,7 @@ bool wxWebUpdateDownload::Install() const
 wxArrayString wxWebUpdatePackage::GetParsedPrerequisites() const
 {
     wxArrayString ret;
-    wxStringTokenizer tkz(m_strPrerequisites, wxT(","));
+    wxStringTokenizer tkz(m_strPrerequisites, wxS(","));
     while (tkz.HasMoreTokens())
         ret.Add(tkz.GetNextToken());
     return ret;
@@ -1067,18 +1069,18 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node)
 bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxString &lang)
 {
     // look for the LANG property of this tag...
-    wxString l = n->GetPropVal(wxT("lang"), wxT("en"));    // english is the default
+    wxString l = n->GetAttribute(wxS("lang"), wxS("en"));    // english is the default
 
     // does the LANG property match the given language name ?
     if (l.IsSameAs(lang, FALSE) ||
-        l.BeforeFirst(wxT('-')).IsSameAs(lang.BeforeFirst(wxT('_')), FALSE)) {
-        wxLogDebug(wxT("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
-                    wxT("found a [%s] LANG property matching the given [%s] language name"),
+        l.BeforeFirst(wxS('-')).IsSameAs(lang.BeforeFirst(wxS('_')), FALSE)) {
+        wxLogDebug(wxS("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
+                    wxS("found a [%s] LANG property matching the given [%s] language name"),
                     l.c_str(), lang.c_str());
         return TRUE;
     } else
-        wxLogDebug(wxT("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
-                    wxT("found a [%s] LANG property not matching the given [%s] language name"),
+        wxLogDebug(wxS("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
+                    wxS("found a [%s] LANG property not matching the given [%s] language name"),
                     l.c_str(), lang.c_str());
 
     return FALSE;
@@ -1107,7 +1109,7 @@ wxString wxWebUpdateXMLScript::ChooseLanguage(const wxXmlNode *n, const wxString
             out = GetNodeContent(n);
 
             // is this the english message ?
-            if (IsLangPropertyMatching(n, wxT("en")))
+            if (IsLangPropertyMatching(n, wxS("en")))
                 *bEnglishLangFound = TRUE;
         }
 
@@ -1120,7 +1122,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 {
     wxWebUpdateActionArray ret;
 
-    if (actions->GetName() != wxT("actions"))
+    if (actions->GetName() != wxS("actions"))
         return ret;
 
     // parse all action tags
@@ -1131,7 +1133,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 
         // convert to a wxArrayString the properties of this node
         wxArrayString names, values;
-        wxXmlProperty *prop = child->GetProperties();
+        wxXmlAttribute *prop = child->GetAttributes();
         while (prop) {
 
             names.Add(prop->GetName());
@@ -1152,7 +1154,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
         if (a)
             ret.Add(a);
         else
-            wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
+            wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
 
         child = child->GetNext();
     }
@@ -1162,7 +1164,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 
 wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdownload) const
 {
-    if (latestdownload->GetName() != wxT("latest-download"))
+    if (latestdownload->GetName() != wxS("latest-download"))
         return wxEmptyWebUpdateDownload;
 
     // the info we need to build a wxWebUpdateDownload...
@@ -1175,37 +1177,37 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
     while (child) {
 
         // is this a well-formed tag ?
-        if (child->GetName() == wxT("uri")) {
+        if (child->GetName() == wxS("uri")) {
 
             // extract filename for this download
-            wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - the URI for this download is [") + GetNodeContent(child) + wxT("]"));
+            wxLogDebug(wxS("wxWebUpdateXMLScript::GetDownload - the URI for this download is [") + GetNodeContent(child) + wxS("]"));
             uri = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 
             // the substitution process could have put some '\' (on win32) in the URI var... fix them
-            uri.Replace(wxT("\\"), wxT("/"));
+            uri.Replace(wxS("\\"), wxS("/"));
 
             // be sure that our "uri" var contains a valid URI...
             uri = wxURI(uri).BuildURI();
-            wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - the expanded URI for this download is [") + uri + wxT("]"));
+            wxLogDebug(wxS("wxWebUpdateXMLScript::GetDownload - the expanded URI for this download is [") + uri + wxS("]"));
 
             // this keyword will be removed when exiting from this XML node
-            list[wxT("thisfile")] = list[wxT("downloaddir")] +
+            list[wxS("thisfile")] = list[wxS("downloaddir")] +
                 wxFileName::GetPathSeparator() +
                 wxFileSystem::URLToFileName(uri).GetFullName();
 
-        } else if (child->GetName() == wxT("md5")) {
+        } else if (child->GetName() == wxS("md5")) {
 
             // this is the precomputed MD5 for this file
             md5 = GetNodeContent(child);
 
-        } else if (child->GetName() == wxT("platform")) {
+        } else if (child->GetName() == wxS("platform")) {
 
             // search the known properties
-            platform = child->GetPropVal(wxT("name"), wxT("invalid"));
-            arch = child->GetPropVal(wxT("arch"), wxT("any"));
-            id = child->GetPropVal(wxT("id"), wxT(""));
+            platform = child->GetAttribute(wxS("name"), wxS("invalid"));
+            arch = child->GetAttribute(wxS("arch"), wxS("any"));
+            id = child->GetAttribute(wxS("id"), wxS(""));
 
-        } else if (child->GetName() == wxT("actions")) {
+        } else if (child->GetName() == wxS("actions")) {
 
             // get the actions for this download
             actions = GetActionArray(child);
@@ -1217,7 +1219,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
     }
 
     // remove the keywords we added while parsing
-    list[wxT("thisfile")] = wxEmptyString;
+    list[wxS("thisfile")] = wxEmptyString;
 
     // is this a valid download ?
     if (platform.IsEmpty() || actions.GetCount() <= 0)
@@ -1230,52 +1232,52 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) const
 {
-    if (!package || package->GetName() != wxT("package")) return NULL;
+    if (!package || package->GetName() != wxS("package")) return NULL;
     wxString packagename = GetPackageID(package);
 
     // init the return value
-    wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackage - parsing package [") + packagename + wxT("]"));
+    wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetPackage - parsing package [") + packagename + wxS("]"));
     wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);
 
     // add to the current keyword list the current ID
     wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
-    list[wxT("id")] = packagename;      // will be removed when exiting
+    list[wxS("id")] = packagename;      // will be removed when exiting
 
     // parse this package
     wxXmlNode *child = package->GetChildren();
     bool bDescriptionLangFound = FALSE, bEnglishLangFound = FALSE;
     while (child) {
 
-        if (child->GetName() == wxT("requires")) {
+        if (child->GetName() == wxS("requires")) {
 
             // read the list of required packages
             ret->m_strPrerequisites = GetNodeContent(child);
 
-        } else if (child->GetName() == wxT("latest-version")) {
+        } else if (child->GetName() == wxS("latest-version")) {
 
             // get the version string
             ret->m_verLatest = GetNodeContent(child);
             ret->m_importance = wxWUPI_NORMAL;          // by default
 
             // add the "latest-version" keyword
-            list[wxT("latest-version")] = ret->m_verLatest;  // will be removed when exiting
+            list[wxS("latest-version")] = ret->m_verLatest;  // will be removed when exiting
 
             // and this version's importance (if available)
-            wxString imp = child->GetPropVal(wxT("importance"), wxT(""));
-            if (imp == wxT("high")) ret->m_importance = wxWUPI_HIGH;
-            if (imp == wxT("normal")) ret->m_importance = wxWUPI_NORMAL;
-            if (imp == wxT("low")) ret->m_importance = wxWUPI_LOW;
+            wxString imp = child->GetAttribute(wxS("importance"), wxS(""));
+            if (imp == wxS("high")) ret->m_importance = wxWUPI_HIGH;
+            if (imp == wxS("normal")) ret->m_importance = wxWUPI_NORMAL;
+            if (imp == wxS("low")) ret->m_importance = wxWUPI_LOW;
 
-        } else if (child->GetName() == wxT("latest-download")) {
+        } else if (child->GetName() == wxS("latest-download")) {
 
             // parse this download
             wxWebUpdateDownload update = GetDownload(child);
             if (update.IsOk())
                 ret->AddDownload(update);
             else
-                wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
+                wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
-        } else if (child->GetName() == wxT("description")) {
+        } else if (child->GetName() == wxS("description")) {
 
             // all language-choose logic is in ChooseLanguage (which is called also in other places)
             ret->m_strDescription = ChooseLanguage(child, m_strLanguageID, &bDescriptionLangFound,
@@ -1291,13 +1293,13 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
                                                          ret->m_strDescription);
 
     // remove the keywords we added while parsing
-    list[wxT("id")] = wxEmptyString;
-    list[wxT("latest-version")] = wxEmptyString;
+    list[wxS("id")] = wxEmptyString;
+    list[wxS("latest-version")] = wxEmptyString;
 
     // be sure this package is valid
 #ifdef __WXDEBUG__
     wxASSERT_MSG(ret->m_arrWebUpdates.GetCount() > 0,
-            wxT("No downloads defined for this package in the webupdate script ?"));
+            wxS("No downloads defined for this package in the webupdate script ?"));
 #else
     if (ret->m_arrWebUpdates.GetCount() <= 0) {
         delete ret;
@@ -1311,10 +1313,10 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 // static
 wxString wxWebUpdateXMLScript::GetPackageID(const wxXmlNode *package)
 {
-    wxXmlProperty *prop = package->GetProperties();
-    while (prop && prop->GetName() != wxT("id")) {
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackageID - found unsupported ")
-                wxT("package property: ") + prop->GetName() + wxT("=") + prop->GetValue());
+    wxXmlAttribute *prop = package->GetAttributes();
+    while (prop && prop->GetName() != wxS("id")) {
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetPackageID - found unsupported ")
+                wxS("package property: ") + prop->GetName() + wxS("=") + prop->GetValue());
         prop = prop->GetNext();
     }
 
@@ -1333,7 +1335,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
     bool matches = FALSE;
     while (package && !matches) {
 
-        while (package && package->GetName() != wxT("package"))
+        while (package && package->GetName() != wxS("package"))
             package = package->GetNext();
         if (!package) return NULL;          // could not found other PACKAGE tags in this script !
 
@@ -1368,39 +1370,39 @@ wxWebUpdatePackageArray wxWebUpdateXMLScript::GetAllPackages() const
 // static
 wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *package, wxVersion &ver)
 {
-    wxXmlProperty *prop = package->GetProperties();
-    while (prop && prop->GetName() != wxT("version")) {
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - found unsupported ")
-                wxT("webupdate property: ") + prop->GetName() + wxT("=") + prop->GetValue());
+    wxXmlAttribute *prop = package->GetAttributes();
+    while (prop && prop->GetName() != wxS("version")) {
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - found unsupported ")
+                wxS("webupdate property: ") + prop->GetName() + wxS("=") + prop->GetValue());
         prop = prop->GetNext();
     }
 
     if (prop == NULL) {
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - could not find the ")
-                wxT("version property in the root tag. Defaulting to version ")
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - could not find the ")
+                wxS("version property in the root tag. Defaulting to version ")
             + wxWebUpdateInstaller::Get()->GetVersion());
         ver = wxWebUpdateInstaller::Get()->GetVersion();
 
     } else {
 
         ver = prop->GetValue();
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
-                wxT("of this XML WebUpdate document is ") + ver);
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+                wxS("of this XML WebUpdate document is ") + ver);
     }
 
     // do the version check
     wxWebUpdateCheckFlag f = wxWebUpdateInstaller::Get()->VersionCheck(ver);
     if (f == wxWUCF_UPDATED)
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
-                wxT("of this XML WebUpdate document matches the installer engine version"));
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+                wxS("of this XML WebUpdate document matches the installer engine version"));
     else if (f == wxWUCF_OUTOFDATE)
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
-                wxT("of this XML WebUpdate document is older than the installer engine... ")
-            wxT("continuing anyway"));
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+                wxS("of this XML WebUpdate document is older than the installer engine... ")
+            wxS("continuing anyway"));
     else
-        wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
-                wxT("of this XML WebUpdate document is newer than the installer engine... ")
-            wxT("aborting (cannot handle the new features!)"));
+        wxLogAdvMsg(wxS("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+                wxS("of this XML WebUpdate document is newer than the installer engine... ")
+            wxS("aborting (cannot handle the new features!)"));
     return f;
 }
 
@@ -1432,12 +1434,12 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri, const wxString &langID)
     while (child) {
 
         // parse the children of <webupdate> which are not packages
-        if (child->GetName() == wxT("msg-update-available")) {
+        if (child->GetName() == wxS("msg-update-available")) {
             m_strUpdateAvailableMsg = ChooseLanguage(child, m_strLanguageID, &bMsgUpdateAvailLangFound,
                                                    &bMsgUpdateAvailEnglishFound, m_strUpdateAvailableMsg);
             m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strUpdateAvailableMsg);
 
-        } else if (child->GetName() == wxT("msg-update-notavailable")) {
+        } else if (child->GetName() == wxS("msg-update-notavailable")) {
             m_strUpdateNotAvailableMsg = ChooseLanguage(child, m_strLanguageID, &bMsgUpdateNotAvailLangFound,
                                                    &bMsgUpdateNotAvailEnglishFound, m_strUpdateNotAvailableMsg);
             m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strUpdateNotAvailableMsg);

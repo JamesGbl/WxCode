@@ -72,16 +72,16 @@ wxString wxGetSizeStr(unsigned long bytesize)
     if (bytesize == 0)
         sz = _("NA");     // not available
     else if (bytesize < 1024)
-        sz = wxString::Format(wxT("%lu B"), bytesize);
+        sz = wxString::Format(wxS("%lu B"), bytesize);
     else if (bytesize < 1024*1024)
-        sz = wxString::Format(wxT("%.0f kB"), ((float)bytesize/1024.));
+        sz = wxString::Format(wxS("%.0f kB"), ((float)bytesize/1024.));
     else if (bytesize < 1024*1024*1024)
-        sz = wxString::Format(wxT("%.1f MB"), ((float)bytesize/(1024.*1024.)));
+        sz = wxString::Format(wxS("%.1f MB"), ((float)bytesize/(1024.*1024.)));
     else
         // petabytes are not handled because they require a division
         // for a number of the order 2^40 which exceed the 32 bits
         // of most of the today machines...
-        sz = wxString::Format(wxT("%.3f TB"), ((float)bytesize/(1024.*1024.*1024.)));
+        sz = wxString::Format(wxS("%.3f TB"), ((float)bytesize/(1024.*1024.*1024.)));
 
     return sz;
 }
@@ -212,8 +212,8 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
     for (int i=0; i < (int)m_arrRemotePackages.GetCount(); i++, idx++) {
 
         wxWebUpdatePackage &curr = m_arrRemotePackages[i];
-        wxLogAdvMsg(wxT("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") +
-            curr.GetName() + wxT("' package..."));
+        wxLogAdvMsg(wxS("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") +
+            curr.GetName() + wxS("' package..."));
 
 
         // set the properties for the first column (NAME)
@@ -275,7 +275,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
             Check(idx, FALSE);
             break;
         default:
-            wxASSERT_MSG(0, wxT("Invalid package !"));
+            wxASSERT_MSG(0, wxS("Invalid package !"));
         }
 
 
@@ -328,7 +328,7 @@ int wxWebUpdateListCtrl::GetCheckedItemCount() const
 void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 {
     int n = ev.GetIndex();
-    wxASSERT_MSG(IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
+    wxASSERT_MSG(IsChecked(n), wxS("Something broken in wxCheckedListCtrl"));
 
     if (!CanBeChecked(n)) {
         Check(n, FALSE);
@@ -351,7 +351,7 @@ void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 void wxWebUpdateListCtrl::OnItemUncheck(wxListEvent &ev)
 {
     int n = ev.GetIndex();
-    wxASSERT_MSG(!IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
+    wxASSERT_MSG(!IsChecked(n), wxS("Something broken in wxCheckedListCtrl"));
     if (!CanBeUnchecked(n)) {
         Check(n, TRUE);
         return;
@@ -385,12 +385,12 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 
         const wxWebUpdatePackage &p = GetRemotePackage(GetItemText(j));
         wxASSERT_MSG(p.GetDownload().IsDownloadSizeCached(),
-                    wxT("Why does this item has not a cached size ?"));
+                    wxS("Why does this item has not a cached size ?"));
         unsigned long bytesize = p.GetDownload().GetDownloadSize();
         SetItem(j, 3, wxGetSizeStr(bytesize));
     }
 
-    wxLogAdvMsg(wxT("wxWebUpdateListCtrl::OnCacheSizeComplete - sizes cached"));
+    wxLogAdvMsg(wxS("wxWebUpdateListCtrl::OnCacheSizeComplete - sizes cached"));
 }
 
 void wxWebUpdateListCtrl::CacheDownloadSizes()
@@ -405,11 +405,11 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
     // 1) try strings that won't be parsable (e.g. abcdhttp://)
     // 2) try strings that will parse but do not point to any real file (e.g. http://myserver.com/nonexistingfile)
     // 3) try with a real file (e.g. http://www.google.com)
-    unsigned long n = wxGetSizeOfURI(wxT("http://osdn.dl.sourceforge.net/sourceforge/wxcode/simple-gtk-2.0.3.zipfdsafdas"));
+    unsigned long n = wxGetSizeOfURI(wxS("http://osdn.dl.sourceforge.net/sourceforge/wxcode/simple-gtk-2.0.3.zipfdsafdas"));
     if (n == 0xfffffff)
-        wxMessageBox(wxString::Format(wxT("fake ")));
+        wxMessageBox(wxString::Format(wxS("fake ")));
     else
-        wxMessageBox(wxString::Format(wxT("%lu"), n));
+        wxMessageBox(wxString::Format(wxS("%lu"), n));
 
 #else
 
@@ -418,12 +418,12 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
     for (int i=0; i < (int)m_arrRemotePackages.GetCount(); i++) {
         wxString u = m_arrRemotePackages[i].GetDownload().GetDownloadString();
 
-        wxLogDebug(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - adding [") + u +
-                wxT("] to size-caching"));
+        wxLogDebug(wxS("wxWebUpdateListCtrl::CacheDownloadSizes - adding [") + u +
+                wxS("] to size-caching"));
         p->m_urls.Add(u);
     }
 
-    wxLogAdvMsg(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));
+    wxLogAdvMsg(wxS("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));
     if (p->Create() != wxTHREAD_NO_ERROR ||
         p->Run() != wxTHREAD_NO_ERROR) {
         wxMessageBox(_("Low resources; cannot show the size of the packages...\nClose some applications and then retry."),
@@ -444,8 +444,8 @@ bool wxWebUpdateListCtrl::IsToDiscard(wxWebUpdateListCtrlFilter filter,
 
     // check package platform
     wxASSERT_MSG(pkg.GetDownload() != wxEmptyWebUpdateDownload,
-            wxT("This package does not have any download suitable for current platform !\n")
-            wxT("It should have been filtered out by wxWebUpdateDlg::FilterOtherPlatforms"));
+            wxS("This package does not have any download suitable for current platform !\n")
+            wxS("It should have been filtered out by wxWebUpdateDlg::FilterOtherPlatforms"));
 
     return FALSE;
 }
@@ -495,7 +495,7 @@ bool wxWebUpdateListCtrl::CanBeUnchecked(int n)
 #endif
         CompareVersion(m_arrRemotePackages[GetPackageIndexForItem(n)]);
     wxASSERT_MSG(f != wxWUCF_UPDATED && f != wxWUCF_FAILED,
-                wxT("That item should not have been checked !"));
+                wxS("That item should not have been checked !"));
     return TRUE;
 }
 
@@ -615,7 +615,7 @@ wxObject *wxWebUpdateListCtrlXmlHandler::DoCreateResource()
 {
     XRC_MAKE_INSTANCE(list, wxWebUpdateListCtrl)
 
-    wxLogDebug(wxT("wxWebUpdateListCtrlXmlHandler::DoCreateResource"));
+    wxLogDebug(wxS("wxWebUpdateListCtrlXmlHandler::DoCreateResource"));
     list->Create(m_parentAsWindow,
          GetID(),
          GetPosition(), GetSize(),
@@ -629,6 +629,6 @@ wxObject *wxWebUpdateListCtrlXmlHandler::DoCreateResource()
 
 bool wxWebUpdateListCtrlXmlHandler::CanHandle(wxXmlNode *node)
 {
-    return IsOfClass(node, wxT("wxWebUpdateListCtrl"));
+    return IsOfClass(node, wxS("wxWebUpdateListCtrl"));
 }
 

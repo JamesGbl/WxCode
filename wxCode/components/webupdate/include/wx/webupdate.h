@@ -85,9 +85,18 @@ enum
     wxLOG_NewSection            // a new phase in program flow
 };
 
+#if wxCHECK_VERSION(2,9,0)
+/*wxDEFINE_EMPTY_LOG_FUNCTION(AdvMsg);
+wxDEFINE_EMPTY_LOG_FUNCTION(UsrMsg);
+wxDEFINE_EMPTY_LOG_FUNCTION(NewSection);*/
+#define wxLogAdvMsg     wxLogMessage
+#define wxLogUsrMsg     wxLogMessage
+#define wxLogNewSection     wxLogMessage
+#else
 DECLARE_LOG_FUNCTION(AdvMsg);
 DECLARE_LOG_FUNCTION(UsrMsg);
 DECLARE_LOG_FUNCTION(NewSection);
+#endif
 
 //! A wxLogPassThrough-derived log target for the WebUpdate classes.
 //! This target processes in smart way the log strings sent by
@@ -432,14 +441,14 @@ public:
     // constructor using enums
     wxWebUpdatePlatform(const wxPortId &port = wxPORT_ANY,
                         const wxArchitecture &arch = wxARCH_32,
-                        const wxString &id = wxT(".*"))
+                        const wxString &id = wxS(".*"))
                 : wxPlatformInfo(port, -1, -1, wxOS_UNKNOWN, -1, -1, arch)
         { SetID(id); }
 
     // constructor with wxStrings
     wxWebUpdatePlatform(const wxString &portname,
-                        const wxString &arch = wxT("32"),
-                        const wxString &id = wxT(".*"))
+                        const wxString &arch = wxS("32"),
+                        const wxString &id = wxS(".*"))
         { SetPortId(portname); SetArchitecture(arch); SetID(id); }
 
     virtual ~wxWebUpdatePlatform() {}
@@ -458,12 +467,12 @@ public:         // getters & setters
     wxString GetID() const
         { return m_strID; }
     void SetID(const wxString &id)
-        { m_strID = id.IsEmpty() ? wxT(".*") : id; }
+        { m_strID = id.IsEmpty() ? wxS(".*") : id; }
 
         // add support for wxARCH_ANY
     void SetArchitecture(const wxString &str)
     {
-        if (str.CmpNoCase(wxT("any")) == 0)
+        if (str.CmpNoCase(wxS("any")) == 0)
             m_arch = wxARCH_ANY;
         else
             wxPlatformInfo::SetArchitecture(GetArch(str));
@@ -472,7 +481,7 @@ public:         // getters & setters
         // add support for wxPORT_ANY
     void SetPortId(const wxString &str)
     {
-        if (str.CmpNoCase(wxT("any")) == 0)
+        if (str.CmpNoCase(wxS("any")) == 0)
             m_port = wxPORT_ANY;
         else
             wxPlatformInfo::SetPortId(GetPortId(str));
@@ -835,7 +844,7 @@ public:         // main functions
     //! Returns TRUE if at least the root of this document is valid.
     bool IsOk() const
     { 
-        if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) 
+        if (!GetRoot() || GetRoot()->GetName() != wxS("webupdate")) 
             return FALSE; 
         return TRUE; 
     }
@@ -848,7 +857,7 @@ public:         // main functions
     //! which message to load for those messages which are localized
     //! (e.g. the description field of a wxWebUpdatePackage).
     //! Returns TRUE if the document was successfully parsed.
-    virtual bool Load(const wxString &uri, const wxString &langID = wxT("en"));
+    virtual bool Load(const wxString &uri, const wxString &langID = wxS("en"));
 
     //! Returns the wxWebUpdatePackage stored in this document for
     //! the given package. Returns NULL if the package you asked for

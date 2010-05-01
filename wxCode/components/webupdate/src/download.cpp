@@ -71,7 +71,7 @@ wxThreadError wxDownloadThread::Download(const wxString &url, wxOutputStream *ou
 
     // set url
     m_url.SetURL(url);
-    wxASSERT_MSG(m_url.IsOk(), wxT("Invalid URL!"));
+    wxASSERT_MSG(m_url.IsOk(), wxS("Invalid URL!"));
 
     // set a lower timeout than 10 minutes default!
     m_url.GetProtocol().SetTimeout(30); // 30 secs
@@ -81,14 +81,14 @@ wxThreadError wxDownloadThread::Download(const wxString &url, wxOutputStream *ou
     if (!m_output)
     {
         // try to create a temporary file output stream
-        m_output = new wxFileOutputStream(wxFileName::CreateTempFileName(wxT("download")));
+        m_output = new wxFileOutputStream(wxFileName::CreateTempFileName(wxS("download")));
         if (!m_output || !m_output->IsOk())
             return wxTHREAD_NO_RESOURCE;
     }
     else
     {
         // the user-provided output stream must be valid
-        wxASSERT_MSG(m_output->IsOk(), wxT("Invalid output stream!"));
+        wxASSERT_MSG(m_output->IsOk(), wxS("Invalid output stream!"));
     }
 
     // create & run this thread
@@ -141,14 +141,14 @@ void *wxDownloadThread::Entry()
     {
         if (GetFlag() == wxDTF_ABORT)
         {
-            wxLogDebug(wxT("wxDownloadThread::Entry - user-aborting"));
+            wxLogDebug(wxS("wxDownloadThread::Entry - user-aborting"));
             delete in;
             OnUserAbort();
             return NULL;
         }
         else if (GetFlag() == wxDTF_PAUSE)
         {
-            wxLogDebug(wxT("wxDownloadThread::Entry - sleeping"));
+            wxLogDebug(wxS("wxDownloadThread::Entry - sleeping"));
 
             // did we warn our event handler that the download was paused?
             if (!paused)
@@ -194,20 +194,20 @@ void *wxDownloadThread::Entry()
     delete in;
 
     wxASSERT_MSG(m_nCurrentSize == m_nFinalSize || m_nFinalSize == wxInvalidSize,
-                 wxT("All errors should have already been catched!"));
+                 wxS("All errors should have already been catched!"));
 
     wxLogDebug(_("wxDownloadThread::Entry - completed download of %lu bytes"),
                m_nCurrentSize.ToULong());
 
     // download is complete
     OnComplete();
-    wxLogDebug(wxT("sent complete event"));
+    wxLogDebug(wxS("sent complete event"));
     return NULL;
 }
 
 void wxDownloadThread::OnExit()
 {
-    wxLogDebug(wxT("wxDownloadThread - exiting"));
+    wxLogDebug(wxS("wxDownloadThread - exiting"));
 }
 
 
@@ -405,7 +405,7 @@ void wxDownloadDialog::OnDownloadUpdate(wxDownloadEvent &ev)
         return;
 
     static wxDateTime lastLabelUpdate = wxDateTime::Now();
-    wxLogDebug(wxT("wxDownloadDialog::OnDownloadUpdate"));
+    wxLogDebug(wxS("wxDownloadDialog::OnDownloadUpdate"));
 
     if ((wxDateTime::Now() - lastLabelUpdate).GetMilliseconds() > 200)   // avoid flickering
     {
@@ -429,7 +429,7 @@ void wxDownloadDialog::OnDownloadUpdate(wxDownloadEvent &ev)
 
         wxString currsize = wxFileName::GetHumanReadableSize(ev.GetCurrentSize()),
                  totalsize = wxFileName::GetHumanReadableSize(ev.GetTotalSize());
-        m_pSize->SetLabel(currsize + wxT(" / ") + totalsize);
+        m_pSize->SetLabel(currsize + wxS(" / ") + totalsize);
         m_pSpeed->SetLabel(ev.GetHumanReadableDownloadSpeed());
 
         lastLabelUpdate = wxDateTime::Now();
@@ -464,8 +464,8 @@ void wxDownloadDialog::OnCancel(wxCommandEvent &)
     // the user pressed the "cancel" button
     m_flag = wxDTF_PAUSE;
     m_bDisableEvents = true;
-    int reply = wxMessageBox(wxT("Are you sure you want to cancel the download?"),
-                                wxT("Question"), wxYES_NO|wxICON_QUESTION);
+    int reply = wxMessageBox(wxS("Are you sure you want to cancel the download?"),
+                                wxS("Question"), wxYES_NO|wxICON_QUESTION);
     if (reply == wxYES)
     {
         m_flag = wxDTF_ABORT;
@@ -519,7 +519,7 @@ wxString wxDownloadEvent::GetHumanReadableDownloadSpeed(const wxString &invalid)
     if (speed == 0)
         return invalid;
 
-    return wxFileName::GetHumanReadableSize(speed) + wxT("/s");
+    return wxFileName::GetHumanReadableSize(speed) + wxS("/s");
 }
 
 wxTimeSpan wxDownloadEvent::GetElapsedTime() const
@@ -569,7 +569,7 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_CACHESIZE_COMPLETE)
 
 void *wxSizeCacherThread::Entry()
 {
-    wxLogDebug(wxT("wxSizeCacherThread::Entry - caching file sizes"));
+    wxLogDebug(wxS("wxSizeCacherThread::Entry - caching file sizes"));
     bool allok = TRUE;
 
     if (m_urls.GetCount() == 0)
@@ -587,12 +587,12 @@ void *wxSizeCacherThread::Entry()
         wxURL u(m_urls[i]);
         wxInputStream *is = u.GetInputStream();
         if (is == NULL) {
-            wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+            wxLogDebug(wxS("wxGetSizeOfURI - aborting; invalid URL !"));
             return 0;
         }
 
         if (!is->IsOk()) {
-            wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+            wxLogDebug(wxS("wxGetSizeOfURI - aborting; invalid URL !"));
             delete is;          // be sure to avoid leaks
             return 0;
         }
@@ -610,7 +610,7 @@ void *wxSizeCacherThread::Entry()
         allok &= (m_urlSizes->Item(i) != 0);
     }
 
-    wxLogDebug(wxT("wxSizeCacherThread::Entry - caching of file sizes completed"));
+    wxLogDebug(wxS("wxSizeCacherThread::Entry - caching of file sizes completed"));
     return (void *)allok;
 }
 
