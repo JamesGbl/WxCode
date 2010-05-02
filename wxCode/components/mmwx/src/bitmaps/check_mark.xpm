@@ -1,0 +1,25 @@
+/* XPM */
+static char *check_mark[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 3 1",
+"  c black",
+". c #64c8ff",
+"X c #c0c0c0",
+/* pixels */
+"XXXXXXXXXXXXXX  ",
+"XXXXXXXXXXXXX . ",
+"XXXXXXXXXXXX .. ",
+"XXXXXXXXXXX ... ",
+"XXXXXXXXXX ... X",
+"   XXXXXX ... XX",
+" .. XXXX ... XXX",
+" .. XXX ... XXXX",
+" .. XX ... XXXXX",
+" .. X ... XXXXXX",
+" ..  ... XXXXXXX",
+" .. ... XXXXXXXX",
+" ..... XXXXXXXXX",
+" .... XXXXXXXXXX",
+" ... XXXXXXXXXXX",
+"X   XXXXXXXXXXXX"
+};

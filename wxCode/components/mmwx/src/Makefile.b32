@@ -1,0 +1,21 @@
+# Makes mmwx library, mmwxtest test program,
+# and database test programs mmdb and mmwx.
+# Makefile for BCC 5.5
+
+WXDIR = $(WXWIN)
+
+all:
+	make -f makelib.b32  FINAL=$(FINAL)
+	make -f maketest.b32 FINAL=$(FINAL)
+	make -f makedbmm.b32 FINAL=$(FINAL)
+	make -f makedbwx.b32 FINAL=$(FINAL)
+
+clean:
+	erase *.obj
+	erase *.exe
+	erase *.res
+	erase *.map
+	erase *.rws
+	erase *.tds
+	erase *.il?
+

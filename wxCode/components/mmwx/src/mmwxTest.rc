@@ -1,0 +1,9 @@
+#include <wx/msw/wx.rc>
+
+yin_yang BITMAP "bitmaps/yin_yang.bmp"
+yang_yin BITMAP "bitmaps/yang_yin.bmp"
+cal_bm   BITMAP "bitmaps/cal2.bmp"
+checked   BITMAP "bitmaps/checked.bmp"
+unchecked BITMAP "bitmaps/unchecked.bmp"
+logo3 BITMAP "bitmaps/logo3.bmp"
+

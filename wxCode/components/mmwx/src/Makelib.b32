@@ -1,0 +1,29 @@
+# mmwx library - extensions to wxWindows 2.x
+# Makefile for BCC 5.5
+
+WXDIR = $(WXWIN)
+MMWXLIB  = mmwx.lib
+
+FINAL = 1
+
+LIBTARGET=$(MMWXLIB)
+VERSION=0.1
+DEB = -DAPPVERSION=\"$(VERSION)\" #-D__MMDEBUG__ $(DEBUG_FLAGS)
+
+EXTRACPPFLAGS= -I. $(DEB) $(OPT)
+
+OBJECTS = mmMAPIMail.obj \
+	  mmDbase.obj \
+	  mmMultiButton.obj \
+          mmDropWindow.obj \
+	  mmNavigator.obj \
+	  mmDropMenu.obj \
+	  mmMonthCtrl.obj \
+          mmDropMonth.obj \
+	  mmHyperText.obj \
+	  mmHyperBitmap.obj \
+	  mmLogonDialog.obj \
+	  mmTextStretch.obj
+
+!include $(WXWIN)\src\makelib.b32
+
