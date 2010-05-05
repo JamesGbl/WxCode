@@ -1,0 +1,27 @@
+/* XPM */
+static char *down_btn_inv_xpm[] = {
+/* width height num_colors chars_per_pixel */
+"    13    17        3            1",
+/* colors */
+". c #000000",
+"# c #808080",
+"a c #c0c0c0",
+/* pixels */
+"#############",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaa.....aa#",
+"#aaaaa...aaa#",
+"#aaaaaa.aaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#aaaaaaaaaaa#",
+"#############"
+};

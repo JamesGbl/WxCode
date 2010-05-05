@@ -1,4 +1,13 @@
-The mmwx library - brief description
+
+mmwx ReadMe
+ ---------------------
+
+ Website: http://wxcode.sourceforge.net/components/mmwx
+ Author: Arne Morken, Gary Harris
+ Version: 1.1
+ Description:
+
+ The mmwx library - brief description
 -----------------------------------------------------
 
 This is some useful classes for wxWindows.
@@ -25,7 +34,7 @@ NON_GUI classes:
 
 o mmDbase    - To simplify using wxODBC classes (wxDb, wxDbTable, etc.)
                Only tested with Interbase, but should work with any db
-	       that wxDb/wxDbTable supports. You can also create a data 
+	       that wxDb/wxDbTable supports. You can also create a data
                source with this class.
 o mmMAPIMail - Send and receive email using MAPI (MS Windows only)
 
@@ -36,3 +45,30 @@ showing the difference by using mmDbase and wxDb/wxDbTable for some
 simple database task. No test program for mmMAPIMail yet, but that's
 very simple anyway.
 
+
+
+ ChangeLog
+ -----------------
+
+ Version: 1.1
+
+Updated for wxWidgets 2.8.10, April-May 2010.
+
+Changes:
+-Created Code:Blocks project.
+-Fixed calls to missing or incorrect bitmap names.
+-Changed the fixed grey button background to use the system button colour.
+-Made the arrow and other images transparent so that they are background-independent.
+-Changed code that checked bitmap validity to use IsOk().
+-Made changes to reflect changes in mouse events since wx 2.4.
+-Since http://www.mindmatters.no no longer exists, I have changed the URLs for the hyperlink controls to http://www.codeblocks.org/.
+-Bumped version number to 1.1 since the changes are internal and should be backwards compatible.
+-Reformated the code using AStyle in Code:Blocks. Feel free to do the same for your use.
+-Reorganised files into src/, include/, etc. to meet wxCode's standards.
+
+Notes:
+-Define __MMDEBUG__ if you want the debug window.
+-The username and password for the logon box are:
+	user:	mindmatters
+	pw:	mmwx
+-The demo uses mmMultiButtons for the button navigator and the Logon button. wxButton works just as well and provides the modern UI look.
