@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mmwx\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-05 01:13-0600\n"
-"PO-Revision-Date: 2010-05-05 01:13-0600\n"
+"POT-Creation-Date: 2010-05-05 21:43-0600\n"
+"PO-Revision-Date: 2010-05-05 21:43-0600\n"
 "Last-Translator: Gary Harris <garyjharris@sourceforge.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,7 @@ msgid ""
 msgstr ""
 
 #: samples/mmwxTest.cpp:454
-#: src/mmLogonDialog.cpp:28
+#: src/mmLogonDialog.cpp:29
 msgid "Logon"
 msgstr ""
 
@@ -174,27 +174,47 @@ msgstr ""
 msgid "SHOULD NOT HAPPEN!\n"
 msgstr ""
 
-#: src/mmDropMonth.cpp:54
+#: src/mmDbase.cpp:60
+msgid "Call to SQLConfigDataSource failed.\n"
+msgstr ""
+
+#: src/mmDbase.cpp:79
+msgid "Couldn't allocate space for database variables.\n"
+msgstr ""
+
+#: src/mmDbase.cpp:95
+msgid "Couldn't open database.\n"
+msgstr ""
+
+#: src/mmDbase.cpp:359
+msgid "col type:"
+msgstr ""
+
+#: src/mmDbase.cpp:425
+msgid "----------Illegal C type:"
+msgstr ""
+
+#: src/mmDropMonth.cpp:73
 msgid "date:"
 msgstr ""
 
-#: src/mmLogonDialog.cpp:29
+#: src/mmLogonDialog.cpp:30
 msgid "Username: "
 msgstr ""
 
-#: src/mmLogonDialog.cpp:30
+#: src/mmLogonDialog.cpp:31
 msgid "Password: "
 msgstr ""
 
-#: src/mmLogonDialog.cpp:54
+#: src/mmLogonDialog.cpp:65
 msgid "Ok"
 msgstr "OK"
 
-#: src/mmLogonDialog.cpp:55
+#: src/mmLogonDialog.cpp:66
 msgid "Cancel"
 msgstr ""
 
-#: src/mmMonthCtrl.cpp:45
+#: src/mmMonthCtrl.cpp:52
 msgid "id:"
 msgstr ""
 

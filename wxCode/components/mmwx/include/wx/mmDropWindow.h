@@ -1,3 +1,4 @@
+//! \file mmDropWindow.h
 //
 // Name     : mmDropWindow
 // Purpose  : This is a button that can drop down any window.
@@ -32,6 +33,8 @@ bool MouseIsInside(wxWindow *window);
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief An mmMultiButton with drop-down window.
+ */
 class mmDropWindow : public mmMultiButton
 {
         //friend class mmChildHandler;
@@ -60,34 +63,37 @@ class mmDropWindow : public mmMultiButton
 
         ~mmDropWindow(); // Destructor
 
-        void      SetChild(wxWindow *childWin,
-                           const wxSize &childSize = wxDefaultSize);
+        void SetChild(wxWindow *childWin, const wxSize &childSize = wxDefaultSize);
         // Set the window to be dropped down. The size and style of the
         // child is used, and that given in the constructor is discarded.
+        /*! \brief Get a pointer to the child window.
+         *
+         * \return wxWindow* The window pointer.
+         *
+         */
         wxWindow *GetChild() {
             return mChild;
         }
         // Returns a pointer to the window to be dropped down.
-        void      ToggleChild();
+        void ToggleChild();
         // Toggle displays the child window.
 
     private:
         DECLARE_EVENT_TABLE()
 
-        void    OnDrop(wxCommandEvent &event);
-        wxPoint CalculateWindowPos();
+        void OnDrop(wxCommandEvent &event);
 
-        wxFrame *mParent;
-        long int  mStyle;
-        wxWindow *mChild;
-        wxSize    mChildSize;
-        long int  mChildStyle;
-        bool      mChildHandlerIsPushed;
+        wxFrame 		*mParent;								//!< The parent window.
+        wxWindow 	*mChild;								//!< The child window.
+        wxSize    		mChildSize;							//!< The child window's size.
+        bool      			mChildHandlerIsPushed;	//!< Whether a child handler has already been pushed.
 }; // mmDropWindow
 
 //////////////////////////////////////////////////////////////////////////////
 
 // Event handler for kill focus and mouse events for the child window
+/*! \brief Child window event handler.
+ */
 class mmChildHandler : public wxEvtHandler
 {
     public:
@@ -101,8 +107,8 @@ class mmChildHandler : public wxEvtHandler
         void OnMouse(wxMouseEvent&);
         void OnCaptureLost(wxMouseCaptureLostEvent &event);
 
-        mmDropWindow *mButton;
-        wxWindow     *mChild;
+        mmDropWindow 	*mButton;	//!< The parent button.
+        wxWindow     		*mChild;	//!< The window.
 }; // mmChild
 
 #endif

@@ -80,8 +80,7 @@ bool MyFrame::DoDB()
     // Query
     table->DoQuery(wxEmptyString, wxEmptyString);
     while(table->GetNext())
-        *mTextCtrl << wxT("pkey:") << *(int*)table->GetColumn(0)->mData
-        << wxT(",data:") << wxString((wxChar*)table->GetColumn(1)->mData) << wxT("\n");
+        *mTextCtrl << wxT("pkey:") << *(int*)table->GetColumn(0)->mData << wxT(",data:") << wxString((wxChar*)table->GetColumn(1)->mData) << wxT("\n");
 
     return TRUE;
 }

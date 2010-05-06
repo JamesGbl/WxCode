@@ -1,3 +1,4 @@
+//! \file mmMonthCtrl.h
 //
 // Name     : mmMonthCtrl
 // Purpose  : A panel displaying the days of the months as numbers.
@@ -50,6 +51,8 @@ const wxEventType mmEVT_MONTH_DAY_DOUBLECLICKED = mmEVT_MONTHCTRL_FIRST + 5;
 
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief A calendar control.
+ */
 class mmMonthCtrl : public wxWindow
 {
     public:
@@ -62,6 +65,12 @@ class mmMonthCtrl : public wxWindow
         ~mmMonthCtrl(); // Destructor
 
         void SetDate(const wxDateTime &date);
+        /*! \brief Set the control's style flags.
+         *
+         * \param style const longint	The style flags.
+         * \return void
+         *
+         */
         void SetStyle(const long int style) {
             mStyle = style;
             SetDate(mDate);
@@ -70,10 +79,22 @@ class mmMonthCtrl : public wxWindow
         void SetSelectColour(wxColour *col);
         void SetMonthBackgroundColour(wxColour *col);
 
-        wxDateTime  &GetDate(void)  {
+        /*! \brief Get the selected date.
+         *
+         * \return wxDateTime& The date.
+         *
+         */
+        wxDateTime &GetDate()
+        {
             return mDate;
         }
-        mmNavigator *GetNavigator() {
+        /*! \brief Get a pointer to the navigator control.
+         *
+         * \return mmNavigator*	The navigator pointer.
+         *
+         */
+        mmNavigator *GetNavigator()
+        {
             return mMonthNavigator;
         }
 
@@ -81,8 +102,7 @@ class mmMonthCtrl : public wxWindow
         DECLARE_EVENT_TABLE()
 
         void UpdateDays(wxDC &dc);
-        void UpdateDay(wxDC &dc, const wxDateTime &date,
-                       int daycount, int weekcount);
+        void UpdateDay(wxDC &dc, const wxDateTime &date, int daycount, int weekcount);
 
         void OnPaint(wxPaintEvent &event);
         void OnMotion(wxMouseEvent &event);
@@ -90,27 +110,31 @@ class mmMonthCtrl : public wxWindow
         void OnLeftDown(wxMouseEvent &event);
         void OnNavigator(mmNavigatorEvent &event);
 
-        wxDateTime CoordToDate(int x, int y);
-        void       CalculateSize(wxDC &dc);
-        void       GenerateEvent(wxEventType type);
+        wxDateTime	CoordToDate(int x, int y);
+        void       			CalculateSize(wxDC &dc);
+        void       			GenerateEvent(wxEventType type);
 
-        wxDateTime   mDate;
-        long int      	mStyle;
-        int           		mDaysOfWeek;
-        int           		mWeeksOfMonth;
-        int           		mLastX, mLastY;
-        int           		mCellW, mCellH;
-        int           		mHdrH,  mNavW, mNavH;
-        mmNavigator  *mMonthNavigator;
-        wxWindow     *mDayHeader;
-        wxStaticText	*mDayNames[7];
-        wxColour     	*mTodayColour;
-        wxColour     	*mSelectColour;
-        wxColour     	*mMonthBackgroundColour;
-        wxPen        	*mTodayPen;
-        wxPen        	*mSelectPen;
-        wxPen        	*mMonthBackgroundPen;
-        wxBrush      	*mMonthBackgroundBrush;
+        wxDateTime   	mDate;											//!< The date.
+        long int      		mStyle;											//!< The control's style.
+        int           			mDaysOfWeek;							//!< Max. number of days in a week.
+        int           			mWeeksOfMonth;						//!< Max. number of weeks in a month.
+        int           			mLastX;											//!< The last selection's x coordinate.
+        int						mLastY;											//!< The last selection's y coordinate.
+        int           			mCellW;										//!< The cell width.
+        int						mCellH;											//!< The cell height.
+        int           			mHdrH;											//!< The header's height.
+        int  						mNavW;										//!< The navigation control's width.
+        int						mNavH;											//!< The navigation control's height.
+        mmNavigator 	*mMonthNavigator;						//!< The navigator control.
+        wxWindow     	*mDayHeader;								//!< The window header.
+        wxStaticText		*mDayNames[7];						//!< Day names.
+        wxColour     		*mTodayColour;							//!< Today's date's colour.
+        wxColour     		*mSelectColour;							//!< The selected date's colour.
+        wxColour     		*mMonthBackgroundColour;	//!< Month background colour.
+        wxPen        		*mTodayPen;								//!< The pen used for today's date.
+        wxPen        		*mSelectPen;								//!< The pen used for the selected date .
+        wxPen        		*mMonthBackgroundPen;			//!< The pen used for the month background .
+        wxBrush      		*mMonthBackgroundBrush;		//!< The brush used for the month background .
 }; // mmMonthCtrl
 
 /////////////////////////////////////////////////////////////////////////////
@@ -126,17 +150,30 @@ class mmMonthCtrl : public wxWindow
 #define EVT_MONTH_DAY_DOUBLECLICKED(id,fn) \
     DECLARE_EVENT_TABLE_ENTRY( mmEVT_MONTH_DAY_DOUBLECLICKED,id, -1, (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &fn, (wxObject*)NULL ),
 
+/*! \brief Calendar control event.
+ */
 class mmMonthEvent : public wxCommandEvent
 {
     public:
         mmMonthEvent(mmMonthCtrl *month, wxEventType type);
 
+        /*! \brief Get the date.
+         *
+         * \return const wxDateTime&	The date.
+         *
+         */
         const wxDateTime &GetDate() const {return mDate;}
+
+        /*! \brief Get the day of the week.
+         *
+         * \return const wxDateTime::WeekDay	The day of the week.
+         *
+         */
         const wxDateTime::WeekDay GetWeekDay() const {return mWeekDay;}
 
     private:
-        wxDateTime          		mDate;
-        wxDateTime::WeekDay 	mWeekDay;
+        wxDateTime          			mDate;				//!< The date.
+        wxDateTime::WeekDay 	mWeekDay;		//!< The day of the week.
 }; // mmMonthEvent
 
 #endif

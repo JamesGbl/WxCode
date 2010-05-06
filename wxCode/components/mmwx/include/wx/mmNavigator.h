@@ -1,3 +1,4 @@
+//! \file mmNavigator.h
 //
 // Name:      mmNavigator.h
 // Purpose:   Include file for mmNavigator class
@@ -26,11 +27,13 @@
 #include "mmMultiButton.h"
 
 // Navigator events
-const wxEventType mmEVT_NAVIGATOR_PREV2 = wxEVT_FIRST + 6031;
-const wxEventType mmEVT_NAVIGATOR_PREV  = wxEVT_FIRST + 6032;
-const wxEventType mmEVT_NAVIGATOR_NEXT  = wxEVT_FIRST + 6033;
-const wxEventType mmEVT_NAVIGATOR_NEXT2 = wxEVT_FIRST + 6034;
+const wxEventType mmEVT_NAVIGATOR_PREV2	= wxEVT_FIRST + 6031;
+const wxEventType mmEVT_NAVIGATOR_PREV  	= wxEVT_FIRST + 6032;
+const wxEventType mmEVT_NAVIGATOR_NEXT  	= wxEVT_FIRST + 6033;
+const wxEventType mmEVT_NAVIGATOR_NEXT2	= wxEVT_FIRST + 6034;
 
+/*! \brief Nav. buttons IDs.
+ */
 enum {
     mmID_NAV_PREV2 = 6050,
     mmID_NAV_PREV,
@@ -42,6 +45,8 @@ enum {
 // mmNavigator
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Navigation control.
+ */
 class mmNavigator : public wxWindow
 //  A simple 'navigation' toolbar.
 {
@@ -72,29 +77,59 @@ class mmNavigator : public wxWindow
         ~mmNavigator();
         // Destructor
 
-        virtual bool   SetBackgroundColour(const wxColour &colour);
+        virtual bool  SetBackgroundColour(const wxColour &colour);
         // Set the background colour of the navigator (including
         // the buttons)
 
-        void           SetWindow(wxWindow *win);
+        void SetWindow(wxWindow *win);
         // Set the navigator's optional window.
-        wxWindow      *GetWindow() const {
+        /*! \brief Get a pointer to the navigator's optional window, if any.
+         *
+         * \return wxWindow*	The window pointer.
+         *
+         */
+        wxWindow *GetWindow() const
+        {
             return mWindow;
         }
         // Return the navigator's optional window, if any.
-        mmMultiButton *GetPrevDoubleButton() {
+        /*! \brief Get a pointer to the 'previous-double' button.
+         *
+         * \return mmMultiButton*	The button pointer.
+         *
+         */
+        mmMultiButton *GetPrevDoubleButton()
+        {
             return mPrevDblButton;
         }
         // Return a pointer to the 'previous-double' button.
-        mmMultiButton *GetPrevButton()       {
+        /*! \brief Get a pointer to the 'previous' button.
+         *
+         * \return mmMultiButton*	The button pointer.
+         *
+         */
+        mmMultiButton *GetPrevButton()
+        {
             return mPrevButton;
         }
         // Return a pointer to the 'previous' button.
-        mmMultiButton *GetNextButton()       {
+        /*! \brief Get a pointer to the 'next' button.
+         *
+         * \return mmMultiButton*	The button pointer.
+         *
+         */
+        mmMultiButton *GetNextButton()
+        {
             return mNextButton;
         }
         // Return a pointer to the 'next' button.
-        mmMultiButton *GetNextDoubleButton() {
+        /*! \brief Get a pointer to the 'next-double' button.
+         *
+         * \return mmMultiButton*	The button pointer.
+         *
+         */
+        mmMultiButton *GetNextDoubleButton()
+        {
             return mNextDblButton;
         }
         // Return a pointer to the 'next-double' button.
@@ -105,17 +140,19 @@ class mmNavigator : public wxWindow
         void OnButton(wxCommandEvent &event);
         void GenerateEvent(wxEventType type);
 
-        wxWindow       *mWindow;
-        mmMultiButton *mPrevDblButton;
-        mmMultiButton *mPrevButton;
-        mmMultiButton *mNextButton;
-        mmMultiButton *mNextDblButton;
+        wxWindow       	*mWindow;				//!< The window type to navigate.
+        mmMultiButton *mPrevDblButton;	//!< The back arrow button.
+        mmMultiButton *mPrevButton;			//!< The double back arrow button.
+        mmMultiButton *mNextButton;			//!< The forward arrow button.
+        mmMultiButton *mNextDblButton;	//!< The double forward arrow button.
 }; // class mmNavigator
 
 /////////////////////////////////////////////////////////////////////////////
 // mmNavigatorEvent
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Navigation control event.
+ */
 class mmNavigatorEvent : public wxCommandEvent
 {
     public:

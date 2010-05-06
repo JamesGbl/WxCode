@@ -1,3 +1,4 @@
+//! \file mmMultiButton.cpp
 //
 // Name     : mmMultiButton
 // Purpose  : A clickable button that can
@@ -28,9 +29,9 @@ extern wxTextCtrl *gDebug; // For global debug output
 #endif
 
 #include "../bitmaps/down_btn.xpm"
-static wxBitmap gDownBM(down_btn_xpm);
+static wxBitmap gDownBM(down_btn_xpm);								//!< The down arrow bitmap.
 #include "../bitmaps/disable.xpm"
-static wxBitmap gDisableBM(wxDISABLE_BUTTON_BITMAP);
+static wxBitmap gDisableBM(wxDISABLE_BUTTON_BITMAP);		//!< The disabled bitmap.
 
 BEGIN_EVENT_TABLE(mmMultiButton, wxWindow)
     EVT_PAINT(mmMultiButton::OnPaint)
@@ -38,6 +39,14 @@ BEGIN_EVENT_TABLE(mmMultiButton, wxWindow)
 	EVT_MOUSE_CAPTURE_LOST(mmMultiButton::OnCaptureLost)
 END_EVENT_TABLE()
 
+/*! \brief Tile a bitmap.
+ *
+ * \param rect 		const wxRect&	The area we're tiling in.
+ * \param dc 			wxDC&				The device context to draw on.
+ * \param bitmap 	wxBitmap&		The bitmap to tile.
+ * \return bool
+ *
+ */
 bool TileBitmap(const wxRect &rect, wxDC &dc, wxBitmap &bitmap)
 {
     int w = bitmap.GetWidth();
@@ -52,6 +61,17 @@ bool TileBitmap(const wxRect &rect, wxDC &dc, wxBitmap &bitmap)
     return TRUE;
 } // TileBitmap
 
+/*! \brief Constructor.
+ *
+ * \param parent 			wxWindow*				The parent window.
+ * \param id 					const wxWindowID	The ID of this window.
+ * \param label 				const wxString&		The text to display on the button.
+ * \param defaultBitmap 	const wxBitmap&		The bitmap to display on the button.
+ * \param pos 				const wxPoint&			The button's position.
+ * \param size 				const wxSize&			The button's size.
+ * \param style 				const longint				The button's style.
+ *
+ */
 mmMultiButton::mmMultiButton(wxWindow *parent,
                              const wxWindowID id,
                              const wxString &label,
@@ -88,10 +108,17 @@ mmMultiButton::mmMultiButton(wxWindow *parent,
     Refresh();
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmMultiButton::~mmMultiButton(void)
 {
 } // Destructor
 
+/*! \brief Calculate and set the required size.
+ *
+ * \return void
+ *
+ */
 void mmMultiButton::FindAndSetSize()
 {
     // Set (total) border size
@@ -146,6 +173,12 @@ void mmMultiButton::FindAndSetSize()
     }
 } // FindAndSetSize
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmMultiButton::OnMouse(wxMouseEvent &event)
 // Update button state
 {
@@ -393,6 +426,12 @@ void mmMultiButton::OnMouse(wxMouseEvent &event)
     event.Skip();
 } // OnMouse
 
+/*! \brief The mouse capture was lost.
+ *
+ * \param event wxMouseCaptureLostEvent&	A reference to a wxMouseCaptureLostEvent object.
+ * \return void
+ *
+ */
 void mmMultiButton::OnCaptureLost(wxMouseCaptureLostEvent& event)
 {
 	if(HasCapture()){
@@ -404,6 +443,12 @@ void mmMultiButton::OnCaptureLost(wxMouseCaptureLostEvent& event)
  * Instead, call Refresh() manually after calling GDI functions
  * (such as e.g. SetBackgroundColour() etc.) in the main program.
  * */
+/*! \brief A paint event occurred.
+ *
+ * \param event wxPaintEvent&	A reference to a wxPaintEvent object.
+ * \return void
+ *
+ */
 void mmMultiButton::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC dc(this);
@@ -414,6 +459,12 @@ void mmMultiButton::OnPaint(wxPaintEvent &event)
     RedrawBorders(dc);
 } // OnPaint
 
+/*! \brief Redraw the button's bitmaps.
+ *
+ * \param dc wxDC&	The device context to draw on.
+ * \return void
+ *
+ */
 void mmMultiButton::RedrawBitmaps(wxDC &dc)
 // Redraw icons
 {
@@ -471,6 +522,12 @@ void mmMultiButton::RedrawBitmaps(wxDC &dc)
     }
 } // RedrawBitmaps
 
+/*! \brief Redraw the button's label.
+ *
+ * \param dc wxDC&	The device context to draw on.
+ * \return void
+ *
+ */
 void mmMultiButton::RedrawLabel(wxDC &dc)
 // Redraw label
 {
@@ -510,6 +567,12 @@ void mmMultiButton::RedrawLabel(wxDC &dc)
     }
 } // RedrawLabel
 
+/*! \brief Redraw the button's borders.
+ *
+ * \param dc wxDC&	The device context to draw on.
+ * \return void
+ *
+ */
 void mmMultiButton::RedrawBorders(wxDC &dc)
 // Draw all borders of the button.
 {
@@ -601,6 +664,12 @@ void mmMultiButton::RedrawBorders(wxDC &dc)
     }
 } // RedrawBorders
 
+/*! \brief Set the button's default bitmap.
+ *
+ * \param bm wxBitmap&	The bitmap.
+ * \return void
+ *
+ */
 void mmMultiButton::SetDefaultBitmap(wxBitmap &bm)
 {
     mDefaultBitmap = bm;
@@ -609,6 +678,12 @@ void mmMultiButton::SetDefaultBitmap(wxBitmap &bm)
     Refresh();
 } // SetDefaultBitmap
 
+/*! \brief Set the bitmap to display when the button is focused.
+ *
+ * \param bm wxBitmap&	The bitmap.
+ * \return void
+ *
+ */
 void mmMultiButton::SetFocusBitmap(wxBitmap &bm)
 {
     mFocusBitmap = bm;
@@ -617,6 +692,12 @@ void mmMultiButton::SetFocusBitmap(wxBitmap &bm)
     Refresh();
 } // SetFocusBitmap
 
+/*! \brief Set the bitmap to display when the button is selected.
+ *
+ * \param bm wxBitmap&	The bitmap.
+ * \return void
+ *
+ */
 void mmMultiButton::SetSelectedBitmap(wxBitmap &bm)
 {
     mSelectedBitmap = bm;
@@ -625,6 +706,12 @@ void mmMultiButton::SetSelectedBitmap(wxBitmap &bm)
     Refresh();
 } // SetSelectedBitmap
 
+/*! \brief Set the bitmap to display when the button is toggled.
+ *
+ * \param bm wxBitmap&	The bitmap.
+ * \return void
+ *
+ */
 void mmMultiButton::SetToggleBitmap(wxBitmap &bm)
 {
     mToggleBitmap = bm;
@@ -633,6 +720,12 @@ void mmMultiButton::SetToggleBitmap(wxBitmap &bm)
     Refresh();
 } // SetToggleBitmap
 
+/*! \brief Set the button's label.
+ *
+ * \param label wxString	The label.
+ * \return void
+ *
+ */
 void mmMultiButton::SetLabel(wxString label)
 // Sets the string label.
 {
@@ -640,12 +733,24 @@ void mmMultiButton::SetLabel(wxString label)
     Refresh();
 } // SetLabel
 
+/*! \brief Set the button's style flags.
+ *
+ * \param style const long	The style flags.
+ * \return void
+ *
+ */
 void mmMultiButton::SetStyle(const long style)
 {
     mStyle = style;
     Refresh();
 } // SetStyle
 
+/*! \brief Set the button's focus state.
+ *
+ * \param hasFocus const bool	Focused if true, otherwise not.
+ * \return void
+ *
+ */
 void mmMultiButton::SetFocus(const bool hasFocus)
 // Update button state.
 {
@@ -653,6 +758,12 @@ void mmMultiButton::SetFocus(const bool hasFocus)
     Refresh();
 } // SetSelected
 
+/*! \brief Set the button's selected state.
+ *
+ * \param isSelected const bool	Selected if true, otherwise not.
+ * \return void
+ *
+ */
 void mmMultiButton::SetSelected(const bool isSelected)
 // Update button state.
 {
@@ -660,6 +771,12 @@ void mmMultiButton::SetSelected(const bool isSelected)
     Refresh();
 } // SetSelected
 
+/*! \brief Set the button's toggled state.
+ *
+ * \param isToggleDown const bool	Toggled if true, otherwise not.
+ * \return void
+ *
+ */
 void mmMultiButton::SetToggleDown(const bool isToggleDown)
 // Update button state.
 {
@@ -667,6 +784,12 @@ void mmMultiButton::SetToggleDown(const bool isToggleDown)
     Refresh();
 } // SetToggleDown
 
+/*! \brief Set the toggle state of the whole button.
+ *
+ * \param isWholeDropToggleDown const bool	Toggled if true, otherwise not.
+ * \return void
+ *
+ */
 void mmMultiButton::SetWholeDropToggleDown(const bool isWholeDropToggleDown)
 // Update button state.
 {
@@ -674,6 +797,12 @@ void mmMultiButton::SetWholeDropToggleDown(const bool isWholeDropToggleDown)
     Refresh();
 } // SetWholeDropToggleDown
 
+/*! \brief Set the toggle state of the small button segment.
+ *
+ * \param isDropToggleDown const bool	Toggled if true, otherwise not.
+ * \return void
+ *
+ */
 void mmMultiButton::SetDropToggleDown(const bool isDropToggleDown)
 // Update button state.
 {
@@ -681,6 +810,11 @@ void mmMultiButton::SetDropToggleDown(const bool isDropToggleDown)
     Refresh();
 } // SetDropToggleDown
 
+/*! \brief Check whether the mouse is on the button.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmMultiButton::MouseIsOnButton()
 {
     int cx = 0, cy = 0;
@@ -692,6 +826,12 @@ bool mmMultiButton::MouseIsOnButton()
     return(mpx >= cx && mpx <= cx + cw && mpy >= cy && mpy <= cy + ch);
 } // MouseIsOnButton
 
+/*! \brief Enable or disable the button.
+ *
+ * \param enable bool	Enabled if true, otherwise disabled.
+ * \return bool	True on success, false otherwise.
+ *
+ */
 bool mmMultiButton::Enable(bool enable)
 {
     bool ret = wxWindowBase::Enable(enable);

@@ -1,3 +1,4 @@
+//! \file mmMAPIMail,cpp
 //
 // Name     : mmMAPIMail
 // Purpose  : Send and receive email with MAPI.
@@ -11,8 +12,10 @@
 // 	-See README.txt for changes.
 //========================================================
 
-#include "mmMAPIMail.h"
+#include "wx/mmMAPIMail.h"
 
+/*! \brief Constructor.
+ */
 mmMAPIMail::mmMAPIMail()
 {
     LHANDLE *session;
@@ -33,6 +36,8 @@ mmMAPIMail::mmMAPIMail()
     mSession = (LHANDLE)session;
 } // mmMAPIMail constructor
 
+/*! \brief Destructor.
+ */
 mmMAPIMail::~mmMAPIMail()
 {
     // Get procedure address
@@ -45,6 +50,15 @@ mmMAPIMail::~mmMAPIMail()
         mError = MAPI_SUCCESS;
 } // mmMAPIMail destructor
 
+/*! \brief Send a message.
+ *
+ * \param from 		wxString	The from field text.
+ * \param to 			wxString	The to field text.
+ * \param subject	wxString	The subject text
+ * \param text 		wxString	The message text.
+ * \return bool		True on success, otherwise false.
+ *
+ */
 bool mmMAPIMail::Send(wxString from, wxString to, wxString subject, wxString text)
 {
     if(to == wxEmptyString)
@@ -88,6 +102,13 @@ bool mmMAPIMail::Send(wxString from, wxString to, wxString subject, wxString tex
     return (mError == MAPI_SUCCESS);
 } // mmMAPIMail::Send
 
+/*! \brief Read a message.
+ *
+ * \param from 	wxString*	The from field text.
+ * \param text 	wxString*	The message text.
+ * \return bool	True on success, otherwise false.
+ *
+ */
 bool mmMAPIMail::Read(wxString *from, wxString *text)
 {
     if(!from || !text)

@@ -1,3 +1,4 @@
+//! \file mmLogonDialog.h
 //
 // Name     : mmLogonDialog
 // Purpose  : Displays a logon dialog (username/(secret) password entry)
@@ -23,6 +24,8 @@
 #include "wx/wx.h"
 #endif
 
+/*! \brief A simple log-on dialogue.
+ */
 class mmLogonDialog : public wxDialog
 {
     public:
@@ -41,12 +44,22 @@ class mmLogonDialog : public wxDialog
         bool IsValid();
         bool IsValid(wxString &user, wxString &password);
 
+        /*! \brief Get the user name entered.
+         *
+         * \return wxString	The user name.
+         *
+         */
         wxString GetUserName()
         {
             if(mUserNameEntry)
                 return mUserNameEntry->GetValue();
             return wxEmptyString;
         }
+        /*! \brief Get the password entered.
+         *
+         * \return wxString	The password.
+         *
+         */
         wxString GetPassword()
         {
             if(mPasswordEntry)
@@ -60,17 +73,17 @@ class mmLogonDialog : public wxDialog
         void OnOkBtn(wxCommandEvent &event);
         void OnCancelBtn(wxCommandEvent &event);
 
-        wxPanel      	*mPanel;
-        wxStaticText *mUserNameLabel;
-        wxTextCtrl   	*mUserNameEntry;
-        wxStaticText *mPasswordLabel;
-        wxTextCtrl   	*mPasswordEntry;
-        wxStaticText *mMessage;
-        wxButton     	*mOkBtn;
-        wxButton     	*mCancelBtn;
-        wxString      	mValidUser;
-        wxString      	mValidPassword;
-        bool          	mBtnWasOk;
+        wxPanel      	*mPanel;						//!< The dialogue's panel.
+        wxStaticText	*mUserNameLabel;	//!< the user name label.
+        wxTextCtrl   	*mUserNameEntry;	//!< The user name text control.
+        wxStaticText *mPasswordLabel;		//!< The password label.
+        wxTextCtrl   	*mPasswordEntry;		//!<The password text control.
+        wxStaticText 	*mMessage;				//!< The dialogue message text.
+        wxButton     	*mOkBtn;						//!< The dialogue's "OK" button.
+        wxButton     	*mCancelBtn;				//!< The dialogue's "Cancel" button.
+        wxString      	mValidUser;					//!< The valid user name.
+        wxString      	mValidPassword;		//!< The valid password.
+        bool          		mBtnWasOk;				//!< The OK button was selected.
 }; // class mmLogon
 
 #endif

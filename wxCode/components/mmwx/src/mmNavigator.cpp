@@ -1,3 +1,4 @@
+//! \file mmNavigator.cpp
 //
 // Name     : mmNavigator.cpp
 // Purpose  : mmNavigator methods.
@@ -24,10 +25,10 @@
 extern wxTextCtrl *gDebug; // For global debug output
 #endif
 
-static wxBitmap *gPrevDblBitmap    = NULL;
-static wxBitmap *gPrevBitmap       = NULL;
-static wxBitmap *gNextBitmap       = NULL;
-static wxBitmap *gNextDblBitmap    = NULL;
+static wxBitmap *gPrevDblBitmap	= NULL;	//!< The double back arrow bitmap.
+static wxBitmap *gPrevBitmap		= NULL;	//!< The back arrow bitmap.
+static wxBitmap *gNextBitmap		= NULL;	//!< The forward arrow bitmap.
+static wxBitmap *gNextDblBitmap 	= NULL;	//!< The double forward arrow bitmap.
 
 BEGIN_EVENT_TABLE(mmNavigator, wxWindow)
     EVT_BUTTON(mmID_NAV_PREV2, mmNavigator::OnButton)
@@ -40,11 +41,31 @@ END_EVENT_TABLE()
 // mmNavigatorEvent class
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param nav 	mmNavigator*	The navigator control for which these events are being handled.
+ * \param type 	wxEventType		The type of event.
+ *
+ */
 mmNavigatorEvent::mmNavigatorEvent(mmNavigator *nav, wxEventType type)
     : wxCommandEvent(type, nav->GetId())
 {
 }
 
+/*! \brief Constructor.
+ *
+ * \param parent 		wxWindow*				The parent window.
+ * \param id 				const wxWindowID	The ID of this window.
+ * \param userWin 	wxWindow*				The window/control being navigated.
+ * \param prev 			const bool					Whether to show the back arrow.
+ * \param next 			const bool					Whether to show the forward arrow.
+ * \param prevDbl	const bool					Whether to show the double back arrow.
+ * \param nextDbl	const bool					Whether to show the forward arrow.
+ * \param pos 			const wxPoint&		The button's position.
+ * \param size 			const wxSize&			The button's size.
+ * \param style 			const longint			The button's style.
+ *
+ */
 mmNavigator::mmNavigator(wxWindow *parent,
                          const wxWindowID id,
                          wxWindow *userWin,
@@ -148,6 +169,8 @@ mmNavigator::mmNavigator(wxWindow *parent,
     SetWindow(userWin);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmNavigator::~mmNavigator()
 // Destructor
 {
@@ -169,6 +192,12 @@ mmNavigator::~mmNavigator()
     }
 } // Destructor
 
+/*! \brief Set the type of window being navigated.
+ *
+ * \param win wxWindow*	The window.
+ * \return void
+ *
+ */
 void mmNavigator::SetWindow(wxWindow *win)
 // Set the optional window.
 {
@@ -200,6 +229,12 @@ void mmNavigator::SetWindow(wxWindow *win)
     }
 } // SetWindow
 
+/*! \brief Set the backround colour
+ *
+ * \param colour const wxColour&	The colour.
+ * \return bool
+ *
+ */
 bool mmNavigator::SetBackgroundColour(const wxColour &colour)
 {
     if(mWindow)
@@ -216,6 +251,12 @@ bool mmNavigator::SetBackgroundColour(const wxColour &colour)
     return TRUE;
 } // SetBackgroundColour
 
+/*! \brief A navigation button was pressed.
+ *
+ * \param event wxCommandEvent& A reference to a wxCommandEvent object.
+ * \return void
+ *
+ */
 void mmNavigator::OnButton(wxCommandEvent &event)
 {
     GenerateEvent(event.GetId());
@@ -236,6 +277,12 @@ void mmNavigator::OnButton(wxCommandEvent &event)
     }
 } // OnButton
 
+/*! \brief Generate an event.
+ *
+ * \param type wxEventType	The type of event.
+ * \return void
+ *
+ */
 void mmNavigator::GenerateEvent(wxEventType type)
 {
     mmNavigatorEvent ev(this, type);

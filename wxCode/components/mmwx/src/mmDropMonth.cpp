@@ -1,3 +1,4 @@
+//! \file mmDropMonth.cpp
 //
 // Name     : mmDropMonth.cpp
 // Purpose  : mmDropMonth methods.
@@ -27,6 +28,16 @@ BEGIN_EVENT_TABLE(mmDropMonth, mmDropWindow)
     EVT_NAVIGATOR_NEXT2(-1, mmDropMonth::OnDateChange)
 END_EVENT_TABLE()
 
+/*! \brief Constructor.
+ *
+ * \param parent wxWindow*				The parent window.
+ * \param id 		const wxWindowID	The ID of this window.
+ * \param date 	wxDateTime&			The date to display on the button.
+ * \param pos 	const wxPoint&			The button's position.
+ * \param size 	const wxSize&			The button's size.
+ * \param style 	const longint				The button's style.
+ *
+ */
 mmDropMonth::mmDropMonth(wxWindow *parent,
                          const wxWindowID  id,
                          const wxDateTime &date,
@@ -40,6 +51,8 @@ mmDropMonth::mmDropMonth(wxWindow *parent,
     SetChild(mMonthCtrl, size);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmDropMonth::~mmDropMonth()
 {
     if(mMonthCtrl != NULL) {
@@ -48,6 +61,12 @@ mmDropMonth::~mmDropMonth()
     }
 } // Destructor
 
+/*! \brief The date selection changed.
+ *
+ * \param event mmMonthEvent&	A reference to a mmMonthEvent object.
+ * \return void
+ *
+ */
 void mmDropMonth::OnDateChange(mmMonthEvent &event)
 {
 #ifdef __MMDEBUG__
@@ -65,6 +84,12 @@ void mmDropMonth::OnDateChange(mmMonthEvent &event)
     GetParent()->ProcessEvent(event);
 } // OnDateChange
 
+/*! \brief
+ *
+ * \param date wxDateTime&	A reference to a wxDateTime object.
+ * \return void
+ *
+ */
 void mmDropMonth::SetDate(wxDateTime &date)
 {
     SetLabel(wxT(" ") + date.FormatISODate() + wxT(" "));

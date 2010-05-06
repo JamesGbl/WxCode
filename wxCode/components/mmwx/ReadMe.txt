@@ -33,9 +33,8 @@ o mmLogonDialog - Simple logon dialog.
 NON_GUI classes:
 
 o mmDbase    - To simplify using wxODBC classes (wxDb, wxDbTable, etc.)
-               Only tested with Interbase, but should work with any db
-	       that wxDb/wxDbTable supports. You can also create a data
-               source with this class.
+						Only tested with Interbase, but should work with any db that wxDb/wxDbTable supports.
+						You can also create a data source with this class.
 o mmMAPIMail - Send and receive email using MAPI (MS Windows only)
 
 
@@ -63,8 +62,10 @@ Changes:
 -Made changes to reflect changes in mouse events since wx 2.4.
 -Since http://www.mindmatters.no no longer exists, I have changed the URLs for the hyperlink controls to http://www.codeblocks.org/.
 -Bumped version number to 1.1 since the changes are internal and should be backwards compatible.
--Reformated the code using AStyle in Code:Blocks. Feel free to do the same for your use.
+-Reformatted the code using AStyle in Code:Blocks. Feel free to do the same for your own use.
 -Reorganised files into src/, include/, etc. to meet wxCode's standards.
+-Added doxygen docs.
+-Cleaned up a bunch of unused variables and unnecessary code.
 
 Notes:
 -Define __MMDEBUG__ if you want the debug window.

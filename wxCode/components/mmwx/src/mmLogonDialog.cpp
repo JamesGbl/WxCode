@@ -1,3 +1,4 @@
+//! \file mmLogonDialog.cpp
 //
 // Name     : mmLogonDialog
 // Purpose  : Displays a logon dialog (username/(secret) password entry)
@@ -25,10 +26,20 @@ BEGIN_EVENT_TABLE(mmLogonDialog, wxDialog)
     EVT_BUTTON(wxID_CANCEL, mmLogonDialog::OnCancelBtn)
 END_EVENT_TABLE()
 
-wxString TITLE_TEXT    = _("Logon");
-wxString USERNAME_TEXT = _("Username: ");
-wxString PASSWORD_TEXT = _("Password: ");
+wxString TITLE_TEXT    = _("Logon");					//!< The title text.
+wxString USERNAME_TEXT = _("Username: ");	//!< The user name.
+wxString PASSWORD_TEXT = _("Password: ");	//!< The password.
 
+/*! \brief Constructor.
+ *
+ * \param parent 	wxWindow*				The parent window.
+ * \param id 			const wxWindowID	The ID of this window.
+ * \param message const wxString&		The message text.
+ * \param pos 		const wxPoint&			The button's position.
+ * \param size 		const wxSize&			The button's size.
+ * \param style 		const longint				The button's style.
+ *
+ */
 mmLogonDialog::mmLogonDialog(wxWindow *parent,
                              const wxWindowID id,
                              const wxString  &message,
@@ -63,6 +74,8 @@ mmLogonDialog::mmLogonDialog(wxWindow *parent,
     Centre(wxBOTH);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmLogonDialog::~mmLogonDialog()
 {
     if(mUserNameLabel != NULL)
@@ -87,6 +100,13 @@ mmLogonDialog::~mmLogonDialog()
     }
 } // Destructor
 
+/*! \brief Show the dialogue modally.
+ *
+ * \param user 			wxString*	The user name entered.
+ * \param password 	wxString*	The password entered.
+ * \return bool
+ *
+ */
 bool mmLogonDialog::ShowModal(wxString *user, wxString *password)
 {
     wxDialog::ShowModal();
@@ -97,6 +117,11 @@ bool mmLogonDialog::ShowModal(wxString *user, wxString *password)
     return mBtnWasOk;
 } // ShowModal
 
+/*! \brief Clear the dialogue fields.
+ *
+ * \return void
+ *
+ */
 void mmLogonDialog::Clear()
 {
     mUserNameEntry->SetValue(wxEmptyString);
@@ -105,34 +130,71 @@ void mmLogonDialog::Clear()
     mUserNameEntry->SetFocus();
 }
 
+/*! \brief Set the dialogue's message.
+ *
+ * \param msg wxString&	The message.
+ * \return void
+ *
+ */
 void mmLogonDialog::SetMessage(wxString &msg)
 {
     mMessage->SetLabel(msg);
 } // SetMessage
 
+/*! \brief The OK button was pressed.
+ *
+ * \param event wxCommandEvent&	A reference to a wxCommandEvent object.
+ * \return void
+ *
+ */
 void mmLogonDialog::OnOkBtn(wxCommandEvent &event)
 {
     mBtnWasOk = TRUE;
     EndModal(wxID_OK);
 } // OnOkBtn
 
+/*! \brief The Cancel button was pressed.
+ *
+ * \param event wxCommandEvent&	A reference to a wxCommandEvent object.
+ * \return void
+ *
+ */
 void mmLogonDialog::OnCancelBtn(wxCommandEvent &event)
 {
     mBtnWasOk = FALSE;
     EndModal(wxID_CANCEL);
 } // OnCancelBtn
 
+/*! \brief Set the valid user name and password.
+ *
+ * \param validUser 		wxString& The user name.
+ * \param validPassword wxString&	The password.
+ * \return void
+ *
+ */
 void mmLogonDialog::SetValid(wxString &validUser, wxString &validPassword)
 {
     mValidUser = validUser;
     mValidPassword = validPassword;
 } // SetValid
 
+/*! \brief Check whether the user name and password entered are valid using previously set values.
+ *
+ * \return bool	True if valid, false otherwise.
+ *
+ */
 bool mmLogonDialog::IsValid()
 {   // Checks dialog entry against previously set values
     return (mUserNameEntry->GetValue() == mValidUser && mPasswordEntry->GetValue() == mValidPassword);
 } // IsValid
 
+/*! \brief Check whether the user name and password entered are valid using the values passed.
+ *
+ * \param user 			wxString&	The valid user name.
+ * \param password 	wxString&	The valid password.
+ * \return bool			True if valid, false otherwise.
+ *
+ */
 bool mmLogonDialog::IsValid(wxString &user, wxString &password)
 {   // Checks dialog entry against given values
     return (mUserNameEntry->GetValue() == user && mPasswordEntry->GetValue() == password);

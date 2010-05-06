@@ -1,3 +1,4 @@
+//! \file mmDropWindow.cpp
 //
 // Name     : mmDropWindow
 // Purpose  : This is a button that can drop down any wxWindow.
@@ -18,6 +19,11 @@ extern wxTextCtrl *gDebug;
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Check to see if the mouse is inside a window.
+ *
+ * \param window 	wxWindow*	The parent window.
+ *
+ */
 bool MouseIsInside(wxWindow *window)
 {
     // Check to see if mouse button is inside or outside window
@@ -43,6 +49,19 @@ END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param parent 			wxWindow*				The parent window.
+ * \param id 					const wxWindowID	The ID of this window.
+ * \param titleStr 			const wxString&		The text to display on the button.
+ * \param titleBitmap 		const wxBitmap&		The bitmap to display on the button.
+ * \param pos 				const wxPoint&			The button's position.
+ * \param size 				const wxSize&			The button's size.
+ * \param style 				const longint				The button's style.
+ * \param childWindow 	wxWindow*				The child window.
+ * \param childSize 		const wxSize&			The child window's size
+ *
+ */
 mmDropWindow::mmDropWindow(wxWindow *parent,
                            const wxWindowID id,
                            const wxString  &titleStr,
@@ -54,17 +73,25 @@ mmDropWindow::mmDropWindow(wxWindow *parent,
                            const wxSize    &childSize)
     : mmMultiButton(parent, id, titleStr, titleBitmap, pos, size, style | mmMB_AUTODRAW)
 {
-    mStyle = style;
     mParent = new wxFrame(this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP | wxSIMPLE_BORDER | wxNO_3D);
     mChildHandlerIsPushed = FALSE;
     SetChild(childWindow, childSize);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmDropWindow::~mmDropWindow()
 {
     if(mParent) mParent->Destroy();
 } // Destructor
 
+/*! \brief Set the button's child window.
+ *
+ * \param childWindow 	wxWindow*		The child window.
+ * \param childSize 		const wxSize&	The child window's size.
+ * \return void
+ *
+ */
 void mmDropWindow::SetChild(wxWindow *childWindow, const wxSize &childSize)
 {
     mChild = childWindow;
@@ -86,6 +113,12 @@ void mmDropWindow::SetChild(wxWindow *childWindow, const wxSize &childSize)
     }
 } // SetChild
 
+/*! \brief
+ *
+ * \param event wxCommandEvent&	A reference to a wxCommandEvent object.
+ * \return void
+ *
+ */
 void mmDropWindow::OnDrop(wxCommandEvent &event)
 {
 #ifdef __MMDEBUG__
@@ -95,6 +128,11 @@ void mmDropWindow::OnDrop(wxCommandEvent &event)
         ToggleChild();
 } // OnDrop
 
+/*! \brief Toggle the child window.
+ *
+ * \return void
+ *
+ */
 void mmDropWindow::ToggleChild()
 {
     if(!mParent || !mChild)
@@ -129,12 +167,24 @@ BEGIN_EVENT_TABLE(mmChildHandler, wxEvtHandler)
     EVT_MOUSE_CAPTURE_LOST(mmChildHandler::OnCaptureLost)
 END_EVENT_TABLE()
 
+/*! \brief Constructor.
+ *
+ * \param button mmDropWindow*	The drop window button hosting the window.
+ * \param child 	wxWindow*			The window that's being handled.
+ *
+ */
 mmChildHandler::mmChildHandler(mmDropWindow *button, wxWindow *child)
 {
     mButton = button;
     mChild = child;
 } // mmChildHandler
 
+/*! \brief The child window lost focus.
+ *
+ * \param event wxFocusEvent&	A reference to a wxFocusEvent object.
+ * \return void
+ *
+ */
 void mmChildHandler::OnChildKillFocus(wxFocusEvent &event)
 {
     if(!mChild)
@@ -152,6 +202,12 @@ void mmChildHandler::OnChildKillFocus(wxFocusEvent &event)
     event.Skip();
 } // OnChildKillFocus
 
+/*! \brief The mouse entered or left the child window.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmChildHandler::OnMouseEnterLeaveChild(wxMouseEvent &event)
 {
     if(event.GetEventType() == wxEVT_ENTER_WINDOW)
@@ -167,11 +223,23 @@ void mmChildHandler::OnMouseEnterLeaveChild(wxMouseEvent &event)
     event.Skip();
 } // OnMouseEnterLeaveChild
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmChildHandler::OnMouse(wxMouseEvent &event)
 {
     event.Skip();
 }
 
+/*! \brief The child window lost the mouse capture.
+ *
+ * \param event wxMouseCaptureLostEvent&	A reference to a wxMouseCaptureLostEvent object.
+ * \return void
+ *
+ */
 void mmChildHandler::OnCaptureLost(wxMouseCaptureLostEvent &event)
 {
     if(mChild->HasCapture()) {

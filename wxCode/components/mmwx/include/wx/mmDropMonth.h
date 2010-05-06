@@ -1,3 +1,4 @@
+//! \file mmDropMonth.h
 //
 // Name     : mmDropMonth.h
 // Purpose  : Include file for mmDropMonth class
@@ -28,6 +29,8 @@
 
 #define mmDROPMONTH_UPDATE_LABEL 0x800
 
+/*! \brief An mmMultiButton with drop-down calendar.
+ */
 class mmDropMonth : public mmDropWindow
 {
     public:
@@ -39,6 +42,11 @@ class mmDropMonth : public mmDropWindow
                     const long int    style = 0);
         ~mmDropMonth();
 
+        /*! \brief Get the currently selected date.
+         *
+         * \return wxDateTime&	The date.
+         *
+         */
         wxDateTime &GetDate()
         {
             if(mMonthCtrl)
@@ -51,8 +59,9 @@ class mmDropMonth : public mmDropWindow
         DECLARE_EVENT_TABLE()
 
         void OnDateChange(mmMonthEvent &event);
-        mmMonthCtrl *mMonthCtrl;
-        bool mUpdateLabel;
+
+        mmMonthCtrl *mMonthCtrl;								//!< The calendar control.
+        bool 			mUpdateLabel;								//!< Whether to update the button label when the date changes.
 }; // mmDropMonth
 
 #endif

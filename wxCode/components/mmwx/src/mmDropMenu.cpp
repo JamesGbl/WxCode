@@ -1,3 +1,4 @@
+//! \file mmDropMenu.cpp
 //
 // Name     : mmDropMenu
 // Purpose  : This is a button that can drop down a menu.
@@ -23,6 +24,18 @@ END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param parent 		wxWindow*				The parent window.
+ * \param id 				const wxWindowID	The ID of this window.
+ * \param titleStr 		const wxString&		The text to display on the button.
+ * \param titleBitmap 	const wxBitmap&		The bitmap to display on the button.
+ * \param pos 			const wxPoint&			The button's position.
+ * \param size 			const wxSize&			The button's size.
+ * \param style 			const longint				The button's style.
+ * \param childMenu 	wxMenu*					The menu to display.
+ *
+ */
 mmDropMenu::mmDropMenu(wxWindow *parent,
                        const wxWindowID id,
                        const wxString  &titleStr,
@@ -33,21 +46,32 @@ mmDropMenu::mmDropMenu(wxWindow *parent,
                        wxMenu    *childMenu)
     : mmMultiButton(parent, id, titleStr, titleBitmap, pos, size, style | mmMB_AUTODRAW)
 {
-    mStyle  = style;
-    mToggleByChild  = FALSE;
-    mToggleByButton = FALSE;
     SetChild(childMenu);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmDropMenu::~mmDropMenu()
 {
 } // Destructor
 
+/*! \brief Set the child menu that will be displayed.
+ *
+ * \param childMenu wxMenu*		The child menu.
+ * \return void
+ *
+ */
 void mmDropMenu::SetChild(wxMenu *childMenu)
 {
     mChild = childMenu;
 } // SetChild
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxCommandEvent&	A reference to a wxCommandEvent object.
+ * \return void
+ *
+ */
 void mmDropMenu::OnMouse(wxCommandEvent &event)
 {
     if(event.GetEventType() == mmEVT_DROP_TOGGLE || event.GetEventType() == mmEVT_WHOLEDROP_TOGGLE)
@@ -55,9 +79,13 @@ void mmDropMenu::OnMouse(wxCommandEvent &event)
             ToggleChild();
 } // OnMouse
 
+/*! \brief Toggle the child menu.
+ *
+ * \return void
+ *
+ */
 void mmDropMenu::ToggleChild()
 {
-//  int border_w,border_h;
     if(mChild)
     {
         PopupMenu(mChild, 0, GetClientSize().y);

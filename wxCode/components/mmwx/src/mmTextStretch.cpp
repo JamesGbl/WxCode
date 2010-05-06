@@ -1,3 +1,4 @@
+//! \file mmTextStretch.cpp
 //
 // Name     : mmTextStretch
 // Purpose  : A wxTextCtrl that can be stretched and/or moved by
@@ -24,6 +25,16 @@ BEGIN_EVENT_TABLE(mmTextStretch, wxWindow)
     EVT_MOUSE_CAPTURE_LOST(mmTextStretch::OnCaptureLost)
 END_EVENT_TABLE()
 
+/*! \brief Constructor.
+ *
+ * \param parent wxWindow*				The parent window.
+ * \param id 		const wxWindowID	The ID of this window.
+ * \param value 	wxString&					The text to display.
+ * \param pos 	const wxPoint&			The button's position.
+ * \param size 	const wxSize&			The button's size.
+ * \param style 	const longint				The button's style.
+ *
+ */
 mmTextStretch::mmTextStretch(wxWindow *parent,
                              const wxWindowID id,
                              const wxString &value,
@@ -58,10 +69,18 @@ mmTextStretch::mmTextStretch(wxWindow *parent,
     Layout();
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmTextStretch::~mmTextStretch(void)
 {
 } // Destructor
 
+/*! \brief A key was pressed.
+ *
+ * \param event wxKeyEvent&	A reference to a wxKeyEvent object.
+ * \return void
+ *
+ */
 void mmTextStretch::OnKeyDown(wxKeyEvent &event)
 {
     if(event.ControlDown())
@@ -69,11 +88,6 @@ void mmTextStretch::OnKeyDown(wxKeyEvent &event)
         mCtrlIsDown = TRUE;
         SetCursor(*mMoveCursor);
         wxPoint tp = GetPosition();
-        int mpx, mpy;
-        ::wxGetMousePosition(&mpx, &mpy);
-        GetParent()->ScreenToClient(&mpx, &mpy);
-        mYdelta = mpy - tp.y;
-        mXdelta = mpx - tp.x;
     }
     else
     {
@@ -84,6 +98,12 @@ void mmTextStretch::OnKeyDown(wxKeyEvent &event)
     event.Skip();
 } // OnKeyDown
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmTextStretch::OnMouse(wxMouseEvent &event)
 {
     if(event.Leaving())
@@ -252,6 +272,12 @@ void mmTextStretch::OnMouse(wxMouseEvent &event)
     event.Skip();
 } // OnMouse
 
+/*! \brief The child window lost the mouse capture.
+ *
+ * \param event wxMouseCaptureLostEvent&	A reference to a wxMouseCaptureLostEvent object.
+ * \return void
+ *
+ */
 void mmTextStretch::OnCaptureLost(wxMouseCaptureLostEvent &event)
 {
     if(HasCapture()) {
@@ -259,6 +285,11 @@ void mmTextStretch::OnCaptureLost(wxMouseCaptureLostEvent &event)
     }
 }
 
+/*! \brief Check whether the mouse is hovering over one of the control's borders.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnBorder()
 {
     int w, h;
@@ -275,6 +306,11 @@ bool mmTextStretch::MouseIsOnBorder()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the top left corner.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnTopLeft()
 {
     int cx = 0, cy = 0;
@@ -287,6 +323,11 @@ bool mmTextStretch::MouseIsOnTopLeft()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the bottom right corner.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnBottomRight()
 {
     int w, h;
@@ -301,6 +342,11 @@ bool mmTextStretch::MouseIsOnBottomRight()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the left border.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnLeft()
 {
     int w, h;
@@ -315,6 +361,11 @@ bool mmTextStretch::MouseIsOnLeft()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the right border.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnRight()
 {
     int w, h;
@@ -329,6 +380,11 @@ bool mmTextStretch::MouseIsOnRight()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the top border.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnTop()
 {
     int w, h;
@@ -343,6 +399,11 @@ bool mmTextStretch::MouseIsOnTop()
     return FALSE;
 }
 
+/*! \brief Check whether the mouse is on the bottom border.
+ *
+ * \return bool True or false.
+ *
+ */
 bool mmTextStretch::MouseIsOnBottom()
 {
     int w, h;
@@ -357,7 +418,13 @@ bool mmTextStretch::MouseIsOnBottom()
     return FALSE;
 }
 
-void mmTextStretch::OnPaint(wxPaintEvent &WXUNUSED(event))
+/*! \brief A paint event occurred.
+ *
+ * \param event wxPaintEvent&	A reference to a wxPaintEvent object.
+ * \return void
+ *
+ */
+void mmTextStretch::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC dc(this);
     int w, h;

@@ -208,6 +208,7 @@ void MyPanel::MultiButtonTest(void)
 // mmMultiButton demo
 {
     // mmMultiButton demo
+
     wxStaticBox *box = new wxStaticBox(this, -1, wxT("mmMultiButton"), wxPoint(10, 10), wxSize(370, 150));
 
     wxBitmap *bmon = new wxBitmap(wxT("bitmaps/checked.png"), wxBITMAP_TYPE_PNG);

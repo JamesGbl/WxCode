@@ -1,3 +1,4 @@
+//! \file mmMonthCtrl.cpp
 //
 // Name     : mmMonthCtrl
 // Purpose  : A panel displaying the days of the months as numbers.
@@ -38,6 +39,12 @@ END_EVENT_TABLE()
 
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param month mmMonthCtrl*	The month control for which these events are being handled.
+ * \param type 	wxEventType		The type of event.
+ *
+ */
 mmMonthEvent::mmMonthEvent(mmMonthCtrl *month, wxEventType type)
     : wxCommandEvent(type, month->GetId())
 {
@@ -49,6 +56,16 @@ mmMonthEvent::mmMonthEvent(mmMonthCtrl *month, wxEventType type)
 
 /////////////////////////////////////////////////////////////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param parent wxWindow*				The parent window.
+ * \param id 		const wxWindowID	The ID of this window.
+ * \param date 	const wxDateTime&	The date to be displayed.
+ * \param pos 	const wxPoint&			The button's position.
+ * \param size 	const wxSize&			The button's size.
+ * \param style 	const longint				The button's style.
+ *
+ */
 mmMonthCtrl::mmMonthCtrl(wxWindow *parent,
                          const wxWindowID  id,
                          const wxDateTime &date,
@@ -90,6 +107,8 @@ mmMonthCtrl::mmMonthCtrl(wxWindow *parent,
     SetDate(date);
 } // mmMonthCtrl constructor
 
+/*! \brief Destructor.
+ */
 mmMonthCtrl::~mmMonthCtrl()
 {
     if(mMonthNavigator)
@@ -99,18 +118,36 @@ mmMonthCtrl::~mmMonthCtrl()
     }
 } // Destructor
 
+/*! \brief Set the colour in which to display today's date.
+ *
+ * \param col wxColour*	The colour.
+ * \return void
+ *
+ */
 void mmMonthCtrl::SetTodayColour(wxColour *col)
 {
     mTodayColour = col;
     mTodayPen = wxThePenList->FindOrCreatePen(*col, 1, wxSOLID);
 } // SetTodayColour
 
+/*! \brief Set the colour in which to display the selected date.
+ *
+ * \param col wxColour*	The colour.
+ * \return void
+ *
+ */
 void mmMonthCtrl::SetSelectColour(wxColour *col)
 {
     mSelectColour = col;
     mSelectPen = wxThePenList->FindOrCreatePen(*col, 1, wxSOLID);
 } // SetSelectColour
 
+/*! \brief Set the background colour.
+ *
+ * \param col wxColour*	The colour.
+ * \return void
+ *
+ */
 void mmMonthCtrl::SetMonthBackgroundColour(wxColour *col)
 {
     mMonthBackgroundColour = col;
@@ -119,6 +156,12 @@ void mmMonthCtrl::SetMonthBackgroundColour(wxColour *col)
     //mMonthBackgroundBrush = new wxBrush(*col,wxSOLID);
 } // SetMonthBackgroundColour
 
+/*! \brief Set the date.
+ *
+ * \param date const wxDateTime&	The date.
+ * \return void
+ *
+ */
 void mmMonthCtrl::SetDate(const wxDateTime &date)
 // Update all
 {
@@ -128,6 +171,12 @@ void mmMonthCtrl::SetDate(const wxDateTime &date)
     UpdateDays(dc);
 } // Update
 
+/*! \brief The mouse entered or left the control.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmMonthCtrl::OnEnterLeave(wxMouseEvent &event)
 // Remove the select rectangle when leaving
 {
@@ -153,6 +202,12 @@ void mmMonthCtrl::OnEnterLeave(wxMouseEvent &event)
     }
 } // OnEnterLeave
 
+/*! \brief The mouse moved within the control
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmMonthCtrl::OnMotion(wxMouseEvent &event)
 // Draw/remove the 'select'-rectangle
 {
@@ -188,6 +243,12 @@ void mmMonthCtrl::OnMotion(wxMouseEvent &event)
     }
 } // OnMotion
 
+/*! \brief The left mouse button was depressed.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmMonthCtrl::OnLeftDown(wxMouseEvent &event)
 {
     if(event.GetX() > 0           && event.GetX() < mDaysOfWeek  * mCellW &&
@@ -205,6 +266,12 @@ void mmMonthCtrl::OnLeftDown(wxMouseEvent &event)
     }
 } // OnLeftDown
 
+/*! \brief The navigator control was clicked.
+ *
+ * \param event mmNavigatorEvent&	A reference to a mmNavigatorEvent object.
+ * \return void
+ *
+ */
 void mmMonthCtrl::OnNavigator(mmNavigatorEvent &event)
 {
     if(event.GetEventType() == mmEVT_NAVIGATOR_PREV2) {
@@ -225,6 +292,12 @@ void mmMonthCtrl::OnNavigator(mmNavigatorEvent &event)
     GenerateEvent(event.GetEventType());
 } // OnNavigator
 
+/*! \brief A paint event occurred.
+ *
+ * \param event wxPaintEvent&	A reference to a wxPaintEvent object.
+ * \return void
+ *
+ */
 void mmMonthCtrl::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC dc(this);
@@ -240,6 +313,12 @@ void mmMonthCtrl::OnPaint(wxPaintEvent &event)
     UpdateDays(dc);
 } // OnPaint
 
+/*! \brief Update the calendar display.
+ *
+ * \param dc wxDC&	The device context to draw on.
+ * \return void
+ *
+ */
 void mmMonthCtrl::UpdateDays(wxDC &dc)
 // Update all dates
 {
@@ -320,8 +399,16 @@ void mmMonthCtrl::UpdateDays(wxDC &dc)
     }
 } // UpdateDays
 
-void mmMonthCtrl::UpdateDay(wxDC &dc, const wxDateTime &date,
-                            int daycount, int weekcount)
+/*! \brief Update the display for a given day when the mouse enters or leaves.
+ *
+ * \param dc 				wxDC&						The device context for drawing.
+ * \param date 			const wxDateTime&	The date.
+ * \param daycount 	int							The day number.
+ * \param weekcount 	int							The week number.
+ * \return void
+ *
+ */
+void mmMonthCtrl::UpdateDay(wxDC &dc, const wxDateTime &date, int daycount, int weekcount)
 {
     if(date.GetMonth() == mDate.GetMonth())
     {   // Date is in current month ('enabled')
@@ -333,16 +420,14 @@ void mmMonthCtrl::UpdateDay(wxDC &dc, const wxDateTime &date,
         else
             dc.SetPen(*mMonthBackgroundPen); // Default (no inner border)
         dc.SetBrush(*mMonthBackgroundBrush); // Erase background
-        dc.DrawRectangle(daycount * mCellW, weekcount * mCellH + mHdrH + mNavH,
-                         mCellW, mCellH);
+        dc.DrawRectangle(daycount * mCellW, weekcount * mCellH + mHdrH + mNavH, mCellW, mCellH);
         // Draw outer border
         if(((int)date.GetJDN() == (int)mDate.GetJDN() && (mStyle & mmSHOW_SELECT)))
             dc.SetPen(*mSelectPen);
         else
             dc.SetPen(*mMonthBackgroundPen);
         dc.SetBrush(*wxTRANSPARENT_BRUSH);
-        dc.DrawRectangle(daycount * mCellW + 1, weekcount * mCellH + mHdrH + mNavH + 1,
-                         mCellW - 2, mCellH - 2);
+        dc.DrawRectangle(daycount * mCellW + 1, weekcount * mCellH + mHdrH + mNavH + 1, mCellW - 2, mCellH - 2);
         // Set text colour
         if(date.IsWorkDay())
             dc.SetTextForeground(*wxBLACK);
@@ -369,10 +454,15 @@ void mmMonthCtrl::UpdateDay(wxDC &dc, const wxDateTime &date,
     str.Printf(wxT(" %2d "), date.GetDay());
     long dw, dh;
     dc.GetTextExtent(str, &dw, &dh);
-    dc.DrawText(str, daycount * mCellW + int(mCellW / 2 - dw / 2),
-                weekcount * mCellH + mHdrH + mNavH + 1);
+    dc.DrawText(str, daycount * mCellW + int(mCellW / 2 - dw / 2), weekcount * mCellH + mHdrH + mNavH + 1);
 } // UpdateDay
 
+/*! \brief Calculate the control's size.
+ *
+ * \param dc wxDC&
+ * \return void
+ *
+ */
 void mmMonthCtrl::CalculateSize(wxDC &dc)
 {
     int  w, h;
@@ -394,6 +484,13 @@ void mmMonthCtrl::CalculateSize(wxDC &dc)
 #endif
 } // CalculateSize
 
+/*! \brief Convert a set of coordinates to the date they represent on the calendar.
+ *
+ * \param x int
+ * \param y int
+ * \return wxDateTime
+ *
+ */
 wxDateTime mmMonthCtrl::CoordToDate(int x, int y)
 {
     wxDateTime tmpdate = mDate;
@@ -404,6 +501,12 @@ wxDateTime mmMonthCtrl::CoordToDate(int x, int y)
     return tmpdate;
 } // CoordToDate
 
+/*! \brief Generate an event.
+ *
+ * \param type wxEventType	The event type.
+ * \return void
+ *
+ */
 void mmMonthCtrl::GenerateEvent(wxEventType type)
 {
     mmMonthEvent ev(this, type);

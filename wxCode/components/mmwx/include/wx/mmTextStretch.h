@@ -1,7 +1,7 @@
+//! \file mmTextStretch.h
 //
 // Name     : mmTextStretch
-// Purpose  : A wxTextCtrl that can be stretched and/or moved by
-//            using the left mouse button.
+// Purpose  : A wxTextCtrl that can be stretched and/or moved by using the left mouse button.
 // Author   : Arne Morken
 // Copyright: (C) 2000-2002 MindMatters, www.mindmatters.no
 // Licence  : wxWindows licence
@@ -40,6 +40,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief A stretchable text control.
+ */
 class mmTextStretch: public wxWindow
 {
     public:
@@ -50,16 +52,37 @@ class mmTextStretch: public wxWindow
                       const wxSize    &size  = wxDefaultSize,
                       const long       style = 0);
         // Constructor.
-        ~mmTextStretch(void);
+        ~mmTextStretch();
         // Destructor.
 
-        void SetMargin(int margin)     {
+        /*! \brief Set the margin width.
+         *
+         * \param margin int	The width.
+         * \return void
+         *
+         */
+        void SetMargin(int margin)
+        {
             mMargin = margin;
         }
-        void SetGridSize(int gridSize) {
+        /*! \brief Set the grid size.
+         *
+         * \param gridSize int	The grid size.
+         * \return void
+         *
+         */
+        void SetGridSize(int gridSize)
+        {
             mGridSize = gridSize;
         }
-        void SetSnapToGrid(bool snap)  {
+        /*! \brief Set the snap-to-grid mode.
+         *
+         * \param snap bool	On if true, otherwise off.
+         * \return void
+         *
+         */
+        void SetSnapToGrid(bool snap)
+        {
             if(snap)
                 mStyle |= mmTS_SNAP_TO_GRID;
             else
@@ -82,25 +105,23 @@ class mmTextStretch: public wxWindow
         bool MouseIsOnLeft();
         bool MouseIsOnRight();
 
-        wxTextCtrl *mTextCtrl;
-        long mStyle;
-        int  mMargin;
-        int  mXdelta, mYdelta;
-        int  mGridSize;
-        bool mSnapToGrid;
-        bool mTopLeftWasPressed;
-        bool mBottomRightWasPressed;
-        bool mTopWasPressed;
-        bool mBottomWasPressed;
-        bool mLeftWasPressed;
-        bool mRightWasPressed;
-        bool mLeftIsDown;
-        bool mCtrlIsDown;
-        wxCursor *mNormalCursor;
-        wxCursor *mSizeNWSECursor; // NorthWest-SouthEast
-        wxCursor *mSizeNSCursor;   // NorthSouth
-        wxCursor *mSizeWECursor;   // WestEast
-        wxCursor *mMoveCursor;
+        wxTextCtrl *mTextCtrl;									//!< The text control.
+        long 			mStyle;											//!< The control's style.
+        int  				mMargin;										//!< The margin width.
+        int  				mGridSize;									//!< The grid size.
+        bool 			mTopLeftWasPressed;				//!< Whether the top left border was clicked.
+        bool 			mBottomRightWasPressed;	//!< Whether the bottom right border was clicked.
+        bool 			mTopWasPressed;					//!< Whether the top border was clicked.
+        bool 			mBottomWasPressed;				//!< Whether the bottom border was clicked.
+        bool 			mLeftWasPressed;					//!< Whether the left border was clicked.
+        bool 			mRightWasPressed;					//!< Whether the right border was clicked.
+        bool 			mLeftIsDown;								//!< Whether the left mouse button is down.
+        bool 			mCtrlIsDown;								//!< Whether the CTRL key is down.
+        wxCursor	*mNormalCursor;						//!< The normal mouse cursor.
+        wxCursor 	*mSizeNWSECursor; 				//!< NorthWest/SouthEast resizing cursor.
+        wxCursor 	*mSizeNSCursor;   					//!< North/South resizing cursor.
+        wxCursor 	*mSizeWECursor;   					//!< West/East resizing cursor.
+        wxCursor 	*mMoveCursor;							//!< Movement cursor.
 }; // class mmTextStretch
 
 #endif

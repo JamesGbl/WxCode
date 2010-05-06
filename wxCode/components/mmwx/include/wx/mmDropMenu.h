@@ -1,3 +1,4 @@
+//! \file mmDropMenu.h
 //
 // Name     : mmDropMenu
 // Purpose  : This is a button that can drop down a menu.
@@ -27,6 +28,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+/*! \brief An mmMultiButton with drop-down menu.
+ */
 class mmDropMenu : public mmMultiButton
 {
         friend class mmChildHandler;
@@ -52,33 +55,26 @@ class mmDropMenu : public mmMultiButton
 
         ~mmDropMenu(); // Destructor
 
-        void      SetChild(wxMenu *childWin);
+        void SetChild(wxMenu *childWin);
         // Set the menu to be dropped down.
-        wxMenu   *GetChild() {
+        /*! \brief Get a pointer to the child menu.
+         *
+         * \return wxMenu*	The menu pointer.
+         *
+         */
+        wxMenu *GetChild() {
             return mChild;
         }
         // Returns a pointer to the window to be dropped down.
-        void      ToggleChild();
+        void ToggleChild();
         // Toggle displays the child window.
-
-    protected:
-        void      RequestToggle();
-        // Child requests toggle
 
     private:
         DECLARE_EVENT_TABLE()
 
-        void    OnMouse(wxCommandEvent &event);
-        wxPoint CalculateWindowPos(int *dropWidth, int *dropHeight);
+        void OnMouse(wxCommandEvent &event);
 
-        wxFrame  *mParent;
-        long int  mStyle;
-        wxMenu   *mChild;
-        wxSize    mChildSize;
-        long int  mChildStyle;
-        bool      mChildHandlerIsPushed;
-        bool      mToggleByChild;
-        bool      mToggleByButton;
+        wxMenu *mChild;	//!< The child menu.
 }; // mmDropMenu
 
 

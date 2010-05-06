@@ -1,3 +1,4 @@
+//! \file mmHyperBitmap.cpp
 //
 // Name     : mmHyperBitmap
 // Purpose  : A clickable bitmap that performs an action when clicked.
@@ -22,6 +23,17 @@ BEGIN_EVENT_TABLE(mmHyperBitmap, wxWindow)
     EVT_MOUSE_EVENTS(mmHyperBitmap::OnMouse)
 END_EVENT_TABLE()
 
+/*! \brief Constructor.
+ *
+ * \param parent wxWindow*				The parent window.
+ * \param id 		const wxWindowID	The ID of this window.
+ * \param bitmap const wxBitmap&		The hyperlinked bitmap.
+ * \param url 		const wxString&		The URL to link to.
+ * \param pos 	const wxPoint&			The button's position.
+ * \param size 	const wxSize&			The button's size.
+ * \param style 	const longint				The button's style.
+ *
+ */
 mmHyperBitmap::mmHyperBitmap(wxWindow *parent,
                              const wxWindowID id,
                              const wxBitmap &bitmap,
@@ -37,19 +49,22 @@ mmHyperBitmap::mmHyperBitmap(wxWindow *parent,
     mMargin = 0;
     mIsVisited = FALSE;
     mLeftIsDown = FALSE;
-    mUnvisitedColour = new wxColour(0, 0, 255); // BLUE
-    mVisitedColour   = new wxColour(128, 0, 128); // PURPLE
-    wxFont font = GetFont();
-    font.SetUnderlined(TRUE);
-    SetFont(font);
     mEnterCursor = new wxCursor(wxCURSOR_HAND);
     mLeaveCursor = new wxCursor(wxCURSOR_ARROW);
 } // Constructor
 
-mmHyperBitmap::~mmHyperBitmap(void)
+/*! \brief Destructor.
+ */
+mmHyperBitmap::~mmHyperBitmap()
 {
 } // Destructor
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmHyperBitmap::OnMouse(wxMouseEvent &event)
 {
     if(event.Entering())
@@ -85,6 +100,12 @@ void mmHyperBitmap::OnMouse(wxMouseEvent &event)
     event.Skip();
 } // OnMouse
 
+/*! \brief A paint event occurred.
+ *
+ * \param event wxPaintEvent&	A reference to a wxPaintEvent object.
+ * \return void
+ *
+ */
 void mmHyperBitmap::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC dc(this);
@@ -96,12 +117,6 @@ void mmHyperBitmap::OnPaint(wxPaintEvent &event)
         bh = mBitmap.GetHeight();
         SetClientSize(wxSize(bw + 2 * mMargin, bh + 2 * mMargin));
     }
-    if(mIsVisited)
-        dc.SetTextForeground(*mVisitedColour);
-    else
-        dc.SetTextForeground(*mUnvisitedColour);
-    dc.SetBackgroundMode(wxTRANSPARENT);
-    dc.Clear();
     if(mBitmap.IsOk())
         dc.DrawBitmap(mBitmap, mMargin, mMargin, TRUE);
     if(mLeftIsDown)
@@ -114,6 +129,12 @@ void mmHyperBitmap::OnPaint(wxPaintEvent &event)
     }
 } // OnPaint
 
+/*! \brief The bitmap was clicked, execute the URL.
+ *
+ * \param isURL bool	True if the URL starts with "http:" or "mailto:", false otherwise i.e. "file:"
+ * \return void
+ *
+ */
 void mmHyperBitmap::HyperExec(bool isURL)
 {
     wxString ext;

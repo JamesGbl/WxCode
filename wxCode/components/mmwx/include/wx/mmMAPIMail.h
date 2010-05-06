@@ -1,3 +1,4 @@
+//! \file mmMAPIMail.h
 //
 // Name     : mmMAPIMail
 // Purpose  : Send and receive email with MAPI.
@@ -23,7 +24,9 @@
 #include <mapi.h>
 #include <wx/string.h>
 
-// Error codes
+
+/*! \brief Error codes.
+ */
 enum MAPI_ERROR {
     MAPI_NO_DLL = 0,
     MAPI_NO_LOGON,
@@ -36,6 +39,8 @@ enum MAPI_ERROR {
     MAPI_SUCCESS
 }; // enum MAPI_MAIL_ERROR
 
+/*! \brief MAPI mail class for Windows.
+ */
 class mmMAPIMail
 {
     public:
@@ -44,14 +49,20 @@ class mmMAPIMail
 
         bool Send(wxString from, wxString to, wxString subject, wxString text);
         bool Read(wxString *from, wxString *text);
-        MAPI_ERROR GetError() {
+        /*! \brief Get the error code.
+         *
+         * \return MAPI_ERROR	The error code.
+         *
+         */
+        MAPI_ERROR GetError()
+        {
             return mError;
         }
 
     private:
-        HINSTANCE  mMAPIDLL; // Address of MAPI DLL
-        LHANDLE    mSession; // Session handle
-        MAPI_ERROR mError;   // Error code
+        HINSTANCE  	mMAPIDLL; 	//!< Address of MAPI DLL.
+        LHANDLE    		mSession; 	//!< Session handle.
+        MAPI_ERROR 	mError;   		//!< Error code.
 }; // class mmMAPIMail
 
 #endif

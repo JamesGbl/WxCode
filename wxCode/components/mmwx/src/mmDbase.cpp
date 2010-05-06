@@ -1,3 +1,4 @@
+//! \file mmDbase.cpp
 //
 // Name     : mmDbase
 // Purpose  : Wrapper around wxDb/wxDbTable stuff.
@@ -6,7 +7,7 @@
 // Licence  : wxWindows license.
 //
 
-#include "mmDbase.h"
+#include "wx/mmDbase.h"
 #include <wx/listimpl.cpp>
 
 #ifdef __MMDEBUG__
@@ -17,12 +18,16 @@ WX_DEFINE_LIST(mmDbaseRow)
 
 //////////////////// mmDbase ////////////////////
 
+/*! \brief Constructor.
+ */
 mmDbase::mmDbase()
 {
     mDB = NULL;
-    mDbaseErr = wxT("");
+    mDbaseErr = wxEmptyString;
 } // mmDbase
 
+/*! \brief Destructor.
+ */
 mmDbase::~mmDbase()
 {
     if(mDB)
@@ -33,6 +38,13 @@ mmDbase::~mmDbase()
     }
 } // ~mmDbase
 
+/*! \brief Create a datasource
+ *
+ * \param odbcDriver 	wxString&	The driver to use.
+ * \param regCmd 		wxString&	The data source attributes.
+ * \return bool			True on success, false otherwise.
+ *
+ */
 bool mmDbase::CreateDataSource(wxString &odbcDriver, wxString &regCmd)
 // Create data source entries
 {
@@ -45,17 +57,26 @@ bool mmDbase::CreateDataSource(wxString &odbcDriver, wxString &regCmd)
             regCmd[i] = '\0';
     bool status = SQLConfigDataSource(0, ODBC_ADD_DSN, odbcDriver, regCmd);
     if(!status)
-        mDbaseErr = wxT("Call to SQLConfigDataSource failed.\n");
+        mDbaseErr = _("Call to SQLConfigDataSource failed.\n");
     else
-        mDbaseErr = wxT("");
+        mDbaseErr = wxEmptyString;
     return status;
 } // ConfigDataSource
 
+/*! \brief Initialise the database.
+ *
+ * \param dataSourceName wxString	The data source name.
+ * \param user 					wxString	The user name.
+ * \param password 			wxString	The password.
+ * \param dataSourceDir 	wxString	The default directory.
+ * \return bool					True on success, false otherwise.
+ *
+ */
 bool mmDbase::Init(wxString dataSourceName, wxString user, wxString password, wxString dataSourceDir)
 {
     if(!mDbConInf.AllocHenv())
     {
-        mDbaseErr = wxT("Couldn't allocate space for database variables.\n");
+        mDbaseErr = _("Couldn't allocate space for database variables.\n");
         return FALSE;
     }
     mDbConInf.SetDsn(dataSourceName);
@@ -71,13 +92,19 @@ bool mmDbase::Init(wxString dataSourceName, wxString user, wxString password, wx
     mDB = new wxDb(mDbConInf.GetHenv());
     if(!mDB->Open(mDbConInf.GetDsn(), mDbConInf.GetUserID(), mDbConInf.GetPassword()))
     {
-        mDbaseErr = wxT("Couldn't open database.\n");
+        mDbaseErr = _("Couldn't open database.\n");
         return FALSE;
     }
-    mDbaseErr = wxT("");
+    mDbaseErr = wxEmptyString;
     return TRUE;
 } // Init
 
+/*! \brief Open a table.
+ *
+ * \param tableName 			wxString	The table name.
+ * \return mmDbaseTable*	The table pointer.
+ *
+ */
 mmDbaseTable *mmDbase::OpenTable(wxString tableName)
 {
     if(!mDB)
@@ -136,6 +163,15 @@ mmDbaseTable* mmDbase::CreateTable(wxString tableName, mmDbaseRow& row)
 
 //////////////////// mmDbaseTable ////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param db 			wxDb*			Pointer to the wxDb instance to be used by this wxDbTable instance.
+ * \param tabName wxString&		The name of the table in the RDBMS.
+ * \param ncols 		int				The number of columns in the table. (Do NOT include the ROWID column in the count if using Oracle).
+ * \param col_inf 	wxDbColInf*	Column info.
+ * \param defDir 	wxString&		Some datasources (such as dBase) require a path to where the table is stored on the system. Default is "".
+ *
+ */
 mmDbaseTable::mmDbaseTable(wxDb *db, wxString &tabName, int ncols, wxDbColInf *col_inf, wxString &defDir)
     : wxDbTable(db, tabName, ncols, wxEmptyString, !wxDB_QUERY_ONLY, defDir)
 {
@@ -155,6 +191,8 @@ mmDbaseTable::mmDbaseTable(wxDb *db, wxString &tabName, int ncols, wxDbColInf *c
     }
 } // mmDbaseTable
 
+/*! \brief Destructor.
+ */
 mmDbaseTable::~mmDbaseTable()
 {
     mmDbaseRow::Node *node = mRow.GetFirst();
@@ -168,6 +206,13 @@ mmDbaseTable::~mmDbaseTable()
         delete[] mColInf;
 } // ~mmDbaseTable
 
+/*! \brief Run a query.
+ *
+ * \param whereStr wxString	An SQL WHERE statement.
+ * \param orderStr 	wxString	An SQL ORDER BY statement.
+ * \return void
+ *
+ */
 void mmDbaseTable::DoQuery(wxString whereStr, wxString orderStr)
 {
     SetWhereClause(whereStr);
@@ -176,6 +221,13 @@ void mmDbaseTable::DoQuery(wxString whereStr, wxString orderStr)
     Query();
 } // mmDbaseTable::DoQuery
 
+/*! \brief Set a string value.
+ *
+ * \param colNo	int			The column number.
+ * \param val 		wxString	The string to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, wxString val)
 {
     mRow[colNo]->mCType = SQL_C_CHAR;
@@ -189,6 +241,13 @@ void mmDbaseTable::SetColumn(int colNo, wxString val)
     }
 } // mmDbaseTable::SetColumn
 
+/*! \brief Set an integer value.
+ *
+ * \param colNo	int	The column number.
+ * \param val 		int	The integer value to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, int val)
 {
     mRow[colNo]->mCType = SQL_C_SLONG;
@@ -197,21 +256,49 @@ void mmDbaseTable::SetColumn(int colNo, int val)
         *((int*)mRow[colNo]->mData) = val;
 } // mmDbaseTable::SetColumn
 
-void mmDbaseTable::SetColumn(int colNo, long int val)
+/*! \brief Set a long integer value.
+ *
+ * \param colNo	int			The column number.
+ * \param val 		long 			The long integer value to set.
+ * \return void
+ *
+ */
+void mmDbaseTable::SetColumn(int colNo, long val)
 {
     SetColumn(colNo, (int)val);
 } // mmDbaseTable::SetColumn
 
-void mmDbaseTable::SetColumn(int colNo, short int val)
+/*! \brief Set a short integer value.
+ *
+ * \param colNo	int			The column number.
+ * \param val 		short 		The short integer value to set.
+ * \return void
+ *
+ */
+void mmDbaseTable::SetColumn(int colNo, short val)
 {
     SetColumn(colNo, (int)val);
 } // mmDbaseTable::SetColumn
 
+/*! \brief Set a boolean value.
+ *
+ * \param colNo	int	The column number.
+ * \param val 		bool	The boolean value to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, bool val)
 {
     SetColumn(colNo, (int)val);
 } // mmDbaseTable::SetColumn
 
+/*! \brief Set a float value.
+ *
+ * \param colNo	int	The column number.
+ * \param val 		float	The float vale to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, float val)
 {
     mRow[colNo]->mCType = SQL_C_FLOAT;
@@ -220,6 +307,13 @@ void mmDbaseTable::SetColumn(int colNo, float val)
         *((float*)mRow[colNo]->mData) = val;
 } // mmDbaseTable::SetColumn
 
+/*! \brief Set a double value.
+ *
+ * \param colNo	int		The column number.
+ * \param val 		double	The double value to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, double val)
 {
     mRow[colNo]->mCType = SQL_C_DOUBLE;
@@ -228,6 +322,13 @@ void mmDbaseTable::SetColumn(int colNo, double val)
         *((double*)mRow[colNo]->mData) = val;
 } // mmDbaseTable::SetColumn
 
+/*! \brief Set a DateTime value.
+ *
+ * \param colNo	int					The column number.
+ * \param val 		wxDateTime&	The DateTime value to set.
+ * \return void
+ *
+ */
 void mmDbaseTable::SetColumn(int colNo, wxDateTime &val)
 {
     mRow[colNo]->mCType = SQL_C_TIMESTAMP;
@@ -246,10 +347,16 @@ void mmDbaseTable::SetColumn(int colNo, wxDateTime &val)
 
 //////////////////// mmDbaseColumn ////////////////////
 
+/*! \brief Constructor.
+ *
+ * \param type int	Column type.
+ * \param size int	Column size.
+ *
+ */
 mmDbaseColumn::mmDbaseColumn(int type, int size)
 {
 #ifdef __MMDEBUG__
-    *gDebug << wxT("col type:") << type << wxT("\n");
+    *gDebug << _("col type:") << type << wxT("\n");
 #endif
     mData  = NULL;
     mCType = type;
@@ -258,12 +365,12 @@ mmDbaseColumn::mmDbaseColumn(int type, int size)
     {
         case SQL_C_CHAR:
         case SQL_VARCHAR: // We need this - why?
-            {
-                mCType = SQL_C_CHAR;
-                mType  = DB_DATA_TYPE_VARCHAR;
-                mData  = new wxChar[mSize+1];
-                break;
-            }
+		{
+			mCType = SQL_C_CHAR;
+			mType  = DB_DATA_TYPE_VARCHAR;
+			mData  = new wxChar[mSize+1];
+			break;
+		}
         case SQL_C_LONG:
         case SQL_C_SLONG:
         case SQL_C_ULONG:
@@ -275,50 +382,50 @@ mmDbaseColumn::mmDbaseColumn(int type, int size)
         case SQL_C_UTINYINT:
         case SQL_C_BINARY:
         case SQL_C_BIT:
-            {
-                mCType = SQL_C_SLONG;
-                mType  = DB_DATA_TYPE_INTEGER;
-                mData  = new int(0);
-                break;
-            }
+		{
+			mCType = SQL_C_SLONG;
+			mType  = DB_DATA_TYPE_INTEGER;
+			mData  = new int(0);
+			break;
+		}
         case SQL_C_FLOAT:
-            {
-                mCType = SQL_C_FLOAT;
-                mType  = DB_DATA_TYPE_FLOAT;
-                mData  = new float(0.0);
-                break;
-            }
+		{
+			mCType = SQL_C_FLOAT;
+			mType  = DB_DATA_TYPE_FLOAT;
+			mData  = new float(0.0);
+			break;
+		}
         case SQL_C_DOUBLE:
-            {
-                mCType = SQL_C_DOUBLE;
-                mType  = DB_DATA_TYPE_FLOAT;
-                mData  = new double(0.0);
-                break;
-            }
+		{
+			mCType = SQL_C_DOUBLE;
+			mType  = DB_DATA_TYPE_FLOAT;
+			mData  = new double(0.0);
+			break;
+		}
         case SQL_C_TIMESTAMP:
         case SQL_C_DATE:
         case SQL_C_TIME:
-            {
-                mCType = SQL_C_TIMESTAMP;
-                mType  = DB_DATA_TYPE_DATE;
-                mData  = new TIMESTAMP_STRUCT;
-                (*((TIMESTAMP_STRUCT*)mData)).year     = 2000;
-                (*((TIMESTAMP_STRUCT*)mData)).month    = 1;
-                (*((TIMESTAMP_STRUCT*)mData)).day      = 1;
-                (*((TIMESTAMP_STRUCT*)mData)).hour     = 0;
-                (*((TIMESTAMP_STRUCT*)mData)).minute   = 0;
-                (*((TIMESTAMP_STRUCT*)mData)).second   = 0;
-                (*((TIMESTAMP_STRUCT*)mData)).fraction = 0;
-                break;
-            }
+		{
+			mCType = SQL_C_TIMESTAMP;
+			mType  = DB_DATA_TYPE_DATE;
+			mData  = new TIMESTAMP_STRUCT;
+			(*((TIMESTAMP_STRUCT*)mData)).year     = 2000;
+			(*((TIMESTAMP_STRUCT*)mData)).month    = 1;
+			(*((TIMESTAMP_STRUCT*)mData)).day      = 1;
+			(*((TIMESTAMP_STRUCT*)mData)).hour     = 0;
+			(*((TIMESTAMP_STRUCT*)mData)).minute   = 0;
+			(*((TIMESTAMP_STRUCT*)mData)).second   = 0;
+			(*((TIMESTAMP_STRUCT*)mData)).fraction = 0;
+			break;
+		}
         default:
-            {
-                // Error msg here...
+		{
+			// Error msg here...
 #ifdef __MMDEBUG__
-                *gDebug << wxT("----------Illegal C type:") << mCType << wxT("\n");
+			*gDebug << _("----------Illegal C type:") << mCType << wxT("\n");
 #endif
-                return;
-            }
+			return;
+		}
     } // switch
 } // mmDbaseColumn
 
@@ -364,10 +471,15 @@ void mmDbaseColumn::Update(wxString& str)
 } // mmDbaseColumn::Update
 */
 
+/*! \brief Return a varchar, integer, float or date value as a wxString.
+ *
+ * \return wxString	The value.
+ *
+ */
 wxString mmDbaseColumn::Str()
 {
     if(!mData)
-        return wxT("");
+        return wxEmptyString;
 
     wxString str;
     switch(mType)
@@ -399,8 +511,17 @@ wxString mmDbaseColumn::Str()
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool UpdateDbase(mmDbase *db, mmDbaseTable *tab,
-                 int col, wxString id_name, wxString id)
+/*! \brief Update a database.
+ *
+ * \param db 			mmDbase*			The database.
+ * \param tab 		mmDbaseTable*	The table to update.
+ * \param col 		int						The column number.
+ * \param id_name	wxString				The field to update.
+ * \param id 			wxString				The value to update.
+ * \return bool		True on success, false otherwise.
+ *
+ */
+bool UpdateDbase(mmDbase *db, mmDbaseTable *tab, int col, wxString id_name, wxString id)
 // Temporary solution
 {
     wxString SQLstr;

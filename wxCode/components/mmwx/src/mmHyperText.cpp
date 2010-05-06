@@ -1,3 +1,4 @@
+//! \file mmHyperText.cpp
 //
 // Name     : mmHyperText
 // Purpose  : A clickable text that performs an action when clicked.
@@ -22,6 +23,17 @@ BEGIN_EVENT_TABLE(mmHyperText, wxWindow)
     EVT_MOUSE_EVENTS(mmHyperText::OnMouse)
 END_EVENT_TABLE()
 
+/*! \brief Constructor.
+ *
+ * \param parent wxWindow*				The parent window.
+ * \param id 		const wxWindowID	The ID of this window.
+ * \param str 		const wxString&		The hyperlinked text.
+ * \param url 		const wxString&		The URL to link to.
+ * \param pos 	const wxPoint&			The button's position.
+ * \param size 	const wxSize&			The button's size.
+ * \param style 	const longint				The button's style.
+ *
+ */
 mmHyperText::mmHyperText(wxWindow *parent,
                          const wxWindowID id,
                          const wxString &str,
@@ -46,10 +58,18 @@ mmHyperText::mmHyperText(wxWindow *parent,
     mLeaveCursor = new wxCursor(wxCURSOR_ARROW);
 } // Constructor
 
+/*! \brief Destructor.
+ */
 mmHyperText::~mmHyperText(void)
 {
 } // Destructor
 
+/*! \brief A mouse event occurred.
+ *
+ * \param event wxMouseEvent&	A reference to a wxMouseEvent object.
+ * \return void
+ *
+ */
 void mmHyperText::OnMouse(wxMouseEvent &event)
 {
     if(event.Entering())
@@ -85,6 +105,12 @@ void mmHyperText::OnMouse(wxMouseEvent &event)
     event.Skip();
 } // OnMouse
 
+/*! \brief A paint event occurred.
+ *
+ * \param event wxPaintEvent&	A reference to a wxPaintEvent object.
+ * \return void
+ *
+ */
 void mmHyperText::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC dc(this);
@@ -112,6 +138,12 @@ void mmHyperText::OnPaint(wxPaintEvent &event)
     }
 } // OnPaint
 
+/*! \brief The text was clicked, execute the URL.
+ *
+ * \param isURL bool	True if the URL starts with "http:" or "mailto:", false otherwise i.e. "file:"
+ * \return void
+ *
+ */
 void mmHyperText::HyperExec(bool isURL)
 {
     wxString ext;
