@@ -173,11 +173,11 @@
                                   makefiles. Very very useful to make clean tarballs
                                   of your component at release-time.
 
-            <make-zip>         => for adding a "zip" target on your Win makefiles.
+            <make-zip/>        => for adding a "zip" target on your Win makefiles.
                                   Very very useful  to make clean zip archives
                                   of your component at release-time.
 
-            <make-docs>        => for adding a "docs" target on your makefiles
+            <make-docs/>       => for adding a "docs" target on your makefiles
                                   which runs "doxygen" in yourCompFolder/docs
     -->
 
