@@ -268,7 +268,8 @@
     <ol>
     <li>Compress your files into one or more archives (tar.gz, tar.bz2 or zip); it's a good idea to name this something like <tt>myproject-1.0.ext</tt> (i.e. lowercase name, hyphen, version), with subsequent releases called 1.1 etc. You aren't allowed to use spaces in the name. <br/>
 
-    Then, refer to the Sourceforge's <a href="http://alexandria.wiki.sourceforge.net/File+Release+System+-+Offering+Files+for+Download">FRS system</a> help page for uploading it to Sourceforge servers (you can use various methods, choose your favourite one).
+    Then, refer to the Sourceforge's <a href="https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download">FRS system</a> help page for uploading 
+it to Sourceforge servers (you can use various methods, choose your favourite one).
 
 <!--
     Using your favourite ftp client (for win32, we suggest looking at <a href="http://sourceforge.net/projects/filezilla">FileZilla</a> or <a href="http://www.smartftp.com/">SmartFTP</a>; for Gnome, I use <a href="http://gftp.seul.org/">gFTP</a>; for KDE have a look at <a href="http://kbear.sf.net">KBear</a>), log on by anonymous ftp to &quot;<strong>upload.sourceforge.net</strong>&quot; and upload your archive(s) to the &quot;<strong>incoming</strong>&quot; directory.<br/><br/>
@@ -280,12 +281,9 @@ cd incoming
 put myproject-1.0.ext  # upload the file (warning: no progress bar!)</pre>
     </li>-->
 
-    <li>Go to the Sourceforge page <a href="http://sourceforge.net/project/admin/editpackages.php?group_id=51305">the wxCode file release page</a> (Sourceforge will first get you to log on).
+    <li>Go to the Sourceforge page <a href="https://sourceforge.net/project/admin/explorer.php?group_id=51305">the wxCode file release page</a> (Sourceforge will first get you to log on).
     Click &quot;Edit releases&quot; and look at the list of components available to be edited, you will (currently) see several entries called <strong>&quot;USE THIS FOR NEW COMPONENTS&quot;</strong>, with a status of &quot;Hidden&quot;. These are orphaned releases, unwanted and unloved. To adopt one, just click its &quot;Edit This Release&quot; link, delete any old files that were left behind, change the name and date to that of your project and set the status to &quot;Active&quot;.
     </li>
-
-<!-- WHEN THERE ARE NO MORE ORPHANED RELEASES ENABLE THIS TEXT:
-At the bottom of the page click on "Add release" (the one for the "Components" package). Insert your project's name in the &quot;New release name&quot; box and click on the &quot;Create This Release&quot; button. -->
 
     <li>Add or change whatever you wish in the first section (for wxCode projects you don't really need to fill in the Release Notes or Change Log).  Now the important bit: you should see your uploaded archive(s) in section 2 (together with all the rest of the day's Sourceforge uploads). Tick the checkbox for your file(s), then click the "Add Files" button. Finally fill in the boxes in the newly-revealed Step 3, click Update/Refresh and you've made a File Release. To prove that it worked, go back to the wxCode webpage and check that you can download your archive successfully.</li>
     </ol>
@@ -293,10 +291,11 @@ At the bottom of the page click on "Add release" (the one for the "Components" p
 
     <p id="release_sub"><strong>&rsaquo; Subsequent file releases:</strong></p>
     <div style="margin-left: 1em">
-    <p>The next time you want to make a file release for this project, the procedure is much the same. However when you go to <a href="http://sourceforge.net/project/admin/editpackages.php?group_id=51305">the wxCode file release page</a>, you click &quot;Edit releases&quot;<!-- instead of &quot;Add release&quot; -->. On the next page, find your component and click its &quot;Edit This Release&quot; link. Then you upload the new archive as before.<br/>
+    <p>The next time you want to make a file release for this project, the procedure is much the same. However when you go to <a href="https://sourceforge.net/project/admin/explorer.php?group_id=51305">the wxCode file release 
+page</a>, you click &quot;Edit releases&quot;<!-- instead of &quot;Add release&quot; -->. On the next page, find your component and click its &quot;Edit This Release&quot; link. Then you upload the new archive as before.<br/>
     It may be a good idea this time to write in the Release Notes box about what is new in this Release.  It probably now makes sense to <strong>delete the old release</strong>, and <strong>change the release date</strong>.</p>
 
-    <p>More detailed information is available on <a href="https://sourceforge.net/docman/display_doc.php?docid=6445&amp;group_id=1">this Sourceforge page</a>.
+    <p>More detailed information is available on <a href="https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download">this Sourceforge page</a>.
     </div>
     </p>
 

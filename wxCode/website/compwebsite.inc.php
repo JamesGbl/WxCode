@@ -42,14 +42,16 @@ function writeScreenshotLink($img, $desc, $width = 150, $class = "")
 
 // this is used by component websites to create syntax highlighted snippets of code:
 //
-function writeSnippet($str) {
-
+function writeSnippet($str)
+{
     // some beautifier config stuff
     global $BEAUT_PATH;
-    $BEAUT_PATH= "/home/groups/w/wx/wxcode/htdocs/wiki/cookbook/beautifier/php";
-    require_once("$BEAUT_PATH/Beautifier/Init.php");
-    require_once "$BEAUT_PATH/HFile/HFile_cpp.php";
-    require_once "$BEAUT_PATH/Output/Output_css.php";
+    $BEAUT_PATH = "/home/groups/w/wx/wxcode/htdocs/beautifier/php";
+    require_once("$BEAUT_PATH/Beautifier/Core.php");
+    require_once("$BEAUT_PATH/HFile/HFile_cpp.php");
+    require_once("$BEAUT_PATH/Output/Output_css.php");
+
+    // allocate the highlighter class
     $highlighter = new Core(new HFile_cpp(), new Output_css());
     echo "<pre class='sourcecode'>\n";
     print $highlighter->highlight_text($str);
