@@ -1,0 +1,6 @@
+This directory contains the scripts used for running wxCode website.
+They use the following nomenclature:
+  helper_*   => scripts which are called by other scripts
+  cron_*     => scripts which should be in the CRON table
+  maint_*    => scripts manually invoked by wxCode administrators
+                for regular maintainance

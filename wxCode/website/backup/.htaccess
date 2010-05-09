@@ -1,0 +1,21 @@
+# File:   .htaccess
+# Author: Francesco Montorsi
+# Note:   these settings make the backup directory indexing nicer
+
+# Our DataBase backups end with ".sql.gz"
+AddDescription "Database backup" *.sql.gz
+
+# Our wiki backups end with ".tar.gz"
+AddDescription "Wiki backup" *wiki*.tar.gz
+
+# Our CVS backups end with ".tar.bz2"
+AddDescription "CVS backup" *cvs*.tar.bz2
+
+# enable listing
+Options Indexes
+
+# ignore ourselves from listing
+IndexIgnore .htaccess
+
+# make column width big enough
+IndexOptions FancyIndexing NameWidth=50 DescriptionWidth=*
