@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = wxXmlSerializer
-PROJECT_NUMBER         = "1.3.1 beta"
+PROJECT_NUMBER         = "1.3.2 beta"
 OUTPUT_DIRECTORY       = .
 CREATE_SUBDIRS         = YES
 OUTPUT_LANGUAGE        = English
