@@ -76,6 +76,7 @@ MMWX_LIB_HEADERS =  \
 	include/wx/mmMultiButton.h \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
+	include/wx/mmwx.h \
 	include/wx/wx_pch.h
 MMWX_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_MMWX $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
@@ -105,6 +106,7 @@ MMWX_DLL_HEADERS =  \
 	include/wx/mmMultiButton.h \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
+	include/wx/mmwx.h \
 	include/wx/wx_pch.h
 MMWXTEST_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MMWXTEST_OBJECTS =  \

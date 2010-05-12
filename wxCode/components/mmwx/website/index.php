@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
+  // Author: Gary Harris
+  // Creation date: 11/5/2010
   // RCS-ID: $Id: index.php 505 2007-03-31 10:31:46Z frm $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@
 ?>
   <br /><?php write_h1("Notes"); ?>
   <p>
-    Since the ODBC classes have been removed from wxWidgets 2.9, mmDbase is deprecated and I have not tested it. The suggested alternative is 
+    Since wxODBC has been removed from wxWidgets 2.9, mmDbase is deprecated and I have not tested it. The suggested alternative is 
     <a href="http://debea.net/trac/wiki/WxDba">WxDba</a>.
   </p>
   <p>
@@ -77,22 +77,16 @@
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
        see the ReadMe.txt file at wxCode\template... -->
   <br /><?php write_h1("Documentation"); ?>
-  <p>The documentation for this component is available online
-  <a href="../../docs/mmwx/">here</a>.</p>
+  <p>The documentation for this component is available online <a href="http://wxcode.sourceforge.net/docs/mmwx/">here</a>.</p>
 
 
 	<br /><?php write_h1("Known bugs"); ?>
-  <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>
+  <p>None. To submit a bug report please look at <a href="http://wxcode.sourceforge.net/support.php">wxCode support page</a>.</p>
   
-  <p>
-    
-  </p>
-
-    
+   
 	<br /><?php write_h1("Future enhancements"); ?>
 <!--  <p>None. To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p> -->
   <ul>
-    <li>Doxygen docs.</li>
     <li>Check and compile on Linux and other OSs.</li>
   </ul>
 

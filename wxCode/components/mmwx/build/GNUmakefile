@@ -103,6 +103,7 @@ MMWX_LIB_HEADERS =  \
 	include/wx/mmMultiButton.h \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
+	include/wx/mmwx.h \
 	include/wx/wx_pch.h
 MMWX_DLL_CXXFLAGS = $(____mmwx) $(____mmwx_3) -W -Wall -I../include \
 	-DWXMAKINGDLL_MMWX -fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
@@ -133,6 +134,7 @@ MMWX_DLL_HEADERS =  \
 	include/wx/mmMultiButton.h \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
+	include/wx/mmwx.h \
 	include/wx/wx_pch.h
 MMWXTEST_CXXFLAGS = $(____mmwx) $(____mmwx_3) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
@@ -330,7 +332,7 @@ uninstall_mmwx_dll_headers:
 endif
 
 ../samples/mmwxTest: $(MMWXTEST_OBJECTS) make_sample_dir_mmwxTest $(__mmwx_lib___depname)
-	$(CXX) -o $@ $(MMWXTEST_OBJECTS)  $(____mmwx_3) -L../lib  $(__mmwxTest_RPATH) $(LDFLAGS)  ../lib/gcc_$(__mmwx_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_mmwx-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs richtext,aui,qa,dbgrid,gl,odbc,xrc,html,media,adv,net,xml,core,base`
+	$(CXX) -o $@ $(MMWXTEST_OBJECTS)  $(____mmwx_3) -L../lib  $(__mmwxTest_RPATH) $(LDFLAGS)  ../lib/gcc_$(__mmwx_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_mmwx-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_mmwxTest: 
 	@mkdir -p ../samples

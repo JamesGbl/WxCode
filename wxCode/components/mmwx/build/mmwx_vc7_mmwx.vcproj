@@ -1983,6 +1983,9 @@
 				RelativePath="..\include\wx\mmTextStretch.h">
 			</File>
 			<File
+				RelativePath="..\include\wx\mmwx.h">
+			</File>
+			<File
 				RelativePath="..\include\wx\wx_pch.h">
 			</File>
 		</Filter>

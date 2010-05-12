@@ -101,54 +101,6 @@ __mmwx_dll___depname =
 __mmwx_dll___depname = &
 	..\lib\wat_$(____mmwx_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_mmwx.dll
 !endif
-__WXLIB_RICHTEXT_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_RICHTEXT_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_richtext.lib
-!endif
-__WXLIB_AUI_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_AUI_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_aui.lib
-!endif
-__WXLIB_QA_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_QA_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_qa.lib
-!endif
-__WXLIB_DBGRID_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_DBGRID_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_dbgrid.lib
-!endif
-__WXLIB_GL_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_GL_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_gl.lib
-!endif
-__WXLIB_ODBC_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_ODBC_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_odbc.lib
-!endif
-__WXLIB_XRC_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib
-!endif
-__WXLIB_HTML_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib
-!endif
-__WXLIB_MEDIA_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_MEDIA_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_media.lib
-!endif
-__WXLIB_ADV_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib
-!endif
-__WXLIB_NET_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib
-!endif
-__WXLIB_XML_NAME_p =
-!ifeq WX_MONOLITHIC 0
-__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib
-!endif
 ____mmwx_lib__DIRNAME_SHARED_SUFFIX_FILENAMES =
 !ifeq SHARED 0
 ____mmwx_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
@@ -347,7 +299,7 @@ make_dir_mmwx_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc option caseexact
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(____mmwx_2) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(MMWXTEST_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc file %i
-	@for %i in ( ..\lib\wat_$(____mmwx_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_mmwx.lib $(__WXLIB_RICHTEXT_NAME_p) $(__WXLIB_AUI_NAME_p) $(__WXLIB_QA_NAME_p) $(__WXLIB_DBGRID_NAME_p) $(__WXLIB_GL_NAME_p) $(__WXLIB_ODBC_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_MEDIA_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc library %i
+	@for %i in ( ..\lib\wat_$(____mmwx_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_mmwx.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest_dbmm.res watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest_dbwx.res watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest_mmwxTest.res
 	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc option stack=%i
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\mmwxTest.lbc
