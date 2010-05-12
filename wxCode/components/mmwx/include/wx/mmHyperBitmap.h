@@ -25,6 +25,7 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include <wx/mimetype.h>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@
 
 /*! \brief Hyperlinked bitmap.
  */
-class mmHyperBitmap: public wxWindow
+class WXDLLIMPEXP_MMWX mmHyperBitmap: public wxWindow
 {
     public:
         mmHyperBitmap(wxWindow *parent,

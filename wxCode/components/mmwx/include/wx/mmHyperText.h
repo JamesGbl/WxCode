@@ -25,6 +25,7 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include <wx/mimetype.h>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -36,7 +37,7 @@
 
 /*! \brief Hyperlinked text.
  */
-class mmHyperText: public wxWindow
+class WXDLLIMPEXP_MMWX mmHyperText: public wxWindow
 {
     public:
         mmHyperText(wxWindow *parent,

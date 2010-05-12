@@ -25,6 +25,7 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include "mmMultiButton.h"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@ bool MouseIsInside(wxWindow *window);
 
 /*! \brief An mmMultiButton with drop-down window.
  */
-class mmDropWindow : public mmMultiButton
+class WXDLLIMPEXP_MMWX mmDropWindow : public mmMultiButton
 {
         //friend class mmChildHandler;
     public:

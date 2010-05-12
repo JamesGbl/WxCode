@@ -12,10 +12,11 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmTextStretch.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 BEGIN_EVENT_TABLE(mmTextStretch, wxWindow)
@@ -168,7 +169,7 @@ void mmTextStretch::OnMouse(wxMouseEvent &event)
         GetParent()->ScreenToClient(&mpx, &mpy);
         if(mTopLeftWasPressed || mBottomRightWasPressed || mTopWasPressed || mBottomWasPressed || mLeftWasPressed || mRightWasPressed)
         {
-            int x, y, w, h;
+            int x = 0, y = 0, w = 0, h = 0;
             wxSize  ts = GetSize();
             wxPoint tp = GetPosition();
             if(mpx < 0)

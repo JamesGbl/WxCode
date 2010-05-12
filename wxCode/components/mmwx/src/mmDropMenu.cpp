@@ -11,10 +11,11 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmDropMenu.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug;
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 BEGIN_EVENT_TABLE(mmDropMenu, mmMultiButton)

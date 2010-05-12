@@ -1,10 +1,11 @@
+//! \file mmwxdef.h
 /////////////////////////////////////////////////////////////////////////////
-// Name:        mycomp.h
+// Name:        mmwxdef.h
 // Purpose:     shared build defines
-// Author:      Name Surname
-// Created:     someyear/somemonth/someday
-// RCS-ID:      $Id: mycompdef.h 505 2007-03-31 10:31:46Z frm $
-// Copyright:   (c) YEAR Name Surname
+// Author:      Gary Harris
+// Created:     2010/5/11
+// RCS-ID:      $Id: mmwxdef.h 505 2007-03-31 10:31:46Z frm $
+// Copyright:   (c) 2010 Gary Harris
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -16,8 +17,8 @@
 // The following symbols should be updated for each new component release
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
-#define wxMMWX_MAJOR          1
-#define wxMMWX_MINOR          1
+#define wxMMWX_MAJOR          2
+#define wxMMWX_MINOR           0
 #define wxMMWX_RELEASE      0
 
 // For non-Unix systems (i.e. when building without a configure script),
@@ -54,5 +55,6 @@
     #define WXDLLIMPEXP_DATA_MMWX(type)	    type
 #endif
 
-#endif // _WX_MYCOMP_DEFS_H_
+
+#endif // _WX_MMWX_DEFS_H_
 

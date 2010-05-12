@@ -22,16 +22,17 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmMultiButton.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 #include "../bitmaps/down_btn.xpm"
-static wxBitmap gDownBM(down_btn_xpm);								//!< The down arrow bitmap.
+wxBitmap gDownBM(down_btn_xpm);
 #include "../bitmaps/disable.xpm"
-static wxBitmap gDisableBM(wxDISABLE_BUTTON_BITMAP);		//!< The disabled bitmap.
+wxBitmap gDisableBM(wxDISABLE_BUTTON_BITMAP);
 
 BEGIN_EVENT_TABLE(mmMultiButton, wxWindow)
     EVT_PAINT(mmMultiButton::OnPaint)
@@ -47,7 +48,7 @@ END_EVENT_TABLE()
  * \return bool
  *
  */
-bool TileBitmap(const wxRect &rect, wxDC &dc, wxBitmap &bitmap)
+WXDLLIMPEXP_MMWX bool TileBitmap(const wxRect &rect, wxDC &dc, wxBitmap &bitmap)
 {
     int w = bitmap.GetWidth();
     int h = bitmap.GetHeight();
@@ -165,7 +166,7 @@ void mmMultiButton::FindAndSetSize()
         total_width  += w_extra;
         total_height += h_extra;
 #ifdef __MMDEBUG__
-//        *gDebug << wxT("w,h:") << total_width << wxT(",") << total_height << wxT("\n");
+        *gDebug << wxT("w,h:") << total_width << wxT(",") << total_height << wxT("\n");
 #endif
         SetSize(total_width, total_height);
         SetAutoLayout(TRUE);
@@ -183,7 +184,7 @@ void mmMultiButton::OnMouse(wxMouseEvent &event)
 // Update button state
 {
 #ifdef __MMDEBUG__
-//   *gDebug << wxT("mmMultiButton::OnMouse,type:") << event.GetEventType() << wxT("\n");
+   *gDebug << wxT("mmMultiButton::OnMouse,type:") << event.GetEventType() << wxT("\n");
 #endif
 
 	// Get the mouse position.

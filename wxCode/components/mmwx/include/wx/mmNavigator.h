@@ -24,6 +24,7 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include "mmMultiButton.h"
 
 // Navigator events
@@ -41,13 +42,17 @@ enum {
     mmID_NAV_NEXT2
 };
 
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) *gPrevDblBitmap;		//!< The double back arrow bitmap.
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) *gPrevBitmap;			//!< The back arrow bitmap.
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) *gNextBitmap;			//!< The forward arrow bitmap.
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) *gNextDblBitmap;	//!< The double forward arrow bitmap.
 /////////////////////////////////////////////////////////////////////////////
 // mmNavigator
 /////////////////////////////////////////////////////////////////////////////
 
 /*! \brief Navigation control.
  */
-class mmNavigator : public wxWindow
+class WXDLLIMPEXP_MMWX mmNavigator : public wxWindow
 //  A simple 'navigation' toolbar.
 {
     public:

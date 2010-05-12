@@ -12,10 +12,11 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmHyperText.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 BEGIN_EVENT_TABLE(mmHyperText, wxWindow)

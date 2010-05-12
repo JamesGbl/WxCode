@@ -24,9 +24,11 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
+
 /*! \brief A simple log-on dialogue.
  */
-class mmLogonDialog : public wxDialog
+class WXDLLIMPEXP_MMWX mmLogonDialog : public wxDialog
 {
     public:
         mmLogonDialog(wxWindow *parent,

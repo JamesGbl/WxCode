@@ -7,10 +7,10 @@
 
 /*! \mainpage mmwx
  *
- * \image html mmwx1-1.jpg "mmwx Test Application"
+ * \image html mmwx20.jpg "mmwx Test Application"
  * \author 	Gary Harris.
- * \version 	1.1 Beta
- * \date    	5 May, 2010
+ * \version 	2.0 Beta
+ * \date    	11 May, 2010
  *
  * \section intro Introduction
  * mmwx is a collection of controls and classes for wxWidgets. It was originally created by Arne Morken around 2000 but has been orphaned for a number of years and
@@ -51,9 +51,11 @@
  * \li Reorganised files into src/, include/, etc. to meet wxCode's standards.
  * \li Added doxygen docs.
  * \li Cleaned up a bunch of unused variables and unnecessary code.
+ * \li Added DLL compilation definitions and reorganised things to suit.
+ * \li Decided that the version number should be increased to 2.0 as the changes are becoming significant.
  *
  * \section notes Notes
- * \li Define __MMDEBUG__ if you want the debug window.
+ * \li Define __MMDEBUG__ in mmwxTest if you want the debug window.
  * \li The username and password for the logon box are:\n
  *	user:	<span class="keyword">mindmatters</span>\n
  *	pw:	<span class="keyword">mmwx</span>

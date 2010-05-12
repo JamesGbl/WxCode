@@ -24,6 +24,8 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
+
 //////////////////////////////////////////////////////////////////////////////
 
 #define mmTS_SIZE_TOP        			0x001
@@ -42,7 +44,7 @@
 
 /*! \brief A stretchable text control.
  */
-class mmTextStretch: public wxWindow
+class WXDLLIMPEXP_MMWX mmTextStretch: public wxWindow
 {
     public:
         mmTextStretch(wxWindow *parent,

@@ -31,11 +31,11 @@
 #include "wx/mmTextStretch.h"
 
 #ifdef __MMDEBUG__
-wxTextCtrl *gDebug = NULL; // For global debug output
+	wxTextCtrl *gDebug = NULL; // For global debug output
 #endif
 
 //wxString gVersion = APPVERSION;
-wxString gVersion = wxT("1.1");
+wxString gVersion = wxT("2.0");
 
 wxBitmap *gBMtest = NULL;
 

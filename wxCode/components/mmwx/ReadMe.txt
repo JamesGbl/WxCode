@@ -4,7 +4,7 @@ mmwx ReadMe
 
  Website: http://wxcode.sourceforge.net/components/mmwx
  Author: Arne Morken, Gary Harris
- Version: 1.1
+ Version: 2.0
  Description:
 
  The mmwx library - brief description
@@ -49,7 +49,7 @@ very simple anyway.
  ChangeLog
  -----------------
 
- Version: 1.1
+ Version: 2.0
 
 Updated for wxWidgets 2.8.10, April-May 2010.
 
@@ -66,6 +66,8 @@ Changes:
 -Reorganised files into src/, include/, etc. to meet wxCode's standards.
 -Added doxygen docs.
 -Cleaned up a bunch of unused variables and unnecessary code.
+-Added DLL compilation definitions and reorganised things to suit.
+-Decided that the version number should be increased to 2 as the changes are becoming significant.
 
 Notes:
 -Define __MMDEBUG__ if you want the debug window.
@@ -73,3 +75,5 @@ Notes:
 	user:	mindmatters
 	pw:	mmwx
 -The demo uses mmMultiButtons for the button navigator and the Logon button. wxButton works just as well and provides the modern UI look.
+-Since wxODBC has been removed from wxWidgets 2.9, mmDbase is considered deprecated and I have not tested it.
+-I have not been able to test mmMAPIMail due to the lack of a MAPI server. Feedback is requested.

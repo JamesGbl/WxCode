@@ -12,17 +12,18 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmMonthCtrl.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
-static wxColour mmPALE_RED(240, 200, 200);
-static wxColour mmPALE_GREY(230, 230, 230);
-static wxColour mmBRIGHT_ORANGE(255, 180, 120);
-static wxColour mmBRIGHT_BLUE(150, 170, 230);
-static wxBrush  mmBRIGHT_BLUE_BRUSH(mmBRIGHT_BLUE, wxSOLID);
+wxColour mmPALE_RED(240, 200, 200);
+wxColour mmPALE_GREY(230, 230, 230);
+wxColour mmBRIGHT_ORANGE(255, 180, 120);
+wxColour mmBRIGHT_BLUE(150, 170, 230);
+wxBrush  mmBRIGHT_BLUE_BRUSH(mmBRIGHT_BLUE, wxSOLID);
 
 #define mmID_MONTH_NAVIGATOR 4451
 

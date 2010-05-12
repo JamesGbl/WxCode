@@ -1,4 +1,4 @@
-//! \file mmMAPIMail,cpp
+//! \file mmMAPIMail.cpp
 //
 // Name     : mmMAPIMail
 // Purpose  : Send and receive email with MAPI.
@@ -12,6 +12,7 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmMAPIMail.h"
 
 /*! \brief Constructor.

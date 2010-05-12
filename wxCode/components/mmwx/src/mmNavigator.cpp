@@ -14,6 +14,7 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmNavigator.h"
 
 #include "../bitmaps/prev_dbl_btn.xpm"
@@ -22,13 +23,13 @@
 #include "../bitmaps/next_dbl_btn.xpm"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
-static wxBitmap *gPrevDblBitmap	= NULL;	//!< The double back arrow bitmap.
-static wxBitmap *gPrevBitmap		= NULL;	//!< The back arrow bitmap.
-static wxBitmap *gNextBitmap		= NULL;	//!< The forward arrow bitmap.
-static wxBitmap *gNextDblBitmap 	= NULL;	//!< The double forward arrow bitmap.
+wxBitmap *gPrevDblBitmap	= NULL;
+wxBitmap *gPrevBitmap			= NULL;
+wxBitmap *gNextBitmap			= NULL;
+wxBitmap *gNextDblBitmap 	= NULL;
 
 BEGIN_EVENT_TABLE(mmNavigator, wxWindow)
     EVT_BUTTON(mmID_NAV_PREV2, mmNavigator::OnButton)

@@ -35,15 +35,17 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
+
 // mmMultiButton styles (re-use wxFrame/wxDialog style flags)
 
 #define mmMB_FOCUS         					0x0400 		// Change bitmap on enter/leave.
 #define mmMB_SELECT        					0x0800 		// Change bitmap on select.
 #define mmMB_TOGGLE        					0x1000 		// Change bitmap on toggle.
-#define mmMB_DROPDOWN      			0x2000 		// Draw a drop-down arrow in separate box.
-#define mmMB_WHOLEDROPDOWN	0x4000		// Draw a drop-down arrow on the bitmap.
-#define mmMB_STATIC        					0x8000 		// Do not react on mouse events.
-#define mmMB_NO_AUTOSIZE   			0x0020 		// Button should use the given size, and not resize itself to fit bitmap/label.
+#define mmMB_DROPDOWN      				0x2000 		// Draw a drop-down arrow in separate box.
+#define mmMB_WHOLEDROPDOWN			0x4000			// Draw a drop-down arrow on the bitmap.
+#define mmMB_STATIC        						0x8000 		// Do not react on mouse events.
+#define mmMB_NO_AUTOSIZE   				0x0020 		// Button should use the given size, and not resize itself to fit bitmap/label.
 #define mmMB_AUTODRAW      				0x0010 		// Automatically manage drawing of bitmap, // label and border.
 
 // MultiButton events
@@ -54,11 +56,14 @@ const wxEventType mmEVT_TOGGLE           					= mmEVT_MULTIBUTTON_FIRST + 1;
 const wxEventType mmEVT_WHOLEDROP_TOGGLE 	= mmEVT_MULTIBUTTON_FIRST + 2;
 const wxEventType mmEVT_DROP_TOGGLE      			= mmEVT_MULTIBUTTON_FIRST + 3;
 
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) gDownBM;		//!< The down arrow bitmap.
+WXDLLIMPEXP_DATA_MMWX(extern wxBitmap) gDisableBM;	//!< The disabled bitmap.
+
 //////////////////////////////////////////////////////////////////////////////
 
 /*! \brief Multi-function button.
  */
-class mmMultiButton: public wxWindow
+class WXDLLIMPEXP_MMWX mmMultiButton: public wxWindow
 {
     public:
         mmMultiButton(wxWindow *parent,

@@ -10,7 +10,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = mmwx
-PROJECT_NUMBER         = 1.1
+PROJECT_NUMBER         = 2.0
 OUTPUT_DIRECTORY       =
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -106,6 +106,7 @@ INPUT                  = \
 	"../include\wx\mmNavigator.h" \
 	"../include\wx\mmTextStretch.h" \
 	"../include\wx\mmwx.h" \
+	"../include\wx\mmwxdef.h" \
 	"../include\wx\wx_pch.h" \
 	"../src\mmDbase.cpp" \
 	"../src\mmDropMenu.cpp" \

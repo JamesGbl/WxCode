@@ -22,8 +22,12 @@
 
 #include <windows.h>
 #include <mapi.h>
+#include <wx/mmwxdef.h>
 #include <wx/string.h>
 
+// WINDOWS ONLY.
+// Don't compile if using an OS other than Windows
+#ifdef __WXMSW__
 
 /*! \brief Error codes.
  */
@@ -41,7 +45,7 @@ enum MAPI_ERROR {
 
 /*! \brief MAPI mail class for Windows.
  */
-class mmMAPIMail
+class WXDLLIMPEXP_MMWX mmMAPIMail
 {
     public:
         mmMAPIMail();
@@ -64,6 +68,8 @@ class mmMAPIMail
         LHANDLE    		mSession; 	//!< Session handle.
         MAPI_ERROR 	mError;   		//!< Error code.
 }; // class mmMAPIMail
+
+#endif	// #ifdef __WXMSW__
 
 #endif
 

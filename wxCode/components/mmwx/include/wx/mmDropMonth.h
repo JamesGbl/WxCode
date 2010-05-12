@@ -24,6 +24,7 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include "mmDropWindow.h"
 #include "mmMonthCtrl.h"
 
@@ -31,7 +32,7 @@
 
 /*! \brief An mmMultiButton with drop-down calendar.
  */
-class mmDropMonth : public mmDropWindow
+class WXDLLIMPEXP_MMWX mmDropMonth : public mmDropWindow
 {
     public:
         mmDropMonth(wxWindow *parent,

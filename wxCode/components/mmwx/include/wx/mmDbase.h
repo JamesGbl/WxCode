@@ -25,13 +25,14 @@
 #include <wx/dbtable.h>
 #include <wx/list.h>
 #include <wx/datetime.h>
+#include <wx/mmwxdef.h>
 #define __SQL
 #include <odbcinst.h>
 
 
 /*! \brief Class for holding table column info.
  */
-class mmDbaseColumn
+class WXDLLIMPEXP_MMWX mmDbaseColumn
 {
     public:
         mmDbaseColumn(int type, int size);

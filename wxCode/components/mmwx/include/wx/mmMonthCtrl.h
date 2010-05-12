@@ -25,8 +25,9 @@
 #include "wx/wx.h"
 #endif
 
-#include "mmNavigator.h"
+#include <wx/mmwxdef.h>
 #include <wx/datetime.h>
+#include "mmNavigator.h"
 
 // mmMonthCtrl styles
 
@@ -49,11 +50,17 @@ const wxEventType mmEVT_MONTH_YEAR_CHANGED      = mmEVT_MONTHCTRL_FIRST + 3;
 const wxEventType mmEVT_MONTH_WEEKDAY_CLICKED   = mmEVT_MONTHCTRL_FIRST + 4;
 const wxEventType mmEVT_MONTH_DAY_DOUBLECLICKED = mmEVT_MONTHCTRL_FIRST + 5;
 
+WXDLLIMPEXP_DATA_MMWX(extern wxColour) mmPALE_RED;
+WXDLLIMPEXP_DATA_MMWX(extern wxColour) mmPALE_GREY;
+WXDLLIMPEXP_DATA_MMWX(extern wxColour) mmBRIGHT_ORANGE;
+WXDLLIMPEXP_DATA_MMWX(extern wxColour) mmBRIGHT_BLUE;
+WXDLLIMPEXP_DATA_MMWX(extern wxBrush)  mmBRIGHT_BLUE_BRUSH;
+
 /////////////////////////////////////////////////////////////////////////////
 
 /*! \brief A calendar control.
  */
-class mmMonthCtrl : public wxWindow
+class WXDLLIMPEXP_MMWX mmMonthCtrl : public wxWindow
 {
     public:
         mmMonthCtrl(wxWindow *parent,

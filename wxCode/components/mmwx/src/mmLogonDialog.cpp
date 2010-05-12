@@ -13,22 +13,22 @@
 
 #include <iostream>
 
+#include <wx/mmwxdef.h>
 #include "wx/mmMultiButton.h"
+#include "wx/mmLogonDialog.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug; // For global debug output
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*g) Debug;    //!< Global debug output window.
 #endif
-
-#include "wx/mmLogonDialog.h"
 
 BEGIN_EVENT_TABLE(mmLogonDialog, wxDialog)
     EVT_BUTTON(wxID_OK,    mmLogonDialog::OnOkBtn)
     EVT_BUTTON(wxID_CANCEL, mmLogonDialog::OnCancelBtn)
 END_EVENT_TABLE()
 
-wxString TITLE_TEXT    = _("Logon");					//!< The title text.
-wxString USERNAME_TEXT = _("Username: ");	//!< The user name.
-wxString PASSWORD_TEXT = _("Password: ");	//!< The password.
+WXDLLIMPEXP_DATA_MMWX(wxString) TITLE_TEXT    = _("Logon");					//!< The title text.
+WXDLLIMPEXP_DATA_MMWX(wxString) USERNAME_TEXT = _("Username: ");	//!< The user name.
+WXDLLIMPEXP_DATA_MMWX(wxString) PASSWORD_TEXT = _("Password: ");	//!< The password.
 
 /*! \brief Constructor.
  *

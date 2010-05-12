@@ -12,10 +12,11 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmDropMonth.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug;
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl *) gDebug;    //!< Global debug output window.
 #endif
 
 #define ID_MONTH_CTRL 8285

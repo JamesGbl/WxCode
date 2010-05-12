@@ -7,11 +7,12 @@
 // Licence  : wxWindows license.
 //
 
+#include <wx/mmwxdef.h>
 #include "wx/mmDbase.h"
 #include <wx/listimpl.cpp>
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug;
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 WX_DEFINE_LIST(mmDbaseRow)

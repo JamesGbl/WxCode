@@ -24,13 +24,14 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/mmwxdef.h>
 #include "mmMultiButton.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
 /*! \brief An mmMultiButton with drop-down menu.
  */
-class mmDropMenu : public mmMultiButton
+class WXDLLIMPEXP_MMWX mmDropMenu : public mmMultiButton
 {
         friend class mmChildHandler;
     public:

@@ -11,10 +11,11 @@
 // 	-See README.txt for changes.
 //========================================================
 
+#include <wx/mmwxdef.h>
 #include "wx/mmDropWindow.h"
 
 #ifdef __MMDEBUG__
-extern wxTextCtrl *gDebug;
+	WXDLLIMPEXP_DATA_MMWX(extern wxTextCtrl*) gDebug;    //!< Global debug output window.
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ extern wxTextCtrl *gDebug;
  * \param window 	wxWindow*	The parent window.
  *
  */
-bool MouseIsInside(wxWindow *window)
+WXDLLIMPEXP_MMWX bool MouseIsInside(wxWindow *window)
 {
     // Check to see if mouse button is inside or outside window
     if(!window)
