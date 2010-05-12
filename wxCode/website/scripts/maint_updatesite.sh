@@ -9,7 +9,7 @@
 trap 'exit 1' SIGINT
 trap 'exit 1' SIGQUIT
 
-export CVSROOT=:pserver:anonymous@wxcode.cvs:/cvsroot/wxcode
+#export CVSROOT=:pserver:anonymous@wxcode.cvs:/cvsroot/wxcode
 
 function restorepermissions
 {
@@ -28,12 +28,12 @@ function restorepermissions
 
 # little fix for a dummy error msg that otherwise occurs from time to time
 # (even if it's not clear to me why it does)
-chmod a+x /home/groups/w/wx/wxcode/htdocs/backup/CVS
+#chmod a+x /home/groups/w/wx/wxcode/htdocs/backup/CVS
 
 # update the global site
 echo "Updating wxCode website..."
-cd /home/groups/w/wx/wxcode
-cvs -q checkout -d htdocs wxCode/website
+cd /home/groups/w/wx/wxcode/htdocs
+svn -q update
 
 # if user called this with a non-empty argument, limit the
 # update to the main website only
