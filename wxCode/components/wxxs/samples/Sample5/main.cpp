@@ -105,7 +105,18 @@ int main( int argc, char ** argv )
 	{
 		SerializableObject *pObject = (SerializableObject*) node->GetData();
 		
-		wxPrintf( pObject->m_sTextData << wxT("\n") );
+		// get object's member in a standard way:
+		wxPrintf( wxT("1: ") + pObject->m_sTextData );
+		
+		// get object's member by using serializable properties (reference to data is returned):
+		wxPrintf ( wxT("\n2: ") + pObject->GetProperty( wxT("text") )->AsString() );
+		
+		// get object's member encapsulated by a wxVariant object (if data type is supported):
+		wxPrintf( wxT("\n3: ") + pObject->GetProperty( wxT("text") )->ToVariant().MakeString() );
+		// NOTE: value of ANY data type SUPPORTED by wxXmlSerializer can be converted to/created from
+		// its string representation via functions xsProperty::ToString() and xsProperty::FromString()
+		
+		wxPrintf( wxT("\n\n") );
 		
 		node = node->GetNext();
 	}
