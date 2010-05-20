@@ -370,6 +370,7 @@ void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
    info.SetWebSite(wxT("wxcode.sourceforge.net/showcomp.php?name=wxStEdit"));
    info.SetLicense(wxT("wxWindows"));
    info.AddDeveloper(wxT("John Labenski"));
+   info.AddDeveloper(wxT("Troels K"));
    info.AddDeveloper(wxT("Otto Wyss"));
    info.SetIcon(::wxArtProvider_Icon(pencil32_xpm));
    ::wxAboutBox(info, parent);
