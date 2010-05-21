@@ -73,8 +73,7 @@ wxLineShape::~wxLineShape()
     {
       m_labelObjects[i]->Select(false);
       m_labelObjects[i]->RemoveFromCanvas(m_canvas);
-      delete m_labelObjects[i];
-      m_labelObjects[i] = NULL;
+      wxDELETE(m_labelObjects[i]);
     }
   }
   ClearArrowsAtPosition(-1);
@@ -1649,8 +1648,7 @@ void wxLineShape::Select(bool select, wxDC* dc)
         m_labelObjects[i]->Select(false, dc);
         m_labelObjects[i]->Erase(*dc);
         m_labelObjects[i]->RemoveFromCanvas(m_canvas);
-        delete m_labelObjects[i];
-        m_labelObjects[i] = NULL;
+        wxDELETE(m_labelObjects[i]);
       }
     }
   }

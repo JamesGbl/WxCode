@@ -100,8 +100,7 @@ void OGLCleanUpConstraintTypes()
         delete ct;
         node = node->GetNext();
     }
-    delete wxOGLConstraintTypes;
-    wxOGLConstraintTypes = NULL;
+    wxDELETE(wxOGLConstraintTypes);
 }
 
 /*

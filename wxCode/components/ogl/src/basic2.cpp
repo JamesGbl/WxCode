@@ -81,8 +81,7 @@ void wxPolygonShape::ClearPoints()
       m_points->Erase(node);
       node = m_points->GetFirst();
     }
-    delete m_points;
-    m_points = NULL;
+    wxDELETE(m_points);
   }
   if (m_originalPoints)
   {
@@ -94,8 +93,7 @@ void wxPolygonShape::ClearPoints()
       m_originalPoints->Erase(node);
       node = m_originalPoints->GetFirst();
     }
-    delete m_originalPoints;
-    m_originalPoints = NULL;
+    wxDELETE(m_originalPoints);
   }
 }
 

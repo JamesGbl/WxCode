@@ -56,50 +56,14 @@ void wxOGLInitialize()
 
 void wxOGLCleanUp()
 {
-    if (oglBuffer)
-    {
-        delete[] oglBuffer;
-        oglBuffer = NULL;
-    }
-    oglBuffer = NULL;
-
-    if (g_oglBullseyeCursor)
-    {
-        delete g_oglBullseyeCursor;
-        g_oglBullseyeCursor = NULL;
-    }
-
-    if (g_oglNormalFont)
-    {
-        delete g_oglNormalFont;
-        g_oglNormalFont = NULL;
-    }
-    if (g_oglBlackPen)
-    {
-        delete g_oglBlackPen;
-        g_oglBlackPen = NULL;
-    }
-    if (g_oglWhiteBackgroundPen)
-    {
-        delete g_oglWhiteBackgroundPen;
-        g_oglWhiteBackgroundPen = NULL;
-    }
-    if (g_oglTransparentPen)
-    {
-        delete g_oglTransparentPen;
-        g_oglTransparentPen = NULL;
-    }
-    if (g_oglWhiteBackgroundBrush)
-    {
-        delete g_oglWhiteBackgroundBrush;
-        g_oglWhiteBackgroundBrush = NULL;
-    }
-    if (g_oglBlackForegroundPen)
-    {
-        delete g_oglBlackForegroundPen;
-        g_oglBlackForegroundPen = NULL;
-    }
-
+    wxDELETEA(oglBuffer);
+    wxDELETE(g_oglBullseyeCursor);
+    wxDELETE(g_oglNormalFont);
+    wxDELETE(g_oglBlackPen);
+    wxDELETE(g_oglWhiteBackgroundPen);
+    wxDELETE(g_oglTransparentPen);
+    wxDELETE(g_oglWhiteBackgroundBrush);
+    wxDELETE(g_oglBlackForegroundPen);
     OGLCleanUpConstraintTypes();
 }
 
