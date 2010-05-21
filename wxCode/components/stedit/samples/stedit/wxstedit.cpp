@@ -40,7 +40,7 @@
 #endif
 
 #if (wxVERSION_NUMBER >= 2900)
-#include "wx/stc/private.h" // stc2wx()
+#include "wx/stc/private.h" // TODO: use wxConvertMB2WX() instead of stc2wx()?
 #endif
 
 #include "wx/filename.h"
@@ -490,7 +490,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
                wxString::Format(_("Help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm)))
+            if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
             {
                 helpFrame->Centre();
                 helpFrame->Show(true);
@@ -506,7 +506,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
                wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(::stc2wx((const char*)readme_htm)))
+            if (htmlWin->SetPage(::stc2wx((const char*)readme_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
             {
                 helpFrame->Centre();
                 helpFrame->Show(true);
