@@ -140,7 +140,7 @@ void csFrame::OnCloseWindow(wxCloseEvent& event)
     GetSize(& x, & y);
     wxGetApp().m_mainFrameSize = wxSize(x, y);
 
-    wxDocMDIParentFrame::OnCloseWindow(event);
+    event.Skip();
 }
 
 void csFrame::OnSize(wxSizeEvent& event)
