@@ -144,8 +144,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditorPopupMenu(wxMenu *menu_) const
 
     if (!menu_ && menu && (menu->GetMenuItemCount() == 0))
     {
-        delete menu;
-        return NULL;
+        wxDELETE(menu);
     }
 
     return menu;

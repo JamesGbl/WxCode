@@ -336,8 +336,7 @@ bool wxSTEditorSplitter::DoSplit(wxSplitMode mode, int sashPosition)
         if (m_editorTwo->GetParent() != this)
         {
             wxFAIL_MSG(wxT("Incorrect parent window for wxSTEditor, should be wxSTEditorSplitter"));
-            delete m_editorTwo;
-            m_editorTwo = NULL;
+            wxDELETE(m_editorTwo);
             return false;
         }
 

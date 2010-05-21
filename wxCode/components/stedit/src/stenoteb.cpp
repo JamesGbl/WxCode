@@ -275,12 +275,11 @@ wxSTEditorSplitter* wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxWindow
     wxSTEditorSplitter *splitter = CreateSplitter(win_id);
     wxCHECK_MSG(splitter, NULL, wxT("Invalid splitter"));
     splitter->GetEditor()->NewFile(title);
-    if (InsertEditorSplitter(nPage, splitter, bSelect))
-        return splitter;
-    else
-        delete splitter;
-
-    return NULL;
+    if (!InsertEditorSplitter(nPage, splitter, bSelect))
+    {
+       wxDELETE(splitter);
+    }
+    return splitter;
 }
 
 bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* splitter,
