@@ -138,7 +138,6 @@ IMPLEMENT_CLASS(MyFrame, wxDocParentFrame)
 BEGIN_EVENT_TABLE(MyFrame, wxDocParentFrame)
     EVT_MENU(OGLEDIT_ABOUT, MyFrame::OnAbout)
     EVT_SIZE(MyFrame::OnSize)
-    EVT_CLOSE(MyFrame::OnCloseWindow)
 END_EVENT_TABLE()
 
 MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -148,6 +147,11 @@ MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
   canvas = NULL;
   palette = NULL;
   editMenu = NULL;
+}
+
+MyFrame::~MyFrame()
+{
+   ::wxOGLCleanUp();
 }
 
 void MyFrame::OnSize(wxSizeEvent& event)
@@ -169,15 +173,6 @@ void MyFrame::OnSize(wxSizeEvent& event)
     canvas->SetSize(canvasX, canvasY, canvasW, canvasH);
   }
   event.Skip();
-}
-
-void MyFrame::OnCloseWindow(wxCloseEvent& event)
-{
-  base::OnCloseWindow(event);
-  if (!event.GetVeto())
-  {
-     ::wxOGLCleanUp();
-  }
 }
 
 // Intercept menu commands

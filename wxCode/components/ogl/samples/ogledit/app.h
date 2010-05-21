@@ -52,13 +52,13 @@ public:
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
             long style = wxDEFAULT_FRAME_STYLE);
+    virtual ~MyFrame();
 
     MyCanvas *CreateCanvas(wxView*, wxFrame*parent);
+protected:
     void OnSize(wxSizeEvent&);
-    void OnCloseWindow(wxCloseEvent&);
     void OnAbout(wxCommandEvent&);
-
-DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 extern MyFrame *GetMainFrame(void);
