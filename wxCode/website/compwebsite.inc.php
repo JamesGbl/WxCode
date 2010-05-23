@@ -31,15 +31,15 @@ if (!isset($writesynopsis) or $writesynopsis == TRUE) {
 // < ? php writeScreenshotLink("myimage.png", "description", 200); ? >
 //
 // NOTE: remove the spaces between the <, ? symbols in the example line above
-function writeScreenshotLink($img, $desc, $width = 150, $class = "")
+/*function writeScreenshotLink($img, $desc, $width = 150, $class = "")
 {
     global $compname, $subdir;
     echo "<a href=\"../../screenshots/$subdir/$img\">";
     echo "<img class='$class' alt='$desc' " .
           "src='../../phpTumb/phpThumb.php?src=../screenshots/$subdir/$img&amp;w=$width'/>";
     echo "</a>";
-}
-function MYwriteScreenshotLink($img, $desc, $width = 150, $class = "")
+}*/
+function writeScreenshotLink($img, $desc, $width = 150, $class = "")
 {
     global $compname, $subdir;
 
