@@ -54,6 +54,11 @@
   <link rel="alternate" type="application/rss+xml" title="wxCode Forum News"
         href="http://wxforum.shadonet.com/rss.php?forums%5B%5D=30&amp;threadCount=50" />
 
+  <!-- These three lines are required for Slimbox2. -->
+  <link rel="stylesheet" href="<?php echo SITEBASEURL; ?>slimbox2.css" type="text/css" media="screen" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript" src="<?php echo SITEBASEURL; ?>slimbox2.js"></script>
+
   <title>wxCode - <?php echo "$pagetitle"; ?></title>
 </head>
 

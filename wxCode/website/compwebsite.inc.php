@@ -39,6 +39,15 @@ function writeScreenshotLink($img, $desc, $width = 150, $class = "")
           "src='../../phpTumb/phpThumb.php?src=../screenshots/$subdir/$img&amp;w=$width'/>";
     echo "</a>";
 }
+function MYwriteScreenshotLink($img, $desc, $width = 150, $class = "")
+{
+    global $compname, $subdir;
+
+    echo "<a href=\"../../screenshots/$subdir/$img\" rel=\"lightbox\" title=\"$img\">\n";
+    echo "  <img class='$class' border=\"0\" alt='$desc' src='../../phpTumb/phpThumb.php?src=../screenshots/$subdir/$img&amp;w=$width'/>\n";
+    echo "</a>\n";
+}
+
 
 // this is used by component websites to create syntax highlighted snippets of code:
 //
