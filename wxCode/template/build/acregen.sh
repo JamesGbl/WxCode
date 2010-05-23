@@ -26,6 +26,9 @@ aclocal_maj=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\(
 aclocal_min=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\2/'`
 aclocal_rel=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\3/'`
 
+# some versions of aclocal do not report a 3-fields version (x.y.z) but just an x.y-like:
+if [[ "$aclocal_rel" < "0" ]]; then aclocal_rel=0; fi
+
 aclocal_minimal_maj=1
 aclocal_minimal_min=9
 aclocal_minimal_rel=6
