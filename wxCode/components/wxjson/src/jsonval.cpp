@@ -64,8 +64,9 @@ static const wxChar* cowTraceMask = _T("traceCOW" );
 //! Constructor.
 wxJSONRefData::wxJSONRefData()
 {
-    m_lineNo = -1;
-    m_refCount  = 1;
+    m_lineNo   = -1;
+    m_refCount = 1;
+    m_memBuff  = 0;
 
 #if defined( WXJSON_USE_VALUE_COUNTER )
     m_progr = sm_progr;
@@ -75,9 +76,12 @@ wxJSONRefData::wxJSONRefData()
 #endif
 }
 
-// Dtor - does nothing
+// Dtor
 wxJSONRefData::~wxJSONRefData()
 {
+    if ( m_memBuff ) {
+        delete m_memBuff;
+    }
 }
 
 // Return the number of objects that reference this data.
@@ -142,9 +146,16 @@ The following is an example:
    wxJSONvalue aString( "this is a static string" );
    aString = 10;
  \endcode
- To know more about this topic see \ref json_internals_cstring
+ To know more about this topic see \ref json_internals_cstring.
 
-To know more about using this class see the \ref wxjson_tutorial.
+ Starting from version 1.3 the class can hold binary memory buffers
+ as an extension to the JSON syntax. Memory buffers are stored as
+ \b wxMemoryBuffer objects which contain binary data. The class
+ uses reference counting for the copy and assignment operation but
+ it is not a \e copy-on-write structure.
+ To know more about memory buffers read \ref wxjson_tutorial_memorybuff
+
+ \sa the \ref wxjson_tutorial.
 */
 
 
@@ -197,7 +208,7 @@ wxJSONValue::Init( wxJSONType type )
     data = new wxJSONRefData();
     wxJSON_ASSERT( data );
 
-    // in release builds w do not have ASSERT so we check 'data' before
+    // in release builds we do not have ASSERT so we check 'data' before
     // using it
     if ( data )  {
         data->m_type = type;
@@ -347,30 +358,43 @@ wxJSONValue::wxJSONValue( unsigned long int ul )
     }
 }
 
-//! \overload wxJSONValue()
+//! Construct a JSON value object of type \e memory \e buffer
+/*!
+ Note that this ctor makes a deep copy of \c buff so changes made
+ to the original buffer does not reflect to the buffer stored in this
+ JSON value.
+*/
 wxJSONValue::wxJSONValue( const wxMemoryBuffer& buff )
 {
     m_refData = 0;
     wxJSONRefData* data = Init( wxJSONTYPE_MEMORYBUFF );
     wxJSON_ASSERT( data );
     if ( data != 0 ) {
-        data->m_memBuff = buff; // refcounting is used for wxMemoryBuffer
+        data->m_memBuff = new wxMemoryBuffer();
+        const void* ptr = buff.GetData();
+        size_t buffLen  = buff.GetDataLen();
+        if ( buffLen > 0 )  {
+            data->m_memBuff->AppendData( ptr, buffLen );
+        }
     }
 }
 
-//! \overload wxJSONValue()
+//! Construct a JSON value object of type \e memory \e buffer
+/*!
+ Note that this ctor makes a deep copy of \c buff so changes made
+ to the original buffer does not reflect to the buffer stored in this
+ JSON value.
+*/
 wxJSONValue::wxJSONValue( const void* buff, size_t len )
 {
     m_refData = 0;
     wxJSONRefData* data = Init( wxJSONTYPE_MEMORYBUFF );
     wxJSON_ASSERT( data );
-    if ( data != 0 ) {
-        data->m_memBuff.AppendData( buff, len );
+    if ( data != 0 && len > 0 ) {
+        data->m_memBuff = new wxMemoryBuffer();
+        data->m_memBuff->AppendData( buff, len );
     }
 }
-
-
-
 
 //! Copy constructor
 /*!
@@ -907,8 +931,9 @@ wxJSONValue::AsDouble() const
  \li if the value is of type wxJSONTYPE_INVALID, the literal string \b &lt;invalid&gt;
     is returned. Note that this is NOT a valid JSON text.
  
- \li if the value is of type wxJSONTYPE_MEMORYBUFF the length of the binary buffer
-    is returned enclosed in brackets
+ \li if the value is of type wxJSONTYPE_MEMORYBUFF the string returned contains the
+    hexadecimal digits of the first 5 bytes preceeded by the length of the buffer,
+    enclosed in parenthesis
 
  If the value is an array or map, the returned string is the number of
  elements is the array/object enclosed in the JSON special characters that
@@ -971,7 +996,7 @@ wxJSONValue::AsString() const
             s.Printf( _T("{%d}"), size );
             break;
         case wxJSONTYPE_MEMORYBUFF :
-            s.Printf( _T("(%u)"), data->m_memBuff.GetDataLen() );
+            s = MemoryBuffToString( *(data->m_memBuff), 5 );
             break;
         default :
             s.assign( _T( "wxJSONValue::AsString(): Unknown JSON type \'"));
@@ -1262,6 +1287,9 @@ wxJSONValue::AsDouble( double& d ) const
  representation of this value is returned.
  This function, instead, returns TRUE only if this object contains a string, that is
  only if \c IsString() returns TRUE.
+ Also note that the string value is only stored in \c str if this object actually
+ contains a \b string or \b c-string value.
+ \c str will never contain a string representation of other types. 
 */
 bool
 wxJSONValue::AsString( wxString& str ) const
@@ -1285,16 +1313,18 @@ wxJSONValue::AsCString( wxChar* ch ) const
 
 //! Returns the value as a memory buffer
 /*!
- The function returns a copy of the memory buffer object stored in
+ The function returns the \e memory \e buffer object stored in
  this JSON object.
  Note that as of wxWidgets 2.8 and 2.9 the \b wxMemoryBuffer object uses
  reference counting when copying the actual buffer but the class itself
  is not a \e copy-on-write structure so changes made to one buffer affects
  all other copies made from it.
+ This means that if you make a change to the returned copy of the memory
+ buffer, the change affects also the memory buffer stored in this JSON value.
 
  If this JSON object does not contain a \e wxJSONTYPE_MEMORYBUFF type
  the function returns an empty memory buffer object.
- Also note that an empty memory buffer is also returned if this JSON
+ An empty memory buffer is also returned if this JSON
  type contains a valid, empty memory buffer.
  You have to use the IsMemoryBuff() function to known the type of the
  JSON value contained in this object, or the overloaded version of
@@ -1305,7 +1335,10 @@ wxJSONValue::AsMemoryBuff() const
 {
     wxJSONRefData* data = GetRefData();
     wxJSON_ASSERT( data );
-    wxMemoryBuffer buff = data->m_memBuff;
+    wxMemoryBuffer buff;
+    if ( data->m_memBuff ) {
+        buff = *(data->m_memBuff);
+    }
 
     wxJSON_ASSERT( IsMemoryBuff());
     return buff;
@@ -1313,6 +1346,24 @@ wxJSONValue::AsMemoryBuff() const
 
 
 //! Returns the value as a memory buffer
+/*!
+ The function returns the \e memory \e buffer object stored in
+ this JSON object.
+ Note that as of wxWidgets 2.8 and 2.9 the \b wxMemoryBuffer object uses
+ reference counting when copying the actual buffer but the class itself
+ is not a \e copy-on-write structure so changes made to one buffer affects
+ all other copies made from it.
+ This means that if you make a change to the returned copy of the memory
+ buffer, the change affects also the memory buffer stored in this JSON value.
+
+ If this JSON object does not contain a \e wxJSONTYPE_MEMORYBUFF type
+ the function returns an empty memory buffer object.
+ An empty memory buffer is also returned if this JSON
+ type contains a valid, empty memory buffer.
+ You have to use the IsMemoryBuff() function to known the type of the
+ JSON value contained in this object, or the overloaded version of
+ this function. 
+*/
 bool
 wxJSONValue::AsMemoryBuff( wxMemoryBuffer& buff ) const
 {
@@ -1638,7 +1689,7 @@ wxJSONValue::Cat( const wxMemoryBuffer& buff )
     if ( data->m_type == wxJSONTYPE_MEMORYBUFF )  {
         wxJSONRefData* data = COW();
         wxJSON_ASSERT( data );
-        data->m_memBuff.AppendData( buff.GetData(), buff.GetDataLen());
+        data->m_memBuff->AppendData( buff.GetData(), buff.GetDataLen());
         r = true;
     }
     return r;
@@ -1982,12 +2033,22 @@ wxJSONValue::operator = ( const wxString& str )
 }
 
 
-//! \overload operator = (int)
+//! Assigns to this object a memory buffer type
+/*!
+ As with the ctor, this function makes a deep copy of the
+ memory buffer \c buff so changes made to the original buffer
+ does not reflect to the memory buffer stored in this JSON value.
+*/
 wxJSONValue&
 wxJSONValue::operator = ( const wxMemoryBuffer& buff )
 {
     wxJSONRefData* data = SetType( wxJSONTYPE_MEMORYBUFF );
-    data->m_memBuff = buff;
+    data->m_memBuff = new wxMemoryBuffer();
+    const void* ptr = buff.GetData();
+    size_t      len = buff.GetDataLen();
+    if ( data->m_memBuff && len )  {
+        data->m_memBuff->AppendData( ptr, len );
+    }
     return *this;
 }
 
@@ -2444,7 +2505,7 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
             break;
         case wxJSONTYPE_MEMORYBUFF :
             // we cannot simply use the operator ==; we need a deep comparison
-            r1 = CompareMemoryBuff( data->m_memBuff, otherData->m_memBuff );
+            r1 = CompareMemoryBuff( *(data->m_memBuff), *(otherData->m_memBuff));
             if ( r1 != 0 )   {
                 r = false;
             }
@@ -2787,7 +2848,11 @@ wxJSONValue::SetType( wxJSONType type )
             data->m_valMap.clear();
             break;
         case wxJSONTYPE_MEMORYBUFF:
-            data->m_memBuff.SetDataLen( 0 );
+            // we first have to delete the actual memory buffer, if any
+            if ( data->m_memBuff )  {
+                delete data->m_memBuff;
+                data->m_memBuff = 0;
+            }
             break;
         default :
             // there is not need to clear primitive types
@@ -2939,7 +3004,18 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
     data->m_valString  = other->m_valString;
     data->m_valArray   = other->m_valArray;
     data->m_valMap     = other->m_valMap;
-    data->m_memBuff    = other->m_memBuff;
+
+    // if the data contains a wxMemoryBuffer object, then we have
+    // to make a deep copy of the buffer by allocating a new one because
+    // wxMemoryBuffer is not a copy-on-write structure
+    if ( other->m_memBuff ) {
+        data->m_memBuff = new wxMemoryBuffer();
+        const void* ptr = data->m_memBuff->GetData();
+        size_t len      = data->m_memBuff->GetDataLen();
+        if ( data->m_memBuff && len )   {
+            data->m_memBuff->AppendData( ptr, len );
+        }
+    }
 
     wxLogTrace( cowTraceMask, _T("(%s) CloneRefData() PROGR: other=%d data=%d"),
             __PRETTY_FUNCTION__, other->GetRefCount(), data->GetRefCount() );
@@ -3014,11 +3090,13 @@ wxJSONValue::AllocExclusive()
  The string starts with the actual lenght of the data enclosed in parenthesis.
  The string will contain \c len bytes if \c len is less than the length
  of the actual data in \c buff.
+ Note that the (len) printed in the output referes to the length of the buffer
+ which may be greater than the length that has to be printed.
 
  \b Example:
  This is an example of printing a memory buffer object that contains 10 bytes:
  \code
-   (10) 00 01 02 03 04 05 06 07 08 09
+   0x80974653 (10) 00 01 02 03 04 05 06 07 08 09
  \endcode
 */
 wxString
@@ -3026,7 +3104,7 @@ wxJSONValue::MemoryBuffToString( const wxMemoryBuffer& buff, size_t len )
 {
     size_t buffLen = buff.GetDataLen();
     void*  ptr = buff.GetData();
-    wxString s = MemoryBuffToString( ptr, MIN( buffLen, len ));
+    wxString s = MemoryBuffToString( ptr, MIN( buffLen, len ), buffLen );
     return s;
 }
 
@@ -3037,19 +3115,30 @@ wxJSONValue::MemoryBuffToString( const wxMemoryBuffer& buff, size_t len )
  binary memory buffer pointed to by \c buff for \c len bytes.
  The string is composed of two hexadecimal digits for every byte contained
  in the memory buffer; bytes are separated by a space character.
- The string starts with the lenght of the data enclosed in parenthesis.
+ The string starts with pointer to binary data followed by the lenght of the
+ data enclosed in parenthesis.
 
  \b Example:
  This is an example of printing ten bytes from a memory buffer:
  \code
-   (10) 00 01 02 03 04 05 06 07 08 09
+   0x80974653 (10) 00 01 02 03 04 05 06 07 08 09
  \endcode
+
+ @param buff the pointer to the memory buffer data
+ @len   the length of the data that has to be printed
+ @actualLen the real lenght of the memory buffer that has to be printed
+        just afetr the pointer; may be greater than \c len. If this parameter
+        is -1 then it is equal to \c len
 */
 wxString
-wxJSONValue::MemoryBuffToString( const void* buff, size_t len )
+wxJSONValue::MemoryBuffToString( const void* buff, size_t len, size_t actualLen )
 {
     wxString s;
-    s.Printf( _T("(%u) "), len );
+    size_t buffLen = actualLen;
+    if (buffLen == (size_t) -1 )    {
+        buffLen = len;
+    }
+    s.Printf( _T("%p (%u) "), buff, buffLen );
     unsigned char*  ptr = (unsigned char*) buff;
     for ( unsigned int i = 0; i < len; i++ ) {
         unsigned char c = *ptr;

@@ -14,7 +14,7 @@ LINKER = gcc
 
 #
 # wxJSON version
-VERSION = 1.1.0
+VERSION = 1.2.0
 
 #
 # Flags for the compiler. You always have to turn on full warnings.

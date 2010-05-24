@@ -263,7 +263,7 @@ public:
     // public static functions: mainly used for debugging
     static  wxString TypeToString( wxJSONType type );
     static  wxString MemoryBuffToString( const wxMemoryBuffer& buff, size_t len = -1 );
-    static  wxString MemoryBuffToString( const void* buff, size_t len );
+    static  wxString MemoryBuffToString( const void* buff, size_t len, size_t actualLen = -1 );
     static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const wxMemoryBuffer& buff2 );
     static  int      CompareMemoryBuff( const wxMemoryBuffer& buff1, const void* buff2 );
     static wxMemoryBuffer ArrayToMemoryBuff( const wxJSONValue& value );
@@ -288,6 +288,7 @@ protected:
 
     //! the referenced data
     wxJSONRefData*  m_refData;
+
 
     // used for debugging purposes: only in debug builds.
 #if defined( WXJSON_USE_VALUE_COUNTER )
@@ -396,9 +397,6 @@ public:
     //! The JSON object value.
     wxJSONInternalMap   m_valMap;
 
-    //! The memory buffer object
-    wxMemoryBuffer      m_memBuff;
-
     //! The position of the comment line(s), if any.
     /*!
     The data member contains one of the following constants:
@@ -421,6 +419,13 @@ public:
     */
     int               m_lineNo;
 
+    //! The pointer to the memory buffer object
+    /*!
+     Note that despite using reference counting, the \b wxMemoryBuffer is not a 
+     \e copy-on-write structure so the wxJSON library uses some tricks in order to
+     avoid the side effects of copying / assigning wxMemoryBuffer objects
+    */
+    wxMemoryBuffer* m_memBuff;
 
     // used for debugging purposes: only in debug builds.
 #if defined( WXJSON_USE_VALUE_COUNTER )
