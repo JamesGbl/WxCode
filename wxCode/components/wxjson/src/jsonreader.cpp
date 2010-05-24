@@ -1035,7 +1035,8 @@ wxJSONReader::SkipComment( wxInputStream& is )
             if ( ch == '*' )    {
                 ch = PeekChar( is );
                 if ( ch == '/' )    {
-                    ch = ReadChar( is );
+                    ch = ReadChar( is );  // read the '/' char
+                    ch = ReadChar( is );  // read the next char that will be returned
                     utf8Buff.AppendData( "*/", 2 );
                     break;
                 }
