@@ -1314,17 +1314,17 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
 
     // fix up the splitBefore/After by removing any extra whitespace
     wxString splitBefore = splitBefore_;
-    splitBefore.Replace(wxT(" "),  wxT(""), true);
-    splitBefore.Replace(wxT("\t"), wxT(""), true);
+    splitBefore.Replace(wxT(" "),  wxEmptyString, true);
+    splitBefore.Replace(wxT("\t"), wxEmptyString, true);
     splitBefore += wxT(" \t");
 
     wxString splitAfter = splitAfter_;
-    splitAfter.Replace(wxT(" "),  wxT(""), true);
-    splitAfter.Replace(wxT("\t"), wxT(""), true);
+    splitAfter.Replace(wxT(" "),  wxEmptyString, true);
+    splitAfter.Replace(wxT("\t"), wxEmptyString, true);
 
     wxString ignoreAfterChars = ignoreAfterChars_;
-    ignoreAfterChars.Replace(wxT(" "),  wxT(""), true);
-    ignoreAfterChars.Replace(wxT("\t"), wxT(""), true);
+    ignoreAfterChars.Replace(wxT(" "),  wxEmptyString, true);
+    ignoreAfterChars.Replace(wxT("\t"), wxEmptyString, true);
 
     // parse preserveChars '"" () []' and fill preserveStart with the first
     //   char to start preserving and fill preserveArray with the chars to
@@ -2935,7 +2935,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         }
         case ID_STE_PREF_INDENT_WIDTH :
         {
-            int val = wxGetNumberFromUser(_("Characters to indent"), wxT(""), _("Set indentation width"),
+            int val = wxGetNumberFromUser(_("Characters to indent"), wxEmptyString, _("Set indentation width"),
                                           GetIndent(),
                                           0, 255, this);
             if (val >= 0)
