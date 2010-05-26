@@ -197,7 +197,7 @@ wxSizer *wxSTEditorLangSizer( wxWindow *parent, bool call_fit, bool set_sizer )
     wxStaticText *item6 = new wxStaticText( parent, ID_TEXT, _("File patterns"), wxDefaultPosition, wxDefaultSize, 0 );
     item3->Add( item6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxTextCtrl *item7 = new wxTextCtrl( parent, ID_STEDLG_FILEPATTERN_TEXTCTRL, wxT(""), wxDefaultPosition, wxDefaultSize, 0 );
+    wxTextCtrl *item7 = new wxTextCtrl( parent, ID_STEDLG_FILEPATTERN_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     item7->SetToolTip( _("File extensions associated with this language (*.cpp;*.c;*.h)") );
     item3->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -424,7 +424,7 @@ wxSizer *wxSTEditorFindReplaceSizer( wxWindow *parent, bool call_fit, bool set_s
         _("Item9"), 
         _("Item0")
     };
-    wxComboBox *item5 = new wxComboBox( parent, ID_STEDLG_FIND_COMBO, wxT(""), wxDefaultPosition, wxSize(250,-1), 11, strs5, wxCB_DROPDOWN );
+    wxComboBox *item5 = new wxComboBox( parent, ID_STEDLG_FIND_COMBO, wxEmptyString, wxDefaultPosition, wxSize(250,-1), 11, strs5, wxCB_DROPDOWN );
     item3->Add( item5, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxBitmapButton *item6 = new wxBitmapButton( parent, ID_STEDLG_FIND_BITMAPBUTTON, wxSTEBitmapsFunc( 1 ), wxDefaultPosition, wxDefaultSize );
@@ -447,7 +447,7 @@ wxSizer *wxSTEditorFindReplaceSizer( wxWindow *parent, bool call_fit, bool set_s
         _("Item9"), 
         _("Item0")
     };
-    wxComboBox *item8 = new wxComboBox( parent, ID_STEDLG_REPLACE_COMBO, wxT(""), wxDefaultPosition, wxSize(250,-1), 11, strs8, wxCB_DROPDOWN );
+    wxComboBox *item8 = new wxComboBox( parent, ID_STEDLG_REPLACE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(250,-1), 11, strs8, wxCB_DROPDOWN );
     item3->Add( item8, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxBitmapButton *item9 = new wxBitmapButton( parent, ID_STEDLG_REPLACE_BITMAPBUTTON, wxSTEBitmapsFunc( 1 ), wxDefaultPosition, wxDefaultSize );
@@ -599,7 +599,7 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
         _("Item"), 
         _("Item")
     };
-    wxComboBox *item9 = new wxComboBox( parent, ID_STEDLG_INSERT_PREPEND_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 6, strs9, wxCB_DROPDOWN );
+    wxComboBox *item9 = new wxComboBox( parent, ID_STEDLG_INSERT_PREPEND_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 6, strs9, wxCB_DROPDOWN );
     item9->SetToolTip( _("Text to prepend") );
     item7->Add( item9, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -618,7 +618,7 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
         _("Item"), 
         _("Item")
     };
-    wxComboBox *item12 = new wxComboBox( parent, ID_STEDLG_INSERT_APPEND_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 6, strs12, wxCB_DROPDOWN );
+    wxComboBox *item12 = new wxComboBox( parent, ID_STEDLG_INSERT_APPEND_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 6, strs12, wxCB_DROPDOWN );
     item12->SetToolTip( _("Text to append") );
     item7->Add( item12, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -787,7 +787,7 @@ wxSizer *wxSTEditorPrintPrefsSizer( wxWindow *parent, bool call_fit, bool set_si
     wxStaticText *item8 = new wxStaticText( parent, ID_TEXT, _("Wrap lines"), wxDefaultPosition, wxDefaultSize, 0 );
     item3->Add( item8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxCheckBox *item9 = new wxCheckBox( parent, ID_STEDLG_PRINT_WRAPMODE_CHECKBOX, wxT(""), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox *item9 = new wxCheckBox( parent, ID_STEDLG_PRINT_WRAPMODE_CHECKBOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     item9->SetToolTip( _("Wrap long lines when printing, else cut them off") );
     item3->Add( item9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -1127,7 +1127,7 @@ wxSizer *wxSTEditorColumnizeSizer( wxWindow *parent, bool call_fit, bool set_siz
         _("Item9"), 
         _("Item0")
     };
-    wxComboBox *item3 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_BEFORE_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 11, strs3, wxCB_DROPDOWN );
+    wxComboBox *item3 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_BEFORE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 11, strs3, wxCB_DROPDOWN );
     item3->SetToolTip( _("Characters to split before, ex. '){}'") );
     item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -1153,7 +1153,7 @@ wxSizer *wxSTEditorColumnizeSizer( wxWindow *parent, bool call_fit, bool set_siz
         _("Item9"), 
         _("Item0")
     };
-    wxComboBox *item6 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_AFTER_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 11, strs6, wxCB_DROPDOWN );
+    wxComboBox *item6 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_AFTER_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 11, strs6, wxCB_DROPDOWN );
     item6->SetToolTip( _("Characters to split after, ex. '(,;'") );
     item1->Add( item6, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -1179,7 +1179,7 @@ wxSizer *wxSTEditorColumnizeSizer( wxWindow *parent, bool call_fit, bool set_siz
         _("Item9"), 
         _("Item0")
     };
-    wxComboBox *item9 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_PRESERVE_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 11, strs9, wxCB_DROPDOWN );
+    wxComboBox *item9 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_PRESERVE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 11, strs9, wxCB_DROPDOWN );
     item9->SetToolTip( _("Character pairs to preserve formatting between, ex. '\"\" ()'") );
     item1->Add( item9, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
@@ -1195,7 +1195,7 @@ wxSizer *wxSTEditorColumnizeSizer( wxWindow *parent, bool call_fit, bool set_siz
     {
         _("ComboItem")
     };
-    wxComboBox *item12 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_IGNORE_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 1, strs12, wxCB_DROPDOWN );
+    wxComboBox *item12 = new wxComboBox( parent, ID_STEDLG_COLUMNIZE_IGNORE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(100,-1), 1, strs12, wxCB_DROPDOWN );
     item1->Add( item12, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1264,7 +1264,7 @@ wxSizer *wxSTEditorExportSizer( wxWindow *parent, bool call_fit, bool set_sizer 
         _("Item"), 
         _("Item")
     };
-    wxComboBox *item5 = new wxComboBox( parent, ID_STEDLG_EXPORT_FILENAME_COMBO, wxT(""), wxDefaultPosition, wxDefaultSize, 6, strs5, wxCB_DROPDOWN );
+    wxComboBox *item5 = new wxComboBox( parent, ID_STEDLG_EXPORT_FILENAME_COMBO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 6, strs5, wxCB_DROPDOWN );
     item1->Add( item5, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxBitmapButton *item6 = new wxBitmapButton( parent, ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON, wxSTEBitmapsFunc( 0 ), wxDefaultPosition, wxDefaultSize );
@@ -1344,10 +1344,10 @@ wxSizer *wxSTEditorLangKeywordSizer( wxWindow *parent, bool call_fit, bool set_s
     wxStaticText *item7 = new wxStaticText( parent, ID_TEXT, _("Additional keywords"), wxDefaultPosition, wxDefaultSize, 0 );
     item5->Add( item7, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5 );
 
-    wxTextCtrl *item8 = new wxTextCtrl( parent, ID_STEDLG_LANG_KEYWORD_TEXTCTRL, wxT(""), wxDefaultPosition, wxSize(80,40), wxTE_MULTILINE|wxTE_READONLY );
+    wxTextCtrl *item8 = new wxTextCtrl( parent, ID_STEDLG_LANG_KEYWORD_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(80,40), wxTE_MULTILINE|wxTE_READONLY );
     item5->Add( item8, 0, wxGROW|wxALL, 5 );
 
-    wxTextCtrl *item9 = new wxTextCtrl( parent, ID_STEDLG_LANG_USERKEYWORD_TEXTCTRL, wxT(""), wxDefaultPosition, wxSize(80,40), wxTE_MULTILINE );
+    wxTextCtrl *item9 = new wxTextCtrl( parent, ID_STEDLG_LANG_USERKEYWORD_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(80,40), wxTE_MULTILINE );
     item5->Add( item9, 0, wxGROW|wxALL, 5 );
 
     item0->Add( item5, 1, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );

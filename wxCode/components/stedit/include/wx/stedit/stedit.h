@@ -346,7 +346,7 @@ public :
                    const wxString& splitBefore = wxT(")]{}"),
                    const wxString& splitAfter  = wxT(",;"),
                    const wxString& preserveChars = wxT("\""),
-                   const wxString& ignoreAfterChars = wxT(""));
+                   const wxString& ignoreAfterChars = wxEmptyString);
 
     // Show a dialog that allows the user to append, prepend, or insert text
     //  in the selected lines or the current line
