@@ -431,6 +431,7 @@ private:
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
 #define wxDialogIconSize wxSize(16,16)
+#define wxMenuIconSize   wxSize(16,16)
 
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {
