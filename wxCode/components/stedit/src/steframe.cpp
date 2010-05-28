@@ -195,6 +195,8 @@ static const AcceleratorArray& getaccelerator()
       array.Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPYPATH));
       array.Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_NUMPAD_ADD, ID_STE_COPYPATH));
 
+      array.Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F9, ID_STE_PREFERENCES));
+
       //array.Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
 
 #ifdef __UNIX__
