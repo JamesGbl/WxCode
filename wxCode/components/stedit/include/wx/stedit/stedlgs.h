@@ -368,7 +368,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 {
 public:
     wxSTEditorPropertiesDialog(wxSTEditor *editor,
-                               const wxString& title = wxT("Document Properties"),
+                               const wxString& title,
                                long style = wxDEFAULT_DIALOG_STYLE);
 
 private:
@@ -385,7 +385,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorWindowsDialog : public wxDialog
 {
 public:
     wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
-                            const wxString& title = wxT("Windows"),
+                            const wxString& title,
                             long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
 
     // -----------------------------------------------------------------------

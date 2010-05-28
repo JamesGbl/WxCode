@@ -2513,8 +2513,7 @@ void wxSTEditor::SetFileModificationTime(const wxDateTime &dt)
 
 void wxSTEditor::ShowPropertiesDialog()
 {
-    wxSTEditorPropertiesDialog dlg(this);
-    dlg.ShowModal();
+    wxSTEditorPropertiesDialog(this, wxGetStockLabelEx(wxID_PROPERTIES, wxSTOCK_PLAINTEXT)).ShowModal();
 }
 
 void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)

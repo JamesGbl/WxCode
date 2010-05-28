@@ -630,7 +630,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
     }
     else if (win_id == ID_STN_WINDOWS)
     {
-        wxSTEditorWindowsDialog(this);
+        wxSTEditorWindowsDialog(this, _("Windows"));
         return true;
     }
 
