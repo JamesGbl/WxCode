@@ -1455,6 +1455,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
     Centre();
     SetMinSize(GetSize());
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
     return true;
 }
 
@@ -1648,6 +1649,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
     UpdateListBox();
     UpdateButtons();
     Centre();
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
     ShowModal();
 }
 
@@ -1809,7 +1811,9 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     ((wxRadioButton*)FindWindow(sm_radioID))->SetValue(true);
 
     UpdateControls();
+
     Centre();
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()

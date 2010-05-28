@@ -14,7 +14,6 @@
 #include "wx/stedit/stemenum.h"
 #include "wx/stedit/stedit.h"
 #include "wxext.h"
-#include "../art/pencil16.xpm"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - a holding place for menu generating code
@@ -797,7 +796,7 @@ wxMenu *wxSTEditorMenuManager::CreateHelpMenu(wxMenu *menu_) const
     if (HasMenuOptionType(STE_MENU_FRAME) && HasMenuItemType(STE_MENU_HELP_MENU, STE_MENU_HELP_ABOUT))
     {
         wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
-        item->SetBitmap(wxBitmap(pencil16_xpm));
+        item->SetBitmap(wxSTEditorArtProvider::GetBitmap(wxART_STEDIT_APP, wxART_STEDIT));
         menu->Append(item);
     }
 
@@ -1155,6 +1154,8 @@ bool wxSTEditorMenuManager::DoSetTextItem(wxMenu *menu, wxMenuBar *menuBar,
 #include "wx/image.h"
 
 // Bitmaps used for the toolbar in the wxSTEditorFrame
+#include "../art/pencil16.xpm"
+#include "../art/pencil32.xpm"
 #include "../art/new.xpm"
 #include "../art/open.xpm"
 #include "../art/save.xpm"
@@ -1231,6 +1232,10 @@ wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
         bmp = wxArtProvider::GetBitmap(wxART_HELP_BOOK, wxART_OTHER, reqSize);
     else if (id == wxART_STEDIT_PREFDLG_LANGS)
         bmp = wxArtProvider::GetBitmap(wxART_HELP_SETTINGS, wxART_OTHER, reqSize);
+    else if (id == wxART_STEDIT_APP)
+    {
+       bmp = wxBitmap((reqSize_ == wxDefaultSize) ? pencil32_xpm : pencil16_xpm);
+    }
     else
     {
         bmp = wxSTEditorArtProvider_GetBitmap(id);

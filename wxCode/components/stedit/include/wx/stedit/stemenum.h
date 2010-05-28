@@ -397,6 +397,7 @@ private:
 
 #define wxART_STEDIT                wxART_MAKE_CLIENT_ID(wxART_STEDIT)
 
+#define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)
 #define wxART_STEDIT_NEW            wxART_MAKE_ART_ID(wxART_STEDIT_NEW)
 #define wxART_STEDIT_OPEN           wxART_MAKE_ART_ID(wxART_STEDIT_OPEN)
 #define wxART_STEDIT_SAVE           wxART_MAKE_ART_ID(wxART_STEDIT_SAVE)

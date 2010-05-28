@@ -15,9 +15,6 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 
-#include "../art/pencil16.xpm"
-#include "../art/pencil32.xpm"
-
 #include "wxext.h"
 
 //-----------------------------------------------------------------------------
@@ -52,14 +49,6 @@ void wxSTEditorFrame::Init()
     m_sideSplitterWin2 = NULL;
 }
 
-static wxIcon wxArtProvider_Icon(const char* const* xpm_data)
-{
-    wxBitmap bmp(xpm_data);
-    wxIcon icon;
-    icon.CopyFromBitmap(bmp);
-    return icon;
-}
-
 bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
                              const wxString& title,
                              const wxPoint& pos, const wxSize& size,
@@ -73,8 +62,8 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
 
     // Set the frame's icons
     wxIconBundle iconBundle;
-    iconBundle.AddIcon(::wxArtProvider_Icon(pencil16_xpm));
-    iconBundle.AddIcon(::wxArtProvider_Icon(pencil32_xpm));
+    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxSize(16,16)));
+    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxSize(32,32)));
     SetIcons(iconBundle);
 
     return true;
@@ -374,7 +363,7 @@ void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
    info.AddDeveloper(wxT("John Labenski"));
    info.AddDeveloper(wxT("Troels K"));
    info.AddDeveloper(wxT("Otto Wyss"));
-   info.SetIcon(::wxArtProvider_Icon(pencil32_xpm));
+   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT));
    ::wxAboutBox(info, parent);
 }
 

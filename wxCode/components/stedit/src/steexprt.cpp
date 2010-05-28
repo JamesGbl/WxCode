@@ -1977,6 +1977,7 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
     wxBitmapButton *bmpButton = (wxBitmapButton*)FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON);
     bmpButton->SetBitmapLabel(STE_ARTBMP(wxART_STEDIT_OPEN));
     Centre();
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
 }
 
 wxFileName wxSTEditorExportDialog::GetFileName() const
