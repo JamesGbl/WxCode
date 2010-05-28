@@ -399,10 +399,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\wx\stedit\wx24defs.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\wxext.h"
 				>
 			</File>
