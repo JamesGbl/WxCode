@@ -1453,7 +1453,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     panel->SetSizer(panelSizer);
     panelSizer->Fit(this);
 
-    Centre(wxBOTH);
+    Centre();
     return true;
 }
 
@@ -1610,8 +1610,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
         eolStr = wxT("none");
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
-
-    Centre(wxBOTH);
+    Centre();
 }
 
 //-----------------------------------------------------------------------------
@@ -1647,7 +1646,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
 
     UpdateListBox();
     UpdateButtons();
-    Centre(wxBOTH);
+    Centre();
     ShowModal();
 }
 
@@ -1809,8 +1808,7 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     ((wxRadioButton*)FindWindow(sm_radioID))->SetValue(true);
 
     UpdateControls();
-
-    Centre(wxBOTH);
+    Centre();
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()

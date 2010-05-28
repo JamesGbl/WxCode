@@ -3625,7 +3625,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
     rect.Deflate(20,20);
     frame->SetSize(rect);
 
-    frame->Centre(wxBOTH);
+    frame->Centre();
     frame->Initialize();
     frame->Show(true);
     return true;

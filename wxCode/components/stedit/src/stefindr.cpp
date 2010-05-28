@@ -876,9 +876,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
     {
         SetSize(wxMax(dialogSize.x, size.x), wxMax(dialogSize.y, size.y));
     }
-
-    Centre( wxBOTH );
-
+    Centre();
     return true;
 }
 

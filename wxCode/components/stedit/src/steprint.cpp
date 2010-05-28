@@ -395,8 +395,7 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
         SetPrintWrapMode(false);
         SetPrintLinenumbers(STE_PRINT_LINENUMBERS_DEFAULT);
     }
-
-    Centre(wxBOTH);
+    Centre();
 }
 
 void wxSTEditorPrintOptionsDialog::SetPrintMagnification( int val )
