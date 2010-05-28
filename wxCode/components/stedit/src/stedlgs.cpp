@@ -1454,6 +1454,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     panelSizer->Fit(this);
 
     Centre();
+    SetMinSize(GetSize());
     return true;
 }
 
