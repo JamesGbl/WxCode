@@ -1613,6 +1613,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
     Centre();
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
 }
 
 //-----------------------------------------------------------------------------
