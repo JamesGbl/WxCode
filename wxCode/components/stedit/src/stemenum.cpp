@@ -318,7 +318,9 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 
         menu->Append(ID_STN_CLOSE_PAGE, _("&Close current page"), _("Close current page"));
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
-            menu->Append(ID_STN_CLOSE_ALL, _("Cl&ose all pages..."), _("Close all pages"));
+        {
+            menu->Append(ID_STN_CLOSE_ALL, _("Close all pages..."), _("Close all pages"));
+        }
 
         add_sep = true;
     }
@@ -341,14 +343,14 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, ID_STE_EXPORT, _("Expor&t..."), _("Export to file"), wxITEM_NORMAL));
+        menu->Append(MenuItem(menu, ID_STE_EXPORT, _("E&xport..."), _("Export to file"), wxITEM_NORMAL));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_PROPERTY))
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(ID_STE_PROPERTIES, _("Document propert&ies..."), _("Show document properties dialog"));
+        menu->Append(ID_STE_PROPERTIES, wxGetStockLabelEx(wxID_PROPERTIES), _("Show document properties dialog"));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_FILE_MENU, STE_MENU_FILE_PRINT))
@@ -731,7 +733,7 @@ wxMenu *wxSTEditorMenuManager::CreatePreferenceMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(ID_STE_SAVE_PREFERENCES, _("Save preferences"), _("Save current preferences"));
+        menu->Append(MenuItem(menu, ID_STE_SAVE_PREFERENCES, _("Save preferences"), _("Save current preferences"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_SAVE)));
         add_sep = true;
     }
 
