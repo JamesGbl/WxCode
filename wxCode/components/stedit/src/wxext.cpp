@@ -192,13 +192,13 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
    wxString stockLabel;
    switch (id)
    {
-      STOCKITEM(wxID_ABOUT,     _("&About..."))   // with ellipsis
-      STOCKITEM(wxID_OPEN,      _("&Open..."))    // with ellipsis
-      STOCKITEM(wxID_SELECTALL, _("Select &All")) // with ampersand
-      STOCKITEM(wxID_FIND,      _("&Find..."))    // with ellipsis
-      STOCKITEM(wxID_REPLACE,   _("Rep&lace...")) // with ellipsis
+      STOCKITEM(wxID_ABOUT,     _("&About..."))   // + ellipsis
+      STOCKITEM(wxID_OPEN,      _("&Open..."))    // + ellipsis
+      STOCKITEM(wxID_SELECTALL, _("Select &All")) // + ampersand
+      STOCKITEM(wxID_FIND,      _("&Find..."))    // + ellipsis
+      STOCKITEM(wxID_REPLACE,   _("Rep&lace...")) // + ellipsis
       STOCKITEM(wxID_REVERT,    _("Re&vert..."))
-      STOCKITEM(wxID_EXIT,      _("E&xit")) // more common than "Quit"
+      STOCKITEM(wxID_PROPERTIES, _("Proper&ties...")) // + ellipsis
       default:
          break;
    }
