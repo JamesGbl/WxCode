@@ -13,6 +13,7 @@
 
 #include "wx/stedit/steprint.h"
 #include "wx/stedit/stedit.h"
+#include "wx/stedit/steart.h"
 #include "stedlgs_wdr.h"
 
 #include "wx/progdlg.h"   // wxProgressDialog

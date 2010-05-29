@@ -37,7 +37,7 @@
 #define STE_APPNAME           wxT("wxstedit")
 #define STE_APPDISPLAYNAME    wxT("wxStEdit")
 #define STE_VERSION_STRING    STE_APPDISPLAYNAME wxT(" 1.2.6")
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1363")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1364")
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -70,8 +70,6 @@
 //-----------------------------------------------------------------------------
 // Generic convenience defines
 //-----------------------------------------------------------------------------
-
-#define STE_ARTBMP(id) wxArtProvider::GetBitmap(id, wxART_STEDIT)
 
 #define STE_HASBIT(value, bit)      (((value) & (bit)) != 0)
 #define STE_SETBIT(value, bit, set) ((set) ? (value)|(bit) : (value)&(~(bit)))

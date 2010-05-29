@@ -928,6 +928,10 @@ SOURCE=..\src\stestyls.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\steart.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\wxext.cpp
 # End Source File
 # End Group

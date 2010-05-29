@@ -339,6 +339,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\wx\stedit\steart.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\wx\stedit\stedefs.h"
 				>
 			</File>
@@ -445,6 +449,10 @@
 						PrecompiledHeaderThrough="precomp.h"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\steart.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\src\stedit.cpp"

@@ -155,6 +155,7 @@
 		</Unit>
 		<Unit filename="..\src\wxext.cpp" />
 		<Unit filename="..\src\stedit.cpp" />
+		<Unit filename="..\src\steart.cpp" />
 		<Unit filename="..\src\stedlgs.cpp" />
 		<Unit filename="..\src\stedlgs_wdr.cpp" />
 		<Unit filename="..\src\steexprt.cpp" />

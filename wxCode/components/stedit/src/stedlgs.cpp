@@ -12,6 +12,7 @@
 
 #include "wx/stedit/stedlgs.h"
 #include "wx/stedit/steexprt.h"
+#include "wx/stedit/steart.h"
 #include "stedlgs_wdr.h"
 
 #include "wx/fontenum.h"   // font support
