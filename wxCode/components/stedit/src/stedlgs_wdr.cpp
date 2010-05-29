@@ -629,7 +629,7 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
 
     wxWindow *item14 = parent->FindWindow( ID_STEDLG_INSERT_EDITOR );
     wxASSERT( item14 );
-    item0->Add( item14, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item0->Add( item14, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxStaticLine *item15 = new wxStaticLine( parent, ID_LINE, wxDefaultPosition, wxSize(20,-1), wxLI_HORIZONTAL );
     item0->Add( item15, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
