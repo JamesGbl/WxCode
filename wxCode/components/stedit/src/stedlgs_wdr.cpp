@@ -394,7 +394,7 @@ wxSizer *wxSTEditorPropertiesSizer( wxWindow *parent, bool call_fit, bool set_si
 
 wxSizer *wxSTEditorFindReplaceSizer( wxWindow *parent, bool call_fit, bool set_sizer )
 {
-    wxFlexGridSizer *item0 = new wxFlexGridSizer( 1, 0, 0 );
+    wxFlexGridSizer *item0 = new wxFlexGridSizer( 2, 1, 0, 0 );
     item0->AddGrowableCol( 0 );
     item0->AddGrowableRow( 1 );
 
