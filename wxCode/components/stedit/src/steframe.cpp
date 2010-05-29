@@ -63,8 +63,8 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
 
     // Set the frame's icons
     wxIconBundle iconBundle;
-    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxSize(16,16)));
-    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxSize(32,32)));
+    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxSize(16,16)));
+    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxSize(32,32)));
     SetIcons(iconBundle);
 
     return true;
@@ -364,7 +364,7 @@ void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
    info.AddDeveloper(wxT("John Labenski"));
    info.AddDeveloper(wxT("Troels K"));
    info.AddDeveloper(wxT("Otto Wyss"));
-   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT));
+   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP));
    ::wxAboutBox(info, parent);
 }
 

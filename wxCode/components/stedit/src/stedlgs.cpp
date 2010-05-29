@@ -1456,7 +1456,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
     Centre();
     SetMinSize(GetSize());
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
     return true;
 }
 
@@ -1614,7 +1614,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
 }
 
 //-----------------------------------------------------------------------------
@@ -1651,7 +1651,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
     UpdateListBox();
     UpdateButtons();
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
     ShowModal();
 }
 
@@ -1815,7 +1815,7 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     UpdateControls();
 
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxART_STEDIT, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()

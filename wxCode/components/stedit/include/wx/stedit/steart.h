@@ -63,13 +63,29 @@
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {
 public:
-    wxSTEditorArtProvider() {}
+    wxSTEditorArtProvider() : wxArtProvider() {}
 
     virtual wxBitmap CreateBitmap(const wxArtID& id,
                                   const wxArtClient& client,
                                   const wxSize& size);
+
+    static wxBitmap GetBitmap(const wxArtID& id,
+                              const wxSize& size = wxDefaultSize)
+    {
+       return wxArtProvider::GetBitmap(id, wxART_STEDIT, size);
+    }
+
+    static wxIcon GetIcon(const wxArtID& id,
+                          const wxSize& size = wxDefaultSize)
+    {
+       return wxArtProvider::GetIcon(id, wxART_STEDIT, size);
+    }
+    static wxIcon GetDefaultDialogIcon()
+    {
+       return GetIcon(wxART_STEDIT_APP, wxDialogIconSize);
+    }
 };
 
-#define STE_ARTBMP(id) wxArtProvider::GetBitmap(id, wxART_STEDIT)
+#define STE_ARTBMP(id) wxSTEditorArtProvider::GetBitmap(id)
 
 #endif  // _STEART_H_

@@ -878,7 +878,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
         SetSize(wxMax(dialogSize.x, size.x), wxMax(dialogSize.y, size.y));
     }
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_FIND, wxART_STEDIT, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_FIND, wxDialogIconSize));
     return true;
 }
 
