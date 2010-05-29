@@ -845,7 +845,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
 {
     if (!wxDialog::Create(parent, ID_STE_FINDREPLACE_DIALOG, title,
                            wxDefaultPosition, wxDefaultSize,
-                           wxDEFAULT_DIALOG_STYLE | wxFRAME_FLOAT_ON_PARENT | wxRESIZE_BORDER | style,
+                           wxDEFAULT_DIALOG_STYLE_RESIZE | wxFRAME_FLOAT_ON_PARENT | style,
                            name))
                            //wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxFRAME_FLOAT_ON_PARENT | style,
     {

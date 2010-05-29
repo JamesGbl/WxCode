@@ -2892,8 +2892,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                                   GetLanguageId(),
                                                   this);
 
-                wxSTEditorPrefDialog prefDialog(editorData, this, wxID_ANY,
-                                                wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+                wxSTEditorPrefDialog prefDialog(editorData, this, wxID_ANY);
 
                 prefDialog.ShowModal();
             }

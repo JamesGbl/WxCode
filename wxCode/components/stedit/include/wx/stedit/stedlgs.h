@@ -24,6 +24,10 @@ class WXDLLIMPEXP_FWD_CORE wxImageList;
 
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefDialog;
 
+#ifndef wxDEFAULT_DIALOG_STYLE_RESIZE
+#define wxDEFAULT_DIALOG_STYLE_RESIZE (wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+#endif
+
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData - data shared by multiple pages shown at once
 //
@@ -319,7 +323,7 @@ public:
     wxSTEditorPrefDialog() : wxDialog() { Init(); }
     wxSTEditorPrefDialog( const wxSTEditorPrefPageData& editorPrefData,
                           wxWindow *parent, wxWindowID win_id,
-                          long style = wxDEFAULT_DIALOG_STYLE,
+                          long style = wxDEFAULT_DIALOG_STYLE_RESIZE,
                           const wxString& name = wxT("wxSTEditorPrefDialog")) : wxDialog()
     {
         Init();
@@ -327,7 +331,7 @@ public:
     }
     bool Create( const wxSTEditorPrefPageData& editorPrefData,
                  wxWindow *parent, wxWindowID win_id = wxID_ANY,
-                 long style = wxDEFAULT_DIALOG_STYLE,
+                 long style = wxDEFAULT_DIALOG_STYLE_RESIZE,
                  const wxString& name = wxT("wxSTEditorPrefDialog"));
 
     virtual ~wxSTEditorPrefDialog();
@@ -369,7 +373,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 public:
     wxSTEditorPropertiesDialog(wxSTEditor *editor,
                                const wxString& title,
-                               long style = wxDEFAULT_DIALOG_STYLE);
+                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
 private:
     DECLARE_ABSTRACT_CLASS(wxSTEditorPropertiesDialog);
@@ -386,7 +390,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorWindowsDialog : public wxDialog
 public:
     wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
                             const wxString& title,
-                            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+                            long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     // -----------------------------------------------------------------------
     // implementation
@@ -423,7 +427,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog: public wxDialog
 {
 public:
     wxSTEditorInsertTextDialog(wxWindow* parent,
-                               long style = wxDEFAULT_DIALOG_STYLE);
+                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     virtual ~wxSTEditorInsertTextDialog();
 
@@ -487,8 +491,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorColumnizeDialog : public wxDialog
 {
 public:
     wxSTEditorColumnizeDialog(wxWindow* parent,
-                              long style = wxDEFAULT_DIALOG_STYLE|
-                                           wxRESIZE_BORDER|wxMAXIMIZE_BOX);
+                              long style = wxDEFAULT_DIALOG_STYLE_RESIZE|wxMAXIMIZE_BOX);
 
     // Set the text to display to the user to be formatted
     void SetText(const wxString& text);

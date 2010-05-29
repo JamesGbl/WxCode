@@ -440,7 +440,7 @@ void wxStEditApp::CreateShell()
 {
     wxDialog dialog(m_frame, wxID_ANY, wxT("wxSTEditorShell"),
                     wxDefaultPosition, wxDefaultSize,
-                    wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+                    wxDEFAULT_DIALOG_STYLE_RESIZE);
     wxSTEditorShell* shell = new wxSTEditorShell(&dialog, wxID_ANY);
     // Set the styles and langs to those of the frame (not necessary, but nice)
     // The prefs aren't shared since we want to control the look and feel.

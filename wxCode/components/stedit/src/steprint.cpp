@@ -367,7 +367,7 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPrintOptionsDialog, wxDialog);
 wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
                              :wxDialog(parent, wxID_ANY, _("Printout options"),
                                        wxDefaultPosition, wxDefaultSize,
-                                       wxDEFAULT_DIALOG_STYLE)
+                                       wxDEFAULT_DIALOG_STYLE_RESIZE)
 {
     wxSizer *sizer = wxSTEditorPrintPrefsSizer(this, true, true);
 

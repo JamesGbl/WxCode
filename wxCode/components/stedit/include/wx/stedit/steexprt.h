@@ -80,7 +80,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorExportDialog : public wxDialog
 {
 public:
     wxSTEditorExportDialog(wxWindow* parent,
-                           long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+                           long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     wxFileName GetFileName() const;
     void SetFileName(const wxFileName&);
