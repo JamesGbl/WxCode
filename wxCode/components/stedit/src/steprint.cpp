@@ -401,38 +401,39 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
 
 void wxSTEditorPrintOptionsDialog::SetPrintMagnification( int val )
 {
-    ((wxSpinCtrl*)FindWindow(ID_STEDLG_PRINT_MAGNIFICATION_SPINCTRL))->SetValue(val);
+    wxStaticCast(FindWindow(ID_STEDLG_PRINT_MAGNIFICATION_SPINCTRL), wxSpinCtrl)->SetValue(val);
 }
+
 void wxSTEditorPrintOptionsDialog::SetPrintColourMode( int val )
 {
-    wxChoice* choice = (wxChoice*)FindWindow(ID_STEDLG_PRINT_COLOURMODE_CHOICE);
+    wxChoice* choice = wxStaticCast(FindWindow(ID_STEDLG_PRINT_COLOURMODE_CHOICE), wxChoice);
     wxCHECK_RET((val >= 0) && (val < (int)choice->GetCount()),
                 wxT("Invalid selection in wxSTEditorPrintOptionsDialog::SetPrintColourMode"));
     choice->SetSelection(val);
 }
 void wxSTEditorPrintOptionsDialog::SetPrintWrapMode( bool val )
 {
-    ((wxCheckBox*)FindWindow(ID_STEDLG_PRINT_WRAPMODE_CHECKBOX))->SetValue(val);
+    wxStaticCast(FindWindow(ID_STEDLG_PRINT_WRAPMODE_CHECKBOX), wxCheckBox)->SetValue(val);
 }
 void wxSTEditorPrintOptionsDialog::SetPrintLinenumbers( int show_linenumbers )
 {
     wxCHECK_RET((show_linenumbers >= 0) && (show_linenumbers <= 2), wxT("Invalid value"));
-    ((wxChoice*)FindWindow(ID_STEDLG_PRINT_LINENUMBERS_CHOICE))->SetSelection(show_linenumbers);
+    wxStaticCast(FindWindow(ID_STEDLG_PRINT_LINENUMBERS_CHOICE), wxChoice)->SetSelection(show_linenumbers);
 }
 
 int wxSTEditorPrintOptionsDialog::GetPrintMagnification()
 {
-    return ((wxSpinCtrl*)FindWindow(ID_STEDLG_PRINT_MAGNIFICATION_SPINCTRL))->GetValue();
+    return wxStaticCast(FindWindow(ID_STEDLG_PRINT_MAGNIFICATION_SPINCTRL), wxSpinCtrl)->GetValue();
 }
 int wxSTEditorPrintOptionsDialog::GetPrintColourMode()
 {
-    return ((wxChoice*)FindWindow(ID_STEDLG_PRINT_COLOURMODE_CHOICE))->GetSelection();
+    return wxStaticCast(FindWindow(ID_STEDLG_PRINT_COLOURMODE_CHOICE), wxChoice)->GetSelection();
 }
 bool wxSTEditorPrintOptionsDialog::GetPrintWrapMode()
 {
-    return ((wxCheckBox*)FindWindow(ID_STEDLG_PRINT_WRAPMODE_CHECKBOX))->GetValue();
+    return wxStaticCast(FindWindow(ID_STEDLG_PRINT_WRAPMODE_CHECKBOX), wxCheckBox)->GetValue();
 }
 int wxSTEditorPrintOptionsDialog::GetPrintLinenumbers()
 {
-    return ((wxChoice*)FindWindow(ID_STEDLG_PRINT_LINENUMBERS_CHOICE))->GetSelection();
+    return wxStaticCast(FindWindow(ID_STEDLG_PRINT_LINENUMBERS_CHOICE), wxChoice)->GetSelection();
 }

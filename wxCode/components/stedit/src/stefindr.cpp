@@ -243,26 +243,26 @@ bool wxSTEditorFindReplacePanel::Create(wxWindow *parent, wxWindowID winid,
 
     wxSizer* frSizer = wxSTEditorFindReplaceSizer(this, false, false);
 
-    m_findCombo    = (wxComboBox*)FindWindow(ID_STEDLG_FIND_COMBO);
-    m_replaceCombo = (wxComboBox*)FindWindow(ID_STEDLG_REPLACE_COMBO);
+    m_findCombo    = wxStaticCast(FindWindow(ID_STEDLG_FIND_COMBO   ), wxComboBox);
+    m_replaceCombo = wxStaticCast(FindWindow(ID_STEDLG_REPLACE_COMBO), wxComboBox);
 
-    m_wholewordCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_WHOLEWORD_CHECKBOX);
-    m_matchcaseCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_MATCHCASE_CHECKBOX);
-    m_backwardsCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_BACKWARDS_CHECKBOX);
-    m_wordstartCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_WORDSTART_CHECKBOX);
-    m_regexpFindCheckBox  = (wxCheckBox*)FindWindow(ID_STEDLG_REGEXP_FIND_CHECKBOX);
-    m_wraparoundCheckBox  = (wxCheckBox*)FindWindow(ID_STEDLG_WRAP_CHECKBOX);
-    m_findallCheckBox     = (wxCheckBox*)FindWindow(ID_STEDLG_FINDALL_CHECKBOX);
-    m_bookmarkallCheckBox = (wxCheckBox*)FindWindow(ID_STEDLG_BOOKMARKALL_CHECKBOX);
+    m_wholewordCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_WHOLEWORD_CHECKBOX  ), wxCheckBox);
+    m_matchcaseCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_MATCHCASE_CHECKBOX  ), wxCheckBox);
+    m_backwardsCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_BACKWARDS_CHECKBOX  ), wxCheckBox);
+    m_wordstartCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_WORDSTART_CHECKBOX  ), wxCheckBox);
+    m_regexpFindCheckBox  = wxStaticCast(FindWindow(ID_STEDLG_REGEXP_FIND_CHECKBOX), wxCheckBox);
+    m_wraparoundCheckBox  = wxStaticCast(FindWindow(ID_STEDLG_WRAP_CHECKBOX       ), wxCheckBox);
+    m_findallCheckBox     = wxStaticCast(FindWindow(ID_STEDLG_FINDALL_CHECKBOX    ), wxCheckBox);
+    m_bookmarkallCheckBox = wxStaticCast(FindWindow(ID_STEDLG_BOOKMARKALL_CHECKBOX), wxCheckBox);
 
-    m_scopewholeRadioButton   = (wxRadioButton*)FindWindow(ID_STEDLG_SCOPEWHOLE_RADIOBUTTON);
-    m_scopecursorRadioButton  = (wxRadioButton*)FindWindow(ID_STEDLG_SCOPECURSOR_RADIOBUTTON);
-    m_scopealldocsRadioButton = (wxRadioButton*)FindWindow(ID_STEDLG_SCOPEALLDOCS_RADIOBUTTON);
+    m_scopewholeRadioButton   = wxStaticCast(FindWindow(ID_STEDLG_SCOPEWHOLE_RADIOBUTTON  ), wxRadioButton);
+    m_scopecursorRadioButton  = wxStaticCast(FindWindow(ID_STEDLG_SCOPECURSOR_RADIOBUTTON ), wxRadioButton);
+    m_scopealldocsRadioButton = wxStaticCast(FindWindow(ID_STEDLG_SCOPEALLDOCS_RADIOBUTTON), wxRadioButton);
 
-    m_findButton        = (wxButton*)FindWindow(ID_STEDLG_FIND_BUTTON);
-    m_replaceButton     = (wxButton*)FindWindow(ID_STEDLG_REPLACE_BUTTON);
-    m_replaceFindButton = (wxButton*)FindWindow(ID_STEDLG_REPLACEFIND_BUTTON);
-    m_replaceAllButton  = (wxButton*)FindWindow(ID_STEDLG_REPLACEALL_BUTTON);
+    m_findButton        = wxStaticCast(FindWindow(ID_STEDLG_FIND_BUTTON       ), wxButton);
+    m_replaceButton     = wxStaticCast(FindWindow(ID_STEDLG_REPLACE_BUTTON    ), wxButton);
+    m_replaceFindButton = wxStaticCast(FindWindow(ID_STEDLG_REPLACEFIND_BUTTON), wxButton);
+    m_replaceAllButton  = wxStaticCast(FindWindow(ID_STEDLG_REPLACEALL_BUTTON ), wxButton);
 
     m_insertMenu = wxSTEditorMenuManager::CreateInsertCharsMenu(NULL,
         STE_MENU_INSERTCHARS_CHARS|STE_MENU_INSERTCHARS_REGEXP);

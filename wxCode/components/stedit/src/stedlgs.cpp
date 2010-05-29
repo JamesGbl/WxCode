@@ -393,7 +393,7 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
 
     wxSTEditorStyleSizer( this, true, true );
 
-    m_styleNotebook = (wxNotebook *)FindWindow(ID_STEDLG_STYLE_NOTEBOOK);
+    m_styleNotebook = wxStaticCast(FindWindow(ID_STEDLG_STYLE_NOTEBOOK), wxNotebook);
     m_colourEditor  = new wxSTEditor(m_styleNotebook, ID_STEDLG_STYLE_COLOUR_EDITOR);
     m_styleEditor   = new wxSTEditor(m_styleNotebook, ID_STEDLG_STYLE_STYLE_EDITOR);
     m_helpEditor    = new wxSTEditor(m_styleNotebook, wxID_ANY);
@@ -415,21 +415,21 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
     m_colour_editor_marker_handle = m_colourEditor->MarkerAdd(0, 0);
     m_style_editor_marker_handle  = m_styleEditor->MarkerAdd(0, 0);
 
-    m_langChoice        = (wxChoice  *)FindWindow(ID_STEDLG_STYLELANG_CHOICE);
-    m_fontCheckBox      = (wxCheckBox*)FindWindow(ID_STEDLG_FONT_CHECKBOX);
-    m_fontButton        = (wxButton  *)FindWindow(ID_STEDLG_FONT_BUTTON);
-    m_fontChoice        = (wxChoice  *)FindWindow(ID_STEDLG_FONT_CHOICE);
-    m_fontSizeCheckBox  = (wxCheckBox*)FindWindow(ID_STEDLG_FONTSIZE_CHECKBOX);
-    m_fontSizeSpin      = (wxSpinCtrl*)FindWindow(ID_STEDLG_FONTSIZE_SPINCTRL);
-    m_attribCheckBox    = (wxCheckBox*)FindWindow(ID_STEDLG_ATTRIBUTES_CHECKBOX);
-    m_boldCheckBox      = (wxCheckBox*)FindWindow(ID_STEDLG_BOLD_CHECKBOX);
-    m_italicsCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_ITALICS_CHECKBOX);
-    m_underlineCheckBox = (wxCheckBox*)FindWindow(ID_STEDLG_UNDERLINE_CHECKBOX);
-    m_eolFillCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_EOLFILL_CHECKBOX);
-    m_fontForeCheckBox  = (wxCheckBox*)FindWindow(ID_STEDLG_FONTFORE_CHECKBOX);
-    m_fontForeButton    = (wxButton  *)FindWindow(ID_STEDLG_FONTFORE_BUTTON);
-    m_fontBackCheckBox  = (wxCheckBox*)FindWindow(ID_STEDLG_FONTBACK_CHECKBOX);
-    m_fontBackButton    = (wxButton  *)FindWindow(ID_STEDLG_FONTBACK_BUTTON);
+    m_langChoice        = wxStaticCast(FindWindow(ID_STEDLG_STYLELANG_CHOICE   ), wxChoice  );
+    m_fontCheckBox      = wxStaticCast(FindWindow(ID_STEDLG_FONT_CHECKBOX      ), wxCheckBox);
+    m_fontButton        = wxStaticCast(FindWindow(ID_STEDLG_FONT_BUTTON        ), wxButton  );
+    m_fontChoice        = wxStaticCast(FindWindow(ID_STEDLG_FONT_CHOICE        ), wxChoice  );
+    m_fontSizeCheckBox  = wxStaticCast(FindWindow(ID_STEDLG_FONTSIZE_CHECKBOX  ), wxCheckBox);
+    m_fontSizeSpin      = wxStaticCast(FindWindow(ID_STEDLG_FONTSIZE_SPINCTRL  ), wxSpinCtrl);
+    m_attribCheckBox    = wxStaticCast(FindWindow(ID_STEDLG_ATTRIBUTES_CHECKBOX), wxCheckBox);
+    m_boldCheckBox      = wxStaticCast(FindWindow(ID_STEDLG_BOLD_CHECKBOX      ), wxCheckBox);
+    m_italicsCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_ITALICS_CHECKBOX   ), wxCheckBox);
+    m_underlineCheckBox = wxStaticCast(FindWindow(ID_STEDLG_UNDERLINE_CHECKBOX ), wxCheckBox);
+    m_eolFillCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_EOLFILL_CHECKBOX   ), wxCheckBox);
+    m_fontForeCheckBox  = wxStaticCast(FindWindow(ID_STEDLG_FONTFORE_CHECKBOX  ), wxCheckBox);
+    m_fontForeButton    = wxStaticCast(FindWindow(ID_STEDLG_FONTFORE_BUTTON    ), wxButton  );
+    m_fontBackCheckBox  = wxStaticCast(FindWindow(ID_STEDLG_FONTBACK_CHECKBOX  ), wxCheckBox);
+    m_fontBackButton    = wxStaticCast(FindWindow(ID_STEDLG_FONTBACK_BUTTON    ), wxButton  );
 
     m_langChoice->Clear();
     if (GetPrefData().GetLangs().IsOk())
@@ -1015,9 +1015,9 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
 
     wxSTEditorLangSizer(this, true, true);
 
-    m_languageChoice      = (wxChoice*)FindWindow(ID_STEDLG_LANG_CHOICE);
-    m_filepatternTextCtrl = (wxTextCtrl*)FindWindow(ID_STEDLG_FILEPATTERN_TEXTCTRL);
-    m_notebook            = (wxNotebook*)FindWindow(ID_STEDLG_LANG_NOTEBOOK);
+    m_languageChoice      = wxStaticCast(FindWindow(ID_STEDLG_LANG_CHOICE),wxChoice);
+    m_filepatternTextCtrl = wxStaticCast(FindWindow(ID_STEDLG_FILEPATTERN_TEXTCTRL), wxTextCtrl);
+    m_notebook            = wxStaticCast(FindWindow(ID_STEDLG_LANG_NOTEBOOK), wxNotebook);
 
     // Create and add the style panel
     wxPanel *stylePanel = new wxPanel(m_notebook, wxID_ANY);
@@ -1040,7 +1040,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     m_notebook->AddPage(stylePanel, _("Styles"), true);
 
     // add the styles to the choice
-    m_styleChoice = (wxChoice*)FindWindow(ID_STEDLG_LANG_STYLE_CHOICE);
+    m_styleChoice = wxStaticCast(FindWindow(ID_STEDLG_LANG_STYLE_CHOICE), wxChoice);
     m_styleChoice->Clear();
     wxArrayInt styleArray = steStyles.GetStylesArray(false);
     count = styleArray.GetCount();
@@ -1058,9 +1058,9 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     wxSTEditorLangKeywordSizer(keywordPanel, true, true);
     m_notebook->AddPage(keywordPanel, _("Keywords"), false);
 
-    m_keywordsChoice       = (wxChoice*)FindWindow(ID_STEDLG_LANG_KEYWORD_CHOICE);
-    m_keywordsTextCtrl     = (wxTextCtrl*)FindWindow(ID_STEDLG_LANG_KEYWORD_TEXTCTRL);
-    m_userKeywordsTextCtrl = (wxTextCtrl*)FindWindow(ID_STEDLG_LANG_USERKEYWORD_TEXTCTRL);
+    m_keywordsChoice       = wxStaticCast(FindWindow(ID_STEDLG_LANG_KEYWORD_CHOICE      ), wxChoice  );
+    m_keywordsTextCtrl     = wxStaticCast(FindWindow(ID_STEDLG_LANG_KEYWORD_TEXTCTRL    ), wxTextCtrl);
+    m_userKeywordsTextCtrl = wxStaticCast(FindWindow(ID_STEDLG_LANG_USERKEYWORD_TEXTCTRL), wxTextCtrl);
 
     m_helpEditor = new wxSTEditor(m_notebook, wxID_ANY);
     m_helpEditor->SetWrapMode(wxSTC_WRAP_WORD);
@@ -1548,7 +1548,7 @@ void wxSTEditorPrefDialog::OnUpdateUIApply(wxUpdateUIEvent& event)
 //-----------------------------------------------------------------------------
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
-#define SET_STATTEXT(win_id, val) ((wxStaticText*)FindWindow(win_id))->SetLabel(val)
+#define SET_STATTEXT(win_id,val) wxStaticCast(FindWindow(win_id),wxStaticText)->SetLabel(val)
 
 wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
                                                        const wxString& title,
@@ -1560,7 +1560,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
 
     wxFileName fileName = edit->GetFileName();
 
-    wxTextCtrl *textCtrl = (wxTextCtrl*)FindWindow(ID_STEPROP_FILENAME_TEXTCTRL);
+    wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
     textCtrl->SetValue(fileName.GetFullPath());
 
     bool exists = fileName.FileExists();
@@ -1646,7 +1646,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
 
     wxSTEditorWindowsSizer(this, true, true);
 
-    m_listBox = (wxListBox*)FindWindow(ID_STEDLG_WINDOWS_LISTBOX);
+    m_listBox = wxStaticCast(FindWindow(ID_STEDLG_WINDOWS_LISTBOX), wxListBox);
 
     UpdateListBox();
     UpdateButtons();
@@ -1793,10 +1793,9 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
 
     wxSTEditorInsertTextSizer(this, true, true);
 
-    m_prependText  = (wxStaticText*)FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT);
-
-    m_prependCombo = (wxComboBox*)FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO);
-    m_appendCombo  = (wxComboBox*)FindWindow(ID_STEDLG_INSERT_APPEND_COMBO);
+    m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
+    m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
+    m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
     m_prependCombo->Clear();
     m_appendCombo->Clear();
 
@@ -1809,8 +1808,8 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     m_prependString = m_prependCombo->GetValue();
     m_appendString  = m_appendCombo->GetValue();
 
-    ((wxSpinCtrl*)FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL))->SetValue(m_col);
-    ((wxRadioButton*)FindWindow(sm_radioID))->SetValue(true);
+    wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
+    wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
 
     UpdateControls();
 
@@ -1993,7 +1992,7 @@ void wxSTEditorInsertTextDialog::UpdateControls()
 {
     m_prependString = m_prependCombo->GetValue();
     m_appendString  = m_appendCombo->GetValue();
-    m_col  = ((wxSpinCtrl*)FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL))->GetValue();
+    m_col  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->GetValue();
     m_type = RadioIdToType(GetSelectedRadioId());
 
     m_prependCombo->Enable((m_type == STE_INSERT_TEXT_PREPEND) ||
@@ -2008,7 +2007,8 @@ void wxSTEditorInsertTextDialog::UpdateControls()
         m_prependText->SetLabel(_("Prepend"));
 }
 
-#define GET_RADIO_VALUE(id) ((wxRadioButton*)FindWindow(id))->GetValue()
+#define GET_RADIO_VALUE(id) wxStaticCast(FindWindow(id),wxRadioButton)->GetValue()
+
 wxWindowID wxSTEditorInsertTextDialog::GetSelectedRadioId() const
 {
     if (GET_RADIO_VALUE(ID_STEDLG_INSERT_PREPEND_RADIOBUTTON))
@@ -2071,11 +2071,11 @@ wxSTEditorColumnizeDialog::wxSTEditorColumnizeDialog(wxWindow* parent,
                                         wxDefaultPosition, wxSize(400, 200));
     wxSTEditorColumnizeSizer(this, true, true);
 
-    m_splitBeforeCombo = (wxComboBox*)FindWindow(ID_STEDLG_COLUMNIZE_BEFORE_COMBO);
-    m_splitAfterCombo  = (wxComboBox*)FindWindow(ID_STEDLG_COLUMNIZE_AFTER_COMBO);
-    m_preserveCombo    = (wxComboBox*)FindWindow(ID_STEDLG_COLUMNIZE_PRESERVE_COMBO);
-    m_ignoreCombo      = (wxComboBox*)FindWindow(ID_STEDLG_COLUMNIZE_IGNORE_COMBO);
-    m_updateCheckBox   = (wxCheckBox*)FindWindow(ID_STEDLG_COLUMNIZE_CHECKBOX);
+    m_splitBeforeCombo = wxStaticCast(FindWindow(ID_STEDLG_COLUMNIZE_BEFORE_COMBO  ), wxComboBox);
+    m_splitAfterCombo  = wxStaticCast(FindWindow(ID_STEDLG_COLUMNIZE_AFTER_COMBO   ), wxComboBox);
+    m_preserveCombo    = wxStaticCast(FindWindow(ID_STEDLG_COLUMNIZE_PRESERVE_COMBO), wxComboBox);
+    m_ignoreCombo      = wxStaticCast(FindWindow(ID_STEDLG_COLUMNIZE_IGNORE_COMBO  ), wxComboBox);
+    m_updateCheckBox   = wxStaticCast(FindWindow(ID_STEDLG_COLUMNIZE_CHECKBOX      ), wxCheckBox);
 
     wxSTEInitComboBoxStrings(sm_splitBeforeArray, m_splitBeforeCombo);
     wxSTEInitComboBoxStrings(sm_splitAfterArray,  m_splitAfterCombo);

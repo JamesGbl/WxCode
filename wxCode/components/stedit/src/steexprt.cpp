@@ -1968,14 +1968,14 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
 
     wxSTEditorExportSizer(this, true, true);
 
-    m_fileFormatChoice = (wxChoice*)FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE);
-    m_fileNameCombo    = (wxComboBox*)FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO);
+    m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
+    m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
     m_fileNameCombo->Clear();
     wxSTEInitComboBoxStrings(sm_fileNames, m_fileNameCombo);
 
     m_fileFormatChoice->SetSelection(sm_file_format);
 
-    wxBitmapButton *bmpButton = (wxBitmapButton*)FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON);
+    wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
     bmpButton->SetBitmapLabel(STE_ARTBMP(wxART_STEDIT_OPEN));
     Centre();
     SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
@@ -2015,7 +2015,7 @@ void wxSTEditorExportDialog::OnChoice(wxCommandEvent& event)
     {
         case ID_STEDLG_EXPORT_FORMAT_CHOICE :
         {
-            if (((wxCheckBox*)FindWindow(ID_STEDLG_EXPORT_EXTENSION_CHECKBOX))->IsChecked())
+            if (wxStaticCast(FindWindow(ID_STEDLG_EXPORT_EXTENSION_CHECKBOX), wxCheckBox)->IsChecked())
             {
                 SetFileName(FileNameExtChange(GetFileName(), GetFileFormat()));
             }
