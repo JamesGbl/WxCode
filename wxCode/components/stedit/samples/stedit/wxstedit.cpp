@@ -307,6 +307,7 @@ bool wxStEditApp::OnInit()
     // create with the readonly menuitem, not set by default since I don't think
     //  it's generally useful, but good for debugging.
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
+    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
 
     // ------------------------------------------------------------------------
     m_frame = new wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
