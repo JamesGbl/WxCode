@@ -47,6 +47,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
+#include "wx/stedit/steart.h"
 #include "wxext.h"
 
 //-----------------------------------------------------------------------------
@@ -3617,6 +3618,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
     }
 
     wxPreviewFrame *frame = new wxPreviewFrameEx(preview, this, wxGetStockLabelEx(wxID_PREVIEW, wxSTOCK_PLAINTEXT));
+    frame->SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon()); // use the pencil even in embedded wxStEdit
 
     wxRect rect = wxGetClientDisplayRect();
     rect.Intersect(wxRect(rect.x, rect.y, 600, 700));
