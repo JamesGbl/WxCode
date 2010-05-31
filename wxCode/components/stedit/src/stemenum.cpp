@@ -292,6 +292,17 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
         tb->AddTool(ID_STE_BOOKMARK_LAST,     _("Last bookmark"),       STE_ARTBMP(wxART_GO_DOWN),      wxNullBitmap, wxITEM_NORMAL, _("Last bookmark"),   _("Goto last bookmark"));
         tb->AddTool(ID_STE_BOOKMARK_CLEAR,    _("Clear all bookmarks"), STE_ARTBMP(wxART_DEL_BOOKMARK), wxNullBitmap, wxITEM_NORMAL, _("Clear bookmarks"), _("Clear all bookmarks"));
     }
+    if (HasToolbarToolType(STE_TOOLBAR_PRINT))
+    {
+        if (tb->GetToolsCount()) tb->AddSeparator();
+        tb->AddTool(wxID_PRINT, wxGetStockLabel(wxID_PRINT), STE_ARTBMP(wxART_STEDIT_PRINT), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_PRINT, wxSTOCK_PLAINTEXT), wxGetStockHelpString(wxID_PRINT));
+        tb->AddTool(wxID_PREVIEW, wxGetStockLabel(wxID_PREVIEW), STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_PREVIEW, wxSTOCK_PLAINTEXT), wxGetStockHelpString(wxID_PREVIEW));
+    }
+    if (HasToolbarToolType(STE_TOOLBAR_EXIT))
+    {
+        if (tb->GetToolsCount()) tb->AddSeparator();
+        tb->AddTool(wxID_EXIT, wxGetStockLabel(wxID_EXIT), STE_ARTBMP(wxART_STEDIT_EXIT), wxNullBitmap, wxITEM_NORMAL, wxGetStockLabelEx(wxID_EXIT, wxSTOCK_PLAINTEXT), wxGetStockHelpString(wxID_EXIT));//, wxSTOCK_PLAINTEXT));
+    }
     tb->Realize();
 
     return tb->GetToolsCount() > tools_count;

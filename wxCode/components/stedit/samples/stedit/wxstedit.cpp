@@ -145,8 +145,8 @@ bool wxStEditApp::OnInit()
     // A sample of things that you might do to change the behavior
 
     // no bookmark items in menus or toolbar
-    //steOptions.GetMenuManager().SetMenuItemType(STE_MENU_BOOKMARK, false);
-    //steOptions.GetMenuManager().SetToolbarToolType(STE_MENU_BOOKMARK, false);
+    //steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_BOOKMARK, false);
+    //steOptions.GetMenuManager()->SetToolbarToolType(STE_MENU_BOOKMARK, false);
 
     // don't create a toolbar
     //steOptions.SetFrameOption(STF_TOOLBAR, false);
@@ -308,6 +308,8 @@ bool wxStEditApp::OnInit()
     //  it's generally useful, but good for debugging.
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
+    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
+    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
 
     // ------------------------------------------------------------------------
     m_frame = new wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
