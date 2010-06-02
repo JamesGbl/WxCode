@@ -40,8 +40,14 @@ function write_col_forsingletable($value, $link = "", $class = "fieldValue")
 // little helper function for query_table
 function write_helper_link($link, $linklabel, $writeseparator = TRUE, $docheck = TRUE)
 {
-    if ($docheck && !file_exists(SERVERBASEURL . substr($link, strlen(SITEBASEURL))))
-        echo "&rsaquo; $linklabel";
+    $file_to_check = SERVERBASEURL . substr($link, strlen(SITEBASEURL));
+    if ($docheck) {
+        //echo "\n<!-- checking for '$file_to_check' -->\n";
+        if (!file_exists($file_to_check))
+            echo "&rsaquo; $linklabel";
+        else
+            echo "<a href='$link'>&rsaquo; $linklabel</a>";
+    }
     else
         echo "<a href='$link'>&rsaquo; $linklabel</a>";
     if ($writeseparator) echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
@@ -353,10 +359,13 @@ class DbOutput {
             // this component has an enabled wiki ?
             // NB: believe it or not but PHP has a function which directly makes uppercase only the
             //     first character of a string !
-            if (file_exists("/tmp/persistent/wxcode/pmwiki.d/wiki.d/Components." . ucfirst($comp['name'])))
+            /*if (file_exists("/tmp/persistent/wxcode/pmwiki.d/wiki.d/Components." . ucfirst($comp['name'])))
                 write_helper_link($compurl['wiki'], "Wiki", FALSE, FALSE);
             else
                 echo "&rsaquo; Wiki";
+
+                 NOTE: wiki has been disabled because was mostly unused
+            */
 
             /*write_helper_link($compurl['showthisonly'], "Show only this box");
                      -- takes too much space - already linked with the component logo */
