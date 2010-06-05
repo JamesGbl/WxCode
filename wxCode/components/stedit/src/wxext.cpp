@@ -17,6 +17,9 @@
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(AcceleratorArray)
 
+const wxSize wxIconSize_System(wxSystemSettings::GetMetric(wxSYS_ICON_X     ), wxSystemSettings::GetMetric(wxSYS_ICON_Y     ));
+const wxSize wxIconSize_Small (wxSystemSettings::GetMetric(wxSYS_SMALLICON_X), wxSystemSettings::GetMetric(wxSYS_SMALLICON_Y));
+
 bool wxGetExeFolder(wxFileName* filename)
 {
    filename->Assign(wxTheApp->argv[0]);

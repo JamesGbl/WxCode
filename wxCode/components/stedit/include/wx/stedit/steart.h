@@ -57,13 +57,13 @@
 #define wxART_STEDIT_PREFDLG_STYLES     wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_STYLES)
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
-#define wxDialogIconSize wxSize(16,16)
-#define wxMenuIconSize   wxSize(16,16)
+#define wxDialogIconSize wxIconSize_Small
+#define wxMenuIconSize   wxIconSize_Small
 
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {
 public:
-    wxSTEditorArtProvider() : wxArtProvider() {}
+    wxSTEditorArtProvider();
 
     virtual wxBitmap CreateBitmap(const wxArtID& id,
                                   const wxArtClient& client,
@@ -80,10 +80,10 @@ public:
     {
        return wxArtProvider::GetIcon(id, wxART_STEDIT, size);
     }
-    static wxIcon GetDefaultDialogIcon()
-    {
-       return GetIcon(wxART_STEDIT_APP, wxDialogIconSize);
-    }
+    static wxIcon GetDefaultDialogIcon();
+protected:
+    wxBitmap m_app_large;
+    wxBitmap m_app_small;
 };
 
 #define STE_ARTBMP(id) wxSTEditorArtProvider::GetBitmap(id)

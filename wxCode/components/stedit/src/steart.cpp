@@ -13,6 +13,7 @@
 
 #include "wx/stedit/stedefs.h"
 #include "wx/stedit/steart.h"
+#include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorArtProvider
@@ -48,7 +49,7 @@
 #define ART(artid, xpmRc) \
     if (id == (artid)) return wxBitmap(xpmRc##_xpm);
 
-wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
+static wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
 {
     ART(wxART_STEDIT_NEW,            new)
     ART(wxART_STEDIT_OPEN,           open)
@@ -75,12 +76,16 @@ wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
     return wxNullBitmap;
 }
 
+wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider(), m_app_large(pencil32_xpm), m_app_small(pencil16_xpm)
+{
+}
+
 wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
                                              const wxArtClient& client,
                                              const wxSize& reqSize_)
 {
     wxBitmap bmp;
-    wxSize reqSize(32, 32);
+    wxSize reqSize = wxIconSize_System;
 
     if (id == wxART_STEDIT_PREFDLG_VIEW)
         bmp = wxArtProvider::GetBitmap(wxART_FIND, wxART_OTHER, reqSize);
@@ -100,7 +105,10 @@ wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
         bmp = wxArtProvider::GetBitmap(wxART_HELP_SETTINGS, wxART_OTHER, reqSize);
     else if (id == wxART_STEDIT_APP)
     {
-       bmp = wxBitmap((reqSize_ == wxDefaultSize) ? pencil32_xpm : pencil16_xpm);
+        // this logic has room for improvement
+        bmp = (reqSize_ == wxSize(m_app_small.GetWidth(), m_app_small.GetHeight()))
+           ? m_app_small
+           : m_app_large;
     }
     else
     {
@@ -134,4 +142,9 @@ wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
 #endif // wxUSE_IMAGE
 
     return bmp;
+}
+
+/*static*/ wxIcon wxSTEditorArtProvider::GetDefaultDialogIcon()
+{
+    return GetIcon(wxART_STEDIT_APP, wxDialogIconSize);
 }

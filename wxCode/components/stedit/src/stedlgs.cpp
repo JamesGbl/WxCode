@@ -20,6 +20,7 @@
 #include "wx/fontdlg.h"
 #include "wx/listbook.h"
 #include "wx/imaglist.h"
+#include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData_RefData - data shared by multiple pages shown at once
@@ -1318,7 +1319,7 @@ extern void LangConfig(); // FIXME test code to dump languages (100Kb!, maybe no
 void wxSTEditorPrefDialog::Init()
 {
     m_noteBook = NULL;
-    m_imageList = new wxImageList(32, 32);
+    m_imageList = new wxImageList(wxIconSize_System.x, wxIconSize_System.y);
 }
 
 bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,

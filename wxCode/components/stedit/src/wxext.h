@@ -30,6 +30,9 @@ class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
 
+WXDLLIMPEXP_CODE extern const wxSize wxIconSize_System;
+WXDLLIMPEXP_CODE extern const wxSize wxIconSize_Small;
+
 #ifdef _WX_STOCKITEM_H_
 #if (wxVERSION_NUMBER < 2901)
 #define wxSTOCK_WITHOUT_ELLIPSIS 4
