@@ -93,12 +93,12 @@ void OGLCleanUpConstraintTypes()
     if (!wxOGLConstraintTypes)
         return;
 
-    wxNode* node = wxOGLConstraintTypes->GetFirst();
-    while (node)
+    for (wxNode* node = wxOGLConstraintTypes->GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxOGLConstraintType* ct = (wxOGLConstraintType*) node->GetData();
+        wxOGLConstraintType* ct = wxStaticCast(node->GetData(), wxOGLConstraintType);
         delete ct;
-        node = node->GetNext();
     }
     wxDELETE(wxOGLConstraintTypes);
 }
@@ -121,11 +121,11 @@ wxOGLConstraint::wxOGLConstraint(int type, wxShape *constraining, wxList& constr
   m_constraintId = 0;
   m_constraintName = wxT("noname");
 
-  wxNode *node = constrained.GetFirst();
-  while (node)
+  for (wxNode* node = constrained.GetFirst();
+       node;
+       node = node->GetNext())
   {
     m_constrainedObjects.Append(node->GetData());
-    node = node->GetNext();
   }
 }
 
@@ -159,15 +159,16 @@ bool wxOGLConstraint::Evaluate()
     {
       int n = m_constrainedObjects.GetCount();
       double totalObjectHeight = 0.0;
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      wxNode* node;
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         totalObjectHeight += height2;
-        node = node->GetNext();
       }
       double startY;
       double spacingY;
@@ -186,10 +187,11 @@ bool wxOGLConstraint::Evaluate()
 
       // Now position the objects
       bool changed = false;
-      node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         startY += (double)(spacingY + (height2/2.0));
@@ -199,7 +201,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
         }
         startY += (double)(height2/2.0);
-        node = node->GetNext();
       }
       return changed;
     }
@@ -207,15 +208,16 @@ bool wxOGLConstraint::Evaluate()
     {
       int n = m_constrainedObjects.GetCount();
       double totalObjectWidth = 0.0;
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      wxNode* node;
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         totalObjectWidth += width2;
-        node = node->GetNext();
       }
       double startX;
       double spacingX;
@@ -234,10 +236,11 @@ bool wxOGLConstraint::Evaluate()
 
       // Now position the objects
       bool changed = false;
-      node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         startX += (double)(spacingX + (width2/2.0));
@@ -247,7 +250,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
         }
         startX += (double)(width2/2.0);
-        node = node->GetNext();
       }
       return changed;
     }
@@ -256,16 +258,18 @@ bool wxOGLConstraint::Evaluate()
       int n = m_constrainedObjects.GetCount();
       double totalObjectWidth = 0.0;
       double totalObjectHeight = 0.0;
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      wxNode* node;
+      
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         totalObjectWidth += width2;
         totalObjectHeight += height2;
-        node = node->GetNext();
       }
       double startX;
       double spacingX;
@@ -300,10 +304,11 @@ bool wxOGLConstraint::Evaluate()
 
       // Now position the objects
       bool changed = false;
-      node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
         startX += (double)(spacingX + (width2/2.0));
@@ -317,8 +322,6 @@ bool wxOGLConstraint::Evaluate()
 
         startX += (double)(width2/2.0);
         startY += (double)(height2/2.0);
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -326,10 +329,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -340,8 +344,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -349,10 +351,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -363,8 +366,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -372,10 +373,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -386,8 +388,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -395,10 +395,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -409,8 +410,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -418,10 +417,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -432,8 +432,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -441,10 +439,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -455,8 +454,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
       #if 0
@@ -468,10 +465,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -482,8 +480,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -491,10 +487,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double width2, height2;
         constrainedObject->GetBoundingBoxMax(&width2, &height2);
@@ -505,8 +502,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -514,10 +509,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double x3 = (double)(x - (minWidth/2.0));
         if (!Equals(x3, constrainedObject->GetX()))
@@ -525,8 +521,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -534,10 +528,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double x3 = (double)(x + (minWidth/2.0));
         if (!Equals(x3, constrainedObject->GetX()))
@@ -545,8 +540,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, x3, constrainedObject->GetY(), false);
         }
-
-        node = node->GetNext();
       }
       return changed;
       #if 0
@@ -558,10 +551,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double y3 = (double)(y - (minHeight/2.0));
         if (!Equals(y3, constrainedObject->GetY()))
@@ -569,8 +563,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }
@@ -578,10 +570,11 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      wxNode *node = m_constrainedObjects.GetFirst();
-      while (node)
+      for (wxNode* node = m_constrainedObjects.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *constrainedObject = (wxShape *)node->GetData();
+        wxShape* constrainedObject = wxStaticCast(node->GetData(), wxShape);
 
         double y3 = (double)(y + (minHeight/2.0));
         if (!Equals(y3, constrainedObject->GetY()))
@@ -589,8 +582,6 @@ bool wxOGLConstraint::Evaluate()
           changed = true;
           constrainedObject->Move(dc, constrainedObject->GetX(), y3, false);
         }
-
-        node = node->GetNext();
       }
       return changed;
     }

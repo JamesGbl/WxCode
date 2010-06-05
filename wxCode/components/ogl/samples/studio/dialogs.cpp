@@ -189,8 +189,9 @@ bool csSettingsDialog::TransferDataFromWindow()
     }
 
     // Apply settings to all open diagram documents
-    wxObjectList::compatibility_iterator node = wxGetApp().GetDocManager()->GetDocuments().GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = wxGetApp().GetDocManager()->GetDocuments().GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxDocument* doc = wxStaticCast(node->GetData(), wxDocument);
         if (doc->IsKindOf(CLASSINFO(csDiagramDocument)))
@@ -218,7 +219,6 @@ bool csSettingsDialog::TransferDataFromWindow()
                 }
             }
         }
-        node = node->GetNext();
     }
 
     return true;
@@ -349,23 +349,10 @@ void csShapePropertiesDialog::SetDefaults()
     if (!m_attributeDialog)
         return;
 
-    wxWindowList::compatibility_iterator node = m_attributeDialog->GetChildren().GetFirst();
-    while (node)
-    {
-        wxWindow* child = (wxWindow*) node->GetData();
-        if (child->IsKindOf(CLASSINFO(wxChoice)))
-        {
-            wxChoice* choice = (wxChoice*) child;
-            choice->SetSelection(0);
-        }
-        node = node->GetNext();
-    }
-
-    if (!m_alternativeAttributeDialog)
-        return;
-
-    node = m_alternativeAttributeDialog->GetChildren().GetFirst();
-    while (node)
+    wxWindowList::compatibility_iterator node;
+    for (node = m_attributeDialog->GetChildren().GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxWindow* child = wxStaticCast(node->GetData(), wxWindow);
         if (child->IsKindOf(CLASSINFO(wxChoice)))
@@ -373,7 +360,21 @@ void csShapePropertiesDialog::SetDefaults()
             wxChoice* choice = wxStaticCast(child, wxChoice);
             choice->SetSelection(0);
         }
-        node = node->GetNext();
+    }
+
+    if (!m_alternativeAttributeDialog)
+        return;
+
+    for (node = m_alternativeAttributeDialog->GetChildren().GetFirst();
+         node;
+         node = node->GetNext())
+    {
+        wxWindow* child = wxStaticCast(node->GetData(), wxWindow);
+        if (child->IsKindOf(CLASSINFO(wxChoice)))
+        {
+            wxChoice* choice = wxStaticCast(child, wxChoice);
+            choice->SetSelection(0);
+        }
     }
 }
 

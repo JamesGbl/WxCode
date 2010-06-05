@@ -211,7 +211,7 @@ int csApp::OnExit(void)
 wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu** editMenuRet)
 {
     //// Make a child frame
-    csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, (wxMDIParentFrame*)GetTopWindow(), wxID_ANY, wxEmptyString,
+    csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, wxStaticCast(GetTopWindow(), wxMDIParentFrame), wxID_ANY, wxEmptyString,
                                                     wxPoint(10, 10), wxSize(300, 300), wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE | wxMAXIMIZE);
 
 #ifdef __X__
@@ -308,7 +308,7 @@ csCanvas *csApp::CreateCanvas(wxView *view, wxMDIChildFrame *parent)
     parent->GetClientSize(&width, &height);
 
     // Non-retained canvas
-    csCanvas *canvas = new csCanvas((csDiagramView*) view, parent, 1000, wxPoint(0, 0), wxSize(width, height), wxSUNKEN_BORDER);
+    csCanvas *canvas = new csCanvas(wxStaticCast(view, csDiagramView), parent, 1000, wxPoint(0, 0), wxSize(width, height), wxSUNKEN_BORDER);
 
     wxColour bgColour(wxT("WHITE"));
     canvas->SetBackgroundColour(bgColour);

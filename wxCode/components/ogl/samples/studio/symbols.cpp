@@ -60,41 +60,40 @@ void csSymbolDatabase::AddSymbol(csSymbol* symbol)
 
 void csSymbolDatabase::ClearSymbols()
 {
-    wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csSymbol* symbol = (csSymbol*) node->GetData();
         delete symbol;
-
-        node = node->GetNext();
     }
     m_symbols.Clear();
 }
 
 csSymbol* csSymbolDatabase::FindSymbol(const wxString& name) const
 {
-    wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csSymbol* symbol = (csSymbol*) node->GetData();
         if (symbol->GetName() == name)
+        {
             return symbol;
-
-        node = node->GetNext();
+        }
     }
     return NULL;
 }
 
 csSymbol* csSymbolDatabase::FindSymbol(int toolId) const
 {
-    wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_symbols.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csSymbol* symbol = (csSymbol*) node->GetData();
         if (symbol->GetToolId() == toolId)
             return symbol;
-
-        node = node->GetNext();
     }
     return NULL;
 }

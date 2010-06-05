@@ -49,13 +49,13 @@ void wxPolygonShape::Create(wxList *the_points)
       // Duplicate the list of points
       m_points = new wxList;
 
-      wxObjectList::compatibility_iterator node = the_points->GetFirst();
-      while (node)
+      for (wxObjectList::compatibility_iterator node = the_points->GetFirst();
+           node;
+           node = node->GetNext())
       {
           wxRealPoint *point = (wxRealPoint *)node->GetData();
           wxRealPoint *new_point = new wxRealPoint(point->x, point->y);
           m_points->Append((wxObject*) new_point);
-          node = node->GetNext();
       }
       CalculateBoundingBox();
       m_originalWidth = m_boundWidth;
@@ -73,25 +73,25 @@ void wxPolygonShape::ClearPoints()
 {
   if (m_points)
   {
-    wxObjectList::compatibility_iterator node = m_points->GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+         node;
+         node = m_points->GetFirst())
     {
       wxRealPoint *point = (wxRealPoint *)node->GetData();
       delete point;
       m_points->Erase(node);
-      node = m_points->GetFirst();
     }
     wxDELETE(m_points);
   }
   if (m_originalPoints)
   {
-    wxObjectList::compatibility_iterator node = m_originalPoints->GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_originalPoints->GetFirst();
+         node;
+         node = m_originalPoints->GetFirst())
     {
       wxRealPoint *point = (wxRealPoint *)node->GetData();
       delete point;
       m_originalPoints->Erase(node);
-      node = m_originalPoints->GetFirst();
     }
     wxDELETE(m_originalPoints);
   }
@@ -113,8 +113,9 @@ void wxPolygonShape::CalculateBoundingBox()
   double top = 10000;
   double bottom = -10000;
 
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     if (point->x < left) left = point->x;
@@ -122,8 +123,6 @@ void wxPolygonShape::CalculateBoundingBox()
 
     if (point->y < top) top = point->y;
     if (point->y > bottom) bottom = point->y;
-
-    node = node->GetNext();
   }
   m_boundWidth = right - left;
   m_boundHeight = bottom - top;
@@ -141,8 +140,10 @@ void wxPolygonShape::CalculatePolygonCentre()
   double top = 10000;
   double bottom = -10000;
 
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  wxObjectList::compatibility_iterator node;
+  for (node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     if (point->x < left) left = point->x;
@@ -150,8 +151,6 @@ void wxPolygonShape::CalculatePolygonCentre()
 
     if (point->y < top) top = point->y;
     if (point->y > bottom) bottom = point->y;
-
-    node = node->GetNext();
   }
   double bwidth = right - left;
   double bheight = bottom - top;
@@ -159,13 +158,13 @@ void wxPolygonShape::CalculatePolygonCentre()
   double newCentreX = (double)(left + (bwidth/2.0));
   double newCentreY = (double)(top + (bheight/2.0));
 
-  node = m_points->GetFirst();
-  while (node)
+  for (node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     point->x -= newCentreX;
     point->y -= newCentreY;
-    node = node->GetNext();
   }
   m_xpos += newCentreX;
   m_ypos += newCentreY;
@@ -232,15 +231,14 @@ bool wxPolygonShape::HitTest(double x, double y, int *attachment, double *distan
   int np = m_points->GetCount();
   double *xpoints = new double[np];
   double *ypoints = new double[np];
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
   int i = 0;
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+       node;
+       node = node->GetNext(), i++)
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     xpoints[i] = point->x + m_xpos;
     ypoints[i] = point->y + m_ypos;
-    node = node->GetNext();
-    i ++;
   }
 
   // We assume it's inside the polygon UNLESS one or more
@@ -302,16 +300,15 @@ void wxPolygonShape::SetSize(double new_width, double new_height, bool WXUNUSED(
 
   wxObjectList::compatibility_iterator node = m_points->GetFirst();
   wxObjectList::compatibility_iterator original_node = m_originalPoints->GetFirst();
-  while (node && original_node)
+  for (;
+       node && original_node;
+       node = node->GetNext(), original_node = original_node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxRealPoint *original_point = (wxRealPoint *)original_node->GetData();
 
     point->x = (original_point->x * x_proportion);
     point->y = (original_point->y * y_proportion);
-
-    node = node->GetNext();
-    original_node = original_node->GetNext();
   }
 
 //  CalculateBoundingBox();
@@ -324,25 +321,24 @@ void wxPolygonShape::SetSize(double new_width, double new_height, bool WXUNUSED(
 void wxPolygonShape::UpdateOriginalPoints()
 {
   if (!m_originalPoints) m_originalPoints = new wxList;
-  wxObjectList::compatibility_iterator original_node = m_originalPoints->GetFirst();
-  while (original_node)
+  for (wxObjectList::compatibility_iterator original_node = m_originalPoints->GetFirst();
+       original_node;
+       )
   {
     wxObjectList::compatibility_iterator next_node = original_node->GetNext();
     wxRealPoint *original_point = (wxRealPoint *)original_node->GetData();
     delete original_point;
     m_originalPoints->Erase(original_node);
-
     original_node = next_node;
   }
 
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxRealPoint *original_point = new wxRealPoint(point->x, point->y);
     m_originalPoints->Append((wxObject*) original_point);
-
-    node = node->GetNext();
   }
   CalculateBoundingBox();
   m_originalWidth = m_boundWidth;
@@ -409,8 +405,9 @@ bool wxPolygonShape::GetPerimeterPoint(double x1, double y1,
   {
     // Look for the point we'd be connecting to. This is
     // a heuristic...
-    wxObjectList::compatibility_iterator node = m_points->GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+         node;
+         node = node->GetNext())
     {
       wxRealPoint *point = (wxRealPoint *)node->GetData();
       if (point->x == 0.0)
@@ -428,22 +425,20 @@ bool wxPolygonShape::GetPerimeterPoint(double x1, double y1,
           return true;
         }
       }
-      node = node->GetNext();
     }
   }
 
   double *xpoints = new double[n];
   double *ypoints = new double[n];
 
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
   int i = 0;
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+       node;
+       node = node->GetNext(), i++)
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     xpoints[i] = point->x + m_xpos;
     ypoints[i] = point->y + m_ypos;
-    node = node->GetNext();
-    i ++;
   }
 
   oglFindEndForPolyline(n, xpoints, ypoints,
@@ -513,15 +508,15 @@ void wxPolygonShape::OnDrawOutline(wxDC& dc, double x, double y, double w, doubl
 // Make as many control points as there are vertices.
 void wxPolygonShape::MakeControlPoints()
 {
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxPolygonControlPoint *control = new wxPolygonControlPoint(m_canvas, this, CONTROL_POINT_SIZE,
       point, point->x, point->y);
     m_canvas->AddShape(control);
     m_controlPoints.Append(control);
-    node = node->GetNext();
   }
 }
 
@@ -529,17 +524,16 @@ void wxPolygonShape::ResetControlPoints()
 {
   wxObjectList::compatibility_iterator node = m_points->GetFirst();
   wxObjectList::compatibility_iterator controlPointNode = m_controlPoints.GetFirst();
-  while (node && controlPointNode)
+  for (;
+       node && controlPointNode;
+       node = node->GetNext(), controlPointNode = controlPointNode->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
-    wxPolygonControlPoint *controlPoint = (wxPolygonControlPoint *)controlPointNode->GetData();
+    wxPolygonControlPoint* controlPoint = wxStaticCast(controlPointNode->GetData(), wxPolygonControlPoint);
 
     controlPoint->m_xoffset = point->x;
     controlPoint->m_yoffset = point->y;
     controlPoint->m_polygonVertex = point;
-
-    node = node->GetNext();
-    controlPointNode = controlPointNode->GetNext();
   }
 }
 
@@ -552,8 +546,10 @@ void wxPolygonShape::WriteAttributes(wxXmlNode*clause) const
 
   // Make a list of lists for the coordinates
   wxXmlNode* list = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("points"));
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  wxObjectList::compatibility_iterator node;
+  for (node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
 
@@ -561,22 +557,20 @@ void wxPolygonShape::WriteAttributes(wxXmlNode*clause) const
     child->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), point->x));
     child->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), point->y));
     list->AddChild(child);
-
-    node = node->GetNext();
   }
   clause->AddChild(list);
 
   // Save the original (unscaled) points
   list = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("m_originalPoints"));
-  node = m_originalPoints->GetFirst();
-  while (node)
+  for (node = m_originalPoints->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxXmlNode* child = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("point"));
     child->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), point->x));
     child->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), point->y));
     list->AddChild(child);
-    node = node->GetNext();
   }
   clause->AddChild(list);
 }
@@ -615,7 +609,9 @@ void wxPolygonShape::ReadAttributes(wxXmlNode*clause)
   }
   else
   {
-    for (wxXmlNode* node = points_list->GetChildren(); node; node = node->GetNext())
+    for (wxXmlNode* node = points_list->GetChildren();
+         node;
+         node = node->GetNext())
     {
       long x = 0, y = 0;
       if (   node->GetAttribute(wxT("x"), wxEmptyString).ToLong(&x)
@@ -695,21 +691,22 @@ void wxPolygonShape::Copy(wxShape& copy)
   polyCopy.m_points = new wxList;
   polyCopy.m_originalPoints = new wxList;
 
-  wxObjectList::compatibility_iterator node = m_points->GetFirst();
-  while (node)
+  wxObjectList::compatibility_iterator node;
+  for (node = m_points->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxRealPoint *new_point = new wxRealPoint(point->x, point->y);
     polyCopy.m_points->Append((wxObject*) new_point);
-    node = node->GetNext();
   }
-  node = m_originalPoints->GetFirst();
-  while (node)
+  for (node = m_originalPoints->GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxRealPoint *point = (wxRealPoint *)node->GetData();
     wxRealPoint *new_point = new wxRealPoint(point->x, point->y);
     polyCopy.m_originalPoints->Append((wxObject*) new_point);
-    node = node->GetNext();
   }
   polyCopy.m_boundWidth = m_boundWidth;
   polyCopy.m_boundHeight = m_boundHeight;
@@ -720,13 +717,15 @@ void wxPolygonShape::Copy(wxShape& copy)
 int wxPolygonShape::GetNumberOfAttachments() const
 {
   int maxN = (m_points ? (m_points->GetCount() - 1) : 0);
-  wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
     if (point->m_id > maxN)
+    {
       maxN = point->m_id;
-    node = node->GetNext();
+    }
   }
   return maxN+1;;
 }
@@ -753,13 +752,13 @@ bool wxPolygonShape::AttachmentIsValid(int attachment) const
   if ((attachment >= 0) && (attachment < (int) m_points->GetCount()))
     return true;
 
-  wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
     if (point->m_id == attachment)
       return true;
-    node = node->GetNext();
   }
   return false;
 }
@@ -772,36 +771,37 @@ void wxPolygonShape::Rotate(double x, double y, double theta)
     // Rotate attachment points
     double sinTheta = (double)sin(actualTheta);
     double cosTheta = (double)cos(actualTheta);
-    wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
-    while (node)
+    wxObjectList::compatibility_iterator node;
+    for (node = m_attachmentPoints.GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+        wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
         double x1 = point->m_x;
         double y1 = point->m_y;
         point->m_x = x1*cosTheta - y1*sinTheta + x*(1.0 - cosTheta) + y*sinTheta;
         point->m_y = x1*sinTheta + y1*cosTheta + y*(1.0 - cosTheta) + x*sinTheta;
-        node = node->GetNext();
     }
 
-    node = m_points->GetFirst();
-    while (node)
+    for (node = m_points->GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxRealPoint *point = (wxRealPoint *)node->GetData();
         double x1 = point->x;
         double y1 = point->y;
         point->x = x1*cosTheta - y1*sinTheta + x*(1.0 - cosTheta) + y*sinTheta;
         point->y = x1*sinTheta + y1*cosTheta + y*(1.0 - cosTheta) + x*sinTheta;
-        node = node->GetNext();
     }
-    node = m_originalPoints->GetFirst();
-    while (node)
+    for (node = m_originalPoints->GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxRealPoint *point = (wxRealPoint *)node->GetData();
         double x1 = point->x;
         double y1 = point->y;
         point->x = x1*cosTheta - y1*sinTheta + x*(1.0 - cosTheta) + y*sinTheta;
         point->y = x1*sinTheta + y1*cosTheta + y*(1.0 - cosTheta) + x*sinTheta;
-        node = node->GetNext();
     }
 
     m_rotation = theta;
@@ -908,7 +908,7 @@ void wxRectangleShape::ReadAttributes(wxXmlNode* clause)
   // In case we're reading an old file, set the region's size
   if (m_regions.GetCount() == 1)
   {
-    wxShapeRegion *region = (wxShapeRegion *)m_regions.GetFirst()->GetData();
+    wxShapeRegion* region = wxStaticCast(m_regions.GetFirst()->GetData(), wxShapeRegion);
     region->SetSize(m_width, m_height);
   }
 }
@@ -1041,7 +1041,7 @@ void wxEllipseShape::ReadAttributes(wxXmlNode*clause)
   // In case we're reading an old file, set the region's size
   if (m_regions.GetCount() == 1)
   {
-    wxShapeRegion *region = (wxShapeRegion *)m_regions.GetFirst()->GetData();
+    wxShapeRegion* region = wxStaticCast(m_regions.GetFirst()->GetData(), wxShapeRegion);
     region->SetSize(m_width, m_height);
   }
 }
@@ -1575,7 +1575,7 @@ void wxPolygonControlPoint::OnEndDragLeft(double x, double y, int keys, int atta
 // to override sizing behaviour.
 void wxPolygonShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), double x, double y, int WXUNUSED(keys), int WXUNUSED(attachment))
 {
-  wxPolygonControlPoint* ppt = (wxPolygonControlPoint*) pt;
+  wxPolygonControlPoint* ppt = wxStaticCast(pt, wxPolygonControlPoint);
 
   wxClientDC dc(GetCanvas());
   GetCanvas()->PrepareDC(dc);
@@ -1613,7 +1613,7 @@ void wxPolygonShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), d
 
 void wxPolygonShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double y, int WXUNUSED(keys), int WXUNUSED(attachment))
 {
-  wxPolygonControlPoint* ppt = (wxPolygonControlPoint*) pt;
+  wxPolygonControlPoint* ppt = wxStaticCast(pt, wxPolygonControlPoint);
 
   wxClientDC dc(GetCanvas());
   GetCanvas()->PrepareDC(dc);
@@ -1667,7 +1667,7 @@ void wxPolygonShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double 
 
 void wxPolygonShape::OnSizingEndDragLeft(wxControlPoint* pt, double WXUNUSED(x), double WXUNUSED(y), int keys, int WXUNUSED(attachment))
 {
-  wxPolygonControlPoint* ppt = (wxPolygonControlPoint*) pt;
+  wxPolygonControlPoint* ppt = wxStaticCast(pt,wxPolygonControlPoint);
 
   wxClientDC dc(GetCanvas());
   GetCanvas()->PrepareDC(dc);
@@ -1746,14 +1746,14 @@ wxShapeRegion::wxShapeRegion(wxShapeRegion& region):wxObject()
   m_penColour = region.m_penColour;
 
   ClearText();
-  wxObjectList::compatibility_iterator node = region.m_formattedText.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = region.m_formattedText.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShapeTextLine *line = (wxShapeTextLine *)node->GetData();
+    wxShapeTextLine* line = wxStaticCast(node->GetData(), wxShapeTextLine);
     wxShapeTextLine *new_line =
       new wxShapeTextLine(line->GetX(), line->GetY(), line->GetText());
     m_formattedText.Append(new_line);
-    node = node->GetNext();
   }
 }
 
@@ -1764,10 +1764,11 @@ wxShapeRegion::~wxShapeRegion()
 
 void wxShapeRegion::ClearText()
 {
-  wxObjectList::compatibility_iterator node = m_formattedText.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = m_formattedText.GetFirst();
+       node;
+       )
   {
-    wxShapeTextLine *line = (wxShapeTextLine *)node->GetData();
+    wxShapeTextLine* line = wxStaticCast(node->GetData(), wxShapeTextLine);
     wxObjectList::compatibility_iterator next = node->GetNext();
     delete line;
     m_formattedText.Erase(node);

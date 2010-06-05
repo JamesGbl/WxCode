@@ -197,7 +197,7 @@ bool DiagramCommand::Do(void)
         doc->GetDiagram()->RemoveShape(shape);
         if (shape->IsKindOf(CLASSINFO(wxLineShape)))
         {
-          wxLineShape *lineShape = (wxLineShape *)shape;
+          wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
           fromShape = lineShape->GetFrom();
           toShape = lineShape->GetTo();
         }
@@ -216,7 +216,7 @@ bool DiagramCommand::Do(void)
         theShape = shape; // Saved from undoing the shape
       else
       {
-        theShape = (wxShape *)shapeInfo->CreateObject();
+        theShape = wxStaticCast(shapeInfo->CreateObject(), wxShape);
         theShape->AssignNewIds();
         theShape->SetEventHandler(new MyEvtHandler(theShape, theShape, wxEmptyString));
         theShape->SetCentreResize(false);
@@ -247,13 +247,13 @@ bool DiagramCommand::Do(void)
         theShape = shape; // Saved from undoing the line
       else
       {
-        theShape = (wxShape *)shapeInfo->CreateObject();
+        theShape = wxStaticCast(shapeInfo->CreateObject(), wxShape);
         theShape->AssignNewIds();
         theShape->SetEventHandler(new MyEvtHandler(theShape, theShape, wxEmptyString));
         theShape->SetPen(wxBLACK_PEN);
         theShape->SetBrush(wxRED_BRUSH);
 
-        wxLineShape *lineShape = (wxLineShape *)theShape;
+        wxLineShape *lineShape = wxStaticCast(theShape, wxLineShape);
 
         // Yes, you can have more than 2 control points, in which case
         // it becomes a multi-segment line.
@@ -263,7 +263,7 @@ bool DiagramCommand::Do(void)
 
       doc->GetDiagram()->AddShape(theShape);
 
-      fromShape->AddLine((wxLineShape *)theShape, toShape);
+      fromShape->AddLine(wxStaticCast(theShape, wxLineShape), toShape);
 
       theShape->Show(true);
 
@@ -338,7 +338,7 @@ bool DiagramCommand::Undo(void)
 
         if (shape->IsKindOf(CLASSINFO(wxLineShape)))
         {
-          wxLineShape *lineShape = (wxLineShape *)shape;
+          wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
 
           fromShape->AddLine(lineShape, toShape);
         }
@@ -413,13 +413,12 @@ bool DiagramCommand::Undo(void)
 // Remove each individual line connected to a shape by sending a command.
 void DiagramCommand::RemoveLines(wxShape *shape)
 {
-  wxObjectList::compatibility_iterator node = shape->GetLines().GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = shape->GetLines().GetFirst();
+       node;
+       node = shape->GetLines().GetFirst())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     doc->GetCommandProcessor()->Submit(new DiagramCommand(_("Cut"), wxID_CUT, doc, NULL, 0.0, 0.0, line->Selected(), line));
-
-    node = shape->GetLines().GetFirst();
   }
 }
 
@@ -444,10 +443,11 @@ void MyEvtHandler::OnLeftClick(double WXUNUSED(x), double WXUNUSED(y), int keys,
     {
       // Ensure no other shape is selected, to simplify Undo/Redo code
       bool redraw = false;
-      wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
-      while (node)
+      for (wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *eachShape = (wxShape *)node->GetData();
+        wxShape* eachShape = wxStaticCast(node->GetData(), wxShape);
         if (eachShape->GetParent() == NULL)
         {
           if (eachShape->Selected())
@@ -456,7 +456,6 @@ void MyEvtHandler::OnLeftClick(double WXUNUSED(x), double WXUNUSED(y), int keys,
             redraw = true;
           }
         }
-        node = node->GetNext();
       }
       GetShape()->Select(true, &dc);
       if (redraw)
@@ -525,7 +524,7 @@ void MyEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int WX
   if (otherShape && !otherShape->IsKindOf(CLASSINFO(wxLineShape)))
   {
     canvas->view->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, (DiagramDocument *)canvas->view->GetDocument(), CLASSINFO(wxLineShape),
+      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, wxStaticCast(canvas->view->GetDocument(), DiagramDocument), CLASSINFO(wxLineShape),
       0.0, 0.0, false, NULL, GetShape(), otherShape));
   }
 }

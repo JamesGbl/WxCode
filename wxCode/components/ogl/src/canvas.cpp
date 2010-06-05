@@ -368,10 +368,12 @@ wxShape *wxShapeCanvas::FindShape(double x, double y, int *attachment, wxClassIn
   //     the other objects
   // (b) to find the control points FIRST if they exist
 
-  wxObjectList::compatibility_iterator current = GetDiagram()->GetShapeList()->GetLast();
-  while (current)
+  wxObjectList::compatibility_iterator current;
+  for (current = GetDiagram()->GetShapeList()->GetLast();
+       current;
+       )
   {
-    wxShape *object = (wxShape *)current->GetData();
+    wxShape* object = wxStaticCast(current->GetData(), wxShape);
 
     double dist;
     int temp_attachment;
@@ -404,10 +406,10 @@ wxShape *wxShapeCanvas::FindShape(double x, double y, int *attachment, wxClassIn
       current = current->GetPrevious();
   }
 
-  current = GetDiagram()->GetShapeList()->GetLast();
-  while (current)
+  for (current = GetDiagram()->GetShapeList()->GetLast();
+       current;)
   {
-    wxShape *object = (wxShape *)current->GetData();
+    wxShape* object = wxStaticCast(current->GetData(), wxShape);
     double dist;
     int temp_attachment;
 

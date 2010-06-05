@@ -56,10 +56,12 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
 
     // First copy all node shapes.
     wxList* shapeList = diagramFrom->GetShapeList();
-    wxObjectList::compatibility_iterator node = shapeList->GetFirst();
-    while (node)
+    wxObjectList::compatibility_iterator node;
+    for (node = shapeList->GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxShape* shape = (wxShape*) node->GetData();
+        wxShape* shape = wxStaticCast(node->GetData(), wxShape);
         if (((diagramFrom == this) || shape->Selected()) && !shape->IsKindOf(CLASSINFO(wxLineShape)))
         {
             wxShape* newShape = shape->CreateNewCopy();
@@ -76,30 +78,30 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
             OnAddShape(diagramTo, newShape, dc);
 
         }
-        node = node->GetNext();
     }
 
-    node = shapeList->GetFirst();
-    while (node)
+    for (node = shapeList->GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxShape* shape = (wxShape*) node->GetData();
+        wxShape* shape = wxStaticCast(node->GetData(), wxShape);
         if (((diagramFrom == this) || shape->Selected()) && shape->IsKindOf(CLASSINFO(wxLineShape)))
         {
-            wxLineShape* lineShape = (wxLineShape*) shape;
+            wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
             // Only copy a line if its ends are selected too.
             if ((diagramFrom == this) || (lineShape->GetTo()->Selected() && lineShape->GetFrom()->Selected()))
             {
-                wxLineShape* newShape = (wxLineShape*) shape->CreateNewCopy();
+                wxLineShape* newShape = wxStaticCast(shape->CreateNewCopy(), wxLineShape);
                 mapping.Put((long) shape, (wxObject*) newShape);
 
                 if (newIds)
                     newShape->AssignNewIds();
 
-                wxShape* fromShape = (wxShape*) mapping.Get((long) lineShape->GetFrom());
-                wxShape* toShape = (wxShape*) mapping.Get((long) lineShape->GetTo());
+                wxShape* fromShape = wxStaticCast(mapping.Get((long) lineShape->GetFrom()), wxShape);
+                wxShape* toShape = wxStaticCast(mapping.Get((long) lineShape->GetTo()), wxShape);
 
-                wxASSERT_MSG( (fromShape != NULL), wxT("Could not find 'from' shape"));
-                wxASSERT_MSG( (toShape != NULL), wxT("Could not find 'to' shape"));
+                wxASSERT_MSG( fromShape, wxT("Could not find 'from' shape"));
+                wxASSERT_MSG( toShape, wxT("Could not find 'to' shape"));
 
                 fromShape->AddLine(newShape, toShape, newShape->GetAttachmentFrom(),
                   newShape->GetAttachmentTo());
@@ -108,41 +110,39 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
 
             }
         }
-        node = node->GetNext();
     }
 
     // Now make sure line ordering is correct
-    node = shapeList->GetFirst();
-    while (node)
+    for (node = shapeList->GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxShape* shape = (wxShape*) node->GetData();
+        wxShape* shape = wxStaticCast(node->GetData(), wxShape);
         if (((diagramFrom == this) || shape->Selected()) && !shape->IsKindOf(CLASSINFO(wxLineShape)))
         {
-            wxShape* newShape = (wxShape*) mapping.Get((long) shape);
+            wxShape* newShape = wxStaticCast(mapping.Get((long) shape), wxShape);
 
             // Make a list of all the new lines, in the same order as the old lines.
             // Then apply the list of new lines to the shape.
             wxList newLines;
-            wxObjectList::compatibility_iterator lineNode = shape->GetLines().GetFirst();
-            while (lineNode)
+            for (wxObjectList::compatibility_iterator lineNode = shape->GetLines().GetFirst();
+                 lineNode;
+                 lineNode = lineNode->GetNext())
             {
-                wxLineShape* lineShape = (wxLineShape*) lineNode->GetData();
+                wxLineShape* lineShape = wxStaticCast(lineNode->GetData(), wxLineShape);
                 if ((diagramFrom == this) || (lineShape->GetTo()->Selected() && lineShape->GetFrom()->Selected()))
                 {
-                    wxLineShape* newLineShape = (wxLineShape*) mapping.Get((long) lineShape);
+                    wxLineShape* newLineShape = wxStaticCast(mapping.Get((long) lineShape), wxLineShape);
 
-                    wxASSERT_MSG( (newLineShape != NULL), wxT("Could not find new line shape"));
+                    wxASSERT_MSG(newLineShape, wxT("Could not find new line shape"));
 
                     newLines.Append(newLineShape);
                 }
-
-                lineNode = lineNode->GetNext();
             }
 
             if (newLines.GetCount() > 0)
                 newShape->ApplyAttachmentOrdering(newLines);
         }
-        node = node->GetNext();
     }
 
     OnEndCopy(diagramTo);
@@ -255,9 +255,9 @@ bool csDiagramClipboard::OnStartCopy(wxDiagram* diagramTo)
 
     // Deselect all objects initially.
 
-    csDiagram* diagram = (csDiagram*) diagramTo;
+    csDiagram* diagram = wxStaticCast(diagramTo, csDiagram);
     csDiagramDocument* doc = diagram->GetDocument();
-    ((csDiagramView*)doc->GetFirstView())->SelectAll(false);
+    wxStaticCast(doc->GetFirstView(), csDiagramView)->SelectAll(false);
 
     m_currentCmd = new csDiagramCommand(_("Paste"), doc);
 
@@ -270,7 +270,7 @@ bool csDiagramClipboard::OnEndCopy(wxDiagram* diagramTo)
     if (diagramTo == this)
         return true;
 
-    csDiagram* diagram = (csDiagram*) diagramTo;
+    csDiagram* diagram = wxStaticCast(diagramTo, csDiagram);
     csDiagramDocument* doc = diagram->GetDocument();
 
     if (m_currentCmd)
@@ -298,7 +298,7 @@ bool csDiagramClipboard::OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxD
     }
     else
     {
-        csDiagram* diagram = (csDiagram*) diagramTo;
+        csDiagram* diagram = wxStaticCast(diagramTo, csDiagram);
         /* csDiagramDocument* doc = */ diagram->GetDocument();
 
         if (newShape->IsKindOf(CLASSINFO(wxLineShape)))

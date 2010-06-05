@@ -106,12 +106,12 @@ csDiagramCommand::csDiagramCommand(const wxString& name, csDiagramDocument *doc,
 
 csDiagramCommand::~csDiagramCommand()
 {
-    wxObjectList::compatibility_iterator node = m_states.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_states.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csCommandState* state = (csCommandState*) node->GetData();
         delete state;
-        node = node->GetNext();
     }
 }
 
@@ -133,51 +133,52 @@ void csDiagramCommand::InsertState(csCommandState* state)
 // Schedule all lines connected to the states to be cut.
 void csDiagramCommand::RemoveLines()
 {
-    wxObjectList::compatibility_iterator node = m_states.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_states.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csCommandState* state = (csCommandState*) node->GetData();
         wxShape* shape = state->GetShapeOnCanvas();
-        wxASSERT( (shape != NULL) );
+        wxASSERT(shape);
 
-        wxObjectList::compatibility_iterator node1 = shape->GetLines().GetFirst();
-        while (node1)
+        for (wxObjectList::compatibility_iterator node1 = shape->GetLines().GetFirst();
+             node1;
+             node1 = node1->GetNext())
         {
-            wxLineShape *line = (wxLineShape *)node1->GetData();
+            wxLineShape *line = wxStaticCast(node1->GetData(), wxLineShape);
             if (!FindStateByShape(line))
             {
                 csCommandState* newState = new csCommandState(wxID_CUT, NULL, line);
                 InsertState(newState);
             }
-
-            node1 = node1->GetNext();
         }
-        node = node->GetNext();
     }
 }
 
 csCommandState* csDiagramCommand::FindStateByShape(wxShape* shape)
 {
-    wxObjectList::compatibility_iterator node = m_states.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_states.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csCommandState* state = (csCommandState*) node->GetData();
         if (shape == state->GetShapeOnCanvas() || shape == state->GetSavedState())
             return state;
-        node = node->GetNext();
     }
     return NULL;
 }
 
 bool csDiagramCommand::Do()
 {
-    wxObjectList::compatibility_iterator node = m_states.GetFirst();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_states.GetFirst();
+         node;
+         node = node->GetNext())
     {
         csCommandState* state = (csCommandState*) node->GetData();
         if (!state->Do())
+        {
             return false;
-        node = node->GetNext();
+        }
     }
     return true;
 }
@@ -186,13 +187,15 @@ bool csDiagramCommand::Undo()
 {
     // Undo in reverse order, so e.g. shapes get added
     // back before the lines do.
-    wxObjectList::compatibility_iterator node = m_states.GetLast();
-    while (node)
+    for (wxObjectList::compatibility_iterator node = m_states.GetLast();
+         node;
+         node = node->GetPrevious())
     {
         csCommandState* state = (csCommandState*) node->GetData();
         if (!state->Undo())
+        {
             return false;
-        node = node->GetPrevious();
+        }
     }
     return true;
 }
@@ -240,7 +243,7 @@ bool csCommandState::Do()
         if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
         {
             // Store the from/to info to save in the line shape
-            wxLineShape* lineShape = (wxLineShape*) m_shapeOnCanvas;
+            wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
             lineFrom = lineShape->GetFrom();
             lineTo = lineShape->GetTo();
             attachmentFrom = lineShape->GetAttachmentFrom();
@@ -251,7 +254,7 @@ bool csCommandState::Do()
         }
 
         m_shapeOnCanvas->Select(false);
-        ((csDiagramView*) m_doc->GetFirstView())->SelectShape(m_shapeOnCanvas, false);
+        wxStaticCast(m_doc->GetFirstView(), csDiagramView)->SelectShape(m_shapeOnCanvas, false);
 
         m_shapeOnCanvas->Unlink();
 
@@ -262,7 +265,7 @@ bool csCommandState::Do()
         if (m_savedState->IsKindOf(CLASSINFO(wxLineShape)))
         {
             // Restore the from/to info for future reference
-            wxLineShape* lineShape = (wxLineShape*) m_savedState;
+            wxLineShape* lineShape = wxStaticCast(m_savedState, wxLineShape);
             lineShape->SetFrom(lineFrom);
             lineShape->SetTo(lineTo);
             lineShape->SetAttachments(attachmentFrom, attachmentTo);
@@ -300,7 +303,7 @@ bool csCommandState::Do()
         wxClientDC dc(m_shapeOnCanvas->GetCanvas());
         m_shapeOnCanvas->GetCanvas()->PrepareDC(dc);
 
-        csEvtHandler *handler = (csEvtHandler *)m_shapeOnCanvas->GetEventHandler();
+        csEvtHandler *handler = wxStaticCast(m_shapeOnCanvas->GetEventHandler(), csEvtHandler);
         m_shapeOnCanvas->FormatText(dc, handler->m_label);
 
         m_shapeOnCanvas->Move(dc, m_shapeOnCanvas->GetX(), m_shapeOnCanvas->GetY());
@@ -308,7 +311,7 @@ bool csCommandState::Do()
         if (m_cmd == ID_CS_ADD_SHAPE_SELECT)
         {
             m_shapeOnCanvas->Select(true, &dc);
-            ((csDiagramView*) m_doc->GetFirstView())->SelectShape(m_shapeOnCanvas, true);
+            wxStaticCast(m_doc->GetFirstView(), csDiagramView)->SelectShape(m_shapeOnCanvas, true);
         }
 
         m_doc->Modify(true);
@@ -318,13 +321,13 @@ bool csCommandState::Do()
     case ID_CS_ADD_LINE:
     case ID_CS_ADD_LINE_SELECT:
     {
-        wxASSERT( (m_shapeOnCanvas == NULL) );
-        wxASSERT( (m_savedState != NULL) );
-        wxASSERT( (m_doc != NULL) );
+        wxASSERT(m_shapeOnCanvas == NULL);
+        wxASSERT(m_savedState);
+        wxASSERT(m_doc);
 
-        wxLineShape *lineShape = (wxLineShape *)m_savedState;
-        wxASSERT( (lineShape->GetFrom() != NULL) );
-        wxASSERT( (lineShape->GetTo() != NULL) );
+        wxLineShape* lineShape = wxStaticCast(m_savedState, wxLineShape);
+        wxASSERT(lineShape->GetFrom());
+        wxASSERT(lineShape->GetTo());
 
         m_shapeOnCanvas = m_savedState;
         m_savedState = NULL;
@@ -347,7 +350,7 @@ bool csCommandState::Do()
         if (m_cmd == ID_CS_ADD_LINE_SELECT)
         {
             lineShape->Select(true, &dc);
-            ((csDiagramView*) m_doc->GetFirstView())->SelectShape(m_shapeOnCanvas, true);
+            wxStaticCast(m_doc->GetFirstView(), csDiagramView)->SelectShape(m_shapeOnCanvas, true);
         }
 
         m_doc->Modify(true);
@@ -415,7 +418,7 @@ bool csCommandState::Do()
         {
             m_shapeOnCanvas->Move(dc, m_shapeOnCanvas->GetX(), m_shapeOnCanvas->GetY());
 
-            csEvtHandler *handler = (csEvtHandler *)m_shapeOnCanvas->GetEventHandler();
+            csEvtHandler* handler = wxStaticCast(m_shapeOnCanvas->GetEventHandler(), csEvtHandler);
             m_shapeOnCanvas->FormatText(dc, handler->m_label);
             m_shapeOnCanvas->Draw(dc);
         }
@@ -425,7 +428,7 @@ bool csCommandState::Do()
         }
         else if (m_cmd == ID_CS_CHANGE_LINE_ATTACHMENT)
         {
-            wxLineShape *lineShape = (wxLineShape *)m_shapeOnCanvas;
+            wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
 
             // Have to move both sets of links since we don't know which links
             // have been affected (unless we compared before and after states).
@@ -450,7 +453,7 @@ bool csCommandState::Do()
         }
         else if ( (m_cmd == wxID_PROPERTIES) || (m_cmd == ID_CS_FONT_CHANGE))
         {
-            csEvtHandler *handler = (csEvtHandler *)m_shapeOnCanvas->GetEventHandler();
+            csEvtHandler* handler = wxStaticCast(m_shapeOnCanvas->GetEventHandler(), csEvtHandler);
             m_shapeOnCanvas->FormatText(dc, handler->m_label);
             m_shapeOnCanvas->Draw(dc);
         }
@@ -486,7 +489,7 @@ bool csCommandState::Undo()
 
         if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
         {
-            wxLineShape* lineShape = (wxLineShape*) m_shapeOnCanvas;
+            wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
             lineShape->GetFrom()->AddLine(lineShape, lineShape->GetTo(),
                 lineShape->GetAttachmentFrom(), lineShape->GetAttachmentTo(),
                 m_linePositionFrom, m_linePositionTo);
@@ -523,7 +526,7 @@ bool csCommandState::Undo()
         if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
         {
             // Store the from/to info to save in the line shape
-            wxLineShape* lineShape = (wxLineShape*) m_shapeOnCanvas;
+            wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
             lineFrom = lineShape->GetFrom();
             lineTo = lineShape->GetTo();
             attachmentFrom = lineShape->GetAttachmentFrom();
@@ -534,14 +537,14 @@ bool csCommandState::Undo()
         m_shapeOnCanvas->GetCanvas()->PrepareDC(dc);
 
         m_shapeOnCanvas->Select(false, &dc);
-        ((csDiagramView*) m_doc->GetFirstView())->SelectShape(m_shapeOnCanvas, false);
+        wxStaticCast(m_doc->GetFirstView(), csDiagramView)->SelectShape(m_shapeOnCanvas, false);
         m_doc->GetDiagram()->RemoveShape(m_shapeOnCanvas);
         m_shapeOnCanvas->Unlink(); // Unlinks the line, if it is a line
 
         if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
         {
             // Restore the from/to info for future reference
-            wxLineShape* lineShape = (wxLineShape*) m_shapeOnCanvas;
+            wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
             lineShape->SetFrom(lineFrom);
             lineShape->SetTo(lineTo);
             lineShape->SetAttachments(attachmentFrom, attachmentTo);

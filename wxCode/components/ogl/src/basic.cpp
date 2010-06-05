@@ -51,10 +51,10 @@ wxShapeEvtHandler::~wxShapeEvtHandler()
 // Creates a copy of this event handler.
 wxShapeEvtHandler* wxShapeEvtHandler::CreateNewCopy()
 {
-  wxShapeEvtHandler* newObject = (wxShapeEvtHandler*) GetClassInfo()->CreateObject();
+  wxShapeEvtHandler* newObject = wxStaticCast(GetClassInfo()->CreateObject(), wxShapeEvtHandler);
 
-  wxASSERT( (newObject != NULL) );
-  wxASSERT( (newObject->IsKindOf(CLASSINFO(wxShapeEvtHandler))) );
+  wxASSERT(newObject);
+  wxASSERT(newObject->IsKindOf(CLASSINFO(wxShapeEvtHandler)));
 
   newObject->m_previousHandler = newObject;
 
@@ -310,12 +310,12 @@ void wxShape::SetHighlight(bool hi, bool recurse)
   m_highlighted = hi;
   if (recurse)
   {
-    wxNode *node = m_children.GetFirst();
-    while (node)
+    for (wxNode* node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->SetHighlight(hi, recurse);
-      node = node->GetNext();
     }
   }
 }
@@ -330,12 +330,12 @@ void wxShape::SetSensitivityFilter(int sens, bool recursive)
   m_sensitivity = sens;
   if (recursive)
   {
-    wxNode *node = m_children.GetFirst();
-    while (node)
+    for (wxNode* node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *obj = (wxShape *)node->GetData();
+      wxShape* obj = wxStaticCast(node->GetData(), wxShape);
       obj->SetSensitivityFilter(sens, true);
-      node = node->GetNext();
     }
   }
 }
@@ -351,12 +351,12 @@ void wxShape::SetDraggable(bool drag, bool recursive)
 
   if (recursive)
   {
-    wxNode *node = m_children.GetFirst();
-    while (node)
+    for (wxNode* node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *obj = (wxShape *)node->GetData();
+      wxShape* obj = wxStaticCast(node->GetData(), wxShape);
       obj->SetDraggable(drag, true);
-      node = node->GetNext();
     }
   }
 }
@@ -364,12 +364,12 @@ void wxShape::SetDraggable(bool drag, bool recursive)
 void wxShape::SetDrawHandles(bool drawH)
 {
   m_drawHandles = drawH;
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *obj = (wxShape *)node->GetData();
+    wxShape* obj = wxStaticCast(node->GetData(), wxShape);
     obj->SetDrawHandles(drawH);
-    node = node->GetNext();
   }
 }
 
@@ -394,27 +394,26 @@ void wxShape::SetShadowMode(int mode, bool redraw)
 void wxShape::SetCanvas(wxShapeCanvas *theCanvas)
 {
   m_canvas = theCanvas;
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     child->SetCanvas(theCanvas);
-    node = node->GetNext();
   }
 }
 
 void wxShape::AddToCanvas(wxShapeCanvas *theCanvas, wxShape *addAfter)
 {
   theCanvas->AddShape(this, addAfter);
-  wxNode *node = m_children.GetFirst();
   wxShape *lastImage = this;
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *object = (wxShape *)node->GetData();
+    wxShape* object = wxStaticCast(node->GetData(), wxShape);
     object->AddToCanvas(theCanvas, lastImage);
     lastImage = object;
-
-    node = node->GetNext();
   }
 }
 
@@ -422,15 +421,14 @@ void wxShape::AddToCanvas(wxShapeCanvas *theCanvas, wxShape *addAfter)
 void wxShape::InsertInCanvas(wxShapeCanvas *theCanvas)
 {
   theCanvas->InsertShape(this);
-  wxNode *node = m_children.GetFirst();
   wxShape *lastImage = this;
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *object = (wxShape *)node->GetData();
+    wxShape* object = wxStaticCast(node->GetData(), wxShape);
     object->AddToCanvas(theCanvas, lastImage);
     lastImage = object;
-
-    node = node->GetNext();
   }
 }
 
@@ -439,24 +437,23 @@ void wxShape::RemoveFromCanvas(wxShapeCanvas *theCanvas)
   if (Selected())
     Select(false);
   theCanvas->RemoveShape(this);
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *object = (wxShape *)node->GetData();
+    wxShape* object = wxStaticCast(node->GetData(), wxShape);
     object->RemoveFromCanvas(theCanvas);
-
-    node = node->GetNext();
   }
 }
 
 void wxShape::ClearAttachments()
 {
-  wxNode *node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxNode* node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
     delete point;
-    node = node->GetNext();
   }
   m_attachmentPoints.Clear();
 }
@@ -472,16 +469,17 @@ void wxShape::ClearText(int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->ClearText();
 }
 
 void wxShape::ClearRegions()
 {
-  wxNode *node = m_regions.GetFirst();
-  while (node)
+  for (wxNode* node = m_regions.GetFirst();
+       node;
+       )
   {
-    wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
     wxNode *next = node->GetNext();
     delete region;
     delete node;
@@ -498,7 +496,7 @@ void wxShape::SetDefaultRegionSize()
 {
   wxNode *node = m_regions.GetFirst();
   if (!node) return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   double w, h;
   GetBoundingBoxMin(&w, &h);
   region->SetSize(w, h);
@@ -571,7 +569,7 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
   if (!node)
     return;
 
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   // region->SetText(s);  // don't set the formatted text yet, it will be done below
   region->m_regionText = s;
   dc.SetFont(* region->GetFont());
@@ -579,13 +577,13 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
   region->GetSize(&w, &h);
 
   wxStringList *stringList = oglFormatText(dc, s, (w-2*m_textMarginX), (h-2*m_textMarginY), region->GetFormatMode());
-  node = (wxNode*)stringList->GetFirst();
-  while (node)
+  for (node = (wxNode*)stringList->GetFirst();
+       node;
+       node = node->GetNext())
   {
     const wxChar *s = (const wxChar *)node->GetData();
-    wxShapeTextLine *line = new wxShapeTextLine(0.0, 0.0, s);
-    region->GetFormattedText().Append((wxObject *)line);
-    node = node->GetNext();
+    wxShapeTextLine* line = new wxShapeTextLine(0.0, 0.0, s);
+    region->GetFormattedText().Append((wxObject*)line);
   }
   delete stringList;
   double actualW = w;
@@ -608,7 +606,7 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
         // Make sure we don't recurse infinitely
         GraphicsInSizeToContents = true;
 
-        wxCompositeShape *composite = (wxCompositeShape *)topAncestor;
+        wxCompositeShape *composite = wxStaticCast(topAncestor, wxCompositeShape);
         composite->Erase(dc);
         SetSize(actualW+2*m_textMarginX, actualH+2*m_textMarginY);
         Move(dc, m_xpos, m_ypos);
@@ -650,7 +648,7 @@ void wxShape::Recentre(wxDC& dc)
     wxNode *node = m_regions.Item(i);
     if (node)
     {
-      wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+      wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
       oglCentreText(dc, &(region->GetFormattedText()), m_xpos, m_ypos, w-2*m_textMarginX, h-2*m_textMarginY, region->GetFormatMode());
     }
   }
@@ -694,7 +692,7 @@ void wxShape::SetFont(wxFont *the_font, int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->SetFont(the_font);
 }
 
@@ -703,7 +701,7 @@ wxFont *wxShape::GetFont(int n) const
   wxNode *node = m_regions.Item(n);
   if (!node)
     return NULL;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   return region->GetFont();
 }
 
@@ -712,7 +710,7 @@ void wxShape::SetFormatMode(int mode, int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->SetFormatMode(mode);
 }
 
@@ -721,7 +719,7 @@ int wxShape::GetFormatMode(int regionId) const
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return 0;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   return region->GetFormatMode();
 }
 
@@ -733,7 +731,7 @@ void wxShape::SetTextColour(const wxString& the_colour, int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->SetColour(the_colour);
 }
 
@@ -742,7 +740,7 @@ wxString wxShape::GetTextColour(int regionId) const
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return wxEmptyString;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   return region->GetColour();
 }
 
@@ -751,7 +749,7 @@ void wxShape::SetRegionName(const wxString& name, int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->SetName(name);
 }
 
@@ -760,21 +758,20 @@ wxString wxShape::GetRegionName(int regionId)
   wxNode *node = m_regions.Item(regionId);
   if (!node)
     return wxEmptyString;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   return region->GetName();
 }
 
 int wxShape::GetRegionId(const wxString& name)
 {
-  wxNode *node = m_regions.GetFirst();
   int i = 0;
-  while (node)
+  for (wxNode *node = m_regions.GetFirst();
+       node;
+       node = node->GetNext(), i++)
   {
-    wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
     if (region->GetName() == name)
       return i;
-    node = node->GetNext();
-    i ++;
   }
   return wxNOT_FOUND;
 }
@@ -792,18 +789,18 @@ void wxShape::NameRegions(const wxString& parentName)
       buff << i;
     SetRegionName(buff, i);
   }
-  wxNode *node = m_children.GetFirst();
   int j = 0;
-  while (node)
+  for (wxNode *node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
     buff.Empty();
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     if (parentName.Length() > 0)
       buff << parentName << wxT(".") << j;
     else
       buff << j;
     child->NameRegions(buff);
-    node = node->GetNext();
     j ++;
   }
 }
@@ -818,14 +815,14 @@ wxShape *wxShape::FindRegion(const wxString& name, int *regionId)
     return this;
   }
 
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode *node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     wxShape *actualImage = child->FindRegion(name, regionId);
     if (actualImage)
       return actualImage;
-    node = node->GetNext();
   }
   return NULL;
 }
@@ -841,12 +838,12 @@ void wxShape::FindRegionNames(wxStringList& list)
     list.Add(name);
   }
 
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode *node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     child->FindRegionNames(list);
-    node = node->GetNext();
   }
 }
 
@@ -854,12 +851,12 @@ void wxShape::AssignNewIds()
 {
 //  if (m_id == 0)
   m_id = wxNewId();
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     child->AssignNewIds();
-    node = node->GetNext();
   }
 }
 
@@ -872,12 +869,12 @@ void wxShape::OnMoveLinks(wxDC& dc)
   // Want to set the ends of all attached links
   // to point to/from this object
 
-  wxNode *current = m_lines.GetFirst();
-  while (current)
+  for (wxNode* current = m_lines.GetFirst();
+       current;
+       current = current->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)current->GetData();
+    wxLineShape* line = wxStaticCast(current->GetData(), wxLineShape);
     line->GetEventHandler()->OnMoveLink(dc);
-    current = current->GetNext();
   }
 }
 
@@ -890,7 +887,7 @@ void wxShape::OnDrawContents(wxDC& dc)
 
     if (m_pen) dc.SetPen(* m_pen);
 
-    wxShapeRegion *region = (wxShapeRegion *)m_regions.GetFirst()->GetData();
+    wxShapeRegion* region = wxStaticCast(m_regions.GetFirst()->GetData(), wxShapeRegion);
     if (region->GetFont()) dc.SetFont(* region->GetFont());
 
     dc.SetTextForeground(region->GetActualColourObject());
@@ -930,12 +927,12 @@ void wxShape::OnErase(wxDC& dc)
     return;
 
   // Erase links
-  wxNode *current = m_lines.GetFirst();
-  while (current)
+  for (wxNode* current = m_lines.GetFirst();
+       current;
+       current = current->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)current->GetData();
+    wxLineShape* line = wxStaticCast(current->GetData(), wxLineShape);
     line->GetEventHandler()->OnErase(dc);
-    current = current->GetNext();
   }
   GetEventHandler()->OnEraseContents(dc);
 }
@@ -969,23 +966,25 @@ void wxShape::EraseLinks(wxDC& dc, int attachment, bool recurse)
   if (!m_visible)
     return;
 
-  wxNode *current = m_lines.GetFirst();
-  while (current)
+  for (wxNode* current = m_lines.GetFirst();
+       current;
+       current = current->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)current->GetData();
+    wxLineShape* line = wxStaticCast(current->GetData(), wxLineShape);
     if (attachment == -1 || ((line->GetTo() == this && line->GetAttachmentTo() == attachment) ||
                              (line->GetFrom() == this && line->GetAttachmentFrom() == attachment)))
+    {
       line->GetEventHandler()->OnErase(dc);
-    current = current->GetNext();
+    }
   }
   if (recurse)
   {
-    wxNode *node = m_children.GetFirst();
-    while (node)
+    for (wxNode *node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->EraseLinks(dc, attachment, recurse);
-      node = node->GetNext();
     }
   }
 }
@@ -995,24 +994,26 @@ void wxShape::DrawLinks(wxDC& dc, int attachment, bool recurse)
   if (!m_visible)
     return;
 
-  wxNode *current = m_lines.GetFirst();
-  while (current)
+  for (wxNode* current = m_lines.GetFirst();
+       current;
+       current = current->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)current->GetData();
+    wxLineShape* line = wxStaticCast(current->GetData(), wxLineShape);
     if (attachment == -1 ||
         (line->GetTo() == this && line->GetAttachmentTo() == attachment) ||
         (line->GetFrom() == this && line->GetAttachmentFrom() == attachment))
+    {
       line->Draw(dc);
-    current = current->GetNext();
+    }
   }
   if (recurse)
   {
-    wxNode *node = m_children.GetFirst();
-    while (node)
+    for (wxNode* node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->DrawLinks(dc, attachment, recurse);
-      node = node->GetNext();
     }
   }
 }
@@ -1068,11 +1069,12 @@ bool wxShape::MoveLineToNewAttachment(wxDC& dc, wxLineShape *to_move,
   wxList newOrdering;
 
   // First, add all links to the new list.
-  wxNode *node = m_lines.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_lines.GetFirst();
+       node;
+       node = node->GetNext())
   {
     newOrdering.Append(node->GetData());
-    node = node->GetNext();
   }
 
   // Delete the line object from the list of links; we're going to move
@@ -1082,12 +1084,13 @@ bool wxShape::MoveLineToNewAttachment(wxDC& dc, wxLineShape *to_move,
   double old_x = (double) -99999.9;
   double old_y = (double) -99999.9;
 
-  node = newOrdering.GetFirst();
   bool found = false;
 
-  while (!found && node)
+  for (node = newOrdering.GetFirst();
+       !found && node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     if ((line->GetTo() == this && oldAttachment == line->GetAttachmentTo()) ||
         (line->GetFrom() == this && oldAttachment == line->GetAttachmentFrom()))
     {
@@ -1117,7 +1120,6 @@ bool wxShape::MoveLineToNewAttachment(wxDC& dc, wxLineShape *to_move,
       old_x = xp;
       old_y = yp;
     }
-    node = node->GetNext();
   }
 
   if (!found)
@@ -1151,36 +1153,37 @@ void wxShape::ApplyAttachmentOrdering(wxList& linesToSort)
   // This is a temporary store of all the lines.
   wxList linesStore;
 
-  wxNode *node = m_lines.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_lines.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     linesStore.Append(line);
-    node = node->GetNext();;
   }
 
   m_lines.Clear();
 
-  node = linesToSort.GetFirst();
-  while (node)
+  for (node = linesToSort.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     if (linesStore.Member(line))
     {
       // Done this one
       linesStore.DeleteObject(line);
       m_lines.Append(line);
     }
-    node = node->GetNext();
   }
 
   // Now add any lines that haven't been listed in linesToSort.
-  node = linesStore.GetFirst();
-  while (node)
+  for (node = linesStore.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     m_lines.Append(line);
-    node = node->GetNext();
   }
 }
 
@@ -1193,10 +1196,12 @@ void wxShape::SortLines(int attachment, wxList& linesToSort)
   // point. We'll tick them off as we've processed them.
   wxList linesAtThisAttachment;
 
-  wxNode *node = m_lines.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_lines.GetFirst();
+       node;
+       )
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     wxNode *next = node->GetNext();
     if ((line->GetTo() == this && line->GetAttachmentTo() == attachment) ||
         (line->GetFrom() == this && line->GetAttachmentFrom() == attachment))
@@ -1205,29 +1210,32 @@ void wxShape::SortLines(int attachment, wxList& linesToSort)
       delete node;
       node = next;
     }
-    else node = node->GetNext();
+    else
+    {
+       node = node->GetNext();
+    }
   }
 
-  node = linesToSort.GetFirst();
-  while (node)
+  for (node = linesToSort.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     if (linesAtThisAttachment.Member(line))
     {
       // Done this one
       linesAtThisAttachment.DeleteObject(line);
       m_lines.Append(line);
     }
-    node = node->GetNext();
   }
 
   // Now add any lines that haven't been listed in linesToSort.
-  node = linesAtThisAttachment.GetFirst();
-  while (node)
+  for (node = linesAtThisAttachment.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape *line = (wxLineShape *)node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     m_lines.Append(line);
-    node = node->GetNext();
   }
 }
 
@@ -1510,12 +1518,12 @@ void wxShape::Flash()
 void wxShape::Show(bool show)
 {
   m_visible = show;
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode *node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *image = (wxShape *)node->GetData();
+    wxShape* image = wxStaticCast(node->GetData(), wxShape);
     image->Show(show);
-    node = node->GetNext();
   }
 }
 
@@ -1536,7 +1544,7 @@ void wxShape::AddText(const wxString& string)
   wxNode *node = m_regions.GetFirst();
   if (!node)
     return;
-  wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+  wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
   region->ClearText();
   wxShapeTextLine *new_line =
       new wxShapeTextLine(0.0, 0.0, string);
@@ -1564,13 +1572,13 @@ void wxShape::SetAttachmentSize(double w, double h)
     scaleY = 1.0;
   else scaleY = h/height;
 
-  wxNode *node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxNode *node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
     point->m_x = (double)(point->m_x * scaleX);
     point->m_y = (double)(point->m_y * scaleY);
-    node = node->GetNext();
   }
 }
 
@@ -1710,15 +1718,14 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
   if (n_lines)
   {
     wxXmlNode* list = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("arcs"));
-    wxNode *node = m_lines.GetFirst();
     int i = 0;
-    while (node)
+    for (wxNode* node = m_lines.GetFirst();
+         node;
+         node = node->GetNext(), i++)
     {
-      wxShape *line = (wxShape*)node->GetData();
+      wxShape* line = wxStaticCast(node->GetData(), wxShape);
       //wxExpr *id_expr = new wxExpr(line->GetId());
       list->AddAttribute(wxString::Format(wxT("%d"), i), wxString::Format(wxT("%d"), (int)line->GetId()));
-      node = node->GetNext();
-      i++;
     }
     clause->AddChild(list);
   }
@@ -1760,16 +1767,16 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
   if (m_attachmentPoints.GetCount())
   {
     wxXmlNode* attachmentList = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("user_attachments"));
-    wxNode *node = m_attachmentPoints.GetFirst();
-    while (node)
+    for (wxNode *node = m_attachmentPoints.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+      wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
       wxXmlNode* pointExpr = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("point"));
       pointExpr->AddAttribute(wxT("id"), wxString::Format(wxT("%d"), point->m_id));
       pointExpr->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), point->m_x));
       pointExpr->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), point->m_y));
       attachmentList->AddChild(pointExpr);
-      node = node->GetNext();
     }
     clause->AddChild(attachmentList);
   }
@@ -1785,10 +1792,11 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
   int regionNo = 1;
   wxChar regionNameBuf[20];
   wxChar textNameBuf[20];
-  wxNode *node = m_regions.GetFirst();
-  while (node)
+  for (wxNode* node = m_regions.GetFirst();
+       node;
+       node = node->GetNext(), regionNo++)
   {
-    wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
     wxSprintf(regionNameBuf, wxT("region%d"), regionNo);
     wxSprintf(textNameBuf, wxT("text%d"), regionNo);
 
@@ -1825,24 +1833,21 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
     // text1 = ((x y string) (x y string) ...)
     wxXmlNode* textExpr = new wxXmlNode(wxXML_ELEMENT_NODE, textNameBuf);
 
-    wxNode *textNode = region->m_formattedText.GetFirst();
-    while (textNode)
+    for (wxNode *textNode = region->m_formattedText.GetFirst();
+         textNode;
+         textNode = textNode->GetNext())
     {
-      wxShapeTextLine *line = (wxShapeTextLine *)textNode->GetData();
+      wxShapeTextLine* line = wxStaticCast(textNode->GetData(), wxShapeTextLine);
       wxXmlNode* list2 = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("text"));
       list2->AddAttribute(wxT("x"), wxString::Format(wxT("%g"), line->GetX()));
       list2->AddAttribute(wxT("y"), wxString::Format(wxT("%g"), line->GetY()));
       list2->AddAttribute(wxT("text"), line->GetText());
       textExpr->AddChild(list2);
-      textNode = textNode->GetNext();
     }
 
     // Now add both attributes to the clause
     clause->AddChild(regionExpr);
     clause->AddChild(textExpr);
-
-    node = node->GetNext();
-    regionNo ++;
   }
 }
 
@@ -1981,8 +1986,13 @@ void wxShape::ReadRegions(wxXmlNode*clause)
 
   m_formatted = true;  // Assume text is formatted unless we prove otherwise
 
-  while (regionExpr = ::xmlFindChild(clause, regionNameBuf))
+  for (;;)
   {
+    regionExpr = ::xmlFindChild(clause, regionNameBuf);
+    if (NULL == regionExpr)
+    {
+       break;
+    }
     /*
      * Get the region information
      *
@@ -2121,10 +2131,11 @@ void wxShape::ReadRegions(wxXmlNode*clause)
     if (m_text.GetCount() > 0)
     {
       newRegion->ClearText();
-      wxNode *node = m_text.GetFirst();
-      while (node)
+      for (wxNode* node = m_text.GetFirst();
+           node;
+           )
       {
-        wxShapeTextLine *textLine = (wxShapeTextLine *)node->GetData();
+        wxShapeTextLine* textLine = wxStaticCast(node->GetData(), wxShapeTextLine);
         wxNode *next = node->GetNext();
         newRegion->GetFormattedText().Append((wxObject *)textLine);
         delete node;
@@ -2170,37 +2181,38 @@ void wxShape::Copy(wxShape& copy)
 
   // Copy text regions
   copy.ClearRegions();
-  wxNode *node = m_regions.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_regions.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShapeRegion *region = (wxShapeRegion *)node->GetData();
+    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
     wxShapeRegion *newRegion = new wxShapeRegion(*region);
     copy.m_regions.Append(newRegion);
-    node = node->GetNext();
   }
 
   // Copy attachments
   copy.ClearAttachments();
-  node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
     wxAttachmentPoint *newPoint = new wxAttachmentPoint;
     newPoint->m_id = point->m_id;
     newPoint->m_x = point->m_x;
     newPoint->m_y = point->m_y;
     copy.m_attachmentPoints.Append((wxObject *)newPoint);
-    node = node->GetNext();
   }
 
   // Copy lines
   copy.m_lines.Clear();
-  node = m_lines.GetFirst();
-  while (node)
+  for (node = m_lines.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxLineShape* line = (wxLineShape*) node->GetData();
+    wxLineShape* line = wxStaticCast(node->GetData(), wxLineShape);
     copy.m_lines.Append(line);
-    node = node->GetNext();
   }
 }
 
@@ -2210,10 +2222,10 @@ wxShape *wxShape::CreateNewCopy(bool resetMapping, bool recompute)
   if (resetMapping)
     oglObjectCopyMapping.Clear();
 
-  wxShape* newObject = (wxShape*) GetClassInfo()->CreateObject();
+  wxShape* newObject = wxStaticCast(GetClassInfo()->CreateObject(),wxShape);
 
-  wxASSERT( (newObject != NULL) );
-  wxASSERT( (newObject->IsKindOf(CLASSINFO(wxShape))) );
+  wxASSERT(newObject);
+  wxASSERT(newObject->IsKindOf(CLASSINFO(wxShape)));
 
   Copy(*newObject);
 
@@ -2308,23 +2320,23 @@ void wxShape::MakeControlPoints()
 
 void wxShape::MakeMandatoryControlPoints()
 {
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     child->MakeMandatoryControlPoints();
-    node = node->GetNext();
   }
 }
 
 void wxShape::ResetMandatoryControlPoints()
 {
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     child->ResetMandatoryControlPoints();
-    node = node->GetNext();
   }
 }
 
@@ -2350,39 +2362,43 @@ void wxShape::ResetControlPoints()
   double right = (double)(widthMin / 2.0 + (maxX - minX));
 
   wxNode *node = m_controlPoints.GetFirst();
-  wxControlPoint *control = (wxControlPoint *)node->GetData();
+  wxControlPoint* control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = left; control->m_yoffset = top;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = 0; control->m_yoffset = top;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = right; control->m_yoffset = top;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = right; control->m_yoffset = 0;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = right; control->m_yoffset = bottom;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = 0; control->m_yoffset = bottom;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = left; control->m_yoffset = bottom;
 
-  node = node->GetNext(); control = (wxControlPoint *)node->GetData();
+  node = node->GetNext(); control = wxStaticCast(node->GetData(), wxControlPoint);
   control->m_xoffset = left; control->m_yoffset = 0;
 }
 
 void wxShape::DeleteControlPoints(wxDC *dc)
 {
-  wxNode *node = m_controlPoints.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_controlPoints.GetFirst();
+       node;
+       )
   {
-    wxControlPoint *control = (wxControlPoint *)node->GetData();
+    wxControlPoint* control = wxStaticCast(node->GetData(), wxControlPoint);
     if (dc)
+    {
         control->GetEventHandler()->OnErase(*dc);
+    }
     m_canvas->RemoveShape(control);
     delete control;
     delete node;
@@ -2392,12 +2408,12 @@ void wxShape::DeleteControlPoints(wxDC *dc)
   // so stop here
   if (!IsKindOf(CLASSINFO(wxDivisionShape)))
   {
-    node = m_children.GetFirst();
-    while (node)
+    for (node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->DeleteControlPoints(dc);
-      node = node->GetNext();
     }
   }
 }
@@ -2410,12 +2426,13 @@ void wxShape::OnDrawControlPoints(wxDC& dc)
   dc.SetBrush(* wxBLACK_BRUSH);
   dc.SetPen(* wxBLACK_PEN);
 
-  wxNode *node = m_controlPoints.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_controlPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxControlPoint *control = (wxControlPoint *)node->GetData();
+    wxControlPoint* control = wxStaticCast(node->GetData(), wxControlPoint);
     control->Draw(dc);
-    node = node->GetNext();
   }
   // Children of divisions are contained objects,
   // so stop here.
@@ -2423,33 +2440,34 @@ void wxShape::OnDrawControlPoints(wxDC& dc)
   // (critical when drawing)
   if (!IsKindOf(CLASSINFO(wxDivisionShape)))
   {
-    node = m_children.GetFirst();
-    while (node)
+    for (node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->GetEventHandler()->OnDrawControlPoints(dc);
-      node = node->GetNext();
     }
   }
 }
 
 void wxShape::OnEraseControlPoints(wxDC& dc)
 {
-  wxNode *node = m_controlPoints.GetFirst();
-  while (node)
+  wxNode* node;
+  for (node = m_controlPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxControlPoint *control = (wxControlPoint *)node->GetData();
+    wxControlPoint* control = wxStaticCast(node->GetData(), wxControlPoint);
     control->Erase(dc);
-    node = node->GetNext();
   }
   if (!IsKindOf(CLASSINFO(wxDivisionShape)))
   {
-    node = m_children.GetFirst();
-    while (node)
+    for (node = m_children.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxShape *child = (wxShape *)node->GetData();
+      wxShape* child = wxStaticCast(node->GetData(), wxShape);
       child->GetEventHandler()->OnEraseControlPoints(dc);
-      node = node->GetNext();
     }
   }
 }
@@ -2464,12 +2482,12 @@ void wxShape::Select(bool select, wxDC* dc)
     // so stop here
     if (!IsKindOf(CLASSINFO(wxDivisionShape)))
     {
-      wxNode *node = m_children.GetFirst();
-      while (node)
+      for (wxNode* node = m_children.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *child = (wxShape *)node->GetData();
+        wxShape* child = wxStaticCast(node->GetData(), wxShape);
         child->MakeMandatoryControlPoints();
-        node = node->GetNext();
       }
     }
     if (dc)
@@ -2480,12 +2498,12 @@ void wxShape::Select(bool select, wxDC* dc)
     DeleteControlPoints(dc);
     if (!IsKindOf(CLASSINFO(wxDivisionShape)))
     {
-      wxNode *node = m_children.GetFirst();
-      while (node)
+      for (wxNode* node = m_children.GetFirst();
+           node;
+           node = node->GetNext())
       {
-        wxShape *child = (wxShape *)node->GetData();
+        wxShape* child = wxStaticCast(node->GetData(), wxShape);
         child->DeleteControlPoints(dc);
-        node = node->GetNext();
       }
     }
   }
@@ -2515,13 +2533,13 @@ int wxShape::GetNumberOfAttachments() const
   else
   {
     int maxN = 3;
-    wxNode *node = m_attachmentPoints.GetFirst();
-    while (node)
+    for (wxNode* node = m_attachmentPoints.GetFirst();
+         node;
+         node = node->GetNext())
     {
-      wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+      wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
       if (point->m_id > maxN)
         maxN = point->m_id;
-      node = node->GetNext();
     }
     return maxN+1;;
   }
@@ -2534,13 +2552,13 @@ bool wxShape::AttachmentIsValid(int attachment) const
     return ((attachment >= 0) && (attachment < 4)) ;
   }
 
-  wxNode *node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxNode* node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
     if (point->m_id == attachment)
       return true;
-    node = node->GetNext();
   }
   return false;
 }
@@ -2565,17 +2583,17 @@ bool wxShape::GetAttachmentPosition(int attachment, double *x, double *y,
     {
         if (m_attachmentPoints.GetCount() > 0)
         {
-            wxNode *node = m_attachmentPoints.GetFirst();
-            while (node)
+            for (wxNode* node = m_attachmentPoints.GetFirst();
+                 node;
+                 node = node->GetNext())
             {
-                wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+                wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
                 if (point->m_id == attachment)
                 {
                     *x = (double)(m_xpos + point->m_x);
                     *y = (double)(m_ypos + point->m_y);
                     return true;
                 }
-                node = node->GetNext();
             }
             *x = m_xpos; *y = m_ypos;
             return false;
@@ -2660,14 +2678,14 @@ bool wxShape::HasDescendant(wxShape *image)
 {
   if (image == this)
     return true;
-  wxNode *node = m_children.GetFirst();
-  while (node)
+  for (wxNode* node = m_children.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxShape *child = (wxShape *)node->GetData();
+    wxShape* child = wxStaticCast(node->GetData(), wxShape);
     bool ans = child->HasDescendant(image);
     if (ans)
       return true;
-    node = node->GetNext();
   }
   return false;
 }
@@ -2675,13 +2693,12 @@ bool wxShape::HasDescendant(wxShape *image)
 // Clears points from a list of wxRealPoints, and clears list
 void wxShape::ClearPointList(wxList& list)
 {
-    wxNode* node = list.GetFirst();
-    while (node)
+    for (wxNode* node = list.GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxRealPoint* pt = (wxRealPoint*) node->GetData();
         delete pt;
-
-        node = node->GetNext();
     }
     list.Clear();
 }
@@ -2776,7 +2793,7 @@ wxRealPoint wxShape::CalcSimpleAttachment(const wxRealPoint& pt1, const wxRealPo
 int wxShape::GetLinePosition(wxLineShape* line)
 {
     for (size_t i = 0; i < m_lines.GetCount(); i++)
-        if ((wxLineShape*) (m_lines.Item(i)->GetData()) == line)
+        if (wxStaticCast(m_lines.Item(i)->GetData(), wxLineShape) == line)
             return i;
 
     return 0;
@@ -2931,16 +2948,15 @@ bool wxShape::GetBranchingAttachmentPoint(int attachment, int n, wxRealPoint& pt
 int wxShape::GetAttachmentLineCount(int attachment) const
 {
     int count = 0;
-    wxNode* node = m_lines.GetFirst();
-    while (node)
+    for (wxNode* node = m_lines.GetFirst();
+         node;
+         node = node->GetNext())
     {
-        wxLineShape* lineShape = (wxLineShape*) node->GetData();
+        wxLineShape* lineShape = wxStaticCast(node->GetData(), wxLineShape);
         if ((lineShape->GetFrom() == this) && (lineShape->GetAttachmentFrom() == attachment))
             count ++;
         else if ((lineShape->GetTo() == this) && (lineShape->GetAttachmentTo() == attachment))
             count ++;
-
-        node = node->GetNext();
     }
     return count;
 }

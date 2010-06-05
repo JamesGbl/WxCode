@@ -126,15 +126,15 @@ void wxDrawnShape::Rotate(double x, double y, double theta)
   // Rotate attachment points
   double sinTheta = (double)sin(actualTheta);
   double cosTheta = (double)cos(actualTheta);
-  wxNode *node = m_attachmentPoints.GetFirst();
-  while (node)
+  for (wxNode* node = m_attachmentPoints.GetFirst();
+       node;
+       node = node->GetNext())
   {
-    wxAttachmentPoint *point = (wxAttachmentPoint *)node->GetData();
+    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
     double x1 = point->m_x;
     double y1 = point->m_y;
     point->m_x = x1*cosTheta - y1*sinTheta + x*(1.0 - cosTheta) + y*sinTheta;
     point->m_y = x1*sinTheta + y1*cosTheta + y*(1.0 - cosTheta) + x*sinTheta;
-    node = node->GetNext();
   }
   m_rotation = theta;
 
@@ -183,7 +183,7 @@ void wxDrawnShape::OnDrawOutline(wxDC& dc, double x, double y, double w, double 
     if (m_metafiles[m_currentAngle].GetOutlineOp() != -1)
     {
         wxNode* node = m_metafiles[m_currentAngle].GetOps().Item(m_metafiles[m_currentAngle].GetOutlineOp());
-        wxASSERT (node != NULL);
+        wxASSERT (node);
         wxDrawOp* op = (wxDrawOp*) node->GetData();
 
         if (op->OnDrawOutline(dc, x, y, w, h, m_width, m_height))
@@ -1362,12 +1362,12 @@ wxPseudoMetaFile::~wxPseudoMetaFile()
 
 void wxPseudoMetaFile::Clear()
 {
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     delete op;
-    node = node->GetNext();
   }
   m_ops.Clear();
   m_gdiObjects.Clear();
@@ -1378,23 +1378,23 @@ void wxPseudoMetaFile::Clear()
 
 void wxPseudoMetaFile::Draw(wxDC& dc, double xoffset, double yoffset)
 {
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     op->Do(dc, xoffset, yoffset);
-    node = node->GetNext();
   }
 }
 
 void wxPseudoMetaFile::Scale(double sx, double sy)
 {
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     op->Scale(sx, sy);
-    node = node->GetNext();
   }
   m_width *= sx;
   m_height *= sy;
@@ -1402,12 +1402,12 @@ void wxPseudoMetaFile::Scale(double sx, double sy)
 
 void wxPseudoMetaFile::Translate(double x, double y)
 {
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     op->Translate(x, y);
-    node = node->GetNext();
   }
 }
 
@@ -1418,12 +1418,12 @@ void wxPseudoMetaFile::Rotate(double x, double y, double theta)
   double cosTheta = (double)cos(theta1);
   double sinTheta = (double)sin(theta1);
 
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     op->Rotate(x, y, theta, sinTheta, cosTheta);
-    node = node->GetNext();
   }
   m_currentRotation = theta;
 }
@@ -1748,6 +1748,8 @@ void wxPseudoMetaFile::ReadAttributes(wxExpr *clause, int whichAngle)
 // Does the copying for this object
 void wxPseudoMetaFile::Copy(wxPseudoMetaFile& copy)
 {
+  wxNode* node;
+
   copy.Clear();
 
   copy.m_currentRotation = m_currentRotation;
@@ -1759,35 +1761,35 @@ void wxPseudoMetaFile::Copy(wxPseudoMetaFile& copy)
   copy.m_outlineOp = m_outlineOp;
 
   // Copy the GDI objects
-  wxNode *node = m_gdiObjects.GetFirst();
-  while (node)
+  for (node = m_gdiObjects.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxObject *obj = (wxObject *)node->GetData();
     copy.m_gdiObjects.Append(obj);
-    node = node->GetNext();
   }
 
   // Copy the operations
-  node = m_ops.GetFirst();
-  while (node)
+  for (node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     copy.m_ops.Append(op->Copy(&copy));
-    node = node->GetNext();
   }
 
   // Copy the outline/fill operations
-  node = m_outlineColours.GetFirst();
-  while (node)
+  for (node = m_outlineColours.GetFirst();
+       node;
+       node = node->GetNext())
   {
     copy.m_outlineColours.Append((wxObject *)node->GetData());
-    node = node->GetNext();
   }
-  node = m_fillColours.GetFirst();
-  while (node)
+  for (node = m_fillColours.GetFirst();
+       node;
+       node = node->GetNext())
   {
     copy.m_fillColours.Append((wxObject *)node->GetData());
-    node = node->GetNext();
   }
 }
 
@@ -1814,8 +1816,9 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
   double lastY = 0.0;
 
   // Convert from metafile records to wxDrawnShape records
-  wxNode *node = metaFile->metaRecords.GetFirst();
-  while (node)
+  for (wxNode* node = metaFile->metaRecords.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxMetaRecord *record = (wxMetaRecord *)node->GetData();
     switch (record->metaFunction)
@@ -2107,7 +2110,6 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
         break;
       }
     }
-    node = node->GetNext();
   }
   double actualWidth = (double)fabs(metaFile->right - metaFile->left);
   double actualHeight = (double)fabs(metaFile->bottom - metaFile->top);
@@ -2164,8 +2166,9 @@ void wxPseudoMetaFile::GetBounds(double *boundMinX, double *boundMinY, double *b
   double minX = (double) 99999.9;
   double minY = (double) 99999.9;
 
-  wxNode *node = m_ops.GetFirst();
-  while (node)
+  for (wxNode* node = m_ops.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxDrawOp *op = (wxDrawOp *)node->GetData();
     switch (op->GetOp())
@@ -2236,7 +2239,6 @@ void wxPseudoMetaFile::GetBounds(double *boundMinX, double *boundMinY, double *b
       default:
         break;
     }
-    node = node->GetNext();
   }
 
   *boundMinX = minX;

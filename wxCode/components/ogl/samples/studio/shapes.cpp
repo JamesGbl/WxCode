@@ -69,11 +69,11 @@ void csEvtHandler::OnLeftClick(double WXUNUSED(x), double WXUNUSED(y), int keys,
   wxClientDC dc(GetShape()->GetCanvas());
   GetShape()->GetCanvas()->PrepareDC(dc);
 
-  csDiagramView* view = ((csCanvas*)GetShape()->GetCanvas())->GetView();
+  csDiagramView* view = wxStaticCast(GetShape()->GetCanvas(), csCanvas)->GetView();
   view->ReflectPointSize(GetShape()->GetFont()->GetPointSize());
 
   if (GetShape()->IsKindOf(CLASSINFO(wxLineShape)))
-      view->ReflectArrowState((wxLineShape*) GetShape());
+      view->ReflectArrowState(wxStaticCast(GetShape(), wxLineShape));
 
   csEditorToolPalette *palette = wxGetApp().GetDiagramPalette();
   if (palette->GetSelection() == PALETTE_TEXT_TOOL)
@@ -140,7 +140,7 @@ void csEvtHandler::OnLeftClick(double WXUNUSED(x), double WXUNUSED(y), int keys,
   else
   {
 #if wxUSE_STATUSBAR
-    ((wxFrame*)wxGetApp().GetTopWindow())->SetStatusText(m_label);
+    wxStaticCast(wxGetApp().GetTopWindow(), wxFrame)->SetStatusText(m_label);
 #endif // wxUSE_STATUSBAR
   }
 }
@@ -201,7 +201,7 @@ void csEvtHandler::OnDragRight(bool WXUNUSED(draw), double x, double y, int WXUN
 void csEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int attachment)
 {
   GetShape()->GetCanvas()->ReleaseMouse();
-  csCanvas *canvas = (csCanvas *)GetShape()->GetCanvas();
+  csCanvas *canvas = wxStaticCast(GetShape()->GetCanvas(), csCanvas);
 
   // Check if we're on an object
   int new_attachment;
@@ -219,7 +219,7 @@ void csEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int at
         wxToolBar* toolbar = wxGetApp().GetDiagramToolBar();
         bool haveArrow = toolbar->GetToolState(DIAGRAM_TOOLBAR_LINE_ARROW);
 
-        wxLineShape *lineShape = (wxLineShape *)theShape;
+        wxLineShape* lineShape = wxStaticCast(theShape, wxLineShape);
 
         // Yes, you can have more than 2 control points, in which case
         // it becomes a multi-segment line.
@@ -281,16 +281,16 @@ void csEvtHandler::OnDragLeft(bool draw, double x, double y, int keys, int attac
   GetShape()->GetEventHandler()->OnDrawOutline(dc, xx, yy, w, h);
 
   // Draw bounding box for other selected shapes
-  wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
+       node;
+       node = node->GetNext())
   {
-     wxShape* shape = (wxShape*) node->GetData();
+     wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
      {
         shape->GetBoundingBoxMax(&w, &h);
         shape->OnDrawOutline(dc, shape->GetX() + offsetX, shape->GetY() + offsetY, w, h);
      }
-     node = node->GetNext();
   }
 }
 
@@ -340,25 +340,24 @@ void csEvtHandler::OnBeginDragLeft(double x, double y, int keys, int attachment)
   GetShape()->GetEventHandler()->OnDrawOutline(dc, xx, yy, w, h);
 
   // Draw bounding box for other selected shapes
-  wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
+       node;
+       node = node->GetNext())
   {
-     wxShape* shape = (wxShape*) node->GetData();
+     wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
      {
         shape->GetBoundingBoxMax(&w, &h);
         shape->OnDrawOutline(dc, shape->GetX() + offsetX, shape->GetY() + offsetY, w, h);
      }
-     node = node->GetNext();
   }
-
   GetShape()->GetCanvas()->CaptureMouse();
 }
 
 
 void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
 {
-  csCanvas *canvas = (csCanvas *)GetShape()->GetCanvas();
+  csCanvas *canvas = wxStaticCast(GetShape()->GetCanvas(), csCanvas);
 
   canvas->ReleaseMouse();
   if ((GetShape()->GetSensitivityFilter() & OP_DRAG_LEFT) != OP_DRAG_LEFT)
@@ -395,10 +394,12 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
                 new csCommandState(ID_CS_MOVE, newShape, GetShape()));
 
   // Move line points
-  wxObjectList::compatibility_iterator node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
-  while (node)
+  wxObjectList::compatibility_iterator node;
+  for (node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
+       node;
+       node = node->GetNext())
   {
-     wxShape* shape = (wxShape*) node->GetData();
+     wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      // Only move the line point(s) if both ends move too
      if (shape->IsKindOf(CLASSINFO(wxLineShape)) &&
            wxStaticCast(shape, wxLineShape)->GetTo()->Selected() && wxStaticCast(shape, wxLineShape)->GetFrom()->Selected())
@@ -409,24 +410,24 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
         {
             wxLineShape* newLineShape = wxStaticCast(lineShape->CreateNewCopy(), wxLineShape);
 
-            wxObjectList::compatibility_iterator node1 = newLineShape->GetLineControlPoints()->GetFirst();
-            while (node1)
+            for (wxObjectList::compatibility_iterator node1 = newLineShape->GetLineControlPoints()->GetFirst();
+                 node1;
+                 node1 = node1->GetNext())
             {
                 wxRealPoint* point = (wxRealPoint*)node1->GetData();
                 point->x += offsetX;
                 point->y += offsetY;
-                node1 = node1->GetNext();
             }
             cmd->AddState(new csCommandState(ID_CS_MOVE_LINE_POINT, newLineShape, lineShape));
             lineShape->Erase(dc);
         }
      }
-     node = node->GetNext();
   }
 
   // Add other selected node shapes, if any
-  node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
-  while (node)
+  for (node = GetShape()->GetCanvas()->GetDiagram()->GetShapeList()->GetFirst();
+       node;
+       node = node->GetNext())
   {
      wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
@@ -436,9 +437,7 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
         newShape2->SetY(shape->GetY() + offsetY);
         cmd->AddState(new csCommandState(ID_CS_MOVE, newShape2, shape));
      }
-     node = node->GetNext();
   }
-
   canvas->GetView()->GetDocument()->GetCommandProcessor()->Submit(cmd);
 }
 
@@ -1039,19 +1038,19 @@ csLineShape::csLineShape()
 
 bool csLineShape::OnMoveMiddleControlPoint(wxDC& WXUNUSED(dc), wxLineControlPoint* lpt, const wxRealPoint& pt)
 {
-    csDiagramView* view = ((csCanvas*)GetCanvas())->GetView();
+    csDiagramView* view = wxStaticCast(GetCanvas(), csCanvas)->GetView();
 
     // Temporarily set the new shape properties so we can copy it
     lpt->SetX(pt.x); lpt->SetY(pt.y);
     lpt->m_point->x = pt.x; lpt->m_point->y = pt.y;
 
-    wxLineShape* newShape = (wxLineShape*) this->CreateNewCopy();
+    wxLineShape* newShape = wxStaticCast(this->CreateNewCopy(), wxLineShape);
 
     // Now set them back again
     lpt->SetX(lpt->m_originalPos.x); lpt->SetY(lpt->m_originalPos.y);
     lpt->m_point->x = lpt->m_originalPos.x; lpt->m_point->y = lpt->m_originalPos.y;
 
-    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(wxT("Move line point"), (csDiagramDocument*) view->GetDocument(),
+    view->GetDocument()->GetCommandProcessor()->Submit(new csDiagramCommand(_("Move line point"), wxStaticCast(view->GetDocument(), csDiagramDocument),
                 new csCommandState(ID_CS_MOVE_LINE_POINT, newShape, this)));
 
     return true;
@@ -1095,14 +1094,14 @@ void csLabelShape::OnEndDragLeft(double x, double y, int keys, int attachment)
 // Menu for editing shapes
 void studioShapeEditProc(wxMenu& menu, wxCommandEvent& event)
 {
-    wxShape* shape = (wxShape*) menu.GetClientData();
-    csDiagramView* view = ((csCanvas*)shape->GetCanvas())->GetView();
+    wxShape* shape = wxStaticCast(menu.GetClientData(), wxShape);
+    csDiagramView* view = wxStaticCast(shape->GetCanvas(), csCanvas)->GetView();
 
     switch (event.GetId())
     {
         case wxID_PROPERTIES:
         {
-            csEvtHandler* handler1 = (csEvtHandler *)shape->GetEventHandler();
+            csEvtHandler* handler1 = wxStaticCast(shape->GetEventHandler(), csEvtHandler);
             handler1->EditProperties();
 #if 0
             csEvtHandler* handler1 = (csEvtHandler *)shape->GetEventHandler();

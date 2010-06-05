@@ -713,8 +713,9 @@ bool wxXMetaFile::ReadFile(const wxChar *file)
 
 wxXMetaFile::~wxXMetaFile(void)
 {
-  wxObjectList::compatibility_iterator node = metaRecords.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = metaRecords.GetFirst();
+       node;
+       )
   {
     wxMetaRecord *rec = (wxMetaRecord *)node->GetData();
     delete rec;
@@ -731,8 +732,9 @@ bool wxXMetaFile::SetClipboard(int WXUNUSED(width), int WXUNUSED(height))
 
 bool wxXMetaFile::Play(wxDC *dc)
 {
-  wxObjectList::compatibility_iterator node = metaRecords.GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = metaRecords.GetFirst();
+       node;
+       node = node->GetNext())
   {
     wxMetaRecord *rec = (wxMetaRecord *)node->GetData();
     int rdFunction = rec->metaFunction;
@@ -1065,7 +1067,6 @@ bool wxXMetaFile::Play(wxDC *dc)
         break;
       }
     }
-    node = node->GetNext();
   }
   return true;
 }

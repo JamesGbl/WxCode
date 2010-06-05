@@ -37,7 +37,7 @@ bool DiagramView::OnCreate(wxDocument* doc, long WXUNUSED(flags))
   Activate(true);
 
   // Initialize the edit menu Undo and Redo items
-  doc->GetCommandProcessor()->SetEditMenu(((MyFrame*)frame)->editMenu);
+  doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(frame, MyFrame)->editMenu);
   doc->GetCommandProcessor()->Initialize();
 
   wxShapeCanvas *shapeCanvas = canvas;
@@ -113,16 +113,15 @@ void DiagramView::OnDraw(wxDC *dc)
   if (diagram_p->GetShapeList())
   {
     /* wxCursor *old_cursor = NULL; */
-    wxObjectList::compatibility_iterator current = diagram_p->GetShapeList()->GetFirst();
-
-    while (current) // Loop through the entire list of shapes
+    for (wxObjectList::compatibility_iterator current = diagram_p->GetShapeList()->GetFirst();
+         current;
+         current = current->GetNext())
     {
-        wxShape *object = (wxShape *)current->GetData();
+        wxShape* object = wxStaticCast(current->GetData(), wxShape);
         if (!object->GetParent())
         {
             object->Draw(* dc); // Draw the shape onto our printing dc
         }
-        current = current->GetNext();  // Procede to the next shape in the list
     }
   }
 }
@@ -174,15 +173,19 @@ bool DiagramView::OnClose(bool deleteWindow)
 wxShape *DiagramView::FindSelectedShape(void)
 {
   DiagramDocument *doc = GetDocument();
-  wxObjectList::compatibility_iterator node = doc->GetDiagram()->GetShapeList()->GetFirst();
-  while (node)
+  for (wxObjectList::compatibility_iterator node = doc->GetDiagram()->GetShapeList()->GetFirst();
+       node;
+       )
   {
-    wxShape *eachShape = (wxShape *)node->GetData();
+    wxShape* eachShape = wxStaticCast(node->GetData(), wxShape);
     if ((eachShape->GetParent() == NULL) && eachShape->Selected())
     {
       return eachShape;
     }
-    else node = node->GetNext();
+    else
+    {
+       node = node->GetNext();
+    }
   }
   return NULL;
 }
@@ -288,7 +291,7 @@ void MyCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
   if (info)
   {
     view->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand( info->GetClassName(), OGLEDIT_ADD_SHAPE, (DiagramDocument *)view->GetDocument(), info,
+      new DiagramCommand( info->GetClassName(), OGLEDIT_ADD_SHAPE, wxStaticCast(view->GetDocument(), DiagramDocument), info,
          x, y));
   }
 }
