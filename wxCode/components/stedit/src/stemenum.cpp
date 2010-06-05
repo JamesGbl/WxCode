@@ -1051,14 +1051,15 @@ void wxSTEditorMenuManager::DestroyMenuItem(wxMenu *menu, int menu_id, bool clea
     }
 
     // delete duplicate separators
-    while (node)
+    for (;
+         node;
+         node = node->GetNext())
     {
         wxMenuItem *item = (wxMenuItem*)node->GetData();
         if (lastItem && lastItem->IsSeparator() && item->IsSeparator())
             menu->Destroy(lastItem);
 
         lastItem = item;
-        node = node->GetNext();
     }
 
     // delete trailing separator too

@@ -698,18 +698,16 @@ void wxSTEditor::OnSetFocus(wxFocusEvent &event)
         return;
 
     // check to make sure that the parent is not being deleted
-    wxWindow *parent = GetParent();
-    while (parent)
+    for (wxWindow* parent = GetParent();
+         parent;
+         parent = parent->GetParent())
     {
         if (parent->IsBeingDeleted())
         {
             SetSendSTEEvents(false);
             return;
         }
-
-        parent = parent->GetParent();
     }
-
     SendEvent(wxEVT_STE_SET_FOCUS, 0, GetState(), GetFileName().GetFullPath(), false);
 }
 void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
@@ -893,8 +891,9 @@ void wxSTEditor::PasteRectangular(const wxString& str, int pos)
 
     wxString eolStr = GetEOLString();
 
-    wxStringTokenizer tkz(str, wxT("\r\n"), wxTOKEN_STRTOK);
-    while (tkz.HasMoreTokens())
+    for (wxStringTokenizer tkz(str, wxT("\r\n"), wxTOKEN_STRTOK);
+         tkz.HasMoreTokens();
+         line++)
     {
         if (line >= GetLineCount())
             AppendText(eolStr);
@@ -907,7 +906,6 @@ void wxSTEditor::PasteRectangular(const wxString& str, int pos)
             InsertText(line_end_pos, wxString(wxT(' '), line_start_pos + line_pos - line_end_pos));
 
         InsertText(line_start_pos + line_pos, token);
-        line = line + 1;
     }
 
     EndUndoAction();
@@ -1137,15 +1135,15 @@ size_t wxSTEditor::ConvertTabsToSpaces(bool to_spaces, int start_pos, int end_po
     size_t count = 0;
 
     BeginUndoAction();
-    int find_pos = SearchInTarget(findString);
-    while (find_pos >= 0)
+    for (int find_pos = SearchInTarget(findString);
+         find_pos >= 0;
+         find_pos = SearchInTarget(findString))
     {
         count++;
         ReplaceTarget(replaceString);
         SetTargetStart(find_pos);
         end_pos += diff;
         SetTargetEnd(end_pos);
-        find_pos = SearchInTarget(findString);
     }
     EndUndoAction();
 
@@ -1281,9 +1279,10 @@ int wxString_FindFromPos(const wxString& str, const wxString& chars,
 {
     const wxChar *c = str.GetData() + start_pos;
     size_t len      = str.Length();
-    size_t n        = start_pos;
 
-    while (n < len)
+    for (size_t n = start_pos;
+         n < len;
+         n++, c++)
     {
         int idx = chars.Find(*c);
 
@@ -1293,11 +1292,7 @@ int wxString_FindFromPos(const wxString& str, const wxString& chars,
         {
             return n;
         }
-
-        n++;
-        c++;
     }
-
     return wxNOT_FOUND;
 }
 
@@ -1334,8 +1329,9 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
     wxArrayString preserveEndArray;
     wxString preserveStart;
 
-    wxStringTokenizer tkz(preserveChars, wxT(" "), wxTOKEN_STRTOK);
-    while ( tkz.HasMoreTokens() )
+    for (wxStringTokenizer tkz(preserveChars, wxT(" "), wxTOKEN_STRTOK);
+         tkz.HasMoreTokens();
+         )
     {
         wxString token = tkz.GetNextToken();
         preserveStart += token[0];
@@ -1350,11 +1346,13 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
     for (line = top_line; line <= bottom_line; line++)
     {
         wxString lineText(GetLine(line).Strip(wxString::trailing));
-        int n = 0, col = 0, len = lineText.Length();
+        int col = 0, len = lineText.Length();
         const wxChar *c = lineText.GetData();
         bool ignore = false;
 
-        while (n < len)
+        for (int n = 0;
+             n < len;
+             )
         {
             // skip whitespace always
             while ((n < len) && ((*c == wxT(' ')) || (*c == wxT('\t')))) { c++; n++; }
@@ -1900,8 +1898,9 @@ size_t wxSTEditor::DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString
     size_t n, count = 0, keyword_count = langs.GetKeyWordsCount(lang_n);
     for (n = 0; n < keyword_count; n++)
     {
-        wxStringTokenizer tkz(langs.GetKeyWords(lang_n, n));
-        while ( tkz.HasMoreTokens() )
+        for (wxStringTokenizer tkz(langs.GetKeyWords(lang_n, n));
+             tkz.HasMoreTokens();
+             )
         {
             wxString token = tkz.GetNextToken();
 
@@ -3408,10 +3407,13 @@ int wxSTEditor::ReplaceAllStrings(const wxString &findString,
 
     int found_start_pos = 0;
     int found_end_pos   = 0;
-    int pos = FindString(findString, 0, -1, flags, STE_FINDSTRING_NOTHING,
-                         &found_start_pos, &found_end_pos);
 
-    while (pos != -1)
+    for (int pos = FindString(findString, 0, -1, flags, STE_FINDSTRING_NOTHING,
+                         &found_start_pos, &found_end_pos);
+         pos != wxNOT_FOUND;
+         pos = FindString(findString, pos + replace_len, -1, flags, STE_FINDSTRING_NOTHING,
+                         &found_start_pos, &found_end_pos)
+        )
     {
         ++count;
         SetTargetStart(found_start_pos);
@@ -3424,9 +3426,6 @@ int wxSTEditor::ReplaceAllStrings(const wxString &findString,
         // back up original cursor position to the "same" place
         if (pos < cursor_pos)
             cursor_pos += (replace_len - (found_end_pos-found_start_pos));
-
-        pos = FindString(findString, pos + replace_len, -1, flags, STE_FINDSTRING_NOTHING,
-                         &found_start_pos, &found_end_pos);
     }
 
     // return to starting pos or as close as possible
@@ -3453,15 +3452,15 @@ size_t wxSTEditor::FindAllStrings(const wxString &str, int flags,
     int found_end_pos   = 0;
     size_t count = 0;
 
-    int pos = FindString(str, 0, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos);
     wxArrayInt positions;
 
-    while (pos != -1)
+    for (int pos = FindString(str, 0, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos);
+         pos != wxNOT_FOUND;
+         pos = FindString(str, found_end_pos, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos))
     {
         count++;
         if (startPositions) startPositions->Add(found_start_pos);
         if (endPositions  ) endPositions->Add(found_end_pos);
-        pos = FindString(str, found_end_pos, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos);
     }
 
     return count;

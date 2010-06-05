@@ -896,15 +896,14 @@ wxArrayString wxSTETreeCtrlHelper::GetItemPath(const wxTreeItemId& id_)
     wxArrayString pathArray;
     wxCHECK_MSG(m_treeCtrl, pathArray, wxT("Invalid wxTreeCtrl"));
 
-    wxTreeItemId id = id_;
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
 
-    while( id && (id != rootId))
+    for (wxTreeItemId id = id_;
+         id && (id != rootId);
+         id = m_treeCtrl->GetItemParent(id))
     {
         pathArray.Insert(m_treeCtrl->GetItemText(id), 0);
-        id = m_treeCtrl->GetItemParent(id);
     }
-
     return pathArray;
 }
 
@@ -936,13 +935,14 @@ int wxSTETreeCtrlHelper::DeleteItem(const wxTreeItemId& id_, bool delete_empty, 
     else
     {
         // back up the tree and delete all parents that have no other children
-        wxTreeItemId parentId = m_treeCtrl->GetItemParent(id);
         wxTreeItemId parentId_last;
         wxTreeItemId rootId = m_treeCtrl->GetRootItem();
         m_treeCtrl->Delete(id);
         n++;
 
-        while (parentId && (parentId != rootId) && ((n <= levels) || (levels == -1)))
+        for (wxTreeItemId parentId = m_treeCtrl->GetItemParent(id);
+             parentId && (parentId != rootId) && ((n <= levels) || (levels == -1));
+             )
         {
             wxTreeItemIdValue tmpCookie;
             wxTreeItemId siblingId = m_treeCtrl->GetFirstChild(parentId, tmpCookie);
@@ -1059,9 +1059,10 @@ size_t wxSTETreeCtrlHelper::GetAllItemIds(const wxTreeItemId& start_id, wxArrayT
 size_t wxSTETreeCtrlHelper::DoGetAllItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type)
 {
     size_t count = 0;
-    wxTreeItemId id = start_id;
 
-    while (id)
+    for (wxTreeItemId id = start_id;
+         id;
+         id = m_treeCtrl->GetNextSibling(id))
     {
         if (get_type == STE_TREECTRLHELPER_GET_ALL)
         {
@@ -1083,10 +1084,7 @@ size_t wxSTETreeCtrlHelper::DoGetAllItemIds(const wxTreeItemId& start_id, wxArra
         wxTreeItemId childId = m_treeCtrl->GetFirstChild(id, childCookie);
         if (childId)
             count += DoGetAllItemIds(childId, arrayIds, get_type);
-
-        id = m_treeCtrl->GetNextSibling(id);
     }
-
     return count;
 }
 
@@ -1095,13 +1093,12 @@ void wxSTETreeCtrlHelper::SortChildren(const wxTreeItemId& item_)
     wxCHECK_RET(m_treeCtrl && item_, wxT("Invalid wxTreeCtrl"));
 
     wxTreeItemIdValue cookie;
-    wxTreeItemId childId = m_treeCtrl->GetFirstChild(item_, cookie);
-
-    while (childId)
+    for (wxTreeItemId childId = m_treeCtrl->GetFirstChild(item_, cookie);
+         childId;
+         childId = m_treeCtrl->GetNextChild(item_, cookie))
     {
         m_treeCtrl->SortChildren(childId);
         SortChildren(childId);
-        childId = m_treeCtrl->GetNextChild(item_, cookie);
     }
 }
 

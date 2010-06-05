@@ -769,8 +769,9 @@ wxString wxSTEditorStyles::ParseConfigLine(const wxString &key, const wxString &
     if (style_n == -1)
         return _("Unknown style name in '")+name+wxT("'\n");
 
-    wxStringTokenizer tkz(value, wxT(","));
-    while (tkz.HasMoreTokens())
+    for (wxStringTokenizer tkz(value, wxT(","));
+         tkz.HasMoreTokens();
+         )
     {
         wxString token = tkz.GetNextToken();
         option = token.BeforeFirst(wxT(':')).Strip(wxString::both);

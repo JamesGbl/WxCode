@@ -188,9 +188,9 @@ void wxSTEditorFindReplacePanel::Init()
 wxSizer *FindSizerSizer(wxSizer *sizer, wxSizer *topSizer)
 {
     wxSizerItemList &sizerList = topSizer->GetChildren();
-    wxNode *node = (wxNode*)sizerList.GetFirst();
-
-    while (node)
+    for (wxNode* node = (wxNode*)sizerList.GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxSizerItem *item = (wxSizerItem*)node->GetData();
         if (item->IsSizer())
@@ -204,19 +204,17 @@ wxSizer *FindSizerSizer(wxSizer *sizer, wxSizer *topSizer)
                     return foundSizer;
             }
         }
-
-        node = node->GetNext();
     }
-
     return NULL;
 }
 
 wxSizer *FindSizerWindow(wxWindow *win, wxSizer *topSizer)
 {
     wxSizerItemList &sizerList = topSizer->GetChildren();
-    wxNode *node = (wxNode*)sizerList.GetFirst();
 
-    while (node)
+    for (wxNode* node = (wxNode*)sizerList.GetFirst();
+         node;
+         node = node->GetNext())
     {
         wxSizerItem *item = (wxSizerItem*)node->GetData();
         if (item->IsWindow() && (item->GetWindow() == win))
@@ -227,10 +225,7 @@ wxSizer *FindSizerWindow(wxWindow *win, wxSizer *topSizer)
             if (foundSizer)
                 return foundSizer;
         }
-
-        node = node->GetNext();
     }
-
     return NULL;
 }
 

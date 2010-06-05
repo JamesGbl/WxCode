@@ -5025,8 +5025,9 @@ int wxSTEditorLangs::FindLanguageByFilename(const wxFileName& fileName_) const
         if (!HasLanguage(lang_n) || !GetUseLanguage(lang_n)) continue;
 
         wxString filePattern = GetFilePattern(lang_n).Lower();
-        wxStringTokenizer tokenizer(filePattern, wxT(";"));
-        while ( tokenizer.HasMoreTokens() )
+        for (wxStringTokenizer tokenizer(filePattern, wxT(";"));
+             tokenizer.HasMoreTokens();
+             )
         {
             wxString wildToken = tokenizer.GetNextToken();
             wxFileName wildFileName(wildToken);
