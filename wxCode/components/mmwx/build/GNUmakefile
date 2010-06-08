@@ -104,6 +104,7 @@ MMWX_LIB_HEADERS =  \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
 	include/wx/mmwx.h \
+	include/wx/mmwxdef.h \
 	include/wx/wx_pch.h
 MMWX_DLL_CXXFLAGS = $(____mmwx) $(____mmwx_3) -W -Wall -I../include \
 	-DWXMAKINGDLL_MMWX -fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
@@ -135,6 +136,7 @@ MMWX_DLL_HEADERS =  \
 	include/wx/mmNavigator.h \
 	include/wx/mmTextStretch.h \
 	include/wx/mmwx.h \
+	include/wx/mmwxdef.h \
 	include/wx/wx_pch.h
 MMWXTEST_CXXFLAGS = $(____mmwx) $(____mmwx_3) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)

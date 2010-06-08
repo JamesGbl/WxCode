@@ -972,6 +972,10 @@ SOURCE=..\include\wx\mmwx.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\include\wx\mmwxdef.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\include\wx\wx_pch.h
 # End Source File
 # End Group

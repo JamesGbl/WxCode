@@ -25,6 +25,9 @@ aclocal_verfull=$(aclocal --version)
 aclocal_maj=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\1/'`
 aclocal_min=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\2/'`
 aclocal_rel=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\3/'`
+if [[ "$aclocal_rel" = "" ]]; then aclocal_rel="0"; fi
+
+#echo "Your aclocal version is $aclocal_maj.$aclocal_min.$aclocal_rel"   # for debugging
 
 aclocal_minimal_maj=1
 aclocal_minimal_min=9
