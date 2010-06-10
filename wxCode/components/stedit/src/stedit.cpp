@@ -177,7 +177,7 @@ wxSTEditor* wxSTEditor::Clone(wxWindow *parent, wxWindowID id,
                               const wxPoint& pos, const wxSize& size,
                               long style, const wxString& name) const
 {
-    wxSTEditor *editor = (wxSTEditor*)GetClassInfo()->CreateObject();
+    wxSTEditor *editor = wxStaticCast(GetClassInfo()->CreateObject(), wxSTEditor);
     editor->Create(parent, id, pos, size, style, name);
     return editor;
 }
@@ -426,7 +426,7 @@ void wxSTEditor::OnScroll( wxScrollEvent& event )
     event.Skip();
     if (event.GetOrientation() == wxVERTICAL) return;
 
-    wxScrollBar *sb = (wxScrollBar*)event.GetEventObject();
+    wxScrollBar* sb = wxStaticCast(event.GetEventObject(), wxScrollBar);
     int pos   = event.GetPosition();
     int thumb = sb->GetThumbSize();
     //int range = sb->GetRange();

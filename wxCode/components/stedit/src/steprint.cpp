@@ -380,7 +380,7 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
 
     if (wxDynamicCast(parent, wxSTEditor))
     {
-        wxSTEditor *edit = (wxSTEditor*)parent;
+        wxSTEditor *edit = wxStaticCast(parent, wxSTEditor);
         SetPrintMagnification(edit->GetPrintMagnification());
         SetPrintColourMode(edit->GetPrintColourMode());
         SetPrintWrapMode(edit->GetPrintWrapMode() == wxSTC_WRAP_WORD);

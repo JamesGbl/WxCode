@@ -733,7 +733,7 @@ void wxSTEditorPrefDialogPageStyles::OnMarginClick( wxStyledTextEvent &event )
     if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
         return;
 
-    wxSTEditor *editor = (wxSTEditor*)event.GetEventObject();
+    wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
     int pos = event.GetPosition();
 
     if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
@@ -1895,14 +1895,14 @@ void wxSTEditorInsertTextDialog::OnButton(wxCommandEvent& event)
         case ID_STEDLG_INSERT_PREPEND_BITMAPBUTTON :
         {
             // set the clientdata of the menu to the combo it's for, see OnMenu
-            wxRect r = ((wxWindow*)event.GetEventObject())->GetRect();
+            wxRect r = wxStaticCast(event.GetEventObject(), wxWindow)->GetRect();
             m_insertMenu->SetClientData((void*)m_prependCombo);
             PopupMenu(m_insertMenu, r.GetRight(), r.GetTop());
             break;
         }
         case ID_STEDLG_INSERT_APPEND_BITMAPBUTTON :
         {
-            wxRect r = ((wxWindow*)event.GetEventObject())->GetRect();
+            wxRect r = wxStaticCast(event.GetEventObject(), wxWindow)->GetRect();
             m_insertMenu->SetClientData((void*)m_appendCombo);
             PopupMenu(m_insertMenu, r.GetRight(), r.GetTop());
             break;
@@ -1941,7 +1941,7 @@ void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
 
     if (c.Length())  // this must have been for the m_insertMenu
     {
-        wxComboBox* cBox = (wxComboBox*)m_insertMenu->GetClientData();
+        wxComboBox* cBox = wxStaticCast(m_insertMenu->GetClientData(), wxComboBox);
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
         int pos = cBox == m_prependCombo ? m_prepend_insert_pos : m_append_insert_pos;
 

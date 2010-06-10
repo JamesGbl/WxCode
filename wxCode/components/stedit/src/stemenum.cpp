@@ -1044,9 +1044,9 @@ void wxSTEditorMenuManager::DestroyMenuItem(wxMenu *menu, int menu_id, bool clea
     wxwxMenuItemListNode *node = menuItems.GetFirst();
 
     // delete leading separator
-    if (node && ((wxMenuItem*)node->GetData())->IsSeparator())
+    if (node && wxStaticCast(node->GetData(), wxMenuItem)->IsSeparator())
     {
-        menu->Destroy((wxMenuItem*)node->GetData());
+        menu->Destroy(wxStaticCast(node->GetData(), wxMenuItem));
         node = node->GetNext();
     }
 
@@ -1055,7 +1055,7 @@ void wxSTEditorMenuManager::DestroyMenuItem(wxMenu *menu, int menu_id, bool clea
          node;
          node = node->GetNext())
     {
-        wxMenuItem *item = (wxMenuItem*)node->GetData();
+        wxMenuItem* item = wxStaticCast(node->GetData(), wxMenuItem);
         if (lastItem && lastItem->IsSeparator() && item->IsSeparator())
             menu->Destroy(lastItem);
 
@@ -1064,9 +1064,9 @@ void wxSTEditorMenuManager::DestroyMenuItem(wxMenu *menu, int menu_id, bool clea
 
     // delete trailing separator too
     node = menuItems.GetLast();
-    if (node && ((wxMenuItem*)node->GetData())->IsSeparator())
+    if (node && wxStaticCast(node->GetData(), wxMenuItem)->IsSeparator())
     {
-        menu->Destroy((wxMenuItem*)node->GetData());
+        menu->Destroy(wxStaticCast(node->GetData(), wxMenuItem));
     }
 }
 

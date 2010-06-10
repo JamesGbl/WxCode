@@ -658,7 +658,7 @@ void wxSTEditorFrame::OnSTCUpdateUI(wxStyledTextEvent &event)
     if (!GetStatusBar()) // nothing to do
         return;
 
-    wxStyledTextCtrl* editor = (wxStyledTextCtrl*)event.GetEventObject();
+    wxStyledTextCtrl* editor = wxStaticCast(event.GetEventObject(), wxStyledTextCtrl);
     int pos   = editor->GetCurrentPos();
     int line  = editor->GetCurrentLine() + 1; // start at 1
     int lines = editor->GetLineCount();

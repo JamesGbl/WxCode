@@ -192,7 +192,7 @@ wxSizer *FindSizerSizer(wxSizer *sizer, wxSizer *topSizer)
          node;
          node = node->GetNext())
     {
-        wxSizerItem *item = (wxSizerItem*)node->GetData();
+        wxSizerItem *item = wxStaticCast(node->GetData(), wxSizerItem);
         if (item->IsSizer())
         {
             if (item->GetSizer() == sizer)
@@ -615,7 +615,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
 
     if (c.Length()) // this must have been for the m_insertMenu
     {
-        wxComboBox* cBox = (wxComboBox*)m_insertMenu->GetClientData();
+        wxComboBox* cBox = wxStaticCast(m_insertMenu->GetClientData(), wxComboBox);
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
         int pos = (cBox == m_findCombo) ? m_find_insert_pos : m_replace_insert_pos;
 
@@ -785,7 +785,7 @@ void wxSTEditorFindReplacePanel::OnMarginClick( wxStyledTextEvent &event )
     if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
         return;
 
-    wxSTEditor *editor = (wxSTEditor*)event.GetEventObject();
+    wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
     int pos = event.GetPosition();
 
     if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
