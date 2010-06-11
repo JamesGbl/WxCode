@@ -3087,14 +3087,14 @@ void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
         if (find)
         {
             frDialog = new wxSTEditorFindReplaceDialog(parent,
-                               GetFindReplaceData(), _("Find dialog"),
+                               GetFindReplaceData(), wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT),
                                style);
         }
         else // replace
         {
             style |= wxFR_REPLACEDIALOG;
             frDialog = new wxSTEditorFindReplaceDialog(parent,
-                               GetFindReplaceData(), _("Replace dialog"),
+                               GetFindReplaceData(), wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT),
                                style);
         }
 
