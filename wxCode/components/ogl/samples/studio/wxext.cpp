@@ -16,7 +16,7 @@ bool wxGetDevFolder(wxFileName* filename)
 {
    wxGetExeFolder(filename);
    filename->RemoveLastDir();
-   filename->AppendDir(wxTheApp->GetAppName().MakeLower());
+   filename->AppendDir(wxTheApp->GetAppName().Lower());
    return filename->DirExists();
 }
 
