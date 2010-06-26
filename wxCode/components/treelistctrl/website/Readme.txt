@@ -1,16 +1,39 @@
 Latest information:
 ===================
 
+* 2010-06-26 : new release (tooltips support, page-up/down, minor changes & bug fixes)
 * 2009-07-19 : new release (maintenance release)
-* 2008-12-05 : new release (fixed several crashes --upgrade recommended)
-* 2008-07-21 : new release (important fixes & enhancements to: events, selection, delete --upgrade recommended)
+* 2008-12-05 : new release (fixed several crashes)
+* 2008-07-21 : new release (important fixes & enhancements to: events, selection, delete)
 * 2008-06-18 : new release (minor changes only)
 * 2008-05-26 : change of maintainer from Otto Wyss to Ronan Chartois
 
+(see release details further down)
+
+
+Known problems:
+===============
+
+- Bug #2815443 : Edit control does not move with columns
+- end of drag triggers a menu event (wrong) on the item at the new position (even more wrong)
 
 
 Release History:
 ================
+
+* treelistctrl_2010-06.26.tar.gz
+  - Fixed: improved support for GCC 4.x & compiling under Linux/GTK [#2858731]
+  - Fixed: crash on start with GTK (call to SetBackgroundStyle)
+  - Fixed: Unicode support [#2911015]
+  - Fixed: spurious warning, unicode support with VC8.0 [#2962879]
+  - Fixed: keep multiple selection when right-clicking on any selected (included last selected) item
+  - Fixed: rectangle on non-current item after multiple unselection
+  - Fixed: explicit conversions around size_t
+  - Changed: made GetHeaderWindow() and GetMainWindow() protected (useless outside treelistctrl.cpp)
+  - Changed: IsVisible now with 'within' option, and will only return true for fully visible items
+  - Added: test program now reports selection content
+  - Added: tooltip support, also for individual items [feature#2858734]
+  - Added: support for page-up/page-down, improved 'end' key [feature#2989510]
 
 * treelistctrl_2009-07-19.tar.gz
   - Fixed: GetPrev() not working at all [#2691182]
@@ -56,10 +79,3 @@ Release History:
 
 * treelistctrl_2006-06-21.tar.gz
   - first available release on sf.net
-
-
-
-Known problems:
-===============
-
-- Bug #2815443 : Edit control does not move with columns
