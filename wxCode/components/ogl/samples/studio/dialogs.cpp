@@ -189,7 +189,7 @@ bool csSettingsDialog::TransferDataFromWindow()
     }
 
     // Apply settings to all open diagram documents
-    for (wxObjectList::compatibility_iterator node = wxGetApp().GetDocManager()->GetDocuments().GetFirst();
+    for (wxObjectList::compatibility_iterator node = wxDocManager::GetDocumentManager()->GetDocuments().GetFirst();
          node;
          node = node->GetNext())
     {

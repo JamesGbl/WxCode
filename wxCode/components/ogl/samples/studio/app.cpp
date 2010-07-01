@@ -53,7 +53,6 @@ IMPLEMENT_APP(csApp)
 
 csApp::csApp() : wxAppEx()
 {
-    m_docManager = NULL;
     m_diagramPalette = NULL;
     m_diagramToolBar = NULL;
     m_projectTreeCtrl = NULL;
@@ -75,6 +74,7 @@ csApp::csApp() : wxAppEx()
 
 csApp::~csApp()
 {
+    delete wxDocManager::GetDocumentManager();
 }
 
 // Initialise this in OnInit, not statically
@@ -99,10 +99,10 @@ bool csApp::OnInit(void)
     InitSymbols();
 
     //// Create a document manager
-    m_docManager = new wxDocManager();
+    wxDocManager* docManager = new wxDocManager();
 
     //// Create a template relating drawing documents to their views
-    (void) new wxDocTemplate(m_docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
+    (void) new wxDocTemplate(docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
             CLASSINFO(csDiagramDocument), CLASSINFO(csDiagramView));
 
     // Create the main frame window.
@@ -113,7 +113,7 @@ bool csApp::OnInit(void)
 #define wxDEFAULT_FRAME_STYLE_NO_CLIP \
     (wxDEFAULT_FRAME_STYLE & ~wxCLIP_CHILDREN)
 
-    csFrame* frame = new csFrame(m_docManager, NULL, wxID_ANY, GetAppDisplayName(), m_mainFramePos, m_mainFrameSize,
+    csFrame* frame = new csFrame(docManager, NULL, wxID_ANY, GetAppDisplayName(), m_mainFramePos, m_mainFrameSize,
                      wxDEFAULT_FRAME_STYLE_NO_CLIP | wxHSCROLL | wxVSCROLL);
 
     // Give it an icon
@@ -137,7 +137,7 @@ bool csApp::OnInit(void)
     menuBar->Append(menu, wxGetStockLabel(wxID_FILE));
 
     // A history of files visited. Use this menu.
-    m_docManager->FileHistoryUseMenu(menu);
+    docManager->FileHistoryUseMenu(menu);
 
     // View menu
     menu = new wxMenu();
@@ -155,7 +155,7 @@ bool csApp::OnInit(void)
 
     // Load the file history
     wxConfig config(wxT("OGL Studio"), wxT("wxWidgets"));
-    m_docManager->FileHistoryLoad(config);
+    docManager->FileHistoryLoad(config);
 
 #if wxUSE_STATUSBAR
     frame->CreateStatusBar();
@@ -184,7 +184,7 @@ bool csApp::OnInit(void)
 
     SetTopWindow(frame);
 
-    m_docManager->CreateDocument(wxEmptyString, wxDOC_NEW);
+    docManager->CreateDocument(wxEmptyString, wxDOC_NEW);
 
     return true;
 }
@@ -194,7 +194,6 @@ int csApp::OnExit(void)
     WriteOptions();
 
     wxDELETE(m_symbolDatabase);
-    wxDELETE(m_docManager);
     wxDELETE(m_shapeEditMenu);
     wxDELETE(m_helpController);
 
@@ -251,8 +250,8 @@ wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMen
        wxAcceleratorEntry(wxACCEL_CTRL, 'Q').ToString().wx_str()
        ));
     menuBar->Append(menu, wxGetStockLabel(wxID_FILE));
-    m_docManager->FileHistoryUseMenu(menu);
-    m_docManager->FileHistoryAddFilesToMenu(menu);
+    doc->GetDocumentManager()->FileHistoryUseMenu(menu);
+    doc->GetDocumentManager()->FileHistoryAddFilesToMenu(menu);
 
     // Edit menu
     menu = new wxMenu();
@@ -499,7 +498,7 @@ bool csApp::WriteOptions()
     config.Write(wxT("gridStyle"), (long) m_gridStyle);
     config.Write(wxT("gridSpacing"), (long) m_gridSpacing);
 
-    m_docManager->FileHistorySave(config);
+    wxDocManager::GetDocumentManager()->FileHistorySave(config);
 
     return true;
 }

@@ -149,7 +149,7 @@ bool csDiagramView::OnClose(bool deleteWindow)
   wxMenu* fileMenu = m_frame->GetMenuBar()->GetMenu(0);
 
   // Remove file menu from those managed by the command history
-  wxGetApp().GetDocManager()->FileHistoryRemoveMenu(fileMenu);
+  diagramDoc->GetDocumentManager()->FileHistoryRemoveMenu(fileMenu);
 
   Activate(false);
   m_frame->Show(false);

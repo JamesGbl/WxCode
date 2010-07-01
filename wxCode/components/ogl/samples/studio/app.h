@@ -88,7 +88,6 @@ public:
     wxComboBox* GetZoomComboBox() const { return m_zoomComboBox; }
     wxMenu* GetShapeEditMenu() const { return m_shapeEditMenu; }
     wxDiagramClipboard& GetDiagramClipboard() const { return (wxDiagramClipboard&) m_diagramClipboard; }
-    wxDocManager* GetDocManager() const { return m_docManager; }
     wxHelpControllerBase* GetHelpController() const { return m_helpController; }
 
     int GetGridStyle() const { return m_gridStyle; }
@@ -98,7 +97,6 @@ public:
     void SetGridSpacing(int spacing) { m_gridSpacing = spacing; }
 
 protected:
-    wxDocManager*           m_docManager;
     wxSashLayoutWindow*     m_diagramPaletteSashWindow;
     wxSashLayoutWindow*     m_diagramToolBarSashWindow;
     wxSashLayoutWindow*     m_projectSashWindow;
