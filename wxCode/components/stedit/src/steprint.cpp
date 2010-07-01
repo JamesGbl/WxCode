@@ -367,10 +367,11 @@ bool wxSTEditorPrintout::PrintScaling(wxDC *dc)
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPrintOptionsDialog, wxDialog);
 
 wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
-                             :wxDialog(parent, wxID_ANY, _("Printout options"),
+                             :wxDialog(parent, wxID_ANY, _("Printer options"),
                                        wxDefaultPosition, wxDefaultSize,
                                        wxDEFAULT_DIALOG_STYLE_RESIZE)
 {
+    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
     wxSizer *sizer = wxSTEditorPrintPrefsSizer(this, true, true);
 
     wxSizer* stdButtonSizer = CreateStdDialogButtonSizer(wxOK|wxCANCEL);
