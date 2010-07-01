@@ -1568,16 +1568,16 @@ bool wxSTEditor::ShowSetZoomDialog()
                                wxEmptyString,
                                _("Change text font size"),
                                GetZoom(), -10, 20, wxDefaultPosition);
-    if (numDlg.ShowModal() == wxID_CANCEL)
-        return false;
-
-    int val = numDlg.GetValue();
-    if (GetEditorPrefs().IsOk())
-        GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_ZOOM, val);
-    else
-        SetZoom(val);
-
-    return true;
+    bool ok = (wxID_CANCEL != numDlg.ShowModal());
+    if (ok)
+    {
+        int val = numDlg.GetValue();
+        if (GetEditorPrefs().IsOk())
+            GetEditorPrefs().SetPrefIntByID(ID_STE_PREF_ZOOM, val);
+        else
+            SetZoom(val);
+    }
+    return ok;
 }
 
 // This code copied from SciTEBase.cxx
@@ -3642,14 +3642,12 @@ bool wxSTEditor::ShowPrintSetupDialog()
     wxPrintDialogData printDialogData(*printData);
     wxPrintDialog printerDialog(this, &printDialogData);
 
-    int ret = printerDialog.ShowModal();
-
-    if (ret != wxID_CANCEL)
+    bool ok = (wxID_CANCEL != printerDialog.ShowModal());
+    if (ok)
     {
         *printData = printerDialog.GetPrintDialogData().GetPrintData();
     }
-
-    return ret != wxID_CANCEL;
+    return ok;
 }
 
 bool wxSTEditor::ShowPrintPageSetupDialog()
@@ -3659,21 +3657,20 @@ bool wxSTEditor::ShowPrintPageSetupDialog()
     *pageSetupData = *printData;
 
     wxPageSetupDialog pageSetupDialog(this, pageSetupData);
-    int ret = pageSetupDialog.ShowModal();
-
-    if (ret != wxID_CANCEL)
+    bool ok = (wxID_CANCEL != pageSetupDialog.ShowModal());
+    if (ok)
     {
         *printData = pageSetupDialog.GetPageSetupData().GetPrintData();
         *pageSetupData = pageSetupDialog.GetPageSetupData();
     }
-    return ret != wxID_CANCEL;
+    return ok;
 }
 
 bool wxSTEditor::ShowPrintOptionsDialog()
 {
     wxSTEditorPrintOptionsDialog dialog(this);
-
-    if (dialog.ShowModal() == wxID_OK)
+    bool ok = (wxID_OK == dialog.ShowModal());
+    if (ok)
     {
         if (GetEditorPrefs().IsOk())
         {
@@ -3689,11 +3686,8 @@ bool wxSTEditor::ShowPrintOptionsDialog()
             SetPrintWrapMode(dialog.GetPrintWrapMode());
             // oops no way to set this
         }
-
-        return true;
     }
-
-    return false;
+    return ok;
 }
 
 const wxSTEditorOptions& wxSTEditor::GetOptions() const
