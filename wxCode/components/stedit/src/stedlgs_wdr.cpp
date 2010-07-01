@@ -376,7 +376,7 @@ wxSizer *wxSTEditorPropertiesSizer( wxWindow *parent, bool call_fit, bool set_si
 
     wxFlexGridSizer *item46 = new wxFlexGridSizer( 2, 0, 0 );
 
-    wxButton *item47 = new wxButton( parent, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton *item47 = new wxButton( parent, wxID_OK, wxGetStockLabel(wxID_CLOSE), wxDefaultPosition, wxDefaultSize, 0 );
     item47->SetDefault();
     item46->Add( item47, 0, wxALIGN_CENTER, 5 );
 
