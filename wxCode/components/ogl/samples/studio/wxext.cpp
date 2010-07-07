@@ -24,17 +24,22 @@ bool wxInitXRC()
 {
    wxXmlResource::Get()->InitAllHandlers();
 
-   wxString fullname = wxTheApp->GetAppName().Lower() + wxT(".xrc");
+   const wxString fullname = wxTheApp->GetAppName().Lower() + wxT(".xrc");
 
    wxFileName filename;
    wxGetExeFolder(&filename);
    filename.SetFullName(fullname);
    if (!filename.FileExists())
    {
-      ::wxGetDevFolder(&filename);
-      filename.AppendDir(wxT("src"));
-      filename.AppendDir(wxT("res"));
-      filename.SetFullName(fullname);
+      wxFileName dev;
+      ::wxGetDevFolder(&dev);
+      dev.AppendDir(wxT("src"));
+      dev.AppendDir(wxT("res"));
+      dev.SetFullName(fullname);
+      if (dev.FileExists())
+      {
+         filename = dev;
+      }
    }
    return wxXmlResource::Get()->Load(filename.GetFullPath());
 }
