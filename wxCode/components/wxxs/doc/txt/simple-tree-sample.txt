@@ -1,0 +1,213 @@
+/**
+\page simple-tree-sample Simple tree sample
+This sample demonstrates how to create and serialize the objects arranged in a tree structure.
+
+The sample contains one serializable class called \c SerializableObject which encapsulates serialized
+data member \c m_sTextData. The data member is marked to serialize by using the universal macro \c XS_SERIALIZE.
+
+The implementation of the serializable class used in this sample:
+\code
+class SerializableObject : public xsSerializable
+{
+	// RTTI and Clone() function must be provided
+	XS_DECLARE_CLONABLE_CLASS(SerializableObject);
+
+	// constructor
+	SerializableObject();
+	// copy contructor must be provided for cloneability
+	SerializableObject(const SerializableObject& obj);
+	// destructor
+	virtual ~SerializableObject() {;}
+	
+	// public data member
+	wxString m_sTextData;
+	
+private:
+	// private data member
+	static int m_nCounter;
+};
+
+SerializableObject::SerializableObject()
+{
+	// initialize member data
+	m_sTextData = wxString::Format( wxT("'SerializableObject' class instance No. %d"), m_nCounter++ );
+	// mark the data members which should be serialized
+	XS_SERIALIZE( m_sTextData, wxT("text") );
+}
+
+SerializableObject::SerializableObject(const SerializableObject& obj) : xsSerializable( obj )
+{
+	// initialize member data
+	m_sTextData = obj.m_sTextData;
+	// mark the data members which should be serialized
+	XS_SERIALIZE( m_sTextData, wxT("text") );
+}
+
+// static data member
+int SerializableObject::m_nCounter = 0;
+
+// implementation of RTTI and Clone() function for serializable class
+XS_IMPLEMENT_CLONABLE_CLASS( SerializableObject, xsSerializable );
+\endcode
+
+Colaborations between classes in this sample:
+\image html "simple-tree-sample-diagram.png"
+
+A tree stucture of objects in this sample is created by recurrently calling of
+the function \c xsSerializable* \c MakeTree which takes as the arguments
+the pointer to the parent object and the number of levels indicating the depth
+of the tree structure.
+\code
+xsSerializable* MakeTree( xsSerializable *parent, int levels )
+{
+	if( levels > 0 )
+	{
+		levels--;
+		// add new instances of serializable object to given parent and pass these new instances
+		// as parents for recursive call of this function ( operator << returns pointer to newly
+		// added object ).
+		MakeTree( *parent << new SerializableObject(), levels );
+		MakeTree( *parent << new SerializableObject(), levels );
+		
+		// also member function of xsSerializable class can be used for this task as follows:
+		//MakeTree( parent->AddChild( new SerializableObject() ), levels );
+	}
+	
+	return parent;
+}
+\endcode
+
+A content of the serializer is printed out by the function \c PrintTree:
+\code
+void PrintTree( xsSerializable *parent, int level )
+{
+	level++;
+	
+	// iterate through children list of given parent
+	SerializableList::compatibility_iterator node = parent->GetFirstChildNode();
+	while( node )
+	{
+		SerializableObject *pObject = (SerializableObject*) node->GetData();
+	
+		// print info about current object...
+		for( int i = 1; i < level; i++ ) wxPrintf( wxT(" ") );
+		wxPrintf( pObject->m_sTextData << wxT("\n") );
+		
+		// .. and process the object's children if exist
+		if( pObject->HasChildren() ) PrintTree( pObject, level );
+		
+		node = node->GetNext();
+	}
+}
+\endcode
+
+The application's main body:
+\code
+int main( int argc, char ** argv )
+{	
+	// create instance of XML serializer
+	wxXmlSerializer Serializer; 
+	
+	// first, create set of serializable class objects and add them to the serializer
+	
+	// add root item of a tree of serializable class objects to the serializer
+	Serializer << MakeTree( new SerializableObject(), 3 );
+	
+	// also member function of wxXmlSerializer class can be used for this task as follows
+	// (first NULL argument means that the object is added directly to the serializer's root):
+	//Serializer.AddItem( (xsSerializable*)NULL, MakeTree( new SerializableObject(), 3 ) );
+	
+	// store the serializer's content to an XML file
+	Serializer.SerializeToXml( wxT("data.xml") );
+	
+	// clear the serializer's content
+	Serializer.RemoveAll();
+	
+	// now, re-create list of stored class instances from XML file (data.xml)
+	Serializer.DeserializeFromXml( wxT("data.xml") );
+	
+	// if you declare serializable classes as clonable ones (using XS_DECLARE_CLONABLE_CLASS, etc), then you can
+	// simply copy whole serializer's content in this way (or using its copy contructor or wxXmlSerializer::CopyItems() function):
+	wxXmlSerializer Serializer2 = Serializer;
+	
+	// print out info about loaded class instances
+	PrintTree( Serializer2.GetRootItem(), 0 );
+	
+	// wait at application's termination
+	pause;
+	
+	return 0;
+}
+\endcode
+
+\n A content of the output XML file created by this sample application:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<root owner="" version="">
+    <object type="SerializableObject">
+        <property name="id" type="long">1</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 0</property>
+        <object type="SerializableObject">
+            <property name="id" type="long">2</property>
+            <property name="text" type="string">'SerializableObject' class instance No. 1</property>
+            <object type="SerializableObject">
+                <property name="id" type="long">4</property>
+                <property name="text" type="string">'SerializableObject' class instance No. 2</property>
+                <object type="SerializableObject">
+                    <property name="id" type="long">6</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 3</property>
+                </object>
+                <object type="SerializableObject">
+                    <property name="id" type="long">7</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 4</property>
+                </object>
+            </object>
+            <object type="SerializableObject">
+                <property name="id" type="long">5</property>
+                <property name="text" type="string">'SerializableObject' class instance No. 5</property>
+                <object type="SerializableObject">
+                    <property name="id" type="long">8</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 6</property>
+                </object>
+                <object type="SerializableObject">
+                    <property name="id" type="long">9</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 7</property>
+                </object>
+            </object>
+        </object>
+        <object type="SerializableObject">
+            <property name="id" type="long">3</property>
+            <property name="text" type="string">'SerializableObject' class instance No. 8</property>
+            <object type="SerializableObject">
+                <property name="id" type="long">10</property>
+                <property name="text" type="string">'SerializableObject' class instance No. 9</property>
+                <object type="SerializableObject">
+                    <property name="id" type="long">12</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 10</property>
+                </object>
+                <object type="SerializableObject">
+                    <property name="id" type="long">13</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 11</property>
+                </object>
+            </object>
+            <object type="SerializableObject">
+                <property name="id" type="long">11</property>
+                <property name="text" type="string">'SerializableObject' class instance No. 12</property>
+                <object type="SerializableObject">
+                    <property name="id" type="long">14</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 13</property>
+                </object>
+                <object type="SerializableObject">
+                    <property name="id" type="long">15</property>
+                    <property name="text" type="string">'SerializableObject' class instance No. 14</property>
+                </object>
+            </object>
+        </object>
+    </object>
+</root>
+\endcode
+
+\n Screenshot of running application from this example:
+\image html "simple-tree-sample.png" 
+*/
+    

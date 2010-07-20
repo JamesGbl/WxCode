@@ -1,0 +1,302 @@
+/**
+\page data-tree-sample Data tree sample
+
+The sample demostrates how to create and use a persistent hierarchical data structure.
+The serializer object (instance of the wxXmlSerializer class) holds data objects
+(instances of xsSerializable class ) reflecting a current structure of the tree
+contols' items. The serializer's content is stored in a configuration file so
+the tree control's content can be reconstructed from this information at the application's start up.
+
+Screenshot of the application:
+\image html "data-tree-sample.png"
+
+A content of the output XML file corresponding to the tree structure on the screenshot above:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<tree owner="TreeSampleApp" version="1.0.0">
+    <object type="SerializableObject">
+        <property name="id" type="long">1</property>
+        <property name="item_name" type="string">Item 1</property>
+        <object type="SerializableObject">
+            <property name="id" type="long">2</property>
+            <property name="item_name" type="string">Item 2</property>
+        </object>
+        <object type="SerializableObject">
+            <property name="id" type="long">3</property>
+            <property name="item_name" type="string">Item 3</property>
+            <object type="SerializableObject">
+                <property name="id" type="long">6</property>
+                <property name="item_name" type="string">Item 6</property>
+            </object>
+        </object>
+    </object>
+    <object type="SerializableObject">
+        <property name="id" type="long">4</property>
+        <property name="item_name" type="string">Item 4</property>
+        <object type="SerializableObject">
+            <property name="id" type="long">5</property>
+            <property name="item_name" type="string">Item 5</property>
+            <object type="SerializableObject">
+                <property name="id" type="long">7</property>
+                <property name="item_name" type="string">Item 7</property>
+            </object>
+            <object type="SerializableObject">
+                <property name="id" type="long">9</property>
+                <property name="item_name" type="string">Item 9</property>
+            </object>
+        </object>
+        <object type="SerializableObject">
+            <property name="id" type="long">8</property>
+            <property name="item_name" type="string">Item 8</property>
+        </object>
+    </object>
+</tree>
+\endcode
+
+\n The sample consists of two classes:
+
+- SerializableClass - instances of this class are adding to the tree structure,
+class encapsulates serialized \c wxString data type member \c m_sTreeItemName.
+
+- TreeSampleApp - encapsulates the functions necessary for the saving/loading
+of the SerializableClass instances to/from the XML file.  
+
+Relationships between classes in this sample:
+\image html "data-tree-sample-diagram.png"
+
+Declaration and implementation of these classes (taken from source files
+TreeSample.h and TreeSample.cpp):
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// SerializableObject class declaration /////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+class SerializableObject : public xsSerializable
+{
+public:
+	// RTTI and xsSerializable::Clone() function must be provided
+	XS_DECLARE_CLONABLE_CLASS(SerializableObject);
+
+	// constructor
+	SerializableObject();
+	// copy onstructor needed by default implementation of xsSerializable::Clone() function
+	SerializableObject(SerializableObject &obj);
+	// destructor
+	virtual ~SerializableObject();
+
+	// protected data members
+	wxString m_sTreeItemName;
+
+private:
+	// private data members
+	static int m_nItemCounter;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////
+// SerializableObject class implementation //////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+XS_IMPLEMENT_CLONABLE_CLASS(SerializableObject, xsSerializable);
+
+SerializableObject::SerializableObject()
+{
+	// initialize member data
+	m_sTreeItemName.Printf(wxT("Item %d"), ++m_nItemCounter);
+	// mark the data members which should be serialized
+	XS_SERIALIZE(m_sTreeItemName, wxT("item_name"));
+}
+
+SerializableObject::SerializableObject(SerializableObject &obj)
+{
+	// initialize member data
+	m_sTreeItemName = obj.m_sTreeItemName;
+	// mark the data members which should be serialized
+	XS_SERIALIZE(m_sTreeItemName, wxT("item_name"));
+}
+
+SerializableObject::~SerializableObject()
+{
+}
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// TreeSampleApp class declaration //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+class TreeSampleApp : public wxApp
+{
+public:
+	virtual bool OnInit();
+	virtual int OnExit();
+
+	// main serializer object
+	wxXmlSerializer m_XmlIO;
+};
+
+DECLARE_APP(TreeSampleApp);
+
+/////////////////////////////////////////////////////////////////////////////////////
+// TreeSampleApp class implementation ///////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_APP(TreeSampleApp);
+
+bool TreeSampleApp::OnInit()
+{
+	// load application settings if the configuration file exists, otherwise create new
+	// settings class object with default values
+
+	// initialize serializer
+	m_XmlIO.SetSerializerOwner(wxT("TreeSampleApp"));
+	m_XmlIO.SetSerializerRootName(wxT("tree"));
+	m_XmlIO.SetSerializerVersion(wxT("1.0.0"));
+
+	if( wxFileExists(wxT("data.xml")) )
+	{
+		// load tree data from configuration file (data class objects will be created at
+		// run-time from the information stored in the configuration file)
+		m_XmlIO.DeserializeFromXml(wxT("data.xml"));
+	}
+
+	// create and show main application frame
+	MainFrame *frame = new MainFrame(NULL);
+	SetTopWindow(frame);
+	frame->Show();
+
+	return true;
+}
+
+int TreeSampleApp::OnExit()
+{
+	// serialize tree data to given configuration file
+	m_XmlIO.SerializeToXml(wxT("data.xml"));
+
+	return 0;
+}
+\endcode
+
+\n The class MainFrame which is responsible for viewing a main application window
+has implemented the functions by which the tree structure can be viewed and the new
+objects can be added/removed to/from this tree structure.
+
+Implementation of these functions:
+\code
+MainFrame::MainFrame( wxWindow* parent )
+: _MainFrame( parent )
+{
+	SetIcon(wxIcon(wx_xpm));
+
+	// initialize root node
+	CreateTreeRoot();
+
+	// build the tree control content
+	BuildTreeFromData();
+}
+
+void MainFrame::CreateTreeRoot()
+{
+	// initialize root node
+	treeCtrl->AddRoot(wxT("Root"));
+	// Every tree control's item holds user data container encapsulating an ID of the corespondent serializable
+	// data object. Note that the root data object is created by the serializer and shouldn't be manipulated
+	// direcly (but it is possible as well).
+	treeCtrl->SetItemData(treeCtrl->GetRootItem(), new TreeData(wxGetApp().m_XmlIO.GetRootItem()->GetId()));
+}
+
+void MainFrame::BuildTreeFromData()
+{
+	// create a content of the tree control in accordance to the structure of the data objects stored in
+	// the serializer
+	_BuildChildren(treeCtrl->GetRootItem());
+	treeCtrl->ExpandAll();
+}
+
+void MainFrame::_BuildChildren(wxTreeItemId parent)
+{
+	// get ID of a serializable object associated with relevant tree node
+	long nId = ((TreeData*)treeCtrl->GetItemData(parent))->m_nDataId;
+	// get pointer to serializable object
+	xsSerializable *parentObject = wxGetApp().m_XmlIO.GetItem(nId);
+	if(parentObject)
+	{
+	    wxTreeItemId treeId;
+	    SerializableObject *pChild;
+		// iterate through all the parent data object's items and create relevant tree control nodes
+		SerializableList::compatibility_iterator node = parentObject->GetFirstChildNode();
+		while(node)
+		{
+		    pChild = (SerializableObject*)node->GetData();
+		    // create new tree control node
+		    treeId = treeCtrl->AppendItem(parent, pChild->m_sTreeItemName, -1, -1, new TreeData(pChild->GetId()));
+			// create next tree level items recursively
+			_BuildChildren(treeId);
+
+			node = node->GetNext();
+		}
+	}
+}
+
+void MainFrame::OnAddClick( wxCommandEvent& WXUNUSED(event) )
+{
+	// This function creates new tree node as a child of currently selected tree node.
+	// Hierarchical structure of data objects stored in the serializer copies the tree control's
+	// nodes structure.
+
+	// get selected tree node
+	wxTreeItemId treeNode = treeCtrl->GetSelection();
+	// create new serializable data object
+	SerializableObject *data = new SerializableObject();
+	// add new data object to the serializer at a position given by the tree structure
+	// (selected tree node is a parent)
+	long parentId = ((TreeData*)treeCtrl->GetItemData(treeNode))->m_nDataId;
+	wxGetApp().m_XmlIO.AddItem(parentId, data);
+	// create new tree node containing an ID of new data object and set it visible
+	treeCtrl->EnsureVisible(treeCtrl->AppendItem(treeNode, data->m_sTreeItemName, -1, -1, new TreeData(data->GetId())));
+}
+
+void MainFrame::OnUpdateAdd( wxUpdateUIEvent& event )
+{
+	event.Enable(treeCtrl->GetSelection().IsOk());
+}
+
+void MainFrame::OnRemoveClick( wxCommandEvent& event )
+{	wxUnusedVar(event);
+	// This function removes currently selected tree node. Also relevant data object
+	// in the serializer is removed.
+
+	// get selected tree node
+	wxTreeItemId treeNode = treeCtrl->GetSelection();
+	if(treeNode == treeCtrl->GetRootItem())
+	{
+		// remove all data objects from the serializer
+		wxGetApp().m_XmlIO.RemoveAll();
+		// clear the tree control's content
+		treeCtrl->DeleteAllItems();
+
+		// re-create tree root
+		CreateTreeRoot();
+	}
+	else
+	{
+	    // get ID of a serializable object associated with relevant tree node
+        long nId = ((TreeData*)treeCtrl->GetItemData(treeNode))->m_nDataId;
+		// remove the data object stored in the serializer
+		wxGetApp().m_XmlIO.RemoveItem(nId);
+		// remove tree control node
+		treeCtrl->Delete(treeNode);
+	}
+}
+
+void MainFrame::OnUpdateRemove( wxUpdateUIEvent& event )
+{
+	event.Enable(treeCtrl->GetSelection().IsOk());
+}
+
+void MainFrame::OnOk( wxCommandEvent& event )
+{	wxUnusedVar(event);
+	Destroy();
+}
+\endcode
+*/
+
+

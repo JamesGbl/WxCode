@@ -1,0 +1,66 @@
+/*********************************************************************
+ * Name:      main.cpp
+ * Purpose:   SimpleListSample tutorial
+ * Author:    Michal Bližòák (michal.bliznak@tiscali.cz)
+ * Created:   2009-03-13
+ * Copyright: Michal Bližòák
+ * License:   wxWidgets license (www.wxwidgets.org)
+ * Notes:
+ *********************************************************************/
+
+#ifdef _DEBUG_MSVC
+#define new DEBUG_NEW
+#endif
+
+#include <wx/wx.h>
+// wxXmlSerializer main header file
+#include "wx/wxxmlserializer/XmlSerializer.h"
+
+#define pause wxPrintf( wxT("Press ENTER to continue...\n") ); while( wxFgetc( stdin ) != '\n' );
+
+/////////////////////////////////////////////////////////////////////////////////////
+// SerializableObject class /////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+class SerializableObject : public xsSerializable
+{
+	// RTTI must be provided
+	DECLARE_DYNAMIC_CLASS(SerializableObject);
+
+	SerializableObject() {};
+	wxString DataMember;
+	
+	SerializableObject(const wxString& content)
+	{
+		DataMember = content;
+		XS_SERIALIZE( DataMember, wxT("object") );
+	}
+		
+	virtual ~SerializableObject() {;}
+};
+
+
+// implementation of RTTI for serializable class
+IMPLEMENT_DYNAMIC_CLASS( SerializableObject, xsSerializable );
+
+int main( int argc, char ** argv )
+{
+    // create the wxXmlSerializer class instance
+    wxXmlSerializer serializer;
+    // initialization of the serializer
+    serializer.SetSerializerOwner(wxT("Tree of objects"));
+    serializer.SetSerializerRootName(wxT("object"));
+    serializer.SetSerializerVersion(wxT("1.0.0"));
+    // create the serializable objects
+    SerializableObject *object1 = new SerializableObject(wxT("Object No. 1 connected to the serializer's root node."));
+    SerializableObject *object2 = new SerializableObject(wxT("Object No. 2 connected to the object No. 1."));
+    SerializableObject *object3 = new SerializableObject(wxT("Object No. 3 connected to the serializer's root node."));
+    SerializableObject *object4 = new SerializableObject(wxT("Object No. 4 connected to the object No. 3."));
+    // insert objects to the serializer
+    serializer << object1;
+    *object1 << object2;
+    serializer << object3;
+    *object3 << object4;
+    // store content of the serializer to the output XML file
+    serializer.SerializeToXml(wxT("data.xml"));
+}

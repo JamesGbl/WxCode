@@ -1,0 +1,43 @@
+
+/**
+
+@mainpage
+
+    The wxXmlSerializer (wxXS) is a cross-platform software library written in C++ programming language based 
+    on wxWidgets which offers a functionality needed for creation of persistent hierarchical
+    data containers able to store various C++ class instances (can be regarded as complex data records).
+    wxXS allows users to easily serialize hierarchically arranged class instances and their data members
+    to an XML structure and deserialize them later. The user can create classes derived from a so called
+    'serializable' base class provided by the wxXS and then define which the class members will be serialized
+    and which not into XML structure. The XML content can be then stored in a disk file or in any output stream. \n\n
+        
+    <b>Currently supported data types serializable by the wxXS are:</b>
+      - Generic data types such as:
+        bool, char, int, long, float, double
+      - Most frequently used wxWidgets data types: 
+        wxString, wxPoint, wxSize, wxRealPoint, wxPen, wxBrush, wxFont, wxColour
+      - wxArrayString, array of wxRealPoint values, arrays of common generic data types 
+        and list of wxRealPoint values
+      - Dynamic or static instances of the serializable base class itself or its derivates.
+      
+    Moreover, the library architecture allows user to extend built-in list of supported data types by any 
+    other data type. A new data type can be added by implementing a new I/O handler, which is relatively 
+    easy piece of code composed of code macros provided by the library and small amount of manual programming. \n\n
+    
+    <b>The wxXS library can be used for wide range of application scenarios, e.g.:</b>
+      - simple saving and loading of the program settings/configurations
+      - as a persistent dynamic linked list of class instances encapsulating application data
+      - as a persistent dynamic n-ary tree-based data container with methods needed for 
+        comfortable management of its items (useful for the software applications managing their 
+        data in tree controls, applications working with diagrams, etc.) \n\n
+       
+    <b>For understanding how to work with the library there are available some examples:</b>
+      - \subpage simple-list-sample "Simple list sample"
+      - \subpage simple-tree-sample "Simple tree sample"
+      - \subpage data-tree-sample "Data tree sample"
+      - \subpage static-setting-sample "Static setting sample"
+      - \subpage dynamic-setting-sample "Dynamic setting sample"
+      - \subpage custom-data-sample "Custom data sample"           
+
+*/
+

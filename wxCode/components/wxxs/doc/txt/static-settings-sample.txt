@@ -1,0 +1,486 @@
+/**
+\page static-setting-sample Static setting sample
+
+This sample demonstrates how to load/save an application settings via
+the wxXmlSerializer class. The serializable class instance with application
+settings is created as the static instance in this sample.
+
+The sample consists of three main classes:
+- SerializableObject class
+- Settings class
+- SettingsSampleApp class
+
+The following diagram showing the relations between these classes:
+\image html "static-settings-sample-diagram.png" 
+
+\n\n <b>SerializableObject class</b>
+\n Encapsulates wxString data type member \c m_sTextData. Class has implemented
+copy constructor necessary for proper functionality of the wxXmlSerializer class
+copy constructor and <tt>wxXmlSerializer::CopyItems()</tt> function.
+
+Declaration and implementation of this class (from source files StaticSettingsSample.h
+and StaticSettingsSample.cpp):
+
+\code
+class SerializableObject : public xsSerializable
+{
+public:
+	// RTTI must be provided
+	DECLARE_DYNAMIC_CLASS(SerializableObject);
+
+	// constructor
+	SerializableObject();
+	// copy constructor needed by the xml serializer class copy constructor
+	// or by default implementation of the xsSerializable::Clone() function.
+	// You haven't to define it if you don't plan to use the Clone() function
+	// or serializer class copy constructor.
+	SerializableObject(SerializableObject &obj);
+	// destructor
+	virtual ~SerializableObject();
+
+	// Clone function and copy constructor must be implemented for proper
+	// functionality of the serializer class copy constructor and
+	// wxXmlSerializer::CopyItems() function. The Clone function can
+	// be defined automatically if you use XS_DECLARE_CLONABLE_CLASS and
+	// XS_IMPLEMENT_CLONABLE_CLASS instead of the DECLARE_DYNAMIC_CLASS
+	// and IMPLEMENT_DYNAMIC_CLASS (see Settings class bellow)
+	virtual xsSerializable* Clone(){return new SerializableObject(*this);}
+
+	// protected data members
+	wxString m_sTextData;
+};
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// SerializableObject class /////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DYNAMIC_CLASS(SerializableObject, xsSerializable);
+
+SerializableObject::SerializableObject()
+{
+	// initialize member data
+	m_sTextData = wxT("Textual data encapsulated by 'SerializableObject' class object");
+	// mark the data members which should be serialized
+	XS_SERIALIZE(m_sTextData, wxT("text"));
+}
+
+SerializableObject::SerializableObject(SerializableObject &obj)
+: xsSerializable(obj)
+{
+	// initialize member data
+	m_sTextData = obj.m_sTextData;
+	// mark the data members which should be serialized
+	XS_SERIALIZE(m_sTextData, wxT("text"));
+}
+
+SerializableObject::~SerializableObject()
+{
+}
+\endcode
+
+
+\n <b>Settings class</b>
+
+This class encapsulates tha data members of all data types which are currently
+supported by the wxXmlSerializer library and also contains the static and dynamic
+instances of the SerializableObject class. All these members can be marked to
+serialize by calling the function <tt>Settings::MarkDataMembers()</tt> and their
+default values are set in the constructor.
+
+Declaration and implementation of the Settings class with commentary:
+\code
+class Settings : public xsSerializable
+{
+public:
+	// RTTI and xsSerializable::Clone() function must be provided
+	XS_DECLARE_CLONABLE_CLASS(Settings);
+
+	// constructor
+	Settings();
+	// copy constructor needed by the xml serializer class copy constructor
+	// or by default implementation of the xsSerializable::Clone() function.
+	// You haven't to define it if you don't plan to use the Clone() function
+	// or serializer class copy constructor.
+	Settings(Settings &obj);
+	// destructor
+	virtual ~Settings();
+
+protected:
+	// protected data members
+
+	// wxXmlSerializer currently supports these data types:
+	// int
+	int m_nIntData;
+	// long
+	long m_nLongData;
+	// double
+	float m_nFloatData;
+	// double
+	double m_nDoubleData;
+	// bool
+	bool m_fBoolData;
+	// wxChar
+	wxChar m_nCharData;
+	// wxString
+	wxString m_sTextData;
+	// wxPoint
+	wxPoint m_nPointData;
+	// wxSize
+	wxSize m_nSizeData;
+	// wxRealPoint
+	wxRealPoint m_nRealPointData;
+	// wxColour
+	wxColour m_nColourData;
+	// wxPen
+	wxPen m_PenData;
+	// wxBrush
+	wxBrush m_BrushData;
+	// wxFont
+	wxFont m_FontData;
+	// wxArrayString
+	wxArrayString m_arrStringData;
+	// RealPointArray - array of wxRealPoint values
+	RealPointArray m_arrRealPointData;
+	// RealPointList - list of wxRealPoint values
+	RealPointList m_lstRealPointData;
+	// StringMap - hash map with string keys and values
+	StringMap m_mapStringData;
+	// dynamic instances of xsSerializable class or other derived classes
+	SerializableObject *m_pDynamicSerializableObject;
+	// static instances of xsSerializable class or other derived classes
+	SerializableObject m_StaticSerializableObject;
+
+private:
+	// private auxiliary functions
+	void MarkDataMembers();
+};
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// Settings class ///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+XS_IMPLEMENT_CLONABLE_CLASS(Settings, xsSerializable);
+
+Settings::Settings()
+{
+	// set default values of application properties:
+
+	// int
+	m_nIntData = 1024;
+	// long
+	m_nLongData = 123456789;
+	// double
+	m_nDoubleData = 3.14159267;
+	// double
+	m_nFloatData = 3.14f;
+	// bool
+	m_fBoolData = true;
+	// wxChar
+	m_nCharData = 'A';
+	// wxString
+	m_sTextData = wxT("Textual data");
+	// wxPoint
+	m_nPointData = wxPoint(0, 0);
+	// wxSize
+	m_nSizeData = wxSize(100, 200);
+	// wxRealPoint
+	m_nRealPointData = wxRealPoint(1.23, 4.56);
+	// wxPen
+	m_PenData = wxPen(wxColour(0, 0, 0), 1, wxSOLID);
+	// wxBrush
+	m_BrushData = wxBrush(wxColour(0, 0, 0), wxSOLID);
+	// wxFont
+	m_FontData = wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+	// wxColour
+	m_nColourData = wxColour(255, 255, 255);
+	// wxArrayString
+	m_arrStringData.Add(wxT("First string item"));
+	m_arrStringData.Add(wxT("Second string item"));
+	// RealPointArray - array of wxRealPoint values
+	m_arrRealPointData.Add(wxRealPoint(1.2, 3.4));
+	m_arrRealPointData.Add(wxRealPoint(5.6, 7.8));
+	// RealPointList - list of wxRealPoint values
+	m_lstRealPointData.Append(new wxRealPoint(1.2, 3.4));
+	m_lstRealPointData.Append(new wxRealPoint(5.6, 7.8));
+	// StringMap - hash map with string keys and values
+	m_mapStringData[wxT("Key1")] = wxT("Value1");
+	m_mapStringData[wxT("Key2")] = wxT("Value2");
+	// dynamic instances of xsSerializable class or other derived classes
+	m_pDynamicSerializableObject = new SerializableObject();
+	// static instances of xsSerializable class or other derived classes
+	m_StaticSerializableObject.m_sTextData = wxT("Modified textual data encapsulated by 'SerializableObject' class object");
+
+	// mark class data members which should be serialized
+	MarkDataMembers();
+}
+
+// Copy constructor needed by the xml serializer class copy constructor
+// or by default implementation of the xsSerializable::Clone() function.
+// You haven't to define it if you don't plan to use the Clone() function
+// or serializer class copy constructor.
+Settings::Settings(Settings &obj) : xsSerializable(obj)
+{
+	// copy values from source object
+
+	m_nIntData = obj.m_nIntData;
+	m_nLongData = obj.m_nLongData;
+	m_nDoubleData = obj.m_nDoubleData;
+	m_nFloatData = obj.m_nFloatData;
+	m_fBoolData = obj.m_fBoolData;
+	m_nCharData = obj.m_nCharData;
+	m_sTextData = obj.m_sTextData;
+	m_nPointData = obj.m_nPointData;
+	m_nSizeData = obj.m_nSizeData;
+	m_nRealPointData = obj.m_nRealPointData;
+	m_PenData = obj.m_PenData;
+	m_BrushData = obj.m_BrushData;
+	m_FontData = obj.m_FontData;
+	m_nColourData = obj.m_nColourData;
+
+	// copy array items
+	WX_APPEND_ARRAY(m_arrStringData, obj.m_arrStringData);
+	WX_APPEND_ARRAY(m_arrRealPointData, obj.m_arrRealPointData);
+
+	// copy list item
+	wxRealPointListNode *node = obj.m_lstRealPointData.GetFirst();
+	while(node)
+	{
+		m_lstRealPointData.Append(new wxRealPoint(*node->GetData()));
+		node = node->GetNext();
+	}
+
+    // copy map content
+	m_mapStringData = obj.m_mapStringData;
+
+	// copy dynamic instances of xsSerializable class or other derived classes
+	m_pDynamicSerializableObject = (SerializableObject*)obj.m_pDynamicSerializableObject->Clone();
+
+	// copy static instances of xsSerializable class or other derived classes
+	m_StaticSerializableObject.m_sTextData = obj.m_StaticSerializableObject.m_sTextData;
+
+	// mark class data members which should be serialized
+	MarkDataMembers();
+}
+
+Settings::~Settings()
+{
+	// data clean up
+	if( m_pDynamicSerializableObject )delete m_pDynamicSerializableObject;
+
+	m_lstRealPointData.DeleteContents(true);
+	m_lstRealPointData.Clear();
+}
+
+void Settings::MarkDataMembers()
+{
+	// mark class data members which should be serialized
+	XS_SERIALIZE(m_nIntData, wxT("integer_data"));
+	XS_SERIALIZE(m_nLongData, wxT("long_int_data"));
+	XS_SERIALIZE(m_nFloatData, wxT("float_data"));
+	XS_SERIALIZE(m_nDoubleData, wxT("double_data"));
+	XS_SERIALIZE(m_fBoolData, wxT("boolean_data"));
+	XS_SERIALIZE(m_nCharData, wxT("char_data"));
+	XS_SERIALIZE(m_sTextData, wxT("string_data"));
+	XS_SERIALIZE(m_nPointData, wxT("point_data"));
+	XS_SERIALIZE(m_nSizeData, wxT("size_data"));
+	XS_SERIALIZE(m_nRealPointData, wxT("realpoint_data"));
+	XS_SERIALIZE(m_nColourData, wxT("color_data"));
+	XS_SERIALIZE(m_PenData, wxT("pen_data"));
+	XS_SERIALIZE(m_BrushData, wxT("brush_data"));
+	XS_SERIALIZE(m_FontData, wxT("font_data"));
+	XS_SERIALIZE(m_arrStringData, wxT("stringarray_data"));
+	XS_SERIALIZE(m_arrRealPointData, wxT("realpointarray_data"));
+	XS_SERIALIZE(m_lstRealPointData, wxT("realpointlist_data"));
+	XS_SERIALIZE(m_mapStringData, wxT("stringmap_data"));
+	XS_SERIALIZE_DYNAMIC_OBJECT_NO_CREATE(m_pDynamicSerializableObject, wxT("dynamicobject_data"));
+	XS_SERIALIZE_STATIC_OBJECT(m_StaticSerializableObject, wxT("staticobject_data"));
+}
+\endcode
+
+\n <b>SettingsSampleApp class</b>
+
+This class implements the functions necessary for the serilization/deserialization
+of the static Settings class instance which is encapsulated by this class.
+
+Function oninit() deserialize values of Setting class properties from XML file, if this
+file doesn't exist the static Settings class instance is serialized with its default
+values. Static Settings class instance is serialized as a standard property of
+the serializer's root node. 
+
+Function onexit() performs the saving the content of the serializer to the output
+XML file.
+
+The commented declaration and implementation of this class is here (from source
+files StaticSettingsSample.h StaticSettingsSample.cpp):
+
+\code
+class SettingsSampleApp : public wxApp
+{
+public:
+	virtual bool OnInit();
+	virtual int OnExit();
+
+	// public data members
+
+	Settings m_Settings;
+
+protected:
+	// protected data members
+
+	// main serializer object
+	wxXmlSerializer m_XmlIO;
+};
+
+DECLARE_APP(SettingsSampleApp);
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// SettingsSampleApp class //////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_APP(SettingsSampleApp);
+
+bool SettingsSampleApp::OnInit()
+{
+	// load application settings if the configuration file exists, otherwise default
+	// values are used
+
+	// initialize serializer
+	m_XmlIO.SetSerializerOwner(wxT("StaticSettingsSampleApp"));
+	m_XmlIO.SetSerializerRootName(wxT("settings"));
+	m_XmlIO.SetSerializerVersion(wxT("1.0.0"));
+
+    // tell the serializer's root node it should serialize static 'Settings' class instance as a
+    // standard property (the 'Settings' class instance is not created at the runtime, only its
+    // properties are serialized).
+    m_XmlIO.GetRootItem()->AddProperty(new xsProperty(&m_Settings, wxT("serializablestatic"), wxT("app_settings")));
+
+	if( wxFileExists(wxT("settings.xml")) )
+	{		// load settings from configuration file
+		m_XmlIO.DeserializeFromXml(wxT("settings.xml"));
+	}
+	
+	// data stored in serializable classes can be also accessed in a standard way via class data members like this:
+	// m_Settings.m_nIntData = 100;
+	// or via properties encapsulating the class members, for example in this way:
+	// m_Settings.GetProperty(wxT("integer_data"))->FromString(wxT("100"));
+	// m_Settings.GetProperty(wxT("integer_data"))->AsInt() = 1024;
+	// wxPrintf( wxT("Value %d\n"), m_Settings.GetProperty(wxT("integer_data"))->AsInt() );
+
+    // create and show main application frame
+    MainFrame *frame = new MainFrame(NULL);
+    SetTopWindow(frame);
+    frame->Show();
+
+    return true;
+}
+
+int SettingsSampleApp::OnExit()
+{
+	// Write application settings. We must tell the serializer the root's properties
+	// added manually in the OnInit() function should be serialzied as well. Note that
+	// the root node isn't serialized like any other nodes: only its properties can
+	// be serialized into special xml node called 'NAME_properties' where NAME is the root
+	// node name set by function SetSerializerRootName().
+    m_XmlIO.SerializeToXml(wxT("settings.xml"), xsWITH_ROOT );
+
+	return 0;
+}
+\endcode
+
+\n In this sample there is another class called MainFrame which takes care about
+view of the main application window. This class also implements the function
+<tt>DumpSerializableObject(xsSerializable *obj, wxTextCtrl *memo)</tt> which print out
+properties of the serializable class instance passed as the parameter
+<tt>xsSerializable *obj</tt>. Implementation of this function with commentary is here
+(from MainFrame.cpp):
+
+\code
+void MainFrame::DumpSerializableObject(xsSerializable *obj, wxTextCtrl *memo)
+{
+	// dump info about serializable object
+	memo->AppendText(wxString::Format(wxT("Serializable object of type '%s' with ID:%d at address 0x%x :\n"), obj->GetClassInfo()->GetClassName(), obj->GetId(), obj));
+
+	// get serialized properties maintained by the Setting class
+	xsProperty *prop;
+	PropertyList::compatibility_iterator node = obj->GetProperties().GetFirst();
+	while( node )
+	{
+		prop = node->GetData();
+		memo->AppendText( wxString::Format( wxT("Property name: %s, Type: %s, Value: %s\n"),
+											prop->m_sFieldName.c_str(),
+											prop->m_sDataType.c_str(),
+											prop->ToString().c_str() ) );
+		node = node->GetNext();
+	}
+
+	memo->AppendText(wxT("\n"));
+}
+\endcode
+
+\n A content of the XML file created by this sample application:   
+
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<settings owner="StaticSettingsSampleApp" version="1.0.0">
+    <settings_properties>
+        <object type="xsSerializable">
+            <property name="id" type="long">-1</property>
+            <property name="app_settings" type="serializablestatic">
+                <object type="Settings">
+                    <property name="id" type="long">-1</property>
+                    <property name="integer_data" type="int">1024</property>
+                    <property name="long_int_data" type="long">123456789</property>
+                    <property name="float_data" type="float">3.140000</property>
+                    <property name="double_data" type="double">3.141593</property>
+                    <property name="boolean_data" type="bool">1</property>
+                    <property name="char_data" type="char">A</property>
+                    <property name="string_data" type="string">Textual data</property>
+                    <property name="point_data" type="point">0,0</property>
+                    <property name="size_data" type="size">100,200</property>
+                    <property name="realpoint_data" type="realpoint">1.230000,4.560000</property>
+                    <property name="color_data" type="colour">255,255,255,255</property>
+                    <property name="pen_data" type="pen">0,0,0,255 1 100</property>
+                    <property name="brush_data" type="brush">0,0,0,255 100</property>
+                    <property name="font_data" type="font">arial 12</property>
+                    <property name="stringarray_data" type="arraystring">
+                        <item>First string item</item>
+                        <item>Second string item</item>
+                    </property>
+                    <property name="realpointarray_data" type="arrayrealpoint">
+                        <item>1.200000,3.400000</item>
+                        <item>5.600000,7.800000</item>
+                    </property>
+                    <property name="realpointlist_data" type="listrealpoint">
+                        <item>1.200000,3.400000</item>
+                        <item>5.600000,7.800000</item>
+                    </property>
+                    <property name="stringmap_data" type="mapstring">
+                        <item key="Key1">Value1</item>
+                        <item key="Key2">Value2</item>
+                    </property>
+                    <property name="dynamicobject_data" type="serializabledynamicnocreate">
+                        <object type="SerializableObject">
+                            <property name="id" type="long">-1</property>
+                            <property name="text" type="string">Textual data encapsulated by 'SerializableObject' class object</property>
+                        </object>
+                    </property>
+                    <property name="staticobject_data" type="serializablestatic">
+                        <object type="SerializableObject">
+                            <property name="id" type="long">-1</property>
+                            <property name="text" type="string">Modified textual data encapsulated by 'SerializableObject' class object</property>
+                        </object>
+                    </property>
+                </object>
+            </property>
+        </object>
+    </settings_properties>
+</settings>
+\endcode
+
+\n Screenshot of the running application:
+\image html "static-settings-sample.png"
+
+*/

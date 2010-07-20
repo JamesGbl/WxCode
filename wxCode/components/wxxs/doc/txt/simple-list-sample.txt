@@ -1,0 +1,145 @@
+/**
+\page simple-list-sample Simple list sample
+This example demonstrates creating a list of serializable class instances and their insertion to the serializer.
+
+The sample contains one serializable class called \c SerializableObject which encapsulates serialized
+data member \c m_sTextData. The data member is marked to serialize by using the universal macro \c XS_SERIALIZE.
+
+The implementation of the serializable class used in this sample:
+
+\code
+class SerializableObject : public xsSerializable
+{
+  // RTTI and Clone() function must be provided
+  XS_DECLARE_CLONABLE_CLASS(SerializableObject);
+
+	// constructor
+	SerializableObject();
+	// copy contructor must be provided for cloneability
+	SerializableObject(const SerializableObject& obj);
+	// destructor
+	virtual ~SerializableObject() {;}
+	
+	// public data member
+	wxString m_sTextData;
+	
+private:
+	// private data member
+	static int m_nCounter;
+};
+
+SerializableObject::SerializableObject()
+{
+	// initialize member data
+	m_sTextData = wxString::Format( wxT("'SerializableObject' class instance No. %d"), m_nCounter++ );
+	// mark the data members which should be serialized
+	XS_SERIALIZE( m_sTextData, wxT("text") );
+}
+
+SerializableObject::SerializableObject(const SerializableObject& obj) : xsSerializable( obj )
+{
+	// initialize member data
+	m_sTextData = obj.m_sTextData;
+	// mark the data members which should be serialized
+	XS_SERIALIZE( m_sTextData, wxT("text") );
+}
+
+// static data member
+int SerializableObject::m_nCounter = 0;
+
+// implementation of RTTI and Clone() function for serializable class
+XS_IMPLEMENT_CLONABLE_CLASS( SerializableObject, xsSerializable );
+\endcode
+
+Colaborations between classes in this sample:
+\image html "simple-list-sample-diagram.png"
+
+\n The serializable class instances are appended to the root node of the serializer
+so the inserted objects will be arranged into a list. An overloaded operator \c << is used
+for adding objects into the serializer.
+
+The content of the serializer is stored to the output XML file called \e data.xml.
+Then the serializer's content is removed and objects in the output XML file is
+reloaded back and printed to the screen.  
+ 
+\code
+int main( int argc, char ** argv )
+{	
+	// create instance of XML serializer
+	wxXmlSerializer Serializer;
+	
+	// first, create set of serializable class objects and add them to the serializer
+	for( int i = 0; i < 5; i++ )
+	{
+		// Add all new class objects to the serializer's root ( pointer to parent object is NULL )
+		// so the instances will be arranged into a list. Note that each serializable object 
+		// could be assigned as a child to another one so the objects could be arranged into a tree
+		// structure as well.
+		Serializer << new SerializableObject();
+		
+		// also member function of wxXmlSerializer could be used for this task as follows:
+		//Serializer.AddItem( (xsSerializable*)NULL, new SerializableObject() );
+	}
+	
+	// store the serializer's content to an XML file
+	Serializer.SerializeToXml( wxT("data.xml") );
+	
+	// clear the serializer's content
+	Serializer.RemoveAll();
+	
+	// now, re-create list of stored class instances from XML file (data.xml)
+	Serializer.DeserializeFromXml( wxT("data.xml") );
+	
+	// if you declare serializable classes as clonable ones (using XS_DECLARE_CLONABLE_CLASS, etc), then you can
+	// simply copy whole serializer's content in this way (or using its copy contructor or wxXmlSerializer::CopyItems() function):
+	wxXmlSerializer Serializer2 = Serializer;
+	
+	// print out info about loaded class instances
+	SerializableList::compatibility_iterator node = Serializer2.GetRootItem()->GetFirstChildNode();
+	while( node )
+	{
+		SerializableObject *pObject = (SerializableObject*) node->GetData();
+		
+		wxPrintf( pObject->m_sTextData << wxT("\n") );
+		
+		node = node->GetNext();
+	}
+	
+	// wait at application's termination
+	pause;
+	
+	return 0;
+}
+\endcode
+
+\n A content of the XML file created by this sample:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<root owner="" version="">
+    <object type="SerializableObject">
+        <property name="id" type="long">1</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 0</property>
+    </object>
+    <object type="SerializableObject">
+        <property name="id" type="long">2</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 1</property>
+    </object>
+    <object type="SerializableObject">
+        <property name="id" type="long">3</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 2</property>
+    </object>
+    <object type="SerializableObject">
+        <property name="id" type="long">4</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 3</property>
+    </object>
+    <object type="SerializableObject">
+        <property name="id" type="long">5</property>
+        <property name="text" type="string">'SerializableObject' class instance No. 4</property>
+    </object>
+</root>
+\endcode
+
+\n Screenshot of the executed application from this example:
+\image html "simple-list-sample.png"
+
+*/

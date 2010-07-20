@@ -1,0 +1,251 @@
+/**
+\page custom-data-sample Custom data sample
+
+This sample demonstrates how to extend the wxXmlSerializer about own data types, 
+In this sample wxColourDataType.
+
+First of all the user have to create the new IO handler and define the macros
+which will be used for marking serialized data members (code taken from
+CustomDataSample.h):
+
+\code
+// declaration of a class 'xsColourDataPropIO' encapsulating custom property I/O handler
+// for 'wxColouData' data type
+XS_DECLARE_IO_HANDLER(wxColourData, xsColourDataPropIO);
+
+// definition macros which create new serialized wxColourData property (without/with defined default value). data type's assertion is not compulsory, but usefull...
+#define XS_SERIALIZE_COLOURDATA(x, name) wxASSERT_MSG(x.IsKindOf(CLASSINFO(wxColourData)), wxT("Object is not wxColourData"));XS_SERIALIZE_PROPERTY(x, wxT("colourdata"), name);
+#define XS_SERIALIZE_COLOURDATA_EX(x, name, def) wxASSERT_MSG(x.IsKindOf(CLASSINFO(wxColourData)), wxT("Object is not wxColourData"));XS_SERIALIZE_PROPERTY_EX(x, wxT("colourdata"), name, xsColourDataPropIO::ToString(def));
+\endcode
+
+The macro <tt>XS_DECLARE_IO_HANDLER</tt> declares the new class <tt>xsColourDataPropIO</tt>
+which will handle the data members of <tt>wxColourData</tt> data type. Macros
+<tt>XS_SERIALIZE_COLOURDATA</tt> and <tt>XS_SERIALIZE_COLOURDATA_EX</tt> will be
+using for marking <tt>wxColourData</tt> data types in similar way like the macro
+<tt>XS_SERIALIZE</tt> used for standardly supported data types.
+
+\n In the the macro <tt>XS_DEFINE_IO_HANDLER</tt> the programmer have to
+implement the functions <tt>xsColourDataPropIO::ToString</tt>
+and <tt>xsColourDataPropIO::FromString</tt> which will be responsible for
+conversion of processed data value to its string representation and vice versa.
+
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// xsColourDataPropIO class /////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+// define class encapsulating custom data format handler
+XS_DEFINE_IO_HANDLER(wxColourData, xsColourDataPropIO);
+
+// two following static member functions of the data handler class MUST be defined manualy:
+
+// wxString xsPropIO::ToString(T value) -> creates a string representation of the given value
+wxString xsColourDataPropIO::ToString(const wxColourData& value)
+{
+	wxString out;
+    wxColourData data = value; // << hack due to bug in WX: function wxColourData::GetCustomColour() isn't constant like wxColourData::GetColour()
+
+	out << xsColourPropIO::ToString( data.GetColour() );
+	for(int i = 0; i < 16; i++)
+	{
+		out << wxT("|");
+		out << xsColourPropIO::ToString( data.GetCustomColour(i) );
+	}
+
+    return out;
+}
+
+// T xsPropIO::FromString(const wxString& value) -> converts data from given string representation to its relevant value
+wxColourData xsColourDataPropIO::FromString(const wxString& value)
+{
+	wxColourData data;
+
+	if(!value.IsEmpty())
+	{
+		int i = 0;
+		wxStringTokenizer tokens(value, wxT("|"), wxTOKEN_STRTOK);
+
+		data.SetColour(xsColourPropIO::FromString(tokens.GetNextToken()));
+		while(tokens.HasMoreTokens())
+		{
+			data.SetCustomColour(i, xsColourPropIO::FromString(tokens.GetNextToken()));
+			i++;
+		}
+	}
+
+	return data;
+}
+\endcode
+
+\n Setting class contains member of data type \c wxColourData:
+\code
+class Settings : public xsSerializable
+{
+public:
+	// RTTI and xsSerializable::Clone() function must be provided
+	XS_DECLARE_CLONABLE_CLASS(Settings);
+
+	// constructor
+	Settings();
+	// copy onstructor needed by default implementation of xsSerializable::Clone() function
+	Settings(Settings &obj);
+	// destructor
+	virtual ~Settings();
+
+	// public data members
+	wxColourData m_colourData;
+};
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// Settings class ///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+XS_IMPLEMENT_CLONABLE_CLASS(Settings, xsSerializable);
+
+Settings::Settings()
+{
+	// set default values of application properties:
+	m_colourData.SetColour(*wxBLUE);
+	for(int i = 0; i < 16; i++)m_colourData.SetCustomColour(i, wxColour(i*16, i*16, i*16));
+
+	// serialize colour data everytime
+	XS_SERIALIZE_COLOURDATA(m_colourData, wxT("colordlg_content"));
+
+	// this version of mark macro causes the data will be serialized only if its value
+	// differs from the default one (the last macro parameter)
+	//XS_SERIALIZE_COLOURDATA_EX(m_colourData, wxT("colordlg_content"), m_colourData);
+}
+
+Settings::Settings(Settings &obj)
+{
+	// set default values of application properties:
+	m_colourData = obj.m_colourData;
+
+	// serialize colour data everytime
+	XS_SERIALIZE_COLOURDATA(m_colourData, wxT("colordlg_content"));
+
+	// this version of mark macro causes the data will be serialized only if its value
+	// differs from the default one (the last macro parameter)
+	//XS_SERIALIZE_COLOURDATA_EX(m_colourData, wxT("colordlg_content"), m_colourData);
+}
+
+Settings::~Settings()
+{
+	// data clean up
+}
+\endcode
+
+The \c wxColourData data type member \c m_colourData is marked to serialize
+by previously defined macro \c XS_SERIALIZE_COLOURDATA. Note that new macros
+\c XS_DECLARE_CLONABLE_CLASS and \c XS_DECLARE_CLONABLE_CLASS were used in
+the code. These macros differ from \c DECLARE_DYNAMIC_CLASS and 
+\c IMPLEMENT_DYNAMIC_CLASS macros in such way that they implement also \c Clone()
+function for the class, which can be used for retrieving the exact copy of the 
+class instance. This function is further used by \c wxXmlSerializer::CopyItems()
+member function and its copy constructor so a whole serializer's content can be
+copied in a single program line.
+
+\n The last step in the initialization process of new IO handler is its registration.
+In this sample it is done in \c CustomDataSampleApp class by using the macro
+\c XS_REGISTER_IO_HANDLER.
+
+The declaration and implemetation of \c CustomDataSampleApp class (taken from 
+files CustomDataSample.h and CustomDataSample.cpp):  
+\code
+class CustomDataSampleApp : public wxApp
+{
+public:
+	virtual bool OnInit();
+	virtual int OnExit();
+
+	// public data members
+
+	// settings class
+	Settings *m_pSettings;
+
+protected:
+	// protected data members
+
+	// main serializer object
+	wxXmlSerializer m_XmlIO;
+};
+\endcode
+\code
+/////////////////////////////////////////////////////////////////////////////////////
+// CustomDataSampleApp class ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_APP(CustomDataSampleApp);
+
+bool CustomDataSampleApp::OnInit()
+{
+	// load application settings if the configuration file exists, otherwise create new
+	// settings class object with default values
+
+	// initialize serializer
+	m_XmlIO.SetSerializerOwner(wxT("CustomDataSampleApp"));
+	m_XmlIO.SetSerializerRootName(wxT("settings"));
+	m_XmlIO.SetSerializerVersion(wxT("1.0.0"));
+
+	// register new property I/O handler 'xsColourDataPropIO' for data type with name 'colourdata'
+	XS_REGISTER_IO_HANDLER(wxT("colourdata"), xsColourDataPropIO);
+
+    // create serialized settings class object manualy with default values
+    m_pSettings = new Settings();
+    // insert settings class object into serializer as its root node
+    m_XmlIO.SetRootItem(m_pSettings);
+
+	if( wxFileExists(wxT("settings.xml")) )
+	{		// load settings from configuration file
+		m_XmlIO.DeserializeFromXml(wxT("settings.xml"));
+	}
+	
+	// data stored in serializable classes can be also accessed in a standard way via class data members like this:
+	// m_pSettings->m_nIntData = 100;
+	// or via properties encapsulating the class members, for example in this way:
+	// m_pSettings->GetProperty(wxT("integer_data"))->FromString(wxT("100"));
+	// m_pSettings->GetProperty(wxT("integer_data"))->AsInt() = 1024;
+	// wxPrintf( wxT("Value %d\n"), m_pSettings->GetProperty(wxT("integer_data"))->AsInt() );
+	
+    // create and show main application frame
+    MainFrame *frame = new MainFrame(NULL);
+    SetTopWindow(frame);
+    frame->Show();
+
+    return true;
+}
+
+int CustomDataSampleApp::OnExit()
+{
+	// write application settings
+	if( m_pSettings )
+	{
+		// serialize settings to XML file
+		m_XmlIO.SerializeToXml(wxT("settings.xml"), xsWITH_ROOT);
+	}
+
+	return 0;
+}
+\endcode
+
+Colaborations between classes in this sample:
+\image html "custom-data-sample-diagram.png"
+
+\n A content of the output XML file created bz this sample application:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<settings owner="CustomDataSampleApp" version="1.0.0">
+    <settings_properties>
+        <object type="Settings">
+            <property name="id" type="long">-1</property>
+            <property name="colordlg_content" type="colourdata">64,0,128,255|0,0,0,255|16,16,16,255|32,32,32,255|48,48,48,255|64,64,64,255|80,80,80,255|96,96,96,255|112,112,112,255|128,128,128,255|144,144,144,255|160,160,160,255|176,176,176,255|192,192,192,255|208,208,208,255|224,224,224,255|240,240,240,255</property>
+        </object>
+    </settings_properties>
+</settings>
+\endcode
+
+\n Screenshot of the running application:
+\image html "custom-data-sample.png"
+
+*/
