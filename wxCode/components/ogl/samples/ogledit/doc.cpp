@@ -523,8 +523,8 @@ void MyEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int WX
 
   if (otherShape && !otherShape->IsKindOf(CLASSINFO(wxLineShape)))
   {
-    canvas->view->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, wxStaticCast(canvas->view->GetDocument(), DiagramDocument), CLASSINFO(wxLineShape),
+    canvas->GetDocument()->GetCommandProcessor()->Submit(
+      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, wxStaticCast(canvas->GetDocument(), DiagramDocument), CLASSINFO(wxLineShape),
       0.0, 0.0, false, NULL, GetShape(), otherShape));
   }
 }

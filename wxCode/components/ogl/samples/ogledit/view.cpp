@@ -28,19 +28,18 @@ END_EVENT_TABLE()
 // windows for displaying the view.
 bool DiagramView::OnCreate(wxDocument* doc, long WXUNUSED(flags))
 {
-  frame = GetMainFrame();
-  canvas = GetMainFrame()->canvas;
-  canvas->view = this;
-  canvas->Enable(true);
+  m_canvas = GetMainFrame()->canvas;
+  m_canvas->m_view = this;
+  m_canvas->Enable(true);
 
-  SetFrame(frame);
+  SetFrame(GetMainFrame());
   Activate(true);
 
   // Initialize the edit menu Undo and Redo items
-  doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(frame, MyFrame)->editMenu);
+  doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(GetFrame(), MyFrame)->editMenu);
   doc->GetCommandProcessor()->Initialize();
 
-  wxShapeCanvas *shapeCanvas = canvas;
+  wxShapeCanvas *shapeCanvas = m_canvas;
   DiagramDocument* diagramDoc = wxStaticCast(doc, DiagramDocument);
   shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
   diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
@@ -50,7 +49,7 @@ bool DiagramView::OnCreate(wxDocument* doc, long WXUNUSED(flags))
 
 DiagramDocument* DiagramView::GetDocument()
 {
-   return wxStaticCast(base::GetDocument(), DiagramDocument);
+   return wxStaticCast(wxView::GetDocument(), DiagramDocument);
 }
 
 #define CENTER  false // Place the drawing to the center of the page
@@ -128,13 +127,13 @@ void DiagramView::OnDraw(wxDC *dc)
 
 void DiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
 {
-  if (canvas)
-    canvas->Refresh();
+  if (m_canvas)
+    m_canvas->Refresh();
 }
 
 void DiagramView::OnChangeFilename()
 {
-    base::OnChangeFilename();
+    wxView::OnChangeFilename();
     wxWindow *win = GetFrame();
     if (!win) return;
 
@@ -147,26 +146,23 @@ void DiagramView::OnChangeFilename()
 // Clean up windows used for displaying the view.
 bool DiagramView::OnClose(bool deleteWindow)
 {
-  if (!base::OnClose(deleteWindow))
+  if (!wxView::OnClose(deleteWindow))
     return false;
 
   DiagramDocument *diagramDoc = GetDocument();
   diagramDoc->GetDiagram()->SetCanvas(NULL);
 
-  canvas->ClearBackground();
-  canvas->SetDiagram(NULL);
-  canvas->view = NULL;
-  canvas->Enable(false);
-  canvas = NULL;
+  m_canvas->ClearBackground();
+  m_canvas->SetDiagram(NULL);
+  m_canvas->m_view = NULL;
+  m_canvas->Enable(false);
+  m_canvas = NULL;
 
-  wxString s = wxGetApp().GetAppDisplayName();
-  if (frame)
-    frame->SetTitle(s);
-
-  SetFrame(NULL);
+  //wxString s = wxGetApp().GetAppDisplayName();
+  //if (frame)
+  //  frame->SetTitle(s);
 
   Activate(false);
-
   return true;
 }
 
@@ -210,7 +206,7 @@ void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         data.SetChooseFull(true);
         data.SetColour(theShape->GetBrush()->GetColour());
 
-        wxColourDialog *dialog = new wxColourDialog(frame, &data);
+        wxColourDialog *dialog = new wxColourDialog(GetFrame(), &data);
         wxBrush *theBrush = NULL;
         if (dialog->ShowModal() == wxID_OK)
         {
@@ -252,7 +248,7 @@ MyCanvas::MyCanvas(wxView *v, wxWindow *parent, wxWindowID id, const wxPoint& po
  wxShapeCanvas(parent, id, pos, size, style)
 {
   SetBackgroundColour(*wxWHITE);
-  view = v;
+  m_view = v;
 }
 
 MyCanvas::~MyCanvas(void)
@@ -290,8 +286,8 @@ void MyCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
   }
   if (info)
   {
-    view->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand( info->GetClassName(), OGLEDIT_ADD_SHAPE, wxStaticCast(view->GetDocument(), DiagramDocument), info,
+    GetDocument()->GetCommandProcessor()->Submit(
+      new DiagramCommand( info->GetClassName(), OGLEDIT_ADD_SHAPE, wxStaticCast(GetDocument(), DiagramDocument), info,
          x, y));
   }
 }

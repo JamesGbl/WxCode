@@ -71,11 +71,10 @@ END_EVENT_TABLE()
 bool csDiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
 {
   wxMenu* editMenu;
-  m_frame = wxGetApp().CreateChildFrame(doc, this, &editMenu);
-  m_canvas = wxGetApp().CreateCanvas(this, m_frame);
+  wxDocMDIChildFrame* frame = wxGetApp().CreateChildFrame(doc, this, &editMenu);
+  m_canvas = wxGetApp().CreateCanvas(this, frame);
   m_canvas->SetView(this);
 
-  SetFrame(m_frame);
   Activate(true);
 
   // Initialize the edit menu Undo and Redo items
@@ -114,10 +113,6 @@ bool csDiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
 
 csDiagramView::~csDiagramView(void)
 {
-    if (m_frame)
-    {
-        m_frame->SetView(NULL);
-    }
 }
 
 // Sneakily gets used for default print/preview
@@ -146,19 +141,19 @@ bool csDiagramView::OnClose(bool deleteWindow)
   m_canvas->SetView(NULL);
   m_canvas = NULL;
 
-  wxMenu* fileMenu = m_frame->GetMenuBar()->GetMenu(0);
+  wxMenu* fileMenu = wxStaticCast(GetFrame(), wxFrame)->GetMenuBar()->GetMenu(0);
 
   // Remove file menu from those managed by the command history
   diagramDoc->GetDocumentManager()->FileHistoryRemoveMenu(fileMenu);
 
   Activate(false);
-  m_frame->Show(false);
+  GetFrame()->Show(false);
 
   if (deleteWindow)
   {
-    m_frame->Destroy();
+    GetFrame()->Destroy();
+    SetFrame(NULL);
   }
-
   return true;
 }
 
@@ -365,7 +360,7 @@ void csDiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
             data.SetColour(firstShape->GetBrush()->GetColour());
         }
 
-        wxColourDialog *dialog = new wxColourDialog(m_frame, &data);
+        wxColourDialog *dialog = new wxColourDialog(GetFrame(), &data);
         wxBrush *theBrush = NULL;
         if (dialog->ShowModal() == wxID_OK)
         {

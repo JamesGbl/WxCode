@@ -18,17 +18,16 @@
 class MyCanvas: public wxShapeCanvas
 {
 // DECLARE_DYNAMIC_CLASS(wxShapeCanvas)
- protected:
- public:
-  wxView *view;
+protected:
+  wxView* m_view;
+public:
 
-  MyCanvas(wxView *view, wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
+  MyCanvas(wxView*, wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxRETAINED);
   virtual ~MyCanvas(void);
 
-  void OnMouseEvent(wxMouseEvent&);
-  void OnPaint(wxPaintEvent&);
+  wxDocument* GetDocument() const { return m_view->GetDocument(); }
 
   virtual void OnLeftClick(double x, double y, int keys = 0);
   virtual void OnRightClick(double x, double y, int keys = 0);
@@ -41,37 +40,40 @@ class MyCanvas: public wxShapeCanvas
   virtual void OnBeginDragRight(double x, double y, int keys=0);
   virtual void OnEndDragRight(double x, double y, int keys=0);
 
-DECLARE_EVENT_TABLE()
+protected:
+  void OnMouseEvent(wxMouseEvent&);
+  void OnPaint(wxPaintEvent&);
+  DECLARE_EVENT_TABLE()
+
+  friend class DiagramView;
 };
 
 class DiagramDocument;
 class DiagramView : public wxView
 {
-   typedef wxView base;
+  //typedef wxView base;
   DECLARE_DYNAMIC_CLASS(DiagramView)
-private:
+protected:
+  MyCanvas* m_canvas;
 public:
-  wxFrame *frame;
-  MyCanvas *canvas;
 
-  DiagramView(void) { canvas = NULL, frame = NULL; }
+  DiagramView(void) { m_canvas = NULL; }
   virtual ~DiagramView(void) {}
   virtual void OnChangeFilename();
 
   DiagramDocument* GetDocument();
 
-  bool OnCreate(wxDocument*, long flags);
-  void OnDraw(wxDC*);
-  void OnUpdate(wxView *sender, wxObject *hint = NULL);
-  bool OnClose(bool deleteWindow = true);
+  virtual bool OnCreate(wxDocument*, long flags);
+  virtual void OnDraw(wxDC*);
+  virtual void OnUpdate(wxView *sender, wxObject *hint = NULL);
+  virtual bool OnClose(bool deleteWindow = true);
 
   wxShape *FindSelectedShape(void);
-
+protected:
   void OnCut(wxCommandEvent&);
   void OnChangeBackgroundColour(wxCommandEvent&);
   void OnEditLabel(wxCommandEvent&);
-
-DECLARE_EVENT_TABLE()
+  DECLARE_EVENT_TABLE()
 };
 
 #endif

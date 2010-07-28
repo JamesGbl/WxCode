@@ -59,7 +59,7 @@ class csDiagramView : public wxView
    typedef wxView base;
    DECLARE_DYNAMIC_CLASS(csDiagramView)
 public:
-   csDiagramView(void) { m_canvas = NULL, m_frame = NULL; };
+   csDiagramView(void) : wxView() { m_canvas = NULL; }
    virtual ~csDiagramView(void);
 
    virtual bool OnCreate(wxDocument*, long flags);
@@ -131,7 +131,6 @@ protected:
    DECLARE_EVENT_TABLE()
 
 public:
-  wxDocMDIChildFrame* m_frame;
   csCanvas*     m_canvas;
   wxList        m_selections;
 };
