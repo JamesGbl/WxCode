@@ -284,10 +284,7 @@ void wxSTEditorOptions::SetNotebookPopupMenu(wxMenu* menu, bool is_static)
 
 /*static*/ void wxSTEditorOptions::RegisterIds()
 {
-   for (long i = ID_STE__FIRST; i <= ID_STE__LAST; i++)
-   {
-      wxRegisterId(i);
-   }
+   wxRegisterId(ID_STE__LAST); // TODO: how to do this right?
 }
 
 /*static*/ wxPathFormat wxSTEditorOptions::m_path_display_format = wxPATH_NATIVE;
