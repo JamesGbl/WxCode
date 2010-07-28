@@ -82,8 +82,8 @@ bool csApp::OnInit(void)
 {
     SetAppName(wxT("oglstudio"));
     SetAppDisplayName(wxT("OGL Studio"));
-    wxFileSystem::AddHandler(new wxZipFSHandler);
-    bool ok = ::wxInitXRC();
+    wxFileSystem::AddHandler(new wxZipFSHandler());
+    //bool ok = ::wxInitXRC();
 #if wxUSE_MS_HTML_HELP && !defined(__WXUNIVERSAL__)
     m_helpController = new wxWinHelpController();
 #else
