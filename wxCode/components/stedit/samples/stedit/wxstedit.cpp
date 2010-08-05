@@ -101,6 +101,19 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
 };
 
 // ----------------------------------------------------------------------------
+// STEditorFrame - the frame window
+// ----------------------------------------------------------------------------
+class STEditorFrame : public wxSTEditorFrame
+{
+public:
+   STEditorFrame() : wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
+                                      wxDefaultPosition, wxSize(800,600))
+   {
+      m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
+   }
+};
+
+// ----------------------------------------------------------------------------
 // wxStEditApp - the application class
 // ----------------------------------------------------------------------------
 class wxStEditApp : public wxApp
@@ -114,7 +127,7 @@ public:
     void OnMenuEvent(wxCommandEvent& event);
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
-    wxSTEditorFrame* m_frame;
+    STEditorFrame* m_frame;
     wxLocale m_locale;
 };
 
@@ -127,7 +140,7 @@ bool wxStEditApp::OnInit()
     SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
     ::wxLocale_Init(&m_locale, STE_APPNAME);
-    //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_GERMAN);
+    //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_SPANISH);
 
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically
@@ -312,8 +325,7 @@ bool wxStEditApp::OnInit()
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
 
     // ------------------------------------------------------------------------
-    m_frame = new wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
-                                   wxDefaultPosition, wxSize(800,600));
+    m_frame = new STEditorFrame();
 
     // ------------------------------------------------------------------------
     // load the prefs/style/langs from the config, if we're using one
