@@ -1,3 +1,6 @@
+CHANGES for version 6.4
+ConfigStyle() will now call a built in theme from the style name
+
 CHANGES for version 6.3
 added exports for dll version, they where not all present.
 fixed a minor bug in SaveFileX
