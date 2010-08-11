@@ -123,6 +123,8 @@
  #define WXMAKINGDLL_STC //this is for wxstyledtextctrl
  #define SCI_LEXER //need this for scintilla when building
  #define LINK_LEXERS
+#elif WXUSINGDLL
+ #define WXDLLIMPEXP_XSTC WXIMPORT
 #else
  #define WXDLLIMPEXP_XSTC
 #endif
