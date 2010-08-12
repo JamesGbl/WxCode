@@ -14,6 +14,7 @@
 #include "wx/defs.h"
 #include "wx/datetime.h"
 #include "wx/fdrepdlg.h"
+#include "wx/filename.h"
 #include "wx/treectrl.h"
 
 class WXDLLIMPEXP_FWD_CORE wxMenu;
