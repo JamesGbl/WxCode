@@ -50,105 +50,110 @@
 #include <wx/utils.h>
 
 #ifndef XSTC_NO_CONFIG
- #include <wx/gdicmn.h>
- #include <wx/colour.h>
- #include <wx/confbase.h>
+#include <wx/gdicmn.h>
+#include <wx/colour.h>
+#include <wx/confbase.h>
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_KEYS
-/**
-\brief holds keywords for the lexers
+	/**
+	\brief Holds keywords for the lexers
 
-\detailed each of the string names representing these strings in PurgeKeys()
-          are the same as the name of the identifier. identifiers are named thus:
-          name
-          name1
-            and for trailing numbers:
-          namex_0
-          namex_1
+	Each of the string names representing these strings in PurgeKeys()
+		are the same as the name of the identifier. Identifiers are named thus:
+		name
+		name1
+			and for names with trailing numbers trailing numbers:
+			namex_0
+			namex_1
 
-\struct
-*/
-struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a filename to the keywords
-      {//if a '.' is found in it, a filename is assumed, KeyCheck checks this and loads the file if the filename is found
-//versions where a language support was added is marked above each key set.
-//comments in place of language without keyword support
+	\struct Keyword_Sets
+	*/
+//Should hold either default keywords OR a filename listing keywords.
+struct WXDLLIMPEXP_XSTC Keyword_Sets
+{
+/*
+ *If "^ISFILE^" is in the string, a filename, or list of filenames is assumed.
+ *KeyCheck() checks this and loads the file if the file is found.
+ *Versions of Scintilla where a lexer was added is marked above each key set.
+ *Comments in place of language without keyword support.
+ */
 #ifndef XSTC_NO_ABAQUS
 //V1.75
-         wxString abaqus;//processors
-		 wxString abaqus1;//commands
-		 wxString abaqus2;//slashommands
-		 wxString abaqus3;//starcommands
-		 wxString abaqus4;//arguments
-		 wxString abaqus5;//functions
+	wxString abaqus;//processors
+	wxString abaqus1;//commands
+	wxString abaqus2;//slashommands
+	wxString abaqus3;//starcommands
+	wxString abaqus4;//arguments
+	wxString abaqus5;//functions
 #endif //XSTC_NO_ABAQUS
 #ifndef XSTC_NO_ADA
 //V1.37
-		 wxString ada;
+	wxString ada;
 #endif //XSTC_NO_ADA
 #ifndef XSTC_NO_APDL
 //V1.60
-         wxString apdl;//preprocessor
-         wxString apdl1;//commands
-         wxString apdl2;//slashcommands
-         wxString apdl3;//starcommands
-         wxString apdl4;//arguments
-         wxString apdl5;//functions
+	wxString apdl;//preprocessor
+	wxString apdl1;//commands
+	wxString apdl2;//slashcommands
+	wxString apdl3;//starcommands
+	wxString apdl4;//arguments
+	wxString apdl5;//functions
 #endif //XSTC_NO_APDL
 #ifndef XSTC_NO_ASM
 //V1.56
-         wxString asm_0;//cpu instructions
-         wxString asm_1;//fpu instructions
-         wxString asm_2;//registers
-         wxString asm_3;//directives
-         wxString asm_4;//directive operands
-         wxString asm_5;//extended instructions
+	wxString asm_0;//cpu instructions
+	wxString asm_1;//fpu instructions
+	wxString asm_2;//registers
+	wxString asm_3;//directives
+	wxString asm_4;//directive operands
+	wxString asm_5;//extended instructions
 #endif //XSTC_NO_ASM
 #ifndef XSTC_NO_ASN1
 //V1.62
-         wxString asn1_0;//keywords
-         wxString asn1_1;//attributes
-         wxString asn1_2;//descriptors
-         wxString asn1_3;//types
+	wxString asn1_0;//keywords
+	wxString asn1_1;//attributes
+	wxString asn1_2;//descriptors
+	wxString asn1_3;//types
 #endif //XSTC_NO_ASN1
 #ifndef XSTC_NO_ASYMPTOTE
 //V1.75
-		 wxString asymptote;//key words 1
-		 wxString asymptote1;//key words 2
+	wxString asymptote;//key words 1
+	wxString asymptote1;//key words 2
 #endif //XSTC_NO_ASYMPTOTE
 #ifndef XSTC_NO_AU3
 //V1.60
-         wxString au3_0;
-         wxString au3_1;
-         wxString au3_2;
-         wxString au3_3;
-         wxString au3_4;
-         wxString au3_5;
-         wxString au3_6;
-         wxString au3_7;
+	wxString au3_0;
+	wxString au3_1;
+	wxString au3_2;
+	wxString au3_3;
+	wxString au3_4;
+	wxString au3_5;
+	wxString au3_6;
+	wxString au3_7;
 #endif //XSTC_NO_AU3
 #ifndef XSTC_NO_AVE
 //V1.36
-         wxString ave;
-         wxString ave1;
-         wxString ave2;
-         wxString ave3;
-         wxString ave4;
-         wxString ave5;
+	wxString ave;
+	wxString ave1;
+	wxString ave2;
+	wxString ave3;
+	wxString ave4;
+	wxString ave5;
 #endif //XSTC_NO_AVE
 #ifndef XSTC_NO_BAAN
 //V1.42
-         wxString baan;
-         wxString baan1;
+	wxString baan;
+	wxString baan1;
 #endif //XSTC_NO_BAAN
 //if all 4 versions of basic are turned off, then the all versions keys are removed too.
 #ifndef XSTC_NO_BLITZBASIC
 #ifndef XSTC_NO_FREEBASIC
 #ifndef XSTC_NO_POWERBASIC
 #ifndef XSTC_NO_PUREBASIC
-         wxString basic;//these vary on the language
-         wxString basic2;
-         wxString basic3;
+	wxString basic;//these vary on the language
+	wxString basic2;
+	wxString basic3;
 #endif //XSTC_NO_PUREBASIC
 #endif //XSTC_NO_POWERBASIC
 #endif //XSTC_NO_FREEBASIC
@@ -156,1940 +161,1872 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets//should hold either default keywords OR a f
 
 //check beside the dialect to see version it was added.
 #ifndef XSTC_NO_BLITZBASIC
-         wxString basic1bl;//blitz //V1.63
+	wxString basic1bl;//blitz //V1.63
 #endif //XSTC_NO_BLITZBASIC
 
 #ifndef XSTC_NO_FREEBASIC
-         wxString basic1fr;//free //V1.65
+	wxString basic1fr;//free //V1.65
 #endif //XSTC_NO_FREEBASIC
 
 #ifndef XSTC_NO_POWERBASIC
-         wxString basic1po;//power //V1.56
+	wxString basic1po;//power //V1.56
 #endif //XSTC_NO_POWERBASIC
 
 #ifndef XSTC_NO_PUREBASIC
-         wxString basic1pu;//pure //V1.63
+	wxString basic1pu;//pure //V1.63
 #endif //XSTC_NO_PUREBASIC
 
 #ifndef XSTC_NO_BASH
 //V1.60
-         wxString bash;//keywords
+	wxString bash;//keywords
 #endif //XSTC_NO_BASH
 #ifndef XSTC_NO_BATCH
 //initial release
-         wxString batch;
+	wxString batch;
 #endif //XSTC_NO_BATCH
 #ifndef XSTC_NO_BULLANT
 //V1.41
-         wxString bullant;//keywords
+	wxString bullant;//keywords
 #endif //XSTC_NO_BULLANT
 #ifndef XSTC_NO_CAML
 //V1.63
-         wxString caml;//primary keywords
-         wxString caml1;
-         wxString caml2;
+	wxString caml;//primary keywords
+	wxString caml1;
+	wxString caml2;
 #endif //XSTC_NO_CAML
 #ifndef XSTC_NO_CLW
 //V1.55
-         wxString clw;//clarion keywords
-         wxString clw1;//compiler directives
-         wxString clw2;//built-in functions
-         wxString clw3;//runtime expressions
-         wxString clw4;//structures data types
-         wxString clw5;//attributes
-         wxString clw6;//standard equates
-         wxString clw7;//reserved words labels
-         wxString clw8;//reserved words procedure labels
+	wxString clw;//clarion keywords
+	wxString clw1;//compiler directives
+	wxString clw2;//built-in functions
+	wxString clw3;//runtime expressions
+	wxString clw4;//structures data types
+	wxString clw5;//attributes
+	wxString clw6;//standard equates
+	wxString clw7;//reserved words labels
+	wxString clw8;//reserved words procedure labels
 #endif //XSTC_NO_CLW
 #ifndef XSTC_NO_CMAKE
 //V1.72
-		 wxString cmake;//Commands
-		 wxString cmake1;//Parameters
-		 wxString cmake2;//UserDefined
+	wxString cmake;//Commands
+	wxString cmake1;//Parameters
+	wxString cmake2;//UserDefined
 #endif //XSTC_NO_CMAKE
 #ifndef XSTC_NO_COBOL
 //1.78
-         wxString cobol;//A keywords
-         wxString cobol1;//B keywords
-         wxString cobol2;//extended
+	wxString cobol;//A keywords
+	wxString cobol1;//B keywords
+	wxString cobol2;//extended
 #endif //XSTC_NO_COBOL
 #ifndef XSTC_NO_CONF
 //V1.33
-         wxString conf;//directives
-         wxString conf1;//parameters
+	wxString conf;//directives
+	wxString conf1;//parameters
 #endif //XSTC_NO_CONF
 #ifndef XSTC_NO_CPP
 //C++ original release IDL added V1.24 C# added V1.31
-         wxString cpp;//primary keywords
-         wxString cpp1;//secondary keywords [stl]
-         wxString cpp2;//documentation
-         wxString cpp3;//global classes and typedefs
+	wxString cpp;//primary keywords
+	wxString cpp1;//secondary keywords [stl]
+	wxString cpp2;//documentation
+	wxString cpp3;//global classes and typedefs
 #endif //XSTC_NO_CPP
 #ifndef XSTC_NO_CSOUND
 //V1.64
-         wxString csound;//opcodes
-         wxString csound1;//header statements
-         wxString csound2;//user keywords
+	wxString csound;//opcodes
+	wxString csound1;//header statements
+	wxString csound2;//user keywords
 #endif //XSTC_NO_CSOUND
 #ifndef XSTC_NO_CSS
 //V1.55
-         wxString css;//css1 keywords
-         wxString css1;//pseudo classes
-         wxString css2;//css2 keywords
+	wxString css;//css1 keywords
+	wxString css1;//pseudo classes
+	wxString css2;//css2 keywords
 #endif //XSTC_NO_CSS
 #ifndef XSTC_NO_D
 //V1.72
-		 wxString d;
-		 wxString d1;
-		 wxString d2;
-		 wxString d3;
+	wxString d;
+	wxString d1;
+	wxString d2;
+	wxString d3;
 #endif //XSTC_NO_D
 //Diff V1.31
 #ifndef XSTC_NO_EIFFEL
 //V1.38
-         wxString eiffel;//keywords
+	wxString eiffel;//keywords
 #endif //XSTC_NO_EIFFEL
 #ifndef XSTC_NO_EIFFEL
 //V1.38
-         wxString eiffelkw;
+	wxString eiffelkw;
 #endif //XSTC_NO_EIFFEL
 #ifndef XSTC_NO_ERLANG
 //V1.57
-         wxString erlang;//keywords
+	wxString erlang;//keywords
 #endif //XSTC_NO_ERLANG
 //errorlist initial release
 #ifndef XSTC_NO_ESCRIPT
 //V1.53
-         wxString escript;
-         wxString escript1;
-         wxString escript2;
+	wxString escript;
+	wxString escript1;
+	wxString escript2;
 #endif //XSTC_NO_ESCRIPT
 #ifndef XSTC_NO_F77
 //V1.49
-         wxString f77_0;
-         wxString f77_1;
-         wxString f77_2;
+	wxString f77_0;
+	wxString f77_1;
+	wxString f77_2;
 #endif //XSTC_NO_F77
 #ifndef XSTC_NO_FLAGSHIP
 //V1.64
-         wxString flagship;//keywords
-         wxString flagship1;//functions
-         wxString flagship2;//user 1
-         wxString flagship3;//user2
+	wxString flagship;//keywords
+	wxString flagship1;//functions
+	wxString flagship2;//user 1
+	wxString flagship3;//user2
 #endif //XSTC_NO_FLAGSHIP
 #ifndef XSTC_NO_FORTH
 //V1.56
-         wxString forth;
-         wxString forth1;
-         wxString forth2;
-         wxString forth3;
-         wxString forth4;
-         wxString forth5;
+	wxString forth;
+	wxString forth1;
+	wxString forth2;
+	wxString forth3;
+	wxString forth4;
+	wxString forth5;
 #endif //XSTC_NO_FORTH
 #ifndef XSTC_NO_FORTRAN
 //V1.49
-         wxString fortran;
-         wxString fortran1;
-         wxString fortran2;
+	wxString fortran;
+	wxString fortran1;
+	wxString fortran2;
 #endif //XSTC_NO_FORTRAN
 #ifndef XSTC_NO_GAP
 //V1.74
-		 wxString gap;
-		 wxString gap1;
-		 wxString gap2;
-		 wxString gap3;
+	wxString gap;
+	wxString gap1;
+	wxString gap2;
+	wxString gap3;
 #endif //XSTC_NO_GAP
 #ifndef XSTC_NO_GUI4CLI
 //V1.60
-         wxString gui4cli;//globals
-         wxString gui4cli1;//events
-         wxString gui4cli2;//sttributes
-         wxString gui4cli3;//contorl
-         wxString gui4cli4;//commands
+	wxString gui4cli;//globals
+	wxString gui4cli1;//events
+	wxString gui4cli2;//sttributes
+	wxString gui4cli3;//contorl
+	wxString gui4cli4;//commands
 #endif //XSTC_NO_GUI4CLI
 #ifndef XSTC_NO_HASKELL
 //V1.63
-         wxString haskell;
+	wxString haskell;
 #endif //XSTC_NO_HASKELL
 #ifndef XSTC_NO_HTM
 //initial release php added V1.23 later merged V1.30 sgml V1.40 asp 1.40 i guess
-         wxString html;//html elements attributes
-         wxString html1;//javascript keywords
-         wxString html2;//vbscript keywords
-         wxString html3;//python keywords;
-         wxString html4;//php keywords
-         wxString html5;//sgml dtd keywords
-         wxString html6;
-         wxString html7;//phpscript
+	wxString html;//html elements attributes
+	wxString html1;//javascript keywords
+	wxString html2;//vbscript keywords
+	wxString html3;//python keywords;
+	wxString html4;//php keywords
+	wxString html5;//sgml dtd keywords
+	wxString html6;
+	wxString html7;//phpscript
 #endif //XSTC_NO_HTM
 #ifndef XSTC_NO_INNOSETUP
 //V1.68
-         wxString inno;//sectoins
-         wxString inno1;//keywords
-         wxString inno2;//parameters
-         wxString inno3;//preprocessor directives
-         wxString inno4;//pascal keywords
-         wxString inno5;//user defined keywords
+	wxString inno;//sectoins
+	wxString inno1;//keywords
+	wxString inno2;//parameters
+	wxString inno3;//preprocessor directives
+	wxString inno4;//pascal keywords
+	wxString inno5;//user defined keywords
 #endif //XSTC_NO_INNOSETUP
 #ifndef XSTC_NO_JS
 //initial release, later merged into C++ lexer V1.22
-         wxString js;//same as cpp lexer unless i can get html sublexer to work right.
-         wxString js1;//i may not use that for primary javascript files anyway
-         wxString js2;
+	wxString js;//same as cpp lexer unless i can get html sublexer to work right.
+	wxString js1;//i may not use that for primary javascript files anyway
+	wxString js2;
 #endif //XSTC_NO_JS
 #ifndef XSTC_NO_JAVA
 //initial release, later merged into C++ lexer V1.22
-         wxString java;//same as cpp lexer
-         wxString java1;
-         wxString java2;
-         wxString java3;
+	wxString java;//same as cpp lexer
+	wxString java1;
+	wxString java2;
+	wxString java3;
 #endif //XSTC_NO_JAVA
 #ifndef XSTC_NO_KIX
 //V1.60
-         wxString kix;
-         wxString kix1;
-         wxString kix2;
+	wxString kix;
+	wxString kix1;
+	wxString kix2;
 #endif //XSTC_NO_KIX
 //latex V1.25
 #ifndef XSTC_NO_LISP
 //V1.38
-         wxString lisp;//functions and secial operators
-         wxString lisp1;//keywords
+	wxString lisp;//functions and secial operators
+	wxString lisp1;//keywords
 #endif //XSTC_NO_LISP
 #ifndef XSTC_NO_LOUT
 //V1.53
-         wxString lout;
-         wxString lout1;
-         wxString lout2;
+	wxString lout;
+	wxString lout1;
+	wxString lout2;
 #endif //XSTC_NO_LOUT
 #ifndef XSTC_NO_LUA
 //V1.26
-         wxString lua;//keywords
-         wxString lua1;//basic functions
-         wxString lua2;//string math functions
-         wxString lua3;//coroutines, I/O system facilities
-         wxString lua4;//user1
-         wxString lua5;//user2
-         wxString lua6;//user3
-         wxString lua7;//user4
+	wxString lua;//keywords
+	wxString lua1;//basic functions
+	wxString lua2;//string math functions
+	wxString lua3;//coroutines, I/O system facilities
+	wxString lua4;//user1
+	wxString lua5;//user2
+	wxString lua6;//user3
+	wxString lua7;//user4
 #endif //XSTC_NO_LUA
 //makefile V1.35 ??
 #ifndef XSTC_NO_MAGIK
 //V1.76
-		 wxString magik;//keywords
-		 wxString magik1;//pragmatics
-		 wxString magik2;//containers
-		 wxString magik3;//flow
-		 wxString magik4;//characters
+	wxString magik;//keywords
+	wxString magik1;//pragmatics
+	wxString magik2;//containers
+	wxString magik3;//flow
+	wxString magik4;//characters
 #endif //XSTC_NO_MAGIK
+//MARKDOWN 2.20
 #ifndef XSTC_NO_MATLAB
 //V1.45
-         wxString matlab;//keywords
+	wxString matlab;//keywords
 #endif //XSTC_NO_MATLAB
 #ifndef XSTC_NO_METAPOST
 //V1.56
-         wxString metapost;//metapost
-         wxString metapost1;//metafun
+	wxString metapost;//metapost
+	wxString metapost1;//metafun
 #endif //XSTC_NO_METAPOST
 #ifndef XSTC_NO_MMIXAL
 //V1.54
-         wxString mmixal;//operator codes
-         wxString mmixal1;//special registers
-         wxString mmixal2;//predefined symbols
+	wxString mmixal;//operator codes
+	wxString mmixal1;//special registers
+	wxString mmixal2;//predefined symbols
 #endif //XSTC_NO_MMIXAL
 #ifndef XSTC_NO_NIMROD
 //1.78
-         wxString nimrod;
+	wxString nimrod;
 #endif //XSTC_NO_NIMROD
 #ifndef XSTC_NO_NNCRONTAB
 //V1.40
-         wxString nncrontab;//section forth keywords
-         wxString nncrontab1;//nncrontab keywords
-         wxString nncrontab2;//modifiers
+	wxString nncrontab;//section forth keywords
+	wxString nncrontab1;//nncrontab keywords
+	wxString nncrontab2;//modifiers
 #endif //XSTC_NO_NNCRONTAB
 #ifndef XSTC_NO_NSIS
 //V1.54
-         wxString nsis;//functions
-         wxString nsis1;//variables
-         wxString nsis2;//lables
-         wxString nsis3;//user defined
+	wxString nsis;//functions
+	wxString nsis1;//variables
+	wxString nsis2;//lables
+	wxString nsis3;//user defined
 #endif //XSTC_NO_NSIS
 #ifndef XSTC_NO_OCTAVE
 //V1.58
-         wxString octave;
+	wxString octave;
 #endif //XSTC_NO_OCTAVE
 #ifndef XSTC_NO_OPAL
 //V1.68
-         wxString opal;//keywords
-         wxString opal1;//sorts
+	wxString opal;//keywords
+	wxString opal1;//sorts
 #endif //XSTC_NO_OPAL
 #ifndef XSTC_NO_PASCAL
 //V1.34
-         wxString pas;//keywords
-         wxString pas1;//classwords
+	wxString pas;//keywords
+	wxString pas1;//classwords
 #endif //XSTC_NO_PASCAL
 #ifndef XSTC_NO_PERL
 //V1.21
-         wxString perl;//keywords
+	wxString perl;//keywords
 #endif //XSTC_NO_PERL
 #ifndef XSTC_NO_PLM
 //V1.74
-		 wxString plm;
+	wxString plm;
 #endif //XSTC_NO_PLM
 //PO V1.77
 #ifndef XSTC_NO_POV
 //V1.52
-         wxString pov;
-         wxString pov1;
-         wxString pov2;
-         wxString pov3;
-         wxString pov4;
-         wxString pov5;
-         wxString pov6;
-         wxString pov7;
+	wxString pov;
+	wxString pov1;
+	wxString pov2;
+	wxString pov3;
+	wxString pov4;
+	wxString pov5;
+	wxString pov6;
+	wxString pov7;
 #endif //XSTC_NO_POV
 #ifndef XSTC_NO_POWERPRO
 //1.78
-         wxString powerpro;
-         wxString powerpro1;
-         wxString powerpro2;
-         wxString powerpro3;
+	wxString powerpro;
+	wxString powerpro1;
+	wxString powerpro2;
+	wxString powerpro3;
 #endif //XSTC_NO_POWERPRO
 #ifndef XSTC_NO_POWERSHELL
 //V1.76
-		 wxString powershell;
-		 wxString powershell1;
-		 wxString powershell2;
+	wxString powershell;
+	wxString powershell1;
+	wxString powershell2;
 #endif //XSTC_NO_POWERSHELL
 #ifndef XSTC_NO_PROGRESS
 //V1.74
-		 wxString progress;//primary keywords
-		 wxString progress1;//secondary keywords
-		 wxString progress2;//documentation
+	wxString progress;//primary keywords
+	wxString progress1;//secondary keywords
+	wxString progress2;//documentation
 #endif //XSTC_NO_PROGRESS
 //properties initial release
 #ifndef XSTC_NO_PS
 //V1.54
-         wxString ps;//L1 operators
-         wxString ps1;//L2 operators
-         wxString ps2;//L3 operators
-         wxString ps3;//RIP-specific operators
-         wxString ps4;//user defined operators
+	wxString ps;//L1 operators
+	wxString ps1;//L2 operators
+	wxString ps2;//L3 operators
+	wxString ps3;//RIP-specific operators
+	wxString ps4;//user defined operators
 #endif //XSTC_NO_PS
 #ifndef XSTC_NO_PYTHON
 //initial release
-         wxString python;//keywords
-         wxString python1;//highlighted identifiers
+	wxString python;//keywords
+	wxString python1;//highlighted identifiers
 #endif //XSTC_NO_PYTHON
 #ifndef XSTC_NO_R
 //V1.75
-		 wxString r;
-		 wxString r1;
-		 wxString r2;
+	wxString r;
+	wxString r1;
+	wxString r2;
 #endif //XSTC_NO_R
 #ifndef XSTC_NO_REBOL
 //V1.64
-         wxString rebol;
-         wxString rebol1;
-         wxString rebol2;
+	wxString rebol;
+	wxString rebol1;
+	wxString rebol2;
 #endif //XSTC_NO_REBOL
 #ifndef XSTC_NO_RUBY
 //V1.38
-         wxString ruby;
+	wxString ruby;
 #endif //XSTC_NO_RUBY
 #ifndef XSTC_NO_SCRIPTOL
 //V1.54
-         wxString scriptol;
+	wxString scriptol;
 #endif //XSTC_NO_SCRIPTOL
 #ifndef XSTC_NO_SMALLTALK
 //V1.64
-         wxString smalltalk;//special selectors
+	wxString smalltalk;//special selectors
 #endif //XSTC_NO_SMALLTALK
 #ifndef XSTC_NO_SML
 //1.78
-         wxString sml;
-         wxString sml1;
-         wxString sml2;
+	wxString sml;
+	wxString sml1;
+	wxString sml2;
 #endif //XSTC_NO_SML
 #ifndef XSTC_NO_SORCUS
 //1.78
-         wxString sorcus;//command
-         wxString sorcus1;//parameter
-         wxString sorcus2;//constants
+	wxString sorcus;//command
+	wxString sorcus1;//parameter
+	wxString sorcus2;//constants
 #endif //XSTC_NO_SORCUS
 #ifndef XSTC_NO_SPECMAN
 //V1.60
-         wxString specman;
-         wxString specman1;
-         wxString specman2;
-         wxString specman3;
+	wxString specman;
+	wxString specman1;
+	wxString specman2;
+	wxString specman3;
 #endif //XSTC_NO_SPECMAN
 #ifndef XSTC_NO_SPICE
 //V1.69
-         wxString spice;//command
-         wxString spice1;//functions
-         wxString spice2;//params
+	wxString spice;//command
+	wxString spice1;//functions
+	wxString spice2;//params
 #endif //XSTC_NO_SPICE
 #ifndef XSTC_NO_MSSQL
 //V1.59
-         wxString mssql;//statements
-         wxString mssql1;//data tables
-         wxString mssql2;//system tables
-         wxString mssql3;//global variables
-         wxString mssql4;//functions
-         wxString mssql5;//system stored procedures
-         wxString mssql6;//operators
+	wxString mssql;//statements
+	wxString mssql1;//data tables
+	wxString mssql2;//system tables
+	wxString mssql3;//global variables
+	wxString mssql4;//functions
+	wxString mssql5;//system stored procedures
+	wxString mssql6;//operators
 #endif //XSTC_NO_MSSQL
 #ifndef XSTC_NO_MYSQL
 //V1.77
-		 wxString mysql;//major keywords
-		 wxString mysql1;//keywords
-		 wxString mysql2;//database objects
-		 wxString mysql3;//functions
-		 wxString mysql4;//system variables
-		 wxString mysql5;//procedure keywords
-		 wxString mysql6;//user1
-		 wxString mysql7;//user2
-		 wxString mysql8;//user3
+	wxString mysql;//major keywords
+	wxString mysql1;//keywords
+	wxString mysql2;//database objects
+	wxString mysql3;//functions
+	wxString mysql4;//system variables
+	wxString mysql5;//procedure keywords
+	wxString mysql6;//user1
+	wxString mysql7;//user2
+	wxString mysql8;//user3
 #endif //XSTC_NO_MYSQL
 #ifndef XSTC_NO_SQL
 //V1.22
-         wxString sql;
-         wxString sql1;
-         wxString sql2;
-         wxString sql3;
-         wxString sql4;
-         wxString sql5;
-         wxString sql6;
-         wxString sql7;
+	wxString sql;
+	wxString sql1;
+	wxString sql2;
+	wxString sql3;
+	wxString sql4;
+	wxString sql5;
+	wxString sql6;
+	wxString sql7;
 #endif //XSTC_NO_SQL
 #ifndef XSTC_NO_TACL
 //1.78
-         wxString tacl;//builtin
-         wxString tacl1;//labels
-         wxString tacl2;//commands
+	wxString tacl;//builtin
+	wxString tacl1;//labels
+	wxString tacl2;//commands
 #endif //XSTC_NO_TACL
 #ifndef XSTC_NO_TADS3
 //V1.64
-         wxString tads3_0;
-         wxString tads3_1;
-         wxString tads3_2;
-         wxString tads3_3;
+	wxString tads3_0;
+	wxString tads3_1;
+	wxString tads3_2;
+	wxString tads3_3;
 #endif //XSTC_NO_TADS3
 #ifndef XSTC_NO_TAL
 //1.78
-         wxString tal;//keywords
-         wxString tal1;//builtin
+	wxString tal;//keywords
+	wxString tal1;//builtin
 #endif //XSTC_NO_TAL
 #ifndef XSTC_NO_TCL
 //V1.39
-         wxString tcl;
-         wxString tcl1;
-         wxString tcl2;
-         wxString tcl3;
-         wxString tcl4;
-         wxString tcl5;
-         wxString tcl6;
-         wxString tcl7;
-         wxString tcl8;
+	wxString tcl;
+	wxString tcl1;
+	wxString tcl2;
+	wxString tcl3;
+	wxString tcl4;
+	wxString tcl5;
+	wxString tcl6;
+	wxString tcl7;
+	wxString tcl8;
 #endif //XSTC_NO_TCL
 #ifndef XSTC_NO_TEX
 //V1.25
-         wxString tex;
+	wxString tex;
 #endif //XSTC_NO_TEX
+//TXT2TAGS 2.20
 #ifndef XSTC_NO_VB
 //initial release
-         wxString vb;
-         wxString vb1;
-         wxString vb2;
-         wxString vb3;
+	wxString vb;
+	wxString vb1;
+	wxString vb2;
+	wxString vb3;
 #endif //XSTC_NO_VB
 #ifndef XSTC_NO_VBSCRIPT
 //initial release
-         wxString vbscript;
-         wxString vbscript1;
-         wxString vbscript2;
-         wxString vbscript3;
+	wxString vbscript;
+	wxString vbscript1;
+	wxString vbscript2;
+	wxString vbscript3;
 #endif //XSTC_NO_VBSCRIPT
 #ifndef XSTC_NO_VERILOG
 //V1.59
-         wxString verilog;
-         wxString verilog1;
-         wxString verilog2;
-         wxString verilog3;
+	wxString verilog;
+	wxString verilog1;
+	wxString verilog2;
+	wxString verilog3;
 #endif //XSTC_NO_VERILOG
 #ifndef XSTC_NO_VHDL
 //V1.62
-         wxString vhdl;//keywords
-         wxString vhdl1;//operators
-         wxString vhdl2;//attributes
-         wxString vhdl3;//functions
-         wxString vhdl4;//packages
-         wxString vhdl5;//types
-         wxString vhdl6;//user
+	wxString vhdl;//keywords
+	wxString vhdl1;//operators
+	wxString vhdl2;//attributes
+	wxString vhdl3;//functions
+	wxString vhdl4;//packages
+	wxString vhdl5;//types
+	wxString vhdl6;//user
 #endif //XSTC_NO_VHDL
 //xcode dunno
 //xml V1.21
 #ifndef XSTC_NO_YAML
 //V1.55
-         wxString yaml;
+	wxString yaml;
 #endif //XSTC_NO_YAML
-      };
+};
 #endif //XSTC_NO_KEYS
-/**
-\brief holds two string values for the lexer properties
 
-\detailed it is a simple way to pass property strings around as one
-          then split the L/R values when the property needs to be
-          sent to scintilla
+	/**
+	\brief Holds two string values for lexer properties.
 
-\struct
-*/
-struct WXDLLIMPEXP_XSTC PropSTR //holds the right and left values of a property string
-{//the 'side' is delimited by the '_' underscore character
-   wxString L;//left
-   wxString R;//right
+	A simple way to pass property strings around as one unit
+		then split the L/R values when the property needs to be
+		sent to scintilla.
+
+	\struct PropSTR
+	*/
+//Holds the right and left values of a property string
+struct WXDLLIMPEXP_XSTC PropSTR
+{
+	//The 'side' is delimited by the '_' underscore character
+	wxString L;//left
+	wxString R;//right
 };
 
 /*
-there are two ways to edit coloring of a lexer. first, quite simple find
-the source that sets up the lex coloring and manualy edit the entries.
-if you want to dynamically allow color changes, you may want to just
-make a conf file to take care of it for you. obviously you can change
-the code and make a conf file at the same time, to say, change the default
-color settings without needing to have a lot of files for your program to
-work directly.
-*/
+ *There are two ways to edit coloring of a lexer. First find
+ *the source that sets up the lexer styles and manualy edit the entries.
+ *Otherwise if you want to dynamically allow color changes, you may want to just
+ *make a conf file to take care of it for you. Obviously you can change
+ *the code and make a conf file at the same time.
+ */
 
-/**
-\brief this class automates some of scintilla
+	/**
+	\class XSTC
+	\brief XSTC automates some of Scintilla and adds some other functionality as well.
 
-\detailed the basics of what XSTC does is:
-          automatically sets up brace matching
-          automatic margin setup
-          toggle the fold margin based on lexer support
-          automatic set up of lexer colors and keywords from extention
+	XSTC is a wrapper for wxScintilla/wxSTC. Its purpose is to make getting
+	started and using wxScintilla easy.
 
-          and, XSTC is a wrapper class, light enough (because scintilla
-          does all of the work) that it can be added right into the project
-          like any other source file or it can be compiled as a library
-          encompassing wxSTC/SCI and scintilla.
+	It has a Scintilla specific configuration
+	model already to go, including per lexer style configuration, coloring
+	themes that keep all language highlighting looking the same.
+	It automatically sets up the margins, setting up the folding margin symbols
+	is as simple as a function call. A user bookmark is already to go as well
+	as folding for all languages that support it. A set of numbered bookmarks
+	0-9 is ready to use. Lexers are set automatically when a file is loaded.
 
-          To compile sources in-project
-            define XSTC_H_FLAT
-          Make sure to define XCLASS
-            0=wxSTC 1=wxSCI
-*/
+	In addition to the built in theme functions that take care of syntax coloring,
+	themes can be loaded from the config database. You can set up a color
+	database and use string names for colors. Also some utility functions are
+	avaiible to do quick document processing. Optionally keywords can be managed
+	automatically and the sets of words can be easily replaced at runtime without
+	being overwriten by XSTC.
+	
+	Aside from much of the repetative stuff XSTC also handles
+	setting up some of the more generic or lesser obvious functionalities as well.
+	Besides XSTC, there are also several other helper classes availible like
+	a macro record/playback module or a document exchanger. (For using 1 Scintilla
+	instance with several documents at the same time.)
+	See my other work for more details. Nuklear Zelph.
+	*/
 class WXDLLIMPEXP_XSTC XSTC: public XSTC_CLASS
 {
-    public:
+public:
 
-    /**
-    \brief constructor, obviously sets it all up
+	/**
+	\brief initializes XSTC internal variables
 
-    \detailed does what a constructor should
-    */
-WXDLLIMPEXP_XSTC XSTC(wxWindow *parent, wxWindowID id=wxID_ANY,
-         const wxPoint& pos = wxDefaultPosition,
-         const wxSize& size = wxDefaultSize,
-         long style = 0,
-         const wxString& name = "XSTC");
+	and sets up all the defaults, line ending based on platform, initializes
+	the margins, if keyword support is turned on it will initialize all of those
+	variables.
+	*/
+	WXDLLIMPEXP_XSTC XSTC(wxWindow *parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxString& name = wxT("XSTC"));
 
-    /**
-    \brief in case you didn't notice it's a destructor
+	/**
+	\brief probably will always remain empty
+	*/
+	WXDLLIMPEXP_XSTC virtual ~XSTC();
 
-    \detailed probably will always remain empty
-    */
-WXDLLIMPEXP_XSTC virtual ~XSTC();
+//The load and save functions here wrap the scintilla functins and allow for other
+//actions to take place.
+	/**
+	\brief Wrapper for wxScintilla file load routine, for automatic coloring.
 
-//the load and save functions here wrap the scintilla functins and allow for other
-//actions to take place when it happens. (so lexers and coloring can be set up via extension.)
-    /**
-    \brief load file
+	loads a file through scintilla then sets up the lexer
+		unless setlexer is false, then the current lexer will
+		color the document. Also returns a status message.
+	*/
+	WXDLLIMPEXP_XSTC long LoadFileX(wxString filename, bool setlexer = false);
 
-    \detailed loads a file through scintilla then sets up the lexer
-              unless setlexer is false, then the current lexer will
-              color the document and the fold margin will stay as
-              it was toggled already. also returns a status message.
-    */
-WXDLLIMPEXP_XSTC long LoadFileX(wxString filename, bool setlexer = false);
+	/**
+	\brief Wrapper for wxScintilla file save routine. Used to invoke any util functions.
 
-    /**
-    \brief save file
+	if trimming space, space to tab or any other utility functions are active
+		they will be called in this function.
 
-    \detailed if trimming space, space to tab or any other functionality
-              was aded to xstc and set to on for saving, then it will be
-              called in this function.
+		savemode is a three mode flag, for utilizing a saveas dialog automatically.
+		never always or on failed attempt of the used filename.
 
-              savemode is a three mode flag. for utilizing a saveas dialog automatically.
-              never always or on failed attempt of the used filename
+		If no filename is passed then the internal "XFilename" copy is used
+		otherwise it uses the argument variable.
+	*/
+	WXDLLIMPEXP_XSTC long SaveFileX(const wxString filename = wxT(""), long saveas = SAVE_AS_NEVER);
 
-              if no filename is passed then the internal "XFilename" copy is used
-              if one is passed that variable is ignored
-    */
-WXDLLIMPEXP_XSTC long SaveFileX(const wxString filename = wxT(""), long saveas = SAVE_AS_NEVER);
+	/**
+	\brief clears the editor
 
-    /**
-    \brief clears the editor
-
-    \detailed clears the editor sets lexer to NULL and Filename to 'Untitled'
-              also returns a status message.
-    */
-WXDLLIMPEXP_XSTC void CloseFile(); //kindof an extended Clear() function for the same purpose as the file wrappers.
+	clears the editor sets lexer to NULL and Filename to 'Untitled'
+		also returns a status message.
+	*/
+	//Kindof an extended Clear() function for the same purpose as the file wrappers.
+	WXDLLIMPEXP_XSTC void CloseFile();
 
 #ifndef XSTC_NO_KEYS
-    /**
-    \brief sets all keywords to ""
-    */
-WXDLLIMPEXP_XSTC void PurgeKeys();
+	/**
+	\brief Sets all keywords to ""
+	*/
+	WXDLLIMPEXP_XSTC void PurgeKeys();
 
-    /**
-    \brief simply it resets ALL of the keys_set strings to default
-    */
-WXDLLIMPEXP_XSTC void InitKeys();
+	/**
+	\brief Simply it resets ALL of the keys_set strings to default
+	*/
+	WXDLLIMPEXP_XSTC void InitKeys();
 #endif //XSTC_NO_KEYS
 
-    /**
-    \brief toggles a bookmark
+	/**
+	\brief Toggles a bookmark
 
-    \detailed toggles a bookamrk at the specified line, internaly this is the
-              line where the margin was clicked
-    */
-WXDLLIMPEXP_XSTC void ToggleBookMark(int line);
+	Toggles a bookamrk at the specified line, internaly this is the
+		line where the margin was clicked
+	*/
+	WXDLLIMPEXP_XSTC void ToggleBookMark(int line);
 
-    /**
-    \brief sets margin number for each margin type
+	/**
+	\brief Use this to rearrange the default margin order
+	*/
+	WXDLLIMPEXP_XSTC void MapMargins(int line, int symbol, int fold);
 
-    \detailed sets the margins and sets the withs to those set with SetMgnWidth
-    */
-WXDLLIMPEXP_XSTC void MapMargins(int line, int symbol, int fold);
+	/**
+	\brief Sets widths of the mapped margins
 
-    /**
-    \brief sets widths of the mapped margins
-
-    \detailed sets the margin widths and stores them so that
-              when mapping margins the same settings will be used
-    */
-WXDLLIMPEXP_XSTC void SetMgnsWidth(int line, int symbol, int fold);
+	If you don't map margins then you don't need to use this to change the width,
+	but if you do it is a good idea to use this function instead of doing it yourself.
+	*/
+	WXDLLIMPEXP_XSTC void SetMgnsWidth(int line, int symbol, int fold);
 
 #ifndef XSTC_NO_KEYS
-    /**
-    \brief load keywords from a file
+	/**
+	\brief Load keywords from a file
 
-    \detailed loads a newline delimited keyword set from file and returns it
-              as space delimited or a space delimited should just pass as is.
-              use: KeyCheck() instead if you might support keywords too.
-    */
-WXDLLIMPEXP_XSTC wxString LoadKeyWords(wxString filename);
+	Will convert newline delimited to space delimited, or pass verbatim in
+	it is aleady space delimited.
+	*/
+	WXDLLIMPEXP_XSTC wxString LoadKeyWords(wxString filename);
 #endif //XSTC_NO_KEYS
 
-    /**
-    \brief sets the visual mode to color on black
+	/**
+	\brief Colors on black background theme.
+	*/
+	WXDLLIMPEXP_XSTC void DarkStyle();
 
-    \detailed sets up scintilla for color over black, all lexers adjust
-              accordingly if this is used to set up the general colors
-    */
-WXDLLIMPEXP_XSTC void DarkStyle();
+	/**
+	\brief Attempts to emulate visual studio coloring
 
-    /**
-    \brief attempts to emulate visual studio coloring
+	I don't use VS so I copied these settings with
+	some creativity for readability from Dev-C++.
+	*/
+	WXDLLIMPEXP_XSTC void VisualStudioStyle();
 
-    \detailed i don't use VS too often and i copied these settings
-              with some creativity for readability from Dev-C++
-    */
-WXDLLIMPEXP_XSTC void VisualStudioStyle();
+	/**
+	\brief Attempts to emulate classic colors (whatever that means)
 
-    /**
-    \brief attempts to emulate classic colors (whatever that means)
+	Dunno I copied these settings with some
+	creativity for readability from Dev-C++
+	*/
+	WXDLLIMPEXP_XSTC void ClassicStyle();
 
-    \detailed dunno i copied these settings with some
-              creativity for readability from Dev-C++
-    */
-WXDLLIMPEXP_XSTC void ClassicStyle();
+	/**
+	\brief Attempts to emulate the old borland TUI ide
+	*/
+	WXDLLIMPEXP_XSTC void BorlandStyle();
 
-    /**
-    \brief attempts to emulate the old borland TUI ide
+	/**
+	\brief A style I found on the internet
 
-    \detailed yes i have a copy of Turbo C++ and in fact that is what
-              i learned c++ on, if i can figure out how to set up the
-              default colors again i definatly can get this one right.
-    */
-WXDLLIMPEXP_XSTC void BorlandStyle();
+	I found it on codinghorror in "is you're ide hot or not"
+	*/
+	WXDLLIMPEXP_XSTC void JeffStyle();
 
-	   /**
-    \brief a style i found on the internet
+	/**
+	\brief a style i found on the internet
 
-    \detailed i found it on codinghorror in is you're ide hot or not as i recall
-    */
-WXDLLIMPEXP_XSTC void JeffStyle();
+	I found it on codinghorror in "is you're ide hot or not"
+	*/
+	WXDLLIMPEXP_XSTC void ZenburnStyle();
 
-	   /**
-    \brief a style i found on the internet
+	/**
+	\brief A style based on the Matrix
 
-    \detailed i found it on codinghorror in is you're ide hot or not as i recall
-    */
-WXDLLIMPEXP_XSTC void ZenburnStyle();
+	I saw a matrix based color scheme and decided to make one too.
+	*/
+	WXDLLIMPEXP_XSTC void MatrixStyle();
 
-    /**
-    \brief a style based on the matrix
+	/**
+	\brief Loads a theme from the config database.
 
-    \detailed i saw a matrix based color scheme and decided to make one
-    */
-WXDLLIMPEXP_XSTC void MatrixStyle();
+	Does the same thing that the built in functions do and will set any undefined
+	styles to the default black on white. Also for convienience the built in
+	theme functions are caled if their name is passed.
 
-    /**
-    \brief loads a style from the configs
+	*/
+	WXDLLIMPEXP_XSTC void ConfigStyle(wxString style);
 
-    \detailed will load colorstyle settings from a config file. only needs the style name, will create all
-              default of black on white if no settings exsist. also uses styleconf(), but these settings take
-              priority.
-    */
-WXDLLIMPEXP_XSTC void ConfigStyle(wxString style);
+	/**
+	\brief Look up what names of the themes that reside in the config database.
 
-    /**
-    \brief returns the names of availible config styles
+	Returns a wxArrayString of all names that are in the config CStyles string.
+	*/
+	WXDLLIMPEXP_XSTC wxString GetConfNames();
 
-    \detailed returns a wxArrayString of all names that are in the config CStyles string.
-    */
-WXDLLIMPEXP_XSTC wxString GetConfNames();
+	/**
+	\brief Sets everything back to default Black on white and clears any extras.
 
-    /**
-    \brief turns off enviornment colorstyles
-
-    \detailed it changes the colorstyle string to "NULL" and changes
-              the margin colors back to button face (or whatever) all
-              other settings will keep, so you could call DarkStyle()
-              then this and the lexers will ignore the black bg
-    */
-WXDLLIMPEXP_XSTC void ResetStyle();
+	Changes the colorstyle string to "NULL" and changes
+	the margin colors back to button face (or whatever)
+	*/
+	WXDLLIMPEXP_XSTC void ResetStyle();
 
 #ifndef XSTC_NO_CONFIG
-    /**
-    \brief sets config based colors for colorstyle functions
+	/**
+	\brief Configuration loading for non-language related styles
+	*/
+	WXDLLIMPEXP_XSTC void StyleConf();
 
-    \detailed called by all colorstyle functions since it does the same
-              thing for each
-    */
-WXDLLIMPEXP_XSTC void StyleConf();
-
-    /**
-    \brief sets config based colors for foldstyle functions
-
-    \detailed called by all foldstyle functions since it does the same
-              thing for each
-    */
-WXDLLIMPEXP_XSTC void FoldConf();
+	/**
+	\brief Configuration loading for the fold margin symbol styles.
+	*/
+	WXDLLIMPEXP_XSTC void FoldConf();
 #endif //XSTC_NO_CONFIG
 
-    /**
-    \brief sets a lexer
+	/**
+	\brief Sets up the lexer, keywords and properties
+	*/
+	WXDLLIMPEXP_XSTC void SetLexerX(int lexer);
 
-    \detailed the lang string is optional. if config is turned on and the language was set in the
-			  config database then properties will be automatically loaded. otherwise it is ignored. 
-			  properties will only be loaded if lang is set. that is the language being used for the
-			  document, not the lexer.
-    */
-WXDLLIMPEXP_XSTC void SetLexerX(int lexer);
+	/**
+	\brief Splits a simple "option" string in two.
 
-    /**
-    \brief gets property and value from a string
-
-    \detailed parses a property_value string. the '_' underscore is a
-              delimiter between them. property is a lexer property
-              string value is the setting to use with that property
-    */
-WXDLLIMPEXP_XSTC PropSTR GetPropStr(wxString property);
+	A PropSTR is a small struct that holds a name and value pair.
+	*/
+	WXDLLIMPEXP_XSTC PropSTR GetPropStr(wxString property);
 
 #ifndef XSTC_NO_KEYS
-    /**
-    \brief checks keyname for either being a filename or keyword set
+	/**
+	\brief Checks to see if this is a file or a set of keywords.
 
-    \detailed checks keyname for "^ISFILE^" (if it is a filename, or coma delimeted
-              set of filenames) and either loads the file(s) or
-              returns its given value which sould be a set of keywords
-    */
-WXDLLIMPEXP_XSTC wxString KeyCheck(wxString keyname);
+	If "^ISFILE^" is contained in the string then the file(s) are loaded
+	and the lexers approptiate wordlist is updated. The list is coma delimited.
+	If that literal is not found then it is assumed to be a wordlist and is
+	loaded directly. Do note: if you don't want the overhead of XSTC storing
+	all of the keywords in memory, you can set the appropriate strings to be a
+	filename and that file will be loaded when appropriate. Keep in mind that
+	file loading will always take place in this instance.
+
+	One way to reduce the overhead and still keep automatic keyword support is
+	to hand modify the keyword list. (Even if that means you empty them)
+	#XSTC_NO_LANGNAME options to turn off languages is another option, but
+	that lexer will never auto-load/colorize. You would have to do that yourself.
+	*/
+	WXDLLIMPEXP_XSTC wxString KeyCheck(wxString keyname);
 #endif //XSTC_NO_KEYS
 
 #ifndef XSTC_NO_ABAQUS
-    /**
-    \brief abaqus lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexABAQUS();
+	/**
+	\brief Abaqus lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexABAQUS();
 #endif //XSTC_NO_ABAQUS
 
 #ifndef XSTC_NO_ADA
-    /**
-    \brief ada lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexADA();
+	/**
+	\brief Ada lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexADA();
 #endif //XSTC_NO_ADA
 
 #ifndef XSTC_NO_APDL
-    /**
-    \brief apdl lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexAPDL();
+	/**
+	\brief APDL lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexAPDL();
 #endif //XSTC_NO_APDL
 
 #ifndef XSTC_NO_ASM
-    /**
-    \brief assembly lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexASM();
+	/**
+	\brief Assembly lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexASM();
 #endif //XSTC_NO_ASM
 
 #ifndef XSTC_NO_ASN1
-    /**
-    \brief asn1 lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexASN1();
+	/**
+	\brief ASN1 lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexASN1();
 #endif //XSTC_NO_ASN1
 
 #ifndef XSTC_NO_ASYMPTOTE
-    /**
-    \brief asymptote lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexASYMPTOTE();
+	/**
+	\brief Asymptote lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexASYMPTOTE();
 #endif //XSTC_NO_ASYMPTOTE
 
 #ifndef XSTC_NO_AU3
-    /**
-    \brief au3 lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexAU3();
+	/**
+	\brief Au3 lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexAU3();
 #endif //XSTC_NO_AU3
 
 #ifndef XSTC_NO_AVE
-    /**
-    \brief avenuelexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexAVE();
+	/**
+	\brief Avenue lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexAVE();
 #endif //XSTC_NO_AVE
 
 #ifndef XSTC_NO_BAAN
-    /**
-    \brief baan lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexBAAN();
+	/**
+	\brief Baan lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexBAAN();
 #endif //XSTC_NO_BAAN
 
 #ifndef XSTC_NO_BLITZBASIC
-    /**
-    \brief blitzbasic lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexBLBASIC();//all four use the same color defs, but doing this makes it easier to customize the coloring
+	/**
+	\brief Blitzbasic lexcolor setup
+	*/
+	//All four use the same color defs, but doing this makes it easier to customize
+	//the coloring for each dialect.
+	WXDLLIMPEXP_XSTC void LexBLBASIC();
 #endif //XSTC_NO_BLITZBASIC
 
 #ifndef XSTC_NO_FREEBASIC
-    /**
-    \brief freebasic lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexFRBASIC();
+	/**
+	\brief Freebasic lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexFRBASIC();
 #endif //XSTC_NO_FREEBASIC
 
 #ifndef XSTC_NO_POWERBASIC
-    /**
-    \brief powerbasic lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPOBASIC();
+	/**
+	\brief Powerbasic lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPOBASIC();
 #endif //XSTC_NO_POWERBASIC
 
 #ifndef XSTC_NO_PUREBASIC
-    /**
-    \brief purebasic lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPUBASIC();
+	/**
+	\brief Purebasic lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPUBASIC();
 #endif //XSTC_NO_PUREBASIC
 
 #ifndef XSTC_NO_BASH
-    /**
-    \brief bash lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexBASH();
+	/**
+	\brief Bash (Unix shell) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexBASH();
 #endif //XSTC_NO_BASH
 
 #ifndef XSTC_NO_BATCH
-    /**
-    \brief batch lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexBATCH();
+	/**
+	\brief Batch (MS-Dos shell) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexBATCH();
 #endif //XSTC_NO_BATCH
 
-#ifndef XSTC_NO_BULLANT
-/* has no properties to set up
-void LexBULLANT();
-*/
-#endif //XSTC_NO_BULLANT
-
 #ifndef XSTC_NO_CAML
-    /**
-    \brief caml lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCAML();
+	/**
+	\brief Caml lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCAML();
 #endif //XSTC_NO_CAML
 
 #ifndef XSTC_NO_CLW
-    /**
-    \brief clw lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCLW();
+	/**
+	\brief CLW lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCLW();
 #endif //XSTC_NO_CLW
 
 #ifndef XSTC_NO_CMAKE
-    /**
-    \brief cmake lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCMAKE();
+	/**
+	\brief Cmake lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCMAKE();
 #endif //XSTC_NO_CMAKE
 
 #ifndef XSTC_NO_COBOL
-    /**
-    \brief cobol lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCOBOL();
+	/**
+	\brief Cobol lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCOBOL();
 #endif //XSTC_NO_COBOL
 
 #ifndef XSTC_NO_CONF
-    /**
-    \brief apache conf lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCONF();
+	/**
+	\brief Apache Conf lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCONF();
 #endif //XSTC_NO_CONF
 
 #ifndef XSTC_NO_CPP
-    /**
-    \brief c/c++ lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCPP();
+	/**
+	\brief C/C++ lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCPP();
 #endif //XSTC_NO_CPP
 
 #ifndef XSTC_NO_CSOUND
-    /**
-    \brief csound lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCSOUND();
+	/**
+	\brief Csound lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCSOUND();
 #endif //XSTC_NO_CSOUND
 
 #ifndef XSTC_NO_CSS
-    /**
-    \brief css lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexCSS();
+	/**
+	\brief CSS lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexCSS();
 #endif //XSTC_NO_CSS
 
 #ifndef XSTC_NO_D
-    /**
-    \brief d lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexD();
+	/**
+	\brief D lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexD();
 #endif //XSTC_NO_D
 
 #ifndef XSTC_NO_DIFF
-    /**
-    \brief diff lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexDIFF();
+	/**
+	\brief Diff lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexDIFF();
 #endif //XSTC_NO_DIFF
 
 #ifndef XSTC_NO_EIFFEL
-    /**
-    \brief eiffel lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexEIFFEL();
+	/**
+	\brief Eiffel lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexEIFFEL();
 #endif //XSTC_NO_EIFFEL
 
 #ifndef XSTC_NO_EIFFELKW
-    /**
-    \brief eiffelkw lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexEIFFELKW();
+	/**
+	\brief Eiffelkw lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexEIFFELKW();
 #endif //XSTC_NO_EIFFELKW
 
 #ifndef XSTC_NO_ERLANG
-    /**
-    \brief erlang lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexERLANG();
+	/**
+	\brief Erlang lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexERLANG();
 #endif //XSTC_NO_ERLANG
 
 #ifndef XSTC_NO_ERRORLIST
-    /**
-    \brief errorlist lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexERRORLIST();
+	/**
+	\brief Errorlist lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexERRORLIST();
 #endif //XSTC_NO_ERRORLIST
 
 #ifndef XSTC_NO_ESCRIPT
-    /**
-    \brief escript lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexESCRIPT();
+	/**
+	\brief Escript lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexESCRIPT();
 #endif //XSTC_NO_ESCRIPT
 
 #ifndef XSTC_NO_F77
-    /**
-    \brief f77 lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexF77();
+	/**
+	\brief F77 lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexF77();
 #endif //XSTC_NO_F77
 
 #ifndef XSTC_NO_FLAGSHIP
-    /**
-    \brief flagship (clipper) lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexFLAGSHIP();
+	/**
+	\brief Flagship (clipper) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexFLAGSHIP();
 #endif //XSTC_NO_FLAGSHIP
 
 #ifndef XSTC_NO_FORTH
-    /**
-    \brief forth lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexFORTH();
+	/**
+	\brief Forth lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexFORTH();
 #endif //XSTC_NO_FORTH
 
 #ifndef XSTC_NO_FORTRAN
-    /**
-    \brief fortran lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexFORTRAN();
+	/**
+	\brief Fortran lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexFORTRAN();
 #endif //XSTC_NO_FORTRAN
 
 #ifndef XSTC_NO_GAP
-    /**
-    \brief gap lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexGAP();
+	/**
+	\brief Gap lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexGAP();
 #endif //XSTC_NO_GAP
 
 #ifndef XSTC_NO_GUI4CLI
-    /**
-    \brief agui4cli lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexGUI4CLI();
+	/**
+	\brief Gui4cli lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexGUI4CLI();
 #endif //XSTC_NO_GUI4CLI
 
 #ifndef XSTC_NO_HASKELL
-    /**
-    \brief haskel lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexHASKELL();
+	/**
+	\brief Haskel lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexHASKELL();
 #endif //XSTC_NO_HASKELL
 
 #ifndef XSTC_NO_HTM
-    /**
-    \brief html php asp embeded javascript lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexHTM();
+	/**
+	\brief HTML, PHP, ASP, embeded Javascript lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexHTM();
 #endif //XSTC_NO_HTM
 
 #ifndef XSTC_NO_INNOSETUP
-    /**
-    \brief inno installer lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexINNO();
+	/**
+	\brief Inno Installer lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexINNO();
 #endif //XSTC_NO_INNOSETUP
 
 #ifndef XSTC_NO_JS
-    /**
-    \brief javascript file (cpp lexer) lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexJS();
+	/**
+	\brief Javascript file (cpp lexer) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexJS();
 #endif //XSTC_NO_JS
 
 #ifndef XSTC_NO_JAVA
-    /**
-    \brief java file (cpp lexer) lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexJAVA();
+	/**
+	\brief Java file (cpp lexer) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexJAVA();
 #endif //XSTC_NO_JAVA
 
 #ifndef XSTC_NO_KIX
-    /**
-    \brief kix lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexKIX();
+	/**
+	\brief Kix lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexKIX();
 #endif //XSTC_NO_KIX
 
 #ifndef XSTC_NO_LATEX
-    /**
-    \brief latexlexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexLATEX();
+	/**
+	\brief Latex lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexLATEX();
 #endif //XSTC_NO_LATEX
 
 #ifndef XSTC_NO_LISP
-    /**
-    \brief lisp lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexLISP();
+	/**
+	\brief Lisp lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexLISP();
 #endif //XSTC_NO_LISP
 
 #ifndef XSTC_NO_LOT
-    /**
-    \brief lot lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexLOT();
+	/**
+	\brief Lot lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexLOT();
 #endif //XSTC_NO_LOT
 
 #ifndef XSTC_NO_LOUT
-    /**
-    \brief lout lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexLOUT();
+	/**
+	\brief Lout lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexLOUT();
 #endif //XSTC_NO_LOUT
 
 #ifndef XSTC_NO_LUA
-    /**
-    \brief lua lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexLUA();
+	/**
+	\brief Lua lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexLUA();
 #endif //XSTC_NO_LUA
 
 #ifndef XSTC_NO_MAKEFILE
-    /**
-    \brief makefile lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMAKEFILE();
+	/**
+	\brief Makefile lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMAKEFILE();
 #endif //XSTC_NO_MAKEFILE
 
 #ifndef XSTC_NO_MAGIK
-    /**
-    \brief magik lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMAGIK();
+	/**
+	\brief Magik lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMAGIK();
 #endif //XSTC_NO_MAGIK
 
+#ifndef XSTC_NO_MARKDOWN
+	/**
+	\brief Markdown lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMARKDOWN();
+#endif //XSTC_NO_MARKDOWN
+
 #ifndef XSTC_NO_MATLAB
-    /**
-    \brief matlab lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMATLAB();
+	/**
+	\brief Matlab lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMATLAB();
 #endif //XSTC_NO_MATLAB
 
 #ifndef XSTC_NO_METAPOST
-    /**
-    \brief metapost lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMETAPOST();
+	/**
+	\brief Metapost lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMETAPOST();
 #endif //XSTC_NO_METAPOST
 
 #ifndef XSTC_NO_MMIXAL
-    /**
-    \brief mmixal lexcolor setup
-    */
-void LexMMIXAL();
+	/**
+	\brief Mmixal lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMMIXAL();
 #endif //XSTC_NO_MMIXAL
 
 #ifndef XSTC_NO_NIMROD
-    /**
-    \brief nimrod lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexNIMROD();
+	/**
+	\brief Nimrod lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexNIMROD();
 #endif //XSTC_NO_NIMROD
 
 #ifndef XSTC_NO_NNCRONTAB
-    /**
-    \brief nncrontab lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexNNCRONTAB();
+	/**
+	\brief Nncrontab lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexNNCRONTAB();
 #endif //XSTC_NO_NNCRONTAB
 
 #ifndef XSTC_NO_NSIS
-    /**
-    \brief nsis lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexNSIS();
+	/**
+	\brief NSIS lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexNSIS();
 #endif //XSTC_NO_NSIS
 
 #ifndef XSTC_NO_OCTAVE
-    /**
-    \brief octave lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexOCTAVE();
+	/**
+	\brief Octave lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexOCTAVE();
 #endif //XSTC_NO_OCTAVE
 
 #ifndef XSTC_NO_OPAL
-    /**
-    \brief opal lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexOPAL();
+	/**
+	\brief Opal lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexOPAL();
 #endif //XSTC_NO_OPAL
 
 #ifndef XSTC_NO_PAS
-    /**
-    \brief pascal/delphi lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPAS();
+	/**
+	\brief Pascal/Delphi lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPAS();
 #endif //XSTC_NO_PAS
 
 #ifndef XSTC_NO_PERL
-    /**
-    \brief perl lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPERL();
+	/**
+	\brief Perl lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPERL();
 #endif //XSTC_NO_PERL
 
 #ifndef XSTC_NO_PLM
-    /**
-    \brief plm lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPLM();
+	/**
+	\brief PLM lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPLM();
 #endif //XSTC_NO_PLM
 
 #ifndef XSTC_NO_PO
-    /**
-    \brief po lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPO();
+	/**
+	\brief PO lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPO();
 #endif //XSTC_NO_PO
 
 #ifndef XSTC_NO_POV
-    /**
-    \brief pov lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPOV();
+	/**
+	\brief POV lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPOV();
 #endif //XSTC_NO_POV
 
 #ifndef XSTC_NO_POWERPRO
-    /**
-    \brief powerpro lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPOWERPRO();
+	/**
+	\brief PowerPro lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPOWERPRO();
 #endif //XSTC_NO_POWERPRO
 
 #ifndef XSTC_NO_POWERSHELL
-    /**
-    \brief powershell lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPOWERSHELL();
+	/**
+	\brief PowerShell lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPOWERSHELL();
 #endif //XSTC_NO_POWERSHELL
 
 #ifndef XSTC_NO_PROGRESS
-    /**
-    \brief progress lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPROGRESS();
+	/**
+	\brief Progress lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPROGRESS();
 #endif //XSTC_NO_PROGRESS
 
 #ifndef XSTC_NO_PROPERTIES
-    /**
-    \brief properties lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPROPERTIES();
+	/**
+	\brief Properties lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPROPERTIES();
 #endif //XSTC_NO_PROPERTIES
 
 #ifndef XSTC_NO_PS
-    /**
-    \brief ps lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPS();
+	/**
+	\brief PS (Post Script) lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPS();
 #endif //XSTC_NO_PS
 
 #ifndef XSTC_NO_PYTHON
-    /**
-    \brief python lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexPYTHON();
+	/**
+	\brief Python lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexPYTHON();
 #endif //XSTC_NO_PYTHON
 
 #ifndef XSTC_NO_R
-    /**
-    \brief r lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexR();
+	/**
+	\brief R lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexR();
 #endif //XSTC_NO_R
 
 #ifndef XSTC_NO_REBOL
-    /**
-    \brief rebol lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexREBOL();
+	/**
+	\brief Rebol lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexREBOL();
 #endif //XSTC_NO_REBOL
 
 #ifndef XSTC_NO_RUBY
-    /**
-    \brief ruby lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexRUBY();
+	/**
+	\brief Ruby lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexRUBY();
 #endif //XSTC_NO_RUBY
 
 #ifndef XSTC_NO_SCRIPTOL
-    /**
-    \brief scriptol lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSCRIPTOL();
+	/**
+	\brief Scriptol lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSCRIPTOL();
 #endif //XSTC_NO_SCRIPTOL
 
 #ifndef XSTC_NO_SMALLTALK
-    /**
-    \brief smalltalk lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSMALLTALK();
+	/**
+	\brief Smalltalk lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSMALLTALK();
 #endif //XSTC_NO_SMALLTALK
 
 #ifndef XSTC_NO_SML
-    /**
-    \brief sml lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSML();
+	/**
+	\brief SML lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSML();
 #endif //XSTC_NO_SML
 
 #ifndef XSTC_NO_SORCUS
-    /**
-    \brief sorcus lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSORCUS();
+	/**
+	\brief Sorcus lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSORCUS();
 #endif //XSTC_NO_SORCUS
 
 #ifndef XSTC_NO_SPECMAN
-    /**
-    \brief specman lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSPECMAN();
+	/**
+	\brief Specman lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSPECMAN();
 #endif //XSTC_NO_SPECMAN
 
 #ifndef XSTC_NO_SPICE
-    /**
-    \brief spice lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSPICE();
+	/**
+	\brief Spice lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSPICE();
 #endif //XSTC_NO_SPICE
 
 #ifndef XSTC_NO_MSSQL
-    /**
-    \brief Microsoft sql lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMSSQL();
+	/**
+	\brief Microsoft SQL lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMSSQL();
 #endif //XSTC_NO_MSSQL
 
 #ifndef XSTC_NO_MYSQL
-    /**
-    \brief Mysql lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexMYSQL();
+	/**
+	\brief MySQL lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexMYSQL();
 #endif //XSTC_NO_MYSQL
 
 #ifndef XSTC_NO_SQL
-    /**
-    \brief sql lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexSQL();
+	/**
+	\brief SLQ lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexSQL();
 #endif //XSTC_NO_SQL
 
 #ifndef XSTC_NO_TACL
-    /**
-    \brief tacl lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexTACL();
+	/**
+	\brief Tacl lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTACL();
 #endif //XSTC_NO_TACL
 
 #ifndef XSTC_NO_TADS3
-    /**
-    \brief tads3 lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexTADS3();
+	/**
+	\brief Tads3 lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTADS3();
 #endif //XSTC_NO_TADS3
 
 #ifndef XSTC_NO_TAL
-    /**
-    \brief tal lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexTAL();
+	/**
+	\brief Tal lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTAL();
 #endif //XSTC_NO_TAL
 
 #ifndef XSTC_NO_TCL
-    /**
-    \brief tcl lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexTCL();
+	/**
+	\brief Tcl lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTCL();
 #endif //XSTC_NO_TCL
 
 #ifndef XSTC_NO_TEX
-    /**
-    \brief tex lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexTEX();
+	/**
+	\brief Tex lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTEX();
 #endif //XSTC_NO_TEX
 
+#ifndef XSTC_NO_TXT2TAGS
+	/**
+	\brief Txt2Tags lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexTXT2TAGS();
+#endif //XSTC_NO_TXT2TAGS
+
 #ifndef XSTC_NO_VB
-    /**
-    \brief Visual Basic lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexVB();
+	/**
+	\brief Visual Basic lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexVB();
 #endif //XSTC_NO_VB
 
 #ifndef XSTC_NO_VBSCRIPT
-    /**
-    \brief vb script lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexVBSCRIPT();
+	/**
+	\brief VB Script lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexVBSCRIPT();
 #endif //XSTC_NO_VBSCRIPT
 
 #ifndef XSTC_NO_VERILOG
-    /**
-    \brief verilong lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexVERILOG();
+	/**
+	\brief Verilong lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexVERILOG();
 #endif //XSTC_NO_VERILOG
 
 #ifndef XSTC_NO_VHDL
-    /**
-    \brief vhdl lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexVHDL();
+	/**
+	\brief VHDL lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexVHDL();
 #endif //XSTC_NO_VHDL
 
 #ifndef XSTC_NO_XCODE
-    /**
-    \brief xcode lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexXCODE();
+	/**
+	\brief Xcode lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexXCODE();
 #endif //XSTC_NO_XCODE
 
 #ifndef XSTC_NO_XML
-    /**
-    \brief xml lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexXML();
+	/**
+	\brief XML lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexXML();
 #endif //XSTC_NO_XML
 
 #ifndef XSTC_NO_YAML
-    /**
-    \brief yaml lexcolor setup
-    */
-WXDLLIMPEXP_XSTC void LexYAML();
+	/**
+	\brief Yaml lexcolor setup
+	*/
+	WXDLLIMPEXP_XSTC void LexYAML();
 #endif //XSTC_NO_YAML
 
 #ifndef XSTC_NO_CONFIG
-    /**
-    \brief pass a configuration object so that XSTC can load external settings
-    
-    \detailed the XSTC namespace is used in the configuration files.
-              XSTC/COLOR/ is used for all coloring/styling options
-              XSTC/EXT/ is used for the extension and property options
-    */
-WXDLLIMPEXP_XSTC void SetColorConf(wxConfigBase* clrconf, wxString root = wxT("//"));
+	/**
+	\brief Give XSTC a pointer to your config database.
+
+	Without it you wont be ale to use XSTC configuration routines.
+	Themes will still work though. root is the sublocation you want the XSTC
+	settings stored in. make sure it has a trailing '/' or it wont work.
+
+	See UsingXSTC.html for more information on the configuration paths and settings.
+	*/
+	WXDLLIMPEXP_XSTC void SetColorConf(wxConfigBase* clrconf, wxString root = wxT("/"));
+
+	/**
+	\brief Same as above except if pass == true then the old config database is passed back.
+	*/
+
+	WXDLLIMPEXP_XSTC wxConfigBase* SetColorConf(wxConfigBase* clrconf, bool pass = true, wxString root = wxT("/"));
+
 #endif //XSTC_NO_CONFIG
 
 #ifndef XSTC_NO_TRIMTRAIL
-    /**
-    \brief trims all trailing spaces and tabs in the document
+	/**
+	\brief Trims all trailing spaces and tabs in the document.
 
-    \detailed if trimspaces is set to true, then this will be called in savefileX.
-    */
-WXDLLIMPEXP_XSTC void TrimTrailing();
+	If trimspaces is set to true, then this will be called in savefileX.
+	*/
+	WXDLLIMPEXP_XSTC void TrimTrailing();
 #endif //XSTC_NO_TRIMTRAIL
 
 #ifndef XSTC_NO_TABSPACE
-    /**
-    \brief converts tabs to spaces or vice verca
+	/**
+	\brief Converts tabs to spaces or vice verca
 
-    \detailed tabs=true tabs to spaces else spaces to tabs
-              int spaces, is the number of spaces to equal one tab
-    */
-WXDLLIMPEXP_XSTC void TabSpace(bool tabs, int spaces);
+	tabs=true tabs to spaces else spaces to tabs
+		int spaces, is the number of spaces to equal one tab
+	*/
+	WXDLLIMPEXP_XSTC void TabSpace(bool tabs, int spaces);
 #endif //XSTC_NO_TABSPACE
 
-    /**
-    \brief sets up the folding matgin mask for square markers
-    */
-WXDLLIMPEXP_XSTC void FoldBox();
-
-    /**
-    \brief sets up the folding margin mask for circle markers
-    */
-WXDLLIMPEXP_XSTC void FoldCircle();
-
-    /**
-    \brief sets the folding margin mask for arrow markers
-    */
-WXDLLIMPEXP_XSTC void FoldArrow(bool lines = true);
-
-    /**
-    \brief sets the foldimg margin mask for +- markers
-    */
-WXDLLIMPEXP_XSTC void FoldSimple(bool lines = true);
-
-    /**
-    \brief sets the foldimg marker colors
-    */
-WXDLLIMPEXP_XSTC void FoldColors();
-
-    /**
-    \brief converts a string representing a lexer to an int
-
-    \detailed the string can represent a number or lexer keyword, numbers are converted
-           and passed verbatim, the keyword is converted to its respective lexer
-    */
-WXDLLIMPEXP_XSTC int GetEXTLexer(wxString extparam);
-
-
-    /**
-    \brief checks if the entry has any characters that are invalid for use in a filename
-
-    \detailed doens't do any well formed checks, just looks for characters
-    */
-WXDLLIMPEXP_XSTC bool FilevalidCheck(wxString entry);
-
-    /**
-    \brief resets all markers to default
-
-    \detailed this is an easy way to clear the slate, it only resets markers managed my XSTC
-    */
-WXDLLIMPEXP_XSTC void ResetMarkers();
-
-#ifndef XSTC_NO_CONFIG
-    /**
-    \brief converts the input string to a color. this is used in the configuration code for loading in colors.
-
-    \detailed takes a valid color string and converts it to a color. if the color database was set a name can
-              be used if it is in the database. otherwize an html or rgb string can be used #RRGGBB or rgb(r, g, b)
-              the rgb string can be used with or without the rgb prefix, but that is how the wxColour class takes it.
-    */
-WXDLLIMPEXP_XSTC bool Ccolor(wxString configvalue, wxColour& color);
-
-    /**
-    \brief checks the value of a config color setting and converts it to a string defaults to #RRGGBB
-
-    \detailed converts the input value to a specified output value. it uses Ccolor() and then gets
-              the appropriate type string. defaults to html color string.
-              type used the wxColour flags which are:
-              wxC2S_NAME          red
-              wxC2S_CSS_SYNTAX    rgb(255, 0, 0)
-              wxC2S_HTML_SYNTAX   #FF0000
-    */
-WXDLLIMPEXP_XSTC bool CcolorS(wxString configvalue, wxString& color, long type = wxC2S_HTML_SYNTAX);
-
-    /**
-    \brief gives the user a pointer to the color database, XSTC still destroys it internally.
-
-    \detailed the color string option for Ccolor and CcolorS are not availible till this is called, because
-              no database has been created. it will send a new pointer if the database was already created.
-              (this function was already called) the database agrument may be NULL if pass is false. this lets
-              you just create and get the pointer later if you need it.
-    */
-WXDLLIMPEXP_XSTC void SetColorDbase(wxColourDatabase& dbase);
-
-#endif //XSTC_NO_CONFIG
-
-/**********************************************************************************************************************
-***********************************************Variables here***********************************************************
-***********************************************************************************************************************/
-
-    /**
-    \brief a status result for file load and save functions
-    */
-WXDLLIMPEXP_XSTC enum //filestatus
-	{
-	FILE_OK = 0,
-	FILE_NOT_FOUND = 1,
-	FILE_SAVE_ERROR = 2
-	};
-
-    /**
-    \brief a status result for file load and save functions
-    */
-WXDLLIMPEXP_XSTC enum //savemode
-	{
-	SAVE_AS_NEVER = 0,
-	SAVE_AS_ALWAYS = 1,
-	SAVE_AS_ON_FAIL = 3
-	};
-
-#ifndef XSTC_NO_CONFIG
-    /**
-    \brief for external extention conf
-
-    \detailed this when set to true tells the class to search an external
-              configuration file for extentions and which lexer it should be assigned
-              if no assignment is found for the current extention, the default is used
-              or null_lexer when there is no assignment also you can use a strings
-              rather than a file should that be nessicary
-    */
-WXDLLIMPEXP_XSTC bool useext;
-
-    /**
-    \brief for external coloring conf
-
-    \detailed this when set to true tells the class to use an external conf
-              for colorization or a string
-    */
-WXDLLIMPEXP_XSTC bool usecolor;
-	
 	/**
-	\brief whether to set properties from config file
+	\brief Sets up the folding margin mask for square markers
 	*/
-WXDLLIMPEXP_XSTC bool useprops;
+	WXDLLIMPEXP_XSTC void FoldBox();
+
+	/**
+	\brief Sets up the folding margin mask for circle markers
+	*/
+	WXDLLIMPEXP_XSTC void FoldCircle();
+
+	/**
+	\brief Sets the folding margin mask for arrow markers.
+
+	If lines is true then connecting lines are drawn, otherwize
+	only the head and tail symbold are drawn.
+	*/
+	WXDLLIMPEXP_XSTC void FoldArrow(bool lines = true);
+
+	/**
+	\brief Sets the foldimg margin mask for +- markers.
+
+	If lines is true then connecting lines are drawn, otherwize
+	only the head and tail symbold are drawn.
+	*/
+	WXDLLIMPEXP_XSTC void FoldSimple(bool lines = true);
+
+	/**
+	\brief Sets the fold margin styles to the default colors.
+
+	It will do a configuration based setting check if there is a
+	config database availible.
+	*/
+	WXDLLIMPEXP_XSTC void FoldColors();
+
+	/**
+	\brief Takes a case insensitive lex-name and returns the appropriate lexer
+
+	If the string is a number then the number is passed back, however if it is
+	a string then it is converted to the appropriate number. This will return
+	LEX_NULL if no match was found. It uses the names from the #def's in wxScintilla.h
+	with the extra stuff removed. "cpp" is a valid string for example.
+	*/
+	WXDLLIMPEXP_XSTC int GetEXTLexer(wxString extparam);
+
+
+	/**
+	\brief Checks the filename string for invalid characters.
+
+	Does not do any well formed checks.
+	*/
+	WXDLLIMPEXP_XSTC bool FilevalidCheck(wxString entry);
+
+	/**
+	\brief Resets the markers managed my XSTC, user managed markers are left alone.
+	*/
+	WXDLLIMPEXP_XSTC void ResetMarkers();
+
+#ifndef XSTC_NO_CONFIG
+	/**
+	\brief Converts a string representing a color to a wxColour. Used by the config code.
+
+	This can convert any css/html string value "#RRGGBB" or a decimal rgb triplet (r,g,b)
+	the triplet can be prefixed with rgb hence "rgb(0,0,0)" as wxColour requires but
+	is not needed here. (optional) If a color database is set then a string name may be used
+	as well to get a color. wxWidgets sets a good number of them up already but you are free
+	to modify and add as you please.
+	*/
+	WXDLLIMPEXP_XSTC bool Ccolor(wxString configvalue, wxColour& color);
+
+	/**
+	\brief Converts a wxColour to a string representing the color value.
+
+	Defaults to html color string.
+	wxC2S_NAME          red
+	wxC2S_CSS_SYNTAX    rgb(255, 0, 0)
+	wxC2S_HTML_SYNTAX   #FF0000
+	The flag will determine the type of result you get.
+	*/
+	WXDLLIMPEXP_XSTC bool CcolorS(wxString configvalue, wxString& color, long type = wxC2S_HTML_SYNTAX);
+
+	/**
+	\brief Allows XSTC to use string name lookup for colors.
+
+	By passing a null you turn the color-name functionality off.
+	This version will internally destroy the old database when you
+	Set a new one.
+	*/
+	WXDLLIMPEXP_XSTC void SetColorDbase(wxColourDatabase& dbase);
+
+	/**
+	\brief Same as above but passes back the old database if pass == true
+	*/
+	WXDLLIMPEXP_XSTC wxColourDatabase* SetColorDbase(wxColourDatabase& dbase, bool pass);
+
 #endif //XSTC_NO_CONFIG
 
-    /**
-    \brief for fold margin functions
+	/**********************************************************************************************************************
+	***********************************************Variables here***********************************************************
+	***********************************************************************************************************************/
 
-    \detailed set to true and the marker will be styled as outline, if you
-              use a config color setting to overwrite the colors, this may
-              have no effect. (the foreground color makes the outline)
-    */
-WXDLLIMPEXP_XSTC bool markoutline;
+	/**
+	\brief Status result for Save and Load
+	*/
+	WXDLLIMPEXP_XSTC enum //filestatus
+	{
+		FILE_OK = 0,
+		FILE_NOT_FOUND = 1,
+		FILE_SAVE_ERROR = 2
+	};
 
-    /**
-    \brief for fold margin functions
+	/**
+	\brief Used as an argument for SaveFileX(), for showing a SaveAs dialog.
+	*/
+	WXDLLIMPEXP_XSTC enum //savemode
+	{
+		SAVE_AS_NEVER = 0,
+		SAVE_AS_ALWAYS = 1,
+		SAVE_AS_ON_FAIL = 3
+	};
 
-    \detailed sets the shape of the marker when using foldmargin functions
-              use the same value as the #defines wxSTC_MARK_CIRCLE
-              if using char, you must add the char value to the marker
-              1000+(ascii)char value defaults to circle
-    */
-WXDLLIMPEXP_XSTC int markshape;
+#ifndef XSTC_NO_CONFIG
+	/**
+	\brief Turn on config lookup lexer per file extention in config database.
 
-    /**
-    \brief sets the fold line after/before contracted/expanded
+	If this is false then built in lookup is done which is probably quite poor.
+	It is automatically set to true with a call to SetColorConf()
+	*/
+	WXDLLIMPEXP_XSTC bool useext;
 
-    \detailed defaults to line after contracted
-    */
-WXDLLIMPEXP_XSTC int foldline;
+	/**
+	\brief Turn on style color lookup in config database
+
+	This is automatically set to true when you call SetColorConf()
+	*/
+	WXDLLIMPEXP_XSTC bool usecolor;
+
+	/**
+	\brief If this is true then properties will be looked up via config database.
+	*/
+	WXDLLIMPEXP_XSTC bool useprops;
+#endif //XSTC_NO_CONFIG
+
+	/**
+	\brief If true the marker colors are switched and the bookmark looks outlined.
+	*/
+	WXDLLIMPEXP_XSTC bool markoutline;
+
+	/**
+	\brief Defines the shape of the bookmark marker
+
+	It defaults to a circle but you can change it. The value is based on
+	#define wxSCI_MARK_CIRCLE definitions like that.
+	Also characters may be used by using 1000+Ascii_val as the argument.
+	*/
+	WXDLLIMPEXP_XSTC int markshape;
+
+	/**
+	\brief Fold line behavior, determines where and if a line shows up when text is collapsed.
+	*/
+	WXDLLIMPEXP_XSTC int foldline;
 
 #ifndef XSTC_NO_TRIMTRAIL
-    /**
-    \brief trim trailing spaces/tabs on save
-
-    \detailed when calling saveX and this is set to true, TrimTrailing() will
-              called. for resources and effectiveness this seems to be the
-              best approach to trim the end spaces.
-    */
-WXDLLIMPEXP_XSTC bool trimspaces;
+	/**
+	\brief If true then TrimTrailing() will be called on save.
+	*/
+	WXDLLIMPEXP_XSTC bool trimspaces;
 #endif //XSTC_NO_TRIMTRAIL
 
 #ifndef XSTC_NO_TABSPACE
-    /**
-    \brief covert spaces/tabs to settings on save
+	/**
+	\brief Defines how space/tab conversion is handled
 
-    \detailed when calling saveX and this is set to an active mode the whitespace
-	          will be converted accordingly.
-    */
-WXDLLIMPEXP_XSTC int spaceconv; //0 off, 1 space to tab, 2 tab to space, >2 off
+	0=none/off
+	1=spaces convert to tabs
+	2=tabs convert to spaces
+	<0||>2 is also off
+	*/
+	WXDLLIMPEXP_XSTC int spaceconv; //0 off, 1 space to tab, 2 tab to space, >2 off
 
-    /**
-    \brief this is the # of spaces in a tab for TabSpace()
-    */
-WXDLLIMPEXP_XSTC int spaces;
+	/**
+	\brief Number of spaces that defines a tab, used in TabSpace() for tab/space conversion.
+	*/
+	WXDLLIMPEXP_XSTC int spaces;
 #endif //XSTC_NO_TABSPACE
 
 #ifndef XSTC_NO_KEYS
-    /**
-    \brief for loading keywords
-
-    \detailed if true keywords will be loaded, default is keys_set strings, but
-              you can either pass your own keywords to keycheck() or send it a
-              filename. alternatly you can use loadkeywords() specifically if you
-              KNOW that a file will alwayse be used. internally keycheck calls
-              loadkeywords if a '.' dot is present in the string
-    */
-WXDLLIMPEXP_XSTC bool usekeys;
+	/**
+	\brief Defaults to off, however if keyword support is turned on and this is true, wordlists are automatically loaded.
+	*/
+	WXDLLIMPEXP_XSTC bool usekeys;
 #endif
 
-    /**
-    \brief sets the default coloring for c/c++
+	/**
+	\brief Toggles using indent guide to match braces with brace-matching
+	*/
+	WXDLLIMPEXP_XSTC bool braceline;
 
-    \detailed holds a specific string if a colorstyle function was called
-              dark classic visualstudio borland zenburn jeff matrix
-              it defaults to 'NULL' that is basically just ignore the colors
-              that are set, make defaults. or a property string that can be
-              sent to GetPropString() can be used for the fg_bg colors. this
-              gives a small degree of flexability to the lexcolor functions
-              as that property is seen as the whitespace color and they will
-              try to adjust the color so any direct conflicts are avoided.
-              this won't work too well cus the program doesn't have eyes, but
-              its workth a try.
-    */
-WXDLLIMPEXP_XSTC wxString colorstyle; //this is for the fold marker coloring and to programmically determine
-                                      //if/what the setting is
-    /**
-    \brief color of the edge column
+	/**
+	\brief This is the name of the current theme mode.
 
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC wxColour edgcolr;
+	If it is "null", then all settings will be make black on white. (default)
 
-    /**
-    \brief column number for the edge column
+	It is primarily used as a convienience variable for the user to find what if any
+	theme is set. This can be a config based theme as well.
+	*/
+	WXDLLIMPEXP_XSTC wxString colorstyle;
+	/**
+	\brief Color of the right column.
+	*/
+	WXDLLIMPEXP_XSTC wxColour edgcolr;
 
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC int edgcolm;
+	/**
+	\brief Number of characters to put the right column.
+	*/
+	WXDLLIMPEXP_XSTC int edgcolm;
 
-    /**
-    \brief mode of the edge column
+	/**
+	\brief Mode the right column is set to, line or background.
+	*/
+	WXDLLIMPEXP_XSTC int edgmod;
 
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC int edgmod;
+	/**
+	\brief Mode for word wrap.
+	*/
+	WXDLLIMPEXP_XSTC int wrapmod;
 
-    /**
-    \brief mode for text wrap
+	/**
+	\brief Mode for word wrap visual flags. (a small rounded arrow)
+	*/
+	WXDLLIMPEXP_XSTC int wrapvf;
 
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC int wrapmod;
+	/**
+	\brief Document caching mode
+	*/
+	WXDLLIMPEXP_XSTC int cachemod;
 
-    /**
-    \brief visual flags for text wrap
+	/**
+	\brief Whether the caret line gets highlighted
+	*/
+	WXDLLIMPEXP_XSTC bool caretlv;
 
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC int wrapvf;
+	/**
+	\brief Whether the case sensitive cpp lexer is used, defaults to off
+	*/
+	WXDLLIMPEXP_XSTC bool cppcase;
 
-    /**
-    \brief cache mode for the document
-
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC int cachemod;
-
-    /**
-    \brief visibility fot the cater background highlight
-
-    \detailed used in the colorstyle functions
-    */
-WXDLLIMPEXP_XSTC bool caretlv;
-
-    /**
-    \brief case sensitive cpp lexer
-
-    \detailed used in extention to lexer setting, defaults true
-    */
-WXDLLIMPEXP_XSTC bool cppcase;
-
-    /**
-    \brief case sensitive clw lexer
-
-    \detailed used in extention to lexer setting, defaults true
-    */
-WXDLLIMPEXP_XSTC bool clwcase;
+	/**
+	\brief Whether the case sensitive clw lexer is used, defaults to off
+	*/
+	WXDLLIMPEXP_XSTC bool clwcase;
 
 #ifndef XSTC_NO_ALPHA
-//this macro is needed since scintilla didn't support alpha blending till version 1.68
-    /**
-    \brief alpha blending level for bookmarks, caret backgrounda and text selection
-
-    \detailed this value sets all three to the same alpha setting, use 256 to turn
-              blending off (full visible), the config settings set them individually
-    */
-WXDLLIMPEXP_XSTC int alphalvl;
+//This macro is needed since scintilla didn't support alpha blending till version 1.68
+	/**
+	\brief Generic default trancparentcy level for all alpha supporting styles.
+	*/
+	WXDLLIMPEXP_XSTC int alphalvl;
 #endif //XSTC_NO_ALPHA
 
-    /**
-    \brief filename of the loaded file
-
-    \detailed if no file is loaded or CloseFile() was called, this is 'Untitled'
-              the file name of the loaded file is stored here if loadfileX is
-              used, that will contain the full path as passed to it, otherwize you
-              set it and it is whatever you make it out to be
-    */
-WXDLLIMPEXP_XSTC wxString XFilename;
+	/**
+	\brief Defaults to "Untitled". This is the internally stored filename of the document.
+	*/
+	WXDLLIMPEXP_XSTC wxString XFilename;
 
 #ifndef XSTC_NO_KEYS
-    /**
-    \brief a set of strings that hold a default set of keywords
+	/**
+	\brief Sets of strings that hold default wordlists.
 
-    \detailed this also supports overwriting the keywords using spaces as a delimiter
-              or a filename, a '.' dot is used to determine if it is a filename
-    */
-WXDLLIMPEXP_XSTC Keyword_Sets Keys_Set;
+	Not all languages have wordlists actually defined, many are empty strings. It is
+	tough to track down lists of valid strings for many of these languages. Contributions
+	are welcome. These may also be changes to a filename or a list of filenames.
+	See KeyCheck() for details.
+	*/
+	WXDLLIMPEXP_XSTC Keyword_Sets Keys_Set;
 #endif
 
-    /**
-    \brief a few strings to represent colors for background markers
+	/**
+	\brief Ide related colors. These are only here for convienience and are not used internally.
+	*/
+	WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
 
-    \detailed these strings are a convienient way to store the colors
-              for various background markers. you set the marker and
-              the color, but these will be updated when a colorstyle
-              function is called.
-              brkptcol      breakpoint
-              actbrkptcol   active breakpoint
-              errorcol      error
-              more may come, i haven't thought too much of it yet. any suggestions?
-    */
-WXDLLIMPEXP_XSTC wxString brkptcol, actbrkptcol, errorcol;
+private:
+	/**
+	\brief Mrace match for the brace highlighting function.
 
- private:
-    /**
-    \brief handles brace matching
-
-    \detailed matches braces for these symbols {} () [] <>
-              also with optional uniqe colors for each brace type
-              uniqe per bracetype is under a delayed investigation
-              they might need to all be the same, i do hope i can
-              figure it out.
-    */
-    void Bmatch(XSTC_EVENT& event);
-
-    /**
-    \brief Handles margin click events
-
-    \detailed calls ToggleBookmark() or togles a fold dependong on wich margin
-              was clicked
-    */
-    void MarginClicked(XSTC_EVENT& event);
-
-    /**
-    \brief determins which lexer to use
-
-    \detailed using the file extentions, this returns the correct lexer or
-              LEX_NULL if error and prop1 is set to default behavior for that lexer
-              as internalt designated the information defined here is used in
-              setlexerX. also by loading a set of properties and extentions into
-              extset some extentions can be redefined or unsuppoted extentions
-              given a lexer other than null
-    */
-    int AutoEXT(wxString filename);//returns the lexer number
-
-#ifndef XSTC_NO_CONFIG
-    /**
-    \brief checks if entry (file extention) was loaded into extset (handled in conf file)
-
-    \detailed returns true if it was and sets dest to the handled properties
-              if it returns false dest is emptied
-    */
-    bool IsConfEXT(wxString extension, int &lexer);//was the extention loaded from conf?
+	Matches braces for these symbols {} () [] <>
+	*/
+	void Bmatch(XSTC_EVENT& event);
 
 	/**
-	\brief set properties from config database
+	\brief Used for toggling bookmarks and folding.
+	*/
+	void MarginClicked(XSTC_EVENT& event);
+
+	/**
+	\brief Returns the appropriate lexer based on the lexer string name.
+
+	If no matches are made it returns LEX_NULL. The lexer name is form the #def's
+	in wxScintilla.h
+	*/
+	int AutoEXT(wxString filename);//returns the lexer number
+
+#ifndef XSTC_NO_CONFIG
+	/**
+	\brief Returns true if the extention was in the config database and sets lexer accordingly.
+	*/
+	bool IsConfEXT(wxString extension, int &lexer);//was the extention loaded from conf?
+
+	/**
+	\brief Sets the properties in the config database for the given extention
 	*/
 	bool SetProperties(wxString extension);
 #endif //XSTC_NO_CONFIG
 
-    /**
-    \brief toggles the numbered bookmarks
-
-    \detailed checks the keys and toggles or goto the appropriate bookmark.
-    */
-    void MarkerToggle(wxKeyEvent& event);
-	
 	/**
-    \brief handles other keypress events than numbered bookmarks
-    */
+	\brief Used to toggle/goto numbered bookmarks
+
+	marker is the numbered bookmark to modify (0-9)
+	move, if true the marker will be moved to the current cursor
+		position. Otherwise the cursor will be moved to the bookmark.
+	newline is the line to move the bookmark to. If it is <0 then the
+		bookmark will be deleted as long as move is true.
+	If the bookmark number is out of range nothing will happen.
+	Also the bookmark will be deleted if move is true and we are on the
+	same line as the marker.
+	*/
+	void MarkerToggle(int marker, bool move, int newline = -1);
+
+	/**
+	\brief Handles all of the Key events for XSTC, like toggling numbered bookmarks
+	*/
 	void KeyParse(wxKeyEvent& event);
 
-/**********************************************************************************************************************
-***********************************************Variables here***********************************************************
-***********************************************************************************************************************/
+	/**********************************************************************************************************************
+	***********************************************Variables here***********************************************************
+	***********************************************************************************************************************/
 
-    
-    /**
-    \brief holds the width for the internally mapped margins
-    */
-    int linemgn, symmgn, fldmgn;//these store the number for the left margins
 
-    /**
-    \brief margin width settings
+	/**
+	\brief These functions are used in margin ordering. Usually default order is all that works well.
+	*/
+	//These store the order mapping for the margins.
+	int linemgn, symmgn, fldmgn;
 
-    \detailed widths for settings margins
-    */
-    int linew, symw, fldw;
+	/**
+	\brief Used with the margin ordering to hold the correct margin widths for each margin.
+	*/
+	int linew, symw, fldw;
 
 #ifndef XSTC_NO_CONFIG
-    /**
-    \brief the color database that XSTC uses for name to color
+	/**
+	\brief call SetColorDbase(), this stores the value passed. Needed only for color-name lookup in string conversions.
+	*/
+	wxColourDatabase* XSTCcolorDbase;
 
-    \detailed this is not readily useable and SetColorDbase() must be called first
-              that way unneded memory is not allocated. remember if name strings are used
-              then color setting will fail on those entries when this is not initialized.
-              the user can add entries as they wish, because a pointer is passed with the
-              function call.
-    */
-    wxColourDatabase* XSTCcolorDbase;
-    
-    /**
-    \brief user set location for the XSTC config. defaults to '/'
-    */
-    wxString confroot;
+	/**
+	\brief Internal XSTC config location for the config database, defaults to "/"
+	*/
+	wxString confroot;
 #endif //XSTC_NO_CONFIG
 
-    /**
-    \brief stores the handle to numbered bookmarks
+	/**
+	\brief Stores the numbered bookmark handles so that when the user changes a position only one marker will exsist.
+	*/
+	int BmarkHandles[10];
 
-    \detailed stored bookmark handles for the numbered bookmarks so they can be found when the BmarkPos becomes invalid.
-    */
-    int BmarkHandles[10];
+	/**
+	\brief Stores the names of config based themes from "XSTC/COLOR/MISIC/CSTYLES"
 
-    /**
-    \brief all of the names of the config based colorstyles
+	The list is coma delimited. The use of this setting is not nessecary but is recomended
+	when creating config based themes.
+	*/
+	wxString CStyles;
 
-    \detailed the strings are read from "XSTC/COLOR/MISIC/CSTYLES" a coma delimited list of names.
-              the names are used to utilize the config based colorstyle settings. since searching for the styles is not an effective
-              means of knowing what ones are present. any undefined settings will be set to the default color of black on white.
-    */
-    wxString CStyles;
+	/**
+	\brief A simple way to check C/C++ extentions in AutoEXT() and SetLexerX().
+	*/
+	wxString c_ext_array[8];
 
-    /**
-    \brief c/c++ extention array
+	/**
+	\brief These variables use StyleSetSpec() compliant strings. They are the heart of the theme system.
+	*/
+	wxString XS_comment, //stream comments
+			 XS_comment2, //block comments
+			 XS_comment3, //documentation comments
+			 XS_s_string, //singe quote string ''
+			 XS_d_string, //double quote string ""
+			 XS_number,
+			 XS_char,
+			 XS_default, //anything that uses a default style
+			 XS_key1,
+			 XS_key2,
+			 XS_key3,
+			 XS_key4,
+			 XS_preproc, //preprocessor
+			 XS_symbol, //syntax characters, braces, operators
+			 XS_tag, //script tags like in html/xml
+			 XS_user,
+			 XS_misic, //generic fill in variable
+			 XS_lang,
+			 XS_global,
+			 XS_bad, //illegal, error
+			 XS_instruction, //whatever
+			 XS_dtype; //datatype
 
-    \detailed a space saving way to check the c++ file extentions in AutoEXT()
-    */
-    wxString c_ext_array[8];
+	/**
+	\brief Fold margin foreground color
+	*/
+	wxString foldfg;
 
-    /**
-    \brief these variables are for lexcolor functions, this way there is a fast easy way to chnge default in all functions at once.
-
-    \detailed  these are strings that are used in StyleSetSpec()
-    */
-    wxString XS_comment,
-             XS_comment2,
-             XS_comment3,
-             XS_s_string,
-             XS_d_string,
-             XS_number,
-             XS_char,
-             XS_default,
-             XS_key1,
-             XS_key2,
-             XS_key3,
-             XS_key4,
-             XS_preproc,
-             XS_symbol,
-             XS_tag,
-             XS_user,
-             XS_misic,
-             XS_lang,
-             XS_global,
-             XS_bad, //illegal, error
-             XS_instruction, //whatever
-             XS_dtype; //datatype
-
-    /**
-    \brief fold margin foreground color string
-
-    \detailed to simplify code, the colorstyle function sets this value instead of checking for
-              the value of the 'colorstyle' string in each fold setup function
-    */
-    wxString foldfg;
-
-    /**
-    \brief fold margin background color string
-
-    \detailed to simplify code, the colorstyle function sets this value instead of checking for
-              the value of the 'colorstyle' string in each fold setup function
-    */
-    wxString foldbg;
-
-    /**
-    \brief holds the id passed to the constructor
-
-    \detailed The window id is needed to dynamically connect events to this
-              instance of the editor. its here so you can use it if you need
-    */
-    wxWindowID WIN_ID; //this way we can use connect to dynamically connect events to our
-	                   //component and the user still has the option over what the id
-	                   //setting is.
+	/**
+	\brief Fold margin background color
+	*/
+	wxString foldbg;
 #ifndef XSTC_NO_CONFIG
-    /**
-    \brief pointer to the color config object
-
-    \detailed XSTC does not write any values to this object, it only reads them
-              define color structure!!
-    */
-     wxConfigBase* colorconf;
+	/**
+	\brief The config database. XSTC will not write to it. Remember to set up a color database if you need to use color-names.
+	*/
+	wxConfigBase* colorconf;
 #endif //XSTC_NO_CONFIG
 };
 

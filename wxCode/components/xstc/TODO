@@ -1,29 +1,14 @@
 find missing keywords in the languages that where added
-add xml config support
-	wxXMLConfig
-check out any events that should be dealt with
-	textdragging support, remember to turn it off when dnd is off.
-	has this been done?
-savefilex() logic does not address the default xfilename string, this needs to be fixed
-	test the new file save and load functions
+
+test the new file save and load functions
 any updates? check for added scintilla functionality that should be taken advantage of
-write a user doc (seperate from doxy) and remove the txt files. (html)
 
 create a simple macro recorder, this should be in seperate files
 add a function that will fold a region from the closing brace (via looking up the opening match)
 multi-line editing support?
 add option to activate the left margin highlight that shows when a line was modified
-add option to activate indent line highlighting for matching braces
 add option for auto indent code
 
-
-wxScintilla:
-added a definition for getmonitorrect (single monitor only currently) //does this need updating?
-
-
-once finished, audit the code
-	spaces to tabs
-	all instances of "config file" to "config database"
 is there a scintilla function to reset properties? none in wxSci api..
 other npp functionality to impliment?
 is there anything I can add for calltips or autocompletion?

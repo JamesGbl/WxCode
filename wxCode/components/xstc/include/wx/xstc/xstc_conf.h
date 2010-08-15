@@ -42,75 +42,77 @@
 /****************************************************************************************************
  *                                                                                                  *
  *                                                                                                  *
- *   This block explains the macros below, there are comments by macro definitions to help as well  *
+ *  This block explains the macros below, there are comments by macro definitions to help as well   *
  *                                                                                                  *
- *  NOTE: most of the macros defined are to disable functionality rather than enable it.            *
+ *  NOTE: Most of the macros defined are to disable functionality rather than enable it.            *
  *                                                                                                  *
  *                                                                                                  *
- *  WXMAKINGDLL standard wxWidgets macro, define this if you are building the library. if not       *
- *              comment it out.                                                                     *
+ *  WXMAKINGDLL Standard wxWidgets macro, define this if you are building the library.              *
  *                                                                                                  *
- *  WXDLLIMPEXP_XSTC if WXMAKINGDLL is defined then wxEXPORT is used else it is nothing.            *
+ *  WXDLLIMPEXP_XSTC If WXMAKINGDLL is defined then wxEXPORT is used else it is nothing.            *
  *                                                                                                  *
- *  XSTC_USE_WXSCINTILLA   these macros are all you will need to make the library work, unless you  *
- *  XSTC_USE_WXSTC         want to redefine the libraries functionality                             *
+ *  XSTC_USE_WXSCINTILLA  These macros are all you will need to make the library work, unless you   *
+ *  XSTC_USE_WXSTC        want to cut out some of the libraries functionality                       *
  *                                                                                                  *
- *  XSTC_CLASS this macro defines the class used. either wxScintilla or wxStyledTextCtrl            *
- *             it is defined automatically unless you set XSTC_NO_CONF at the command line          *
+ *  XSTC_CLASS Defines the class used. Either wxScintilla or wxStyledTextCtrl.                      *
+ *             It is defined automatically unless you set XSTC_NO_CONF at the command line          *
+ *             You must modify uncomment the apropriate line, or change it for your                 *
+ *             subclasses version.                                                                  *
  *                                                                                                  *
- *  XSTC_EVENT this macro defines the event type, thus wxStyledTextEvent                            *
+ *  XSTC_EVENT Defines the event type, ie wxStyledTextEvent                                         *
  *                                                                                                  *
- *  XSTC_EVENT_FUNCT this macro defies the event_function for connect()                             *
+ *  XSTC_EVENT_FUNCT Defines the event_function for connect()                                       *
  *                                                                                                  *
- *  XSTC_EVENT_DEF() this macro concatonates the correct event prefix wxEVT_STC_ or wxEVT_SCI_      *
- *                   this way the library and anyone who uses these macros are library independant  *
+ *  XSTC_EVENT_DEF() Concatonates the correct event prefix wxEVT_STC_ or wxEVT_SCI_.                *
+ *                   That way the library and anyone who uses these macros are library independant  *
  *                                                                                                  *
- *  XSTC_DEF() same as the above, but this is for everything else, so use it for style definitions  *
- *             to make your code library independant. (that is why these macros where created.      *
+ *  XSTC_DEF() Same as the above, but this is for everything else, so use it for style definitions  *
+ *             to make your code library independant. (That is why these macros where created.      *
  *                                                                                                  *
- *  XSTC_NO_KEYS if defined this will remove all automatic keyword initialization functionality     *
- *               from XSTC. you will have to deal with all keywords code yourself. utilizing this   *
- *               does not limit you from reinitializing the keyword arrays to something you need    *
- *               instead.                                                                           *
+ *  XSTC_NO_KEYS If defined this will remove all automatic keyword initialization functionality     *
+ *               from XSTC. You will have to deal with all keywords code yourself. Utilizing this   *
+ *               does not limit you from reusing the keyword arrays.                                *
  *                                                                                                  *
- *  XSTC_NO_KEYS_DEFINED this leaves the keyword subsystem in place, but does not do any of the     *
+ *  XSTC_NO_KEYS_DEFINED This leaves the keyword subsystem in place, but does not do any of the     *
  *                       automatic language initialization, that means they will all be empty and   *
- *                       you will be responsible for initializing them yourself.                    *
+ *                       you will be responsible for filling them yourself, they may be filenames.  *
  *                                                                                                  *
- *  XSTC_NO_ALPHA disables alpha functionality for versions that do not support it.                 *
+ *  XSTC_NO_ALPHA Disables alpha functionality for versions that do not support it.                 *
  *                                                                                                  *
- *  XSTC_NO_TABSPACE disables the utility function for converting between spaces and tabs.          *
- *                   and anywhere it is used in the code. also removes spaceconv and spaces         *
+ *  XSTC_NO_TABSPACE Disables the utility function for converting between spaces and tabs           *
+ *                   and anywhere it is used in the code. Also removes spaceconv and spaces         *
  *                   variables from the codebase.                                                   *
  *                                                                                                  *
- *  XSTC_NO_TRIMTRAIL disables the utility function for trimming trailing whitespace st end of      *
- *                    files and all instances in the code. also removes trimspaces varible.         *
+ *  XSTC_NO_TRIMTRAIL Disables the utility function for trimming trailing whitespace at end of      *
+ *                    files and all instances in the code. Also removes trimspaces varible.         *
  *                                                                                                  *
- *  XSTC_NO_MARK_FULLRECT scintilla 1.69 added this style.                                          *
+ *  XSTC_NO_MARK_FULLRECT Scintilla 1.69 added this style.                                          *
  *                                                                                                  *
- *  XSTC_NO_MARK_LEFTRECT another later added style. 1.78?                                          *
+ *  XSTC_NO_MARK_LEFTRECT Another later added style. 1.78?                                          *
  *                                                                                                  *
- *  XSTC_NO_MARK_AVAILABLE another later added style. 1.78?                                         *
+ *  XSTC_NO_MARK_AVAILABLE Another later added style. 1.78?                                         *
  *                                                                                                  *
- *  XSTC_NO_[LEX]NAME this allows lexer setup functions to be removed and not utilized in the       *
- *                       codebase. that way the code can support current scintilla and still work   *
- *                       for older versions. use the function name minus the lex prefix.            *
- *                       //XSTC_NO_PASCAL                                                           *
+ *  XSTC_NO_[LEX]NAME This allows lexer setup functions to be removed and not utilized in the       *
+ *                    codebase. That way the code can support current scintilla and still work      *
+ *                    for older versions. Use the function name minus the lex prefix.               *
+ *                    ie XSTC_NO_PASCAL                                                             *
  *                                                                                                  *
- *  XSTC_H_FLAT a commandline macro to allow compiling with the header in the same directory as     *
+ *  XSTC_H_FLAT A commandline macro to allow compiling with the header in the same directory as     *
  *              the sources.                                                                        *
  *                                                                                                  *
- *  GetCaretALPHA an api independant way to get Caret line highlight alpha level.                   *
+ *  GetCaretALPHA An api independant way to get Caret line highlight alpha level.                   *
  *                                                                                                  *
- *  SetCaretALPHA an api independant way to set Caret line highlight alpha level.                   *
+ *  SetCaretALPHA An api independant way to set Caret line highlight alpha level.                   *
  *                                                                                                  *
- *  SetCaretBk an api independant way to set the color for caret line highlight.                    *
+ *  SetCaretBk An api independant way to set the color for caret line highlight.                    *
  *                                                                                                  *
- *  GetCaretBk an api independant way to get the color for caret line highlight.                    *
+ *  GetCaretBk An api independant way to get the color for caret line highlight.                    *
  *                                                                                                  *
- *  XSTC_NO_AUTOSAVEAS if you want to deal with all of the save errors yourself, define this and    *
+ *  XSTC_NO_AUTOSAVEAS If you want to deal with all of the save errors yourself, define this and    *
  *                     no save dialog will be shown when saving fails, an errorcode will always     *
- *                     be passed instead.                                                           *
+ *                     be passed instead, if save was unsucessful.                                  *
+ *                                                                                                  *
+ *  XSTC_NO_CONFIG Disables the config loading routines and removes them from the sources.          *
  *                                                                                                  *
  *                                                                                                  *
  ****************************************************************************************************/
@@ -122,32 +124,18 @@
  #define WXDLLIMPEXP_XSTC WXEXPORT
  #define WXMAKINGDLL_SCI //this if for wxScintilla
  #define WXMAKINGDLL_STC //this is for wxstyledtextctrl
- #define SCI_LEXER //need this for scintilla when building
- #define LINK_LEXERS
-#elif WXUSINGDLL
- #define WXDLLIMPEXP_XSTC WXIMPORT
+ #define SCI_LEXER //Tells Scintilla to build lexer modules and coloring support.
+ #define LINK_LEXERS //Builds the lexers directly into the library and initializes them.
 #else
  #define WXDLLIMPEXP_XSTC
 #endif
 
-#ifndef _DEBUG
+#ifndef DEBUG
  #define NDEBUG
 #endif
 
 #define XSTC_USE_WXSCINTILLA //define this if you are using wxScintilla
 //#define XSTC_USE_WXSTC       //define this if you are using wxStyledTextCtrl
 //define one or the other
-
-//#define XSTC_NO_ALPHA
-//#define XSTC_NO_CONFIG //turn off all configuration subsystems, ini and xml.
-//#define XSTC_NO_KEYS //disables all automatic keyword functionality
-//#define XSTC_NO_KEYS_DEFINED //only disables setting the keyword arrays initially, this does not interfere with the subsystem.
-//#define XSTC_NO_TABSPACE //disable the tabs/spaces conversion utility function
-//#define XSTC_NO_TRIMTRAIL //disables the trim trailing whitespace utility functin and all instances it is used in the code.
-//#define XSTC_NO_MARK_FULLRECT //some older versions of scintilla don't support this marker
-//#define XSTC_NO_MARK_LEFTRECT //same as above
-//#define XSTC_NO_MARK_AVAILABLE //same as above
-//#define XSTC_NO_AUTOSAVEAS //disables the auto saveas functionality in savefilex
-                             //the saveas variable will be ignored
 
 #endif //XSTC_CONF_H

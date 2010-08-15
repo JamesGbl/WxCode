@@ -52,7 +52,7 @@
  #define XSTC_EVENT_DEF(Cx)  wxEVT_SCI_ ## Cx
  #define XSTC_DEF(Cy) wxSCI_ ## Cy
 
-//these macros define a neutral function that is both version and library independant. they do not
+//These macros define a neutral function that is both version and library independant. They do not
 //conform to the actual library function names, but using them will make sure you don't need to
 //worry about which version of library code you are using.
 
@@ -65,7 +65,7 @@
 #endif
 
 #endif //XSTC_USE_WXSCINTILLA
-//above macros are for wxScintilla, do not edit this section
+//Above macros are for wxScintilla, do not edit this section!
 
 #ifdef XSTC_USE_WXSTC
 
@@ -78,13 +78,13 @@
 
 //wxStyledTextCtrl does not support these languages
 
-//scintilla 1.77 not all of these where added to scintilla then, i need to check it out
-#define XSTC_NO_ASYMPTOTE
-#define XSTC_NO_R
-#define XSTC_NO_MAGIK
-#define XSTC_NO_POWERSHELL
-#define XSTC_NO_MYSQL
-#define XSTC_NO_PO
+ //Scintilla 1.77
+ #define XSTC_NO_ASYMPTOTE
+ #define XSTC_NO_R
+ #define XSTC_NO_MAGIK
+ #define XSTC_NO_POWERSHELL
+ #define XSTC_NO_MYSQL
+ #define XSTC_NO_PO
  //scintilla 1.78
  #define XSTC_NO_TAL
  #define XSTC_NO_COBOL
@@ -93,9 +93,12 @@
  #define XSTC_NO_POWERPRO
  #define XSTC_NO_NIMROD
  #define XSTC_NO_SML
+ //scintilla 2.20
+ #define XSTC_NO_MARKDOWN
+ #define XSTC_NO_TXT2TAGS
  
- #if wxMAJOR_VERSION >= 2
- #if wxMINOR_VERSION = 9
+ #if wxMAJOR_VERSION = 2
+ #if wxMINOR_VERSION < 9
  //these languages are present in 2.9 but not 2.8
  #define XSTC_NO_ABAQUS
  #define XSTC_NO_CMAKE
@@ -110,16 +113,15 @@
  #define XSTC_NO_MARK_AVAILABLE
  #define XSTC_NO_MARK_LEFTRECT
 
-//these macros define a neutral function that is both version and library independant. they do not
-//conform to the actual library function names, but using them will make sure you don't need to
-//worry about which version of library code you are using.
-
-
 #if wxMAJOR_VERSION <= 2
 #if wxMINOR_VERSION > 6
- #define XSTC_LVL
+ #define XSTC_LVL //Tells us if we need to use the new or old version of the function names.
 #endif
 #endif
+
+//These macros define a neutral function that is both version and library independant. They do not
+//conform to the actual library function names, but using them will make sure you don't need to
+//worry about which version of library code you are using.
 
 #ifdef XSTC_LVL
  #define SetCaretBk SetCaretLineBackground
@@ -136,6 +138,6 @@
 #undef XSTC_LVL
 
 #endif //XSTC_USE_WXSTC
-//above macros are for wxStyledTextCtrl, do not edit this section
+//Above macros are for wxStyledTextCtrl, do not edit this section!
 
 #endif //UTIL_H
