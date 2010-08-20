@@ -325,7 +325,7 @@ bool wxSTEditorSplitter::DoSplit(wxSplitMode mode, int sashPosition)
         m_is_resplitting = true;
         Unsplit();
         m_is_resplitting = false;
-        m_editorTwo->Show(true);
+        m_editorTwo->Show();
     }
 
     if (!m_editorTwo)

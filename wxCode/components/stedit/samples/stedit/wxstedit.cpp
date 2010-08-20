@@ -429,7 +429,7 @@ bool wxStEditApp::OnInit()
     }
     //m_frame->ShowSidebar(false);
     //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX; // trac.wxwidgets.org/ticket/11947
-    m_frame->Show(true);
+    m_frame->Show();
 
     // filenames had *, ? or other junk so we didn't load them
     if (badFileNames.GetCount())
@@ -508,7 +508,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
             if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
             {
                 helpFrame->Centre();
-                helpFrame->Show(true);
+                helpFrame->Show();
             }
             else
                 delete helpFrame;
@@ -524,7 +524,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
             if (htmlWin->SetPage(::stc2wx((const char*)readme_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
             {
                 helpFrame->Centre();
-                helpFrame->Show(true);
+                helpFrame->Show();
             }
             else
                 delete helpFrame;

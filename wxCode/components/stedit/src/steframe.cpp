@@ -825,7 +825,7 @@ void wxSTEditorFrame::ShowSidebar(bool on)
             if (!GetSideSplitter()->IsSplit())
             {
                 GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 100);
-                GetSideNotebook()->Show(true);
+                GetSideNotebook()->Show();
             }
         }
         else if (GetSideSplitter()->IsSplit())

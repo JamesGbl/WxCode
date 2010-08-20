@@ -3098,7 +3098,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
                                style);
         }
 
-        frDialog->Show(true);
+        frDialog->Show();
     }
 }
 
@@ -3626,7 +3626,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
 
     frame->Centre();
     frame->Initialize();
-    frame->Show(true);
+    frame->Show();
     return true;
 #endif //STE_USE_HTML_PRINT
 }
