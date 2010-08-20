@@ -1680,10 +1680,10 @@ void wxDivisionShape::EditEdge(int WXUNUSED(side))
   form->dialog = dialog;
 
   dialog->Fit();
-  dialog->Centre(wxBOTH);
+  dialog->Centre();
 
   wxEndBusyCursor();
-  dialog->Show(true);
+  dialog->Show();
 
   int lineStyle = wxSOLID;
   if (*pStyle)

@@ -44,7 +44,7 @@ class csMDIChildFrame : public wxDocMDIChildFrame
 {
     typedef wxDocMDIChildFrame base;
 public:
-    csMDIChildFrame(wxDocument*, wxView*, wxMDIParentFrame* parent, wxWindowID, const wxString& title, const wxPoint&, const wxSize&, long style);
+    csMDIChildFrame(wxDocument*, wxMDIParentFrame* parent, wxWindowID, const wxString& title, const wxPoint&, const wxSize&);
 
 protected:
     void OnActivate(wxActivateEvent&);

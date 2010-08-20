@@ -502,11 +502,11 @@ void wxDividedShape::EditRegions()
   form->dialog = dialog;
 
   dialog->Fit();
-  dialog->Centre(wxBOTH);
+  dialog->Centre();
 
   wxEndBusyCursor();
 
-  dialog->Show(true);
+  dialog->Show();
 
   node = GetRegions().GetFirst();
   i = 0;

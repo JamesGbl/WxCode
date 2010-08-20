@@ -42,7 +42,7 @@ END_EVENT_TABLE()
 
 // Define my frame constructor
 csFrame::csFrame(wxDocManager* manager, wxFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
-  wxDocMDIParentFrame(manager, parent, id, title, pos, size, style, wxT("frame"))
+  wxDocMDIParentFrame(manager, parent, id, title, pos, size, style)
 {
     CreateToolBar(wxNO_BORDER|wxTB_FLAT|wxTB_HORIZONTAL);
     wxGetApp().InitToolBar(GetToolBar());
@@ -162,8 +162,8 @@ void csFrame::OnIdle(wxIdleEvent& event)
     {
         if (!paletteWin->IsShown() || !diagramToolBarWin->IsShown())
         {
-            paletteWin->Show(true);
-            diagramToolBarWin->Show(true);
+            paletteWin->Show();
+            diagramToolBarWin->Show();
 
             doLayout = true;
         }
@@ -224,8 +224,9 @@ BEGIN_EVENT_TABLE(csMDIChildFrame, wxDocMDIChildFrame)
   EVT_ACTIVATE(csMDIChildFrame::OnActivate)
 END_EVENT_TABLE()
 
-csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxView* view, wxMDIParentFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
-  wxDocMDIChildFrame(doc, view, parent, id, title, pos, size, style)
+csMDIChildFrame::csMDIChildFrame(wxDocument* doc, wxMDIParentFrame *parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size):
+wxDocMDIChildFrame(doc, doc->GetFirstView(), parent, id, title, pos, size, 
+     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE | wxMAXIMIZE)
 {
     // Accelerators
     size_t i = 0;

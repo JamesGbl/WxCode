@@ -116,8 +116,8 @@ bool MyApp::OnInit(void)
     frame->GetStatusBar()->PushStatusText(_("Ready"));
 #endif // wxUSE_STATUSBAR
 
-  frame->Centre(wxBOTH);
-  frame->Show(true);
+  frame->Centre();
+  frame->Show();
 
   return true;
 }
@@ -141,8 +141,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxDocParentFrame)
 END_EVENT_TABLE()
 
 MyFrame::MyFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
-    const wxPoint& pos, const wxSize& size, long type):
-  wxDocParentFrame(manager, frame, wxID_ANY, title, pos, size, type)
+    const wxPoint& pos, const wxSize& size, long style):
+  wxDocParentFrame(manager, frame, wxID_ANY, title, pos, size, style)
 {
   canvas = NULL;
   palette = NULL;

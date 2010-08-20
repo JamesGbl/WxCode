@@ -26,25 +26,27 @@ END_EVENT_TABLE()
 
 // What to do when a view is created. Creates actual
 // windows for displaying the view.
-bool DiagramView::OnCreate(wxDocument* doc, long WXUNUSED(flags))
+bool DiagramView::OnCreate(wxDocument* doc, long flags)
 {
-  m_canvas = GetMainFrame()->canvas;
-  m_canvas->m_view = this;
-  m_canvas->Enable(true);
+    bool ok = wxView::OnCreate(doc, flags);
+    if (ok)
+    {
+        m_canvas = GetMainFrame()->canvas;
+        m_canvas->m_view = this;
+        m_canvas->Enable(true);
 
-  SetFrame(GetMainFrame());
-  Activate(true);
+        SetFrame(GetMainFrame());
 
-  // Initialize the edit menu Undo and Redo items
-  doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(GetFrame(), MyFrame)->editMenu);
-  doc->GetCommandProcessor()->Initialize();
+        // Initialize the edit menu Undo and Redo items
+        doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(GetFrame(), MyFrame)->editMenu);
+        doc->GetCommandProcessor()->Initialize();
 
-  wxShapeCanvas *shapeCanvas = m_canvas;
-  DiagramDocument* diagramDoc = wxStaticCast(doc, DiagramDocument);
-  shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
-  diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
-
-  return true;
+        wxShapeCanvas *shapeCanvas = m_canvas;
+        DiagramDocument* diagramDoc = wxStaticCast(doc, DiagramDocument);
+        shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
+        diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
+    }
+    return ok;
 }
 
 DiagramDocument* DiagramView::GetDocument()

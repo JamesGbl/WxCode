@@ -180,7 +180,7 @@ bool csApp::OnInit(void)
     m_shapeEditMenu->AppendSeparator();
     m_shapeEditMenu->Append(wxID_CUT, _("Cut"));
 
-    frame->Show(true);
+    frame->Show();
 
     SetTopWindow(frame);
 
@@ -207,11 +207,11 @@ int csApp::OnExit(void)
  * Called from view.cpp, when a view is created.
  */
 
-wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxView *view, wxMenu** editMenuRet)
+wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxMenu** editMenuRet)
 {
     //// Make a child frame
-    csMDIChildFrame *subframe = new csMDIChildFrame(doc, view, wxStaticCast(GetTopWindow(), wxMDIParentFrame), wxID_ANY, wxEmptyString,
-                                                    wxPoint(10, 10), wxSize(300, 300), wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE | wxMAXIMIZE);
+    csMDIChildFrame *subframe = new csMDIChildFrame(doc, wxStaticCast(GetTopWindow(), wxMDIParentFrame), wxID_ANY, wxEmptyString,
+                                                    wxPoint(10, 10), wxSize(300, 300));
 
 #ifdef __X__
     subframe->SetIcon(wxIcon(wxT("doc.xbm")));

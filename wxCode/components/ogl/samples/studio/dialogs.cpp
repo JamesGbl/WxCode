@@ -143,7 +143,7 @@ csSettingsDialog::csSettingsDialog(wxWindow* parent):
     okButton->SetFocus();
 
     Layout();
-    Centre(wxBOTH);
+    Centre();
 }
 
 void csSettingsDialog::OnOK(wxCommandEvent& event)
@@ -329,7 +329,7 @@ csShapePropertiesDialog::csShapePropertiesDialog(wxWindow* parent, const wxStrin
     SetDefaults();
 
     Layout();
-    Centre(wxBOTH);
+    Centre();
 }
 
 void csShapePropertiesDialog::OnOK(wxCommandEvent& event)

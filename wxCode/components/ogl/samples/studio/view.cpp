@@ -68,47 +68,42 @@ END_EVENT_TABLE()
 
 // What to do when a view is created. Creates actual
 // windows for displaying the view.
-bool csDiagramView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
+bool csDiagramView::OnCreate(wxDocument* doc, long flags)
 {
-  wxMenu* editMenu;
-  wxDocMDIChildFrame* frame = wxGetApp().CreateChildFrame(doc, this, &editMenu);
-  m_canvas = wxGetApp().CreateCanvas(this, frame);
-  m_canvas->SetView(this);
-
-  Activate(true);
-
-  // Initialize the edit menu Undo and Redo items
-  doc->GetCommandProcessor()->SetEditMenu(editMenu);
-  doc->GetCommandProcessor()->Initialize();
-
-  wxShapeCanvas *shapeCanvas = m_canvas;
-  csDiagramDocument *diagramDoc = wxStaticCast(doc, csDiagramDocument);
-  shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
-  diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
-
-  diagramDoc->GetDiagram()->SetGridSpacing((double) wxGetApp().GetGridSpacing());
-
-    switch (wxGetApp().GetGridStyle())
+    bool ok = wxView::OnCreate(doc, flags);
+    if (ok)
     {
-        case csGRID_STYLE_NONE:
+        wxMenu* editMenu;
+        wxDocMDIChildFrame* frame = wxGetApp().CreateChildFrame(doc, &editMenu);
+        wxASSERT(frame == GetFrame());
+        m_canvas = wxGetApp().CreateCanvas(this, frame);
+        m_canvas->SetView(this);
+
+        // Initialize the edit menu Undo and Redo items
+        doc->GetCommandProcessor()->SetEditMenu(editMenu);
+        doc->GetCommandProcessor()->Initialize();
+
+        wxShapeCanvas *shapeCanvas = m_canvas;
+        csDiagramDocument *diagramDoc = wxStaticCast(doc, csDiagramDocument);
+        shapeCanvas->SetDiagram(diagramDoc->GetDiagram());
+        diagramDoc->GetDiagram()->SetCanvas(shapeCanvas);
+
+        diagramDoc->GetDiagram()->SetGridSpacing((double) wxGetApp().GetGridSpacing());
+
+        switch (wxGetApp().GetGridStyle())
         {
-            diagramDoc->GetDiagram()->SetSnapToGrid(false);
-            break;
-        }
-        case csGRID_STYLE_INVISIBLE:
-        {
-            diagramDoc->GetDiagram()->SetSnapToGrid(true);
-            break;
-        }
-        case csGRID_STYLE_DOTTED:
-        {
-            // TODO (not implemented in OGL)
-            break;
+            case csGRID_STYLE_NONE:
+                diagramDoc->GetDiagram()->SetSnapToGrid(false);
+                break;
+            case csGRID_STYLE_INVISIBLE:
+                diagramDoc->GetDiagram()->SetSnapToGrid(true);
+                break;
+            case csGRID_STYLE_DOTTED:
+                // TODO (not implemented in OGL)
+                break;
         }
     }
-
-
-  return true;
+    return ok;
 }
 
 csDiagramView::~csDiagramView(void)
