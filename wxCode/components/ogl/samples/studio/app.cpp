@@ -301,13 +301,10 @@ wxDocMDIChildFrame* csApp::CreateChildFrame(wxDocument *doc, wxMenu** editMenuRe
 }
 
 // Creates a canvas. Called by OnInit as a child of the main window
-csCanvas *csApp::CreateCanvas(wxView *view, wxMDIChildFrame *parent)
+csCanvas *csApp::CreateCanvas(wxView *view)
 {
-    int width, height;
-    parent->GetClientSize(&width, &height);
-
     // Non-retained canvas
-    csCanvas *canvas = new csCanvas(wxStaticCast(view, csDiagramView), parent, 1000, wxPoint(0, 0), wxSize(width, height), wxSUNKEN_BORDER);
+    csCanvas *canvas = new csCanvas(wxStaticCast(view, csDiagramView), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER);
 
     wxColour bgColour(wxT("WHITE"));
     canvas->SetBackgroundColour(bgColour);

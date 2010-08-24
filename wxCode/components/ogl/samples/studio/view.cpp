@@ -76,8 +76,7 @@ bool csDiagramView::OnCreate(wxDocument* doc, long flags)
         wxMenu* editMenu;
         wxDocMDIChildFrame* frame = wxGetApp().CreateChildFrame(doc, &editMenu);
         wxASSERT(frame == GetFrame());
-        m_canvas = wxGetApp().CreateCanvas(this, frame);
-        m_canvas->SetView(this);
+        m_canvas = wxGetApp().CreateCanvas(this);
 
         // Initialize the edit menu Undo and Redo items
         doc->GetCommandProcessor()->SetEditMenu(editMenu);
@@ -116,10 +115,11 @@ void csDiagramView::OnDraw(wxDC *WXUNUSED(dc))
 {
 }
 
-void csDiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
+void csDiagramView::OnUpdate(wxView* sender, wxObject* hint)
 {
-  if (m_canvas)
-    m_canvas->Refresh();
+    base::OnUpdate(sender, hint);
+    if (m_canvas)
+        m_canvas->Refresh();
 }
 
 // Clean up windows used for displaying the view.
@@ -136,7 +136,7 @@ bool csDiagramView::OnClose(bool deleteWindow)
   m_canvas->SetView(NULL);
   m_canvas = NULL;
 
-  wxMenu* fileMenu = wxStaticCast(GetFrame(), wxFrame)->GetMenuBar()->GetMenu(0);
+  wxMenu* fileMenu = GetFrame()->GetMenuBar()->GetMenu(0);
 
   // Remove file menu from those managed by the command history
   diagramDoc->GetDocumentManager()->FileHistoryRemoveMenu(fileMenu);
@@ -799,11 +799,10 @@ BEGIN_EVENT_TABLE(csCanvas, wxShapeCanvas)
 END_EVENT_TABLE()
 
 // Define a constructor for my m_canvas
-csCanvas::csCanvas(csDiagramView *v, wxWindow *parent, wxWindowID id, const wxPoint& pos,
-    const wxSize& size, long style):
- wxShapeCanvas(parent, id, pos, size, style)
+csCanvas::csCanvas(csDiagramView* view, wxWindowID id, const wxPoint& pos, const wxSize& size, long style):
+    wxShapeCanvas(view->GetFrame(), id, pos, size, style)
 {
-  m_view = v;
+    m_view = view;
 }
 
 csCanvas::~csCanvas(void)

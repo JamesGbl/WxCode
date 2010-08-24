@@ -24,7 +24,7 @@ class csCanvas : public wxShapeCanvas
 DECLARE_CLASS(csCanvas)
  public:
 
-  csCanvas(csDiagramView *view, wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
+  csCanvas(csDiagramView *view, wxWindowID id = wxID_ANY,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxRETAINED);
   virtual ~csCanvas(void);
@@ -68,6 +68,7 @@ public:
    virtual bool OnClose(bool deleteWindow = true);
    
    csDiagramDocument* GetDocument();
+   wxFrame* GetFrame() const { return wxStaticCast(base::GetFrame(), wxFrame); }
 
    wxShape *FindFirstSelectedShape(void);
 

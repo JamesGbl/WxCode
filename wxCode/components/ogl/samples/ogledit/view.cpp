@@ -127,10 +127,11 @@ void DiagramView::OnDraw(wxDC *dc)
   }
 }
 
-void DiagramView::OnUpdate(wxView *WXUNUSED(sender), wxObject *WXUNUSED(hint))
+void DiagramView::OnUpdate(wxView* sender, wxObject* hint)
 {
-  if (m_canvas)
-    m_canvas->Refresh();
+    wxView::OnUpdate(sender, hint);
+    if (m_canvas)
+        m_canvas->Refresh();
 }
 
 void DiagramView::OnChangeFilename()
