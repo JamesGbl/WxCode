@@ -144,7 +144,7 @@ bool csDiagramView::OnClose(bool deleteWindow)
   Activate(false);
   GetFrame()->Show(false);
 
-  if (deleteWindow)
+  if (deleteWindow && GetFrame())
   {
     GetFrame()->Destroy();
     SetFrame(NULL);
