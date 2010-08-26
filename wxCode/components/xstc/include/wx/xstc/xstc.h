@@ -224,7 +224,7 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets
 	wxString conf1;//parameters
 #endif //XSTC_NO_CONF
 #ifndef XSTC_NO_CPP
-//C++ original release IDL added V1.24 C# added V1.31
+//C++ original release Java and Javascript merged 1.22 IDL added V1.24 C# added V1.31
 	wxString cpp;//primary keywords
 	wxString cpp1;//secondary keywords [stl]
 	wxString cpp2;//documentation
@@ -317,7 +317,7 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets
 	wxString haskell;
 #endif //XSTC_NO_HASKELL
 #ifndef XSTC_NO_HTM
-//initial release php added V1.23 later merged V1.30 sgml V1.40 asp 1.40 i guess
+//initial release php added V1.23 later merged V1.30 sgml V1.40 asp 1.23 i guess
 	wxString html;//html elements attributes
 	wxString html1;//javascript keywords
 	wxString html2;//vbscript keywords
@@ -387,7 +387,7 @@ struct WXDLLIMPEXP_XSTC Keyword_Sets
 	wxString magik3;//flow
 	wxString magik4;//characters
 #endif //XSTC_NO_MAGIK
-//MARKDOWN 2.20
+//MARKDOWN 2.02
 #ifndef XSTC_NO_MATLAB
 //V1.45
 	wxString matlab;//keywords

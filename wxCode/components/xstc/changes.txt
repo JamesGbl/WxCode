@@ -1,11 +1,12 @@
 CHANGES for version 6.4
 ConfigStyle() will now call a built in theme from the style name
-Updated documentation to me more clear and updated some out of date comments.
+Updated documentation to be more clear and updated some out of date comments.
 Added some overloaded functions so that objects passed to XSTC can be got back rather than just being deleted.
 Changed the numbered bookmark toggle code so that it can be done programmincally as well as by user.
 Fixed some bugs where incorrect input would cause memory leaks in some places.
 Cleaned up the whitespace in the codebase to make it easier to read and checked for capitalization correctness.
 Added an option to activate indentation highlighting for brace matching.
+Minor bug fixes.
 
 CHANGES for version 6.3
 added exports for dll version, they where not all present.

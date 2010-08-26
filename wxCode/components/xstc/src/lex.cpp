@@ -6689,7 +6689,7 @@ void XSTC::LexTEX()
 }
 #endif //XSTC_NO_TEX
 
-#ifndef XSTC_NO_LexTXT2TAGS
+#ifndef XSTC_NO_TXT2TAGS
 void XSTC::LexTXT2TAGS()
 {
 	this->StyleSetSpec(XSTC_DEF(TXT2TAGS_DEFAULT), XS_default);
@@ -6725,87 +6725,87 @@ void XSTC::LexTXT2TAGS()
 	{
 		wxString colorval;
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/DEFAULT"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/DEFAULT"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_DEFAULT),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/LINE_BEGIN"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/LINE_BEGIN"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_LINE_BEGIN),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/STRONG1"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/STRONG1"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_STRONG1),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/STRONG2"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/STRONG2"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_STRONG2),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/EM1"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/EM1"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_EM1),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/EM2"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/EM2"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_EM2),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER1"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER1"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER1),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER2"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER2"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER2),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER3"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER3"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER3),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER4"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER4"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER4),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER5"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER5"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER5),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HEADER6"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HEADER6"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HEADER6),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/PRECHAR"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/PRECHAR"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_PRECHAR),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/ULIST_ITEM"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/ULIST_ITEM"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_ULIST_ITEM),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/OLIST_ITEM"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/OLIST_ITEM"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_OLIST_ITEM),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/BLOCKQUOTE"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/BLOCKQUOTE"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_BLOCKQUOTE),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/STRIKEOUT"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/STRIKEOUT"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_STRIKEOUT),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/HRULE"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/HRULE"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_HRULE),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/LINK"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/LINK"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_LINK),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/CODE"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/CODE"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_CODE),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/CODE2"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/CODE2"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_CODE2),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/CODEBK"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/CODEBK"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(MARKDOWN_CODEBK),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/COMMENT"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/COMMENT"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(TXT2TAGS_COMMENT),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/OPTION"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/OPTION"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(TXT2TAGS_OPTION),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/PREPROC"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/PREPROC"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(TXT2TAGS_PREPROC),            colorval);
 
-		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MARKDOWN/POSTPROC"), &colorval) && colorval != wxT(""))
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/TXT2TAGS/POSTPROC"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(TXT2TAGS_POSTPROC),            colorval);
 	}
 #endif //XSTC_NO_CONFIG
 }
-#endif //XSTC_NO_LexTXT2TAGS
+#endif //XSTC_NO_TXT2TAGS
 
 #ifndef XSTC_NO_VB
 void XSTC::LexVB()

@@ -97,7 +97,7 @@
  #define XSTC_NO_MARKDOWN
  #define XSTC_NO_TXT2TAGS
  
- #if wxMAJOR_VERSION = 2
+ #if wxMAJOR_VERSION == 2
  #if wxMINOR_VERSION < 9
  //these languages are present in 2.9 but not 2.8
  #define XSTC_NO_ABAQUS

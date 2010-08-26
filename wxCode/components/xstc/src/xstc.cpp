@@ -54,17 +54,17 @@
 XSTC::XSTC(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 :XSTC_CLASS(parent, id, pos, size, style, name)
 {//Sets up default behavior, links events and calls default coloring
-	Connect(this->GetId();, XSTC_EVENT_DEF(MARGINCLICK),
+	Connect(this->GetId(), XSTC_EVENT_DEF(MARGINCLICK),
 	        (wxObjectEventFunction)
 	        (wxEventFunction)
 	        (wxCommandEventFunction)&XSTC::MarginClicked);
 
-	Connect(this->GetId();, XSTC_EVENT_DEF(UPDATEUI),
+	Connect(this->GetId(), XSTC_EVENT_DEF(UPDATEUI),
 	        (wxObjectEventFunction)
 	        (wxEventFunction)
 	        (wxCommandEventFunction)&XSTC::Bmatch);
 
-	Connect(this->GetId();, wxEVT_KEY_DOWN,
+	Connect(this->GetId(), wxEVT_KEY_DOWN,
 	        (wxObjectEventFunction)
 	        (wxEventFunction)
 	        (wxCommandEventFunction)&XSTC::KeyParse);
@@ -132,11 +132,11 @@ XSTC::XSTC(wxWindow *parent, wxWindowID id, const wxPoint& pos, const wxSize& si
 	SetPasteConvertEndings(true); //Keep new line endings form messing up the document.
 
 #ifdef __WXMSW__ //Initialize the editor to the current platform EOL
-	SetEOLMode(wxSCI_EOL_CRLF);
+	SetEOLMode(XSTC_DEF(EOL_CRLF));
 #elif __WXMAC__ //Mac, this is not classic and older osx uses unix, how can I check it?
-	SetEOLMode(wxSCI_EOL_CR);
+	SetEOLMode(XSTC_DEF(EOL_CR));
 #else //Unix
-	SetEOLMode(wxSCI_EOL_LF);
+	SetEOLMode(XSTC_DEF(EOL_LF));
 #endif
 }
 
@@ -439,7 +439,7 @@ void XSTC::SetLexerX(int lexer)
 		case XSTC_DEF(LEX_ABAQUS):
 		{
 			this->LexABAQUS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.abaqus));
@@ -449,28 +449,28 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.abaqus4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.abaqus5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ABAQUS
-#ifn	def XSTC_NO_ADA
+#endif //XSTC_NO_ABAQUS
+#ifndef XSTC_NO_ADA
 		case XSTC_DEF(LEX_ADA):
 		{
 			this->LexADA();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.ada));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ADA
-#ifn	def XSTC_NO_APDL
+#endif //XSTC_NO_ADA
+#ifndef XSTC_NO_APDL
 		case XSTC_DEF(LEX_APDL):
 		{
 			this->LexAPDL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.apdl));
@@ -480,15 +480,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.apdl4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.apdl5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_APDL
-#ifn	def XSTC_NO_ASN1
+#endif //XSTC_NO_APDL
+#ifndef XSTC_NO_ASN1
 		case XSTC_DEF(LEX_ASN1):
 		{
 			this->LexASN1();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.asn1_0));
@@ -496,15 +496,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.asn1_2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.asn1_3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ASN1
-#ifn	def XSTC_NO_ASM
+#endif //XSTC_NO_ASN1
+#ifndef XSTC_NO_ASM
 		case XSTC_DEF(LEX_ASM):
 		{
 			this->LexASM();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.asm_0));
@@ -514,15 +514,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.asm_4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.asm_5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ASM
-#ifn	def XSTC_NO_AU3
+#endif //XSTC_NO_ASM
+#ifndef XSTC_NO_AU3
 		case XSTC_DEF(LEX_AU3):
 		{
 			this->LexAU3();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.au3_0));
@@ -534,15 +534,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(6,KeyCheck(Keys_Set.au3_6));
 				this->SetKeyWords(7,KeyCheck(Keys_Set.au3_7));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_AU3
-#ifn	def XSTC_NO_AVE
+#endif //XSTC_NO_AU3
+#ifndef XSTC_NO_AVE
 		case XSTC_DEF(LEX_AVE):
 		{
 			this->LexAVE();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.ave));
@@ -552,43 +552,43 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.ave4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.ave5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_AVE
-#ifn	def XSTC_NO_ASYMPTOTE
+#endif //XSTC_NO_AVE
+#ifndef XSTC_NO_ASYMPTOTE
 		case XSTC_DEF(LEX_ASYMPTOTE):
 		{
 			this->LexASYMPTOTE();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.asymptote));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.asymptote1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ASYMPTOTE
-#ifn	def XSTC_NO_BAAN
+#endif //XSTC_NO_ASYMPTOTE
+#ifndef XSTC_NO_BAAN
 		case XSTC_DEF(LEX_BAAN):
 		{
 			this->LexBAAN();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.baan));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.baan1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_BAAN
-#ifn	def XSTC_NO_BLITZBASIC
+#endif //XSTC_NO_BAAN
+#ifndef XSTC_NO_BLITZBASIC
 		case XSTC_DEF(LEX_BLITZBASIC):
 		{
 			this->LexBLBASIC();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
@@ -596,15 +596,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_BLITZBASIC
-#ifn	def XSTC_NO_FREEBASIC
+#endif //XSTC_NO_BLITZBASIC
+#ifndef XSTC_NO_FREEBASIC
 		case XSTC_DEF(LEX_FREEBASIC):
 		{
 			this->LexFRBASIC();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
@@ -612,15 +612,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_FREEBASIC
-#ifn	def XSTC_NO_POWERBASIC
+#endif //XSTC_NO_FREEBASIC
+#ifndef XSTC_NO_POWERBASIC
 		case XSTC_DEF(LEX_POWERBASIC):
 		{
 			this->LexPOBASIC();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
@@ -628,15 +628,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_POWERBASIC
-#ifn	def XSTC_NO_PUREBASIC
+#endif //XSTC_NO_POWERBASIC
+#ifndef XSTC_NO_PUREBASIC
 		case XSTC_DEF(LEX_PUREBASIC):
 		{
 			this->LexPUBASIC();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.basic));
@@ -644,70 +644,70 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.basic2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.basic3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PUREBASIC
-#ifn	def XSTC_NO_BASH
+#endif //XSTC_NO_PUREBASIC
+#ifndef XSTC_NO_BASH
 		case XSTC_DEF(LEX_BASH):
 		{
 			this->LexBASH();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.bash));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_BASH
-#ifn	def XSTC_NO_BATCH
+#endif //XSTC_NO_BASH
+#ifndef XSTC_NO_BATCH
 		case XSTC_DEF(LEX_BATCH):
 		{
 			this->LexBATCH();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.batch));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_BATCH
-#ifn	def XSTC_NO_BULLANT
+#endif //XSTC_NO_BATCH
+#ifndef XSTC_NO_BULLANT
 		case XSTC_DEF(LEX_BULLANT):
 		{
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.bullant));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_BULLANT
-#ifn	def XSTC_NO_CAML
+#endif //XSTC_NO_BULLANT
+#ifndef XSTC_NO_CAML
 		case XSTC_DEF(LEX_CAML):
 		{
 			this->LexCAML();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.caml));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.caml1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.caml2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CAML
-#ifn	def XSTC_NO_CLW
+#endif //XSTC_NO_CAML
+#ifndef XSTC_NO_CLW
 		case XSTC_DEF(LEX_CLW):
 		{
 			this->LexCLW();
 			if(!clwcase)
 				lexer = XSTC_DEF(LEX_CLWNOCASE);
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.clw));
@@ -720,61 +720,61 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(7,KeyCheck(Keys_Set.clw7));
 				this->SetKeyWords(8,KeyCheck(Keys_Set.clw8));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CLW
-#ifn	def XSTC_NO_CMAKE
+#endif //XSTC_NO_CLW
+#ifndef XSTC_NO_CMAKE
 		case XSTC_DEF(LEX_CMAKE):
 		{
 			this->LexCMAKE();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.cmake));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.cmake1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.cmake2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CMAKE
+#endif //XSTC_NO_CMAKE
 	
-#ifn	def XSTC_NO_COBOL
+#ifndef XSTC_NO_COBOL
 		case XSTC_DEF(LEX_COBOL):
 		{
 			this->LexCOBOL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.cobol));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.cobol1));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.cobol2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_COBOL
+#endif //XSTC_NO_COBOL
 	
-#ifn	def XSTC_NO_CONF
+#ifndef XSTC_NO_CONF
 		case XSTC_DEF(LEX_CONF):
 		{
 			this->LexCONF();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.conf));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.conf1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CONF
-#ifn	def XSTC_NO_CPP
+#endif //XSTC_NO_CONF
+#ifndef XSTC_NO_CPP
 		case XSTC_DEF(LEX_CPPNOCASE):
 		{
 			this->LexCPP();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
@@ -782,7 +782,7 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
 				this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
 		case XSTC_DEF(LEX_CPP):
@@ -792,19 +792,19 @@ void XSTC::SetLexerX(int lexer)
 			if(ext==wxT("JS"))
 			{
 				this->LexJS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 				if(usekeys)
 				{
 					this->SetKeyWords(0,KeyCheck(Keys_Set.js));
 					this->SetKeyWords(1,KeyCheck(Keys_Set.js1));
 					this->SetKeyWords(2,KeyCheck(Keys_Set.js2));
 				}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			}
 			else if(ext==wxT("JAVA"))
 			{
 				this->LexJAVA();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 				if(usekeys)
 				{
 					this->SetKeyWords(0,KeyCheck(Keys_Set.java));
@@ -812,14 +812,14 @@ void XSTC::SetLexerX(int lexer)
 					this->SetKeyWords(2,KeyCheck(Keys_Set.java2));
 					this->SetKeyWords(4,KeyCheck(Keys_Set.java3));
 				}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			}
 			else
 			{
 				this->LexCPP();
 				if(!cppcase)
 					lexer = XSTC_DEF(LEX_CPPNOCASE);
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 				if(usekeys)
 				{
 					this->SetKeyWords(0,KeyCheck(Keys_Set.cpp));
@@ -827,46 +827,46 @@ void XSTC::SetLexerX(int lexer)
 					this->SetKeyWords(2,KeyCheck(Keys_Set.cpp2));
 					this->SetKeyWords(4,KeyCheck(Keys_Set.cpp3));
 				}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			}
 			break;
 		}
-#end	if //XSTC_NO_CPP
-#ifn	def XSTC_NO_CSOUND
+#endif //XSTC_NO_CPP
+#ifndef XSTC_NO_CSOUND
 		case XSTC_DEF(LEX_CSOUND):
 		{
 			this->LexCSOUND();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.csound));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.csound1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.csound2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CSOUND
-#ifn	def XSTC_NO_CSS
+#endif //XSTC_NO_CSOUND
+#ifndef XSTC_NO_CSS
 		case XSTC_DEF(LEX_CSS):
 		{
 			this->LexCSS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.css));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.css1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.css2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_CSS
-#ifn	def XSTC_NO_D
+#endif //XSTC_NO_CSS
+#ifndef XSTC_NO_D
 		case XSTC_DEF(LEX_D):
 		{
 			this->LexD();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.d));
@@ -874,98 +874,98 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.d2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.d3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_D
-#ifn	def XSTC_NO_DIFF
+#endif //XSTC_NO_D
+#ifndef XSTC_NO_DIFF
 		case XSTC_DEF(LEX_DIFF):
 		{
 			this->LexDIFF();
 			break;
 		}
-#end	if //XSTC_NO_DIFF
-#ifn	def XSTC_NO_EIFFEL
+#endif //XSTC_NO_DIFF
+#ifndef XSTC_NO_EIFFEL
 		case XSTC_DEF(LEX_EIFFEL):
 		{
 			this->LexEIFFEL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.eiffel));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_EIFFEL
-#ifn	def XSTC_NO_EIFFELKW
+#endif //XSTC_NO_EIFFEL
+#ifndef XSTC_NO_EIFFELKW
 		case XSTC_DEF(LEX_EIFFELKW):
 		{
 			this->LexEIFFELKW();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.eiffelkw));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_EIFFELKW
-#ifn	def XSTC_NO_ERLANG
+#endif //XSTC_NO_EIFFELKW
+#ifndef XSTC_NO_ERLANG
 		case XSTC_DEF(LEX_ERLANG):
 		{
 			this->LexERLANG();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.erlang));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ERLANG
-#ifn	def XSTC_NO_ERRORLIST
+#endif //XSTC_NO_ERLANG
+#ifndef XSTC_NO_ERRORLIST
 		case XSTC_DEF(LEX_ERRORLIST):
 		{
 			this->LexERRORLIST();
 			break;
 		}
-#end	if //XSTC_NO_ERRORLIST
-#ifn	def XSTC_NO_ESCRIPT
+#endif //XSTC_NO_ERRORLIST
+#ifndef XSTC_NO_ESCRIPT
 		case XSTC_DEF(LEX_ESCRIPT):
 		{
 			this->LexESCRIPT();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.escript));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.escript1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.escript2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_ESCRIPT
-#ifn	def XSTC_NO_F77
+#endif //XSTC_NO_ESCRIPT
+#ifndef XSTC_NO_F77
 		case XSTC_DEF(LEX_F77):
 		{
 			this->LexF77();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.f77_0));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.f77_1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.f77_2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_F77
-#ifn	def XSTC_NO_FLAGSHIP
+#endif //XSTC_NO_F77
+#ifndef XSTC_NO_FLAGSHIP
 		case XSTC_DEF(LEX_FLAGSHIP):
 		{
 			this->LexFLAGSHIP();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.flagship));
@@ -973,15 +973,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.flagship2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.flagship3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_FLAGSHIP
-#ifn	def XSTC_NO_FORTH
+#endif //XSTC_NO_FLAGSHIP
+#ifndef XSTC_NO_FORTH
 		case XSTC_DEF(LEX_FORTH):
 		{
 			this->LexFORTH();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.forth));
@@ -991,30 +991,30 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.forth4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.forth5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_FORTH
-#ifn	def XSTC_NO_FORTRAN
+#endif //XSTC_NO_FORTH
+#ifndef XSTC_NO_FORTRAN
 		case XSTC_DEF(LEX_FORTRAN):
 		{
 			this->LexFORTRAN();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.fortran));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.fortran1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.fortran2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_FORTRAN
-#ifn	def XSTC_NO_GAP
+#endif //XSTC_NO_FORTRAN
+#ifndef XSTC_NO_GAP
 		case XSTC_DEF(LEX_GAP):
 		{
 			this->LexGAP();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.gap));
@@ -1022,15 +1022,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.gap2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.gap3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_GAP
-#ifn	def XSTC_NO_GUI4CLI
+#endif //XSTC_NO_GAP
+#ifndef XSTC_NO_GUI4CLI
 		case XSTC_DEF(LEX_GUI4CLI):
 		{
 			this->LexGUI4CLI();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.gui4cli));
@@ -1039,28 +1039,28 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(3,KeyCheck(Keys_Set.gui4cli3));
 				this->SetKeyWords(4,KeyCheck(Keys_Set.gui4cli4));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_GUI4CLI
-#ifn	def XSTC_NO_HASKELL
+#endif //XSTC_NO_GUI4CLI
+#ifndef XSTC_NO_HASKELL
 		case XSTC_DEF(LEX_HASKELL):
 		{
 			this->LexHASKELL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.haskell));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_HASKELL
-#ifn	def XSTC_NO_HTM
+#endif //XSTC_NO_HASKELL
+#ifndef XSTC_NO_HTM
 		case XSTC_DEF(LEX_HTML):
 		{
 			this->LexHTM();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.html));
@@ -1072,15 +1072,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(6,KeyCheck(Keys_Set.html6));
 				this->SetKeyWords(7,KeyCheck(Keys_Set.html7));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_HTM
-#ifn	def XSTC_NO_INNOSETUP
+#endif //XSTC_NO_HTM
+#ifndef XSTC_NO_INNOSETUP
 		case XSTC_DEF(LEX_INNOSETUP):
 		{
 			this->LexINNO();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.inno));
@@ -1090,74 +1090,74 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(4,KeyCheck(Keys_Set.inno4));
 				this->SetKeyWords(5,KeyCheck(Keys_Set.inno5));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 	
 		}
-#end	if //XSTC_NO_INNOSETUP
-#ifn	def XSTC_NO_KIX
+#endif //XSTC_NO_INNOSETUP
+#ifndef XSTC_NO_KIX
 		case XSTC_DEF(LEX_KIX):
 		{
 			this->LexKIX();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.kix));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.kix1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.kix2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_KIX
-#ifn	def XSTC_NO_LATEX
+#endif //XSTC_NO_KIX
+#ifndef XSTC_NO_LATEX
 		case XSTC_DEF(LEX_LATEX):
 		{
 			this->LexLATEX();
 			break;
 		}
-#end	if //XSTC_NO_LATEX
-#ifn	def XSTC_NO_LISP
+#endif //XSTC_NO_LATEX
+#ifndef XSTC_NO_LISP
 		case XSTC_DEF(LEX_LISP):
 		{
 			this->LexLISP();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.lisp));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.lisp1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_LISP
-#ifn	def XSTC_NO_LOT
+#endif //XSTC_NO_LISP
+#ifndef XSTC_NO_LOT
 		case XSTC_DEF(LEX_LOT):
 		{
 			this->LexLOT();
 			break;
 		}
-#end	if //XSTC_NO_LOT
-#ifn	def XSTC_NO_LOUT
+#endif //XSTC_NO_LOT
+#ifndef XSTC_NO_LOUT
 		case XSTC_DEF(LEX_LOUT):
 		{
 			this->LexLOUT();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.lout));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.lout1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.lout2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_LOUT
-#ifn	def XSTC_NO_LUA
+#endif //XSTC_NO_LOUT
+#ifndef XSTC_NO_LUA
 		case XSTC_DEF(LEX_LUA):
 		{
 			this->LexLUA();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.lua));
@@ -1169,15 +1169,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(6,KeyCheck(Keys_Set.lua6));
 				this->SetKeyWords(7,KeyCheck(Keys_Set.lua7));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_LUA
-#ifn	def XSTC_NO_MAGIK
+#endif //XSTC_NO_LUA
+#ifndef XSTC_NO_MAGIK
 		case XSTC_DEF(LEX_MAGIK):
 		{
 			this->LexMAGIK();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.magik));
@@ -1186,99 +1186,99 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(3,KeyCheck(Keys_Set.magik3));
 				this->SetKeyWords(4,KeyCheck(Keys_Set.magik4));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_MAGIK
-#ifn	def XSTC_NO_MARKDOWN
+#endif //XSTC_NO_MAGIK
+#ifndef XSTC_NO_MARKDOWN
 		case XSTC_DEF(LEX_MARKDOWN):
 		{
 			this->LexMARKDOWN();
 			break;
 		}
-#end	if //XSTC_NO_MARKDOWN
-#ifn	def XSTC_NO_MAKEFILE
+#endif //XSTC_NO_MARKDOWN
+#ifndef XSTC_NO_MAKEFILE
 		case XSTC_DEF(LEX_MAKEFILE):
 		{
 			this->LexMAKEFILE();
 			break;
 		}
-#end	if //XSTC_NO_MAKEFILE
-#ifn	def XSTC_NO_MATLAB
+#endif //XSTC_NO_MAKEFILE
+#ifndef XSTC_NO_MATLAB
 		case XSTC_DEF(LEX_MATLAB):
 		{
 			this->LexMATLAB();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.matlab));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_MATLAB
-#ifn	def XSTC_NO_METAPOST
+#endif //XSTC_NO_MATLAB
+#ifndef XSTC_NO_METAPOST
 		case XSTC_DEF(LEX_METAPOST):
 		{
 			this->LexMETAPOST();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.metapost));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.metapost1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_METAPOST
-#ifn	def XSTC_NO_MMIXAL
+#endif //XSTC_NO_METAPOST
+#ifndef XSTC_NO_MMIXAL
 		case XSTC_DEF(LEX_MMIXAL):
 		{
 			this->LexMMIXAL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.mmixal));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.mmixal1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.mmixal2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_MMIXAL
-#ifn	def XSTC_NO_NIMROD
+#endif //XSTC_NO_MMIXAL
+#ifndef XSTC_NO_NIMROD
 		case XSTC_DEF(LEX_NIMROD):
 		{
 			this->LexNIMROD();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.nimrod));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_NIMROD
-#ifn	def XSTC_NO_NNCRONTAB
+#endif //XSTC_NO_NIMROD
+#ifndef XSTC_NO_NNCRONTAB
 		case XSTC_DEF(LEX_NNCRONTAB):
 		{
 			this->LexNNCRONTAB();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.nncrontab));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.nncrontab1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.nncrontab2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_NNCRONTAB
-#ifn	def XSTC_NO_NSIS
+#endif //XSTC_NO_NNCRONTAB
+#ifndef XSTC_NO_NSIS
 		case XSTC_DEF(LEX_NSIS):
 		{
 			this->LexNSIS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.nsis));
@@ -1286,89 +1286,89 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.nsis2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.nsis3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_NSIS
-#ifn	def XSTC_NO_OCTAVE
+#endif //XSTC_NO_NSIS
+#ifndef XSTC_NO_OCTAVE
 		case XSTC_DEF(LEX_OCTAVE):
 		{
 			this->LexOCTAVE();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.octave));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_OCTAVE
-#ifn	def XSTC_NO_OPAL
+#endif //XSTC_NO_OCTAVE
+#ifndef XSTC_NO_OPAL
 		case XSTC_DEF(LEX_OPAL):
 		{
 			this->LexOPAL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.opal));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.opal1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_OPAL
-#ifn	def XSTC_NO_PASCAL
+#endif //XSTC_NO_OPAL
+#ifndef XSTC_NO_PASCAL
 		case XSTC_DEF(LEX_PASCAL):
 		{
 			this->LexPAS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.pas));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.pas1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PASCAL
-#ifn	def XSTC_NO_PERL
+#endif //XSTC_NO_PASCAL
+#ifndef XSTC_NO_PERL
 		case XSTC_DEF(LEX_PERL):
 		{
 			this->LexPERL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.perl));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PERL
-#ifn	def XSTC_NO_PLM
+#endif //XSTC_NO_PERL
+#ifndef XSTC_NO_PLM
 		case XSTC_DEF(LEX_PLM):
 		{
 			this->LexPLM();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.plm));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PLM
-#ifn	def XSTC_NO_PO
+#endif //XSTC_NO_PLM
+#ifndef XSTC_NO_PO
 		case XSTC_DEF(LEX_PO):
 		{
 			this->LexPO();
 			break;
 		}
-#end	if //XSTC_NO_PO
-#ifn	def XSTC_NO_POV
+#endif //XSTC_NO_PO
+#ifndef XSTC_NO_POV
 		case XSTC_DEF(LEX_POV):
 		{
 			this->LexPOV();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.pov));
@@ -1380,15 +1380,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(6,KeyCheck(Keys_Set.pov6));
 				this->SetKeyWords(7,KeyCheck(Keys_Set.pov7));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_POV
-#ifn	def XSTC_NO_POWERPRO
+#endif //XSTC_NO_POV
+#ifndef XSTC_NO_POWERPRO
 		case XSTC_DEF(LEX_POWERPRO):
 		{
 			this->LexPOWERPRO();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.powerpro));
@@ -1396,52 +1396,52 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.powerpro2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.powerpro3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_POWERPRO
-#ifn	def XSTC_NO_POWERSHELL
+#endif //XSTC_NO_POWERPRO
+#ifndef XSTC_NO_POWERSHELL
 		case XSTC_DEF(LEX_POWERSHELL):
 		{
 			this->LexPOWERSHELL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.powershell));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.powershell1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.powershell2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_POWERSHELL
-#ifn	def XSTC_NO_PROGRESS
+#endif //XSTC_NO_POWERSHELL
+#ifndef XSTC_NO_PROGRESS
 		case XSTC_DEF(LEX_PROGRESS):
 		{
 			this->LexPROGRESS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.progress));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.progress1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.progress2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PROGRESS
-#ifn	def XSTC_NO_PROPERTIES
+#endif //XSTC_NO_PROGRESS
+#ifndef XSTC_NO_PROPERTIES
 		case XSTC_DEF(LEX_PROPERTIES):
 		{
 			this->LexPROPERTIES();
 			break;
 		}
-#end	if //XSTC_NO_PROPERTIES
-#ifn	def XSTC_NO_PS
+#endif //XSTC_NO_PROPERTIES
+#ifndef XSTC_NO_PS
 		case XSTC_DEF(LEX_PS):
 		{
 			this->LexPS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.ps));
@@ -1450,128 +1450,128 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(3,KeyCheck(Keys_Set.ps3));
 				this->SetKeyWords(4,KeyCheck(Keys_Set.ps4));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PS
-#ifn	def XSTC_NO_PYTHON
+#endif //XSTC_NO_PS
+#ifndef XSTC_NO_PYTHON
 		case XSTC_DEF(LEX_PYTHON):
 		{
 			this->LexPYTHON();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.python));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.python1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_PYTHON
-#ifn	def XSTC_NO_R
+#endif //XSTC_NO_PYTHON
+#ifndef XSTC_NO_R
 		case XSTC_DEF(LEX_R):
 		{
 			this->LexR();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.r));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.r1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.r2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_R
-#ifn	def XSTC_NO_REBOL
+#endif //XSTC_NO_R
+#ifndef XSTC_NO_REBOL
 		case XSTC_DEF(LEX_REBOL):
 		{
 			this->LexREBOL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.rebol));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.rebol));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.rebol));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_REBOL
-#ifn	def XSTC_NO_RUBY
+#endif //XSTC_NO_REBOL
+#ifndef XSTC_NO_RUBY
 		case XSTC_DEF(LEX_RUBY):
 		{
 			this->LexRUBY();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.ruby));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_RUBY
-#ifn	def XSTC_NO_SCRIPTOL
+#endif //XSTC_NO_RUBY
+#ifndef XSTC_NO_SCRIPTOL
 		case XSTC_DEF(LEX_SCRIPTOL):
 		{
 			this->LexSCRIPTOL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.scriptol));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SCRIPTOL
-#ifn	def XSTC_NO_SMALLTALK
+#endif //XSTC_NO_SCRIPTOL
+#ifndef XSTC_NO_SMALLTALK
 		case XSTC_DEF(LEX_SMALLTALK):
 		{
 			this->LexSMALLTALK();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.smalltalk));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SMALLTALK
-#ifn	def XSTC_NO_SML
+#endif //XSTC_NO_SMALLTALK
+#ifndef XSTC_NO_SML
 		case XSTC_DEF(LEX_SML):
 		{
 			this->LexSML();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.sml));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.sml1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.sml2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SML
-#ifn	def XSTC_NO_SORCUS
+#endif //XSTC_NO_SML
+#ifndef XSTC_NO_SORCUS
 		case XSTC_DEF(LEX_SORCUS):
 		{
 			this->LexSORCUS();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.sorcus));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.sorcus1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.sorcus2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SORCUS
-#ifn	def XSTC_NO_SPECMAN
+#endif //XSTC_NO_SORCUS
+#ifndef XSTC_NO_SPECMAN
 		case XSTC_DEF(LEX_SPECMAN):
 		{
 			this->LexSPECMAN();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.specman));
@@ -1579,30 +1579,30 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.specman2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.specman3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SPECMAN
-#ifn	def XSTC_NO_SPICE
+#endif //XSTC_NO_SPECMAN
+#ifndef XSTC_NO_SPICE
 		case XSTC_DEF(LEX_SPICE):
 		{
 			this->LexSPICE();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.spice));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.spice1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.spice2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SPICE
-#ifn	def XSTC_NO_MSSQL
+#endif //XSTC_NO_SPICE
+#ifndef XSTC_NO_MSSQL
 		case XSTC_DEF(LEX_MSSQL):
 		{
 			this->LexMSSQL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.mssql));
@@ -1613,15 +1613,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(5,KeyCheck(Keys_Set.mssql5));
 				this->SetKeyWords(6,KeyCheck(Keys_Set.mssql6));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_MSSQL
-#ifn	def XSTC_NO_MYSQL
+#endif //XSTC_NO_MSSQL
+#ifndef XSTC_NO_MYSQL
 		case XSTC_DEF(LEX_MYSQL):
 		{
 			this->LexMYSQL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.mysql));
@@ -1634,15 +1634,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(7,KeyCheck(Keys_Set.mysql7));
 				this->SetKeyWords(8,KeyCheck(Keys_Set.mysql8));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_MYSQL
-#ifn	def XSTC_NO_SQL
+#endif //XSTC_NO_MYSQL
+#ifndef XSTC_NO_SQL
 		case XSTC_DEF(LEX_SQL):
 		{
 			this->LexSQL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.sql));
@@ -1654,30 +1654,30 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(6,KeyCheck(Keys_Set.sql6));
 				this->SetKeyWords(7,KeyCheck(Keys_Set.sql7));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_SQL
-#ifn	def XSTC_NO_TACL
+#endif //XSTC_NO_SQL
+#ifndef XSTC_NO_TACL
 		case XSTC_DEF(LEX_TACL):
 		{
 			this->LexTACL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.tacl));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.tacl1));
 				this->SetKeyWords(2,KeyCheck(Keys_Set.tacl2));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_TACL
-#ifn	def XSTC_NO_TADS3
+#endif //XSTC_NO_TACL
+#ifndef XSTC_NO_TADS3
 		case XSTC_DEF(LEX_TADS3):
 		{
 			this->LexTADS3();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.tads3_0));
@@ -1685,29 +1685,29 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.tads3_2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.tads3_3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_TADS3
-#ifn	def XSTC_NO_TAL
+#endif //XSTC_NO_TADS3
+#ifndef XSTC_NO_TAL
 		case XSTC_DEF(LEX_TAL):
 		{
 			this->LexTAL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.tal));
 				this->SetKeyWords(1,KeyCheck(Keys_Set.tal1));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_TAL
-#ifn	def XSTC_NO_TCL
+#endif //XSTC_NO_TAL
+#ifndef XSTC_NO_TCL
 		case XSTC_DEF(LEX_TCL):
 		{
 			this->LexTCL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.tcl));
@@ -1720,35 +1720,35 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(7,KeyCheck(Keys_Set.tcl7));
 				this->SetKeyWords(8,KeyCheck(Keys_Set.tcl8));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_TCL
-#ifn	def XSTC_NO_TEX
+#endif //XSTC_NO_TCL
+#ifndef XSTC_NO_TEX
 		case XSTC_DEF(LEX_TEX):
 		{
 			this->LexTEX();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.tex));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_TEX
-#ifn	def XSTC_NO_TXT2TAGS
+#endif //XSTC_NO_TEX
+#ifndef XSTC_NO_TXT2TAGS
 		case XSTC_DEF(LEX_TXT2TAGS):
 		{
 			this->LexTXT2TAGS();
 			break;
 		}
-#end	if //XSTC_NO_TXT2TAGS
-#ifn	def XSTC_NO_VERILOG
+#endif //XSTC_NO_TXT2TAGS
+#ifndef XSTC_NO_VERILOG
 		case XSTC_DEF(LEX_VERILOG):
 		{
 			this->LexVERILOG();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.verilog));
@@ -1756,15 +1756,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.verilog2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.verilog3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_VERILOG
-#ifn	def XSTC_NO_VHDL
+#endif //XSTC_NO_VERILOG
+#ifndef XSTC_NO_VHDL
 		case XSTC_DEF(LEX_VHDL):
 		{
 			this->LexVHDL();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.vhdl));
@@ -1775,15 +1775,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(5,KeyCheck(Keys_Set.vhdl5));
 				this->SetKeyWords(6,KeyCheck(Keys_Set.vhdl6));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_VHDL
-#ifn	def XSTC_NO_VB
+#endif //XSTC_NO_VHDL
+#ifndef XSTC_NO_VB
 		case XSTC_DEF(LEX_VB):
 		{
 			this->LexVB();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
@@ -1791,15 +1791,15 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_VB
-#ifn	def XSTC_NO_VBSCRIPT
+#endif //XSTC_NO_VB
+#ifndef XSTC_NO_VBSCRIPT
 		case XSTC_DEF(LEX_VBSCRIPT):
 		{
 			this->LexVBSCRIPT();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.vb));
@@ -1807,37 +1807,37 @@ void XSTC::SetLexerX(int lexer)
 				this->SetKeyWords(2,KeyCheck(Keys_Set.vb2));
 				this->SetKeyWords(3,KeyCheck(Keys_Set.vb3));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_VBSCRIPT
-#ifn	def XSTC_NO_XCODE
+#endif //XSTC_NO_VBSCRIPT
+#ifndef XSTC_NO_XCODE
 		case XSTC_DEF(LEX_XCODE):
 		{
 			this->LexXCODE();
 			break;
 		}
-#end	if //XSTC_NO_XCODE
-#ifn	def XSTC_NO_XML
+#endif //XSTC_NO_XCODE
+#ifndef XSTC_NO_XML
 		case XSTC_DEF(LEX_XML):
 		{
 			this->LexXML();
 			break;
 		}
-#end	if //XSTC_NO_XML
-#ifn	def XSTC_NO_YAML
+#endif //XSTC_NO_XML
+#ifndef XSTC_NO_YAML
 		case XSTC_DEF(LEX_YAML):
 		{
 			this->LexYAML();
-#ifn	def XSTC_NO_KEYS
+#ifndef XSTC_NO_KEYS
 			if(usekeys)
 			{
 				this->SetKeyWords(0,KeyCheck(Keys_Set.yaml));
 			}
-#end	if //XSTC_NO_KEYS
+#endif //XSTC_NO_KEYS
 			break;
 		}
-#end	if //XSTC_NO_YAML
+#endif //XSTC_NO_YAML
 	
 		default:
 		{
@@ -3157,6 +3157,20 @@ void XSTC::StyleConf()
 
 		if(colorconf->Read(confroot + wxT("XSTC/COLOR/STYLE/MAX"), &colorval) && colorval != wxT(""))
 			this->StyleSetSpec(XSTC_DEF(STYLE_MAX),                colorval);
+
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MISIC/HIGHLIGHTGUIDE"), &colorval) && colorval != wxT(""))
+		{
+			colorval.MakeLower();
+			braceline = (colorval == wxT("true") || colorval == wxT("1"));
+		}
+
+		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MISIC/INDENTATIONGUIDES"), &colorval) && colorval != wxT(""))
+		{
+			colorval.ToLong(&n,10);
+			r=n;
+			this->SetIndentationGuides(r);
+			r=0;
+		}
 
 #ifndef XSTC_NO_ALPHA
 		if(colorconf->Read(confroot + wxT("XSTC/COLOR/MISIC/MARKALPHA"), &colorval) && colorval != wxT(""))
