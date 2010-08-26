@@ -1,7 +1,6 @@
 find missing keywords in the languages that where added
 
 test the new file save and load functions
-any updates? check for added scintilla functionality that should be taken advantage of
 
 create a simple macro recorder, this should be in seperate files
 add a function that will fold a region from the closing brace (via looking up the opening match)
