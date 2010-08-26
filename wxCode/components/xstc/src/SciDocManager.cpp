@@ -37,7 +37,7 @@
  * copyright (C) 2009
  */
  
-#include "SciDocManager.h"
+#include <wx/xstc/SciDocManager.h>
 
 SciDocManager::SciDocHandler::SciDocHandler(void* document, int id)
 {

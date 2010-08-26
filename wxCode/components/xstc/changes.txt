@@ -6,6 +6,7 @@ Changed the numbered bookmark toggle code so that it can be done programmincally
 Fixed some bugs where incorrect input would cause memory leaks in some places.
 Cleaned up the whitespace in the codebase to make it easier to read and checked for capitalization correctness.
 Added an option to activate indentation highlighting for brace matching.
+Added SciDocMan a class to make multi-document usage of Scintilla easy.
 Minor bug fixes.
 
 CHANGES for version 6.3
