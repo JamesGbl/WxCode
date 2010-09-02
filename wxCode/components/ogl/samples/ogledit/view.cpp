@@ -31,11 +31,11 @@ bool DiagramView::OnCreate(wxDocument* doc, long flags)
     bool ok = wxView::OnCreate(doc, flags);
     if (ok)
     {
-        m_canvas = GetMainFrame()->canvas;
+        m_canvas = wxGetApp().GetMainFrame()->canvas;
         m_canvas->m_view = this;
         m_canvas->Enable(true);
 
-        SetFrame(GetMainFrame());
+        SetFrame(wxGetApp().GetMainFrame());
 
         // Initialize the edit menu Undo and Redo items
         doc->GetCommandProcessor()->SetEditMenu(wxStaticCast(GetFrame(), MyFrame)->editMenu);
@@ -260,7 +260,7 @@ MyCanvas::~MyCanvas(void)
 
 void MyCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
 {
-  EditorToolPalette *palette = wxGetApp().frame->palette;
+  EditorToolPalette *palette = wxGetApp().GetMainFrame()->palette;
   wxClassInfo *info = NULL;
   switch (palette->currentlySelected)
   {

@@ -25,34 +25,29 @@
 // in the application itself.
 IMPLEMENT_APP(MyApp)
 
-MyApp::MyApp(void)
+MyApp::MyApp(void) : wxAppEx()
 {
-  frame = NULL;
-  myDocManager= NULL;
+}
+
+MyApp::~MyApp(void)
+{
+   delete wxDocManager::GetDocumentManager();
 }
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame
 bool MyApp::OnInit(void)
 {
-  ::wxOGLInitialize();
+   ::wxOGLInitialize();
 
-   SetAppName(wxT("ogledit"));
-   SetAppDisplayName(wxT("OGLEdit Demo"));
+    SetAppName(wxT("ogledit"));
+    SetAppDisplayName(wxT("OGLEdit Demo"));
 
-   //// Create a document manager
-  myDocManager = new wxDocManager();
-
-  //// Create a template relating drawing documents to their views
-  (void) new wxDocTemplate(myDocManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
-          CLASSINFO(DiagramDocument), CLASSINFO(DiagramView));
-
-  // If we've only got one window, we only get to edit
-  // one document at a time.
-  myDocManager->SetMaxDocsOpen(1);
+    //// Create a document manager
+    wxDocManager* docManager = CreateDocManager();
 
   //// Create the main frame window
-  frame = new MyFrame(myDocManager, NULL, GetAppDisplayName(), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
+  MyFrame* frame = new MyFrame(docManager, NULL, GetAppDisplayName(), wxPoint(0, 0), wxSize(500, 400), wxDEFAULT_FRAME_STYLE);
 
   //// Give it an icon
   frame->SetIcon(wxICON(ogl));
@@ -87,7 +82,7 @@ bool MyApp::OnInit(void)
        ));
     menu_bar->Append(menu, wxGetStockLabel(wxID_FILE));
     // A nice touch: a history of files visited. Use this menu.
-    myDocManager->FileHistoryUseMenu(menu);
+    docManager->FileHistoryUseMenu(menu);
 
     menu = new wxMenu();
     menu->Append(wxID_UNDO);
@@ -106,7 +101,7 @@ bool MyApp::OnInit(void)
 
     frame->canvas = frame->CreateCanvas(NULL, frame);
     frame->palette = wxGetApp().CreatePalette(frame);
-    myDocManager->CreateDocument(wxEmptyString, wxDOC_NEW);
+    docManager->CreateDocument(wxEmptyString, wxDOC_NEW);
 
     // Associate the menu bar with the frame
     frame->SetMenuBar(menu_bar);
@@ -122,11 +117,28 @@ bool MyApp::OnInit(void)
   return true;
 }
 
+wxDocManager* MyApp::CreateDocManager()
+{
+   wxDocManager* docManager = new wxDocManager();
+    //// Create a template relating drawing documents to their views
+   (void) new wxDocTemplate(docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
+          CLASSINFO(DiagramDocument), CLASSINFO(DiagramView));
+
+    // If we've only got one window, we only get to edit
+    // one document at a time.
+    docManager->SetMaxDocsOpen(1);
+    return docManager;
+}
+
 int MyApp::OnExit(void)
 {
     wxOGLCleanUp();
-    wxDELETE(myDocManager);
     return base::OnExit();
+}
+
+MyFrame* MyApp::GetMainFrame(void)
+{
+    return wxStaticCast(GetTopWindow(), MyFrame);
 }
 
 /*
@@ -206,9 +218,4 @@ MyCanvas *MyFrame::CreateCanvas(wxView *view, wxFrame *parent)
   canvas->SetScrollbars(20, 20, 50, 50);
 
   return canvas;
-}
-
-MyFrame *GetMainFrame(void)
-{
-  return wxGetApp().frame;
 }

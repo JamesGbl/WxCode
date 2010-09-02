@@ -22,16 +22,17 @@ class EditorToolPalette;
 class MyApp : public wxAppEx
 {
     typedef wxAppEx base;
-  public:
-    MyFrame* frame;
-    wxDocManager* myDocManager;
-
+public:
     MyApp(void);
+    
+    virtual ~MyApp(void);
     virtual bool OnInit(void);
     virtual int OnExit(void);
 
-    // Palette stuff
     EditorToolPalette* CreatePalette(wxFrame* parent);
+    MyFrame* GetMainFrame(void);
+protected:
+    wxDocManager* CreateDocManager(void);
 };
 
 DECLARE_APP(MyApp)
@@ -60,8 +61,6 @@ protected:
     void OnAbout(wxCommandEvent&);
     DECLARE_EVENT_TABLE()
 };
-
-extern MyFrame *GetMainFrame(void);
 
 // Menu/undo/redo commands
 
