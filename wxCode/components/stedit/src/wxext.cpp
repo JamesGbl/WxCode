@@ -73,15 +73,13 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
         STOCKITEM(wxID_CLOSE,                wxACCEL_CMD, 'W')
         STOCKITEM(wxID_CLEAR,                wxACCEL_NORMAL, WXK_DELETE)
         default:
-            //if (id == wxXRCID_GOTO) ret.Set(wxACCEL_CTRL,'G',id);
-            //else
             ret = wxGetStockAccelerator(id);
             break;
-    };
+    }
 
     #undef STOCKITEM
 
-    // always use wxAcceleratorEntry::IsOk on returned value !
+    wxASSERT(ret.IsOk()); // trac.wxwidgets.org/ticket/12444 trac.wxwidgets.org/ticket/12445
     return ret;
 }
 
@@ -178,7 +176,11 @@ wxString wxGetAccelText(int flags, int keyCode)
          {
             str+=wxString::Format(wxT("F%d"), keyCode - WXK_F1 + 1);
          }
-         else str+=(wxChar)keyCode;
+         else
+         {
+            wxASSERT(keyCode > ' ');
+            str+=(wxChar)keyCode;
+         }
          break;
    }
 #endif
