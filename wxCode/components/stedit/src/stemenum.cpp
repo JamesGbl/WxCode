@@ -425,7 +425,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         // FIXME - ID_STE_PREF_SELECTION_MODE remmed out since I can't make it work in GTK
         //menu->AppendCheckItem(ID_STE_PREF_SELECTION_MODE, _("Rectan&gular Selection"), _("Rectangular selections for cut/copy/paste"));
 
-        menu->Append(MenuItem(menu, wxID_CLEAR, wxGetStockLabel(wxID_DELETE), _("Delete selection"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CLEAR)));
+        menu->Append(MenuItem(menu, wxID_CLEAR, wxGetStockLabel(wxID_DELETE)+ wxT('\t') + _("Del"), _("Delete selection"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CLEAR)));
 
         add_sep = true;
     }

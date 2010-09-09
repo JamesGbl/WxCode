@@ -132,7 +132,6 @@ void wxSTEditorFrame::InitAcceleratorArray()
     m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_UNDO));
     m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_REDO));
     m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SAVEAS));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_CLEAR));
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));
