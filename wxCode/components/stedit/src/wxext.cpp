@@ -79,7 +79,8 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
 
     #undef STOCKITEM
 
-    wxASSERT(ret.IsOk()); // trac.wxwidgets.org/ticket/12444 trac.wxwidgets.org/ticket/12445
+    // uncomment when wxAcceleratorEntry::IsOk() gets fixed, trac.wxwidgets.org/ticket/12444 trac.wxwidgets.org/ticket/12445
+    //wxASSERT(ret.IsOk());
     return ret;
 }
 
@@ -95,6 +96,8 @@ void wxSetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
    wnd->SetAcceleratorTable(accel);
    wxDELETEA(temp);
 }
+
+#endif // wxUSE_ACCEL
 
 wxString wxMenuItem_GetText(const wxMenuItem* item)
 {
@@ -178,7 +181,7 @@ wxString wxGetAccelText(int flags, int keyCode)
          }
          else
          {
-            wxASSERT(keyCode > ' ');
+            wxASSERT(keyCode >= ' ');
             str+=(wxChar)keyCode;
          }
          break;
@@ -332,6 +335,3 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
    }
 }
 #endif
-
-#endif // wxUSE_ACCEL
-
