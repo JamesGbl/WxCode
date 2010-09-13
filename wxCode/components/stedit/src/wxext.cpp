@@ -79,8 +79,12 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
 
     #undef STOCKITEM
 
-    // uncomment when wxAcceleratorEntry::IsOk() gets fixed, trac.wxwidgets.org/ticket/12444 trac.wxwidgets.org/ticket/12445
-    //wxASSERT(ret.IsOk());
+#if (wxVERSION_NUMBER >= 2902)
+    wxASSERT(ret.IsOk());
+#else
+    // trac.wxwidgets.org/ticket/12444
+    // trac.wxwidgets.org/ticket/12445
+#endif
     return ret;
 }
 
