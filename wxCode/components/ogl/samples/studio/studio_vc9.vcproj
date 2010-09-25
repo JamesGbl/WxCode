@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include"
 			/>
@@ -171,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG,__WXDEBUG__,WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;__WXDEBUG__;WXUSINGDLL;wxUSE_NO_MANIFEST=1"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include"
 			/>
