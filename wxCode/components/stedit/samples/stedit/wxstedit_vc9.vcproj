@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswddll/wxstedit.exe"
+				OutputFile=".\bin/wxsteditd.9.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
@@ -182,7 +182,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswddll/wxstedit.exe"
+				OutputFile=".\bin/wxstedit95d.9.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
@@ -281,7 +281,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_msw/wxstedit.exe"
+				OutputFile=".\bin/wxstedit95.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
@@ -380,7 +380,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_msw/wxstedit.exe"
+				OutputFile=".\bin/wxstedit.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
