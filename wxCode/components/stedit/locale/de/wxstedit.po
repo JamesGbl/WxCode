@@ -3,14 +3,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-06 12:42+0200\n"
-"PO-Revision-Date: 2007-05-06\n"
-"Last-Translator: Christian Sturmlechner <www.totocalculator.com>\n"
-"Language-Team: <www.totocalculator.com>\n"
+"PO-Revision-Date: 2010-09-29 11:14+0100\n"
+"Last-Translator: Troels K\n"
+"Language-Team:  <www.totocalculator.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../stedit.cpp:1619 ../../stedit.cpp:2952
+#: ../../stedit.cpp:1619
+#: ../../stedit.cpp:2952
 msgid "Current EOL : "
 msgstr "Aktueller Zeilenumbruch : "
 
@@ -36,11 +37,13 @@ msgstr "Unicode-Textdatei. Zu Ansi unwandeln?"
 msgid "Load Unicode?"
 msgstr "Als Unicode öffnen?"
 
-#: ../../stedit.cpp:2263 ../../stedit.cpp:2317
+#: ../../stedit.cpp:2263
+#: ../../stedit.cpp:2317
 msgid "This file is too large for this editor, sorry."
 msgstr "Die Datei ist für diesen Editor zu groß, sorry."
 
-#: ../../stedit.cpp:2264 ../../stedit.cpp:2318
+#: ../../stedit.cpp:2264
+#: ../../stedit.cpp:2318
 msgid "Error loading file"
 msgstr "Fehler beim Öffnen der Datei"
 
@@ -158,7 +161,8 @@ msgstr "Alle Falten auseinanderklappen bis Level"
 msgid "Expand folds to level"
 msgstr "Auseinanderfalten"
 
-#: ../../stedit.cpp:2894 ../../wx/stedit/stedlgs.h:324
+#: ../../stedit.cpp:2894
+#: ../../wx/stedit/stedlgs.h:324
 #: ../../wx/stedit/stedlgs.h:333
 msgid "Editor Preferences"
 msgstr "Editoreinstellungen"
@@ -208,7 +212,8 @@ msgstr ""
 "%d Vorkommen von\n"
 "'%s' durch '%s' ersetzt."
 
-#: ../../stedit.cpp:3252 ../../stenoteb.cpp:1133
+#: ../../stedit.cpp:3252
+#: ../../stenoteb.cpp:1133
 msgid "Finished replacing"
 msgstr "Ersetzen beendet"
 
@@ -225,10 +230,10 @@ msgstr "Gehe zu"
 msgid "Print document"
 msgstr "Dokument drucken"
 
-#: ../../stedit.cpp:3577 ../../stedit.cpp:3614
+#: ../../stedit.cpp:3577
+#: ../../stedit.cpp:3614
 msgid "A print error occurred, perhaps your printer is not correctly setup?"
-msgstr ""
-"Ein Druckerfehler ist aufgetreten. Wurde Ihr Drucker richtig installiert?"
+msgstr "Ein Druckerfehler ist aufgetreten. Wurde Ihr Drucker richtig installiert?"
 
 #: ../../stedit.cpp:3578
 msgid "Print error"
@@ -242,7 +247,8 @@ msgstr "Dokument"
 msgid "Print preview error"
 msgstr "Fehler bei der Seitenansicht"
 
-#: ../../stedit.cpp:3620 ../../stedit.cpp:3638
+#: ../../stedit.cpp:3620
+#: ../../stedit.cpp:3638
 msgid "Print Preview"
 msgstr "Druckvorschau"
 
@@ -256,7 +262,8 @@ msgstr "Editor Colors"
 msgid "Lexer Styles"
 msgstr "Lexer Styles"
 
-#: ../../stedlgs.cpp:413 ../../stedlgs.cpp:1085
+#: ../../stedlgs.cpp:413
+#: ../../stedlgs.cpp:1085
 msgid "Help"
 msgstr "Hilfe"
 
@@ -273,7 +280,8 @@ msgstr "Wählen Sie die Vordergrundfarbe der Schriftart"
 msgid "Choose the font's background color"
 msgstr "Wählen Sie die Hintergrundfarbe der Schriftart"
 
-#: ../../stedlgs.cpp:1056 ../../stedlgs.cpp:1421
+#: ../../stedlgs.cpp:1056
+#: ../../stedlgs.cpp:1421
 msgid "Styles"
 msgstr "Stil"
 
@@ -309,7 +317,8 @@ msgstr "Hervorhebungen"
 msgid "Languages"
 msgstr "Sprachen"
 
-#: ../../stedlgs.cpp:1435 ../../stedlgs_wdr.cpp:1441
+#: ../../stedlgs.cpp:1435
+#: ../../stedlgs_wdr.cpp:1441
 msgid "Default"
 msgstr "Standard"
 
@@ -317,13 +326,19 @@ msgstr "Standard"
 msgid "Reset this page's values to their default"
 msgstr "Einstellungen der Seite auf Standardwerte zurücksetzen"
 
-#: ../../stedlgs.cpp:1439 ../../stedlgs_wdr.cpp:393 ../../stedlgs_wdr.cpp:653
-#: ../../stedlgs_wdr.cpp:1226 ../../stedlgs_wdr.cpp:1303
+#: ../../stedlgs.cpp:1439
+#: ../../stedlgs_wdr.cpp:393
+#: ../../stedlgs_wdr.cpp:653
+#: ../../stedlgs_wdr.cpp:1226
+#: ../../stedlgs_wdr.cpp:1303
 msgid "OK"
 msgstr "Ok"
 
-#: ../../stedlgs.cpp:1441 ../../stedlgs_wdr.cpp:561 ../../stedlgs_wdr.cpp:659
-#: ../../stedlgs_wdr.cpp:1100 ../../stedlgs_wdr.cpp:1230
+#: ../../stedlgs.cpp:1441
+#: ../../stedlgs_wdr.cpp:561
+#: ../../stedlgs_wdr.cpp:659
+#: ../../stedlgs_wdr.cpp:1100
+#: ../../stedlgs_wdr.cpp:1230
 #: ../../stedlgs_wdr.cpp:1307
 msgid "Cancel"
 msgstr "Abbruch"
@@ -336,7 +351,9 @@ msgstr "Anwenden"
 msgid "Insert"
 msgstr "Einfügen"
 
-#: ../../stedlgs.cpp:2012 ../../stedlgs_wdr.cpp:584 ../../stedlgs_wdr.cpp:604
+#: ../../stedlgs.cpp:2012
+#: ../../stedlgs_wdr.cpp:584
+#: ../../stedlgs_wdr.cpp:604
 msgid "Prepend"
 msgstr "Voranstellen"
 
@@ -345,46 +362,83 @@ msgid "Highlighting and other styles"
 msgstr "Hervorhebungen und sonstiger Stil"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:56 ../../stedlgs_wdr.cpp:184
-#: ../../stedlgs_wdr.cpp:1333 ../../stedlgs_wdr.cpp:1391
+#: ../../stedlgs_wdr.cpp:56
+#: ../../stedlgs_wdr.cpp:184
+#: ../../stedlgs_wdr.cpp:1333
+#: ../../stedlgs_wdr.cpp:1391
 msgid "ChoiceItem"
 msgstr "ChoiceItem"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:57 ../../stedlgs_wdr.cpp:58 ../../stedlgs_wdr.cpp:59
-#: ../../stedlgs_wdr.cpp:60 ../../stedlgs_wdr.cpp:61 ../../stedlgs_wdr.cpp:62
-#: ../../stedlgs_wdr.cpp:86 ../../stedlgs_wdr.cpp:87 ../../stedlgs_wdr.cpp:88
-#: ../../stedlgs_wdr.cpp:89 ../../stedlgs_wdr.cpp:90 ../../stedlgs_wdr.cpp:91
-#: ../../stedlgs_wdr.cpp:92 ../../stedlgs_wdr.cpp:93 ../../stedlgs_wdr.cpp:94
-#: ../../stedlgs_wdr.cpp:95 ../../stedlgs_wdr.cpp:186
-#: ../../stedlgs_wdr.cpp:187 ../../stedlgs_wdr.cpp:188
-#: ../../stedlgs_wdr.cpp:189 ../../stedlgs_wdr.cpp:190
-#: ../../stedlgs_wdr.cpp:191 ../../stedlgs_wdr.cpp:192
-#: ../../stedlgs_wdr.cpp:193 ../../stedlgs_wdr.cpp:194
-#: ../../stedlgs_wdr.cpp:195 ../../stedlgs_wdr.cpp:196
-#: ../../stedlgs_wdr.cpp:197 ../../stedlgs_wdr.cpp:198
-#: ../../stedlgs_wdr.cpp:199 ../../stedlgs_wdr.cpp:200
-#: ../../stedlgs_wdr.cpp:201 ../../stedlgs_wdr.cpp:610
-#: ../../stedlgs_wdr.cpp:611 ../../stedlgs_wdr.cpp:612
-#: ../../stedlgs_wdr.cpp:613 ../../stedlgs_wdr.cpp:614
-#: ../../stedlgs_wdr.cpp:629 ../../stedlgs_wdr.cpp:630
-#: ../../stedlgs_wdr.cpp:631 ../../stedlgs_wdr.cpp:632
-#: ../../stedlgs_wdr.cpp:633 ../../stedlgs_wdr.cpp:1275
-#: ../../stedlgs_wdr.cpp:1276 ../../stedlgs_wdr.cpp:1277
-#: ../../stedlgs_wdr.cpp:1278 ../../stedlgs_wdr.cpp:1279
-#: ../../stedlgs_wdr.cpp:1334 ../../stedlgs_wdr.cpp:1335
-#: ../../stedlgs_wdr.cpp:1336 ../../stedlgs_wdr.cpp:1337
-#: ../../stedlgs_wdr.cpp:1338 ../../stedlgs_wdr.cpp:1339
-#: ../../stedlgs_wdr.cpp:1340 ../../stedlgs_wdr.cpp:1393
-#: ../../stedlgs_wdr.cpp:1394 ../../stedlgs_wdr.cpp:1395
-#: ../../stedlgs_wdr.cpp:1396 ../../stedlgs_wdr.cpp:1397
-#: ../../stedlgs_wdr.cpp:1398 ../../stedlgs_wdr.cpp:1399
-#: ../../stedlgs_wdr.cpp:1400 ../../stedlgs_wdr.cpp:1401
+#: ../../stedlgs_wdr.cpp:57
+#: ../../stedlgs_wdr.cpp:58
+#: ../../stedlgs_wdr.cpp:59
+#: ../../stedlgs_wdr.cpp:60
+#: ../../stedlgs_wdr.cpp:61
+#: ../../stedlgs_wdr.cpp:62
+#: ../../stedlgs_wdr.cpp:86
+#: ../../stedlgs_wdr.cpp:87
+#: ../../stedlgs_wdr.cpp:88
+#: ../../stedlgs_wdr.cpp:89
+#: ../../stedlgs_wdr.cpp:90
+#: ../../stedlgs_wdr.cpp:91
+#: ../../stedlgs_wdr.cpp:92
+#: ../../stedlgs_wdr.cpp:93
+#: ../../stedlgs_wdr.cpp:94
+#: ../../stedlgs_wdr.cpp:95
+#: ../../stedlgs_wdr.cpp:186
+#: ../../stedlgs_wdr.cpp:187
+#: ../../stedlgs_wdr.cpp:188
+#: ../../stedlgs_wdr.cpp:189
+#: ../../stedlgs_wdr.cpp:190
+#: ../../stedlgs_wdr.cpp:191
+#: ../../stedlgs_wdr.cpp:192
+#: ../../stedlgs_wdr.cpp:193
+#: ../../stedlgs_wdr.cpp:194
+#: ../../stedlgs_wdr.cpp:195
+#: ../../stedlgs_wdr.cpp:196
+#: ../../stedlgs_wdr.cpp:197
+#: ../../stedlgs_wdr.cpp:198
+#: ../../stedlgs_wdr.cpp:199
+#: ../../stedlgs_wdr.cpp:200
+#: ../../stedlgs_wdr.cpp:201
+#: ../../stedlgs_wdr.cpp:610
+#: ../../stedlgs_wdr.cpp:611
+#: ../../stedlgs_wdr.cpp:612
+#: ../../stedlgs_wdr.cpp:613
+#: ../../stedlgs_wdr.cpp:614
+#: ../../stedlgs_wdr.cpp:629
+#: ../../stedlgs_wdr.cpp:630
+#: ../../stedlgs_wdr.cpp:631
+#: ../../stedlgs_wdr.cpp:632
+#: ../../stedlgs_wdr.cpp:633
+#: ../../stedlgs_wdr.cpp:1275
+#: ../../stedlgs_wdr.cpp:1276
+#: ../../stedlgs_wdr.cpp:1277
+#: ../../stedlgs_wdr.cpp:1278
+#: ../../stedlgs_wdr.cpp:1279
+#: ../../stedlgs_wdr.cpp:1334
+#: ../../stedlgs_wdr.cpp:1335
+#: ../../stedlgs_wdr.cpp:1336
+#: ../../stedlgs_wdr.cpp:1337
+#: ../../stedlgs_wdr.cpp:1338
+#: ../../stedlgs_wdr.cpp:1339
+#: ../../stedlgs_wdr.cpp:1340
+#: ../../stedlgs_wdr.cpp:1393
+#: ../../stedlgs_wdr.cpp:1394
+#: ../../stedlgs_wdr.cpp:1395
+#: ../../stedlgs_wdr.cpp:1396
+#: ../../stedlgs_wdr.cpp:1397
+#: ../../stedlgs_wdr.cpp:1398
+#: ../../stedlgs_wdr.cpp:1399
+#: ../../stedlgs_wdr.cpp:1400
+#: ../../stedlgs_wdr.cpp:1401
 #: ../../stedlgs_wdr.cpp:1402
 msgid "Item"
 msgstr "Item"
 
-#: ../../stedlgs_wdr.cpp:72 ../../stedlgs_wdr.cpp:79
+#: ../../stedlgs_wdr.cpp:72
+#: ../../stedlgs_wdr.cpp:79
 msgid "Font"
 msgstr "Schriftart"
 
@@ -394,8 +448,7 @@ msgstr "Schriftart setzen"
 
 #: ../../stedlgs_wdr.cpp:80
 msgid "Choose a font (unsupported fonts revert to a default)"
-msgstr ""
-"Schriftart wählen (nicht unterstützte werden durch Standardwert ersetzt)"
+msgstr "Schriftart wählen (nicht unterstützte werden durch Standardwert ersetzt)"
 
 #: ../../stedlgs_wdr.cpp:85
 msgid "Bitstream Vera Sans Mono*"
@@ -525,12 +578,18 @@ msgstr "Dateiname "
 msgid "Name of the document or filename"
 msgstr "Name des Dokuments oder der Datei"
 
-#: ../../stedlgs_wdr.cpp:251 ../../stedlgs_wdr.cpp:261
-#: ../../stedlgs_wdr.cpp:271 ../../stedlgs_wdr.cpp:281
-#: ../../stedlgs_wdr.cpp:291 ../../stedlgs_wdr.cpp:301
-#: ../../stedlgs_wdr.cpp:321 ../../stedlgs_wdr.cpp:341
-#: ../../stedlgs_wdr.cpp:351 ../../stedlgs_wdr.cpp:361
-#: ../../stedlgs_wdr.cpp:371 ../../stedlgs_wdr.cpp:381
+#: ../../stedlgs_wdr.cpp:251
+#: ../../stedlgs_wdr.cpp:261
+#: ../../stedlgs_wdr.cpp:271
+#: ../../stedlgs_wdr.cpp:281
+#: ../../stedlgs_wdr.cpp:291
+#: ../../stedlgs_wdr.cpp:301
+#: ../../stedlgs_wdr.cpp:321
+#: ../../stedlgs_wdr.cpp:341
+#: ../../stedlgs_wdr.cpp:351
+#: ../../stedlgs_wdr.cpp:361
+#: ../../stedlgs_wdr.cpp:371
+#: ../../stedlgs_wdr.cpp:381
 msgid ":"
 msgstr ":"
 
@@ -561,8 +620,10 @@ msgid "Time the file was opened from disk"
 msgstr "Zeit, zu der die Datei geöffnet wurde"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:274 ../../stedlgs_wdr.cpp:284
-#: ../../stedlgs_wdr.cpp:294 ../../stedlgs_wdr.cpp:304
+#: ../../stedlgs_wdr.cpp:274
+#: ../../stedlgs_wdr.cpp:284
+#: ../../stedlgs_wdr.cpp:294
+#: ../../stedlgs_wdr.cpp:304
 msgid "12/12/2003 00:00:00 000000000000000000000"
 msgstr "12/12/2003 00:00:00 000000000000000000000"
 
@@ -579,11 +640,8 @@ msgid "Accessed "
 msgstr "Zugriff"
 
 #: ../../stedlgs_wdr.cpp:288
-msgid ""
-"Last time the file was accessed on disk (not all platforms support this)"
-msgstr ""
-"Letzter Zeitpunkt des Zugriffs auf die Datei auf dem Speichermedium (nicht "
-"von allen Betriebssystemen unterstützt)"
+msgid "Last time the file was accessed on disk (not all platforms support this)"
+msgstr "Letzter Zeitpunkt des Zugriffs auf die Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstützt)"
 
 #: ../../stedlgs_wdr.cpp:297
 msgid "Created "
@@ -591,9 +649,7 @@ msgstr "Erzeugung "
 
 #: ../../stedlgs_wdr.cpp:298
 msgid "Time the file was created on disk (not all platforms support this)"
-msgstr ""
-"Zeitpunkt der Erzeugung der Datei auf dem Speichermedium (nicht von allen "
-"Betriebssystemen unterstützt)"
+msgstr "Zeitpunkt der Erzeugung der Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstützt)"
 
 #: ../../stedlgs_wdr.cpp:311
 msgid "Information"
@@ -625,8 +681,10 @@ msgid "Number of lines in the document"
 msgstr "Anzahl der Zeilen im Dokument"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:344 ../../stedlgs_wdr.cpp:354
-#: ../../stedlgs_wdr.cpp:364 ../../stedlgs_wdr.cpp:374
+#: ../../stedlgs_wdr.cpp:344
+#: ../../stedlgs_wdr.cpp:354
+#: ../../stedlgs_wdr.cpp:364
+#: ../../stedlgs_wdr.cpp:374
 msgid "10000000000000000000000000000000000000"
 msgstr "10000000000000000000000000000000000000"
 
@@ -646,7 +704,8 @@ msgstr "Wörter "
 msgid "Number of words in the document"
 msgstr "Anzahl der Wörter im Dokument"
 
-#: ../../stedlgs_wdr.cpp:367 ../../stedlgs_wdr.cpp:838
+#: ../../stedlgs_wdr.cpp:367
+#: ../../stedlgs_wdr.cpp:838
 msgid "Tabs"
 msgstr "Tabulatoren"
 
@@ -672,79 +731,105 @@ msgid "Find what"
 msgstr "Suche nach"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:429 ../../stedlgs_wdr.cpp:452
-#: ../../stedlgs_wdr.cpp:609 ../../stedlgs_wdr.cpp:628
-#: ../../stedlgs_wdr.cpp:1132 ../../stedlgs_wdr.cpp:1158
-#: ../../stedlgs_wdr.cpp:1184 ../../stedlgs_wdr.cpp:1210
+#: ../../stedlgs_wdr.cpp:429
+#: ../../stedlgs_wdr.cpp:452
+#: ../../stedlgs_wdr.cpp:609
+#: ../../stedlgs_wdr.cpp:628
+#: ../../stedlgs_wdr.cpp:1132
+#: ../../stedlgs_wdr.cpp:1158
+#: ../../stedlgs_wdr.cpp:1184
+#: ../../stedlgs_wdr.cpp:1210
 msgid "ComboItem"
 msgstr "ComboItem"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:430 ../../stedlgs_wdr.cpp:453
-#: ../../stedlgs_wdr.cpp:1133 ../../stedlgs_wdr.cpp:1159
+#: ../../stedlgs_wdr.cpp:430
+#: ../../stedlgs_wdr.cpp:453
+#: ../../stedlgs_wdr.cpp:1133
+#: ../../stedlgs_wdr.cpp:1159
 #: ../../stedlgs_wdr.cpp:1185
 msgid "Item1"
 msgstr "Item1"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:431 ../../stedlgs_wdr.cpp:454
-#: ../../stedlgs_wdr.cpp:1079 ../../stedlgs_wdr.cpp:1134
-#: ../../stedlgs_wdr.cpp:1160 ../../stedlgs_wdr.cpp:1186
+#: ../../stedlgs_wdr.cpp:431
+#: ../../stedlgs_wdr.cpp:454
+#: ../../stedlgs_wdr.cpp:1079
+#: ../../stedlgs_wdr.cpp:1134
+#: ../../stedlgs_wdr.cpp:1160
+#: ../../stedlgs_wdr.cpp:1186
 msgid "Item2"
 msgstr "Item2"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:432 ../../stedlgs_wdr.cpp:455
-#: ../../stedlgs_wdr.cpp:1080 ../../stedlgs_wdr.cpp:1135
-#: ../../stedlgs_wdr.cpp:1161 ../../stedlgs_wdr.cpp:1187
+#: ../../stedlgs_wdr.cpp:432
+#: ../../stedlgs_wdr.cpp:455
+#: ../../stedlgs_wdr.cpp:1080
+#: ../../stedlgs_wdr.cpp:1135
+#: ../../stedlgs_wdr.cpp:1161
+#: ../../stedlgs_wdr.cpp:1187
 msgid "Item3"
 msgstr "Item3"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:433 ../../stedlgs_wdr.cpp:456
-#: ../../stedlgs_wdr.cpp:1136 ../../stedlgs_wdr.cpp:1162
+#: ../../stedlgs_wdr.cpp:433
+#: ../../stedlgs_wdr.cpp:456
+#: ../../stedlgs_wdr.cpp:1136
+#: ../../stedlgs_wdr.cpp:1162
 #: ../../stedlgs_wdr.cpp:1188
 msgid "Item4"
 msgstr "Item4"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:434 ../../stedlgs_wdr.cpp:457
-#: ../../stedlgs_wdr.cpp:1137 ../../stedlgs_wdr.cpp:1163
+#: ../../stedlgs_wdr.cpp:434
+#: ../../stedlgs_wdr.cpp:457
+#: ../../stedlgs_wdr.cpp:1137
+#: ../../stedlgs_wdr.cpp:1163
 #: ../../stedlgs_wdr.cpp:1189
 msgid "Item5"
 msgstr "Item5"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:435 ../../stedlgs_wdr.cpp:458
-#: ../../stedlgs_wdr.cpp:1138 ../../stedlgs_wdr.cpp:1164
+#: ../../stedlgs_wdr.cpp:435
+#: ../../stedlgs_wdr.cpp:458
+#: ../../stedlgs_wdr.cpp:1138
+#: ../../stedlgs_wdr.cpp:1164
 #: ../../stedlgs_wdr.cpp:1190
 msgid "Item6"
 msgstr "Item6"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:436 ../../stedlgs_wdr.cpp:459
-#: ../../stedlgs_wdr.cpp:1139 ../../stedlgs_wdr.cpp:1165
+#: ../../stedlgs_wdr.cpp:436
+#: ../../stedlgs_wdr.cpp:459
+#: ../../stedlgs_wdr.cpp:1139
+#: ../../stedlgs_wdr.cpp:1165
 #: ../../stedlgs_wdr.cpp:1191
 msgid "Item7"
 msgstr "Item7"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:437 ../../stedlgs_wdr.cpp:460
-#: ../../stedlgs_wdr.cpp:1140 ../../stedlgs_wdr.cpp:1166
+#: ../../stedlgs_wdr.cpp:437
+#: ../../stedlgs_wdr.cpp:460
+#: ../../stedlgs_wdr.cpp:1140
+#: ../../stedlgs_wdr.cpp:1166
 #: ../../stedlgs_wdr.cpp:1192
 msgid "Item8"
 msgstr "Item8"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:438 ../../stedlgs_wdr.cpp:461
-#: ../../stedlgs_wdr.cpp:1141 ../../stedlgs_wdr.cpp:1167
+#: ../../stedlgs_wdr.cpp:438
+#: ../../stedlgs_wdr.cpp:461
+#: ../../stedlgs_wdr.cpp:1141
+#: ../../stedlgs_wdr.cpp:1167
 #: ../../stedlgs_wdr.cpp:1193
 msgid "Item9"
 msgstr "Item9"
 
 # offenbar nur Platzhalter
-#: ../../stedlgs_wdr.cpp:439 ../../stedlgs_wdr.cpp:462
-#: ../../stedlgs_wdr.cpp:1142 ../../stedlgs_wdr.cpp:1168
+#: ../../stedlgs_wdr.cpp:439
+#: ../../stedlgs_wdr.cpp:462
+#: ../../stedlgs_wdr.cpp:1142
+#: ../../stedlgs_wdr.cpp:1168
 #: ../../stedlgs_wdr.cpp:1194
 msgid "Item0"
 msgstr "Item0"
@@ -871,7 +956,8 @@ msgstr "Suchtext ersetzen und nächstes Vorkommen finden"
 msgid "Replace &All"
 msgstr "Al&le ersetzen"
 
-#: ../../stedlgs_wdr.cpp:587 ../../stedlgs_wdr.cpp:623
+#: ../../stedlgs_wdr.cpp:587
+#: ../../stedlgs_wdr.cpp:623
 msgid "Append"
 msgstr "Anfügen"
 
@@ -1137,11 +1223,13 @@ msgstr "gilt nur Sprachen, die Preprocessorangaben unterstützen"
 msgid "Highlight braces () {} []"
 msgstr "Klammern () {} []"
 
-#: ../../stedlgs_wdr.cpp:947 ../../stedlgs_wdr.cpp:1430
+#: ../../stedlgs_wdr.cpp:947
+#: ../../stedlgs_wdr.cpp:1430
 msgid "Set language highlighting from file extension"
 msgstr "Hervorhebung aus Dateierweiterung bestimmen"
 
-#: ../../stedlgs_wdr.cpp:948 ../../stedlgs_wdr.cpp:1431
+#: ../../stedlgs_wdr.cpp:948
+#: ../../stedlgs_wdr.cpp:1431
 msgid "Initialize the highlighting language when loading a file"
 msgstr "Beim Öffnen der Datei Sprache für Hervorhebung bestimmen"
 
@@ -1155,8 +1243,7 @@ msgstr "Falten-Randansicht zeigen "
 
 #: ../../stedlgs_wdr.cpp:971
 msgid "Show a margin to fold text (not all lexers are supported)"
-msgstr ""
-"Randansicht für Textfalten anzeigen (nicht jede Syntax wird unterstützt)"
+msgstr "Randansicht für Textfalten anzeigen (nicht jede Syntax wird unterstützt)"
 
 # *** was ist das?
 #: ../../stedlgs_wdr.cpp:976
@@ -1349,9 +1436,7 @@ msgid "Preserve matching"
 msgstr "Keine Änderung zwischen"
 
 #: ../../stedlgs_wdr.cpp:1179
-msgid ""
-"Preserve formatting between matching characters, double first character (() "
-"to preserve between two different characters"
+msgid "Preserve formatting between matching characters, double first character (() to preserve between two different characters"
 msgstr ""
 "Formatierung zwischen zusammengehörenden Zeichen beibehalten.\n"
 "Verdoppeln Sie das erste Zeichen, um Formatierung zwischen \n"
@@ -1359,8 +1444,7 @@ msgstr ""
 
 #: ../../stedlgs_wdr.cpp:1197
 msgid "Character pairs to preserve formatting between, ex. '\"\" ()'"
-msgstr ""
-"Zeichenpaar, zwischen denen Formatierung beibehalten wird, z.B. '\"\" ()'"
+msgstr "Zeichenpaar, zwischen denen Formatierung beibehalten wird, z.B. '\"\" ()'"
 
 #: ../../stedlgs_wdr.cpp:1200
 msgid "Update"
@@ -1479,7 +1563,8 @@ msgstr "Alle Zeilenumbrüche auf die eingestellten EOL-Zeichen ändern"
 msgid "Overwrite file : '"
 msgstr "Datei überschreiben : '"
 
-#: ../../steexprt.cpp:154 ../../steexprt.cpp:177
+#: ../../steexprt.cpp:154
+#: ../../steexprt.cpp:177
 msgid "Export error"
 msgstr "Exportieren"
 
@@ -1491,7 +1576,8 @@ msgstr "Fehler beim Exportieren der Datei : '"
 msgid "Export to file"
 msgstr "Exportieren in Datei"
 
-#: ../../steframe.cpp:200 ../../steframe.cpp:201
+#: ../../steframe.cpp:200
+#: ../../steframe.cpp:201
 msgid "Files"
 msgstr "Dateien"
 
@@ -1499,11 +1585,13 @@ msgstr "Dateien"
 msgid "About editor"
 msgstr "Editor-Info"
 
-#: ../../steframe.cpp:416 ../../steframe.cpp:845
+#: ../../steframe.cpp:416
+#: ../../steframe.cpp:845
 msgid "Root"
 msgstr "Root"
 
-#: ../../steframe.cpp:419 ../../steframe.cpp:437
+#: ../../steframe.cpp:419
+#: ../../steframe.cpp:437
 msgid "Opened files"
 msgstr "Offene Dateien"
 
@@ -1511,35 +1599,43 @@ msgstr "Offene Dateien"
 msgid "Others"
 msgstr "Andere"
 
-#: ../../stemenum.cpp:89 ../../stemenum.cpp:207
+#: ../../stemenum.cpp:89
+#: ../../stemenum.cpp:207
 msgid "&File"
 msgstr "&Datei"
 
-#: ../../stemenum.cpp:96 ../../stemenum.cpp:208
+#: ../../stemenum.cpp:96
+#: ../../stemenum.cpp:208
 msgid "&Edit"
 msgstr "&Bearbeiten"
 
-#: ../../stemenum.cpp:103 ../../stemenum.cpp:209
+#: ../../stemenum.cpp:103
+#: ../../stemenum.cpp:209
 msgid "&Tools"
 msgstr "&Werkzeuge"
 
-#: ../../stemenum.cpp:110 ../../stemenum.cpp:210
+#: ../../stemenum.cpp:110
+#: ../../stemenum.cpp:210
 msgid "&View"
 msgstr "&Ansicht"
 
-#: ../../stemenum.cpp:117 ../../stemenum.cpp:211
+#: ../../stemenum.cpp:117
+#: ../../stemenum.cpp:211
 msgid "&Bookmarks"
 msgstr "&Lesezeichen"
 
-#: ../../stemenum.cpp:124 ../../stemenum.cpp:212
+#: ../../stemenum.cpp:124
+#: ../../stemenum.cpp:212
 msgid "&Preferences"
 msgstr "&Einstellungen"
 
-#: ../../stemenum.cpp:131 ../../stemenum.cpp:213
+#: ../../stemenum.cpp:131
+#: ../../stemenum.cpp:213
 msgid "&Window"
 msgstr "&Fenster"
 
-#: ../../stemenum.cpp:137 ../../stemenum.cpp:214
+#: ../../stemenum.cpp:137
+#: ../../stemenum.cpp:214
 msgid "&Help"
 msgstr "&Hilfe"
 
@@ -1591,7 +1687,8 @@ msgstr "Nächste Seite"
 msgid "Goto page"
 msgstr "Gehe zu"
 
-#: ../../stemenum.cpp:179 ../../stemenum.cpp:310
+#: ../../stemenum.cpp:179
+#: ../../stemenum.cpp:310
 msgid "Close current page"
 msgstr "Aktuelles Dokument schließen"
 
@@ -1603,11 +1700,13 @@ msgstr "Alle Dokumente schließen..."
 msgid "Close page"
 msgstr "Dokumente schließen"
 
-#: ../../stemenum.cpp:183 ../../stemenum.cpp:715
+#: ../../stemenum.cpp:183
+#: ../../stemenum.cpp:715
 msgid "&Windows..."
 msgstr "&Fenster..."
 
-#: ../../stemenum.cpp:183 ../../stemenum.cpp:715
+#: ../../stemenum.cpp:183
+#: ../../stemenum.cpp:715
 msgid "Manage opened windows"
 msgstr "Offene Dokumente verwalten"
 
@@ -1631,7 +1730,8 @@ msgstr "Datei zum Editieren öffnen"
 msgid "Save"
 msgstr "Sichern"
 
-#: ../../stemenum.cpp:238 ../../stemenum.cpp:320
+#: ../../stemenum.cpp:238
+#: ../../stemenum.cpp:320
 msgid "Save current file"
 msgstr "Aktuelles Dokument speichern"
 
@@ -1643,7 +1743,8 @@ msgstr "Sichern unter..."
 msgid "Save to a specific filename..."
 msgstr "Dokument unter einem bestimmten Dateinamen speichern..."
 
-#: ../../stemenum.cpp:244 ../../stemenum.cpp:325
+#: ../../stemenum.cpp:244
+#: ../../stemenum.cpp:325
 msgid "Save all files"
 msgstr "Alle Dokumente speichern"
 
@@ -1687,7 +1788,8 @@ msgstr "Letzten Befehl rückgängig machen"
 msgid "Redo"
 msgstr "Wiederholen"
 
-#: ../../stemenum.cpp:259 ../../stemenum.cpp:437
+#: ../../stemenum.cpp:259
+#: ../../stemenum.cpp:437
 msgid "Redo last undo"
 msgstr "Letzten Befehl wiederholen"
 
@@ -1727,7 +1829,8 @@ msgstr "Text im Dokument ersetzen."
 msgid "Toggle bookmark"
 msgstr "Lesezeichen ein/aus"
 
-#: ../../stemenum.cpp:278 ../../stemenum.cpp:623
+#: ../../stemenum.cpp:278
+#: ../../stemenum.cpp:623
 msgid "Toggle a bookmark on cursor line"
 msgstr "Lesezeichen auf der Cursorlinie setzen bzw. löschen"
 
@@ -1735,7 +1838,8 @@ msgstr "Lesezeichen auf der Cursorlinie setzen bzw. löschen"
 msgid "First bookmark"
 msgstr "Erstes Lesezeichen"
 
-#: ../../stemenum.cpp:279 ../../stemenum.cpp:625
+#: ../../stemenum.cpp:279
+#: ../../stemenum.cpp:625
 msgid "Goto first bookmark"
 msgstr "Zum ersten Lesezeichen gehen"
 
@@ -1743,7 +1847,8 @@ msgstr "Zum ersten Lesezeichen gehen"
 msgid "Previous bookmark"
 msgstr "Vorheriges Lesezeichen"
 
-#: ../../stemenum.cpp:280 ../../stemenum.cpp:626
+#: ../../stemenum.cpp:280
+#: ../../stemenum.cpp:626
 msgid "Goto previous bookmark"
 msgstr "Zum vorherigen Lesezeichen gehen"
 
@@ -1751,7 +1856,8 @@ msgstr "Zum vorherigen Lesezeichen gehen"
 msgid "Next bookmark"
 msgstr "Nächstes Lesezeichen"
 
-#: ../../stemenum.cpp:281 ../../stemenum.cpp:627
+#: ../../stemenum.cpp:281
+#: ../../stemenum.cpp:627
 msgid "Goto next bookmark"
 msgstr "Zum nächsten Lesezeichen gehen"
 
@@ -1759,11 +1865,13 @@ msgstr "Zum nächsten Lesezeichen gehen"
 msgid "Last bookmark"
 msgstr "Letztes Lesezeichen"
 
-#: ../../stemenum.cpp:282 ../../stemenum.cpp:628
+#: ../../stemenum.cpp:282
+#: ../../stemenum.cpp:628
 msgid "Goto last bookmark"
 msgstr "Zum letzten Lesezeichen gehen"
 
-#: ../../stemenum.cpp:283 ../../stemenum.cpp:630
+#: ../../stemenum.cpp:283
+#: ../../stemenum.cpp:630
 msgid "Clear all bookmarks"
 msgstr "Alle Lesezeichen löschen"
 
@@ -2054,8 +2162,7 @@ msgstr "&Einzug vergrößern"
 
 #: ../../stemenum.cpp:479
 msgid "Increase indent of selected text or current line"
-msgstr ""
-"Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts vergrößern"
+msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts vergrößern"
 
 #: ../../stemenum.cpp:480
 msgid "&Decrease indent"
@@ -2063,8 +2170,7 @@ msgstr "E&inzug verkleinern"
 
 #: ../../stemenum.cpp:480
 msgid "Decrease indent of selected text or current line"
-msgstr ""
-"Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts verkleinern"
+msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts verkleinern"
 
 #: ../../stemenum.cpp:487
 msgid "&Join selected lines\tCtrl-J"
@@ -2088,9 +2194,7 @@ msgstr "Ta&bulatoren -> Leerzeichen"
 
 #: ../../stemenum.cpp:495
 msgid "Convert tabs to spaces in selection or current line"
-msgstr ""
-"Tabulatoren im ausgewählten Text bzw. in der aktuellen Zeile in Leerzeichen "
-"verwandeln"
+msgstr "Tabulatoren im ausgewählten Text bzw. in der aktuellen Zeile in Leerzeichen verwandeln"
 
 #: ../../stemenum.cpp:496
 msgid "Convert s&paces to tabs"
@@ -2098,9 +2202,7 @@ msgstr "&Leerzeichen -> Tabulatoren"
 
 #: ../../stemenum.cpp:496
 msgid "Convert spaces to tabs in selection or current line"
-msgstr ""
-"Leerzeichen im ausgewählten Text bzw. in der aktuellen Zeile in Tabulatoren "
-"verwandeln"
+msgstr "Leerzeichen im ausgewählten Text bzw. in der aktuellen Zeile in Tabulatoren verwandeln"
 
 #: ../../stemenum.cpp:503
 msgid "Convert &EOL characters..."
@@ -2116,9 +2218,7 @@ msgstr "Lee&re Zeichen am Ende entfernen\tStrg-W"
 
 #: ../../stemenum.cpp:510
 msgid "Remove whitespace at the ends of lines"
-msgstr ""
-"Leerzeichen und Tabulatoren am Ende der aktuellen Zeile bzw. der markierten "
-"Zeilen entfernen"
+msgstr "Leerzeichen und Tabulatoren am Ende der aktuellen Zeile bzw. der markierten Zeilen entfernen"
 
 #: ../../stemenum.cpp:517
 msgid "I&nsert text...\tCtrl-I"
@@ -2142,8 +2242,7 @@ msgstr "&Text am Fensterende wenden"
 
 #: ../../stemenum.cpp:545
 msgid "Wrap the text to fit inside window"
-msgstr ""
-"Text am rechten Fensterende wenden, um ihn an die Fenstergröße anzupassen"
+msgstr "Text am rechten Fensterende wenden, um ihn an die Fenstergröße anzupassen"
 
 #: ../../stemenum.cpp:552
 msgid "Show &EOL"
@@ -2481,7 +2580,8 @@ msgstr "Tabulatoren"
 msgid "Regexp"
 msgstr "Regular expression"
 
-#: ../../stenoteb.cpp:267 ../../stenoteb.cpp:292
+#: ../../stenoteb.cpp:267
+#: ../../stenoteb.cpp:292
 msgid ""
 "Maximum number of notebook pages exceeded,\n"
 "please close one first."
@@ -2489,7 +2589,8 @@ msgstr ""
 "Höchstzahl an Dokumenten wurde überschritten,\n"
 "bitte schließen Sie zuerst eines."
 
-#: ../../stenoteb.cpp:268 ../../stenoteb.cpp:293
+#: ../../stenoteb.cpp:268
+#: ../../stenoteb.cpp:293
 msgid "Too many pages opened"
 msgstr "Zu viele Dokumente"
 
@@ -2560,8 +2661,7 @@ msgid ""
 "Error loading editor config data, would you like to repair it?\n"
 "\n"
 msgstr ""
-"Fehler beim Laden der Konfigurationsdaten, sollen sie wiederhergestellt "
-"werden?\n"
+"Fehler beim Laden der Konfigurationsdaten, sollen sie wiederhergestellt werden?\n"
 "\n"
 
 #: ../../stestyls.cpp:759
@@ -2637,7 +2737,8 @@ msgstr "angegebene Konfigurationsdatei verwenden"
 msgid "input filenames(s)"
 msgstr "Dateinamen angeben"
 
-#: ../../wxstedit.cpp:240 ../../wxstedit.cpp:250
+#: ../../wxstedit.cpp:240
+#: ../../wxstedit.cpp:250
 msgid "Config file '"
 msgstr "Konfigurationsdatei '"
 
@@ -2787,3 +2888,4 @@ msgstr "Text in Kolonnen"
 #: ../../wx/stedit/steexprt.h:87
 msgid "Export file"
 msgstr "Datei exportieren"
+
