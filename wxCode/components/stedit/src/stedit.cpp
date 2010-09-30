@@ -2446,7 +2446,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
 bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
 {
     // do we currently have a valid filename and datetime from loading?
-    if (GetFileName().GetFullPath().IsEmpty()) return false;
+    if (!GetDocumentSaved()) return false;
     if (!GetFileModificationTime().IsValid()) return false;
 
     wxLogNull nullLog; // no errors, we handle them ourselves
