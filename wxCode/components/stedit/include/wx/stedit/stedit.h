@@ -371,8 +371,10 @@ public :
     // ------------------------------------------------------------------------
     // Load/Save methods
 
+    bool GetDocumentSaved() const { return !GetFileName().GetPath().IsEmpty(); }
+
     // Can/Should this document be saved (has valid filename and is modified)
-    bool CanSave() { return GetModify() && GetFileName().GetFullPath().Length(); }
+    bool CanSave() { return GetModify() && GetDocumentSaved(); }
 
     // Load a file from the wxInputStream (probably a wxFileInputStream)
     //  The fileName is used only for the message on error
