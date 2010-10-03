@@ -120,8 +120,11 @@ class wxStEditApp : public wxApp
 {
 public:
     wxStEditApp() : wxApp(), m_frame(NULL) {}
+
     virtual bool OnInit();
     virtual int OnExit();
+    virtual void OnInitCmdLine(wxCmdLineParser& parser);
+    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
     void CreateShell();
     void OnMenuEvent(wxCommandEvent& event);
@@ -135,6 +138,9 @@ IMPLEMENT_APP(wxStEditApp)
 
 bool wxStEditApp::OnInit()
 {
+    //if (!wxApp::OnInit())
+    //    return false;
+
     SetAppName(STE_APPNAME);
 #if (wxVERSION_NUMBER >= 2900)
     SetAppDisplayName(STE_APPDISPLAYNAME);
@@ -449,6 +455,16 @@ int wxStEditApp::OnExit()
 {
     delete wxConfigBase::Set(NULL);
     return wxApp::OnExit();
+}
+
+void wxStEditApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+    wxApp::OnInitCmdLine(parser);
+}
+
+bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+    return wxApp::OnCmdLineParsed(parser);
 }
 
 void wxStEditApp::CreateShell()
