@@ -51,12 +51,12 @@
 
 #include "wx/cmdline.h"
 #include "wx/config.h"
-#include "wx/fileconf.h"
 #include "wx/dir.h"
 #include "wx/filename.h"
 #include "wx/html/htmlwin.h"
 
 #include "../../src/wxext.h" // wxLocale_Init()
+#include "app.h"
 
 #include "wxstedit_htm.hpp" // include docs
 #include "readme_htm.hpp"
@@ -68,36 +68,6 @@ enum Menu_IDs
     ID_SHOW_HELP      = ID_STE__LAST, // IDs greater than this won't conflict
     ID_SHOW_README,
     ID_TEST_STESHELL
-};
-
-// ----------------------------------------------------------------------------
-// wxCmdLineParser functions
-// ----------------------------------------------------------------------------
-
-#if (wxVERSION_NUMBER >= 2900)
-   #define WXT(a) a
-#else
-   #define WXT wxT
-#endif
-
-static const wxCmdLineEntryDesc cmdLineDesc[] =
-{
-    { wxCMD_LINE_SWITCH, WXT("h"), WXT("help"),   _("help on command line switches"),
-        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_OPTION_HELP },
-
-    { wxCMD_LINE_SWITCH, WXT("1"), WXT("single"), _("single file mode"),
-        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-
-    { wxCMD_LINE_SWITCH, WXT("r"), WXT("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
-        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-
-    { wxCMD_LINE_OPTION, WXT("c"), WXT("config"), _("use config file"),
-        wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_NEEDS_SEPARATOR },
-
-    { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filenames(s)"),
-        wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
-
-    { wxCMD_LINE_NONE }
 };
 
 // ----------------------------------------------------------------------------
@@ -116,36 +86,11 @@ public:
 
 IMPLEMENT_CLASS(STEditorFrame, wxSTEditorFrame)
 
-// ----------------------------------------------------------------------------
-// wxStEditApp - the application class
-// ----------------------------------------------------------------------------
-class wxStEditApp : public wxApp
-{
-public:
-    wxStEditApp() : wxApp() {}
-
-    virtual bool OnInit();
-    virtual int OnExit();
-    virtual void OnInitCmdLine(wxCmdLineParser& parser);
-    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-
-    void CreateShell();
-    wxFrame* CreateHelpFrame(const wxString& caption, const char* text);
-    void OnMenuEvent(wxCommandEvent& event);
-    void OnSTEShellEvent(wxSTEditorEvent& event);
-
-    STEditorFrame* GetTopWindow()
-    {
-        return wxStaticCast(wxApp::GetTopWindow(), STEditorFrame);
-    }
-    wxLocale m_locale;
-};
-
 IMPLEMENT_APP(wxStEditApp)
 
 bool wxStEditApp::OnInit()
 {
-    //if (!wxApp::OnInit())
+    //if (!wxApp::OnInit()) // parse command line
     //    return false;
 
     SetAppName(STE_APPNAME);
@@ -218,112 +163,10 @@ bool wxStEditApp::OnInit()
     // ------------------------------------------------------------------------
     // Read the command line and get the filenames/options, if any
 
-    wxArrayString fileNames;
-    wxCmdLineParser parser(cmdLineDesc, argc, argv);
     bool recurse = false;
-
-/*
-    // test code for looking at the args passed in
-    for (int k = 0; k < argc; k++)
-    {
-        wxArrayString a = parser.ConvertStringToArgs(argv[k]);
-        for (int n=0; n < a.GetCount(); n++)
-        {
-            wxPrintf(wxT("Arg %d #%d '%s'\n"), k, n, a[n].wx_str()); fflush(stdout);
-        }
-    }
-*/
-
-    switch ( parser.Parse() )
-    {
-        case -1 :
-        {
-            // help should be given by the wxCmdLineParser, exit program
-            return false;
-        }
-        case 0:
-        {
-            // use single page, else use a notebook of editors
-            if (parser.Found(wxT("1")))
-            {
-                steOptions.SetFrameOption(STF_CREATE_NOTEBOOK, false);
-                steOptions.SetFrameOption(STF_CREATE_SINGLEPAGE, true);
-                steOptions.GetMenuManager()->CreateForSinglePage();
-            }
-            else
-            {
-                steOptions.SetFrameOption(STF_CREATE_SIDEBAR, true);
-                steOptions.GetMenuManager()->CreateForNotebook();
-            }
-
-            // use specified config file to load saved prefs, styles, langs
-            wxString configFile;
-            if (parser.Found(wxT("c"), &configFile))
-            {
-                wxFileName fN(configFile);
-
-                if ( !fN.FileExists() )
-                {
-                    //wxLogMessage(wxT("Config file '")+configFile+wxT("' does not exist."));
-                    if (configFile.IsEmpty() || !fN.IsOk() || wxIsWild(configFile))
-                    {
-                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' has an invalid name.\nContinue without using a config file?"), configFile.wx_str()),
-                                               _("Invalid config file name"),
-                                               wxICON_QUESTION|wxYES_NO);
-                        if (ret == wxNO)
-                            return false;
-
-                        configFile = wxEmptyString;
-                    }
-                    else // file doesn't exist, ask if they want to create a new one
-                    {
-                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' does not exist.\nWould you like to create a new one?"), configFile.wx_str()),
-                                               _("Invalid config file"),
-                                               wxICON_QUESTION|wxYES_NO|wxCANCEL);
-                        if (ret == wxCANCEL)
-                            return false;
-                        else if (ret == wxNO)
-                            configFile = wxEmptyString;
-                    }
-                }
-
-                // use the specified config file, if it's still set
-                if ( configFile.Length() )
-                {
-                    wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
-                                                            configFile, wxEmptyString,
-                                                            wxCONFIG_USE_RELATIVE_PATH);
-                    wxConfigBase::Set((wxConfigBase*)config);
-                }
-                else // don't use any config file at all, disable saving
-                {
-                    steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
-                }
-            }
-            else
-            {
-                // Always use a wxFileConfig since I don't care for registry entries.
-                wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"));
-                wxConfigBase::Set((wxConfigBase*)config);
-            }
-
-            // they want to open the files recursively
-            if (parser.Found(wxT("r")))
-                recurse = true;
-
-            // gather up all the filenames to load
-            size_t n, count = parser.GetParamCount();
-            for (n = 0; n < count; n++)
-                fileNames.Add(parser.GetParam(n));
-
-            break;
-        }
-        default:
-        {
-            wxLogMessage(wxT("Unknown command line option, aborting."));
-            return false;
-        }
-    }
+    wxArrayString fileNames;
+    if (!ParseCmdLine(&fileNames, &steOptions, &recurse))
+        return false;
 
     // Remove the Help menu since wxMac will pull out the wxID_ABOUT to add to
     // the system menu and then hide the Help menu. Later on when we add items
@@ -465,14 +308,9 @@ int wxStEditApp::OnExit()
     return wxApp::OnExit();
 }
 
-void wxStEditApp::OnInitCmdLine(wxCmdLineParser& parser)
+STEditorFrame* wxStEditApp::GetTopWindow()
 {
-    wxApp::OnInitCmdLine(parser);
-}
-
-bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
-{
-    return wxApp::OnCmdLineParsed(parser);
+    return wxStaticCast(wxApp::GetTopWindow(), STEditorFrame);
 }
 
 void wxStEditApp::CreateShell()
