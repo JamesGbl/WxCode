@@ -130,6 +130,7 @@ public:
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
     void CreateShell();
+    wxFrame* CreateHelpFrame(const wxString& caption, const char* text);
     void OnMenuEvent(wxCommandEvent& event);
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
@@ -520,43 +521,37 @@ void wxStEditApp::CreateShell()
     dialog.ShowModal();
 }
 
+wxFrame* wxStEditApp::CreateHelpFrame(const wxString& caption, const char* text)
+{
+    wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
+       caption,
+       wxDefaultPosition, wxSize(600,400));
+    wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
+    if (htmlWin->SetPage(::stc2wx(text))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
+    {
+        helpFrame->Centre();
+        helpFrame->Show();
+    }
+    else
+    {
+        wxDELETE(helpFrame);
+    }
+    return helpFrame;
+}
+
 void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
 {
     switch (event.GetId())
     {
-        case ID_SHOW_HELP :
-        {
-            wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
-               wxString::Format(_("Help for %s"), STE_APPDISPLAYNAME),
-               wxDefaultPosition, wxSize(600,400));
-            wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(::stc2wx((const char*)wxstedit_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
-            {
-                helpFrame->Centre();
-                helpFrame->Show();
-            }
-            else
-                delete helpFrame;
-
+        case ID_SHOW_HELP:
+            CreateHelpFrame(wxString::Format(_("Help for %s"), STE_APPDISPLAYNAME), (const char*)wxstedit_htm);
             break;
-        }
-        case ID_SHOW_README :
-        {
-            wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
-               wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME),
-               wxDefaultPosition, wxSize(600,400));
-            wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-            if (htmlWin->SetPage(::stc2wx((const char*)readme_htm))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
-            {
-                helpFrame->Centre();
-                helpFrame->Show();
-            }
-            else
-                delete helpFrame;
-
+        case ID_SHOW_README:
+            CreateHelpFrame(wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME), (const char*)readme_htm);
             break;
-        }
-        case ID_TEST_STESHELL : CreateShell(); break;
+        case ID_TEST_STESHELL :
+            CreateShell();
+            break;
         default:
             event.Skip();
             break;
