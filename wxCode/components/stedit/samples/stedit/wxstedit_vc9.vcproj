@@ -430,7 +430,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\wxstedit.cpp"
+				RelativePath=".\app.cpp"
 				>
 			</File>
 			<File

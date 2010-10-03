@@ -224,7 +224,7 @@
 		<Linker>
 			<Add directory="$(#WX.lib)" />
 		</Linker>
-		<Unit filename="wxstedit.cpp" />
+		<Unit filename="app.cpp" />
 		<Unit filename="cmdline.cpp" />
 		<Unit filename="wxstedit.rc">
 			<Option compilerVar="WINDRES" />
