@@ -105,13 +105,16 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
 // ----------------------------------------------------------------------------
 class STEditorFrame : public wxSTEditorFrame
 {
+    DECLARE_CLASS(STEditorFrame)
 public:
-   STEditorFrame() : wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
-                                      wxDefaultPosition, wxSize(800,600))
-   {
-      m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
-   }
+    STEditorFrame() : wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME,
+                                       wxDefaultPosition, wxSize(800,600))
+    {
+        m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
+    }
 };
+
+IMPLEMENT_CLASS(STEditorFrame, wxSTEditorFrame)
 
 // ----------------------------------------------------------------------------
 // wxStEditApp - the application class
@@ -119,7 +122,7 @@ public:
 class wxStEditApp : public wxApp
 {
 public:
-    wxStEditApp() : wxApp(), m_frame(NULL) {}
+    wxStEditApp() : wxApp() {}
 
     virtual bool OnInit();
     virtual int OnExit();
@@ -130,7 +133,10 @@ public:
     void OnMenuEvent(wxCommandEvent& event);
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
-    STEditorFrame* m_frame;
+    STEditorFrame* GetTopWindow()
+    {
+        return wxStaticCast(wxApp::GetTopWindow(), STEditorFrame);
+    }
     wxLocale m_locale;
 };
 
@@ -331,18 +337,18 @@ bool wxStEditApp::OnInit()
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
 
     // ------------------------------------------------------------------------
-    m_frame = new STEditorFrame();
+    STEditorFrame* frame = new STEditorFrame();
 
     // ------------------------------------------------------------------------
     // load the prefs/style/langs from the config, if we're using one
-    if (m_frame->GetConfigBase())
-        steOptions.LoadConfig(*m_frame->GetConfigBase());
+    if (frame->GetConfigBase())
+        steOptions.LoadConfig(*frame->GetConfigBase());
 
     // must call this if you want any of the options, else blank frame
-    m_frame->CreateOptions(steOptions);
+    frame->CreateOptions(steOptions);
 
     // Get the "Help" menu
-    wxMenu* menu = new wxMenu; //m_frame->GetMenuBar()->GetMenu(m_frame->GetMenuBar()->GetMenuCount()-1);
+    wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
 
     wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, _("&About..."), _("About this program"));
     item->SetBitmap(wxBitmap(pencil16_xpm));
@@ -353,18 +359,18 @@ bool wxStEditApp::OnInit()
     menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
-    m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
+    frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-    m_frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
+    frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
     // add menu item for testing the shell
     menu->AppendSeparator();
     menu->Append(ID_TEST_STESHELL, _("Test STE shell..."), _("Test the STE shell component"));
-    m_frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
+    frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
-    m_frame->GetMenuBar()->Append(menu, _("&Help"));
+    frame->GetMenuBar()->Append(menu, _("&Help"));
 
     // ------------------------------------------------------------------------
     // handle loading the files
@@ -372,9 +378,9 @@ bool wxStEditApp::OnInit()
     wxArrayString badFileNames;
 
     // handle recursive file loading
-    if (recurse && m_frame->GetEditorNotebook())
+    if (recurse && frame->GetEditorNotebook())
     {
-        int max_page_count = m_frame->GetEditorNotebook()->GetMaxPageCount();
+        int max_page_count = frame->GetEditorNotebook()->GetMaxPageCount();
 
         wxArrayString recurseFileNames;
         for (n = 0; n < fileNames.GetCount(); n++)
@@ -388,7 +394,7 @@ bool wxStEditApp::OnInit()
             if ((int)recurseFileNames.GetCount() >= max_page_count)
             {
                 wxString msg = wxString::Format(_("Opening %d files, unable to open any more."), max_page_count);
-                wxMessageBox(msg, _("Maximum number of files"), wxOK|wxICON_ERROR, m_frame);
+                wxMessageBox(msg, _("Maximum number of files"), wxOK|wxICON_ERROR, frame);
                 recurseFileNames.RemoveAt(max_page_count - 1, recurseFileNames.GetCount() - max_page_count);
                 break;
             }
@@ -420,22 +426,23 @@ bool wxStEditApp::OnInit()
     if (fileNames.GetCount() > 0u)
     {
         if (wxFileExists(fileNames[0]))
-            m_frame->GetEditor()->LoadFile( fileNames[0] );
+            frame->GetEditor()->LoadFile( fileNames[0] );
         else
         {
             // fix the path to the new file using the command line path
             wxFileName fn(fileNames[0]);
             fn.Normalize();
-            m_frame->GetEditor()->NewFile( fn.GetFullPath() );
+            frame->GetEditor()->NewFile( fn.GetFullPath() );
         }
 
         fileNames.RemoveAt(0);
         if (steOptions.HasFrameOption(STF_CREATE_NOTEBOOK) && fileNames.GetCount())
-            m_frame->GetEditorNotebook()->LoadFiles( &fileNames );
+            frame->GetEditorNotebook()->LoadFiles( &fileNames );
     }
-    //m_frame->ShowSidebar(false);
+    //frame->ShowSidebar(false);
     //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX; // trac.wxwidgets.org/ticket/11947
-    m_frame->Show();
+    frame->Show();
+    SetTopWindow(frame);
 
     // filenames had *, ? or other junk so we didn't load them
     if (badFileNames.GetCount())
@@ -445,7 +452,7 @@ bool wxStEditApp::OnInit()
             msg += wxT("'") + badFileNames[n] + wxT("'\n");
 
         wxMessageBox(msg, _("Unable to load file(s)"), wxOK|wxICON_ERROR,
-                     m_frame);
+                     frame);
     }
 
     return true;
@@ -469,7 +476,9 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void wxStEditApp::CreateShell()
 {
-    wxDialog dialog(m_frame, wxID_ANY, wxT("wxSTEditorShell"),
+    STEditorFrame* frame = GetTopWindow();
+
+    wxDialog dialog(frame, wxID_ANY, wxT("wxSTEditorShell"),
                     wxDefaultPosition, wxDefaultSize,
                     wxDEFAULT_DIALOG_STYLE_RESIZE);
     wxSTEditorShell* shell = new wxSTEditorShell(&dialog, wxID_ANY);
@@ -482,8 +491,8 @@ void wxStEditApp::CreateShell()
     prefs.SetPrefInt(STE_PREF_VIEW_MARKERMARGIN, 1);
     prefs.SetPrefInt(STE_PREF_VIEW_FOLDMARGIN, 0);
     shell->RegisterPrefs(prefs);
-    shell->RegisterStyles(m_frame->GetOptions().GetEditorStyles());
-    shell->RegisterLangs(m_frame->GetOptions().GetEditorLangs());
+    shell->RegisterStyles(frame->GetOptions().GetEditorStyles());
+    shell->RegisterLangs(frame->GetOptions().GetEditorLangs());
     shell->SetLanguage(STE_LANG_PYTHON); // arbitrarily set to python
 
     shell->BeginWriteable();
@@ -517,7 +526,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
     {
         case ID_SHOW_HELP :
         {
-            wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
+            wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
                wxString::Format(_("Help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
@@ -533,7 +542,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         }
         case ID_SHOW_README :
         {
-            wxFrame *helpFrame = new wxFrame(m_frame, wxID_ANY, 
+            wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
                wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME),
                wxDefaultPosition, wxSize(600,400));
             wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
