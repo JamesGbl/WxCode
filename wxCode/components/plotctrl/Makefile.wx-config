@@ -6,7 +6,7 @@
 #----------------------------------------------------------------------------
 
 # Always try to build all targets, let the other Makefiles do dep checking
-.PHONY: all clean library sample
+.PHONY: all clean lib samples
 
 #----------------------------------------------------------------------------
 
