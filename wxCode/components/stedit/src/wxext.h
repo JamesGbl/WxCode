@@ -21,8 +21,13 @@
 #define WXK_FULLSCREEN WXK_F11
 
 WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
+WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 
 WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
+WXDLLIMPEXP_CODE void wxLocale_GetSupportedLanguages(LanguageArray*);
+WXDLLIMPEXP_CODE bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
+WXDLLIMPEXP_CODE bool wxLocale_Find(const wxString&, enum wxLanguage*);
+
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 
 WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&);
@@ -32,6 +37,12 @@ WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&)
 
 WXDLLIMPEXP_CODE extern const wxSize wxIconSize_System;
 WXDLLIMPEXP_CODE extern const wxSize wxIconSize_Small;
+
+#if (wxVERSION_NUMBER >= 2900)
+#define wxMessageBoxCaption wxTheApp->GetAppDisplayName()
+#else
+#define wxMessageBoxCaption wxTheApp->GetAppName()
+#endif
 
 #ifdef _WX_STOCKITEM_H_
 #if (wxVERSION_NUMBER < 2901)

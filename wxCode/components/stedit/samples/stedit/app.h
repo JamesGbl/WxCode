@@ -1,14 +1,26 @@
 // app.h
 
+class CommandLine
+{
+// Attributes
+public:
+   enum wxLanguage m_lang;
+   wxArrayString m_fileNames;
+   bool m_recurse;
+
+// Construction
+public:
+   CommandLine();
+};
+
 // ----------------------------------------------------------------------------
 // wxStEditApp - the application class
 // ----------------------------------------------------------------------------
 class STEditorFrame;
-
 class wxStEditApp : public wxApp
 {
 public:
-    wxStEditApp() : wxApp() {}
+    wxStEditApp();
 
     virtual bool OnInit();
     virtual int OnExit();
@@ -22,5 +34,8 @@ public:
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
     STEditorFrame* GetTopWindow();
+protected:
+    wxSTEditorOptions steOptions;
+    CommandLine m_cmdline;
     wxLocale m_locale;
 };

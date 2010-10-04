@@ -11,6 +11,7 @@
 #include "precomp.h"
 
 #include "wx/stedit/stedefs.h"
+#include "wx/dir.h"
 
 #include "wxext.h"
 
@@ -38,6 +39,67 @@ bool wxLocale_Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage l
    if (ok)
    {
       locale->AddCatalog(exetitle, (enum wxLanguage)locale->GetLanguage(), wxEmptyString);
+   }
+   return ok;
+}
+
+bool wxLocale_Find(const wxString& str, enum wxLanguage* lang)
+{
+   const size_t len = str.Length();
+   for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
+   {
+      const wxLanguageInfo* info = wxLocale::GetLanguageInfo(i);
+      if (   info
+          && (   (0 == str.CmpNoCase(info->CanonicalName))
+              || (0 == str.CmpNoCase(info->CanonicalName.Left(len)))
+             )
+          )
+      {
+         *lang = (enum wxLanguage)i;
+         return true;
+      }
+   }
+   return false;
+}
+
+void wxLocale_GetSupportedLanguages(LanguageArray* array)
+{
+   wxFileName filename(wxTheApp->argv[0]);
+   filename.SetFullName(wxEmptyString);
+   filename.AppendDir(wxT("locale"));
+   wxDir dir;
+   if (dir.Open(filename.GetFullPath()))
+   {
+      const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
+      wxString str;
+      array->Add(default_lang);
+      for (bool cont = dir.GetFirst(&str, wxEmptyString, wxDIR_DIRS);
+           cont;
+           cont = dir.GetNext(&str))
+      {
+         enum wxLanguage lang;
+         if (   wxLocale_Find(str, &lang)
+             && (lang != default_lang))
+         {
+            array->Add(lang);
+         }
+      }
+   }
+}
+
+bool wxLocale_SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
+{
+   wxArrayString as;
+   for (size_t i = 0; i < array.GetCount(); i++)
+   {
+      enum wxLanguage temp = (enum wxLanguage)array.Item(i);
+      as.Add(wxLocale::GetLanguageName(temp));
+   }
+   int index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
+   bool ok = (index != wxNOT_FOUND);
+   if (ok)
+   {
+      *lang = (enum wxLanguage)array.Item(index);
    }
    return ok;
 }

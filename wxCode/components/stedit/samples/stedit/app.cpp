@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Name:        wxstedit.cpp
+// Name:        app.cpp
 // Purpose:     Simple wxSTEditor app
 // Author:      John Labenski
 // Modified by:
@@ -88,16 +88,20 @@ IMPLEMENT_CLASS(STEditorFrame, wxSTEditorFrame)
 
 IMPLEMENT_APP(wxStEditApp)
 
+wxStEditApp::wxStEditApp() : wxApp(), steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS)
+{
+}
+
 bool wxStEditApp::OnInit()
 {
-    //if (!wxApp::OnInit()) // parse command line
-    //    return false;
+    if (!wxApp::OnInit()) // parse command line
+        return false;
 
     SetAppName(STE_APPNAME);
 #if (wxVERSION_NUMBER >= 2900)
     SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
-    ::wxLocale_Init(&m_locale, STE_APPNAME);
+    ::wxLocale_Init(&m_locale, STE_APPNAME, m_cmdline.m_lang);
     //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_SPANISH);
 
     // Create a set of options for your editing "system."
@@ -160,14 +164,6 @@ bool wxStEditApp::OnInit()
     // end sample code
     // =======================================================================
 
-    // ------------------------------------------------------------------------
-    // Read the command line and get the filenames/options, if any
-
-    bool recurse = false;
-    wxArrayString fileNames;
-    if (!ParseCmdLine(&fileNames, &steOptions, &recurse))
-        return false;
-
     // Remove the Help menu since wxMac will pull out the wxID_ABOUT to add to
     // the system menu and then hide the Help menu. Later on when we add items
     // to the help menu, they'll be hidden too.
@@ -220,9 +216,10 @@ bool wxStEditApp::OnInit()
     // handle loading the files
     size_t n;
     wxArrayString badFileNames;
+    wxArrayString fileNames = m_cmdline.m_fileNames;
 
     // handle recursive file loading
-    if (recurse && frame->GetEditorNotebook())
+    if (m_cmdline.m_recurse && frame->GetEditorNotebook())
     {
         int max_page_count = frame->GetEditorNotebook()->GetMaxPageCount();
 

@@ -14,6 +14,7 @@
 #include "wx/cmdline.h"
 #include "wx/fileconf.h"
 #include "wx/stedit/stedit.h"
+#include "../../src/wxext.h"
 
 #include "app.h"
 
@@ -21,17 +22,31 @@
 // wxCmdLineParser functions
 // ----------------------------------------------------------------------------
 
+CommandLine::CommandLine()
+{
+    m_lang = wxLANGUAGE_DEFAULT;
+    m_recurse = false;
+}
+
 #if (wxVERSION_NUMBER >= 2900)
    #define WXT(a) a
 #else
    #define WXT wxT
 #endif
 
+enum parm
+{
+   enum_parm_single,
+   enum_parm_recurse,
+   enum_parm_config,
+   enum_parm_filenames,
+   enum_parm_lang,
+   enum_parm_langdialog,
+   enum_parm_enumcount
+};
+
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
-    { wxCMD_LINE_SWITCH, WXT("h"), WXT("help"),   _("help on command line switches"),
-        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_OPTION_HELP },
-
     { wxCMD_LINE_SWITCH, WXT("1"), WXT("single"), _("single file mode"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
@@ -44,125 +59,107 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
     { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filenames(s)"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
 
-    { wxCMD_LINE_NONE }
+    { wxCMD_LINE_OPTION, WXT("l"       ), WXT("lang"), _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_SWITCH, NULL           , WXT("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+
+    { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 },
 };
-
-bool wxStEditApp::ParseCmdLine(wxArrayString* fileNames, wxSTEditorOptions* steOptions, bool* recurse) // TODO: remove and use OnInitCmdLine + OnCmdLineParsed instead
-{
-    wxCmdLineParser parser(cmdLineDesc, argc, argv);
-
-/*
-    // test code for looking at the args passed in
-    for (int k = 0; k < argc; k++)
-    {
-        wxArrayString a = parser.ConvertStringToArgs(argv[k]);
-        for (int n=0; n < a.GetCount(); n++)
-        {
-            wxPrintf(wxT("Arg %d #%d '%s'\n"), k, n, a[n].wx_str()); fflush(stdout);
-        }
-    }
-*/
-
-    switch ( parser.Parse() )
-    {
-        case -1 :
-        {
-            // help should be given by the wxCmdLineParser, exit program
-            return false;
-        }
-        case 0:
-        {
-            // use single page, else use a notebook of editors
-            if (parser.Found(wxT("1")))
-            {
-                steOptions->SetFrameOption(STF_CREATE_NOTEBOOK, false);
-                steOptions->SetFrameOption(STF_CREATE_SINGLEPAGE, true);
-                steOptions->GetMenuManager()->CreateForSinglePage();
-            }
-            else
-            {
-                steOptions->SetFrameOption(STF_CREATE_SIDEBAR, true);
-                steOptions->GetMenuManager()->CreateForNotebook();
-            }
-
-            // use specified config file to load saved prefs, styles, langs
-            wxString configFile;
-            if (parser.Found(wxT("c"), &configFile))
-            {
-                wxFileName fN(configFile);
-
-                if ( !fN.FileExists() )
-                {
-                    //wxLogMessage(wxT("Config file '")+configFile+wxT("' does not exist."));
-                    if (configFile.IsEmpty() || !fN.IsOk() || wxIsWild(configFile))
-                    {
-                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' has an invalid name.\nContinue without using a config file?"), configFile.wx_str()),
-                                               _("Invalid config file name"),
-                                               wxICON_QUESTION|wxYES_NO);
-                        if (ret == wxNO)
-                            return false;
-
-                        configFile = wxEmptyString;
-                    }
-                    else // file doesn't exist, ask if they want to create a new one
-                    {
-                        int ret = wxMessageBox(wxString::Format(_("Config file '%s' does not exist.\nWould you like to create a new one?"), configFile.wx_str()),
-                                               _("Invalid config file"),
-                                               wxICON_QUESTION|wxYES_NO|wxCANCEL);
-                        if (ret == wxCANCEL)
-                            return false;
-                        else if (ret == wxNO)
-                            configFile = wxEmptyString;
-                    }
-                }
-
-                // use the specified config file, if it's still set
-                if ( configFile.Length() )
-                {
-                    wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
-                                                            configFile, wxEmptyString,
-                                                            wxCONFIG_USE_RELATIVE_PATH);
-                    wxConfigBase::Set((wxConfigBase*)config);
-                }
-                else // don't use any config file at all, disable saving
-                {
-                    steOptions->GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
-                }
-            }
-            else
-            {
-                // Always use a wxFileConfig since I don't care for registry entries.
-                wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"));
-                wxConfigBase::Set((wxConfigBase*)config);
-            }
-
-            // they want to open the files recursively
-            if (parser.Found(wxT("r")))
-                *recurse = true;
-
-            // gather up all the filenames to load
-            size_t n, count = parser.GetParamCount();
-            for (n = 0; n < count; n++)
-                fileNames->Add(parser.GetParam(n));
-
-            break;
-        }
-        default:
-        {
-            wxLogMessage(wxT("Unknown command line option, aborting."));
-            return false;
-        }
-    }
-    return true;
-}
+#define C_ASSERT_(n,e) typedef char __C_ASSERT__##n[(e)?1:-1]
+C_ASSERT_(1,WXSIZEOF(cmdLineDesc) == (enum_parm_enumcount + 1));
 
 void wxStEditApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
+    parser.SetDesc(cmdLineDesc);
     wxApp::OnInitCmdLine(parser);
 }
 
 bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
+    // use single page, else use a notebook of editors
+    if (parser.Found(cmdLineDesc[enum_parm_single].longName))
+    {
+        steOptions.SetFrameOption(STF_CREATE_NOTEBOOK, false);
+        steOptions.SetFrameOption(STF_CREATE_SINGLEPAGE, true);
+        steOptions.GetMenuManager()->CreateForSinglePage();
+    }
+    else
+    {
+        steOptions.SetFrameOption(STF_CREATE_SIDEBAR, true);
+        steOptions.GetMenuManager()->CreateForNotebook();
+    }
+
+    // use specified config file to load saved prefs, styles, langs
+    wxString configFile;
+    if (parser.Found(cmdLineDesc[enum_parm_config].longName, &configFile))
+    {
+        wxFileName fN(configFile);
+
+        if ( !fN.FileExists() )
+        {
+            //wxLogMessage(wxT("Config file '")+configFile+wxT("' does not exist."));
+            if (configFile.IsEmpty() || !fN.IsOk() || wxIsWild(configFile))
+            {
+                int ret = wxMessageBox(wxString::Format(_("Config file '%s' has an invalid name.\nContinue without using a config file?"), configFile.wx_str()),
+                                       _("Invalid config file name"),
+                                       wxICON_QUESTION|wxYES_NO);
+                if (ret == wxNO)
+                    return false;
+
+                configFile = wxEmptyString;
+            }
+            else // file doesn't exist, ask if they want to create a new one
+            {
+                int ret = wxMessageBox(wxString::Format(_("Config file '%s' does not exist.\nWould you like to create a new one?"), configFile.wx_str()),
+                                       _("Invalid config file"),
+                                       wxICON_QUESTION|wxYES_NO|wxCANCEL);
+                if (ret == wxCANCEL)
+                    return false;
+                else if (ret == wxNO)
+                    configFile = wxEmptyString;
+            }
+        }
+
+        // use the specified config file, if it's still set
+        if ( configFile.Length() )
+        {
+            wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
+                                                    configFile, wxEmptyString,
+                                                    wxCONFIG_USE_RELATIVE_PATH);
+            wxConfigBase::Set((wxConfigBase*)config);
+        }
+        else // don't use any config file at all, disable saving
+        {
+            steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
+        }
+    }
+    else
+    {
+        // Always use a wxFileConfig since I don't care for registry entries.
+        wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"));
+        wxConfigBase::Set((wxConfigBase*)config);
+    }
+
+    // they want to open the files recursively
+    if (parser.Found(cmdLineDesc[enum_parm_recurse].longName))
+        m_cmdline.m_recurse = true;
+
+    // gather up all the filenames to load
+    size_t n, count = parser.GetParamCount();
+    for (n = 0; n < count; n++)
+        m_cmdline.m_fileNames.Add(parser.GetParam(n));
+
+    wxString str;
+    if (parser.Found(cmdLineDesc[enum_parm_lang].longName, &str))
+    {
+        if (str.Length()) wxLocale_Find(str, &m_cmdline.m_lang);
+    }
+    
+    if (parser.Found(cmdLineDesc[enum_parm_langdialog].longName))
+    {
+        LanguageArray array;
+        wxLocale_GetSupportedLanguages(&array);
+        wxLocale_SingleChoice(array, &m_cmdline.m_lang);
+    }
+
     return wxApp::OnCmdLineParsed(parser);
 }
-
