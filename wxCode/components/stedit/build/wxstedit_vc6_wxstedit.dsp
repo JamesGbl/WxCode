@@ -900,7 +900,15 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\samples\stedit\wxstedit.cpp
+SOURCE=..\samples\stedit\app.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\stedit\cmdline.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\stedit\link.cpp
 # End Source File
 # Begin Source File
 
@@ -910,6 +918,10 @@ SOURCE=..\samples\stedit\wxstedit.rc
 # Begin Group "Header Files"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\samples\stedit\app.h
+# End Source File
 # Begin Source File
 
 SOURCE=..\samples\stedit\readme_htm.hpp

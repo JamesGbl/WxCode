@@ -26,6 +26,9 @@ aclocal_maj=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\(
 aclocal_min=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\2/'`
 aclocal_rel=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\3/'`
 
+# For versions without a release number, set it to 0
+if [ "a$aclocal_rel" = "a" ]; then aclocal_rel=0; fi
+
 aclocal_minimal_maj=1
 aclocal_minimal_min=9
 aclocal_minimal_rel=6
@@ -35,8 +38,10 @@ minok=$(($aclocal_maj == $aclocal_minimal_maj && $aclocal_min > $aclocal_minimal
 relok=$(($aclocal_maj == $aclocal_minimal_maj && $aclocal_min == $aclocal_minimal_min && \
          $aclocal_rel >= $aclocal_minimal_rel))
 
+
 versionok=$(($majok == 1 || $minok == 1 || $relok == 1))
 if [[ "$versionok" = "0" ]]; then aclocalold; fi
+
 
 # we can safely proceed
 me=$(basename $0)

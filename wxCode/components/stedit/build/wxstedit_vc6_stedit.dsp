@@ -868,6 +868,14 @@ LIB32=link.exe -lib
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\src\precomp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\steart.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\stedit.cpp
 # End Source File
 # Begin Source File
@@ -928,10 +936,6 @@ SOURCE=..\src\stestyls.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\steart.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\wxext.cpp
 # End Source File
 # End Group
@@ -945,6 +949,10 @@ SOURCE=..\include\wx\stedit\pairarr.h
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\setup0.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\stedit\steart.h
 # End Source File
 # Begin Source File
 
@@ -1005,14 +1013,6 @@ SOURCE=..\include\wx\stedit\stesplit.h
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\stestyls.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\include\wx\stedit\wx24defs.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\wxext.h
 # End Source File
 # End Group
 # End Target
