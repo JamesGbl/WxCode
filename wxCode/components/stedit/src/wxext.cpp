@@ -12,10 +12,12 @@
 
 #include "wx/stedit/stedefs.h"
 #include "wx/dir.h"
+#include "wx/stdpaths.h"
+#include "wx/cmdline.h"
 
 #include "wxext.h"
 
-#include <wx/arrimpl.cpp>
+#include "wx/arrimpl.cpp"
 WX_DEFINE_OBJARRAY(AcceleratorArray)
 
 const wxSize wxIconSize_System(wxSystemSettings::GetMetric(wxSYS_ICON_X     ), wxSystemSettings::GetMetric(wxSYS_ICON_Y     ));
@@ -23,7 +25,7 @@ const wxSize wxIconSize_Small (wxSystemSettings::GetMetric(wxSYS_SMALLICON_X), w
 
 bool wxGetExeFolder(wxFileName* filename)
 {
-   filename->Assign(wxTheApp->argv[0]);
+   filename->Assign(wxStandardPaths::Get().GetExecutablePath());
    filename->SetFullName(wxEmptyString);
    return filename->IsOk();
 }
@@ -62,13 +64,14 @@ bool wxLocale_Find(const wxString& str, enum wxLanguage* lang)
    return false;
 }
 
-void wxLocale_GetSupportedLanguages(LanguageArray* array)
+bool wxLocale_GetSupportedLanguages(LanguageArray* array)
 {
-   wxFileName filename(wxTheApp->argv[0]);
-   filename.SetFullName(wxEmptyString);
+   wxFileName filename;
+   wxGetExeFolder(&filename);
    filename.AppendDir(wxT("locale"));
    wxDir dir;
-   if (dir.Open(filename.GetFullPath()))
+   bool ok = dir.Open(filename.GetFullPath());
+   if (ok)
    {
       const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
       wxString str;
@@ -85,6 +88,7 @@ void wxLocale_GetSupportedLanguages(LanguageArray* array)
          }
       }
    }
+   return ok;
 }
 
 bool wxLocale_SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
@@ -401,3 +405,11 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
    }
 }
 #endif
+
+void wxUsage()
+{
+   wxCmdLineParser parser;
+   wxTheApp->OnInitCmdLine(parser);
+   parser.Usage();
+}
+

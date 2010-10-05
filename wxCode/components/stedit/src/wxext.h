@@ -24,9 +24,11 @@ WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 
 WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
-WXDLLIMPEXP_CODE void wxLocale_GetSupportedLanguages(LanguageArray*);
+WXDLLIMPEXP_CODE bool wxLocale_GetSupportedLanguages(LanguageArray*);
 WXDLLIMPEXP_CODE bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
 WXDLLIMPEXP_CODE bool wxLocale_Find(const wxString&, enum wxLanguage*);
+
+WXDLLIMPEXP_CODE void wxUsage();
 
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 
