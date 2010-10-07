@@ -3,11 +3,12 @@
 // License: wxWindows Library Licence, Version 3.1 - see LICENSE.txt
 
 #include "precomp.h"
+#include "wx/stdpaths.h"
 #include "wxext.h"
 
 bool wxGetExeFolder(wxFileName* filename)
 {
-   filename->Assign(wxTheApp->argv[0]);
+   filename->Assign(wxStandardPaths::Get().GetExecutablePath());
    filename->SetFullName(wxEmptyString);
    return filename->IsOk();
 }
