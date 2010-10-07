@@ -3,12 +3,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-06 12:42+0200\n"
-"PO-Revision-Date: 2010-09-29 11:14+0100\n"
-"Last-Translator: Troels K\n"
+"PO-Revision-Date: 2010-10-06 09:38+0100\n"
+"Last-Translator: Troels K <tk@tk.tk>\n"
 "Language-Team:  <www.totocalculator.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
 
 #: ../../stedit.cpp:1619
 #: ../../stedit.cpp:2952
@@ -17,13 +19,13 @@ msgstr "Aktueller Zeilenumbruch : "
 
 #: ../../stedit.cpp:1620
 msgid "Convert End of Line chars"
-msgstr "Zeilenumbrüche umwandeln"
+msgstr "ZeilenumbrÃ¼che umwandeln"
 
 #: ../../stedit.cpp:1640
 msgid "Scale font sizes : -10...20 (not all fonts supported)"
 msgstr ""
 "Skalierung: -10...20\n"
-"(nicht alle Fonts werden unterstützt)"
+"(nicht alle Fonts werden unterstÃ¼tzt)"
 
 #: ../../stedit.cpp:1642
 msgid "Change text font size"
@@ -35,21 +37,21 @@ msgstr "Unicode-Textdatei. Zu Ansi unwandeln?"
 
 #: ../../stedit.cpp:2203
 msgid "Load Unicode?"
-msgstr "Als Unicode öffnen?"
+msgstr "Als Unicode Ã¶ffnen?"
 
 #: ../../stedit.cpp:2263
 #: ../../stedit.cpp:2317
 msgid "This file is too large for this editor, sorry."
-msgstr "Die Datei ist für diesen Editor zu groß, sorry."
+msgstr "Die Datei ist fÃ¼r diesen Editor zu groÃŸ, sorry."
 
 #: ../../stedit.cpp:2264
 #: ../../stedit.cpp:2318
 msgid "Error loading file"
-msgstr "Fehler beim Öffnen der Datei"
+msgstr "Fehler beim Ã–ffnen der Datei"
 
 #: ../../stedit.cpp:2294
 msgid "Open file"
-msgstr "Datei öffnen"
+msgstr "Datei Ã¶ffnen"
 
 #: ../../stedit.cpp:2373
 msgid "Save file"
@@ -57,7 +59,7 @@ msgstr "Datei sichern"
 
 #: ../../stedit.cpp:2386
 msgid "Error opening file :'"
-msgstr "Fehler beim Öffnen der Datei :'"
+msgstr "Fehler beim Ã–ffnen der Datei :'"
 
 #: ../../stedit.cpp:2387
 msgid "Save file error"
@@ -73,11 +75,11 @@ msgstr "Neue Datei"
 
 #: ../../stedit.cpp:2436
 msgid "The filename contains wildcard characters."
-msgstr "Der Dateiname enthält Platzhalter"
+msgstr "Der Dateiname enthÃ¤lt Platzhalter"
 
 #: ../../stedit.cpp:2437
 msgid "Invalid filename"
-msgstr "Ungültiger Dateiname"
+msgstr "UngÃ¼ltiger Dateiname"
 
 #: ../../stedit.cpp:2483
 msgid ""
@@ -86,12 +88,12 @@ msgid ""
 "Would you like to save your file before closing?"
 msgstr ""
 "\n"
-"wurde geändert. Wollen Sie die Datei sichern,\n"
+"wurde geÃ¤ndert. Wollen Sie die Datei sichern,\n"
 "bevor sie geschlossen wird?"
 
 #: ../../stedit.cpp:2484
 msgid "Unsaved changes"
-msgstr "Nichtgesicherte Änderungen"
+msgstr "Nichtgesicherte Ã„nderungen"
 
 #: ../../stedit.cpp:2518
 msgid ""
@@ -99,7 +101,7 @@ msgid ""
 "Doesn't exist on disk anymore."
 msgstr ""
 "\n"
-"ist auf dem Datenträger nicht mehr vorhanden."
+"ist auf dem DatentrÃ¤ger nicht mehr vorhanden."
 
 #: ../../stedit.cpp:2519
 msgid "File removed from disk"
@@ -114,17 +116,17 @@ msgid ""
 "' has been modified externally.\n"
 "Would you like to reload the file?"
 msgstr ""
-"' wurde außerhalb des Programms geändert.\n"
+"' wurde auÃŸerhalb des Programms geÃ¤ndert.\n"
 "Wollen Sie die Datei neu laden?"
 
 #: ../../stedit.cpp:2534
 msgid "File changed on disk"
-msgstr "Datei auf Datenträger geändert"
+msgstr "Datei auf DatentrÃ¤ger geÃ¤ndert"
 
 #: ../../stedit.cpp:2675
 #, c-format
 msgid "Long l&ine guide column (%d)..."
-msgstr "&Spalte für &Markierung des rechten Randes (%d)..."
+msgstr "&Spalte fÃ¼r &Markierung des rechten Randes (%d)..."
 
 #: ../../stedit.cpp:2684
 #, c-format
@@ -143,7 +145,7 @@ msgstr "E&inschubbreite (%d)..."
 
 #: ../../stedit.cpp:2689
 msgid "&EOL Mode ("
-msgstr "&Zeilenumbrüche ("
+msgstr "&ZeilenumbrÃ¼che ("
 
 #: ../../stedit.cpp:2819
 msgid "Level to collapse all folds to"
@@ -169,7 +171,7 @@ msgstr "Editoreinstellungen"
 
 #: ../../stedit.cpp:2904
 msgid "Column to show long line marker"
-msgstr "Spalte für Markierung"
+msgstr "Spalte fÃ¼r Markierung"
 
 #: ../../stedit.cpp:2905
 msgid "Set long line marker"
@@ -193,7 +195,7 @@ msgstr "Einschubbreite"
 
 #: ../../stedit.cpp:2953
 msgid "Select EOL mode"
-msgstr "Modus für Zeichenumbruch"
+msgstr "Modus fÃ¼r Zeichenumbruch"
 
 #: ../../stedit.cpp:3090
 msgid "Find dialog"
@@ -274,11 +276,11 @@ msgstr "Show all styles"
 
 #: ../../stedlgs.cpp:698
 msgid "Choose the font's foreground color"
-msgstr "Wählen Sie die Vordergrundfarbe der Schriftart"
+msgstr "WÃ¤hlen Sie die Vordergrundfarbe der Schriftart"
 
 #: ../../stedlgs.cpp:715
 msgid "Choose the font's background color"
-msgstr "Wählen Sie die Hintergrundfarbe der Schriftart"
+msgstr "WÃ¤hlen Sie die Hintergrundfarbe der Schriftart"
 
 #: ../../stedlgs.cpp:1056
 #: ../../stedlgs.cpp:1421
@@ -287,7 +289,7 @@ msgstr "Stil"
 
 #: ../../stedlgs.cpp:1075
 msgid "Keywords"
-msgstr "Schlüsselwörter"
+msgstr "SchlÃ¼sselwÃ¶rter"
 
 #: ../../stedlgs.cpp:1378
 msgid "View"
@@ -295,7 +297,7 @@ msgstr "Ansicht"
 
 #: ../../stedlgs.cpp:1385
 msgid "Tabs and EOL"
-msgstr "Tabs, Umbrüche"
+msgstr "Tabs, UmbrÃ¼che"
 
 #: ../../stedlgs.cpp:1392
 msgid "Folding and Wrapping"
@@ -324,7 +326,7 @@ msgstr "Standard"
 
 #: ../../stedlgs.cpp:1437
 msgid "Reset this page's values to their default"
-msgstr "Einstellungen der Seite auf Standardwerte zurücksetzen"
+msgstr "Einstellungen der Seite auf Standardwerte zurÃ¼cksetzen"
 
 #: ../../stedlgs.cpp:1439
 #: ../../stedlgs_wdr.cpp:393
@@ -349,7 +351,7 @@ msgstr "Anwenden"
 
 #: ../../stedlgs.cpp:2010
 msgid "Insert"
-msgstr "Einfügen"
+msgstr "EinfÃ¼gen"
 
 #: ../../stedlgs.cpp:2012
 #: ../../stedlgs_wdr.cpp:584
@@ -448,7 +450,7 @@ msgstr "Schriftart setzen"
 
 #: ../../stedlgs_wdr.cpp:80
 msgid "Choose a font (unsupported fonts revert to a default)"
-msgstr "Schriftart wählen (nicht unterstützte werden durch Standardwert ersetzt)"
+msgstr "Schriftart wÃ¤hlen (nicht unterstÃ¼tzte werden durch Standardwert ersetzt)"
 
 #: ../../stedlgs_wdr.cpp:85
 msgid "Bitstream Vera Sans Mono*"
@@ -464,11 +466,11 @@ msgstr "Schriftgrad"
 
 #: ../../stedlgs_wdr.cpp:104
 msgid "Set non default font size for style"
-msgstr "Schriftgrad wählen"
+msgstr "Schriftgrad wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:108
 msgid "Select font size in points"
-msgstr "Schriftgrad in Punkten wählen"
+msgstr "Schriftgrad in Punkten wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:111
 msgid "Attributes"
@@ -476,7 +478,7 @@ msgstr "Eigenschaften"
 
 #: ../../stedlgs_wdr.cpp:112
 msgid "Set non default attributes for style"
-msgstr "Eigenschaften wählen"
+msgstr "Eigenschaften wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:117
 msgid "Bold"
@@ -508,7 +510,7 @@ msgstr "EOL markieren"
 
 #: ../../stedlgs_wdr.cpp:130
 msgid "Fill background to end of line (unclosed strings)"
-msgstr "Zeilenumbrüche markieren bei unvollendenden Zeichenketten"
+msgstr "ZeilenumbrÃ¼che markieren bei unvollendenden Zeichenketten"
 
 #: ../../stedlgs_wdr.cpp:135
 msgid "Foreground color"
@@ -516,7 +518,7 @@ msgstr "Vordergrundfarbe"
 
 #: ../../stedlgs_wdr.cpp:136
 msgid "Set non default foreground colour"
-msgstr "Farbe für Vordergrund bestimmen"
+msgstr "Farbe fÃ¼r Vordergrund bestimmen"
 
 #: ../../stedlgs_wdr.cpp:139
 msgid "Fore Color"
@@ -524,7 +526,7 @@ msgstr "Vordergrund"
 
 #: ../../stedlgs_wdr.cpp:140
 msgid "Choose foreground color"
-msgstr "Farbe für Vordergrund wählen"
+msgstr "Farbe fÃ¼r Vordergrund wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:143
 msgid "Background color"
@@ -540,11 +542,11 @@ msgstr "Hintergrund"
 
 #: ../../stedlgs_wdr.cpp:148
 msgid "Choose background color"
-msgstr "Farbe für Hintergrund wählen"
+msgstr "Farbe fÃ¼r Hintergrund wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:173
 msgid "Language settings"
-msgstr "Einstellungen für Sprachen"
+msgstr "Einstellungen fÃ¼r Sprachen"
 
 #: ../../stedlgs_wdr.cpp:179
 msgid "Language"
@@ -556,7 +558,7 @@ msgstr "ACTIVE SERVER PAGES (ASP) BLAH"
 
 #: ../../stedlgs_wdr.cpp:204
 msgid "Choose the language (lexer) to syntax highlight document"
-msgstr "Sprache (lexer) für die Syntax der Hervorhebung wählen"
+msgstr "Sprache (lexer) fÃ¼r die Syntax der Hervorhebung wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:207
 msgid "File patterns"
@@ -564,7 +566,7 @@ msgstr "Dateitypen"
 
 #: ../../stedlgs_wdr.cpp:211
 msgid "File extensions associated with this language (*.cpp;*.c;*.h)"
-msgstr "Mit der Sprache verknüpfte Dateierweiterungen (*.cpp;*.c;*.h)"
+msgstr "Mit der Sprache verknÃ¼pfte Dateierweiterungen (*.cpp;*.c;*.h)"
 
 #: ../../stedlgs_wdr.cpp:241
 msgid "File properties"
@@ -600,11 +602,11 @@ msgstr "path/to/the/file/and/stuff/untitled.txt"
 
 #: ../../stedlgs_wdr.cpp:257
 msgid "Size "
-msgstr "Größe "
+msgstr "GrÃ¶ÃŸe "
 
 #: ../../stedlgs_wdr.cpp:258
 msgid "Size of the file on disk if it exists"
-msgstr "Größe der Datei auf dem Speichermedium (falls gespeichert)"
+msgstr "GrÃ¶ÃŸe der Datei auf dem Speichermedium (falls gespeichert)"
 
 # offenbar nur Platzhalter
 #: ../../stedlgs_wdr.cpp:264
@@ -613,11 +615,11 @@ msgstr "100000000000000000000000000000000 bytes"
 
 #: ../../stedlgs_wdr.cpp:267
 msgid "Opened "
-msgstr "Geöffnet "
+msgstr "GeÃ¶ffnet "
 
 #: ../../stedlgs_wdr.cpp:268
 msgid "Time the file was opened from disk"
-msgstr "Zeit, zu der die Datei geöffnet wurde"
+msgstr "Zeit, zu der die Datei geÃ¶ffnet wurde"
 
 # offenbar nur Platzhalter
 #: ../../stedlgs_wdr.cpp:274
@@ -629,11 +631,11 @@ msgstr "12/12/2003 00:00:00 000000000000000000000"
 
 #: ../../stedlgs_wdr.cpp:277
 msgid "Modified "
-msgstr "Änderung "
+msgstr "Ã„nderung "
 
 #: ../../stedlgs_wdr.cpp:278
 msgid "Last time the file was modified on disk"
-msgstr "Letzter Zeitpunkt der Änderung der Datei auf dem Speichermedium"
+msgstr "Letzter Zeitpunkt der Ã„nderung der Datei auf dem Speichermedium"
 
 #: ../../stedlgs_wdr.cpp:287
 msgid "Accessed "
@@ -641,7 +643,7 @@ msgstr "Zugriff"
 
 #: ../../stedlgs_wdr.cpp:288
 msgid "Last time the file was accessed on disk (not all platforms support this)"
-msgstr "Letzter Zeitpunkt des Zugriffs auf die Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstützt)"
+msgstr "Letzter Zeitpunkt des Zugriffs auf die Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstÃ¼tzt)"
 
 #: ../../stedlgs_wdr.cpp:297
 msgid "Created "
@@ -649,7 +651,7 @@ msgstr "Erzeugung "
 
 #: ../../stedlgs_wdr.cpp:298
 msgid "Time the file was created on disk (not all platforms support this)"
-msgstr "Zeitpunkt der Erzeugung der Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstützt)"
+msgstr "Zeitpunkt der Erzeugung der Datei auf dem Speichermedium (nicht von allen Betriebssystemen unterstÃ¼tzt)"
 
 #: ../../stedlgs_wdr.cpp:311
 msgid "Information"
@@ -661,7 +663,7 @@ msgstr "Sprache "
 
 #: ../../stedlgs_wdr.cpp:318
 msgid "The language used to hilight the document"
-msgstr "Sprache, die für die Hervorhebungen im Dokument verwendet wird"
+msgstr "Sprache, die fÃ¼r die Hervorhebungen im Dokument verwendet wird"
 
 # offenbar nur Platzhalter
 #: ../../stedlgs_wdr.cpp:324
@@ -694,15 +696,15 @@ msgstr "Zeichen "
 
 #: ../../stedlgs_wdr.cpp:348
 msgid "Number of characters in the document (size)"
-msgstr "Anzahl der Zeichen im Dokument (Größe)"
+msgstr "Anzahl der Zeichen im Dokument (GrÃ¶ÃŸe)"
 
 #: ../../stedlgs_wdr.cpp:357
 msgid "Words "
-msgstr "Wörter "
+msgstr "WÃ¶rter "
 
 #: ../../stedlgs_wdr.cpp:358
 msgid "Number of words in the document"
-msgstr "Anzahl der Wörter im Dokument"
+msgstr "Anzahl der WÃ¶rter im Dokument"
 
 #: ../../stedlgs_wdr.cpp:367
 #: ../../stedlgs_wdr.cpp:838
@@ -715,11 +717,11 @@ msgstr "Anzahl der Tabulator-Zeichen im Dokument"
 
 #: ../../stedlgs_wdr.cpp:377
 msgid "EOL Characters "
-msgstr "Zeilenumbrüche "
+msgstr "ZeilenumbrÃ¼che "
 
 #: ../../stedlgs_wdr.cpp:378
 msgid "Number and types of end of line characters"
-msgstr "Anzahl und Art der Zeilenumbrüche"
+msgstr "Anzahl und Art der ZeilenumbrÃ¼che"
 
 # offenbar nur Platzhalter
 #: ../../stedlgs_wdr.cpp:384
@@ -852,7 +854,7 @@ msgstr "Suchtext muss ein ganzes Wort sein"
 
 #: ../../stedlgs_wdr.cpp:484
 msgid "&Backwards"
-msgstr "Aufwä&rts"
+msgstr "AufwÃ¤&rts"
 
 #: ../../stedlgs_wdr.cpp:485
 msgid "Search from the bottom to the top of the document"
@@ -860,11 +862,11 @@ msgstr "Gesucht wird von unten nach oben"
 
 #: ../../stedlgs_wdr.cpp:488
 msgid "Match &case"
-msgstr "Groß-/&Kleinschreibung"
+msgstr "GroÃŸ-/&Kleinschreibung"
 
 #: ../../stedlgs_wdr.cpp:489
 msgid "Case sensitive finding"
-msgstr "Groß-/Kleinschreibung beachten"
+msgstr "GroÃŸ-/Kleinschreibung beachten"
 
 #: ../../stedlgs_wdr.cpp:492
 msgid "Wra&p around"
@@ -888,7 +890,7 @@ msgstr "Regular e&xpression"
 
 #: ../../stedlgs_wdr.cpp:501
 msgid "Use a regular expression to search for a string"
-msgstr "Suchtext ist ein regulärer Ausdruck"
+msgstr "Suchtext ist ein regulÃ¤rer Ausdruck"
 
 #: ../../stedlgs_wdr.cpp:504
 msgid "Find all"
@@ -915,7 +917,7 @@ msgstr "Bereich"
 msgid "Whole &document "
 msgstr "Gesamtes &Dokument"
 
-# *** dürfte falsch programmiert sein, suche beginnt immer bei cursor
+# *** dÃ¼rfte falsch programmiert sein, suche beginnt immer bei cursor
 #: ../../stedlgs_wdr.cpp:521
 msgid "Search starts at the top of the document"
 msgstr "Suche startet am Anfang des Dokuments"
@@ -950,7 +952,7 @@ msgstr "Er&setzen && Finden"
 
 #: ../../stedlgs_wdr.cpp:551
 msgid "Replace string and find next occurance"
-msgstr "Suchtext ersetzen und nächstes Vorkommen finden"
+msgstr "Suchtext ersetzen und nÃ¤chstes Vorkommen finden"
 
 #: ../../stedlgs_wdr.cpp:554
 msgid "Replace &All"
@@ -959,7 +961,7 @@ msgstr "Al&le ersetzen"
 #: ../../stedlgs_wdr.cpp:587
 #: ../../stedlgs_wdr.cpp:623
 msgid "Append"
-msgstr "Anfügen"
+msgstr "AnfÃ¼gen"
 
 #: ../../stedlgs_wdr.cpp:590
 msgid "At Column"
@@ -975,7 +977,7 @@ msgstr "Text, der vorangestellt wird"
 
 #: ../../stedlgs_wdr.cpp:636
 msgid "Text to append"
-msgstr "Text, der angefügt wird"
+msgstr "Text, der angefÃ¼gt wird"
 
 #: ../../stedlgs_wdr.cpp:678
 msgid "Font scaling"
@@ -983,17 +985,17 @@ msgstr "Schrift skalieren"
 
 #: ../../stedlgs_wdr.cpp:683
 msgid "Text scaling factor"
-msgstr "Schriftgröße skalieren"
+msgstr "SchriftgrÃ¶ÃŸe skalieren"
 
 #: ../../stedlgs_wdr.cpp:687
 msgid "Scale text point size (not all fonts supported)"
 msgstr ""
-"Größe der Schriftzeichen skalieren\n"
-"(nicht alle Fonts werden unterstützt)"
+"GrÃ¶ÃŸe der Schriftzeichen skalieren\n"
+"(nicht alle Fonts werden unterstÃ¼tzt)"
 
 #: ../../stedlgs_wdr.cpp:694
 msgid "Edge marker"
-msgstr "Markierung für rechten Rand"
+msgstr "Markierung fÃ¼r rechten Rand"
 
 #: ../../stedlgs_wdr.cpp:699
 msgid "Type"
@@ -1013,7 +1015,7 @@ msgstr "Hintergrund"
 
 #: ../../stedlgs_wdr.cpp:709
 msgid "Select method to mark an edge"
-msgstr "Art der Markierung des rechten Randes wählen"
+msgstr "Art der Markierung des rechten Randes wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:712
 msgid "Column"
@@ -1059,7 +1061,7 @@ msgstr "Blinkrate (ms)"
 msgid "Set the blinking rate of the cursor in milliseconds (0 for off)"
 msgstr ""
 "Setzen Sie die Blinkrate des Cursors\n"
-"in Millisekunden fest (0 für aus)"
+"in Millisekunden fest (0 fÃ¼r aus)"
 
 #: ../../stedlgs_wdr.cpp:774
 msgid "Printing options"
@@ -1079,19 +1081,19 @@ msgstr "Helle Farben invertieren"
 
 #: ../../stedlgs_wdr.cpp:786
 msgid "Black on white"
-msgstr "Scharz auf weiß"
+msgstr "Scharz auf weiÃŸ"
 
 #: ../../stedlgs_wdr.cpp:787
 msgid "Color on white"
-msgstr "Farben auf weiß"
+msgstr "Farben auf weiÃŸ"
 
 #: ../../stedlgs_wdr.cpp:788
 msgid "Color on white (except line nums)"
-msgstr "Farben auf weiß (außer Zeilennummern)"
+msgstr "Farben auf weiÃŸ (auÃŸer Zeilennummern)"
 
 #: ../../stedlgs_wdr.cpp:791
 msgid "Choose what colors to use for the printout"
-msgstr "Wählen Sie die Farben fürs Drucken"
+msgstr "WÃ¤hlen Sie die Farben fÃ¼rs Drucken"
 
 #: ../../stedlgs_wdr.cpp:794
 msgid "Font scale"
@@ -1100,8 +1102,8 @@ msgstr "Schrift skalieren"
 #: ../../stedlgs_wdr.cpp:798
 msgid "Select the printout scaling (some fonts may not scale properly)"
 msgstr ""
-"Skalieren Sie die Größe der Druckschrift (einige Fonts\n"
-"sind möglicherweise nicht korrekt skalierbar)"
+"Skalieren Sie die GrÃ¶ÃŸe der Druckschrift (einige Fonts\n"
+"sind mÃ¶glicherweise nicht korrekt skalierbar)"
 
 #: ../../stedlgs_wdr.cpp:801
 msgid "Wrap lines"
@@ -1129,7 +1131,7 @@ msgstr "Immer"
 
 #: ../../stedlgs_wdr.cpp:843
 msgid "Tab key inserts tabs not spaces,"
-msgstr "Tabulator fügt Tabulatorzeichen ein (keine Leerzeichen), "
+msgstr "Tabulator fÃ¼gt Tabulatorzeichen ein (keine Leerzeichen), "
 
 #: ../../stedlgs_wdr.cpp:846
 msgid "Tab width"
@@ -1157,7 +1159,7 @@ msgstr "Anzahl der Zeichen des Einschubs"
 
 #: ../../stedlgs_wdr.cpp:874
 msgid "Backspace key unindents "
-msgstr "Rückwärtstaste entfernt Einschub"
+msgstr "RÃ¼ckwÃ¤rtstaste entfernt Einschub"
 
 #: ../../stedlgs_wdr.cpp:877
 msgid "Auto indent new lines"
@@ -1169,11 +1171,11 @@ msgstr "Einschubmarkierungen anzeigen"
 
 #: ../../stedlgs_wdr.cpp:885
 msgid "End of line mode"
-msgstr "Modus für Zeilenumbrüche (EOL)"
+msgstr "Modus fÃ¼r ZeilenumbrÃ¼che (EOL)"
 
 #: ../../stedlgs_wdr.cpp:888
 msgid "End of line characters: CR=carriage return, LF=line feed "
-msgstr "Zeichen für Zeilenumbrüche: CR=carriage return, LF=line feed "
+msgstr "Zeichen fÃ¼r ZeilenumbrÃ¼che: CR=carriage return, LF=line feed "
 
 #: ../../stedlgs_wdr.cpp:893
 msgid "Default EOL"
@@ -1197,7 +1199,7 @@ msgstr "Unsichtbare Zeichen anzeigen"
 
 #: ../../stedlgs_wdr.cpp:912
 msgid "Show EOL marker "
-msgstr "Zeilenumbrüche"
+msgstr "ZeilenumbrÃ¼che"
 
 #: ../../stedlgs_wdr.cpp:915
 msgid "Show whitespace "
@@ -1217,7 +1219,7 @@ msgstr "Preprocessor-Code"
 
 #: ../../stedlgs_wdr.cpp:941
 msgid "Only for languages that support preprocessor statements"
-msgstr "gilt nur Sprachen, die Preprocessorangaben unterstützen"
+msgstr "gilt nur Sprachen, die Preprocessorangaben unterstÃ¼tzen"
 
 #: ../../stedlgs_wdr.cpp:944
 msgid "Highlight braces () {} []"
@@ -1231,7 +1233,7 @@ msgstr "Hervorhebung aus Dateierweiterung bestimmen"
 #: ../../stedlgs_wdr.cpp:948
 #: ../../stedlgs_wdr.cpp:1431
 msgid "Initialize the highlighting language when loading a file"
-msgstr "Beim Öffnen der Datei Sprache für Hervorhebung bestimmen"
+msgstr "Beim Ã–ffnen der Datei Sprache fÃ¼r Hervorhebung bestimmen"
 
 #: ../../stedlgs_wdr.cpp:967
 msgid "Code folding"
@@ -1243,7 +1245,7 @@ msgstr "Falten-Randansicht zeigen "
 
 #: ../../stedlgs_wdr.cpp:971
 msgid "Show a margin to fold text (not all lexers are supported)"
-msgstr "Randansicht für Textfalten anzeigen (nicht jede Syntax wird unterstützt)"
+msgstr "Randansicht fÃ¼r Textfalten anzeigen (nicht jede Syntax wird unterstÃ¼tzt)"
 
 # *** was ist das?
 #: ../../stedlgs_wdr.cpp:976
@@ -1320,7 +1322,7 @@ msgstr "Text am Fensterende wenden"
 
 #: ../../stedlgs_wdr.cpp:1013
 msgid "Wrap text to fit in window (doesn't modify document)"
-msgstr "Text am rechten Fensterende wenden (Dokument wird nicht geändert)"
+msgstr "Text am rechten Fensterende wenden (Dokument wird nicht geÃ¤ndert)"
 
 #: ../../stedlgs_wdr.cpp:1018
 msgid "Marker position"
@@ -1368,11 +1370,11 @@ msgstr "Wende einschieben"
 
 #: ../../stedlgs_wdr.cpp:1048
 msgid "Number of characters to indent wrapped lines"
-msgstr "Anzahl der Zeichen für Einschub der Zeilenwende"
+msgstr "Anzahl der Zeichen fÃ¼r Einschub der Zeilenwende"
 
 #: ../../stedlgs_wdr.cpp:1069
 msgid "Select Window(s)"
-msgstr "Fenster auswählen"
+msgstr "Fenster auswÃ¤hlen"
 
 # offenbar nur Platzhalter
 #: ../../stedlgs_wdr.cpp:1078
@@ -1389,7 +1391,7 @@ msgstr "&Sichern"
 
 #: ../../stedlgs_wdr.cpp:1095
 msgid "&Close Window(s)"
-msgstr "&Fenster schließen"
+msgstr "&Fenster schlieÃŸen"
 
 #: ../../stedlgs_wdr.cpp:1126
 msgid "Split before chars"
@@ -1429,16 +1431,16 @@ msgstr "Original"
 
 #: ../../stedlgs_wdr.cpp:1175
 msgid "Show original text's formatting"
-msgstr "Ursprüngliches Format des Textes in der Vorschau anzeigen"
+msgstr "UrsprÃ¼ngliches Format des Textes in der Vorschau anzeigen"
 
 #: ../../stedlgs_wdr.cpp:1178
 msgid "Preserve matching"
-msgstr "Keine Änderung zwischen"
+msgstr "Keine Ã„nderung zwischen"
 
 #: ../../stedlgs_wdr.cpp:1179
 msgid "Preserve formatting between matching characters, double first character (() to preserve between two different characters"
 msgstr ""
-"Formatierung zwischen zusammengehörenden Zeichen beibehalten.\n"
+"Formatierung zwischen zusammengehÃ¶renden Zeichen beibehalten.\n"
 "Verdoppeln Sie das erste Zeichen, um Formatierung zwischen \n"
 "unterschiedlichen Zeichen beizubehalten."
 
@@ -1497,7 +1499,7 @@ msgstr "This Is a Long Filename to size the dialog"
 
 #: ../../stedlgs_wdr.cpp:1285
 msgid "Choose file"
-msgstr "Datei wählen"
+msgstr "Datei wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:1290
 msgid "Automatic file name extension"
@@ -1505,19 +1507,19 @@ msgstr "Automatische Dateierweiterung"
 
 #: ../../stedlgs_wdr.cpp:1328
 msgid "Choose keyword list"
-msgstr "Liste der Schlüsselwörter wählen"
+msgstr "Liste der SchlÃ¼sselwÃ¶rter wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:1355
 msgid "Default keywords"
-msgstr "Standard-Schlüsselwörter"
+msgstr "Standard-SchlÃ¼sselwÃ¶rter"
 
 #: ../../stedlgs_wdr.cpp:1358
 msgid "Additional keywords"
-msgstr "Zusätzliche Schlüsselwörter"
+msgstr "ZusÃ¤tzliche SchlÃ¼sselwÃ¶rter"
 
 #: ../../stedlgs_wdr.cpp:1386
 msgid "Choose style"
-msgstr "Stil wählen"
+msgstr "Stil wÃ¤hlen"
 
 #: ../../stedlgs_wdr.cpp:1392
 msgid "REGULAR EXPRESSION BLAH"
@@ -1525,11 +1527,11 @@ msgstr "REGULAR EXPRESSION BLAH"
 
 #: ../../stedlgs_wdr.cpp:1427
 msgid "Loading files"
-msgstr "Öffnen von Dateien"
+msgstr "Ã–ffnen von Dateien"
 
 #: ../../stedlgs_wdr.cpp:1436
 msgid "Load Unicode"
-msgstr "Als Unicode öffnen"
+msgstr "Als Unicode Ã¶ffnen"
 
 #: ../../stedlgs_wdr.cpp:1442
 msgid "Ask if unicode"
@@ -1553,15 +1555,15 @@ msgstr "Tabulatoren und Leerzeichen am Zeilenende entfernen"
 
 #: ../../stedlgs_wdr.cpp:1459
 msgid "Convert all EOL characters"
-msgstr "Alle Zeilenumbrüche umwandeln"
+msgstr "Alle ZeilenumbrÃ¼che umwandeln"
 
 #: ../../stedlgs_wdr.cpp:1460
 msgid "Convert all the end of line characters to the set value"
-msgstr "Alle Zeilenumbrüche auf die eingestellten EOL-Zeichen ändern"
+msgstr "Alle ZeilenumbrÃ¼che auf die eingestellten EOL-Zeichen Ã¤ndern"
 
 #: ../../steexprt.cpp:153
 msgid "Overwrite file : '"
-msgstr "Datei überschreiben : '"
+msgstr "Datei Ã¼berschreiben : '"
 
 #: ../../steexprt.cpp:154
 #: ../../steexprt.cpp:177
@@ -1665,11 +1667,11 @@ msgstr "Editorfenster vertikal teilen"
 
 #: ../../stemenum.cpp:165
 msgid "&Add empty page"
-msgstr "&Leere Seite hinzufügen"
+msgstr "&Leere Seite hinzufÃ¼gen"
 
 #: ../../stemenum.cpp:166
 msgid "&Open file(s)..."
-msgstr "Datei(en) &öffnen..."
+msgstr "Datei(en) &Ã¶ffnen..."
 
 #: ../../stemenum.cpp:167
 msgid "&Save all files"
@@ -1681,7 +1683,7 @@ msgstr "Vorherige Seite"
 
 #: ../../stemenum.cpp:175
 msgid "Next page"
-msgstr "Nächste Seite"
+msgstr "NÃ¤chste Seite"
 
 #: ../../stemenum.cpp:177
 msgid "Goto page"
@@ -1690,15 +1692,15 @@ msgstr "Gehe zu"
 #: ../../stemenum.cpp:179
 #: ../../stemenum.cpp:310
 msgid "Close current page"
-msgstr "Aktuelles Dokument schließen"
+msgstr "Aktuelles Dokument schlieÃŸen"
 
 #: ../../stemenum.cpp:180
 msgid "Close all pages..."
-msgstr "Alle Dokumente schließen..."
+msgstr "Alle Dokumente schlieÃŸen..."
 
 #: ../../stemenum.cpp:181
 msgid "Close page"
-msgstr "Dokumente schließen"
+msgstr "Dokumente schlieÃŸen"
 
 #: ../../stemenum.cpp:183
 #: ../../stemenum.cpp:715
@@ -1720,11 +1722,11 @@ msgstr "Neues leeres Dokument erstellen"
 
 #: ../../stemenum.cpp:234
 msgid "Open..."
-msgstr "Öffnen..."
+msgstr "Ã–ffnen..."
 
 #: ../../stemenum.cpp:234
 msgid "Open a file to edit"
-msgstr "Datei zum Editieren öffnen"
+msgstr "Datei zum Editieren Ã¶ffnen"
 
 #: ../../stemenum.cpp:238
 msgid "Save"
@@ -1758,7 +1760,7 @@ msgstr "Ausschneiden"
 
 #: ../../stemenum.cpp:251
 msgid "Cut selected text"
-msgstr "Ausgewählten Text ausschneiden"
+msgstr "AusgewÃ¤hlten Text ausschneiden"
 
 #: ../../stemenum.cpp:252
 msgid "Copy"
@@ -1766,23 +1768,23 @@ msgstr "Kopieren"
 
 #: ../../stemenum.cpp:252
 msgid "Copy selected text"
-msgstr "Ausgewählten Text kopieren"
+msgstr "AusgewÃ¤hlten Text kopieren"
 
 #: ../../stemenum.cpp:253
 msgid "Paste"
-msgstr "Einfügen"
+msgstr "EinfÃ¼gen"
 
 #: ../../stemenum.cpp:253
 msgid "Paste text at cursor"
-msgstr "Text an der Cursorposition einfügen"
+msgstr "Text an der Cursorposition einfÃ¼gen"
 
 #: ../../stemenum.cpp:258
 msgid "Undo"
-msgstr "Rückgängig"
+msgstr "RÃ¼ckgÃ¤ngig"
 
 #: ../../stemenum.cpp:258
 msgid "Undo last editing"
-msgstr "Letzten Befehl rückgängig machen"
+msgstr "Letzten Befehl rÃ¼ckgÃ¤ngig machen"
 
 #: ../../stemenum.cpp:259
 msgid "Redo"
@@ -1799,7 +1801,7 @@ msgstr "Suchrichtung"
 
 #: ../../stemenum.cpp:264
 msgid "Search direction for next occurance in document"
-msgstr "Suchrichtung für das nächste Vorkommen im Dokument"
+msgstr "Suchrichtung fÃ¼r das nÃ¤chste Vorkommen im Dokument"
 
 #: ../../stemenum.cpp:265
 msgid "Find..."
@@ -1811,11 +1813,11 @@ msgstr "Text im Dokument finden..."
 
 #: ../../stemenum.cpp:266
 msgid "Find next"
-msgstr "&Nächstes finden"
+msgstr "&NÃ¤chstes finden"
 
 #: ../../stemenum.cpp:266
 msgid "Find next occurance in document"
-msgstr "Nächstes Vorkommen im Dokument finden"
+msgstr "NÃ¤chstes Vorkommen im Dokument finden"
 
 #: ../../stemenum.cpp:267
 msgid "Replace..."
@@ -1832,7 +1834,7 @@ msgstr "Lesezeichen ein/aus"
 #: ../../stemenum.cpp:278
 #: ../../stemenum.cpp:623
 msgid "Toggle a bookmark on cursor line"
-msgstr "Lesezeichen auf der Cursorlinie setzen bzw. löschen"
+msgstr "Lesezeichen auf der Cursorlinie setzen bzw. lÃ¶schen"
 
 #: ../../stemenum.cpp:279
 msgid "First bookmark"
@@ -1854,12 +1856,12 @@ msgstr "Zum vorherigen Lesezeichen gehen"
 
 #: ../../stemenum.cpp:281
 msgid "Next bookmark"
-msgstr "Nächstes Lesezeichen"
+msgstr "NÃ¤chstes Lesezeichen"
 
 #: ../../stemenum.cpp:281
 #: ../../stemenum.cpp:627
 msgid "Goto next bookmark"
-msgstr "Zum nächsten Lesezeichen gehen"
+msgstr "Zum nÃ¤chsten Lesezeichen gehen"
 
 #: ../../stemenum.cpp:282
 msgid "Last bookmark"
@@ -1873,11 +1875,11 @@ msgstr "Zum letzten Lesezeichen gehen"
 #: ../../stemenum.cpp:283
 #: ../../stemenum.cpp:630
 msgid "Clear all bookmarks"
-msgstr "Alle Lesezeichen löschen"
+msgstr "Alle Lesezeichen lÃ¶schen"
 
 #: ../../stemenum.cpp:283
 msgid "Clear bookmarks"
-msgstr "Alle Lesezeichen löschen"
+msgstr "Alle Lesezeichen lÃ¶schen"
 
 #: ../../stemenum.cpp:298
 msgid "&New...\tCtrl-N"
@@ -1889,23 +1891,23 @@ msgstr "Neues leeres Dokument erstellen"
 
 #: ../../stemenum.cpp:303
 msgid "&Open...\tCtrl-O"
-msgstr "&Öffnen...\tStrg-O"
+msgstr "&Ã–ffnen...\tStrg-O"
 
 #: ../../stemenum.cpp:303
 msgid "Open file..."
-msgstr "Datei öffnen..."
+msgstr "Datei Ã¶ffnen..."
 
 #: ../../stemenum.cpp:310
 msgid "&Close current page\tCtrl-Shift-Q"
-msgstr "Dokument sch&ließen\tStrg-Umschalt-Q"
+msgstr "Dokument sch&lieÃŸen\tStrg-Umschalt-Q"
 
 #: ../../stemenum.cpp:312
 msgid "Cl&ose all pages..."
-msgstr "Alle Do&kumente schließen..."
+msgstr "Alle Do&kumente schlieÃŸen..."
 
 #: ../../stemenum.cpp:312
 msgid "Close all pages"
-msgstr "Alle Dokumente schließen"
+msgstr "Alle Dokumente schlieÃŸen"
 
 #: ../../stemenum.cpp:320
 msgid "&Save \tCtrl-S"
@@ -1961,7 +1963,7 @@ msgstr "Drucker &einrichten..."
 
 #: ../../stemenum.cpp:350
 msgid "Setup the printer"
-msgstr "Einstellungen des Druckers ändern"
+msgstr "Einstellungen des Druckers Ã¤ndern"
 
 #: ../../stemenum.cpp:351
 msgid "Printer pa&ge setup..."
@@ -1985,7 +1987,7 @@ msgstr "&Beenden\tStrg-Q"
 
 #: ../../stemenum.cpp:358
 msgid "Exit editor"
-msgstr "Editor schließen"
+msgstr "Editor schlieÃŸen"
 
 #: ../../stemenum.cpp:379
 msgid "Cu&t   \tCtrl-X"
@@ -1993,7 +1995,7 @@ msgstr "&Ausschneiden\tStrg-X"
 
 #: ../../stemenum.cpp:379
 msgid "Cut selected text to clipboard"
-msgstr "Ausgewählten Text entfernen und in die Zwischenablage kopieren"
+msgstr "AusgewÃ¤hlten Text entfernen und in die Zwischenablage kopieren"
 
 #: ../../stemenum.cpp:380
 msgid "&Copy  \tCtrl-C"
@@ -2001,40 +2003,40 @@ msgstr "&Kopieren\tStrg-C"
 
 #: ../../stemenum.cpp:380
 msgid "Copy selected text to clipboard"
-msgstr "Ausgewählten Text in die Zwischenablage kopieren"
+msgstr "AusgewÃ¤hlten Text in die Zwischenablage kopieren"
 
 # nur unix
 #: ../../stemenum.cpp:382
 msgid "Copy primary\tCtrl-Shift-C"
-msgstr "In Primärablage kopieren\tStrg-Umschalt-C"
+msgstr "In PrimÃ¤rablage kopieren\tStrg-Umschalt-C"
 
 #: ../../stemenum.cpp:382
 msgid "Copy selected text to primary clipboard"
-msgstr "Ausgewählten Text in die primäre Zwischenablage kopieren"
+msgstr "AusgewÃ¤hlten Text in die primÃ¤re Zwischenablage kopieren"
 
 #: ../../stemenum.cpp:386
 msgid "&Paste \tCtrl-V"
-msgstr "&Einfügen\tStrg-V"
+msgstr "&EinfÃ¼gen\tStrg-V"
 
 #: ../../stemenum.cpp:386
 msgid "Paste text from clipboard"
-msgstr "Text aus der Zwischenablage einfügen"
+msgstr "Text aus der Zwischenablage einfÃ¼gen"
 
 #: ../../stemenum.cpp:387
 msgid "Paste Rect\tAlt-Shift-V"
-msgstr "Rechteck einfügen\tAlt-Umschalt-V"
+msgstr "Rechteck einfÃ¼gen\tAlt-Umschalt-V"
 
 #: ../../stemenum.cpp:387
 msgid "Paste rectangular text from clipboard"
-msgstr "Rechteckigen Text aus der Zwischenablage einfügen"
+msgstr "Rechteckigen Text aus der Zwischenablage einfÃ¼gen"
 
 #: ../../stemenum.cpp:389
 msgid "Select A&ll\tCtrl-A"
-msgstr "A&lles auswählen\tStrg-A"
+msgstr "A&lles auswÃ¤hlen\tStrg-A"
 
 #: ../../stemenum.cpp:389
 msgid "Selects entire document"
-msgstr "Gesamtes Dokument auswählen"
+msgstr "Gesamtes Dokument auswÃ¤hlen"
 
 #: ../../stemenum.cpp:400
 msgid "Line Cu&t \tCtrl-L"
@@ -2054,11 +2056,11 @@ msgstr "Aktuelle Zeile in die Zwischenablage kopieren"
 
 #: ../../stemenum.cpp:406
 msgid "Line &Delete \tCtrl-Shift-L"
-msgstr "Zeile &löschen\tStrg-Umschalt-L"
+msgstr "Zeile &lÃ¶schen\tStrg-Umschalt-L"
 
 #: ../../stemenum.cpp:406
 msgid "Delete current line"
-msgstr "Aktuelle Zeile löschen"
+msgstr "Aktuelle Zeile lÃ¶schen"
 
 #: ../../stemenum.cpp:407
 msgid "Line &Transpose \tCtrl-T"
@@ -2090,19 +2092,19 @@ msgstr "Text finden"
 
 #: ../../stemenum.cpp:419
 msgid "Find &Next\tF3"
-msgstr "&Nächstes finden\tF3"
+msgstr "&NÃ¤chstes finden\tF3"
 
 #: ../../stemenum.cpp:419
 msgid "Find next occurance"
-msgstr "Nächstes Vorkommen des Textes finden"
+msgstr "NÃ¤chstes Vorkommen des Textes finden"
 
 #: ../../stemenum.cpp:420
 msgid "Search F&orward\tF2"
-msgstr "A&bwärts suchen\tF2"
+msgstr "A&bwÃ¤rts suchen\tF2"
 
 #: ../../stemenum.cpp:420
 msgid "Search forward/reverse in document"
-msgstr "Im Dokument abwärts/aufwärts suchen"
+msgstr "Im Dokument abwÃ¤rts/aufwÃ¤rts suchen"
 
 #: ../../stemenum.cpp:422
 msgid "R&eplace...\tCtrl-H"
@@ -2122,11 +2124,11 @@ msgstr "Zu einer bestimmten Zeilennummer gehen"
 
 #: ../../stemenum.cpp:436
 msgid "&Undo \tCtrl-Z"
-msgstr "&Rückgängig\tStrg-Z"
+msgstr "&RÃ¼ckgÃ¤ngig\tStrg-Z"
 
 #: ../../stemenum.cpp:436
 msgid "Undo last operation"
-msgstr "Den letzten Befehl rückgängig machen"
+msgstr "Den letzten Befehl rÃ¼ckgÃ¤ngig machen"
 
 #: ../../stemenum.cpp:437
 msgid "&Redo \tCtrl-Y"
@@ -2142,27 +2144,27 @@ msgstr "Dokument auf 'nur lesen' setzen"
 
 #: ../../stemenum.cpp:471
 msgid "Selection &uppercase\tCtrl-Shift-U"
-msgstr "&Großschreibung für Auswahl\tStrg-Umschalt-U"
+msgstr "&GroÃŸschreibung fÃ¼r Auswahl\tStrg-Umschalt-U"
 
 #: ../../stemenum.cpp:471
 msgid "Convert the selected text to uppercase"
-msgstr "Ausgewählten Text mit Großbuchstaben schreiben"
+msgstr "AusgewÃ¤hlten Text mit GroÃŸbuchstaben schreiben"
 
 #: ../../stemenum.cpp:472
 msgid "Selection &lowercase\tCtrl-U"
-msgstr "&Kleinschreibung für Auswahl\tStrg-U"
+msgstr "&Kleinschreibung fÃ¼r Auswahl\tStrg-U"
 
 #: ../../stemenum.cpp:472
 msgid "Convert the selected text to lowercase"
-msgstr "Ausgewählten Text mit Kleinbuchstaben schreiben"
+msgstr "AusgewÃ¤hlten Text mit Kleinbuchstaben schreiben"
 
 #: ../../stemenum.cpp:479
 msgid "&Increase indent"
-msgstr "&Einzug vergrößern"
+msgstr "&Einzug vergrÃ¶ÃŸern"
 
 #: ../../stemenum.cpp:479
 msgid "Increase indent of selected text or current line"
-msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts vergrößern"
+msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewÃ¤hlten Texts vergrÃ¶ÃŸern"
 
 #: ../../stemenum.cpp:480
 msgid "&Decrease indent"
@@ -2170,23 +2172,23 @@ msgstr "E&inzug verkleinern"
 
 #: ../../stemenum.cpp:480
 msgid "Decrease indent of selected text or current line"
-msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewählten Texts verkleinern"
+msgstr "Einzug der aktuellen Zeile oder der Zeilen des ausgewÃ¤hlten Texts verkleinern"
 
 #: ../../stemenum.cpp:487
 msgid "&Join selected lines\tCtrl-J"
-msgstr "&Ausgewählte Zeilen verbinden\tStrg-J"
+msgstr "&AusgewÃ¤hlte Zeilen verbinden\tStrg-J"
 
 #: ../../stemenum.cpp:487
 msgid "Join selected lines together"
-msgstr "Ausgewählte Zeilen miteinander verbinden"
+msgstr "AusgewÃ¤hlte Zeilen miteinander verbinden"
 
 #: ../../stemenum.cpp:488
 msgid "&Split selected lines\tCtrl-K"
-msgstr "Ausgewählte Zeilen &trennen\tStrg-K"
+msgstr "AusgewÃ¤hlte Zeilen &trennen\tStrg-K"
 
 #: ../../stemenum.cpp:488
 msgid "Split selected lines to edge marker"
-msgstr "Ausgewählte Zeilen bei der Randmarkierung trennen"
+msgstr "AusgewÃ¤hlte Zeilen bei der Randmarkierung trennen"
 
 #: ../../stemenum.cpp:495
 msgid "Convert &tabs to spaces"
@@ -2194,7 +2196,7 @@ msgstr "Ta&bulatoren -> Leerzeichen"
 
 #: ../../stemenum.cpp:495
 msgid "Convert tabs to spaces in selection or current line"
-msgstr "Tabulatoren im ausgewählten Text bzw. in der aktuellen Zeile in Leerzeichen verwandeln"
+msgstr "Tabulatoren im ausgewÃ¤hlten Text bzw. in der aktuellen Zeile in Leerzeichen verwandeln"
 
 #: ../../stemenum.cpp:496
 msgid "Convert s&paces to tabs"
@@ -2202,15 +2204,15 @@ msgstr "&Leerzeichen -> Tabulatoren"
 
 #: ../../stemenum.cpp:496
 msgid "Convert spaces to tabs in selection or current line"
-msgstr "Leerzeichen im ausgewählten Text bzw. in der aktuellen Zeile in Tabulatoren verwandeln"
+msgstr "Leerzeichen im ausgewÃ¤hlten Text bzw. in der aktuellen Zeile in Tabulatoren verwandeln"
 
 #: ../../stemenum.cpp:503
 msgid "Convert &EOL characters..."
-msgstr "&Zeilenumbrüche umwandeln..."
+msgstr "&ZeilenumbrÃ¼che umwandeln..."
 
 #: ../../stemenum.cpp:503
 msgid "Convert all end of line characters in doc"
-msgstr "Alle Zeilenumbrüche im Dokument umwandeln"
+msgstr "Alle ZeilenumbrÃ¼che im Dokument umwandeln"
 
 #: ../../stemenum.cpp:510
 msgid "Remove trailing &whitespace\tCtrl-W"
@@ -2222,11 +2224,11 @@ msgstr "Leerzeichen und Tabulatoren am Ende der aktuellen Zeile bzw. der markier
 
 #: ../../stemenum.cpp:517
 msgid "I&nsert text...\tCtrl-I"
-msgstr "Te&xt einfügen...\tStrg-I"
+msgstr "Te&xt einfÃ¼gen...\tStrg-I"
 
 #: ../../stemenum.cpp:517
 msgid "Prepend, Append, or insert text at column..."
-msgstr "Text voranstellen, anfügen oder in einer bestimmten Spalte einfügen"
+msgstr "Text voranstellen, anfÃ¼gen oder in einer bestimmten Spalte einfÃ¼gen"
 
 #: ../../stemenum.cpp:524
 msgid "&Columnize..."
@@ -2234,7 +2236,7 @@ msgstr "K&olonnen..."
 
 #: ../../stemenum.cpp:524
 msgid "Reformat selected lines in columns..."
-msgstr "Ausgewählte Zeilen als Kolonnen neu formatieren"
+msgstr "AusgewÃ¤hlte Zeilen als Kolonnen neu formatieren"
 
 #: ../../stemenum.cpp:545
 msgid "&Wrap text to window"
@@ -2242,15 +2244,15 @@ msgstr "&Text am Fensterende wenden"
 
 #: ../../stemenum.cpp:545
 msgid "Wrap the text to fit inside window"
-msgstr "Text am rechten Fensterende wenden, um ihn an die Fenstergröße anzupassen"
+msgstr "Text am rechten Fensterende wenden, um ihn an die FenstergrÃ¶ÃŸe anzupassen"
 
 #: ../../stemenum.cpp:552
 msgid "Show &EOL"
-msgstr "&Zeilenumbrüche anzeigen"
+msgstr "&ZeilenumbrÃ¼che anzeigen"
 
 #: ../../stemenum.cpp:552
 msgid "Show end of line symbols"
-msgstr "Zeilenumbrüche anzeigen"
+msgstr "ZeilenumbrÃ¼che anzeigen"
 
 #: ../../stemenum.cpp:553
 msgid "Show whi&tespace"
@@ -2282,7 +2284,7 @@ msgstr "&Rechter Rand..."
 
 #: ../../stemenum.cpp:560
 msgid "Set column long line guide..."
-msgstr "Spalte für die Markierung des rechtes Randes festsetzen"
+msgstr "Spalte fÃ¼r die Markierung des rechtes Randes festsetzen"
 
 #: ../../stemenum.cpp:561
 msgid "&Guides"
@@ -2318,11 +2320,11 @@ msgstr "&Randansichten"
 
 #: ../../stemenum.cpp:577
 msgid "To&ggle current fold"
-msgstr "Aktuelle &Falte schließen/öffnen"
+msgstr "Aktuelle &Falte schlieÃŸen/Ã¶ffnen"
 
 #: ../../stemenum.cpp:577
 msgid "Toggle the current fold level"
-msgstr "Aktuelle Falte schließen bzw. öffnen"
+msgstr "Aktuelle Falte schlieÃŸen bzw. Ã¶ffnen"
 
 #: ../../stemenum.cpp:578
 msgid "&Collapse folds below level..."
@@ -2374,7 +2376,7 @@ msgstr "&Schrift skalieren..."
 
 #: ../../stemenum.cpp:596
 msgid "Increase or decrease the size of the text"
-msgstr "Größe der Schriftzeichen skalieren"
+msgstr "GrÃ¶ÃŸe der Schriftzeichen skalieren"
 
 #: ../../stemenum.cpp:603
 msgid "Show f&ullscreen\tF11"
@@ -2398,7 +2400,7 @@ msgstr "&Vorheriges Lesezeichen\tF5"
 
 #: ../../stemenum.cpp:627
 msgid "&Next bookmark\tF6"
-msgstr "&Nächstes Lesezeichen\tF6"
+msgstr "&NÃ¤chstes Lesezeichen\tF6"
 
 #: ../../stemenum.cpp:628
 msgid "&Last bookmark\tShift+F6"
@@ -2406,7 +2408,7 @@ msgstr "Le&tztes Lesezeichen\tUmschalt+F6"
 
 #: ../../stemenum.cpp:630
 msgid "&Clear all bookmarks\tShift+F4"
-msgstr "Alle Lesezeichen lö&schen\tUmschalt+F4"
+msgstr "Alle Lesezeichen lÃ¶&schen\tUmschalt+F4"
 
 #: ../../stemenum.cpp:644
 msgid "Show &preference dialog..."
@@ -2414,7 +2416,7 @@ msgstr "&Einstellungen..."
 
 #: ../../stemenum.cpp:644
 msgid "Show preference dialog..."
-msgstr "Dialog für Einstellungen anzeigen..."
+msgstr "Dialog fÃ¼r Einstellungen anzeigen..."
 
 #: ../../stemenum.cpp:651
 msgid "Use &tabs"
@@ -2422,7 +2424,7 @@ msgstr "&Tabulatoren verwenden"
 
 #: ../../stemenum.cpp:651
 msgid "Tab key inserts a tab character"
-msgstr "Tabulator fügt ein Tabulatorzeichen ein, sonst Leerzeichen"
+msgstr "Tabulator fÃ¼gt ein Tabulatorzeichen ein, sonst Leerzeichen"
 
 #: ../../stemenum.cpp:652
 msgid "Tab &indents"
@@ -2434,11 +2436,11 @@ msgstr "Tabulatortaste erzeugt Einschub"
 
 #: ../../stemenum.cpp:653
 msgid "&Backspace unindents"
-msgstr "Rückwärtstaste -> &kein Einschub"
+msgstr "RÃ¼ckwÃ¤rtstaste -> &kein Einschub"
 
 #: ../../stemenum.cpp:653
 msgid "Backspace key unindents"
-msgstr "Rückwärtstaste entfernt Einschub"
+msgstr "RÃ¼ckwÃ¤rtstaste entfernt Einschub"
 
 #: ../../stemenum.cpp:654
 msgid "&Auto indent"
@@ -2454,7 +2456,7 @@ msgstr "Tabulator&breite..."
 
 #: ../../stemenum.cpp:656
 msgid "Set the number of spaces to show for tab character"
-msgstr "Anzahl der Zeichen für Tabulatoren einstellen"
+msgstr "Anzahl der Zeichen fÃ¼r Tabulatoren einstellen"
 
 #: ../../stemenum.cpp:657
 msgid "Set indent wi&dth..."
@@ -2462,15 +2464,15 @@ msgstr "E&inschubbreite..."
 
 #: ../../stemenum.cpp:657
 msgid "Set the number of spaces to use for indentation"
-msgstr "Anzahl der Zeichen für Einschübe setzen"
+msgstr "Anzahl der Zeichen fÃ¼r EinschÃ¼be setzen"
 
 #: ../../stemenum.cpp:664
 msgid "&EOL Mode..."
-msgstr "&Zeilenumbrüche..."
+msgstr "&ZeilenumbrÃ¼che..."
 
 #: ../../stemenum.cpp:664
 msgid "Set the end of line mode"
-msgstr "Modus der Zeilenumbrüche setzen"
+msgstr "Modus der ZeilenumbrÃ¼che setzen"
 
 #: ../../stemenum.cpp:671
 msgid "Save preferences"
@@ -2498,11 +2500,11 @@ msgstr "Gehe zum vorherigen Dokument"
 
 #: ../../stemenum.cpp:707
 msgid "Ne&xt page\tF8"
-msgstr "Nächstes Dokument zeigen\tF8"
+msgstr "NÃ¤chstes Dokument zeigen\tF8"
 
 #: ../../stemenum.cpp:707
 msgid "Goto next page"
-msgstr "Gehr zum nächsten Dokument"
+msgstr "Gehr zum nÃ¤chsten Dokument"
 
 #: ../../stemenum.cpp:735
 msgid "&About..."
@@ -2510,7 +2512,7 @@ msgstr "&Info..."
 
 #: ../../stemenum.cpp:735
 msgid "About this program"
-msgstr "Information über dieses Programm"
+msgstr "Information Ã¼ber dieses Programm"
 
 #: ../../stemenum.cpp:754
 msgid "Tab character"
@@ -2534,7 +2536,7 @@ msgstr "Zeichen in Bereich"
 
 #: ../../stemenum.cpp:763
 msgid "Character not in range"
-msgstr "Zeichen außer Bereich"
+msgstr "Zeichen auÃŸer Bereich"
 
 #: ../../stemenum.cpp:764
 msgid "Beginning of line"
@@ -2550,15 +2552,15 @@ msgstr "Tagged expression"
 
 #: ../../stemenum.cpp:767
 msgid "0 or more matches"
-msgstr "0 oder mehr Übereinstimmgen"
+msgstr "0 oder mehr Ãœbereinstimmgen"
 
 #: ../../stemenum.cpp:768
 msgid "1 or more matches"
-msgstr "1 oder mehr Übereinstimmgen"
+msgstr "1 oder mehr Ãœbereinstimmgen"
 
 #: ../../stemenum.cpp:769
 msgid "0 or 1 matches"
-msgstr "0 oder 1 Übereinstimmung"
+msgstr "0 oder 1 Ãœbereinstimmung"
 
 #: ../../stemenum.cpp:771
 msgid "Alphanumeric characters"
@@ -2586,8 +2588,8 @@ msgid ""
 "Maximum number of notebook pages exceeded,\n"
 "please close one first."
 msgstr ""
-"Höchstzahl an Dokumenten wurde überschritten,\n"
-"bitte schließen Sie zuerst eines."
+"HÃ¶chstzahl an Dokumenten wurde Ã¼berschritten,\n"
+"bitte schlieÃŸen Sie zuerst eines."
 
 #: ../../stenoteb.cpp:268
 #: ../../stenoteb.cpp:293
@@ -2596,23 +2598,23 @@ msgstr "Zu viele Dokumente"
 
 #: ../../stenoteb.cpp:599
 msgid "Close all pages?"
-msgstr "Alle Dokumente schließen?"
+msgstr "Alle Dokumente schlieÃŸen?"
 
 #: ../../stenoteb.cpp:599
 msgid "Confim closing"
-msgstr "Schließen bestätigen"
+msgstr "SchlieÃŸen bestÃ¤tigen"
 
 #: ../../stenoteb.cpp:693
 msgid "Open file into new notebook page"
-msgstr "Dateie öffnen"
+msgstr "Dateie Ã¶ffnen"
 
 #: ../../stenoteb.cpp:747
 msgid "Open file(s) into new notebook page"
-msgstr "Datei(en) öffnen"
+msgstr "Datei(en) Ã¶ffnen"
 
 #: ../../stenoteb.cpp:765
 msgid "Loading files..."
-msgstr "Dateien öffnen..."
+msgstr "Dateien Ã¶ffnen..."
 
 #: ../../stenoteb.cpp:1130
 #, c-format
@@ -2631,9 +2633,9 @@ msgid ""
 "and the output may be corrupted.\n"
 "Press cancel to not see this warning again."
 msgstr ""
-"Die Schrfitart kann nicht richtig für den Drucker skaliert werden\n"
-"und der Ausdruck könnte verfälscht sein.\n"
-"Wählen Sie 'Abbrechen', um diese Warnung nicht mehr anzuzeigen."
+"Die Schrfitart kann nicht richtig fÃ¼r den Drucker skaliert werden\n"
+"und der Ausdruck kÃ¶nnte verfÃ¤lscht sein.\n"
+"WÃ¤hlen Sie 'Abbrechen', um diese Warnung nicht mehr anzuzeigen."
 
 #: ../../steprint.cpp:150
 msgid "Unscalable font"
@@ -2682,32 +2684,32 @@ msgstr "' in Stil '"
 
 #: ../../stestyls.cpp:818
 msgid "Invalid foreground colour in style '"
-msgstr "Ungültige Vordergrundfarbe in Stil '"
+msgstr "UngÃ¼ltige Vordergrundfarbe in Stil '"
 
 #: ../../stestyls.cpp:828
 msgid "Invalid background colour in style '"
-msgstr "Ungültige Hintergrundfarbe in Stil '"
+msgstr "UngÃ¼ltige Hintergrundfarbe in Stil '"
 
 #: ../../stestyls.cpp:843
 msgid "Invalid font size in style '"
-msgstr "Ungültiger Schriftgrad in Stil '"
+msgstr "UngÃ¼ltiger Schriftgrad in Stil '"
 
-# *** todo was ist das für eine Einstellung?
+# *** todo was ist das fÃ¼r eine Einstellung?
 #: ../../stestyls.cpp:884
 msgid "Invalid letter case for style '"
 msgstr "Invalid letter case for style '"
 
-# *** todo was ist das für eine Einstellung?
+# *** todo was ist das fÃ¼r eine Einstellung?
 #: ../../stestyls.cpp:896
 msgid "Invalid indicator style in '"
 msgstr "Invalid indicator style in '"
 
-# *** todo was ist das für eine Einstellung?
+# *** todo was ist das fÃ¼r eine Einstellung?
 #: ../../stestyls.cpp:906
 msgid "Invalid marker style in '"
 msgstr "Invalid marker style in '"
 
-# *** todo was ist das für eine Einstellung?
+# *** todo was ist das fÃ¼r eine Einstellung?
 #: ../../stestyls.cpp:910
 msgid "Style set for non indicator or marker in '"
 msgstr "Style set for non indicator or marker in '"
@@ -2725,7 +2727,7 @@ msgstr "Modus mit einzelnen Dateien"
 # The translation won't only be used if the language is loaded before the usage show
 #: ../../wxstedit.cpp:75
 msgid "open the given filespecs recursively, quote values \"*.txt\""
-msgstr "öffnet die aufgelisteten Datein rekursiv, Werte mit \"*.txt\" zitieren"
+msgstr "Ã¶ffnet die aufgelisteten Datein rekursiv, Werte mit \"*.txt\" zitieren"
 
 # The translation won't only be used if the language is loaded before the usage show
 #: ../../wxstedit.cpp:78
@@ -2747,12 +2749,12 @@ msgid ""
 "' has an invalid name.\n"
 "Continue without using a config file?"
 msgstr ""
-"' hat einen ungültigen Namen.\n"
+"' hat einen ungÃ¼ltigen Namen.\n"
 "Fortsetzen, ohne eine Konfigurationsdatei zu verwenden?"
 
 #: ../../wxstedit.cpp:241
 msgid "Invalid config file name"
-msgstr "Ungültiger Name der Konfigurationsdatei"
+msgstr "UngÃ¼ltiger Name der Konfigurationsdatei"
 
 #: ../../wxstedit.cpp:250
 msgid ""
@@ -2764,7 +2766,7 @@ msgstr ""
 
 #: ../../wxstedit.cpp:251
 msgid "Invalid config file"
-msgstr "Ungültige Konfigurationsdatei"
+msgstr "UngÃ¼ltige Konfigurationsdatei"
 
 #: ../../wxstedit.cpp:318
 msgid "Help..."
@@ -2793,7 +2795,7 @@ msgstr "STE shell testen"
 #: ../../wxstedit.cpp:354
 #, c-format
 msgid "Opening %d files, unable to open any more."
-msgstr "%d Dateien werden geöffnet, mehr geht nicht."
+msgstr "%d Dateien werden geÃ¶ffnet, mehr geht nicht."
 
 #: ../../wxstedit.cpp:355
 msgid "Maximum number of files"
@@ -2801,11 +2803,11 @@ msgstr "Maximale Anzahl an Dateien"
 
 #: ../../wxstedit.cpp:406
 msgid "There was a problem trying to load file(s):\n"
-msgstr "Problem beim Öffnen dieser Datei(en):\n"
+msgstr "Problem beim Ã–ffnen dieser Datei(en):\n"
 
 #: ../../wxstedit.cpp:410
 msgid "Unable to load file(s)"
-msgstr "Fehler beim Öffnen"
+msgstr "Fehler beim Ã–ffnen"
 
 #: ../../wxstedit.cpp:443
 msgid ""
@@ -2824,12 +2826,12 @@ msgid ""
 "events and prints the contents of the line when you press enter.\n"
 "\n"
 msgstr ""
-"Events und zeigt nach Drücken der Eingabetaste den Inhalt der Zeile.\n"
+"Events und zeigt nach DrÃ¼cken der Eingabetaste den Inhalt der Zeile.\n"
 "\n"
 
 #: ../../wxstedit.cpp:446
 msgid "For demo purposes, the shell understands these simple commands.\n"
-msgstr "Für Testzwecke versteht die Shell folgende einfache Befehle:\n"
+msgstr "FÃ¼r Testzwecke versteht die Shell folgende einfache Befehle:\n"
 
 #: ../../wxstedit.cpp:447
 msgid " SetMaxHistoryLines num : set the number of lines in history buffer\n"
@@ -2862,7 +2864,7 @@ msgstr ""
 #: ../../wxstedit.cpp:532
 #, c-format
 msgid "The maximum number of history lines is set to %d.\n"
-msgstr "Die Höchstzahl der Zeilen im Puffer wurde auf %d gesetzt.\n"
+msgstr "Die HÃ¶chstzahl der Zeilen im Puffer wurde auf %d gesetzt.\n"
 
 #: ../../wxstedit.cpp:535
 msgid "ERR: Expected number, eg. SetMaxHistoryLines 10\n"
@@ -2871,7 +2873,7 @@ msgstr "FEHLER: Zahl erwartet, z.B. SetMaxHistoryLines 10\n"
 #: ../../wxstedit.cpp:544
 #, c-format
 msgid "The maximum number of displayed lines is set to %d.\n"
-msgstr "Die Höchstzahl der angezeigten Zeilen wurde auf %d gesetzt.\n"
+msgstr "Die HÃ¶chstzahl der angezeigten Zeilen wurde auf %d gesetzt.\n"
 
 #: ../../wxstedit.cpp:547
 msgid "ERR: Expected number, eg. SetMaxLines 10\n"
@@ -2879,7 +2881,7 @@ msgstr "FEHLER: Zahl erwartet, z.B. SetMaxLines 10\n"
 
 #: ../../wx/stedit/stedlgs.h:429
 msgid "Insert Text"
-msgstr "Text einfügen"
+msgstr "Text einfÃ¼gen"
 
 #: ../../wx/stedit/stedlgs.h:494
 msgid "Columnize Text"
