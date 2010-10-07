@@ -408,8 +408,8 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
 
 void wxUsage()
 {
-   wxCmdLineParser parser;
-   wxTheApp->OnInitCmdLine(parser);
-   parser.Usage();
+    wxCmdLineParser parser;
+    wxTheApp->OnInitCmdLine(parser);
+    parser.Usage(); // trac.wxwidgets.org/ticket/12549
 }
 
