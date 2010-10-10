@@ -408,8 +408,11 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
 
 void wxUsage()
 {
-    wxCmdLineParser parser;
-    wxTheApp->OnInitCmdLine(parser);
-    parser.Usage(); // trac.wxwidgets.org/ticket/12549
+   wxCmdLineParser parser;
+   wxTheApp->OnInitCmdLine(parser);
+#ifdef __WXMSW__
+   parser.Usage(); // trac.wxwidgets.org/ticket/12549
+#else
+   // wxMessageBox(parser.GetUsageString()); // GetUsageString() is private. sigh. TODO: trac ticket to make it public
+#endif
 }
-
