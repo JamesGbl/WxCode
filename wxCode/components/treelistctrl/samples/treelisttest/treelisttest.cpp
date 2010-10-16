@@ -3,8 +3,8 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.33 2010-04-19 17:55:52 pgriddev Exp $
-// Copyright:   (c) 2004-2008 wxCode
+// RCS-ID:      $Id: treelisttest.cpp,v 1.34 2010-10-16 15:04:44 pgriddev Exp $
+// Copyright:   (c) 2004-2010 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
@@ -61,15 +61,15 @@
 
 #define TRACE_MASK  _("treelisttest")
 
-// define to inherit wxTreeListCtrl and thus be able to get mouse events
+// define to inherit wxTreeListCtrl and thus be able to get mouse & scroll events
 // #define WITH_CHILD_CLASS
 
 const wxString APP_NAME = _("wxTreeListCtrl");
 const wxString APP_VENDOR = _("wxCode");
-const wxString APP_VERSION = _("2009_07_19");
+const wxString APP_VERSION = _("2010_06_26");
 const wxString APP_MAINT = _("Ronan Chartois");
 const wxString APP_LICENCE = _("wxWindows");
-const wxString APP_COPYRIGTH = _("(C) 2005-2009 Otto Wyss && others");
+const wxString APP_COPYRIGTH = _("(C) 2005-2010 Otto Wyss && others");
 
 const wxString APP_DESCR = _("\
 A tree list control presents information as a hierarchy, with \n\
@@ -162,6 +162,7 @@ public:
     }
 protected:
     void OnMouseGeneric(wxMouseEvent &event);
+    void OnScrollGeneric(wxScrollWinEvent& event);
 
     DECLARE_EVENT_TABLE()
 };
@@ -271,8 +272,6 @@ public:
     // tree events
     void OnVetoingEvent (wxTreeEvent &event);
     void OnTreeGeneric (wxTreeEvent &event);
-    // mouse events
-    void OnMouseGeneric(wxMouseEvent &event);
 
 private:
     int m_alignment;
@@ -509,8 +508,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_TREE_ITEM_GETTOOLTIP(-1,        AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
     EVT_TREE_ITEM_MENU(-1,              AppFrame::OnTreeGeneric)
     EVT_TREE_STATE_IMAGE_CLICK(-1,      AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
-    // mouse
-    EVT_MOUSE_EVENTS(                   AppFrame::OnMouseGeneric)
 END_EVENT_TABLE ()
 
 
@@ -545,7 +542,7 @@ AppFrame::AppFrame (const wxString &title)
 #endif // wxUSE_LOG
 
     // create tree
-    m_treelist = new wxTreeListCtrl(
+    m_treelist = new MyTreeListCtrl(
         m_panel, wxID_ANY,
         wxDefaultPosition, wxDefaultSize,
         wxBORDER_THEME );  // border theme used to cause flicker
@@ -978,68 +975,13 @@ const wxChar *name;
             s.Printf("%X ", (unsigned int)(aId[i].m_pItem));
             sSel += s;
         }
-        wxLogMessage(_("selected: ") + sSel);
+//        wxLogMessage(_("selected: ") + sSel);
     } else {
         wxTreeItemId id = m_treelist->GetSelection();
-        wxLogMessage(_("selection: %X"), (unsigned int)(id.IsOk() ? id.m_pItem : 0));
+//        wxLogMessage(_("selection: %X"), (unsigned int)(id.IsOk() ? id.m_pItem : 0));
     }
 
     event.Skip();  // safer, and necessary for default behavior of double-click
-}
-
-
-void AppFrame::OnMouseGeneric(wxMouseEvent &event) {
-const wxChar *name;
-
-// log event name
-    if (event.GetEventType() == wxEVT_LEFT_DOWN) {
-        name = _("wxEVT_LEFT_DOWN");
-    } else
-    if (event.GetEventType() == wxEVT_LEFT_UP) {
-        name = _("wxEVT_LEFT_UP");
-    } else
-    if (event.GetEventType() == wxEVT_LEFT_DCLICK) {
-        name = _("wxEVT _LEFT_DCLICK");
-    } else
-    if (event.GetEventType() == wxEVT_MIDDLE_DOWN) {
-        name = _("wxEVT_MIDDLE_DOWN");
-    } else
-    if (event.GetEventType() == wxEVT_MIDDLE_UP) {
-        name = _("wxEVT_MIDDLE_UP");
-    } else
-    if (event.GetEventType() == wxEVT_MIDDLE_DCLICK) {
-        name = _("wxEVT_MIDDLE_DCLICK");
-    } else
-    if (event.GetEventType() == wxEVT_RIGHT_DOWN) {
-        name = _("wxEVT_RIGHT_DOWN");
-    } else
-    if (event.GetEventType() == wxEVT_RIGHT_UP) {
-        name = _("wxEVT_RIGHT_UP");
-    } else
-    if (event.GetEventType() == wxEVT_RIGHT_DCLICK) {
-        name = _("wxEVT_RIGHT_DCLICK");
-    } else
-    if (event.GetEventType() == wxEVT_MOTION) {
-        name = _("wxEVT_MOTION");
-    } else
-    if (event.GetEventType() == wxEVT_ENTER_WINDOW) {
-        name = _("wxEVT_ENTER_WINDOW");
-    } else
-    if (event.GetEventType() == wxEVT_LEAVE_WINDOW) {
-        name = _("wxEVT_LEAVE_WINDOW");
-    } else
-    if (event.GetEventType() == wxEVT_MOUSEWHEEL) {
-        name = _("wxEVT_MOUSEWHEEL");
-    } else
-    {
-        name = _("BUG,unexpected");
-    }
-    wxLogMessage(_("MOUSE    type=<%s (%d)>    point=(%d, %d)"),
-        name, event.GetEventType(),
-        event.GetX(), event.GetY()
-    );
-
-    event.Skip();
 }
 
 
@@ -1221,6 +1163,7 @@ void AppFrame::ToggleStyle (int id, long flag) {
 
 BEGIN_EVENT_TABLE(MyTreeListCtrl, wxTreeListCtrl)
     EVT_MOUSE_EVENTS(MyTreeListCtrl::OnMouseGeneric)
+    EVT_SCROLLWIN(MyTreeListCtrl::OnScrollGeneric)
 END_EVENT_TABLE();
 
 
@@ -1257,6 +1200,8 @@ wxString message = "";
     } else
     if (event.GetEventType() == wxEVT_MOTION) {
         name = _("wxEVT_MOTION");
+        // too many of those, do not log them
+        event.Skip(); return;
     } else
     if (event.GetEventType() == wxEVT_ENTER_WINDOW) {
         name = _("wxEVT_ENTER_WINDOW");
@@ -1280,5 +1225,45 @@ wxString message = "";
 
     event.Skip();
 }
+
+
+void MyTreeListCtrl::OnScrollGeneric(wxScrollWinEvent& event) {
+const wxChar *name;
+
+// log event name
+    if (event.GetEventType() == wxEVT_SCROLLWIN_TOP) {
+        name = _("wxEVT_SCROLLWIN_TOP");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_BOTTOM) {
+        name = _("wxEVT_SCROLLWIN_BOTTOM");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_LINEUP) {
+        name = _("wxEVT_SCROLLWIN_LINEUP");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_LINEDOWN) {
+        name = _("wxEVT_SCROLLWIN_LINEDOWN");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_PAGEUP) {
+        name = _("wxEVT_SCROLLWIN_PAGEUP");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_PAGEDOWN) {
+        name = _("wxEVT_SCROLLWIN_PAGEDOWN");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_THUMBTRACK ) {
+        name = _("wxEVT_SCROLLWIN_THUMBTRACK");
+    } else
+    if (event.GetEventType() == wxEVT_SCROLLWIN_THUMBRELEASE ) {
+        name = _("wxEVT_SCROLLWIN_THUMBRELEASE");
+    } else
+    {
+        name = _("BUG,unexpected");
+    }
+    wxLogMessage(_("SCROLL WIN type=<%s (%d)>"),
+        name, event.GetEventType()
+    );
+
+    event.Skip();
+}
+
 
 #endif // WITH_CHILD_CLASS
