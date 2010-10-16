@@ -20,6 +20,9 @@ Known problems:
 
 Release History:
 ================
+* next release
+  - Added: make scroll events accessible to child class [#3082693]
+  - Added: test program includes demonstrates capturing mouse events in child class (compile option WITH_CHILD_CLASS) [#3082693]
 
 * treelistctrl_2010-06.26.tar.gz
   - Fixed: improved support for GCC 4.x & compiling under Linux/GTK [#2858731]

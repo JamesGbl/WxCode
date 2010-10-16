@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.115 2010-06-26 16:37:41 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.116 2010-10-16 15:02:35 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -54,7 +54,7 @@
 #include "wx/treelistctrl.h"
 
 #include <wx/log.h>  // only required for debugging purpose
-
+#include <wx/msgdlg.h>  // only required for debugging purpose
 
 // ---------------------------------------------------------------------------
 // array types
@@ -4207,6 +4207,10 @@ void wxTreeListMainWindow::OnIdle (wxIdleEvent &WXUNUSED(event)) {
 }
 
 void wxTreeListMainWindow::OnScroll (wxScrollWinEvent& event) {
+
+    // send event to wxTreeListCtrl (for user code)
+    if (m_owner->GetEventHandler()->ProcessEvent(event)) return; // handled (and not skipped) in user code
+
     // FIXME
 #if defined(__WXGTK__) && !defined(__WXUNIVERSAL__)
     wxScrolledWindow::OnScroll(event);
@@ -5074,3 +5078,4 @@ void wxTreeListCtrl::SetToolTip(wxToolTip *tip) {
 void wxTreeListCtrl::SetItemToolTip(const wxTreeItemId& item, const wxString &tip) {
     m_main_win->SetItemToolTip(item, tip);
 }
+
