@@ -54,6 +54,7 @@
 #include "wx/dir.h"
 #include "wx/filename.h"
 #include "wx/html/htmlwin.h"
+#include "wx/clipbrd.h"
 
 #include "../../src/wxext.h" // wxLocale_Init()
 #include "app.h"
@@ -309,6 +310,7 @@ bool wxStEditApp::OnInit()
 
 int wxStEditApp::OnExit()
 {
+    wxTheClipboard->Flush();
     delete wxConfigBase::Set(NULL);
     return wxApp::OnExit();
 }
