@@ -28,6 +28,11 @@ WXDLLIMPEXP_CODE bool wxLocale_GetSupportedLanguages(LanguageArray*);
 WXDLLIMPEXP_CODE bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
 WXDLLIMPEXP_CODE bool wxLocale_Find(const wxString&, enum wxLanguage*);
 
+WXDLLIMPEXP_CODE void wxFrame_SetInitialPosition(wxFrame*,
+                    const wxPoint& pos = wxDefaultPosition,
+                    const wxSize& size = wxDefaultSize, int margin_pct = 5);
+WXDLLIMPEXP_CODE void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NULL);
+
 WXDLLIMPEXP_CODE void wxUsage();
 
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);

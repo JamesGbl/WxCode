@@ -69,6 +69,7 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
     iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxIconSize_Small));
     SetIcons(iconBundle);
 
+    ::wxFrame_SetInitialPosition(this, pos, size);
     return true;
 }
 

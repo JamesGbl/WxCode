@@ -69,7 +69,7 @@ public:
     wxSTEditorFrame(wxWindow *parent, wxWindowID id,
                     const wxString& title = STE_APPDISPLAYNAME,
                     const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxSize(400, 400),
+                    const wxSize& size = wxDefaultSize,
                     long style = wxDEFAULT_FRAME_STYLE,
                     const wxString& name = wxT("wxSTEditorFrame")) : wxFrame()
     {

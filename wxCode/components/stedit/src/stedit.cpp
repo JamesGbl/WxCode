@@ -3618,13 +3618,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
 
     wxPreviewFrame *frame = new wxPreviewFrameEx(preview, this, wxGetStockLabelEx(wxID_PREVIEW, wxSTOCK_PLAINTEXT));
     frame->SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon()); // use the pencil even in embedded wxStEdit
-
-    wxRect rect = wxGetClientDisplayRect();
-    rect.Intersect(wxRect(rect.x, rect.y, 600, 700));
-    rect.Deflate(20,20);
-    frame->SetSize(rect);
-
-    frame->Centre();
+    ::wxFrame_ClonePosition(frame, this); // Clone main frame position
     frame->Initialize();
     frame->Show();
     return true;

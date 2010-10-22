@@ -416,3 +416,39 @@ void wxUsage()
    // wxMessageBox(parser.GetUsageString()); // GetUsageString() is private. sigh. TODO: trac ticket to make it public
 #endif
 }
+
+void wxFrame_SetInitialPosition(wxFrame* wnd, const wxPoint& pos, const wxSize& size, int margin_pct)
+{
+   if (size == wxDefaultSize)
+   {
+      wxRect rect = wxGetClientDisplayRect();
+      wxSize size(
+         (rect.width  * (100 - margin_pct*2))/100, 
+         (rect.height * (100 - margin_pct*2))/100);
+         
+      wnd->SetSize(size);
+   }
+   if (pos == wxDefaultPosition)
+   {
+      wnd->Center();
+   }
+}
+
+void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
+{
+   otherwindow = otherwindow ? wxGetTopLevelParent(otherwindow) : wxTheApp->GetTopWindow();
+   wxFrame* topframe = wxStaticCast(otherwindow, wxFrame);
+   if (topframe->IsMaximized())
+   {
+      wnd->Maximize();
+   }
+   else if (topframe->IsFullScreen())
+   {
+      wnd->Maximize();
+   }
+   else
+   {
+      wxRect rect = topframe->GetScreenRect();
+      wnd->SetSize(rect);
+   }
+}
