@@ -372,9 +372,14 @@ public :
     // Load/Save methods
 
     bool GetDocumentSaved() const { return !GetFileName().GetPath().IsEmpty(); }
+    
+    // return true if the document hasn't been modified since the last time it
+    // was saved (implying that it returns false if it was never saved, even if
+    // the document is not modified)
+    bool AlreadySaved() { return !IsModified() && GetDocumentSaved(); }
 
     // Can/Should this document be saved (has valid filename and is modified)
-    bool CanSave() { return GetModify() && GetDocumentSaved(); }
+    bool CanSave() { return !AlreadySaved(); }
 
     // Load a file from the wxInputStream (probably a wxFileInputStream)
     //  The fileName is used only for the message on error
