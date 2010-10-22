@@ -206,8 +206,8 @@ public :
     // ------------------------------------------------------------------------
     // wxTextCtrl methods - this can be used as a replacement textctrl with
     //                      very few, if any, code changes.
-    bool CanCopy()  { return GetSelectionEnd() != GetSelectionStart(); }
-    bool CanCut()   { return CanCopy() && !GetReadOnly(); }
+    bool CanCopy() const { return GetSelectionEnd() != GetSelectionStart(); }
+    bool CanCut()  const { return CanCopy() && !GetReadOnly(); }
 
     // FIXME gtk runs evt loop during CanPaste check causing a crash in
     //   scintilla's drawing code, for now let's just assume you can always paste
@@ -217,26 +217,74 @@ public :
 
     // void Clear() { ClearAll(); } // wxSTC uses Clear to clear selection
     void DiscardEdits()                   { SetSavePoint(); }
-    int GetInsertionPoint()               { return GetCurrentPos(); }
-    int GetLineLength(int iLine);         // excluding any cr/lf at end
-    wxString GetLineText(int line);       // excluding any cr/lf at end
-    long GetNumberOfLines()               { return GetLineCount(); }
-    void GetSelection(long *iStart, long *iEnd) { int s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
-    wxString GetValue()                   { return GetText(); }
-    bool IsModified()                     { return GetModify(); }
+    int GetLineLength(int iLine) const;   // excluding any cr/lf at end
+    wxString GetLineText(int line) const; // excluding any cr/lf at end
     void SetInsertionPoint(int pos)       { GotoPos(pos); }
     void SetInsertionPointEnd()           { GotoPos(GetLength()); }
     void ShowPosition(int pos)            { GotoPos(pos); }
     void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + text.Len()); }
-    long XYToPosition(long x, long y)     { return x + PositionFromLine(y); }
+    long XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
     // Remove this section of text between markers
     void Remove(int iStart, int iEnd)     { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }
 
     // Get the row/col representation of the position
-    bool PositionToXY(long pos, long *x, long *y);
+    bool PositionToXY(long pos, long *x, long *y) const;
 
-#if (wxVERSION_NUMBER < 2900)
-    bool HasSelection()
+#if (wxVERSION_NUMBER >= 2900)
+    void GetSelection(long *iStart, long *iEnd) const
+    { 
+        long s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
+    }
+#else
+    wxString GetLine(int line) const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line);
+    }
+    int GetLength() const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength();
+    }
+    int LineFromPosition(int pos) const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos);
+    }
+    int PositionFromLine(int line) const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line);
+    }
+    void GetSelection(long *iStart, long *iEnd) const
+    { 
+        int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
+    }
+    void GetSelection(int* startPos, int* endPos)
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(startPos, endPos);
+    }
+    int GetSelectionStart() const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart();
+    }
+    int GetSelectionEnd() const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd();
+    }
+    bool GetReadOnly() const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly();
+    }
+    int GetInsertionPoint() const
+    {
+        return wxConstCast(this, wxSTEditor)->GetCurrentPos();
+    }
+    long GetNumberOfLines() const
+    { 
+        return wxConstCast(this, wxSTEditor)->GetLineCount();
+    }
+    bool IsModified() const
+    {
+        return wxConstCast(this, wxSTEditor)->GetModify();
+    }
+    bool HasSelection() const
     {
         return (GetSelectionStart() != GetSelectionEnd());
     }
@@ -376,10 +424,10 @@ public :
     // return true if the document hasn't been modified since the last time it
     // was saved (implying that it returns false if it was never saved, even if
     // the document is not modified)
-    bool AlreadySaved() { return !IsModified() && GetDocumentSaved(); }
+    bool AlreadySaved() const { return !IsModified() && GetDocumentSaved(); }
 
     // Can/Should this document be saved (has valid filename and is modified)
-    bool CanSave() { return !AlreadySaved(); }
+    bool CanSave() const { return !AlreadySaved(); }
 
     // Load a file from the wxInputStream (probably a wxFileInputStream)
     //  The fileName is used only for the message on error

@@ -727,7 +727,7 @@ void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
     m_activating = false;
 }
 
-bool wxSTEditor::PositionToXY(long pos, long *col, long *row)
+bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
 {
     if ((pos < 0) || (pos > GetLength()))
     {
@@ -938,12 +938,12 @@ void wxSTEditor::AppendTextGotoEnd(const wxString &text, bool goto_end)
         GotoPos(GetLength());
 }
 
-int wxSTEditor::GetLineLength(int line)
+int wxSTEditor::GetLineLength(int line) const
 {
     return GetLineText(line).Length();
 }
 
-wxString wxSTEditor::GetLineText(int line)
+wxString wxSTEditor::GetLineText(int line) const
 {
     wxString lineText = GetLine(line);
     size_t len = lineText.Length();
