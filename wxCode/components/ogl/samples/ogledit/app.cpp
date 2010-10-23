@@ -107,8 +107,7 @@ bool MyApp::OnInit(void)
     frame->SetMenuBar(menu_bar);
 
 #if wxUSE_STATUSBAR
-    frame->CreateStatusBar();
-    frame->GetStatusBar()->PushStatusText(_("Ready"));
+    frame->CreateStatusBar()->PushStatusText(_("Ready"));
 #endif // wxUSE_STATUSBAR
 
   frame->Centre();

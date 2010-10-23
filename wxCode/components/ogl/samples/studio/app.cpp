@@ -158,8 +158,7 @@ bool csApp::OnInit(void)
     docManager->FileHistoryLoad(config);
 
 #if wxUSE_STATUSBAR
-    frame->CreateStatusBar();
-    frame->GetStatusBar()->PushStatusText(_("Ready"));
+    frame->CreateStatusBar()->PushStatusText(_("Ready"));
 #endif // wxUSE_STATUSBAR
 
     // The ordering of these is important for layout purposes
