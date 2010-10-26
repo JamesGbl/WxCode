@@ -2099,7 +2099,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
         if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
             SetLanguage(fileName);
 
-        const size_t buf_len = wxMin(1024*1024, (size_t)stream_len);
+        const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
         wxCharBuffer charBuf(buf_len + 2); // add room for terminators
         bool unicode     = false;
         bool has_unicode = false;

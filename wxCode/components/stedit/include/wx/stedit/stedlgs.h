@@ -296,7 +296,7 @@ public:
     int               m_current_lang;
     int               m_current_style_n;
     int               m_keyword_n;
-    int               m_max_stylename_length;
+    size_t            m_max_stylename_length;
     wxArrayInt        m_usedLangs;
 
     static wxString sm_helpString; // the text to show in the help editor

@@ -1049,7 +1049,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     {
         wxString styleName = steStyles.GetStyleName(styleArray[n]);
         m_styleChoice->Append(styleName, (void*)(long)styleArray[n]);
-        int len = styleName.Length() + 1;
+        size_t len = styleName.Length() + 1;
         if (m_max_stylename_length < len)
             m_max_stylename_length = len;
     }
@@ -1158,7 +1158,7 @@ void wxSTEditorPrefDialogPageLangs::SetControlValues()
             //if ((word_number >= 0) && (word_number < steLangs.GetKeyWordsCount(m_current_lang)))
             //    styleName += wxT(" (*)");
 
-            styleName += wxString(wxT(' '), wxMax(1, m_max_stylename_length - styleName.Length()));
+            styleName += wxString(wxT(' '), wxMax(1UL, m_max_stylename_length - styleName.Length()));
             styleName += steLangs.GetStyleDescription(m_current_lang, n);
 
             m_styleEditor->AppendText(styleName + wxT("\n"));
