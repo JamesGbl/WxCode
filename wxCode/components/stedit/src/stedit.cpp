@@ -2777,7 +2777,10 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case wxID_REDO : Redo(); return true;
         case wxID_UNDO : Undo(); return true;
 
-        case ID_STE_READONLY : SetReadOnly(event.IsChecked()); return true;
+        case ID_STE_READONLY :
+            SetReadOnly(event.IsChecked());
+            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+            return true;
 
         case ID_STE_COMPLETEWORD : StartAutoCompleteWord(false, true); return true;
         case ID_STE_COPYPATH     : CopyPath(); return true;

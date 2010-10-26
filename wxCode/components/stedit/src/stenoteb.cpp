@@ -105,13 +105,23 @@ void wxSTEditorNotebook::CreateOptions(const wxSTEditorOptions& options)
         GetOptions().SetNotebookPopupMenu(steMM->CreateNotebookPopupMenu(), false);
 }
 
-wxString wxSTEditorNotebook::FileNameToTabName(const wxFileName& fileName) const
+wxString wxSTEditorNotebook::FileNameToTabName(const wxSTEditor* editor) const
 {
-    wxString name = wxFILE_SEP_PATH+fileName.GetFullPath();
+    wxString name = editor->GetFileName().GetFullName();
 #ifdef __WXMSW__
     name.Replace(wxT("&"), wxT("&&"));
 #endif
-    return name.AfterLast(wxFILE_SEP_PATH);
+    if (editor->GetReadOnly())
+    {
+        name << wxT(" [");
+        name << _("Read only");
+        name << wxT("]");
+    }
+    if (editor->IsModified())
+    {
+        name << wxMODIFIED_ASTERISK;
+    }
+    return name;
 }
 
 void wxSTEditorNotebook::OnPageChanged(wxNotebookEvent &event)
@@ -179,7 +189,7 @@ wxSTEditorSplitter *wxSTEditorNotebook::GetEditorSplitter( int page )
     return wxDynamicCast(GetPage(page), wxSTEditorSplitter);
 }
 
-int wxSTEditorNotebook::FindEditorPage(wxSTEditor *editor)
+int wxSTEditorNotebook::FindEditorPage(const wxSTEditor* editor)
 {
     int sel = GetSelection();
 
@@ -297,7 +307,7 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
         return false;
     }
 
-    wxString title = FileNameToTabName(splitter->GetEditor()->GetFileName());
+    wxString title = FileNameToTabName(splitter->GetEditor());
     size_t n_pages = GetPageCount();
 
     if (nPage < 0) // they want to insert it anywhere
@@ -324,13 +334,12 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
             nPage = n_pages;
     }
 
-    const wxString modified = (splitter->GetEditor() && splitter->GetEditor()->IsModified()) ? wxMODIFIED_ASTERISK : wxEmptyString;
     if (n_pages < 1)
         bSelect = true;
     if (nPage < int(n_pages))
-        return InsertPage(nPage, splitter, modified+title, bSelect);
+        return InsertPage(nPage, splitter, title, bSelect);
 
-    bool ret = AddPage(splitter, modified+title, bSelect);
+    bool ret = AddPage(splitter, title, bSelect);
     UpdateAllItems();
     return ret;
 }
@@ -649,8 +658,7 @@ void wxSTEditorNotebook::OnSTEState(wxSTEditorEvent &event)
             int page = FindEditorPage(editor);
             if (page >= 0) // if < 0 then not in notebook (or at least yet)
             {
-                const wxString modified = editor->GetModify() ? wxMODIFIED_ASTERISK : wxEmptyString;
-                SetPageText(page, FileNameToTabName(event.GetString()) + modified);
+                SetPageText(page, FileNameToTabName(editor));
                 SortTabs(GetOptions().GetNotebookOptions());
             }
         }

@@ -457,7 +457,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->AppendCheckItem(ID_STE_READONLY, _("Readonly"), _("Make document readonly"));
+        menu->AppendCheckItem(ID_STE_READONLY, _("Read only"), _("Make document read only"));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_COMPLETEWORD) && !HasMenuOptionType(STE_MENU_READONLY))
