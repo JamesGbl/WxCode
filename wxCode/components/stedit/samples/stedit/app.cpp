@@ -81,8 +81,9 @@ class STEditorFrame : public wxSTEditorFrame
 {
     DECLARE_CLASS(STEditorFrame)
 public:
-    STEditorFrame() : wxSTEditorFrame( NULL, wxID_ANY, STE_APPDISPLAYNAME)
+    STEditorFrame() : wxSTEditorFrame()
     {
+        Create();
         m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
     }
 };

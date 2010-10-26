@@ -80,7 +80,7 @@ public:
     virtual ~wxSTEditorFrame();
     virtual bool Destroy();
 
-    bool Create(wxWindow *parent, wxWindowID id,
+    bool Create(wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
                 const wxString& title = STE_APPDISPLAYNAME,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
