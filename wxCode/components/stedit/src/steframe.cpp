@@ -136,7 +136,10 @@ void wxSTEditorFrame::InitAcceleratorArray()
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));
-    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'W', ID_STN_CLOSE_PAGE));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'W'   , ID_STN_CLOSE_PAGE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F4, ID_STN_CLOSE_PAGE));
+
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'A', ID_STN_SAVE_ALL));
    
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'V', ID_STE_PASTE_RECT));
