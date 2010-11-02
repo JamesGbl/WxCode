@@ -24,11 +24,11 @@
 
 class WXDLLIMPEXP_SHEET wxSheetCellEditorRefData;
 
-class WXDLLEXPORT wxWindow;
-class WXDLLEXPORT wxCheckBox;
-class WXDLLEXPORT wxComboBox;
-class WXDLLEXPORT wxTextCtrl;
-class WXDLLEXPORT wxSpinCtrl;
+class WXDLLIMPEXP_FWD_CORE wxWindow;
+class WXDLLIMPEXP_FWD_CORE wxCheckBox;
+class WXDLLIMPEXP_FWD_CORE wxComboBox;
+class WXDLLIMPEXP_FWD_CORE wxTextCtrl;
+class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
 
 // ----------------------------------------------------------------------------
 // wxSheetCellEditorEvtHandler - an event handler for the editors that

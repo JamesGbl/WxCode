@@ -28,8 +28,8 @@
 #include "wx/scrolbar.h"
 #include "wx/clntdata.h"
 
-class WXDLLEXPORT wxTimer;
-class WXDLLEXPORT wxTimerEvent;
+class WXDLLIMPEXP_FWD_BASE wxTimer;
+class WXDLLIMPEXP_FWD_BASE wxTimerEvent;
 
 // ----------------------------------------------------------------------------
 // wxSheetChildWindow - Child window of the wxSheet, forwards events to sheet
