@@ -35,6 +35,7 @@
 #include "wx/colordlg.h"
 #include "wx/fontdlg.h"
 #include "wx/artprov.h"
+#include "wx/stopwatch.h"
 
 #if wxCHECK_VERSION(2,7,0)
     #include "wx/numdlg.h"
@@ -88,7 +89,7 @@ void TestwxSheetValueProvider_SetValue(int numRows, int numCols, wxSheetValuePro
     PsuedoRandom rnd(0, wxMin(numRows, numCols));
     int n, count = numRows * numCols * 3;
     wxPrintf(wxT("Start TestwxSheetValueProvider_SetValue\n"));
-    wxStartTimer();
+    wxStopWatch sw;
 
 #if 1
     for (n = 0; n < count; n++)
@@ -110,7 +111,7 @@ void TestwxSheetValueProvider_SetValue(int numRows, int numCols, wxSheetValuePro
     for (n = 0; n < count; n++)
         val = values->GetValue(wxSheetCoords(rnd.Get(numRows),rnd.Get(numCols)));
 #endif
-    wxPrintf(wxT("End TestwxSheetValueProvider_SetValue Time %ld\n"), wxGetElapsedTime());
+    wxPrintf(wxT("End TestwxSheetValueProvider_SetValue Time %ld\n"), sw.Time());
     fflush(stdout); fflush(stderr);
 }
 
@@ -119,7 +120,7 @@ void TestwxSheetValueProvider()
     int numRows = 500, numCols = numRows;
     PsuedoRandom rnd(0, wxMin(numRows, numCols));
 
-    wxStartTimer();
+    wxStopWatch sw;
     wxPrintf(wxT("Start TestwxSheetValueProvider\n"));
     {
         wxPrintf(wxT("Start wxSheetValueProviderString\n"));
@@ -166,14 +167,14 @@ void TestwxSheetValueProvider()
 
 //
 
-    wxPrintf(wxT("TestwxSheetValueProvider Time %ld\n"), wxGetElapsedTime()); fflush(stdout);
+    wxPrintf(wxT("TestwxSheetValueProvider Time %ld\n"), sw.Time()); fflush(stdout);
 }
 
 void TestFullRedrawSpeed(wxSheet* sheet, int count)
 {
     wxRect rect(wxPoint(0,0), sheet->GetGridWindow()->GetSize());
     //wxRect rect(1, 1, 1, 1);
-    wxStartTimer();
+    wxStopWatch sw;
     wxPrintf(wxT("Start Full Redraw Test "));
 
     for (int n = 0; n < count; n++)
@@ -182,12 +183,12 @@ void TestFullRedrawSpeed(wxSheet* sheet, int count)
         wxYield();
     }
 
-    wxPrintf(wxT("Time %ld\n"), wxGetElapsedTime()); fflush(stdout);
+    wxPrintf(wxT("Time %ld\n"), sw.Time()); fflush(stdout);
 }
 
 void TestMoveCursorSpeed(wxSheet* sheet)
 {
-    wxStartTimer();
+    wxStopWatch sw;
     wxPrintf(wxT("Start Cursor Speed Test "));
 
     int rows = sheet->GetNumberRows()/2;
@@ -203,7 +204,7 @@ void TestMoveCursorSpeed(wxSheet* sheet)
         }
     }
 
-    wxPrintf(wxT("Time %ld\n"), wxGetElapsedTime()); fflush(stdout);
+    wxPrintf(wxT("Time %ld\n"), sw.Time()); fflush(stdout);
 }
 
 // ============================================================================
@@ -218,7 +219,7 @@ bool GridApp::OnInit()
 {
     //_CrtSetBreakAlloc(2061);
 
-    //TestwxSheetValueProvider();
+    // TestwxSheetValueProvider();
 
     GridFrame *frame = new GridFrame;
     frame->SetSize(800, 600);
@@ -1694,14 +1695,14 @@ void GridFrame::OnVTable(wxCommandEvent& )
 
         //frame->grid->MakeCellVisible(wxSheetCoords(99,99));
         wxRect rect(wxPoint(0,0), win->m_grid->GetGridWindow()->GetSize());
-        wxStartTimer();
+        wxStopWatch sw;
 
         for (int n = 0; n < 000; n++)
         {
             win->m_grid->GetGridWindow()->Refresh(true, &rect);
             wxYield();
         }
-        wxPrintf(wxT("Time %ld\n"), wxGetElapsedTime());
+        wxPrintf(wxT("Time %ld\n"), sw.Time());
 
     }
 }
