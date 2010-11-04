@@ -33,7 +33,7 @@ WXDLLIMPEXP_CODE void wxFrame_SetInitialPosition(wxFrame*,
                     const wxSize& size = wxDefaultSize, int margin_pct = 5);
 WXDLLIMPEXP_CODE void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NULL);
 
-WXDLLIMPEXP_CODE void wxUsage();
+WXDLLIMPEXP_CODE void wxCommandLineUsage(wxWindow* parent);
 
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 

@@ -68,7 +68,7 @@ enum Menu_IDs
 {
     ID_SHOW_HELP      = ID_STE__LAST, // IDs greater than this won't conflict
     ID_SHOW_README,
-#ifdef __WXMSW__
+#if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
     ID_SHOW_USAGE,
 #endif
     ID_TEST_STESHELL
@@ -201,16 +201,15 @@ bool wxStEditApp::OnInit()
     // Add our help dialogs
     menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
     menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
-#ifdef __WXMSW__
-    menu->Append(ID_SHOW_USAGE, _("&Options..."), wxString::Format(_("Show command line help")));
-#endif
+
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
     frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
     frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-#ifdef __WXMSW__
+#if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
+    menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), wxString::Format(_("Show command line help")));
     frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 #endif
@@ -395,9 +394,9 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         case ID_SHOW_README:
             CreateHelpFrame(wxString::Format(_("Programming help for %s"), STE_APPDISPLAYNAME), (const char*)readme_htm);
             break;
-#ifdef __WXMSW__
+#if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
         case ID_SHOW_USAGE:
-            ::wxUsage();
+            ::wxCommandLineUsage(GetTopWindow());
             break;
 #endif
         case ID_TEST_STESHELL :

@@ -406,14 +406,20 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
 }
 #endif
 
-void wxUsage()
+void wxCommandLineUsage(wxWindow* parent)
 {
-   wxCmdLineParser parser;
-   wxTheApp->OnInitCmdLine(parser);
-#ifdef __WXMSW__
-   parser.Usage(); // trac.wxwidgets.org/ticket/12549
+    wxCmdLineParser parser;
+    wxTheApp->OnInitCmdLine(parser);
+#if (wxVERSION_NUMBER >= 2900)
+    // GetUsageString() is public
+    wxMessageBox(parser.GetUsageString(), wxTheApp->GetAppDisplayName(), wxOK | wxICON_INFORMATION, parent);
+#elif defined(__WXMSW__)
+    // GetUsageString() is private, sigh
+    parser.Usage();
+    wxUnusedVar(parent);
 #else
-   // wxMessageBox(parser.GetUsageString()); // GetUsageString() is private. sigh. TODO: trac ticket to make it public
+   // Usage() goes to console, sigh
+    wxUnusedVar(parent);
 #endif
 }
 
