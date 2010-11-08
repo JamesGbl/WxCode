@@ -106,7 +106,7 @@ bool wxStEditApp::OnInit()
     SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
     ::wxLocale_Init(&m_locale, STE_APPNAME, m_cmdline.m_lang);
-    //::wxLocale_Init(&m_locale, STE_APPNAME, wxLANGUAGE_SPANISH);
+    wxSTEditorOptions::SetGlobalDefaultFileName(wxString(_("unnamed")) + wxT(".txt")); // translated
 
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically
