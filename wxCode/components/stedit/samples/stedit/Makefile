@@ -58,24 +58,11 @@ APPEXTRALIBS = -l$(WXSTC_LIB) $(PROFILE)
 # ----------------------------------------------------------------------------
 # Source files, objects to link
 
-PROGRAM = wxstedit
+PROGRAM = app
 
 OBJECTS = \
-    ../../src/stedit.o \
-    ../../src/stedlgs.o \
-    ../../src/stedlgs_wdr.o \
-    ../../src/steexprt.o \
-    ../../src/stefindr.o \
-    ../../src/steframe.o \
-    ../../src/stelangs.o \
-    ../../src/stemenum.o \
-    ../../src/stenoteb.o \
-    ../../src/steopts.o \
-    ../../src/steprefs.o \
-    ../../src/steprint.o \
-    ../../src/stesplit.o \
-    ../../src/steshell.o \
-    ../../src/stestyls.o
+    cmdline.o \
+    link.o
 
 DEPFILES := $(OBJECTS:.o=.d)
 
@@ -85,12 +72,12 @@ DEPFILES := $(OBJECTS:.o=.d)
 all: $(WXSTEDIT_LIBNAME) $(PROGRAM)
 
 $(WXSTEDIT_LIBNAME) :
-	@(cd ../../src && make)
+	@(cd ../../src && $(MAKE))
 
 
 # wxstedit program using shared stedit library
-$(PROGRAM): $(PROGRAM).o $(TARGET_LIB_SHARED)
-	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
+$(PROGRAM): $(PROGRAM).o $(OBJECTS) $(TARGET_LIB_SHARED)
+	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
 
 # wxstedit program using static stedit library
 #$(PROGRAM): $(PROGRAM).o $(TARGET_LIB_STATIC)
