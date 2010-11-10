@@ -136,7 +136,7 @@ void wxSTEditorNotebook::OnPageChanged(wxNotebookEvent &event)
     wxSTERecursionGuard guard(m_rGuard_UpdatePageState);
     bool update_page_state = !guard.IsInside();
 
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && (wxVERSION_NUMBER < 2902) // OnSelChange() removed in trunk
     // let the msw notebook really change the page first
     wxNotebook::OnSelChange(event);
     event.Skip(false);
