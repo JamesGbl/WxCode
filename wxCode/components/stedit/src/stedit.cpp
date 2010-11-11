@@ -2374,7 +2374,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
         }
     }
 
-    SetFileModificationTime(wxDateTime()); // set invalid time
+    SetFileModificationTime(wxInvalidDateTime); // set invalid time
 
     ClearAll();
     EmptyUndoBuffer();
@@ -2470,7 +2470,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         }
 
         // reset to unknown, assume they know what they're doing
-        SetFileModificationTime(wxDateTime());
+        SetFileModificationTime(wxInvalidDateTime);
         return true;
     }
 
@@ -2495,7 +2495,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         else
         {
             // reset to unknown, they don't care so don't ask again
-            SetFileModificationTime(wxDateTime());
+            SetFileModificationTime(wxInvalidDateTime);
         }
     }
 
