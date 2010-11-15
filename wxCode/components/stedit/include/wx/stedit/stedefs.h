@@ -18,6 +18,12 @@
 // Include wxStyledTextCtrl
 #include "wx/stc/stc.h"
 
+#if (wxVERSION_NUMBER >= 2900)
+    // #include "wx/stc/private.h" // wx2stc() has been moved here, but isn't exported
+    #define wx2stc(wxstr)    (wxstr).mb_str()
+    #define stc2wx(char_str) wxString(char_str)
+#endif
+
 // Include our setup file that includes/excludes the different language
 //   information for the wxSTEditorLangs.
 // If you get an error on this line, maybe you forgot to copy

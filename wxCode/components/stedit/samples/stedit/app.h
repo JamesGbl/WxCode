@@ -1,5 +1,7 @@
 // app.h
 
+#include "wx/app.h"
+
 class CommandLine
 {
 // Attributes

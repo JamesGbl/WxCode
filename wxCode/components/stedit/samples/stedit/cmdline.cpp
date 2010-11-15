@@ -13,6 +13,7 @@
 
 #include "wx/cmdline.h"
 #include "wx/fileconf.h"
+#include "wx/msgdlg.h"
 #include "wx/stedit/stedit.h"
 #include "../../src/wxext.h"
 

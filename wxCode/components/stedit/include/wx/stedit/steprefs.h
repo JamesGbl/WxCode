@@ -14,6 +14,7 @@
 #include "wx/stedit/stedefs.h"
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
+class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 
 //----------------------------------------------------------------------------
 // wxSTEditorPrefBase - base for prefs/styles/langs, mangages editors

@@ -372,7 +372,7 @@ wxFrame* wxStEditApp::CreateHelpFrame(const wxString& caption, const char* text)
        caption,
        wxDefaultPosition, wxSize(600,400));
     wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
-    if (htmlWin->SetPage(::stc2wx(text))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
+    if (htmlWin->SetPage(wxString(text))) // TODO: use wxConvertMB2WX() instead of stc2wx()?
     {
         helpFrame->Centre();
         helpFrame->Show();

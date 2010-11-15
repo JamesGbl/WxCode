@@ -45,9 +45,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "stedlgs_wdr.h"
 
 #include "wx/filesys.h"
-#if (wxVERSION_NUMBER >= 2900)
-#include "wx/stc/private.h" // wx2stc()
-#endif
 
 // ----------------------------------------------------------------------------
 // The code below is copied to avoid having to include the Scintilla headers

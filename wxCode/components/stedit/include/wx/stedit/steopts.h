@@ -15,6 +15,9 @@
 
 class WXDLLIMPEXP_FWD_CORE wxFileHistory;
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
+class WXDLLIMPEXP_FWD_CORE wxStatusBar;
+class WXDLLIMPEXP_FWD_CORE wxMenuBar;
+class WXDLLIMPEXP_FWD_CORE wxToolBar;
 
 //-----------------------------------------------------------------------------
 // Editor and window options for wxSTEditor and friends
