@@ -236,6 +236,10 @@ public :
         long s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
     }
 #else
+    int GetEOLMode() const
+    {
+        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode();
+    }
     wxString GetLine(int line) const
     {
         return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line);
@@ -314,6 +318,8 @@ public :
 
     // Get the text between the GetTargetStart and GetTargetEnd
     wxString GetTargetText();
+
+    bool GetClipboardText(wxString*) const;
 
     // Paste the text from the clipboard into the text at the current cursor
     //  position preserving the linefeeds in the text using PasteRectangular

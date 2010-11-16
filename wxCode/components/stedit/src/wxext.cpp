@@ -14,6 +14,7 @@
 #include "wx/dir.h"
 #include "wx/stdpaths.h"
 #include "wx/cmdline.h"
+#include "wx/clipbrd.h"         // wxClipboard
 
 #include "wxext.h"
 
@@ -457,4 +458,44 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
       wxRect rect = topframe->GetScreenRect();
       wnd->SetSize(rect);
    }
+}
+
+bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count)
+{
+   wxClipboard* clipboard = wxTheClipboard;
+   bool open = clipboard->IsOpened();
+   bool ok = open || clipboard->Open();
+   if (ok)
+   {
+      size_t i;
+      for (i = 0; i < array_count; i++)
+      {
+         if (clipboard->IsSupported(wxDataFormat(array[i]))) break;
+      }
+      ok = (i != array_count);
+   }
+   if (!open) clipboard->Close();
+   return ok;
+}
+
+bool wxClipboard_Get(wxString* str)
+{
+    bool ok = false;
+#if wxUSE_DATAOBJ
+    wxClipboard* clipboard = wxTheClipboard;
+    ok = clipboard && clipboard->Open();
+    if (ok)
+    {
+        wxTextDataObject temp;
+        clipboard->UsePrimarySelection(false);
+
+        ok = clipboard->GetData(temp);
+        if (ok && str)
+        {
+            str->operator=(temp.GetText());
+        }
+        clipboard->Close();
+    }
+#endif
+    return ok;
 }

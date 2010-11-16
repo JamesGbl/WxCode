@@ -43,7 +43,7 @@
 #define STE_APPNAME           wxT("wxstedit")
 #define STE_APPDISPLAYNAME    wxT("wxStEdit")
 #define STE_VERSION_STRING    STE_APPDISPLAYNAME wxT(" 1.2.6")
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1483")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1485")
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -308,6 +308,7 @@ enum
     //wxID_COPY,
     ID_STE_COPY_PRIMARY,  // unix copy to primary selection
     //wxID_PASTE,
+    ID_STE_PASTE_NEW,
     ID_STE_PASTE_RECT,
     //ID_STE_PREF_SELECTION_MODE, // rect sel check only
     //wxID_SELECTALL,

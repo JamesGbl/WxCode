@@ -16,6 +16,7 @@
 #include "wx/stedit/stedlgs.h"
 
 #include "wx/progdlg.h"   // wxProgressDialog
+#include "wxext.h"   // wxClipboard_Get()
 
 //-----------------------------------------------------------------------------
 // sorting function for strings, after = is the page #, don't sort by that
@@ -535,114 +536,116 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
     int n_page = GetPageCount();
     int win_id = event.GetId();
 
-    if (win_id == wxID_NEW)
+    switch (win_id)
     {
-        NewPage();
-        return true;
-    }
-    else if (win_id == wxID_OPEN)
-    {
-        LoadFiles();
-        return true;
-    }
-    else if (win_id == wxID_SAVEAS)
-    {
-        wxSTEditor *editor = GetEditor();
-        if (editor)
+        case wxID_NEW:
+            NewPage();
+            return true;
+        case wxID_OPEN:
+            LoadFiles();
+            return true;
+        case wxID_SAVEAS:
         {
-            if (!editor->GetFileModificationTime().IsValid())
+            wxSTEditor *editor = GetEditor();
+            if (editor)
             {
-                editor->SaveFile(true);
-            }
-            else
-            {
-                wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
-                wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
-                wxSTEditor *newEditor = splitter->GetEditor();
-                wxCHECK_MSG(newEditor, true, wxT("Invalid splitter editor"));
-
-                // Make this new editor identical to the original one
-                // these are probably not necessary
-                //splitter->GetEditor()->SetOptions(editor->GetOptions());
-                //splitter->GetEditor()->RegisterPrefs(editor->GetEditorPrefs());
-                //splitter->GetEditor()->RegisterStyles(editor->GetEditorStyles());
-                //splitter->GetEditor()->RegisterLangs(editor->GetEditorLangs());
-                newEditor->SetLanguage(editor->GetLanguageId());
-                newEditor->SetFileName(editor->GetFileName());
-                newEditor->SetText(editor->GetText());
-                newEditor->Colourise(0, -1);
-
-                // if they really did save it and to a new file add it
-                if (newEditor->SaveFile(true))
+                if (!editor->GetFileModificationTime().IsValid())
                 {
-                    // they saved it to the same filename so just update old editor
-                    if (newEditor->GetFileName() == editor->GetFileName())
+                    editor->SaveFile(true);
+                }
+                else
+                {
+                    wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
+                    wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
+                    wxSTEditor *newEditor = splitter->GetEditor();
+                    wxCHECK_MSG(newEditor, true, wxT("Invalid splitter editor"));
+
+                    // Make this new editor identical to the original one
+                    // these are probably not necessary
+                    //splitter->GetEditor()->SetOptions(editor->GetOptions());
+                    //splitter->GetEditor()->RegisterPrefs(editor->GetEditorPrefs());
+                    //splitter->GetEditor()->RegisterStyles(editor->GetEditorStyles());
+                    //splitter->GetEditor()->RegisterLangs(editor->GetEditorLangs());
+                    newEditor->SetLanguage(editor->GetLanguageId());
+                    newEditor->SetFileName(editor->GetFileName());
+                    newEditor->SetText(editor->GetText());
+                    newEditor->Colourise(0, -1);
+
+                    // if they really did save it and to a new file add it
+                    if (newEditor->SaveFile(true))
                     {
-                        editor->SetFileModificationTime(newEditor->GetFileModificationTime());
-                        delete splitter;
+                        // they saved it to the same filename so just update old editor
+                        if (newEditor->GetFileName() == editor->GetFileName())
+                        {
+                            editor->SetFileModificationTime(newEditor->GetFileModificationTime());
+                            delete splitter;
+                        }
+                        else if (!InsertEditorSplitter(-1, splitter, true))
+                            delete splitter;
                     }
-                    else if (!InsertEditorSplitter(-1, splitter, true))
-                        delete splitter;
                 }
             }
+            return true;
         }
-        return true;
+        case ID_STN_SAVE_ALL:
+            SaveAllFiles();
+            return true;
+        case ID_STN_CLOSE_PAGE:
+            if ((GetSelection() != -1) && GetEditor(GetSelection()))
+            {
+                ClosePage(GetSelection(), true);
+            }
+            return true;
+        case ID_STN_CLOSE_ALL:
+            if (wxOK == wxMessageBox(_("Close all pages?"), _("Confim closing"),
+                                   wxICON_QUESTION|wxOK|wxCANCEL, this))
+            {
+                CloseAllPages(true);
+            }
+            return true;
+        case ID_STN_WIN_PREVIOUS:
+            if ((GetPageCount() > 0) && (GetSelection() - 1 >= 0))
+                SetSelection(GetSelection() - 1);
+            else if (GetPageCount() > 0)
+                SetSelection(GetPageCount() - 1);
+            return true;
+        case ID_STN_WIN_NEXT:
+            if ((GetPageCount() > 0) && (GetSelection() + 1 < (int)GetPageCount()))
+                SetSelection(GetSelection() + 1);
+            else if (GetPageCount() > 0)
+                SetSelection(0);
+            return true;
+        case ID_STN_WINDOWS:
+            wxSTEditorWindowsDialog(this, _("Windows"));
+            return true;
+        case ID_STE_PASTE_NEW:
+        {
+            wxString text;
+            if (::wxClipboard_Get(&text))
+            {
+                NewPage();
+                wxSTEditor* editor = GetEditor();
+                if (editor)
+                {
+                    editor->SetText(text);
+                    editor->DiscardEdits(); // IsModified = false
+                }
+            }
+            return true;
+        }
+        default:
+            if ((win_id >= ID_STN_GOTO_PAGE_START) && (win_id < ID_STN_GOTO_PAGE_START+n_page))
+            {
+                SetSelection(win_id - ID_STN_GOTO_PAGE_START);
+                return true;
+            }
+            else if ((win_id >= ID_STN_CLOSE_PAGE_START) && (win_id < ID_STN_CLOSE_PAGE_START+n_page))
+            {
+                ClosePage(win_id - ID_STN_CLOSE_PAGE_START);
+                return true;
+            }
+            break;
     }
-    else if (win_id == ID_STN_SAVE_ALL)
-    {
-        SaveAllFiles();
-        return true;
-    }
-    else if ((win_id >= ID_STN_GOTO_PAGE_START) && (win_id < ID_STN_GOTO_PAGE_START+n_page))
-    {
-        SetSelection(win_id - ID_STN_GOTO_PAGE_START);
-        return true;
-    }
-    else if (win_id == ID_STN_CLOSE_PAGE)
-    {
-        if ((GetSelection() != -1) && GetEditor(GetSelection()))
-            ClosePage(GetSelection(), true);
-
-        return true;
-    }
-    else if (win_id == ID_STN_CLOSE_ALL)
-    {
-        int ret = wxMessageBox(_("Close all pages?"), _("Confim closing"),
-                               wxICON_QUESTION|wxOK|wxCANCEL, this);
-        if (ret == wxOK)
-            CloseAllPages(true);
-
-        return true;
-    }
-    else if ((win_id >= ID_STN_CLOSE_PAGE_START) && (win_id < ID_STN_CLOSE_PAGE_START+n_page))
-    {
-        ClosePage(win_id - ID_STN_CLOSE_PAGE_START);
-        return true;
-    }
-    else if (win_id == ID_STN_WIN_PREVIOUS)
-    {
-        if ((GetPageCount() > 0) && (GetSelection() - 1 >= 0))
-            SetSelection(GetSelection() - 1);
-        else if (GetPageCount() > 0)
-            SetSelection(GetPageCount() - 1);
-
-        return true;
-    }
-    else if (win_id == ID_STN_WIN_NEXT)
-    {
-        if ((GetPageCount() > 0) && (GetSelection() + 1 < (int)GetPageCount()))
-            SetSelection(GetSelection() + 1);
-        else if (GetPageCount() > 0)
-            SetSelection(0);
-
-        return true;
-    }
-    else if (win_id == ID_STN_WINDOWS)
-    {
-        wxSTEditorWindowsDialog(this, _("Windows"));
-        return true;
-    }
-
     return false;
 }
 

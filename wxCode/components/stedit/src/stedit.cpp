@@ -857,25 +857,26 @@ static wxTextFileType wxSTEConvertEOLMode(int scintillaMode)
 
 #endif // wxUSE_DATAOBJ
 
+bool wxSTEditor::GetClipboardText(wxString* text) const
+{
+    wxString str;
+    bool ok = ::wxClipboard_Get(&str);
+    if (ok)
+    {
+        text->operator=(wxTextBuffer::Translate(str, wxSTEConvertEOLMode(GetEOLMode())));
+    }
+    return ok;
+}
+
 bool wxSTEditor::PasteRectangular()
 {
-#if wxUSE_DATAOBJ
-    wxTextDataObject data;
-    bool gotData = false;
-
-    if (wxTheClipboard->Open()) {
-        wxTheClipboard->UsePrimarySelection(false);
-        gotData = wxTheClipboard->GetData(data);
-        wxTheClipboard->Close();
-    }
-    if (gotData) {
-        wxString text = wxTextBuffer::Translate(data.GetText(),
-                                                wxSTEConvertEOLMode(GetEOLMode()));
+    wxString text;
+    bool ok = GetClipboardText(&text);
+    if (ok)
+    {
         PasteRectangular(text, -1);
-        return true;
     }
-#endif // wxUSE_DATAOBJ
-    return false;
+    return ok;
 }
 void wxSTEditor::PasteRectangular(const wxString& str, int pos)
 {
@@ -2531,6 +2532,18 @@ void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
         event.Skip();
 }
 
+static bool IsTextAvailable()
+{
+    const enum wxDataFormatId text[] =
+    {
+        wxDF_TEXT,
+        wxDF_OEMTEXT,
+        wxDF_UNICODETEXT,
+        wxDF_HTML
+    };
+    return wxClipboard_IsAvailable(text, WXSIZEOF(text));
+}
+
 void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
 {
     STE_INITRETURN
@@ -2556,6 +2569,7 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
     if (event.HasStateChange(STE_CANPASTE))
     {
         STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, event.GetStateValue(STE_CANPASTE));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsTextAvailable());
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, event.GetStateValue(STE_CANPASTE));
     }
     if (event.HasStateChange(STE_CANUNDO))
@@ -2577,6 +2591,7 @@ void wxSTEditor::UpdateAllItems()
     UpdateItems(GetOptions().GetNotebookPopupMenu());
     UpdateItems(GetOptions().GetSplitterPopupMenu());
 }
+
 void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBar)
 {
     if (!menu && !menuBar && !toolBar) return;
@@ -2595,6 +2610,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsTextAvailable());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, CanPaste());
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_CUT,       !readonly);

@@ -63,7 +63,8 @@ void wxSTEditorMenuManager::InitAcceleratorArray()
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'A', ID_STN_SAVE_ALL));
    
-    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'V', ID_STE_PASTE_RECT));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'V', ID_STE_PASTE_NEW));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_ALT, 'V', ID_STE_PASTE_RECT));
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'L', ID_STS_SPLIT_HORIZ));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'T', ID_STS_SPLIT_VERT));
@@ -512,6 +513,11 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         {
             menu->Append(MenuItem(menu, wxID_PASTE, wxGetStockLabel(wxID_PASTE), _("Paste text from clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_PASTE)));
             menu->Append(ID_STE_PASTE_RECT, _("Paste &Rect"), _("Paste rectangular text from clipboard (select with Shift+Alt)"));
+        }
+
+        if (HasMenuOptionType(STE_MENU_NOTEBOOK))
+        {
+            menu->Append(ID_STE_PASTE_NEW, _("Paste as &New"), _("Paste text from clipboard into new notebook tab"));
         }
 
         // FIXME - ID_STE_PREF_SELECTION_MODE remmed out since I can't make it work in GTK
