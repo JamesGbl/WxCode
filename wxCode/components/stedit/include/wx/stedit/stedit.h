@@ -425,7 +425,7 @@ public :
     // ------------------------------------------------------------------------
     // Load/Save methods
 
-    bool GetDocumentSaved() const { return !GetFileName().GetPath().IsEmpty(); }
+    bool GetDocumentSaved() const { return GetFileModificationTime().IsValid(); }
     
     // return true if the document hasn't been modified since the last time it
     // was saved (implying that it returns false if it was never saved, even if

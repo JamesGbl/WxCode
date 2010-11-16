@@ -2284,7 +2284,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         if (!fName.IsOk())
             use_dialog = true;
         // make them specify if file wasn't actually loaded from disk
-        else if (!GetFileModificationTime().IsValid())
+        else if (!GetDocumentSaved())
             use_dialog = true;
     }
 
@@ -2435,7 +2435,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     if (save_file && (ret == wxYES))
     {
         // use dialog if it wasn't originally loaded from disk
-        if (!SaveFile(!GetFileModificationTime().IsValid()))
+        if (!SaveFile(!GetDocumentSaved()))
         {
            ret = wxCANCEL;
         }
@@ -2448,7 +2448,6 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
 {
     // do we currently have a valid filename and datetime from loading?
     if (!GetDocumentSaved()) return false;
-    if (!GetFileModificationTime().IsValid()) return false;
 
     wxLogNull nullLog; // no errors, we handle them ourselves
 
@@ -2604,7 +2603,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
 
     // Edit menu items
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,  CanSave());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT, IsModified() && GetFileModificationTime().IsValid());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT, IsModified() && GetDocumentSaved());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());

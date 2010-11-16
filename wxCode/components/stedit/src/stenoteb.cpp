@@ -549,7 +549,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
             wxSTEditor *editor = GetEditor();
             if (editor)
             {
-                if (!editor->GetFileModificationTime().IsValid())
+                if (!editor->GetDocumentSaved())
                 {
                     editor->SaveFile(true);
                 }
