@@ -167,6 +167,7 @@ bool wxStEditApp::OnInit()
     // end sample code
     // =======================================================================
 
+    steOptions.GetMenuManager()->CreateForNotebook();
     // Remove the Help menu since wxMac will pull out the wxID_ABOUT to add to
     // the system menu and then hide the Help menu. Later on when we add items
     // to the help menu, they'll be hidden too.
@@ -174,7 +175,6 @@ bool wxStEditApp::OnInit()
 
     // create with the readonly menuitem, not set by default since I don't think
     //  it's generally useful, but good for debugging.
-    steOptions.GetMenuManager()->SetMenuOptionType(STE_MENU_NOTEBOOK, true);
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
