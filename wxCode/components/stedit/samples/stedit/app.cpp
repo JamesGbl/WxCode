@@ -175,10 +175,12 @@ bool wxStEditApp::OnInit()
 
     // create with the readonly menuitem, not set by default since I don't think
     //  it's generally useful, but good for debugging.
+    steOptions.GetMenuManager()->SetMenuOptionType(STE_MENU_NOTEBOOK, true);
     steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
+    steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tab on the left always
 
     // ------------------------------------------------------------------------
     STEditorFrame* frame = new STEditorFrame();
