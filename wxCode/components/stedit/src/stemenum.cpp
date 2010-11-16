@@ -19,12 +19,104 @@
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - a holding place for menu generating code
 //-----------------------------------------------------------------------------
+
+wxSTEditorMenuManager::~wxSTEditorMenuManager()
+{
+   delete m_accelerator_array;
+}
+
 void wxSTEditorMenuManager::Init()
 {
     m_enabledEditorItems = true;
     m_menuOptionTypes = 0;
     m_menuItemTypes.Add(0, STE_MENU_HELP_MENU+1);
     m_toolBarToolTypes = 0;
+    m_accelerator_array = new AcceleratorArray();
+    InitAcceleratorArray();
+}
+
+void wxSTEditorMenuManager::InitAcceleratorArray()
+{
+    // TODO: filter accelerators
+
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_NEW));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_OPEN));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_CUT));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_COPY));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PASTE));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SAVE));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_EXIT));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_FIND));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PRINT));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PREVIEW));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SELECTALL));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_UNDO));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_REDO));
+    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SAVEAS));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'W', ID_STN_CLOSE_PAGE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'W', ID_STN_CLOSE_ALL));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F4, ID_STN_CLOSE_PAGE));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'A', ID_STN_SAVE_ALL));
+   
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'V', ID_STE_PASTE_RECT));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'L', ID_STS_SPLIT_HORIZ));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'T', ID_STS_SPLIT_VERT));
+
+  //m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'R', ID_STE_PREF_SELECTION_MODE));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'L', ID_STE_LINE_CUT));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'T', ID_STE_LINE_COPY));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'L', ID_STE_LINE_DELETE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'T', ID_STE_LINE_TRANSPOSE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'D', ID_STE_LINE_DUPLICATE));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F3, ID_STE_FIND_NEXT));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT , WXK_F3, ID_STE_FIND_PREV));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F2, ID_STE_FIND_DOWN));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'H', ID_STE_REPLACE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'G', ID_STE_GOTO_LINE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, ' ', ID_STE_COMPLETEWORD));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'U', ID_STE_UPPERCASE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'U', ID_STE_LOWERCASE));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'J', ID_STE_LINES_JOIN));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'K', ID_STE_LINES_SPLIT));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_ALT, 'W', ID_STE_TRAILING_WHITESPACE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'W', ID_STE_REMOVE_CHARSAROUND));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'I', ID_STE_INSERT_TEXT));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F8, ID_STN_WIN_PREVIOUS));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F8, ID_STN_WIN_NEXT));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F4, ID_STE_BOOKMARK_TOGGLE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F5, ID_STE_BOOKMARK_FIRST));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F5, ID_STE_BOOKMARK_PREVIOUS));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F6, ID_STE_BOOKMARK_NEXT));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F6, ID_STE_BOOKMARK_LAST));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_F4, ID_STE_BOOKMARK_CLEAR));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F10, ID_STE_VIEW_NONPRINT));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPYPATH));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_NUMPAD_ADD, ID_STE_COPYPATH));
+
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F9, ID_STE_PREFERENCES));
+
+  //m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
+
+#ifdef __UNIX__
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
+#endif // __UNIX__
 }
 
 void wxSTEditorMenuManager::CreateForSinglePage()

@@ -196,6 +196,7 @@ enum STE_InsertCharsMenuType
 //  creates virtually identical menus as the editor's popup menu.
 //-----------------------------------------------------------------------------
 
+class AcceleratorArray;
 class WXDLLIMPEXP_STEDIT wxSTEditorMenuManager
 {
 public:
@@ -229,13 +230,14 @@ public:
         m_toolBarToolTypes = toolBarToolTypes;
     }
 
-    virtual ~wxSTEditorMenuManager() {}
+    virtual ~wxSTEditorMenuManager();
 
     // ------------------------------------------------------------------------
     // Convenience functions to call after using the default constructor
     //   to set up the flags    and before use
     void CreateForSinglePage();
     void CreateForNotebook();
+    AcceleratorArray* GetAcceleratorArray() { return m_accelerator_array; }
 
     // ------------------------------------------------------------------------
     // Get/Set the menu option, item, and toolbar tool types you want to have
@@ -382,8 +384,12 @@ public:
     wxArrayInt m_menuItemTypes;
     int        m_toolBarToolTypes;
 
+protected:
+    AcceleratorArray* m_accelerator_array;
+
 private:
     void Init();
+    void InitAcceleratorArray();
 };
 
 #endif  // _STEMENUM_H_

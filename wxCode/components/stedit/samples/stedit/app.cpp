@@ -84,7 +84,6 @@ public:
     STEditorFrame() : wxSTEditorFrame()
     {
         Create();
-        m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
     }
 };
 
@@ -181,6 +180,7 @@ bool wxStEditApp::OnInit()
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
     steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
     steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tab on the left always
+    steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
 
     // ------------------------------------------------------------------------
     STEditorFrame* frame = new STEditorFrame();

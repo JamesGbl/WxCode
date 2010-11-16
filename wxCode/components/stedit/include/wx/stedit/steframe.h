@@ -61,7 +61,6 @@ class WXDLLIMPEXP_FWD_CORE wxTreeEvent;
 //                   ^
 //              SideSplitter
 
-class AcceleratorArray;
 class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxFrame
 {
 public:
@@ -175,8 +174,6 @@ protected:
 
     wxWindow           *m_sideSplitterWin1; // these are the two pages of the side splitter
     wxWindow           *m_sideSplitterWin2;
-
-    AcceleratorArray   *m_accelerator_array;
 
     wxSTERecursionGuardFlag m_rGuard_OnMenu;
     wxSTERecursionGuardFlag m_rGuard_HandleMenuEvent;
