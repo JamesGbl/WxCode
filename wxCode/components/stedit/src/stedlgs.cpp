@@ -1986,7 +1986,12 @@ void wxSTEditorInsertTextDialog::OnIdle(wxIdleEvent &event)
 void wxSTEditorInsertTextDialog::OnText(wxCommandEvent& event)
 {
     event.Skip();
-    FormatText();
+#if (wxVERSION_NUMBER >= 2900)
+    if (m_prependCombo)
+#endif
+    {
+        FormatText();
+    }
 }
 
 void wxSTEditorInsertTextDialog::UpdateControls()
