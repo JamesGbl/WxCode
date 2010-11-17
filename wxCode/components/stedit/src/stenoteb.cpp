@@ -684,12 +684,15 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
                 //                  GetOptions().GetDefaultFileName(), this);
     }
 
-    if (!title.IsEmpty())
+    if (title.Length())
     {
         wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
         wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
         splitter->GetEditor()->NewFile(title);
         InsertEditorSplitter(-1, splitter, true);
+    #if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
+        splitter->GetEditor()->SetFocus();
+    #endif
         return true;
     }
 
