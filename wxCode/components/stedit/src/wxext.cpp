@@ -460,6 +460,7 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
    }
 }
 
+#if wxUSE_CLIPBOARD
 bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count)
 {
    wxClipboard* clipboard = wxTheClipboard;
@@ -477,7 +478,9 @@ bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_coun
    if (!open) clipboard->Close();
    return ok;
 }
+#endif
 
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 bool wxClipboard_Get(wxString* str)
 {
     bool ok = false;
@@ -499,3 +502,4 @@ bool wxClipboard_Get(wxString* str)
 #endif
     return ok;
 }
+#endif

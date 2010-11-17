@@ -2533,16 +2533,20 @@ void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
 
 static bool IsTextAvailable()
 {
+#if wxUSE_CLIPBOARD
     const enum wxDataFormatId text[] =
     {
         wxDF_TEXT,
         // wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
         wxDF_UNICODETEXT
-#if __WXMSW__ 
+#ifdef __WXMSW__
         ,wxDF_HTML         // Only supported in MSW
 #endif 
     };
     return wxClipboard_IsAvailable(text, WXSIZEOF(text));
+#else
+    return false;
+#endif
 }
 
 void wxSTEditor::OnSTEState(wxSTEditorEvent &event)

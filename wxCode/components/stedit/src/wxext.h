@@ -32,8 +32,11 @@ WXDLLIMPEXP_CODE void wxFrame_SetInitialPosition(wxFrame*,
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize, int margin_pct = 5);
 WXDLLIMPEXP_CODE void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NULL);
+
+#if wxUSE_CLIPBOARD
 WXDLLIMPEXP_CODE bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count);
 WXDLLIMPEXP_CODE bool wxClipboard_Get(wxString*);
+#endif
 
 WXDLLIMPEXP_CODE void wxCommandLineUsage(wxWindow* parent);
 
