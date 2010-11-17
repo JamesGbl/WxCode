@@ -44,10 +44,12 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "wx/clipbrd.h"         // wxClipboard
 #include "wx/wfstream.h"        // wxFileInputStream
 #include "wx/numdlg.h"
+#include "wx/aboutdlg.h"
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
 #include "wx/stedit/steart.h"
+
 #include "wxext.h"
 
 //-----------------------------------------------------------------------------
@@ -3878,10 +3880,48 @@ wxTreeItemId wxSTEditor::GetTreeItemId() const
 {
     return GetSTERefData()->m_treeItemId;
 }
+
 void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 {
     GetSTERefData()->m_treeItemId = id;
 }
+
+/*static*/ wxString wxSTEditor::GetVersionText()
+{
+    return STE_VERSION_STRING wxT(" svn r1494");
+}
+
+/*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)
+{
+    wxString msg;
+    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
+                wxT("Using the %s editor, http://www.scintilla.org\n")
+                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
+                wxT("\n")
+                wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
+            #if (wxVERSION_NUMBER >= 2900)
+                wxT("Scintilla 2.03")
+            #else
+                wxT("Scintilla 1.70")
+            #endif
+                );
+
+    // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
+    //if ((wxFileConfig*)wxConfigBase::Get(false))
+    //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
+
+   wxAboutDialogInfo info;
+   info.SetName(STE_APPDISPLAYNAME);
+   info.SetDescription(msg);
+   info.SetWebSite(wxT("wxcode.sourceforge.net/showcomp.php?name=wxStEdit"));
+   info.SetLicense(wxT("wxWindows"));
+   info.AddDeveloper(wxT("John Labenski"));
+   info.AddDeveloper(wxT("Troels K"));
+   info.AddDeveloper(wxT("Otto Wyss"));
+   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP));
+   ::wxAboutBox(info, parent);
+}
+
 
 //-----------------------------------------------------------------------------
 // wxSTEditorEvent

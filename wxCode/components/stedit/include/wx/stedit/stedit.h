@@ -415,6 +415,11 @@ public :
     // Simple dialog to goto a particular line in the text
     bool ShowGotoLineDialog();
 
+    // Show the about dialog, called for wxID_ABOUT
+    static void ShowAboutDialog(wxWindow* parent);
+
+    static wxString GetVersionText();
+
     bool GetViewNonPrint()
     {
        return GetViewEOL() && (wxSTC_WS_INVISIBLE != GetViewWhiteSpace());

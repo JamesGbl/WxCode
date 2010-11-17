@@ -10,7 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
-#include "wx/aboutdlg.h"
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
@@ -259,31 +258,6 @@ wxSTEditor *wxSTEditorFrame::GetEditor(int page) const
 wxSTEditorSplitter *wxSTEditorFrame::GetEditorSplitter(int page) const
 {
     return GetEditorNotebook() ? GetEditorNotebook()->GetEditorSplitter(page) : m_steSplitter;
-}
-
-void wxSTEditorFrame::ShowAboutDialog(wxWindow* parent)
-{
-    wxString msg;
-    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
-                wxT("Using the Scintilla editor, http://www.scintilla.org\n")
-                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
-                wxT("\n")
-                wxT("Compiled with %s.\n"), wxVERSION_STRING);
-
-    // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
-    //if ((wxFileConfig*)wxConfigBase::Get(false))
-    //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
-
-   wxAboutDialogInfo info;
-   info.SetName(STE_APPDISPLAYNAME);
-   info.SetDescription(msg);
-   info.SetWebSite(wxT("wxcode.sourceforge.net/showcomp.php?name=wxStEdit"));
-   info.SetLicense(wxT("wxWindows"));
-   info.AddDeveloper(wxT("John Labenski"));
-   info.AddDeveloper(wxT("Troels K"));
-   info.AddDeveloper(wxT("Otto Wyss"));
-   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP));
-   ::wxAboutBox(info, parent);
 }
 
 void wxSTEditorFrame::UpdateAllItems()
@@ -543,7 +517,7 @@ void wxSTEditorFrame::OnSTEPopupMenu(wxSTEditorEvent &event)
     UpdateItems(editor->GetOptions().GetEditorPopupMenu());
 }
 
-wxString wxSTEditorFrame::MakeTitle(wxSTEditor* editor)
+wxString wxSTEditorFrame::MakeTitle(const wxSTEditor* editor) const
 {
     wxFileName filename = editor->GetFileName() ;
     const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
@@ -718,10 +692,8 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             return true;
         }
         case wxID_ABOUT :
-        {
-            ShowAboutDialog(this);
+            wxSTEditor::ShowAboutDialog(this);
             return true;
-        }
         default : break;
     }
 
