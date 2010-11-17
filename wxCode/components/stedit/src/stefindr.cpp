@@ -719,10 +719,12 @@ void wxSTE_WIN_ENABLE(wxWindow* win, bool enable)
         win->Enable(enable);
 
 #ifdef __WXGTK__
-        if (enable)
+        if (enable && win->IsShown())
         {
-            win->CaptureMouse();
-            win->ReleaseMouse();
+            if (!win->HasCapture())
+                win->CaptureMouse();
+            if (win->HasCapture())
+                win->ReleaseMouse();
         }
 #endif // __WXGTK__
     }

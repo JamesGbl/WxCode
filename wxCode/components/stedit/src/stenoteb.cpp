@@ -326,7 +326,7 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
                 if ((name.Length() > 0) && (name[0u] == wxT('*')))
                     name = name.Mid(1);
 
-                names.Add(name + wxString::Format(wxT("=%d"), n));
+                names.Add(name + wxString::Format(wxT("=%d"), (int)n));
             }
 
             names.Sort(STN_SortNameCompareFunction);
@@ -777,7 +777,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
     for (n = 0; n < count; n++)
     {
         wxString fileName = filePaths[n];
-        if (!progDlg.Update(n, wxString::Format(wxT("%d/%d : "), n+1, count) + fileName))
+        if (!progDlg.Update(n, wxString::Format(wxT("%d/%d : "), (int)n+1, (int)count) + fileName))
             break;
 
         if (fileName.IsEmpty() || !wxFileExists(fileName))

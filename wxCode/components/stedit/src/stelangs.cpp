@@ -5306,7 +5306,7 @@ void wxSTEditorLangs::SetUserSTEStyle(size_t lang_n, size_t style_n, int ste_sty
 
     bool is_default = (ste_style == GetSTEStyle(lang_n, style_n, true));
 
-    wxString strStyle = wxString::Format(wxT("%d"), ste_style);
+    wxString strStyle = wxString::Format(wxT("%d"), (int)ste_style);
 
     if (M_LANGDATA->m_userStyles.HasKey(lang_n*1000+style_n))
     {
@@ -5368,7 +5368,7 @@ void wxSTEditorLangs::LoadConfig( wxConfigBase &config,
         // Read in the styles
         for (size_t style_n = 0; style_n < GetStyleCount(lang_n); style_n++)
         {
-            keyName = keyBase + wxString::Format(wxT("/Style_%d"), style_n);
+            keyName = keyBase + wxString::Format(wxT("/Style_%d"), (int)style_n);
             long l_value = 0;
             if (config.Read(keyName, &l_value))
                 SetUserSTEStyle(lang_n, style_n, l_value);
@@ -5377,7 +5377,7 @@ void wxSTEditorLangs::LoadConfig( wxConfigBase &config,
         // Read in the keywords
         for (size_t word_n = 0; word_n < GetKeyWordsCount(lang_n); word_n++)
         {
-            keyName = keyBase + wxString::Format(wxT("/Keyword_%d"), word_n);
+            keyName = keyBase + wxString::Format(wxT("/Keyword_%d"), (int)word_n);
             if (config.Read(keyName, &value))
                 SetUserKeyWords(lang_n, word_n, value);
         }
@@ -5410,7 +5410,7 @@ void wxSTEditorLangs::SaveConfig( wxConfigBase &config,
         // Write out the styles if not default
         for (size_t style_n = 0; style_n < GetStyleCount(lang_n); style_n++)
         {
-            keyName        = keyBase + wxString::Format(wxT("/Style_%d"), style_n);
+            keyName        = keyBase + wxString::Format(wxT("/Style_%d"), (int)style_n);
             int user_style = GetUserSTEStyle(lang_n, style_n);
             value          = wxString::Format(wxT("%d"), user_style);
 
@@ -5424,7 +5424,7 @@ void wxSTEditorLangs::SaveConfig( wxConfigBase &config,
         for (size_t word_n = 0; word_n < GetKeyWordsCount(lang_n); word_n++)
         {
             value   = GetUserKeyWords(lang_n, word_n);
-            keyName = keyBase + wxString::Format(wxT("/Keyword_%d"), word_n);
+            keyName = keyBase + wxString::Format(wxT("/Keyword_%d"), (int)word_n);
 
             if (value.Length())
                 config.Write(keyName, value);
