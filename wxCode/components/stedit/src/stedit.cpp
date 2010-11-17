@@ -2536,9 +2536,11 @@ static bool IsTextAvailable()
     const enum wxDataFormatId text[] =
     {
         wxDF_TEXT,
-        wxDF_OEMTEXT,
-        wxDF_UNICODETEXT,
-        wxDF_HTML
+        // wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
+        wxDF_UNICODETEXT
+#if __WXMSW__ 
+        ,wxDF_HTML         // Only supported in MSW
+#endif 
     };
     return wxClipboard_IsAvailable(text, WXSIZEOF(text));
 }
