@@ -142,6 +142,7 @@ void wxSTEditorNotebook::OnPageChanged(wxNotebookEvent &event)
     wxNotebook::OnSelChange(event);
     event.Skip(false);
 #else
+    // trac.wxwidgets.org/ticket/12688
     event.Skip();
 #endif
 
@@ -690,9 +691,6 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
         wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
         splitter->GetEditor()->NewFile(title);
         InsertEditorSplitter(-1, splitter, true);
-    #if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
-        splitter->GetEditor()->SetFocus();
-    #endif
         return true;
     }
 
