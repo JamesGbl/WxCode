@@ -3900,6 +3900,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
                 wxT("\n")
                 wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
             #if (wxVERSION_NUMBER >= 2900)
+                // wxStyledTextCtrl::GetVersionText().wx_str() // trac.wxwidgets.org/ticket/12690
                 wxT("Scintilla 2.03")
             #else
                 wxT("Scintilla 1.70")
