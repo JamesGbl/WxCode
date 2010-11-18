@@ -341,7 +341,7 @@ void wxMenu_SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
    }
 }
 
-wxString wxGetToolbarToolLabel(const wxString& label, const AcceleratorArray& accel, int id)
+wxString wxToolBar_GetToolTipText(const wxString& label, const AcceleratorArray& accel, int id)
 {
     wxString str = label;
     int index = wxAcceleratorEntry_Find(accel, id);

@@ -322,9 +322,9 @@ bool wxSTEditorMenuManager::CreateMenuBar(wxMenuBar *menuBar, bool for_frame) co
     return menuBar->GetMenuCount() > menu_count;
 }
 
-static wxString wxGetToolbarToolLabel(const AcceleratorArray& accel, int id)
+static wxString wxToolBar_GetToolTipText(const AcceleratorArray& accel, int id)
 {
-    return wxGetToolbarToolLabel(wxGetStockLabelEx(id, wxSTOCK_PLAINTEXT), accel, id);
+    return wxToolBar_GetToolTipText(wxGetStockLabelEx(id, wxSTOCK_PLAINTEXT), accel, id);
 }
 
 bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
@@ -334,45 +334,45 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
 
     if (HasToolbarToolType(STE_TOOLBAR_FILE_NEW))
     {
-        tb->AddTool(wxID_NEW, wxEmptyString, STE_ARTBMP(wxART_STEDIT_NEW), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_NEW), _("Clear editor for new file"));
+        tb->AddTool(wxID_NEW, wxEmptyString, STE_ARTBMP(wxART_STEDIT_NEW), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_NEW), _("Clear editor for new file"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_FILE_OPEN))
     {
-        tb->AddTool(wxID_OPEN, wxEmptyString, STE_ARTBMP(wxART_STEDIT_OPEN), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_OPEN), _("Open a file to edit"));
+        tb->AddTool(wxID_OPEN, wxEmptyString, STE_ARTBMP(wxART_STEDIT_OPEN), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_OPEN), _("Open a file to edit"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_FILE_SAVE))
     {
-        tb->AddTool(wxID_SAVE,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVE  ), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_SAVE  ), _("Save current file"));
-        tb->AddTool(wxID_SAVEAS, wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVEAS), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_SAVEAS), _("Save to a specific filename"));
+        tb->AddTool(wxID_SAVE,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVE  ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_SAVE  ), _("Save current file"));
+        tb->AddTool(wxID_SAVEAS, wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVEAS), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_SAVEAS), _("Save to a specific filename"));
         tb->EnableTool(wxID_SAVE, false);
 
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
         {
-            tb->AddTool(ID_STN_SAVE_ALL, wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVEALL), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(_("Save all files"), *m_accelerator_array, ID_STN_SAVE_ALL), _("Save all open files"));
+            tb->AddTool(ID_STN_SAVE_ALL, wxEmptyString, STE_ARTBMP(wxART_STEDIT_SAVEALL), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Save all files"), *m_accelerator_array, ID_STN_SAVE_ALL), _("Save all open files"));
             tb->EnableTool(ID_STN_SAVE_ALL, false);
         }
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_CUTCOPYPASTE))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_CUT,    wxEmptyString, STE_ARTBMP(wxART_STEDIT_CUT  ), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_CUT  ), _("Cut selected text"));
-        tb->AddTool(wxID_COPY,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_COPY ), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_COPY ), _("Copy selected text"));
-        tb->AddTool(wxID_PASTE,  wxEmptyString, STE_ARTBMP(wxART_STEDIT_PASTE), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_PASTE), _("Paste text at cursor"));
+        tb->AddTool(wxID_CUT,    wxEmptyString, STE_ARTBMP(wxART_STEDIT_CUT  ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_CUT  ), _("Cut selected text"));
+        tb->AddTool(wxID_COPY,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_COPY ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_COPY ), _("Copy selected text"));
+        tb->AddTool(wxID_PASTE,  wxEmptyString, STE_ARTBMP(wxART_STEDIT_PASTE), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_PASTE), _("Paste text at cursor"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_UNDOREDO))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_UNDO, wxEmptyString, STE_ARTBMP(wxART_STEDIT_UNDO), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_UNDO), _("Undo last editing"));
-        tb->AddTool(wxID_REDO, wxEmptyString, STE_ARTBMP(wxART_STEDIT_REDO), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_REDO), _("Redo last undo"));
+        tb->AddTool(wxID_UNDO, wxEmptyString, STE_ARTBMP(wxART_STEDIT_UNDO), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_UNDO), _("Undo last editing"));
+        tb->AddTool(wxID_REDO, wxEmptyString, STE_ARTBMP(wxART_STEDIT_REDO), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_REDO), _("Redo last undo"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDREPLACE))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
         //tb->AddTool(ID_STE_FIND_DOWN, _("Search direction"), STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_CHECK, _("Search direction"), _("Search direction for next occurance in document"));
-        tb->AddTool(wxID_FIND, wxEmptyString, STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_FIND), _("Find text in document..."));
-        tb->AddTool(ID_STE_FIND_NEXT, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(_("Find next"), *m_accelerator_array, ID_STE_FIND_NEXT), _("Find next occurance in document"));
-        tb->AddTool(ID_STE_FIND_PREV, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDUP), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(_("Find previous"), *m_accelerator_array, ID_STE_FIND_PREV), _("Find previous occurance in document"));
-        tb->AddTool(ID_STE_REPLACE,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), *m_accelerator_array, ID_STE_REPLACE), _("Replace text in document"));
+        tb->AddTool(wxID_FIND, wxEmptyString, STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_FIND), _("Find text in document..."));
+        tb->AddTool(ID_STE_FIND_NEXT, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find next"), *m_accelerator_array, ID_STE_FIND_NEXT), _("Find next occurance in document"));
+        tb->AddTool(ID_STE_FIND_PREV, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDUP), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find previous"), *m_accelerator_array, ID_STE_FIND_PREV), _("Find previous occurance in document"));
+        tb->AddTool(ID_STE_REPLACE,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), *m_accelerator_array, ID_STE_REPLACE), _("Replace text in document"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
     {
@@ -393,13 +393,13 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     if (HasToolbarToolType(STE_TOOLBAR_PRINT))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_PRINT  , wxEmptyString, STE_ARTBMP(wxART_STEDIT_PRINT)       , wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_PRINT), wxGetStockHelpString(wxID_PRINT));
-        tb->AddTool(wxID_PREVIEW, wxEmptyString, STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_PREVIEW), wxGetStockHelpString(wxID_PREVIEW));
+        tb->AddTool(wxID_PRINT  , wxEmptyString, STE_ARTBMP(wxART_STEDIT_PRINT)       , wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_PRINT), wxGetStockHelpString(wxID_PRINT));
+        tb->AddTool(wxID_PREVIEW, wxEmptyString, STE_ARTBMP(wxART_STEDIT_PRINTPREVIEW), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_PREVIEW), wxGetStockHelpString(wxID_PREVIEW));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EXIT))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_EXIT, wxEmptyString, STE_ARTBMP(wxART_STEDIT_EXIT), wxNullBitmap, wxITEM_NORMAL, ::wxGetToolbarToolLabel(*m_accelerator_array, wxID_EXIT), wxGetStockHelpString(wxID_EXIT));//, wxSTOCK_PLAINTEXT));
+        tb->AddTool(wxID_EXIT, wxEmptyString, STE_ARTBMP(wxART_STEDIT_EXIT), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_EXIT), wxGetStockHelpString(wxID_EXIT));//, wxSTOCK_PLAINTEXT));
     }
     tb->Realize();
 
