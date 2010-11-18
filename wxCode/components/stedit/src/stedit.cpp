@@ -3108,23 +3108,11 @@ void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
         if (!selectedText.IsEmpty() && (selectedText.Length() < 100u))
             SetFindString(selectedText, true);
 
-        wxSTEditorFindReplaceDialog *frDialog = NULL;
-
-        if (find)
-        {
-            frDialog = new wxSTEditorFindReplaceDialog(parent,
-                               GetFindReplaceData(), wxGetStockLabelEx(wxID_FIND, wxSTOCK_PLAINTEXT),
-                               style);
-        }
-        else // replace
-        {
-            style |= wxFR_REPLACEDIALOG;
-            frDialog = new wxSTEditorFindReplaceDialog(parent,
-                               GetFindReplaceData(), wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT),
-                               style);
-        }
-
-        frDialog->Show();
+        wxSTEditorFindReplaceDialog* dialog = new wxSTEditorFindReplaceDialog(parent,
+            GetFindReplaceData(),
+            wxGetStockLabelEx(find ? wxID_FIND : wxID_REPLACE, wxSTOCK_PLAINTEXT),
+            style | (find ? 0 : wxFR_REPLACEDIALOG));
+        dialog->Show();
     }
 }
 
@@ -3888,7 +3876,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 
 /*static*/ wxString wxSTEditor::GetVersionText()
 {
-    return STE_VERSION_STRING wxT(" svn r1494");
+    return STE_VERSION_STRING wxT(" svn r1495");
 }
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)

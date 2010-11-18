@@ -851,7 +851,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
         return false;
     }
 
-    m_findReplacePanel = new wxSTEditorFindReplacePanel(this, -1, data, wxDefaultPosition,
+    m_findReplacePanel = new wxSTEditorFindReplacePanel(this, wxID_ANY, data, wxDefaultPosition,
                                    wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | style);
     m_findReplacePanel->SetTargetWindow(parent); // assume this, they can override later
 
@@ -876,7 +876,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
         SetSize(wxMax(dialogSize.x, size.x), wxMax(dialogSize.y, size.y));
     }
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_FIND, wxDialogIconSize));
+    SetIcon(wxSTEditorArtProvider::GetIcon((style & wxFR_REPLACEDIALOG) ? wxART_STEDIT_REPLACE : wxART_STEDIT_FIND, wxDialogIconSize));
     return true;
 }
 
