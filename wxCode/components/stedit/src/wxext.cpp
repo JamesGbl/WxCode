@@ -165,7 +165,19 @@ void wxSetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
    }
    wxAcceleratorTable accel(count, temp);
    wnd->SetAcceleratorTable(accel);
-   wxDELETEA(temp);
+   delete [] temp;
+}
+
+static int wxAcceleratorEntry_Find(const AcceleratorArray& array, int id)
+{
+   for (size_t i = 0; i < array.GetCount(); i++)
+   {
+      if (array.Item(i).GetCommand() == id)
+      {
+         return (int)i;
+      }
+   }
+   return wxNOT_FOUND;
 }
 
 #endif // wxUSE_ACCEL
@@ -327,6 +339,17 @@ void wxMenu_SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
       wxMenu* menu = menubar->GetMenu(j);
       wxMenu_SetAccelText(menu, accel);
    }
+}
+
+wxString wxGetToolbarToolLabel(const wxString& label, const AcceleratorArray& accel, int id)
+{
+    wxString str = label;
+    int index = wxAcceleratorEntry_Find(accel, id);
+    if (index != wxNOT_FOUND)
+    {
+       str+=wxString::Format(wxT(" (%s)"), wxGetAccelText(accel.Item(index)).wx_str());
+    }
+    return str;
 }
 
 static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxAcceleratorEntry& entry)
