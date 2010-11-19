@@ -2625,10 +2625,14 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_TRANSPOSE, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_DUPLICATE, !readonly);
 
+    wxSTEditorFindReplaceDialog* find = GetCurrentFindReplaceDialog();
+
+    STE_MM::DoCheckItem( menu, menuBar, toolBar, wxID_FIND, find && !(find->GetWindowStyle() & wxFR_REPLACEDIALOG));
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_NEXT, CanFind());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_PREV, CanFind());
     STE_MM::DoCheckItem( menu, menuBar, toolBar, ID_STE_FIND_DOWN, GetFindDown());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_REPLACE,   !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REPLACE,   !readonly);
+    STE_MM::DoCheckItem( menu, menuBar, toolBar, wxID_REPLACE, find && (find->GetWindowStyle() & wxFR_REPLACEDIALOG));
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_UNDO, CanUndo());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REDO, CanRedo());
@@ -2793,7 +2797,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             UpdateAllItems(); // help toolbar get updated
             return true;
         }
-        case ID_STE_REPLACE   : ShowFindReplaceDialog(true, false); return true;
+        case wxID_REPLACE: ShowFindReplaceDialog(true, false); return true;
 
         case ID_STE_GOTO_LINE : ShowGotoLineDialog(); return true;
 
@@ -3065,10 +3069,15 @@ int wxSTEditor::GetFindFlags() const
     return GetFindReplaceData()->GetFlags();
 }
 
+wxSTEditorFindReplaceDialog* wxSTEditor::GetCurrentFindReplaceDialog()
+{
+    return wxDynamicCast(wxWindow::FindWindowByName(wxSTEditorFindReplaceDialogNameStr), wxSTEditorFindReplaceDialog);
+}
+
 void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
 {
     wxCHECK_RET(GetFindReplaceData(), wxT("Invalid find/replace data"));
-    wxSTEditorFindReplaceDialog *oldDialog = wxDynamicCast(wxWindow::FindWindowByName(wxSTEditorFindReplaceDialogNameStr), wxSTEditorFindReplaceDialog);
+    wxSTEditorFindReplaceDialog *oldDialog = GetCurrentFindReplaceDialog();
 
     if (oldDialog)
     {
@@ -3876,7 +3885,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 
 /*static*/ wxString wxSTEditor::GetVersionText()
 {
-    return STE_VERSION_STRING wxT(" svn r1498");
+    return STE_VERSION_STRING wxT(" svn r1501");
 }
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)

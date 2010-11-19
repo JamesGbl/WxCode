@@ -81,7 +81,7 @@ void wxSTEditorMenuManager::InitAcceleratorArray()
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F3, ID_STE_FIND_NEXT));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_SHIFT , WXK_F3, ID_STE_FIND_PREV));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F2, ID_STE_FIND_DOWN));
-    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'H', ID_STE_REPLACE));
+    m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'H', wxID_REPLACE));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, 'G', ID_STE_GOTO_LINE));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, ' ', ID_STE_COMPLETEWORD));
 
@@ -113,7 +113,7 @@ void wxSTEditorMenuManager::InitAcceleratorArray()
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F9, ID_STE_PREFERENCES));
 
-  //m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F1, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
+  //m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
 
 #ifdef __UNIX__
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
@@ -369,10 +369,10 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
         //tb->AddTool(ID_STE_FIND_DOWN, _("Search direction"), STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_CHECK, _("Search direction"), _("Search direction for next occurance in document"));
-        tb->AddTool(wxID_FIND, wxEmptyString, STE_ARTBMP(wxART_STEDIT_FIND), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_FIND), _("Find text in document..."));
-        tb->AddTool(ID_STE_FIND_NEXT, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find next"), *m_accelerator_array, ID_STE_FIND_NEXT), _("Find next occurance in document"));
-        tb->AddTool(ID_STE_FIND_PREV, wxEmptyString,  STE_ARTBMP(wxART_STEDIT_FINDUP), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find previous"), *m_accelerator_array, ID_STE_FIND_PREV), _("Find previous occurance in document"));
-        tb->AddTool(ID_STE_REPLACE,   wxEmptyString, STE_ARTBMP(wxART_STEDIT_REPLACE), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(wxGetStockLabelEx(wxID_REPLACE, wxSTOCK_PLAINTEXT), *m_accelerator_array, ID_STE_REPLACE), _("Replace text in document"));
+        tb->AddTool(wxID_FIND       , wxEmptyString, STE_ARTBMP(wxART_STEDIT_FIND    ), wxNullBitmap, wxITEM_CHECK , ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_FIND), _("Find text in document..."));
+        tb->AddTool(ID_STE_FIND_NEXT, wxEmptyString, STE_ARTBMP(wxART_STEDIT_FINDDOWN), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find next"), *m_accelerator_array, ID_STE_FIND_NEXT), _("Find next occurance in document"));
+        tb->AddTool(ID_STE_FIND_PREV, wxEmptyString, STE_ARTBMP(wxART_STEDIT_FINDUP  ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBar_GetToolTipText(_("Find previous"), *m_accelerator_array, ID_STE_FIND_PREV), _("Find previous occurance in document"));
+        tb->AddTool(wxID_REPLACE    , wxEmptyString, STE_ARTBMP(wxART_STEDIT_REPLACE ), wxNullBitmap, wxITEM_CHECK , ::wxToolBar_GetToolTipText(*m_accelerator_array, wxID_REPLACE), _("Replace text in document"));
     }
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
     {
@@ -596,12 +596,12 @@ wxMenu *wxSTEditorMenuManager::CreateSearchMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FIND)));
+        menu->Append(MenuItem(menu, wxID_FIND, wxGetStockLabelEx(wxID_FIND), _("Find text"), wxITEM_CHECK));
         menu->Append(MenuItem(menu, ID_STE_FIND_NEXT, _("Find &Next"),   _("Find next occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDNEXT)));
         menu->Append(MenuItem(menu, ID_STE_FIND_PREV, _("Find &Previous"),   _("Find previous occurance"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_FINDUP)));
         menu->AppendCheckItem(ID_STE_FIND_DOWN,       _("Search For&ward"), _("Search forward/reverse in document"));
         if (!HasMenuOptionType(STE_MENU_READONLY))
-            menu->Append(MenuItem(menu, ID_STE_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_REPLACE)));
+            menu->Append(MenuItem(menu, wxID_REPLACE, wxGetStockLabelEx(wxID_REPLACE), _("Replace text"), wxITEM_CHECK));
         add_sep = true;
     }
     if (HasMenuItemType(STE_MENU_SEARCH_MENU, STE_MENU_SEARCH_GOTOLINE))
@@ -1086,7 +1086,7 @@ void wxSTEditorMenuManager::EnableEditorItems(bool enable, wxMenu *menu,
         wxID_FIND,
         ID_STE_FIND_NEXT,
         ID_STE_FIND_DOWN,
-        ID_STE_REPLACE,
+        wxID_REPLACE,
         ID_STE_GOTO_LINE,
         wxID_UNDO,
         wxID_REDO,

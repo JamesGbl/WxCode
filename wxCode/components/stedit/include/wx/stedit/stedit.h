@@ -138,6 +138,7 @@ public:
 // wxSTEditor
 //-----------------------------------------------------------------------------
 
+class wxSTEditorFindReplaceDialog;
 class WXDLLIMPEXP_STEDIT wxSTEditor : public wxStyledTextCtrl
 {
 public :
@@ -549,6 +550,7 @@ public :
 
     // if show then show it, else hide it, if find then find dialog, else replace dialog
     void ShowFindReplaceDialog(bool show, bool find = true);
+    wxSTEditorFindReplaceDialog* GetCurrentFindReplaceDialog();
 
     // Get the find replace data from the options
     wxSTEditorFindReplaceData *GetFindReplaceData() const;

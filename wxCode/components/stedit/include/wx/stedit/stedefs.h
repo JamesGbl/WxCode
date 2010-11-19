@@ -320,7 +320,7 @@ enum
     ID_STE_FIND_NEXT,
     ID_STE_FIND_PREV,
     ID_STE_FIND_DOWN,
-    ID_STE_REPLACE,
+    //wxID_REPLACE
     ID_STE_GOTO_LINE,
     //wxID_UNDO,
     //wxID_REDO,
