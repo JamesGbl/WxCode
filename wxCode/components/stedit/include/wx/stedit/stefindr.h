@@ -212,6 +212,8 @@ public:
 //protected:
     wxSTEditorFindReplaceData *m_findReplaceData;
 
+    bool m_created;
+
     wxWindow *m_targetWin;
 
     int m_flags;

@@ -149,6 +149,8 @@ wxSTEditorFindReplacePanel::~wxSTEditorFindReplacePanel()
 
 void wxSTEditorFindReplacePanel::Init()
 {
+    m_created = false;
+    
     m_targetWin = NULL;
 
     m_flags = 0;
@@ -360,6 +362,8 @@ bool wxSTEditorFindReplacePanel::Create(wxWindow *parent, wxWindowID winid,
     Layout();
     rootSizer->SetSizeHints( this );
     //rootSizer->Fit( this );
+
+    m_created = true;
 
     UpdateFindFlags();
     UpdateButtons();
@@ -732,6 +736,8 @@ void wxSTE_WIN_ENABLE(wxWindow* win, bool enable)
 
 void wxSTEditorFindReplacePanel::UpdateButtons()
 {
+    if (!m_created) return; // skip initial events sent from combobox in GTK
+
     // Can't search backwards when using regexp
     if (m_regexpFindCheckBox->GetValue() && m_backwardsCheckBox->IsEnabled())
     {
