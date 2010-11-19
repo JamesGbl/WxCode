@@ -58,9 +58,10 @@ APPEXTRALIBS = -l$(WXSTC_LIB) $(PROFILE)
 # ----------------------------------------------------------------------------
 # Source files, objects to link
 
-PROGRAM = app
+PROGRAM = wxstedit
 
 OBJECTS = \
+    app.o \
     cmdline.o \
     link.o
 
@@ -76,8 +77,13 @@ $(WXSTEDIT_LIBNAME) :
 
 
 # wxstedit program using shared stedit library
-$(PROGRAM): $(PROGRAM).o $(OBJECTS) $(TARGET_LIB_SHARED)
-	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
+#$(PROGRAM): $(PROGRAM).o $(OBJECTS) $(TARGET_LIB_SHARED)
+#	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
+
+$(PROGRAM): $(OBJECTS) $(TARGET_LIB_SHARED)
+	$(CXX) $(LDFLAGS_EXE) -o wxstedit $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
+
+
 
 # wxstedit program using static stedit library
 #$(PROGRAM): $(PROGRAM).o $(TARGET_LIB_STATIC)

@@ -646,7 +646,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
         {
             wxFileName fileName = GetOptions().GetFileHistory()->GetHistoryFile(win_id-wxID_FILE1);
             bool ok;
-            
+
             if (GetEditorNotebook())
             {
                 ok = GetEditorNotebook()->LoadFile(fileName);
@@ -661,7 +661,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             }
             if (!ok)
             {
-               wxMessageBox(wxString::Format(_("Error opening file: '%s'"), 
+               wxMessageBox(wxString::Format(_("Error opening file: '%s'"),
                               fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                         STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
             }
@@ -992,7 +992,7 @@ void wxSTETreeCtrlHelper::SortChildren(const wxTreeItemId& item_)
     }
 }
 
-wxConfigBase* wxSTEditorFrame::GetConfigBase() 
+wxConfigBase* wxSTEditorFrame::GetConfigBase()
 {
    return wxConfigBase::Get(false);
 }

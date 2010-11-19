@@ -81,6 +81,7 @@ public:
        return wxArtProvider::GetIcon(id, wxART_STEDIT, size);
     }
     static wxIcon GetDefaultDialogIcon();
+
 protected:
     wxBitmap m_app_large;
     wxBitmap m_app_small;

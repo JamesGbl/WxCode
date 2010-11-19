@@ -75,23 +75,11 @@ enum Menu_IDs
 };
 
 // ----------------------------------------------------------------------------
-// STEditorFrame - the frame window
-// ----------------------------------------------------------------------------
-class STEditorFrame : public wxSTEditorFrame
-{
-    DECLARE_CLASS(STEditorFrame)
-public:
-    STEditorFrame() : wxSTEditorFrame()
-    {
-        Create();
-    }
-};
-
-IMPLEMENT_CLASS(STEditorFrame, wxSTEditorFrame)
 
 IMPLEMENT_APP(wxStEditApp)
 
-wxStEditApp::wxStEditApp() : wxApp(), steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS)
+wxStEditApp::wxStEditApp() : wxApp(),
+            m_steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS)
 {
 }
 
@@ -116,33 +104,32 @@ bool wxStEditApp::OnInit()
 
     // For this simple editor we'll basicly use the defaults for everything
     //  (we reset it in cmd line parser to use either a single editor or notebook)
-    wxSTEditorOptions steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS);
     wxSTEditorOptions::RegisterIds();
 
     // =======================================================================
     // A sample of things that you might do to change the behavior
 
     // no bookmark items in menus or toolbar
-    //steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_BOOKMARK, false);
-    //steOptions.GetMenuManager()->SetToolbarToolType(STE_MENU_BOOKMARK, false);
+    //m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_BOOKMARK, false);
+    //m_steOptions.GetMenuManager()->SetToolbarToolType(STE_MENU_BOOKMARK, false);
 
     // don't create a toolbar
-    //steOptions.SetFrameOption(STF_TOOLBAR, false);
+    //m_steOptions.SetFrameOption(STF_TOOLBAR, false);
     // allow notebook to not have any pages
-    //steOptions.SetNotebookOption(STN_ALLOW_NO_PAGES, true);
+    //m_steOptions.SetNotebookOption(STN_ALLOW_NO_PAGES, true);
     // don't ask the user to save a modified document, close silently
-    //steOptions.SetEditorOption(STE_QUERY_SAVE_MODIFIED, false);
+    //m_steOptions.SetEditorOption(STE_QUERY_SAVE_MODIFIED, false);
 
     // Maybe we're editing only python files, set global initializers
     // wxSTEditorOptions::SetGlobalDefaultFileName(wxT("newfile.py"));
     // wxSTEditorOptions::SetGlobalDefaultFileExtensions(wxT("Python file (*.py)|*.py"));
 
     // maybe the editors that use these options are only for your ini files
-    // steOptions.SetDefaultFileName(wxT("MyProgram.ini"));
+    // m_steOptions.SetDefaultFileName(wxT("MyProgram.ini"));
 
     // Maybe you want your own special menu for the splitter?
     //  it'll delete the old one (if there was one) and replace it with yours.
-    // steOptions.SetSplitterPopupMenu(myMenu, false);
+    // m_steOptions.SetSplitterPopupMenu(myMenu, false);
 
     // Maybe you want this editor to not use the global preferences,
     //  create a new one, set it up the way you like it and push it onto the
@@ -151,7 +138,7 @@ bool wxStEditApp::OnInit()
     //  use some other prefs/styles/langs with STE::RegisterXXX(otherXXX)
     // wxSTEditorPrefs myPrefs(true);
     // myPrefs.SetPrefBool(STE_PREF_VIEW_EOL, true);
-    // steOptions.SetEditorPrefs(myPrefs);
+    // m_steOptions.SetEditorPrefs(myPrefs);
 
     // You can do the same for the styles and langs, though the languages
     //  are pretty generic and it probably won't be necessary.
@@ -167,31 +154,30 @@ bool wxStEditApp::OnInit()
     // end sample code
     // =======================================================================
 
-    steOptions.GetMenuManager()->CreateForNotebook();
     // Remove the Help menu since wxMac will pull out the wxID_ABOUT to add to
     // the system menu and then hide the Help menu. Later on when we add items
     // to the help menu, they'll be hidden too.
-    steOptions.GetMenuManager()->SetMenuItems(STE_MENU_HELP_MENU, 0);
+    m_steOptions.GetMenuManager()->SetMenuItems(STE_MENU_HELP_MENU, 0);
 
     // create with the readonly menuitem, not set by default since I don't think
     //  it's generally useful, but good for debugging.
-    steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
-    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
-    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
-    steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
-    steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tab on the left always
-    steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
+    m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
+    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
+    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
+    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
+    m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tab on the left always
+    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
 
     // ------------------------------------------------------------------------
-    STEditorFrame* frame = new STEditorFrame();
+    wxSTEditorFrame* frame = new wxSTEditorFrame(NULL, wxID_ANY);
 
     // ------------------------------------------------------------------------
     // load the prefs/style/langs from the config, if we're using one
     if (frame->GetConfigBase())
-        steOptions.LoadConfig(*frame->GetConfigBase());
+        m_steOptions.LoadConfig(*frame->GetConfigBase());
 
     // must call this if you want any of the options, else blank frame
-    frame->CreateOptions(steOptions);
+    frame->CreateOptions(m_steOptions);
 
     // Get the "Help" menu
     wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
@@ -259,7 +245,7 @@ bool wxStEditApp::OnInit()
     }
 
     // if the files have *, ? or are directories, don't try to load them
-    for (n=0; n < fileNames.GetCount(); n++)
+    for (n = 0; n < fileNames.GetCount(); n++)
     {
         if (wxIsWild(fileNames[n]))
         {
@@ -288,7 +274,7 @@ bool wxStEditApp::OnInit()
         }
 
         fileNames.RemoveAt(0);
-        if (steOptions.HasFrameOption(STF_CREATE_NOTEBOOK) && fileNames.GetCount())
+        if (m_steOptions.HasFrameOption(STF_CREATE_NOTEBOOK) && fileNames.GetCount())
             frame->GetEditorNotebook()->LoadFiles( &fileNames );
     }
     //frame->ShowSidebar(false);
@@ -317,14 +303,14 @@ int wxStEditApp::OnExit()
     return wxApp::OnExit();
 }
 
-STEditorFrame* wxStEditApp::GetTopWindow()
+wxSTEditorFrame* wxStEditApp::GetTopWindow()
 {
-    return wxStaticCast(wxApp::GetTopWindow(), STEditorFrame);
+    return wxStaticCast(wxApp::GetTopWindow(), wxSTEditorFrame);
 }
 
 void wxStEditApp::CreateShell()
 {
-    STEditorFrame* frame = GetTopWindow();
+    wxSTEditorFrame* frame = GetTopWindow();
 
     wxDialog dialog(frame, wxID_ANY, wxT("wxSTEditorShell"),
                     wxDefaultPosition, wxDefaultSize,
@@ -370,10 +356,10 @@ void wxStEditApp::CreateShell()
 
 wxFrame* wxStEditApp::CreateHelpFrame(const wxString& caption, const char* text)
 {
-    wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, 
-       caption,
-       wxDefaultPosition, wxSize(600,400));
+    wxFrame *helpFrame = new wxFrame(NULL, wxID_ANY, caption,
+                                     wxDefaultPosition, wxSize(600,400));
     wxHtmlWindow *htmlWin = new wxHtmlWindow(helpFrame);
+
     if (htmlWin->SetPage(wxConvertMB2WX(text)))
     {
         helpFrame->Centre();
@@ -381,8 +367,9 @@ wxFrame* wxStEditApp::CreateHelpFrame(const wxString& caption, const char* text)
     }
     else
     {
-        wxDELETE(helpFrame);
+        htmlWin->SetPage(wxConvertMB2WX("Unable to display help, sorry!"));
     }
+
     return helpFrame;
 }
 

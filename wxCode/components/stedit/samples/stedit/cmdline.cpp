@@ -4,7 +4,7 @@
 // Author:      John Labenski, Troels K
 // Modified by:
 // Created:     10/03/2010
-// RCS-ID:      
+// RCS-ID:
 // Copyright:   (c) John Labenski
 // Licence:     wxWidgets licence
 
@@ -60,8 +60,8 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
     { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filenames(s)"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
 
-    { wxCMD_LINE_OPTION, WXT("l"       ), WXT("lang"), _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-    { wxCMD_LINE_SWITCH, NULL           , WXT("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_OPTION, WXT("l"), WXT("lang"),       _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_SWITCH, NULL,     WXT("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 },
 };
@@ -79,14 +79,14 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
     // use single page, else use a notebook of editors
     if (parser.Found(cmdLineDesc[enum_parm_single].longName))
     {
-        steOptions.SetFrameOption(STF_CREATE_NOTEBOOK, false);
-        steOptions.SetFrameOption(STF_CREATE_SINGLEPAGE, true);
-        steOptions.GetMenuManager()->CreateForSinglePage();
+        m_steOptions.SetFrameOption(STF_CREATE_NOTEBOOK, false);
+        m_steOptions.SetFrameOption(STF_CREATE_SINGLEPAGE, true);
+        m_steOptions.GetMenuManager()->CreateForSinglePage();
     }
     else
     {
-        steOptions.SetFrameOption(STF_CREATE_SIDEBAR, true);
-        steOptions.GetMenuManager()->CreateForNotebook();
+        m_steOptions.SetFrameOption(STF_CREATE_SIDEBAR, true);
+        m_steOptions.GetMenuManager()->CreateForNotebook();
     }
 
     // use specified config file to load saved prefs, styles, langs
@@ -130,7 +130,7 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
         }
         else // don't use any config file at all, disable saving
         {
-            steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
+            m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
         }
     }
     else
@@ -154,7 +154,7 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         if (str.Length()) wxLocale_Find(str, &m_cmdline.m_lang);
     }
-    
+
     if (parser.Found(cmdLineDesc[enum_parm_langdialog].longName))
     {
         LanguageArray array;

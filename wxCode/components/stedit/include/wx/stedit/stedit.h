@@ -122,7 +122,7 @@ public:
     int m_last_autoindent_line;     // last line that was auto indented
     int m_last_autoindent_len;      // the length of the line before auto indenting
 
-    int m_steLang_id;                // index into the wxSTEditorLangs used
+    int m_steLang_id;               // index into the wxSTEditorLangs used
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -232,7 +232,7 @@ public :
 
 #if (wxVERSION_NUMBER >= 2900)
     void GetSelection(long *iStart, long *iEnd) const
-    { 
+    {
         long s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
     }
 #else
@@ -257,7 +257,7 @@ public :
         return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line);
     }
     void GetSelection(long *iStart, long *iEnd) const
-    { 
+    {
         int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
     }
     void GetSelection(int* startPos, int* endPos)
@@ -281,7 +281,7 @@ public :
         return wxConstCast(this, wxSTEditor)->GetCurrentPos();
     }
     long GetNumberOfLines() const
-    { 
+    {
         return wxConstCast(this, wxSTEditor)->GetLineCount();
     }
     bool IsModified() const
@@ -431,7 +431,7 @@ public :
     // Load/Save methods
 
     bool GetDocumentSaved() const { return GetFileModificationTime().IsValid(); }
-    
+
     // return true if the document hasn't been modified since the last time it
     // was saved (implying that it returns false if it was never saved, even if
     // the document is not modified)
