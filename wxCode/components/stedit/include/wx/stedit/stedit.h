@@ -208,12 +208,12 @@ public :
     // wxTextCtrl methods - this can be used as a replacement textctrl with
     //                      very few, if any, code changes.
     bool CanCopy() const { return GetSelectionEnd() != GetSelectionStart(); }
-    bool CanCut()  const { return CanCopy() && !GetReadOnly(); }
+    bool CanCut()  const { return CanCopy() && IsEditable(); }
 
     // FIXME gtk runs evt loop during CanPaste check causing a crash in
     //   scintilla's drawing code, for now let's just assume you can always paste
 #ifdef __WXGTK__
-    bool CanPaste() { return !GetReadOnly(); }
+    bool CanPaste() { return IsEditable(); }
 #endif // __WXGTK__
 
     // void Clear() { ClearAll(); } // wxSTC uses Clear to clear selection
@@ -236,7 +236,7 @@ public :
     {
         long s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
     }
-#else
+#else // wxVERSION_NUMBER < 2900
     int GetEOLMode() const
     {
         return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode();
@@ -277,6 +277,10 @@ public :
     {
         return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly();
     }
+    bool IsEditable() const
+    {
+        return !GetReadOnly();
+    }
     int GetInsertionPoint() const
     {
         return wxConstCast(this, wxSTEditor)->GetCurrentPos();
@@ -297,7 +301,7 @@ public :
     {
         SetSelection(GetCurrentPos() , GetCurrentPos());
     }
-#endif
+#endif // wxVERSION_NUMBER < 2900
 
     // ------------------------------------------------------------------------
     // Convenience functions - other useful functions
@@ -419,7 +423,7 @@ public :
     // Show the about dialog, called for wxID_ABOUT
     static void ShowAboutDialog(wxWindow* parent);
 
-    static wxString GetVersionText();
+    static wxString GetLibraryVersionString();
 
     bool GetViewNonPrint()
     {
@@ -548,8 +552,7 @@ public :
                           wxArrayInt* startPositions = NULL,
                           wxArrayInt* endPositions = NULL);
 
-    // if show then show it, else hide it, if find then find dialog, else replace dialog
-    void ShowFindReplaceDialog(bool show, bool find = true);
+    void ShowFindReplaceDialog(bool find);
     wxSTEditorFindReplaceDialog* GetCurrentFindReplaceDialog();
 
     // Get the find replace data from the options

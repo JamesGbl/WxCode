@@ -1354,7 +1354,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_STYLES));
     m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_LANGS));
 
-    wxPanel *panel = new wxPanel(this, -1, wxDefaultPosition, wxDefaultSize,
+    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                  wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_BORDER);
     m_noteBook = new wxListbook(panel, ID_STEDLG_PREF_NOTEBOOK,
                                 wxDefaultPosition, wxDefaultSize,

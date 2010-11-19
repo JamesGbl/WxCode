@@ -317,7 +317,7 @@ void wxSTEditor::UpdateCanDo(bool send_event)
         SetStateSingle(STE_CANCOPY, !HasState(STE_CANCOPY));
         state_change |= STE_CANCOPY;
     }
-    if (HasState(STE_CANPASTE) != (!GetReadOnly() || CanPaste())) // FIXME CanPaste()
+    if (HasState(STE_CANPASTE) != (IsEditable() || CanPaste())) // FIXME CanPaste()
     {
         // You get 2 UpdateUI events per key press, the first CanPaste
         // returns false since SelectionContainsProtected->RangeContainsProtected
@@ -2765,7 +2765,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_LINE_TRANSPOSE : LineTranspose(); return true;
         case ID_STE_LINE_DUPLICATE : LineDuplicate(); return true;
 
-        case wxID_FIND        : ShowFindReplaceDialog(true, true); return true;
+        case wxID_FIND        : ShowFindReplaceDialog(true); return true;
         case ID_STE_FIND_PREV :
         case ID_STE_FIND_NEXT :
         {
@@ -2797,7 +2797,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             UpdateAllItems(); // help toolbar get updated
             return true;
         }
-        case wxID_REPLACE: ShowFindReplaceDialog(true, false); return true;
+        case wxID_REPLACE: ShowFindReplaceDialog(false); return true;
 
         case ID_STE_GOTO_LINE : ShowGotoLineDialog(); return true;
 
@@ -3074,20 +3074,29 @@ wxSTEditorFindReplaceDialog* wxSTEditor::GetCurrentFindReplaceDialog()
     return wxDynamicCast(wxWindow::FindWindowByName(wxSTEditorFindReplaceDialogNameStr), wxSTEditorFindReplaceDialog);
 }
 
-void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
+void wxSTEditor::ShowFindReplaceDialog(bool find)
 {
     wxCHECK_RET(GetFindReplaceData(), wxT("Invalid find/replace data"));
-    wxSTEditorFindReplaceDialog *oldDialog = GetCurrentFindReplaceDialog();
+    wxSTEditorFindReplaceDialog* dialog = GetCurrentFindReplaceDialog();
 
-    if (oldDialog)
+    bool create = true;
+
+    if (dialog)
     {
-        oldDialog->Show(false);
-        oldDialog->Destroy();
-        oldDialog = NULL;
-        wxSafeYield();
+        if (   (   find && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG))
+            || ( (!find)&&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
+        {
+            create = false;
+            dialog->SetFocus();
+        }
+        else
+        {
+            dialog->Destroy();
+            dialog = NULL;
+        }
     }
 
-    if (show)
+    if (create)
     {
         int style = STE_FR_NOALLDOCS;
 
@@ -3117,7 +3126,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool show, bool find)
         if (!selectedText.IsEmpty() && (selectedText.Length() < 100u))
             SetFindString(selectedText, true);
 
-        wxSTEditorFindReplaceDialog* dialog = new wxSTEditorFindReplaceDialog(parent,
+        dialog = new wxSTEditorFindReplaceDialog(parent,
             GetFindReplaceData(),
             wxGetStockLabelEx(find ? wxID_FIND : wxID_REPLACE, wxSTOCK_PLAINTEXT),
             style | (find ? 0 : wxFR_REPLACEDIALOG));
@@ -3883,9 +3892,9 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-/*static*/ wxString wxSTEditor::GetVersionText()
+/*static*/ wxString wxSTEditor::GetLibraryVersionString()
 {
-    return STE_VERSION_STRING wxT(" svn r1501");
+    return STE_VERSION_STRING wxT(" svn r1502");
 }
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)
@@ -3897,7 +3906,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
                 wxT("\n")
                 wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
             #if (wxVERSION_NUMBER >= 2900)
-                // wxStyledTextCtrl::GetVersionText().wx_str() // trac.wxwidgets.org/ticket/12690
+                // wxStyledTextCtrl::GetLibraryVersionString().wx_str() // trac.wxwidgets.org/ticket/12690
                 wxT("Scintilla 2.03")
             #else
                 wxT("Scintilla 1.70")
