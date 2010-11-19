@@ -39,10 +39,6 @@
     #include "wx/wx.h"
 #endif
 
-#if (wxVERSION_NUMBER >= 2900)
-#include "wx/stc/private.h" // TODO: use wxConvertMB2WX() instead of stc2wx()?
-#endif
-
 #include "wx/filename.h"
 
 #include "wx/stedit/stedit.h"
@@ -346,7 +342,7 @@ void wxStEditApp::CreateShell()
 
     int width = shell->TextWidth(wxSTC_STYLE_DEFAULT,
                                  wxT(" SetMaxHistoryLines num : set the number of lines in history buffer  "));
-    dialog.SetSize(width + 30, -1);
+    dialog.SetSize(width + 30, wxDefaultCoord);
 
     wxBoxSizer *topSizer = new wxBoxSizer( wxVERTICAL );
     topSizer->Add(shell, 1, wxEXPAND);
@@ -367,9 +363,8 @@ wxFrame* wxStEditApp::CreateHelpFrame(const wxString& caption, const char* text)
     }
     else
     {
-        htmlWin->SetPage(wxConvertMB2WX("Unable to display help, sorry!"));
+        htmlWin->SetPage(_("Unable to display help, sorry!"));
     }
-
     return helpFrame;
 }
 
