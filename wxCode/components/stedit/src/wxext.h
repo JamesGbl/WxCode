@@ -11,12 +11,6 @@
 #ifndef __WXEXT_H__
 #define __WXEXT_H__
 
-#ifdef WXCODEUSINGDLL
-   #define WXDLLIMPEXP_CODE WXIMPORT
-#else
-   #define WXDLLIMPEXP_CODE
-#endif
-
 #define WXK_HELP       WXK_F1
 #define WXK_FULLSCREEN WXK_F11
 
@@ -24,21 +18,21 @@ WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 
 WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
-WXDLLIMPEXP_CODE bool wxLocale_GetSupportedLanguages(LanguageArray*);
-WXDLLIMPEXP_CODE bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
-WXDLLIMPEXP_CODE bool wxLocale_Find(const wxString&, enum wxLanguage*);
+WXDLLIMPEXP_STEDIT bool wxLocale_GetSupportedLanguages(LanguageArray*);
+WXDLLIMPEXP_STEDIT bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
+WXDLLIMPEXP_STEDIT bool wxLocale_Find(const wxString&, enum wxLanguage*);
 
-WXDLLIMPEXP_CODE void wxFrame_SetInitialPosition(wxFrame*,
+WXDLLIMPEXP_STEDIT void wxFrame_SetInitialPosition(wxFrame*,
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize, int margin_pct = 5);
-WXDLLIMPEXP_CODE void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NULL);
+WXDLLIMPEXP_STEDIT void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NULL);
 
 #if wxUSE_CLIPBOARD
-WXDLLIMPEXP_CODE bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count);
-WXDLLIMPEXP_CODE bool wxClipboard_Get(wxString*);
+WXDLLIMPEXP_STEDIT bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count);
+WXDLLIMPEXP_STEDIT bool wxClipboard_Get(wxString*);
 #endif
 
-WXDLLIMPEXP_CODE void wxCommandLineUsage(wxWindow* parent);
+WXDLLIMPEXP_STEDIT void wxCommandLineUsage(wxWindow* parent);
 
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 
@@ -46,10 +40,10 @@ WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
-WXDLLIMPEXP_CODE wxString wxToolBar_GetToolTipText(const wxString& label, const AcceleratorArray&, int id);
+WXDLLIMPEXP_STEDIT wxString wxToolBar_GetToolTipText(const wxString& label, const AcceleratorArray&, int id);
 
-WXDLLIMPEXP_CODE extern const wxSize wxIconSize_System;
-WXDLLIMPEXP_CODE extern const wxSize wxIconSize_Small;
+WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_System;
+WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_Small;
 
 #if (wxVERSION_NUMBER >= 2900)
 #define wxMessageBoxCaption wxTheApp->GetAppDisplayName()
@@ -70,7 +64,7 @@ WXDLLIMPEXP_STEDIT wxString wxGetStockLabelEx(wxWindowID, long flags = wxSTOCK_W
 // wxPreviewFrameEx
 
 #ifdef _WX_PRNTBASEH__
-class WXDLLIMPEXP_CODE wxPreviewFrameEx : public wxPreviewFrame
+class WXDLLIMPEXP_STEDIT wxPreviewFrameEx : public wxPreviewFrame
 {
    typedef wxPreviewFrame base;
 public:

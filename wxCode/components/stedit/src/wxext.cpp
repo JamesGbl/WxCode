@@ -217,7 +217,7 @@ static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, boo
    return true;
 }
 
-wxString wxGetAccelText(int flags, int keyCode)
+static wxString wxGetAccelText(int flags, int keyCode)
 {
    // wxAcceleratorEntry.ToString() produces silly text
    wxString str;
@@ -326,7 +326,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
    return stockLabel;
 }
 
-wxString wxGetAccelText(const wxAcceleratorEntry& accel)
+static wxString wxGetAccelText(const wxAcceleratorEntry& accel)
 {
    return wxGetAccelText(accel.GetFlags(), (enum wxKeyCode)accel.GetKeyCode());
 }
