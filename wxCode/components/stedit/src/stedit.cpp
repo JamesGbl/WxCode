@@ -2625,14 +2625,10 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_TRANSPOSE, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_DUPLICATE, !readonly);
 
-    wxSTEditorFindReplaceDialog* find = GetCurrentFindReplaceDialog();
-
-    STE_MM::DoCheckItem( menu, menuBar, toolBar, wxID_FIND, find && !(find->GetWindowStyle() & wxFR_REPLACEDIALOG));
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_NEXT, CanFind());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_PREV, CanFind());
     STE_MM::DoCheckItem( menu, menuBar, toolBar, ID_STE_FIND_DOWN, GetFindDown());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REPLACE,   !readonly);
-    STE_MM::DoCheckItem( menu, menuBar, toolBar, wxID_REPLACE, find && (find->GetWindowStyle() & wxFR_REPLACEDIALOG));
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_UNDO, CanUndo());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REDO, CanRedo());
@@ -3894,7 +3890,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 
 /*static*/ wxString wxSTEditor::GetLibraryVersionString()
 {
-    return STE_VERSION_STRING wxT(" svn r1502");
+    return STE_VERSION_STRING wxT(" svn r1505");
 }
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)
