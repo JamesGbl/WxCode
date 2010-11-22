@@ -3890,7 +3890,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 
 /*static*/ wxString wxSTEditor::GetLibraryVersionString()
 {
-    return STE_VERSION_STRING wxT(" svn r1505");
+    return STE_VERSION_STRING wxT(" svn r1506");
 }
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)

@@ -160,10 +160,14 @@ public:
     void OnMenu(wxCommandEvent &event);
     virtual bool HandleMenuEvent(wxCommandEvent &event);
     void OnSTEState(wxSTEditorEvent &event);
+#if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
+    void OnLeftUp(wxMouseEvent &event);
+#endif
     void OnRightUp(wxMouseEvent &event);
     void OnMiddleUp(wxMouseEvent &event);
     void OnPageChanged(wxNotebookEvent &event);
     void OnFindDialog(wxFindDialogEvent& event);
+
     void UpdatePageState();
 
 protected:

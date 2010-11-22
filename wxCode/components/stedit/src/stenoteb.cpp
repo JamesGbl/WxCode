@@ -42,6 +42,9 @@ int wxCMPFUNC_CONV STN_SortNameCompareFunction(const wxString& first, const wxSt
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorNotebook, wxNotebook)
 
 BEGIN_EVENT_TABLE(wxSTEditorNotebook, wxNotebook)
+#if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
+    EVT_LEFT_UP                (wxSTEditorNotebook::OnLeftUp)
+#endif
     EVT_RIGHT_UP               (wxSTEditorNotebook::OnRightUp)
     EVT_MIDDLE_UP              (wxSTEditorNotebook::OnMiddleUp)
     EVT_MENU                   (wxID_ANY, wxSTEditorNotebook::OnMenu)
@@ -142,7 +145,7 @@ void wxSTEditorNotebook::OnPageChanged(wxNotebookEvent &event)
     wxNotebook::OnSelChange(event);
     event.Skip(false);
 #else
-    // trac.wxwidgets.org/ticket/12688
+    // trac.wxwidgets.org/ticket/12688, fixed now
     event.Skip();
 #endif
 
@@ -496,6 +499,20 @@ bool wxSTEditorNotebook::CanSaveAll()
     return false;
 }
 
+#if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
+void wxSTEditorNotebook::OnLeftUp(wxMouseEvent &event)
+{
+    wxPoint MClickPoint = event.GetPosition();
+    int page = HitTest(MClickPoint, NULL);
+    
+    if (page != wxNOT_FOUND)
+    {
+        GetEditor(page)->SetFocus();
+    }
+    event.Skip();
+}
+#endif
+
 void wxSTEditorNotebook::OnRightUp(wxMouseEvent &event)
 {
     wxMenu* popupMenu = GetOptions().GetNotebookPopupMenu();
@@ -511,10 +528,11 @@ void wxSTEditorNotebook::OnRightUp(wxMouseEvent &event)
 void wxSTEditorNotebook::OnMiddleUp(wxMouseEvent &event)
 {
     wxPoint MClickPoint = event.GetPosition();
-    int NotePage = HitTest(MClickPoint, NULL);
-    if (NotePage != wxNOT_FOUND)
+    int page = HitTest(MClickPoint, NULL);
+
+    if (page != wxNOT_FOUND)
     {
-        ClosePage(NotePage, true);
+        ClosePage(page, true);
     }
     else
         event.Skip();
