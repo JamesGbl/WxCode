@@ -423,7 +423,11 @@ public :
     // Show the about dialog, called for wxID_ABOUT
     static void ShowAboutDialog(wxWindow* parent);
 
+#if (wxVERSION_NUMBER >= 2902)
+    static wxVersionInfo GetLibraryVersionInfo();
+#else
     static wxString GetLibraryVersionString();
+#endif
 
     bool GetViewNonPrint()
     {
@@ -454,7 +458,7 @@ public :
     // Load a file, if filename is wxEmptyString then use wxFileSelector
     //   if using wxFileSelector then if extensions is wxEmptyString use
     //   GetOptions().GetDefaultFileExtensions() else the ones supplied
-    virtual bool LoadFile( const wxFileName& fileName = wxFileName(),
+    virtual bool LoadFile( const wxFileName& fileName = wxFileName(), // #define wxNullFileName wxFileName()
                            const wxString &extensions = wxEmptyString,
                            bool query_if_changed = true );
     // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector

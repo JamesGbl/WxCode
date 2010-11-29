@@ -3881,22 +3881,30 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1508")
+
+#if (wxVERSION_NUMBER >= 2902)
+/*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
+{
+    return wxVersionInfo(STE_APPDISPLAYNAME, STE_MAJOR_VERSION, STE_MINOR_VERSION, STE_RELEASE_VERSION, STE_VERSION_STRING_SVN);
+}
+#else
 /*static*/ wxString wxSTEditor::GetLibraryVersionString()
 {
-    return STE_VERSION_STRING wxT(" svn r1506");
+    return STE_VERSION_STRING_SVN;
 }
+#endif
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)
 {
     wxString msg;
     msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
-                wxT("Using the %s editor, http://www.scintilla.org\n")
+                wxT("Using %s, http://www.scintilla.org\n")
                 wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
                 wxT("\n")
                 wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
-            #if (wxVERSION_NUMBER >= 2900)
-                // wxStyledTextCtrl::GetLibraryVersionString().wx_str() // trac.wxwidgets.org/ticket/12690
-                wxT("Scintilla 2.03")
+            #if (wxVERSION_NUMBER >= 2902)
+                wxStyledTextCtrl::GetLibraryVersionInfo().ToString().wx_str()
             #else
                 wxT("Scintilla 1.70")
             #endif
