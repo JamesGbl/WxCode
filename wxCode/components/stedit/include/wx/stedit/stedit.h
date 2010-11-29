@@ -455,7 +455,8 @@ public :
     //   if using wxFileSelector then if extensions is wxEmptyString use
     //   GetOptions().GetDefaultFileExtensions() else the ones supplied
     virtual bool LoadFile( const wxFileName& fileName = wxFileName(),
-                           const wxString &extensions = wxEmptyString );
+                           const wxString &extensions = wxEmptyString,
+                           bool query_if_changed = true );
     // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector
     virtual bool SaveFile( bool use_dialog = true,
                            const wxString &extensions = wxEmptyString );
@@ -466,8 +467,6 @@ public :
     // Show a dialog to allow users to export the document
     //   See wxSTEditorExporter
     bool ShowExportDialog();
-
-    bool LoadFile( const wxFileName&, const wxString &extensions, bool noise);
 
     bool Revert();
 

@@ -517,7 +517,7 @@ void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
 
         //wxPrintf(wxT("%d %d '%s'\n"), line_n, len, s.wx_str());
 
-        for ( n = edge_col-1; n >= 0; n--)
+        for (n = edge_col-1; n >= 0; n--)
         {
             if ((s[n] == wxT(' ')) || (s[n] == wxT('\t')))
             {
@@ -548,7 +548,6 @@ void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
                 editor->SetLineText(line_n+1, split+next);
                 editor->MarkerAdd(line_n+1, STE_MARKER_BOOKMARK);
                 wxSTEditor_SplitLines(editor, pos, line_n+1);
-
 
                 break;
             }
@@ -700,9 +699,7 @@ void wxSTEditor::OnSetFocus(wxFocusEvent &event)
         return;
 
     // check to make sure that the parent is not being deleted
-    for (wxWindow* parent = GetParent();
-         parent;
-         parent = parent->GetParent())
+    for (wxWindow* parent = GetParent(); parent; parent = parent->GetParent())
     {
         if (parent->IsBeingDeleted())
         {
@@ -837,7 +834,8 @@ static wxTextFileType wxSTEConvertEOLMode(int scintillaMode)
 {
     wxTextFileType type;
 
-    switch (scintillaMode) {
+    switch (scintillaMode) 
+    {
         case wxSTC_EOL_CRLF:
             type = wxTextFileType_Dos;
             break;
@@ -943,7 +941,7 @@ void wxSTEditor::AppendTextGotoEnd(const wxString &text, bool goto_end)
 
 int wxSTEditor::GetLineLength(int line) const
 {
-    return GetLineText(line).Length();
+    return (int)GetLineText(line).Length();
 }
 
 wxString wxSTEditor::GetLineText(int line) const
@@ -984,7 +982,7 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
     }
 
     int pos = PositionFromLine(line);
-    int line_len = inc_newline ? GetLine(line).Length() : GetLineEndPosition(line) - pos;
+    int line_len = inc_newline ? (int)GetLine(line).Length() : GetLineEndPosition(line) - pos;
 
     //wxPrintf(wxT("SetLineText l %d lc %d added %d len %d end %d '%s'\n"), line, line_count, line-line_count, GetLine(line).Length() , GetLineEndPosition(line)-pos, text.wx_str()); fflush(stdout);
 
@@ -995,7 +993,7 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
     SetTargetEnd(pos + line_len);
     ReplaceTarget(text);
 
-    int diff = prepend.Length() + text.Length() - line_len;
+    int diff = (int)prepend.Length() + (int)text.Length() - line_len;
     SetTargetStart(target_start < pos            ? target_start : target_start + diff);
     SetTargetEnd(  target_end   < pos + line_len ? target_end   : target_end   + diff);
 }
@@ -1263,11 +1261,11 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
         // make sure that the selection stays in same place
         if (pos <= sel_start)
         {
-            sel_start += s.Length();
-            sel_end   += s.Length();
+            sel_start += (int)s.Length();
+            sel_end   += (int)s.Length();
         }
         else if ((pos >= sel_start) && (pos < sel_end))
-            sel_end += s.Length();
+            sel_end += (int)s.Length();
 
         InsertText(pos, s);
     }
@@ -1283,9 +1281,7 @@ int wxString_FindFromPos(const wxString& str, const wxString& chars,
     const wxChar *c = str.GetData() + start_pos;
     size_t len      = str.Length();
 
-    for (size_t n = start_pos;
-         n < len;
-         n++, c++)
+    for (size_t n = start_pos; n < len; n++, c++)
     {
         int idx = chars.Find(*c);
 
@@ -1293,7 +1289,7 @@ int wxString_FindFromPos(const wxString& str, const wxString& chars,
         if ((idx != wxNOT_FOUND) &&
             ( (n == 0) || (*c != wxT('\"')) || (*(c-1) != wxT('\\')) ) )
         {
-            return n;
+            return (int)n;
         }
     }
     return wxNOT_FOUND;
@@ -1349,13 +1345,11 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
     for (line = top_line; line <= bottom_line; line++)
     {
         wxString lineText(GetLine(line).Strip(wxString::trailing));
-        int col = 0, len = lineText.Length();
+        int col = 0, len = (int)lineText.Length();
         const wxChar *c = lineText.GetData();
         bool ignore = false;
 
-        for (int n = 0;
-             n < len;
-             )
+        for (int n = 0; n < len;  )
         {
             // skip whitespace always
             while ((n < len) && ((*c == wxT(' ')) || (*c == wxT('\t')))) { c++; n++; }
@@ -1447,7 +1441,7 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
         if (max_start_pos > 0)
             newLine = wxString(wxT(' '), max_start_pos);
 
-        int col, num_cols = matchStartArray[line-top_line].GetCount();
+        int col, num_cols = (int)matchStartArray[line-top_line].GetCount();
         for (col = 0; col < num_cols; col++)
         {
             int match_start = matchStartArray[line-top_line][col];
@@ -1505,8 +1499,8 @@ bool wxSTEditor::ShowInsertTextDialog()
             if (prependText.Length() > 0u)
                 InsertText(sel_start, prependText);
 
-            sel_start -= prependText.Length();
-            sel_end   += prependText.Length();
+            sel_start -= (int)prependText.Length();
+            sel_end   += (int)prependText.Length();
             SetSelection(sel_start, sel_end);
             return true;
         }
@@ -1836,8 +1830,8 @@ void wxSTEditor::DoBraceMatch() {
     else // must run this to unhighlight last hilighted brace
     {
         char chBrace = 0;
-		if (braceAtCaret >= 0)
-			chBrace = static_cast<char>(GetCharAt(braceAtCaret));
+        if (braceAtCaret >= 0)
+            chBrace = static_cast<char>(GetCharAt(braceAtCaret));
 
         BraceHighlight(braceAtCaret, braceOpposite);
         int columnAtCaret = GetColumn(braceAtCaret);
@@ -1946,7 +1940,7 @@ bool wxSTEditor::StartAutoComplete() {
                 wxString words = GetAutoCompleteKeyWords(root);
                 if (words.Length()) {
                         //EliminateDuplicateWords(words);
-                        AutoCompShow(root.Length(), words);
+                        AutoCompShow((int)root.Length(), words);
                 }
                 return true;
         }
@@ -2001,7 +1995,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
         //ft.chrgText.cpMax = 0;
         int ft_chrg_cpMin = 0;
         const int flags = wxSTC_FIND_WORDSTART | (autoCompleteIgnoreCase ? 0 : wxSTC_FIND_MATCHCASE);
-        int posCurrentWord = GetCurrentPos() - root.length();
+        int posCurrentWord = GetCurrentPos() - (int)root.length();
         unsigned int minWordLength = 0;
         unsigned int nwords = 0;
 
@@ -2018,15 +2012,15 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                 if (posFind == -1 || posFind >= doclen)
                         break;
                 if (posFind == posCurrentWord) {
-                        ft_chrg_cpMin = posFind + root.length();
+                        ft_chrg_cpMin = posFind + (int)root.length();
                         continue;
                 }
                 // Grab the word and put spaces around it
                 const int wordMaxSize = 800;
                 wxString wordstart;
                 wordstart = GetTextRange(posFind, wxMin(posFind + wordMaxSize - 3, doclen));
-                int wordstart_len = wordstart.length();
-                int wordend = root.length();
+                int wordstart_len = (int)wordstart.length();
+                int wordend = (int)root.length();
                 while ((wordend < wordstart_len) && iswordcharforsel(wordstart[wordend]))
                         wordend++;
                 wordstart = wordstart.Mid(0, wordend);
@@ -2053,7 +2047,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                 for (size_t n = 1; n < length; n++)
                     words += wxT(" ") + wordsNear[n];
 
-                AutoCompShow(root.length(), words);
+                AutoCompShow((int)root.length(), words);
         } else {
                 AutoCompCancel();
         }
@@ -2195,15 +2189,10 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     return ok;
 }
 
-
-bool wxSTEditor::LoadFile(const wxFileName& fileName, const wxString &extensions)
+bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool query_if_changed)
 {
-    return LoadFile(fileName, extensions, true);
-}
-
-bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool noise)
-{
-    if (noise && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) && (QuerySaveIfModified(true) == wxCANCEL))
+    if (query_if_changed && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) && 
+        (QuerySaveIfModified(true) == wxCANCEL))
     {
         return false;
     }
@@ -2713,6 +2702,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case wxID_CUT            : Cut();   return true;
         case wxID_COPY           : Copy();  return true;
         case wxID_CLEAR          : 
+        {
             if (!HasSelection())
             {
                // simulate default Del key behaviour
@@ -2722,6 +2712,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             }
             Clear();  
             return true;
+        }
         case ID_STE_COPY_PRIMARY :
         {
             bool is_opened = wxTheClipboard->IsOpened();
@@ -3000,7 +2991,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
 
     // check if wxSTEditorPref knows this id
     if ( GetEditorPrefs().IsOk() && (win_id >= ID_STE_PREF__FIRST) &&
-                                  (win_id <= ID_STE_PREF__LAST))
+                                    (win_id <= ID_STE_PREF__LAST))
     {
         GetEditorPrefs().SetPrefBoolByID(win_id, event.IsChecked());
         return true;
@@ -3079,8 +3070,8 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
 
     if (dialog)
     {
-        if (   (   find && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG))
-            || ( (!find)&&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
+        if ((  find  && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) || 
+            ((!find) &&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
         {
             create = false;
             dialog->SetFocus();
@@ -3433,10 +3424,11 @@ int wxSTEditor::ReplaceAllStrings(const wxString &findString,
     flags = (flags | wxFR_DOWN) & (~STE_FR_WRAPAROUND); // do it in a single pass
     int cursor_pos = GetCurrentPos();  // return here when done
 
+    int pos = 0;
     int found_start_pos = 0;
     int found_end_pos   = 0;
 
-    for (int pos = FindString(findString, 0, -1, flags, STE_FINDSTRING_NOTHING,
+    for (pos = FindString(findString, 0, -1, flags, STE_FINDSTRING_NOTHING,
                          &found_start_pos, &found_end_pos);
          pos != wxNOT_FOUND;
          pos = FindString(findString, pos + replace_len, -1, flags, STE_FINDSTRING_NOTHING,
@@ -3476,13 +3468,14 @@ size_t wxSTEditor::FindAllStrings(const wxString &str, int flags,
     if (flags == -1) flags = GetFindFlags();
     flags = (flags | wxFR_DOWN) & (~STE_FR_WRAPAROUND); // do it in a single pass
 
+    int pos = 0;
     int found_start_pos = 0;
     int found_end_pos   = 0;
     size_t count = 0;
 
     wxArrayInt positions;
 
-    for (int pos = FindString(str, 0, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos);
+    for (pos = FindString(str, 0, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos);
          pos != wxNOT_FOUND;
          pos = FindString(str, found_end_pos, -1, flags, STE_FINDSTRING_NOTHING, &found_start_pos, &found_end_pos))
     {

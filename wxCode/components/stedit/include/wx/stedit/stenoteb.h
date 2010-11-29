@@ -80,7 +80,7 @@ public:
     // Get/Set the maximum number of pages to allow, default is STN_NOTEBOOK_PAGES_MAX_DEFAULT
     //  absolute max is STN_NOTEBOOK_PAGES_MAX, menu IDs will confict if greater
     size_t GetMaxPageCount() const { return m_stn_max_page_count; }
-    void SetMaxPageCount(size_t count) { m_stn_max_page_count = count; }
+    void SetMaxPageCount(size_t count) { m_stn_max_page_count = (int)count; }
 
     // strip the path off the wxSTEditor::GetFileName to use as tab name
     wxString FileNameToTabName(const wxSTEditor*) const;

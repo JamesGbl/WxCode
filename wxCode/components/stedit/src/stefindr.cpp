@@ -532,14 +532,14 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         for (n = 0; n < count; n++)
         {
             str = findAllStrings->Item(n).AfterFirst(wxT('|'));
-            int pos = m_resultEditor->PositionFromLine(n);
+            int pos = m_resultEditor->PositionFromLine((int)n);
             m_resultEditor->StartStyling(pos, 31);
-            int length = str.BeforeFirst(wxT('(')).Length() - 1;
+            int length = (int)str.BeforeFirst(wxT('(')).Length() - 1;
             m_resultEditor->SetStyling(length, 3);
 
             pos = pos + length + 1;
             m_resultEditor->StartStyling(pos, 31);
-            length = str.AfterFirst(wxT('(')).BeforeFirst(wxT(')')).Length() + 2;
+            length = (int)str.AfterFirst(wxT('(')).BeforeFirst(wxT(')')).Length() + 2;
             m_resultEditor->SetStyling(length, 4);
         }
 
@@ -634,7 +634,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
 
         cBox->SetValue(s);
         cBox->SetFocus();
-        cBox->SetInsertionPoint(pos + c.Length() + ipos);
+        cBox->SetInsertionPoint(pos + (int)c.Length() + ipos);
     }
 }
 
@@ -699,7 +699,7 @@ void wxSTEditorFindReplacePanel::SelectFindString()
 {
     wxString value = m_findCombo->GetValue();
     if (value.Len() > 0u)
-        m_findCombo->SetSelection(0, value.Len());
+        m_findCombo->SetSelection(0, (int)value.Len());
 }
 
 void wxSTEditorFindReplacePanel::OnFindComboText(wxCommandEvent& WXUNUSED(event))
