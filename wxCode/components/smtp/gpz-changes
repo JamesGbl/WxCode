@@ -1,0 +1,84 @@
+wxCmdLineProtocol
+    API changes
+    - Added port/service parameter to SetHost()
+    - Split SetHost() into connection (host/port) and user (name/passwd)
+      methods: SetHost() and SetUser()
+
+    Functional changes
+    - socket event handler now has serial number so that if the
+      socket is closed and reopened, events from the prior incarnation
+      are recognized and discarded
+    - handle socket-lost events
+    - parameterize formerly hard-coded port number 25
+
+    Internal structural changes
+    - made some elements protected/private
+    - added OnConnectionLost() to handle socket closure events
+
+wxEmailMessage
+    API changes
+    - Removed wxRecipientsIterator; all recipients are now listed
+      in a single array.
+    - added enum "disposition" for message/recipient delivery status
+    - Added GetRcptStats(wxArrayInt &stats) to get current per-recipient
+      delivery status
+
+    Functional Changes
+    - Track delivery status per recipient
+
+
+    Internal structural changes
+    - changed internal meaning of recipient arrays to correspond to
+      envelope/header division
+
+
+wxSMTPListener
+    API Changes
+    - Recipient and message status reported using wxEmailMessage::disposition
+    - Deleted unused method OnSocketError()
+    - Replaced OnRecipientAdded() with OnRecipientStatus()
+      (still reports result of RCPT command, which does not necessarily
+      represent recipient disposition for this pass - DATA command
+      could fail, for example)
+    - Replaced OnDataSent() with OnMessageStatus() 
+
+
+wxSMTP
+    API Changes
+    - Added SetHost() with default port 25 (TBD: maybe should be 587?)
+    - Added SetRetry() to configure retry parameters
+    - Added Discontinue() (TBD: code it) for graceful interruption
+      if retry cycle.
+    - Added Destroy() which does wxSMTP-specific cleanup then calls
+      parent class Destroy(). Can also terminate smtp transaction
+      or retry cycle with prejudice.
+    - Added TimerStart()/TimerStop() methods for timout and retry timing
+    - Replaced OnRecipientError()/OnRecipientSuccess() with
+      OnRecipientStatus()
+    - Added OnMessageStatus()
+    - Added SetFastRetryMode() for large recipient list (RCPT 452 response)
+      handling
+    - Added Final() to factor out common end-of-transaction/retry
+      actions in state machine code
+
+    Functional changes
+    - handle errors and timeouts
+    - perform retries for recipients that got temporary failures
+    - defined timeout values (30 sec) for parts of SMTP transaction -
+      maybe there are better choices.
+
+    Internal structural changes
+    - moved some items to private and added friend classes RetryState and
+      wxSMTPTimer
+    - added OnConnectionLost() to catch socket closure events
+    - added UpdateElapsed() to track total retry wait time
+    - added NotifyMessageStatus() to call wxSMTPListener and wxEmailMessage
+      with status updates.
+
+wxstates:
+    - handle error responses from smtp server
+    - added MailState::onTimeout for timeout event handling
+    - added QuitState, ClosedState, RetryState for connection
+      termination, error handling, and retry handling.
+
+
