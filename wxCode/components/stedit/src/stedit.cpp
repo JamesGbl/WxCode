@@ -2242,8 +2242,6 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     }
 
     ClearAll();
-    if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
-        SetLanguage( fileName );
 
     int load_flags = GetEditorPrefs().IsOk() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
 
