@@ -2091,8 +2091,11 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     if (ok)
     {
         ClearAll();
+        bool lang_found = false;
         if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
-            SetLanguage(fileName);
+        {
+            lang_found = SetLanguage(fileName);
+        }
 
         const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
         wxCharBuffer charBuf(buf_len + 2); // add room for terminators
@@ -2139,13 +2142,13 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
 
             if (!ok) break;
 
+            wxString str;
             if (unicode)
             {
                 // Skip first 2 chars specifying that it's unicode at start,
                 //   but only it it really has them.
                 const size_t skip = (i == 0) && has_unicode ? 2 : 0;
-                const wxString str((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
-                AddText(str);
+                str = wxString((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
 
                 // this garbles text when compiled in unicode
                 //#ifdef wxUSE_UNICODE
@@ -2156,10 +2159,18 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             }
             else // not unicode text, set it as is
             {
-                const wxString str((char*)(charBuf.data()), *wxConvCurrent, last_read);
-                AddText(str);
+                str = wxString((char*)(charBuf.data()), *wxConvCurrent, last_read);
+            }
 
-                //AddTextRaw(charBuf.data());
+            AddText(str);
+            
+            if (!lang_found)
+            {
+                const wxChar* xml = wxT("<?xml version=\"");
+                if (0 == wxStrnicmp(str, xml, wxStrlen(xml)))
+                {
+                    lang_found = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
+                }
             }
 
             // at end or it was read all at once
@@ -2367,7 +2378,9 @@ bool wxSTEditor::NewFile( const wxString &title_ )
     ClearAll();
     EmptyUndoBuffer();
     if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
-        SetLanguage( title );
+    {
+        SetLanguage(wxFileName(title));
+    }
 
     SetFileName(wxFileName(title), true);
     UpdateCanDo(true);
@@ -3877,7 +3890,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1508")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1516")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
