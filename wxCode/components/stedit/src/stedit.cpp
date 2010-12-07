@@ -3744,7 +3744,7 @@ bool wxSTEditor::SetLanguage(int lang)
 
 bool wxSTEditor::SetLanguage(const wxFileName &filePath)
 {
-    int lang = -1;
+    int lang = STE_LANG_NULL;
 
     // use current langs or default if none
     if (GetEditorLangs().IsOk())
@@ -3752,7 +3752,7 @@ bool wxSTEditor::SetLanguage(const wxFileName &filePath)
     else
         lang = wxSTEditorLangs(true).FindLanguageByFilename(filePath);
 
-    if (lang != -1)
+    if (lang != STE_LANG_NULL)
         return SetLanguage(lang);
 
     return false;
