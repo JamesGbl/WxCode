@@ -56,17 +56,15 @@ OR PERFORMANCE OF THIS SOFTWARE.
 // Global data
 
 wxSTEditorFindReplaceData s_wxSTEditor_FindData(wxFR_DOWN|STE_FR_WRAPAROUND);
-wxString s_findString; // for sending wxEVT_STE_FIND_CHANGED to update GUI
-long s_findFlags = wxFR_DOWN|STE_FR_WRAPAROUND;
+static wxString s_findString; // for sending wxEVT_STE_FIND_CHANGED to update GUI
+static long s_findFlags = wxFR_DOWN|STE_FR_WRAPAROUND;
 
-const wxString EOLModeStrings[] =
+static const wxString EOLModeStrings[] =
 {
     wxT("CRLF (Dos/MS Windows)"),
     wxT("CR (Mac)"),
     wxT("LF (Unix)")
 };
-
-#define wxALL_FILES_PATTERN_DISPLAY wxT("*")
 
 wxString STE_DefaultFileName( wxT("untitled.txt") );
 wxString STE_DefaultFileExtensions( 
@@ -77,7 +75,7 @@ wxString STE_DefaultFileExtensions(
                                     wxT("XML Files (xml)|*.xml|")
                                     wxT("Lua Files (lua)|*.lua|")
                                     wxT("Python Files (py)|*.py|") 
-                                    wxT("All Files (")wxALL_FILES_PATTERN_DISPLAY wxT(")|")wxALL_FILES_PATTERN
+                                    wxT("All Files|")wxALL_FILES_PATTERN
                                     );
 
 //-----------------------------------------------------------------------------
