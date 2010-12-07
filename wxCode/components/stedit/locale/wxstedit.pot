@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-27 15:36+0200\n"
+"POT-Creation-Date: 2010-12-07 08:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,76 +16,76 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ..\src\stedit.cpp:1546 ..\src\stedit.cpp:2952
+#: ..\src\stedit.cpp:1543 ..\src\stedit.cpp:2969
 msgid "Current EOL : "
 msgstr ""
 
-#: ..\src\stedit.cpp:1547
+#: ..\src\stedit.cpp:1544
 msgid "Convert End of Line chars"
 msgstr ""
 
-#: ..\src\stedit.cpp:1567
+#: ..\src\stedit.cpp:1564
 msgid "Scale font sizes : -10...20 (not all fonts supported)"
 msgstr ""
 
-#: ..\src\stedit.cpp:1569
+#: ..\src\stedit.cpp:1566
 msgid "Change text font size"
 msgstr ""
 
-#: ..\src\stedit.cpp:2127
+#: ..\src\stedit.cpp:2124
 msgid "Unicode text file. Convert to Ansi text?"
 msgstr ""
 
-#: ..\src\stedit.cpp:2128
+#: ..\src\stedit.cpp:2125
 msgid "Load Unicode?"
 msgstr ""
 
-#: ..\src\stedit.cpp:2188 ..\src\stedit.cpp:2246
+#: ..\src\stedit.cpp:2185 ..\src\stedit.cpp:2238
 msgid "This file is too large for this editor, sorry."
 msgstr ""
 
-#: ..\src\stedit.cpp:2189 ..\src\stedit.cpp:2247
+#: ..\src\stedit.cpp:2186 ..\src\stedit.cpp:2239
 msgid "Error loading file"
 msgstr ""
 
-#: ..\src\stedit.cpp:2225 ..\src\stemenum.cpp:323
+#: ..\src\stedit.cpp:2217 ..\src\stemenum.cpp:421
 msgid "Open file"
 msgstr ""
 
-#: ..\src\stedit.cpp:2303
+#: ..\src\stedit.cpp:2295
 msgid "Save file"
 msgstr ""
 
-#: ..\src\stedit.cpp:2318
+#: ..\src\stedit.cpp:2310
 #, c-format
 msgid "Error opening file :'%s'"
 msgstr ""
 
-#: ..\src\stedit.cpp:2319
+#: ..\src\stedit.cpp:2311
 msgid "Save file error"
 msgstr ""
 
-#: ..\src\stedit.cpp:2360
+#: ..\src\stedit.cpp:2352
 msgid "New file name"
 msgstr ""
 
-#: ..\src\stedit.cpp:2360
+#: ..\src\stedit.cpp:2352
 msgid "New file"
 msgstr ""
 
-#: ..\src\stedit.cpp:2368
+#: ..\src\stedit.cpp:2360
 msgid "The filename contains wildcard characters."
 msgstr ""
 
-#: ..\src\stedit.cpp:2369
+#: ..\src\stedit.cpp:2361
 msgid "Invalid filename"
 msgstr ""
 
-#: ..\src\stedit.cpp:2391
+#: ..\src\stedit.cpp:2383
 msgid "Discard changes and load last saved version ?"
 msgstr ""
 
-#: ..\src\stedit.cpp:2427
+#: ..\src\stedit.cpp:2419
 #, c-format
 msgid ""
 "%s\n"
@@ -93,137 +93,137 @@ msgid ""
 "Would you like to save your file before closing?"
 msgstr ""
 
-#: ..\src\stedit.cpp:2429
+#: ..\src\stedit.cpp:2421
 msgid "Unsaved changes"
 msgstr ""
 
-#: ..\src\stedit.cpp:2466
+#: ..\src\stedit.cpp:2457
 #, c-format
 msgid ""
 "%s\n"
 "Doesn't exist on disk anymore."
 msgstr ""
 
-#: ..\src\stedit.cpp:2468
+#: ..\src\stedit.cpp:2459
 msgid "File removed from disk"
 msgstr ""
 
-#: ..\src\stedit.cpp:2481
+#: ..\src\stedit.cpp:2472
 #, c-format
 msgid ""
 "The file '%s' has been modified externally.\n"
 "Would you like to reload the file?"
 msgstr ""
 
-#: ..\src\stedit.cpp:2483
+#: ..\src\stedit.cpp:2474
 msgid "File changed on disk"
 msgstr ""
 
-#: ..\src\stedit.cpp:2632
+#: ..\src\stedit.cpp:2644
 #, c-format
 msgid "Long l&ine guide column (%d)..."
 msgstr ""
 
-#: ..\src\stedit.cpp:2641
+#: ..\src\stedit.cpp:2653
 #, c-format
 msgid "&Scale font size (%d)..."
 msgstr ""
 
-#: ..\src\stedit.cpp:2647
+#: ..\src\stedit.cpp:2659
 #, c-format
 msgid "Set tab &width (%d)..."
 msgstr ""
 
-#: ..\src\stedit.cpp:2648
+#: ..\src\stedit.cpp:2660
 #, c-format
 msgid "Set indent wi&dth (%d)..."
 msgstr ""
 
-#: ..\src\stedit.cpp:2649
+#: ..\src\stedit.cpp:2661
 msgid "&EOL Mode ("
 msgstr ""
 
-#: ..\src\stedit.cpp:2820
+#: ..\src\stedit.cpp:2837
 msgid "Level to collapse all folds to"
 msgstr ""
 
-#: ..\src\stedit.cpp:2821
+#: ..\src\stedit.cpp:2838
 msgid "Collapse folds to level"
 msgstr ""
 
-#: ..\src\stedit.cpp:2830
+#: ..\src\stedit.cpp:2847
 msgid "Level to expand all folds to"
 msgstr ""
 
-#: ..\src\stedit.cpp:2831
+#: ..\src\stedit.cpp:2848
 msgid "Expand folds to level"
 msgstr ""
 
-#: ..\src\stedit.cpp:2904
+#: ..\src\stedit.cpp:2921
 msgid "Column to show long line marker"
 msgstr ""
 
-#: ..\src\stedit.cpp:2905
+#: ..\src\stedit.cpp:2922
 msgid "Set long line marker"
 msgstr ""
 
-#: ..\src\stedit.cpp:2920
+#: ..\src\stedit.cpp:2937
 msgid "Characters to expand tabs"
 msgstr ""
 
-#: ..\src\stedit.cpp:2921
+#: ..\src\stedit.cpp:2938
 msgid "Set tab width"
 msgstr ""
 
-#: ..\src\stedit.cpp:2936
+#: ..\src\stedit.cpp:2953
 msgid "Characters to indent"
 msgstr ""
 
-#: ..\src\stedit.cpp:2936
+#: ..\src\stedit.cpp:2953
 msgid "Set indentation width"
 msgstr ""
 
-#: ..\src\stedit.cpp:2953
+#: ..\src\stedit.cpp:2970
 msgid "Select EOL mode"
 msgstr ""
 
-#: ..\src\stedit.cpp:3248
+#: ..\src\stedit.cpp:3267
 #, c-format
 msgid ""
 "Replaced %d occurances of\n"
 "'%s' with '%s'."
 msgstr ""
 
-#: ..\src\stedit.cpp:3252 ..\src\stenoteb.cpp:1125
+#: ..\src\stedit.cpp:3271 ..\src\stenoteb.cpp:1155
 msgid "Finished replacing"
 msgstr ""
 
-#: ..\src\stedit.cpp:3539
+#: ..\src\stedit.cpp:3560
 #, c-format
 msgid "Line number : 1...%d"
 msgstr ""
 
-#: ..\src\stedit.cpp:3540
+#: ..\src\stedit.cpp:3561
 msgid "Goto line"
 msgstr ""
 
-#: ..\src\stedit.cpp:3554
+#: ..\src\stedit.cpp:3575
 msgid "Print document"
 msgstr ""
 
-#: ..\src\stedit.cpp:3577 ..\src\stedit.cpp:3614
+#: ..\src\stedit.cpp:3598 ..\src\stedit.cpp:3635
 msgid "A print error occurred, perhaps your printer is not correctly setup?"
 msgstr ""
 
-#: ..\src\stedit.cpp:3578
+#: ..\src\stedit.cpp:3599
 msgid "Print error"
 msgstr ""
 
-#: ..\src\stedit.cpp:3591
+#: ..\src\stedit.cpp:3612
 msgid "Preview document"
 msgstr ""
 
-#: ..\src\stedit.cpp:3615
+#: ..\src\stedit.cpp:3636
 msgid "Print preview error"
 msgstr ""
 
@@ -318,16 +318,16 @@ msgstr ""
 msgid "Insert Text"
 msgstr ""
 
-#: ..\src\stedlgs.cpp:2006 ..\src\wxext.cpp:172
+#: ..\src\stedlgs.cpp:2011 ..\src\wxext.cpp:251
 msgid "Insert"
 msgstr ""
 
-#: ..\src\stedlgs.cpp:2008 ..\src\stedlgs_wdr.cpp:570
+#: ..\src\stedlgs.cpp:2013 ..\src\stedlgs_wdr.cpp:570
 #: ..\src\stedlgs_wdr.cpp:590
 msgid "Prepend"
 msgstr ""
 
-#: ..\src\stedlgs.cpp:2069
+#: ..\src\stedlgs.cpp:2074
 msgid "Columnize Text"
 msgstr ""
 
@@ -1424,984 +1424,992 @@ msgstr ""
 msgid "Convert all the end of line characters to the set value"
 msgstr ""
 
-#: ..\src\steexprt.cpp:145
+#: ..\src\steexprt.cpp:142
 #, c-format
 msgid "Overwrite file : '%s'?\n"
 msgstr ""
 
-#: ..\src\steexprt.cpp:147 ..\src\steexprt.cpp:171
+#: ..\src\steexprt.cpp:144 ..\src\steexprt.cpp:168
 msgid "Export error"
 msgstr ""
 
-#: ..\src\steexprt.cpp:169
+#: ..\src\steexprt.cpp:166
 #, c-format
 msgid "Unable to export to file : '%s'.\n"
 msgstr ""
 
-#: ..\src\steexprt.cpp:1967
+#: ..\src\steexprt.cpp:1964
 msgid "Export file"
 msgstr ""
 
-#: ..\src\steexprt.cpp:2038
+#: ..\src\steexprt.cpp:2035
 msgid "|All files (*)|*"
 msgstr ""
 
-#: ..\src\steexprt.cpp:2051 ..\src\stemenum.cpp:357
+#: ..\src\steexprt.cpp:2048 ..\src\stemenum.cpp:455
 msgid "Export to file"
 msgstr ""
 
-#: ..\src\steframe.cpp:226
+#: ..\src\steframe.cpp:145
 msgid "Open &Recent"
 msgstr ""
 
-#: ..\src\steframe.cpp:276 ..\src\steframe.cpp:277
+#: ..\src\steframe.cpp:195 ..\src\steframe.cpp:196
 msgid "Files"
 msgstr ""
 
-#: ..\src\steframe.cpp:500 ..\src\steframe.cpp:984
+#: ..\src\steframe.cpp:394 ..\src\steframe.cpp:876
 msgid "Root"
 msgstr ""
 
-#: ..\src\steframe.cpp:503 ..\src\steframe.cpp:522
+#: ..\src\steframe.cpp:397 ..\src\steframe.cpp:416
 msgid "Opened files"
 msgstr ""
 
-#: ..\src\steframe.cpp:534
+#: ..\src\steframe.cpp:428
 msgid "Others"
 msgstr ""
 
-#: ..\src\steframe.cpp:770
+#: ..\src\steframe.cpp:664
 #, c-format
 msgid "Error opening file: '%s'"
 msgstr ""
 
-#: ..\src\stemenum.cpp:94 ..\src\stemenum.cpp:216
+#: ..\src\stemenum.cpp:187 ..\src\stemenum.cpp:309
 msgid "&View"
 msgstr ""
 
-#: ..\src\stemenum.cpp:101 ..\src\stemenum.cpp:217
+#: ..\src\stemenum.cpp:194 ..\src\stemenum.cpp:310
 msgid "&Search"
 msgstr ""
 
-#: ..\src\stemenum.cpp:108 ..\src\stemenum.cpp:218
+#: ..\src\stemenum.cpp:201 ..\src\stemenum.cpp:311
 msgid "&Tools"
 msgstr ""
 
-#: ..\src\stemenum.cpp:115 ..\src\stemenum.cpp:219
+#: ..\src\stemenum.cpp:208 ..\src\stemenum.cpp:312
 msgid "&Insert"
 msgstr ""
 
-#: ..\src\stemenum.cpp:122 ..\src\stemenum.cpp:220
+#: ..\src\stemenum.cpp:215 ..\src\stemenum.cpp:313
 msgid "&Bookmarks"
 msgstr ""
 
-#: ..\src\stemenum.cpp:136 ..\src\stemenum.cpp:222
+#: ..\src\stemenum.cpp:229 ..\src\stemenum.cpp:315
 msgid "&Window"
 msgstr ""
 
-#: ..\src\stemenum.cpp:158
+#: ..\src\stemenum.cpp:251
 msgid "&Unsplit editor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:158
+#: ..\src\stemenum.cpp:251
 msgid "Unsplit the editor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:159
+#: ..\src\stemenum.cpp:252
 msgid "Split editor &horizontally"
 msgstr ""
 
-#: ..\src\stemenum.cpp:159
+#: ..\src\stemenum.cpp:252
 msgid "Split editor horizontally"
 msgstr ""
 
-#: ..\src\stemenum.cpp:160
+#: ..\src\stemenum.cpp:253
 msgid "Split editor &vertically"
 msgstr ""
 
-#: ..\src\stemenum.cpp:160
+#: ..\src\stemenum.cpp:253
 msgid "Split editor vertically"
 msgstr ""
 
-#: ..\src\stemenum.cpp:169
+#: ..\src\stemenum.cpp:262
 msgid "&Add empty page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:170
+#: ..\src\stemenum.cpp:263
 msgid "&Open file(s)..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:171
+#: ..\src\stemenum.cpp:264
 msgid "&Save all files"
 msgstr ""
 
-#: ..\src\stemenum.cpp:178
+#: ..\src\stemenum.cpp:271
 msgid "Previous page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:179
+#: ..\src\stemenum.cpp:272
 msgid "Next page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:181
+#: ..\src\stemenum.cpp:274
 msgid "Goto page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:183 ..\src\stemenum.cpp:330
+#: ..\src\stemenum.cpp:276 ..\src\stemenum.cpp:428
 msgid "Close current page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:184 ..\src\stemenum.cpp:333
+#: ..\src\stemenum.cpp:277 ..\src\stemenum.cpp:431
 msgid "Close all pages..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:185
+#: ..\src\stemenum.cpp:278
 msgid "Close page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:187 ..\src\stemenum.cpp:793
+#: ..\src\stemenum.cpp:280 ..\src\stemenum.cpp:896
 msgid "&Windows..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:187 ..\src\stemenum.cpp:793
+#: ..\src\stemenum.cpp:280 ..\src\stemenum.cpp:896
 msgid "Manage opened windows"
 msgstr ""
 
-#: ..\src\stemenum.cpp:239
+#: ..\src\stemenum.cpp:337
 msgid "Clear editor for new file"
 msgstr ""
 
-#: ..\src\stemenum.cpp:243
+#: ..\src\stemenum.cpp:341
 msgid "Open a file to edit"
 msgstr ""
 
-#: ..\src\stemenum.cpp:247 ..\src\stemenum.cpp:342
+#: ..\src\stemenum.cpp:345 ..\src\stemenum.cpp:440
 msgid "Save current file"
 msgstr ""
 
-#: ..\src\stemenum.cpp:248
+#: ..\src\stemenum.cpp:346
 msgid "Save to a specific filename"
 msgstr ""
 
-#: ..\src\stemenum.cpp:253 ..\src\stemenum.cpp:347
+#: ..\src\stemenum.cpp:351 ..\src\stemenum.cpp:445
 msgid "Save all files"
 msgstr ""
 
-#: ..\src\stemenum.cpp:253
+#: ..\src\stemenum.cpp:351
 msgid "Save all open files"
 msgstr ""
 
-#: ..\src\stemenum.cpp:260
+#: ..\src\stemenum.cpp:358
 msgid "Cut selected text"
 msgstr ""
 
-#: ..\src\stemenum.cpp:261
+#: ..\src\stemenum.cpp:359
 msgid "Copy selected text"
 msgstr ""
 
-#: ..\src\stemenum.cpp:262
+#: ..\src\stemenum.cpp:360
 msgid "Paste text at cursor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:267
+#: ..\src\stemenum.cpp:365
 msgid "Undo last editing"
 msgstr ""
 
-#: ..\src\stemenum.cpp:268 ..\src\stemenum.cpp:406
+#: ..\src\stemenum.cpp:366 ..\src\stemenum.cpp:504
 msgid "Redo last undo"
 msgstr ""
 
-#: ..\src\stemenum.cpp:274
+#: ..\src\stemenum.cpp:372
 msgid "Find text in document..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:275
+#: ..\src\stemenum.cpp:373
 msgid "Find next"
 msgstr ""
 
-#: ..\src\stemenum.cpp:275
+#: ..\src\stemenum.cpp:373
 msgid "Find next occurance in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:276
+#: ..\src\stemenum.cpp:374
 msgid "Find previous"
 msgstr ""
 
-#: ..\src\stemenum.cpp:276
+#: ..\src\stemenum.cpp:374
 msgid "Find previous occurance in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:277
+#: ..\src\stemenum.cpp:375
 msgid "Replace text in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:288
+#: ..\src\stemenum.cpp:386
 msgid "Toggle bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:288 ..\src\stemenum.cpp:704
+#: ..\src\stemenum.cpp:386 ..\src\stemenum.cpp:807
 msgid "Toggle a bookmark on cursor line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:289
+#: ..\src\stemenum.cpp:387
 msgid "First bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:289 ..\src\stemenum.cpp:706
+#: ..\src\stemenum.cpp:387 ..\src\stemenum.cpp:809
 msgid "Goto first bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:290
+#: ..\src\stemenum.cpp:388
 msgid "Previous bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:290 ..\src\stemenum.cpp:707
+#: ..\src\stemenum.cpp:388 ..\src\stemenum.cpp:810
 msgid "Goto previous bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:291
+#: ..\src\stemenum.cpp:389
 msgid "Next bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:291 ..\src\stemenum.cpp:708
+#: ..\src\stemenum.cpp:389 ..\src\stemenum.cpp:811
 msgid "Goto next bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:292
+#: ..\src\stemenum.cpp:390
 msgid "Last bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:292 ..\src\stemenum.cpp:709
+#: ..\src\stemenum.cpp:390 ..\src\stemenum.cpp:812
 msgid "Goto last bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:293 ..\src\stemenum.cpp:711
-msgid "Clear all bookmarks"
-msgstr ""
-
-#: ..\src\stemenum.cpp:293
+#: ..\src\stemenum.cpp:391
 msgid "Clear bookmarks"
 msgstr ""
 
-#: ..\src\stemenum.cpp:318
+#: ..\src\stemenum.cpp:391 ..\src\stemenum.cpp:814
+msgid "Clear all bookmarks"
+msgstr ""
+
+#: ..\src\stemenum.cpp:416
 msgid "Clear contents and start a new file"
 msgstr ""
 
-#: ..\src\stemenum.cpp:330
+#: ..\src\stemenum.cpp:428
 msgid "&Close current page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:333
+#: ..\src\stemenum.cpp:431
 msgid "Close all pages"
 msgstr ""
 
-#: ..\src\stemenum.cpp:344
+#: ..\src\stemenum.cpp:442
 msgid "Save as file"
 msgstr ""
 
-#: ..\src\stemenum.cpp:347
+#: ..\src\stemenum.cpp:445
 msgid "Save A&ll"
 msgstr ""
 
-#: ..\src\stemenum.cpp:350
+#: ..\src\stemenum.cpp:448
 msgid "Revert to saved version of the file"
 msgstr ""
 
-#: ..\src\stemenum.cpp:357
+#: ..\src\stemenum.cpp:455
 msgid "E&xport..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:364
+#: ..\src\stemenum.cpp:462
 msgid "Show document properties dialog"
 msgstr ""
 
-#: ..\src\stemenum.cpp:371
+#: ..\src\stemenum.cpp:469
 msgid "Print current document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:372
+#: ..\src\stemenum.cpp:470
 msgid "Print preview of the current document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:376
+#: ..\src\stemenum.cpp:474
 msgid "Printer set&up..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:376
+#: ..\src\stemenum.cpp:474
 msgid "Setup the printer"
 msgstr ""
 
-#: ..\src\stemenum.cpp:378
+#: ..\src\stemenum.cpp:476
 msgid "Printer pa&ge setup..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:378
+#: ..\src\stemenum.cpp:476
 msgid "Setup the printout page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:379
+#: ..\src\stemenum.cpp:477
 msgid "Printer options..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:379
+#: ..\src\stemenum.cpp:477
 msgid "Set other printout options"
 msgstr ""
 
-#: ..\src\stemenum.cpp:385
+#: ..\src\stemenum.cpp:483
 msgid "Exit editor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:405
+#: ..\src\stemenum.cpp:503
 msgid "Undo last operation"
 msgstr ""
 
-#: ..\src\stemenum.cpp:414
+#: ..\src\stemenum.cpp:512
 msgid "Cut selected text to clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:415
+#: ..\src\stemenum.cpp:513
 msgid "Copy selected text to clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:417
+#: ..\src\stemenum.cpp:515
 msgid "Copy primary"
 msgstr ""
 
-#: ..\src\stemenum.cpp:417
+#: ..\src\stemenum.cpp:515
 msgid "Copy selected text to primary clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:421
+#: ..\src\stemenum.cpp:519
 msgid "Paste text from clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:422
+#: ..\src\stemenum.cpp:520
 msgid "Paste &Rect"
 msgstr ""
 
-#: ..\src\stemenum.cpp:422
+#: ..\src\stemenum.cpp:520
 msgid "Paste rectangular text from clipboard (select with Shift+Alt)"
 msgstr ""
 
-#: ..\src\stemenum.cpp:428 ..\src\wxext.cpp:178
+#: ..\src\stemenum.cpp:525
+msgid "Paste as &New"
+msgstr ""
+
+#: ..\src\stemenum.cpp:525
+msgid "Paste text from clipboard into new notebook tab"
+msgstr ""
+
+#: ..\src\stemenum.cpp:531 ..\src\wxext.cpp:257
 msgid "Del"
 msgstr ""
 
-#: ..\src\stemenum.cpp:428
+#: ..\src\stemenum.cpp:531
 msgid "Delete selection"
 msgstr ""
 
-#: ..\src\stemenum.cpp:433
+#: ..\src\stemenum.cpp:536
 msgid "Selects entire document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:442
+#: ..\src\stemenum.cpp:545
 msgid "Line Cu&t"
 msgstr ""
 
-#: ..\src\stemenum.cpp:442
+#: ..\src\stemenum.cpp:545
 msgid "Cut current line to clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:444
+#: ..\src\stemenum.cpp:547
 msgid "Line &Copy"
 msgstr ""
 
-#: ..\src\stemenum.cpp:444
+#: ..\src\stemenum.cpp:547
 msgid "Copy current line to clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:448
+#: ..\src\stemenum.cpp:551
 msgid "Line &Delete"
 msgstr ""
 
-#: ..\src\stemenum.cpp:448
+#: ..\src\stemenum.cpp:551
 msgid "Delete current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:449
+#: ..\src\stemenum.cpp:552
 msgid "Line &Transpose"
 msgstr ""
 
-#: ..\src\stemenum.cpp:449
+#: ..\src\stemenum.cpp:552
 msgid "Transpose current line upwards"
 msgstr ""
 
-#: ..\src\stemenum.cpp:450
+#: ..\src\stemenum.cpp:553
 msgid "Line D&uplicate"
 msgstr ""
 
-#: ..\src\stemenum.cpp:450
+#: ..\src\stemenum.cpp:553
 msgid "Duplicate current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:453
+#: ..\src\stemenum.cpp:556
 msgid "L&ine Editing"
 msgstr ""
 
-#: ..\src\stemenum.cpp:460
-msgid "Readonly"
+#: ..\src\stemenum.cpp:563 ..\src\stenoteb.cpp:121
+msgid "Read only"
 msgstr ""
 
-#: ..\src\stemenum.cpp:460
-msgid "Make document readonly"
+#: ..\src\stemenum.cpp:563
+msgid "Make document read only"
 msgstr ""
 
-#: ..\src\stemenum.cpp:467
+#: ..\src\stemenum.cpp:570
 msgid "Complete w&ord"
 msgstr ""
 
-#: ..\src\stemenum.cpp:467
+#: ..\src\stemenum.cpp:570
 msgid "Complete word at cursor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:475
+#: ..\src\stemenum.cpp:578
 msgid "Copy &path"
 msgstr ""
 
-#: ..\src\stemenum.cpp:475
+#: ..\src\stemenum.cpp:578
 msgid "Copy full path to clipboard"
 msgstr ""
 
-#: ..\src\stemenum.cpp:496
+#: ..\src\stemenum.cpp:599
 msgid "Find text"
 msgstr ""
 
-#: ..\src\stemenum.cpp:497
+#: ..\src\stemenum.cpp:600
 msgid "Find &Next"
 msgstr ""
 
-#: ..\src\stemenum.cpp:497
+#: ..\src\stemenum.cpp:600
 msgid "Find next occurance"
 msgstr ""
 
-#: ..\src\stemenum.cpp:498
+#: ..\src\stemenum.cpp:601
 msgid "Find &Previous"
 msgstr ""
 
-#: ..\src\stemenum.cpp:498
+#: ..\src\stemenum.cpp:601
 msgid "Find previous occurance"
 msgstr ""
 
-#: ..\src\stemenum.cpp:499
+#: ..\src\stemenum.cpp:602
 msgid "Search For&ward"
 msgstr ""
 
-#: ..\src\stemenum.cpp:499
+#: ..\src\stemenum.cpp:602
 msgid "Search forward/reverse in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:501
+#: ..\src\stemenum.cpp:604
 msgid "Replace text"
 msgstr ""
 
-#: ..\src\stemenum.cpp:508
+#: ..\src\stemenum.cpp:611
 msgid "&Go To..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:508
+#: ..\src\stemenum.cpp:611
 msgid "Goto line number"
 msgstr ""
 
-#: ..\src\stemenum.cpp:533
+#: ..\src\stemenum.cpp:636
 msgid "Selection &uppercase"
 msgstr ""
 
-#: ..\src\stemenum.cpp:533
+#: ..\src\stemenum.cpp:636
 msgid "Convert the selected text to uppercase"
 msgstr ""
 
-#: ..\src\stemenum.cpp:534
+#: ..\src\stemenum.cpp:637
 msgid "Selection &lowercase"
 msgstr ""
 
-#: ..\src\stemenum.cpp:534
+#: ..\src\stemenum.cpp:637
 msgid "Convert the selected text to lowercase"
 msgstr ""
 
-#: ..\src\stemenum.cpp:541
+#: ..\src\stemenum.cpp:644
 msgid "&Increase indent"
 msgstr ""
 
-#: ..\src\stemenum.cpp:541
+#: ..\src\stemenum.cpp:644
 msgid "Increase indent of selected text or current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:542
+#: ..\src\stemenum.cpp:645
 msgid "&Decrease indent"
 msgstr ""
 
-#: ..\src\stemenum.cpp:542
+#: ..\src\stemenum.cpp:645
 msgid "Decrease indent of selected text or current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:549
+#: ..\src\stemenum.cpp:652
 msgid "&Join selected lines"
 msgstr ""
 
-#: ..\src\stemenum.cpp:549
+#: ..\src\stemenum.cpp:652
 msgid "Join selected lines together"
 msgstr ""
 
-#: ..\src\stemenum.cpp:550
+#: ..\src\stemenum.cpp:653
 msgid "&Split selected lines"
 msgstr ""
 
-#: ..\src\stemenum.cpp:550
+#: ..\src\stemenum.cpp:653
 msgid "Split selected lines to edge marker"
 msgstr ""
 
-#: ..\src\stemenum.cpp:557
+#: ..\src\stemenum.cpp:660
 msgid "Convert &tabs to spaces"
 msgstr ""
 
-#: ..\src\stemenum.cpp:557
+#: ..\src\stemenum.cpp:660
 msgid "Convert tabs to spaces in selection or current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:558
+#: ..\src\stemenum.cpp:661
 msgid "Convert s&paces to tabs"
 msgstr ""
 
-#: ..\src\stemenum.cpp:558
+#: ..\src\stemenum.cpp:661
 msgid "Convert spaces to tabs in selection or current line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:565
+#: ..\src\stemenum.cpp:668
 msgid "Convert &EOL characters..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:565
+#: ..\src\stemenum.cpp:668
 msgid "Convert all end of line characters in doc"
 msgstr ""
 
-#: ..\src\stemenum.cpp:572
+#: ..\src\stemenum.cpp:675
 msgid "Remove trailing &whitespace"
 msgstr ""
 
-#: ..\src\stemenum.cpp:572
+#: ..\src\stemenum.cpp:675
 msgid "Remove whitespace at the ends of lines"
 msgstr ""
 
-#: ..\src\stemenum.cpp:573
+#: ..\src\stemenum.cpp:676
 msgid "Remove w&hitespace at cursor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:573
+#: ..\src\stemenum.cpp:676
 msgid "Remove whitespace before and after cursor"
 msgstr ""
 
-#: ..\src\stemenum.cpp:580
+#: ..\src\stemenum.cpp:683
 msgid "&Columnize..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:580
+#: ..\src\stemenum.cpp:683
 msgid "Reformat selected lines in columns..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:602
+#: ..\src\stemenum.cpp:705
 msgid "I&nsert text..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:602
+#: ..\src\stemenum.cpp:705
 msgid "Prepend, Append, or insert text at column..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:607
+#: ..\src\stemenum.cpp:710
 msgid "Insert &date and time"
 msgstr ""
 
-#: ..\src\stemenum.cpp:607
+#: ..\src\stemenum.cpp:710
 msgid "Insert date and time"
 msgstr ""
 
-#: ..\src\stemenum.cpp:626
+#: ..\src\stemenum.cpp:729
 msgid "&Wrap text to window"
 msgstr ""
 
-#: ..\src\stemenum.cpp:626
+#: ..\src\stemenum.cpp:729
 msgid "Wrap the text to fit inside window"
 msgstr ""
 
-#: ..\src\stemenum.cpp:633
+#: ..\src\stemenum.cpp:736
 msgid "&Nonprinting Characters"
 msgstr ""
 
-#: ..\src\stemenum.cpp:633
+#: ..\src\stemenum.cpp:736
 msgid "Show end of line symbols and whitespace"
 msgstr ""
 
-#: ..\src\stemenum.cpp:634
+#: ..\src\stemenum.cpp:737
 msgid "&EOL"
 msgstr ""
 
-#: ..\src\stemenum.cpp:634
+#: ..\src\stemenum.cpp:737
 msgid "Show end of line symbols"
 msgstr ""
 
-#: ..\src\stemenum.cpp:635
+#: ..\src\stemenum.cpp:738
 msgid "Whi&tespace"
 msgstr ""
 
-#: ..\src\stemenum.cpp:635
+#: ..\src\stemenum.cpp:738
 msgid "Show whitespace using symbols"
 msgstr ""
 
-#: ..\src\stemenum.cpp:640
+#: ..\src\stemenum.cpp:743
 msgid "Show indent &guides"
 msgstr ""
 
-#: ..\src\stemenum.cpp:640
+#: ..\src\stemenum.cpp:743
 msgid "Show indentation column guides"
 msgstr ""
 
-#: ..\src\stemenum.cpp:641
+#: ..\src\stemenum.cpp:744
 msgid "Show l&ong line guide"
 msgstr ""
 
-#: ..\src\stemenum.cpp:641
+#: ..\src\stemenum.cpp:744
 msgid "Show column guide for long lines"
 msgstr ""
 
-#: ..\src\stemenum.cpp:642
+#: ..\src\stemenum.cpp:745
 msgid "Set long l&ine guide column..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:642
+#: ..\src\stemenum.cpp:745
 msgid "Set column long line guide..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:643
+#: ..\src\stemenum.cpp:746
 msgid "&Guides"
 msgstr ""
 
-#: ..\src\stemenum.cpp:648
+#: ..\src\stemenum.cpp:751
 msgid "Show &line number margin"
 msgstr ""
 
-#: ..\src\stemenum.cpp:648
+#: ..\src\stemenum.cpp:751
 msgid "Show line number margin"
 msgstr ""
 
-#: ..\src\stemenum.cpp:649
+#: ..\src\stemenum.cpp:752
 msgid "Show &marker margin"
 msgstr ""
 
-#: ..\src\stemenum.cpp:649
+#: ..\src\stemenum.cpp:752
 msgid "Show a margin for markers"
 msgstr ""
 
-#: ..\src\stemenum.cpp:650
+#: ..\src\stemenum.cpp:753
 msgid "Show &folding margin"
 msgstr ""
 
-#: ..\src\stemenum.cpp:650
+#: ..\src\stemenum.cpp:753
 msgid "Show code folding margin"
 msgstr ""
 
-#: ..\src\stemenum.cpp:651
+#: ..\src\stemenum.cpp:754
 msgid "&Margins"
 msgstr ""
 
-#: ..\src\stemenum.cpp:659
+#: ..\src\stemenum.cpp:762
 msgid "To&ggle current fold"
 msgstr ""
 
-#: ..\src\stemenum.cpp:659
+#: ..\src\stemenum.cpp:762
 msgid "Toggle the current fold level"
 msgstr ""
 
-#: ..\src\stemenum.cpp:660
+#: ..\src\stemenum.cpp:763
 msgid "&Collapse folds below level..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:660
+#: ..\src\stemenum.cpp:763
 msgid "Collapse all folds below the level in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:661
+#: ..\src\stemenum.cpp:764
 msgid "E&xpand folds above level..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:661
+#: ..\src\stemenum.cpp:764
 msgid "Expand all folds above the level in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:662
+#: ..\src\stemenum.cpp:765
 msgid "&Collapse all folds"
 msgstr ""
 
-#: ..\src\stemenum.cpp:662
+#: ..\src\stemenum.cpp:765
 msgid "Collapse all folds in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:663
+#: ..\src\stemenum.cpp:766
 msgid "E&xpand all folds"
 msgstr ""
 
-#: ..\src\stemenum.cpp:663
+#: ..\src\stemenum.cpp:766
 msgid "Expand all folds in document"
 msgstr ""
 
-#: ..\src\stemenum.cpp:664
+#: ..\src\stemenum.cpp:767
 msgid "&Folding"
 msgstr ""
 
-#: ..\src\stemenum.cpp:671
+#: ..\src\stemenum.cpp:774
 msgid "S&yntax coloring"
 msgstr ""
 
-#: ..\src\stemenum.cpp:671
+#: ..\src\stemenum.cpp:774
 msgid "Hilight document based on the syntax"
 msgstr ""
 
-#: ..\src\stemenum.cpp:678
+#: ..\src\stemenum.cpp:781
 msgid "&Scale font size..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:678
+#: ..\src\stemenum.cpp:781
 msgid "Increase or decrease the size of the text"
 msgstr ""
 
-#: ..\src\stemenum.cpp:685
+#: ..\src\stemenum.cpp:788
 msgid "Show f&ullscreen"
 msgstr ""
 
-#: ..\src\stemenum.cpp:685
+#: ..\src\stemenum.cpp:788
 msgid "Show the editor fullscreen"
 msgstr ""
 
-#: ..\src\stemenum.cpp:704
+#: ..\src\stemenum.cpp:807
 msgid "&Toggle bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:706
+#: ..\src\stemenum.cpp:809
 msgid "&First bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:707
+#: ..\src\stemenum.cpp:810
 msgid "&Previous bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:708
+#: ..\src\stemenum.cpp:811
 msgid "&Next bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:709
+#: ..\src\stemenum.cpp:812
 msgid "&Last bookmark"
 msgstr ""
 
-#: ..\src\stemenum.cpp:711
+#: ..\src\stemenum.cpp:814
 msgid "&Clear all bookmarks"
 msgstr ""
 
-#: ..\src\stemenum.cpp:724
+#: ..\src\stemenum.cpp:827
 msgid "Show &preference dialog..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:724
+#: ..\src\stemenum.cpp:827
 msgid "Show preference dialog..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:731
+#: ..\src\stemenum.cpp:834
 msgid "Use &tabs"
 msgstr ""
 
-#: ..\src\stemenum.cpp:731
+#: ..\src\stemenum.cpp:834
 msgid "Tab key inserts a tab character"
 msgstr ""
 
-#: ..\src\stemenum.cpp:732
+#: ..\src\stemenum.cpp:835
 msgid "Tab &indents"
 msgstr ""
 
-#: ..\src\stemenum.cpp:732
+#: ..\src\stemenum.cpp:835
 msgid "Tab key indents"
 msgstr ""
 
-#: ..\src\stemenum.cpp:733
+#: ..\src\stemenum.cpp:836
 msgid "&Backspace unindents"
 msgstr ""
 
-#: ..\src\stemenum.cpp:733
+#: ..\src\stemenum.cpp:836
 msgid "Backspace key unindents"
 msgstr ""
 
-#: ..\src\stemenum.cpp:734
+#: ..\src\stemenum.cpp:837
 msgid "&Auto indent"
 msgstr ""
 
-#: ..\src\stemenum.cpp:734
+#: ..\src\stemenum.cpp:837
 msgid "Indent new lines to previous indentation"
 msgstr ""
 
-#: ..\src\stemenum.cpp:736
+#: ..\src\stemenum.cpp:839
 msgid "Set tab &width..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:736
+#: ..\src\stemenum.cpp:839
 msgid "Set the number of spaces to show for tab character"
 msgstr ""
 
-#: ..\src\stemenum.cpp:737
+#: ..\src\stemenum.cpp:840
 msgid "Set indent wi&dth..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:737
+#: ..\src\stemenum.cpp:840
 msgid "Set the number of spaces to use for indentation"
 msgstr ""
 
-#: ..\src\stemenum.cpp:744
+#: ..\src\stemenum.cpp:847
 msgid "&EOL Mode..."
 msgstr ""
 
-#: ..\src\stemenum.cpp:744
+#: ..\src\stemenum.cpp:847
 msgid "Set the end of line mode"
 msgstr ""
 
-#: ..\src\stemenum.cpp:751
+#: ..\src\stemenum.cpp:854
 msgid "Save preferences"
 msgstr ""
 
-#: ..\src\stemenum.cpp:751
+#: ..\src\stemenum.cpp:854
 msgid "Save current preferences"
 msgstr ""
 
-#: ..\src\stemenum.cpp:777
+#: ..\src\stemenum.cpp:880
 msgid "&Show sidebar"
 msgstr ""
 
-#: ..\src\stemenum.cpp:777
+#: ..\src\stemenum.cpp:880
 msgid "Show the sidebar panel"
 msgstr ""
 
-#: ..\src\stemenum.cpp:784
+#: ..\src\stemenum.cpp:887
 msgid "Pr&evious page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:784
+#: ..\src\stemenum.cpp:887
 msgid "Goto previous page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:785
+#: ..\src\stemenum.cpp:888
 msgid "Ne&xt page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:785
+#: ..\src\stemenum.cpp:888
 msgid "Goto next page"
 msgstr ""
 
-#: ..\src\stemenum.cpp:798
+#: ..\src\stemenum.cpp:901
 msgid "&Close"
 msgstr ""
 
-#: ..\src\stemenum.cpp:814
+#: ..\src\stemenum.cpp:917
 msgid "About this program"
 msgstr ""
 
-#: ..\src\stemenum.cpp:833
+#: ..\src\stemenum.cpp:936
 msgid "Tab character"
 msgstr ""
 
-#: ..\src\stemenum.cpp:834
+#: ..\src\stemenum.cpp:937
 msgid "Carriage return"
 msgstr ""
 
-#: ..\src\stemenum.cpp:835
+#: ..\src\stemenum.cpp:938
 msgid "Line feed"
 msgstr ""
 
-#: ..\src\stemenum.cpp:840
+#: ..\src\stemenum.cpp:943
 msgid "Any character"
 msgstr ""
 
-#: ..\src\stemenum.cpp:841
+#: ..\src\stemenum.cpp:944
 msgid "Character in range"
 msgstr ""
 
-#: ..\src\stemenum.cpp:842
+#: ..\src\stemenum.cpp:945
 msgid "Character not in range"
 msgstr ""
 
-#: ..\src\stemenum.cpp:843
+#: ..\src\stemenum.cpp:946
 msgid "Beginning of line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:844
+#: ..\src\stemenum.cpp:947
 msgid "End of line"
 msgstr ""
 
-#: ..\src\stemenum.cpp:845
+#: ..\src\stemenum.cpp:948
 msgid "Tagged expression"
 msgstr ""
 
-#: ..\src\stemenum.cpp:846
+#: ..\src\stemenum.cpp:949
 msgid "0 or more matches"
 msgstr ""
 
-#: ..\src\stemenum.cpp:847
+#: ..\src\stemenum.cpp:950
 msgid "1 or more matches"
 msgstr ""
 
-#: ..\src\stemenum.cpp:848
+#: ..\src\stemenum.cpp:951
 msgid "0 or 1 matches"
 msgstr ""
 
-#: ..\src\stemenum.cpp:850
+#: ..\src\stemenum.cpp:953
 msgid "Alphanumeric characters"
 msgstr ""
 
-#: ..\src\stemenum.cpp:851
+#: ..\src\stemenum.cpp:954
 msgid "Alphabetical characters"
 msgstr ""
 
-#: ..\src\stemenum.cpp:852
+#: ..\src\stemenum.cpp:955
 msgid "Numeric characters"
 msgstr ""
 
-#: ..\src\stemenum.cpp:853
+#: ..\src\stemenum.cpp:956
 msgid "Tab characters"
 msgstr ""
 
-#: ..\src\stemenum.cpp:855
+#: ..\src\stemenum.cpp:958
 msgid "Regexp"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:269 ..\src\stenoteb.cpp:293
+#: ..\src\stenoteb.cpp:284 ..\src\stenoteb.cpp:308
 msgid ""
 "Maximum number of notebook pages exceeded,\n"
 "please close one first."
 msgstr ""
 
-#: ..\src\stenoteb.cpp:270 ..\src\stenoteb.cpp:294
+#: ..\src\stenoteb.cpp:285 ..\src\stenoteb.cpp:309
 msgid "Too many pages opened"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:601
+#: ..\src\stenoteb.cpp:619
 msgid "Close all pages?"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:601
+#: ..\src\stenoteb.cpp:619
 msgid "Confim closing"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:633
+#: ..\src\stenoteb.cpp:638
 msgid "Windows"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:695
+#: ..\src\stenoteb.cpp:725
 msgid "Open file into new notebook page"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:739
+#: ..\src\stenoteb.cpp:769
 msgid "Open file(s) into new notebook page"
 msgstr ""
 
-#: ..\src\stenoteb.cpp:756
+#: ..\src\stenoteb.cpp:786
 msgid "Loading files..."
 msgstr ""
 
-#: ..\src\stenoteb.cpp:1122
+#: ..\src\stenoteb.cpp:1152
 #, c-format
 msgid ""
 "Replaced %d occurances of\n"
@@ -2428,12 +2436,12 @@ msgstr ""
 msgid "Page 1 of ?"
 msgstr ""
 
-#: ..\src\steprint.cpp:283
+#: ..\src\steprint.cpp:284
 #, c-format
 msgid "Page %d of %d"
 msgstr ""
 
-#: ..\src\steprint.cpp:370
+#: ..\src\steprint.cpp:371
 msgid "Printer options"
 msgstr ""
 
@@ -2487,70 +2495,70 @@ msgstr ""
 msgid "Style set for non indicator or marker in '"
 msgstr ""
 
-#: ..\src\wxext.cpp:157
+#: ..\src\wxext.cpp:236
 msgid "Ctrl"
 msgstr ""
 
-#: ..\src\wxext.cpp:162
+#: ..\src\wxext.cpp:241
 msgid "Alt"
 msgstr ""
 
-#: ..\src\wxext.cpp:167
+#: ..\src\wxext.cpp:246
 msgid "Shift"
 msgstr ""
 
-#: ..\src\wxext.cpp:173
+#: ..\src\wxext.cpp:252
 msgid "PgUp"
 msgstr ""
 
-#: ..\src\wxext.cpp:174
+#: ..\src\wxext.cpp:253
 msgid "PgDn"
 msgstr ""
 
-#: ..\src\wxext.cpp:175
+#: ..\src\wxext.cpp:254
 msgid "Home"
 msgstr ""
 
-#: ..\src\wxext.cpp:176
+#: ..\src\wxext.cpp:255
 msgid "End"
 msgstr ""
 
-#: ..\src\wxext.cpp:177
+#: ..\src\wxext.cpp:256
 msgid "Return"
 msgstr ""
 
-#: ..\src\wxext.cpp:179
+#: ..\src\wxext.cpp:258
 msgid "Num+"
 msgstr ""
 
-#: ..\src\wxext.cpp:180
+#: ..\src\wxext.cpp:259
 msgid "Num-"
 msgstr ""
 
-#: ..\src\wxext.cpp:207
+#: ..\src\wxext.cpp:286
 msgid "&About..."
 msgstr ""
 
-#: ..\src\wxext.cpp:208
+#: ..\src\wxext.cpp:287
 msgid "&Open..."
 msgstr ""
 
-#: ..\src\wxext.cpp:209
+#: ..\src\wxext.cpp:288
 msgid "Select &All"
 msgstr ""
 
-#: ..\src\wxext.cpp:210
+#: ..\src\wxext.cpp:289
 msgid "&Find..."
 msgstr ""
 
-#: ..\src\wxext.cpp:211
+#: ..\src\wxext.cpp:290
 msgid "Rep&lace..."
 msgstr ""
 
-#: ..\src\wxext.cpp:212
+#: ..\src\wxext.cpp:291
 msgid "Re&vert..."
 msgstr ""
 
-#: ..\src\wxext.cpp:213
+#: ..\src\wxext.cpp:292
 msgid "Proper&ties..."
 msgstr ""
