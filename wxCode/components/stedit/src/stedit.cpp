@@ -2090,11 +2090,14 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     bool ok = (stream_len <= 40000000);
     if (ok)
     {
+        bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
+        bool found_lang = false;
+
         ClearAll();
-        bool lang_found = false;
-        if (GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG))
+
+        if (want_lang && !found_lang)
         {
-            lang_found = SetLanguage(fileName);
+            found_lang = SetLanguage(fileName);
         }
 
         const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
@@ -2164,12 +2167,12 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
 
             AddText(str);
             
-            if (!lang_found)
+            if (want_lang && !found_lang)
             {
                 const wxChar* xml = wxT("<?xml version=\"");
                 if (0 == wxStrnicmp(str, xml, wxStrlen(xml)))
                 {
-                    lang_found = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
+                    found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
                 }
             }
 
@@ -3890,7 +3893,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1516")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1517")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
