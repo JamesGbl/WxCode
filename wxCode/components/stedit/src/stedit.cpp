@@ -2101,6 +2101,9 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
         }
 
         const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
+        const size_t unicode_signature_len = 2;
+        const wxChar xml_header[] = wxT("<?xml version=\"");
+        const size_t xml_header_len = WXSIZEOF(xml_header) - 1;
         wxCharBuffer charBuf(buf_len + 2); // add room for terminators
         bool unicode     = false;
         bool has_unicode = false;
@@ -2114,7 +2117,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             charBuf.data()[last_read+0] = 0; // zeroterminate
             charBuf.data()[last_read+1] = 0; // zeroterminate again, could be unicode
 
-            if (i == 0)
+            if ( (i == 0) && (last_read >= unicode_signature_len) )
             {
                 // check for unicode
                 has_unicode = ((unsigned char)(charBuf.data()[0]) == 0xff) &&
@@ -2150,7 +2153,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             {
                 // Skip first 2 chars specifying that it's unicode at start,
                 //   but only it it really has them.
-                const size_t skip = (i == 0) && has_unicode ? 2 : 0;
+                const size_t skip = ((i == 0) && has_unicode) ? unicode_signature_len : 0;
                 str = wxString((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
 
                 // this garbles text when compiled in unicode
@@ -2162,19 +2165,20 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             }
             else // not unicode text, set it as is
             {
-                str = wxString((char*)(charBuf.data()), *wxConvCurrent, last_read);
+                str = wxString(charBuf.data(), *wxConvCurrent, last_read);
+            }
+
+            if (    (i == 0) 
+                 && (last_read >= xml_header_len)
+                 && want_lang 
+                 && (!found_lang)
+                 && (0 == wxStrnicmp(str, xml_header, xml_header_len))
+               )
+            {
+                found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
             }
 
             AddText(str);
-            
-            if (want_lang && !found_lang)
-            {
-                const wxChar* xml = wxT("<?xml version=\"");
-                if (0 == wxStrnicmp(str, xml, wxStrlen(xml)))
-                {
-                    found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
-                }
-            }
 
             // at end or it was read all at once
             if (last_read == (size_t)stream_len)
@@ -3893,7 +3897,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1517")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1519")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
