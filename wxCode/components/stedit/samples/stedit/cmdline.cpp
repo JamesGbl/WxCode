@@ -57,7 +57,7 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
     { wxCMD_LINE_OPTION, WXT("c"), WXT("config"), _("use config file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_NEEDS_SEPARATOR },
 
-    { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filenames(s)"),
+    { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filename(s)"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
 
     { wxCMD_LINE_OPTION, WXT("l"), WXT("lang"),       _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
