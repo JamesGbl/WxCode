@@ -60,11 +60,9 @@
 
 const wxChar fillchar = '=';
 
-static wxString cvt = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                         "abcdefghijklmnopqrstuvwxyz"
-                         "0123456789+/");
+static wxString cvt = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
 
-wxString wxBase64::Encode(const wxUint8* pData, size_t len)
+wxString wxBase64::Encode(const char* pData, size_t len)
 {
    size_t c;
    wxString ret;
@@ -147,7 +145,7 @@ wxString wxBase64::Decode(const wxString& data)
       c1 = cvt.Find(data[i]);
       wxASSERT_MSG(c1 >= 0, _T("invalid base64 input"));
       c = (c << 2) | ((c1 >> 4) & 0x3);
-      ret.Append(c, 1);
+      ret.Append((char)c, 1);
       if (++i < len)
       {
          c = data[i];
@@ -156,10 +154,10 @@ wxString wxBase64::Decode(const wxString& data)
             break;
          }
 
-         c = cvt.Find(c);
+         c = cvt.Find((char)c);
          wxASSERT_MSG(c >= 0, _T("invalid base64 input"));
          c1 = ((c1 << 4) & 0xf0) | ((c >> 2) & 0xf);
-         ret.Append(c1, 1);
+         ret.Append((char)c1, 1);
       }
 
       if (++i < len)
@@ -170,10 +168,10 @@ wxString wxBase64::Decode(const wxString& data)
             break;
          }
 
-         c1 = cvt.Find(c1);
+         c1 = cvt.Find((char)c1);
          wxASSERT_MSG(c1 >= 0, _T("invalid base64 input"));
          c = ((c << 6) & 0xc0) | c1;
-         ret.Append(c, 1);
+         ret.Append((char)c, 1);
       }
    }
 

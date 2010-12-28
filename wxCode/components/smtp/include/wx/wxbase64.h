@@ -50,7 +50,7 @@ class WXDLLIMPEXP_SMTP wxBase64
        * \param length The length of the byte array.
        * \return The base64 representation of the byte array.
        */
-      static wxString Encode(const wxUint8* pData, size_t length);
+      static wxString Encode(const char* pData, size_t length);
 
       /**
        * Decodes a base64 encoded string.

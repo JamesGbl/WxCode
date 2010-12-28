@@ -52,10 +52,10 @@
    // here goes the #include <wx/abc.h> directives for those
    // files which are not included by wxprec.h
 
-#include <wx/sckstrm.h>
 
 #endif
 
+#include <wx/sckstrm.h>
 #include "wx/wxsmtp.h"
 #include "wx/wxstates.h"
 
@@ -65,7 +65,7 @@
 wxSMTPListener g_nullListener;
 
 void
-wxSMTPTimer::Notify(void)
+wxSMTPTimer::Notify()
 {
    m_pSmtp->OnTimeout();
 }

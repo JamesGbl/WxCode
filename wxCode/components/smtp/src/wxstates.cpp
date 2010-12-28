@@ -106,8 +106,8 @@ void ConnectedState::onResponse(wxSMTP& context, int smtpCode, const wxString &s
       context.TimerStart(wxSMTP_TIMEOUT_HELO);
       return;
    }
-
-   switch (smtpRsp[0])
+   
+   switch (((const char*)smtpRsp.ToAscii())[0])
    {
       case '4':
          context.OnMessageStatus(wxEmailMessage::dispRetry);
@@ -138,7 +138,7 @@ void HeloState::onResponse(wxSMTP& context, int smtpCode, const wxString &smtpRs
       return;
    }
 
-   switch (smtpRsp[0])
+   switch (((const char*)smtpRsp.ToAscii())[0])
    {
       case '4':
          context.OnMessageStatus(wxEmailMessage::dispRetry);
@@ -169,7 +169,7 @@ void SendMailFromState::onResponse(wxSMTP& context, int smtpCode, const wxString
       return;
    }
 
-   switch (smtpRsp[0])
+   switch (((const char*)smtpRsp.ToAscii())[0])
    {
       case '4':
          context.OnMessageStatus(wxEmailMessage::dispRetry);
@@ -202,7 +202,7 @@ void RcptListState::onResponse(wxSMTP& context, int smtpCode, const wxString &sm
       context.SendQuit();
    }
 
-   switch (smtpRsp[0])
+   switch (((const char*)smtpRsp.ToAscii())[0])
    {
       case '2':
          context.OnRecipientStatus(wxEmailMessage::dispAccept);
@@ -269,7 +269,7 @@ void StartDataState::onResponse(wxSMTP& context, int smtpCode, const wxString &s
       return;
    }
 
-   if (smtpRsp[0] == '4')
+   if (((const char*)smtpRsp.ToAscii())[0] == '4')
    {
       context.OnMessageStatus(wxEmailMessage::dispRetry);
    }
@@ -292,7 +292,7 @@ void DataState::onResponse(wxSMTP& context, int smtpCode, const wxString &smtpRs
    {
       context.OnMessageStatus(wxEmailMessage::dispSucceed);
    }
-   else if (smtpRsp[0] == '4')
+   else if (((const char*)smtpRsp.ToAscii())[0] == '4')
    {
       context.OnMessageStatus(wxEmailMessage::dispRetry);
    }

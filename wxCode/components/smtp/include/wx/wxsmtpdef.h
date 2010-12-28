@@ -47,7 +47,7 @@
 //    variable:
 //          WXDLLIMPEXP_DATA_SMTP(int) myGlobalIntVar;
 //
-#ifdef WXMAKINGDLL_SMTP
+#ifdef WXMAKINGDLL_WXSMTP
     #define WXDLLIMPEXP_SMTP                    WXEXPORT
     #define WXDLLIMPEXP_DATA_SMTP(type)         WXEXPORT type
 #elif defined(WXUSINGDLL)

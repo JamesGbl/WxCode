@@ -162,7 +162,7 @@ void wxMimePart::Encode(wxOutputStream& out)
       if (len == 0) return;
 
       // read file
-      wxUint8* pData = new wxUint8[len];
+      char* pData = new char[len];
       if (!pData)
       {
          wxASSERT_MSG(pData != NULL, _T("out of memory"));
@@ -190,7 +190,7 @@ void wxMimePart::Encode(wxOutputStream& out)
    {
       // We had data as string
       size_t len = m_data.Len();
-      const wxUint8* pData = (wxUint8*) m_data.GetData();
+      const char* pData = m_data.ToAscii();
 
       // write encoded mime part to stream
       wxString cr("\x00d\x00a");
