@@ -1564,26 +1564,34 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
     wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
     textCtrl->SetValue(fileName.GetFullPath());
 
-    bool exists = fileName.FileExists();
-
-    wxStructStat statstr;
     wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
-    if (exists)
+    wxString strSize;
+    if (fileName.FileExists())
     {
-        wxStat(fileName.GetFullPath(), &statstr);
         fileName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
-        SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, wxString::Format(wxT("%ld bytes"), (long)statstr.st_size));
+        wxULongLong size = fileName.GetSize();
+        strSize = wxString::Format(_("%s bytes"), size.ToString().wx_str());
+
+        if (size.GetValue() >= 1024)
+        {
+            strSize = wxString::Format(wxT("%s (%s)"),
+               wxFileName::GetHumanReadableSize(size).wx_str(),
+               strSize.wx_str());
+        }
     }
     else
-        SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, wxT("<Unknown>"));
+    {
+        strSize = _("<Unknown>");
+    }
+    SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, strSize);
 
     dtOpened = edit->GetFileModificationTime();
-    SET_STATTEXT(ID_STEPROP_FILEOPENED_TEXT,   dtOpened.IsValid()   ? dtOpened.Format()   : wxT("Not originally loaded from disk"));
-    SET_STATTEXT(ID_STEPROP_FILEMODIFIED_TEXT, dtModified.IsValid() ? dtModified.Format() : wxT("<Unknown>"));
-    SET_STATTEXT(ID_STEPROP_FILEACCESSED_TEXT, dtAccessed.IsValid() ? dtAccessed.Format() : wxT("<Unknown>"));
-    SET_STATTEXT(ID_STEPROP_FILECREATED_TEXT,  dtCreated.IsValid()  ? dtCreated.Format()  : wxT("<Unknown>"));
+    SET_STATTEXT(ID_STEPROP_FILEOPENED_TEXT  , dtOpened  .IsValid() ? dtOpened  .Format() : _("Not originally loaded from disk"));
+    SET_STATTEXT(ID_STEPROP_FILEMODIFIED_TEXT, dtModified.IsValid() ? dtModified.Format() : _("<Unknown>"));
+    SET_STATTEXT(ID_STEPROP_FILEACCESSED_TEXT, dtAccessed.IsValid() ? dtAccessed.Format() : _("<Unknown>"));
+    SET_STATTEXT(ID_STEPROP_FILECREATED_TEXT , dtCreated .IsValid() ? dtCreated .Format() : _("<Unknown>"));
 
-    SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, edit->GetEditorLangs().IsOk() ? edit->GetEditorLangs().GetName(edit->GetLanguageId()) : wxT("<Unknown>"));
+    SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, edit->GetEditorLangs().IsOk() ? edit->GetEditorLangs().GetName(edit->GetLanguageId()) : _("<Unknown>"));
 
     SET_STATTEXT(ID_STEPROP_NUMLINES_TEXT, wxString::Format(wxT("%d"), edit->GetLineCount()));
     SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), edit->GetTextLength()));
