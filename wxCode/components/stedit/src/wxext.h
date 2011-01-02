@@ -40,7 +40,7 @@ WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
-WXDLLIMPEXP_STEDIT wxString wxToolBar_GetToolTipText(const wxString& label, const AcceleratorArray&, int id);
+WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray& accel, int id);
 
 WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_System;
 WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_Small;
