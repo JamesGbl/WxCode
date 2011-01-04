@@ -745,7 +745,7 @@ bool wxSTEditor::TranslatePos(int  start_pos,       int  end_pos,
 {
     int length = GetLength();
 
-    if ((start_pos == 0) && (end_pos == -1))        // do whole document
+    if ( ( (start_pos == 0) || (start_pos == -1) ) && (end_pos == -1))        // do whole document
     {
         end_pos = length;
     }
@@ -3897,7 +3897,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1532")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn r1540")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
