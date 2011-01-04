@@ -100,6 +100,8 @@
 #define XS_SERIALIZE_ARRAYREALPOINT(x, name) XS_SERIALIZE_PROPERTY(x, wxT("arrayrealpoint"), name);
 /*! \brief Macro creates new serialized property (type 'list of wxRealPoint objects') */
 #define XS_SERIALIZE_LISTREALPOINT(x, name) XS_SERIALIZE_PROPERTY(x, wxT("listrealpoint"), name);
+/*! \brief Macro creates new serialized property (type 'list of xsSerializable objects') */
+#define XS_SERIALIZE_LISTSERIALIZABLE(x, name) XS_SERIALIZE_PROPERTY(x, wxT("listserializable"), name);
 
 /*! \brief Macro creates new serialized property (type 'string hash map (StringMap)') */
 #define XS_SERIALIZE_MAPSTRING(x, name) XS_SERIALIZE_PROPERTY(x, wxT("mapstring"), name);
@@ -134,6 +136,16 @@ public: \
 /*! \brief Enable RTTI (the same as IMPLEMENT_DYNAMIC_CLASS) and implement xsSerializable::Clone() function */
 #define XS_IMPLEMENT_CLONABLE_CLASS(name, base) \
 	IMPLEMENT_DYNAMIC_CLASS(name, base) \
+	wxObject* name::Clone() \
+	{ \
+		if( m_fClone ) return new name(*this); \
+		else \
+			return NULL; \
+	} \
+	
+/*! \brief Enable RTTI (the same as IMPLEMENT_DYNAMIC_CLASS2) and implement xsSerializable::Clone() function */
+#define XS_IMPLEMENT_CLONABLE_CLASS2(name, base1, base2) \
+	IMPLEMENT_DYNAMIC_CLASS2(name, base1, base2) \
 	wxObject* name::Clone() \
 	{ \
 		if( m_fClone ) return new name(*this); \
@@ -770,8 +782,8 @@ private:
  *
  * Allowed property data types (keywords) are: 'long', 'double', 'bool', 'string', 'point', 'size',
  * 'realpoint', 'colour', 'brush', 'pen', 'font', 'arraystring', 'arrayrealpoint', 'listrealpoint',
- * 'serializabledynamic' and 'serializablestatic'. Only properties of these data types are recognized
- * and processed by parent serializable object.
+ * 'listserializable', 'serializabledynamic' and 'serializablestatic'. Only properties of these data types are
+ * recognized and processed by parent serializable object.
  */
 class WXDLLIMPEXP_XS xsProperty : public wxObject
 {
@@ -894,6 +906,9 @@ public:
 
     /*! \brief Constructor for RealPointList property. */
     xsProperty(RealPointList* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("listrealpoint")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
+
+    /*! \brief Constructor for SerializableList property. */
+    xsProperty(SerializableList* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("listserializable")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
 
     /*! \brief Constructor for StringMap property. */
     xsProperty(StringMap* src, const wxString& field) : m_pSourceVariable((void*)src), m_sFieldName(field), m_sDataType(wxT("mapstring")), m_sDefaultValueStr(wxT("")), m_fSerialize(true) {;}
@@ -1056,6 +1071,12 @@ public:
 	 * \return Reference to managed data member
 	 */
 	inline RealPointList& AsRealPointList() { wxASSERT(m_sDataType == wxT("listrealpoint")); return *(RealPointList*)m_pSourceVariable; }
+	/**
+	 * \brief Get reference to managed data member as SerializableList.
+	 * \return Reference to managed data member
+	 */
+	inline SerializableList& AsSerializableList() { wxASSERT(m_sDataType == wxT("listserializable")); return *(SerializableList*)m_pSourceVariable; }
+
 	/**
 	 * \brief Get reference to managed data member as StringMap.
 	 * \return Reference to managed data member

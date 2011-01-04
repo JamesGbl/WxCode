@@ -51,8 +51,12 @@ extern wxPrintData *g_printData;
 #define sfdvSHAPECANVAS_BACKGROUNDCOLOR wxColour(240, 240, 240)
 /*! \brief Default value of wxSFCanvasSettings::m_nGridSize data member */
 #define sfdvSHAPECANVAS_GRIDSIZE wxSize(10, 10)
+/*! \brief Default value of wxSFCanvasSettings::m_nGridLineMult data member */
+#define sfdvSHAPECANVAS_GRIDLINEMULT 1
 /*! \brief Default value of wxSFCanvasSettings::m_nGridColor data member */
 #define sfdvSHAPECANVAS_GRIDCOLOR wxColour(200, 200, 200)
+/*! \brief Default value of wxSFCanvasSettings::m_nGridStyle data member */
+#define sfdvSHAPECANVAS_GRIDSTYLE wxSOLID
 /*! \brief Default value of wxSFCanvasSettings::m_CommnonHoverColor data member */
 #define sfdvSHAPECANVAS_HOVERCOLOR wxColor(120, 120, 255)
 /*! \brief Default value of wxSFCanvasSettings::m_nGradientFrom data member */
@@ -109,7 +113,9 @@ public:
 	wxColour m_nGradientTo;
 
     wxSize m_nGridSize;
+	int m_nGridLineMult;
     wxColour m_nGridColor;
+	int m_nGridStyle;
 
     wxRealPoint m_nShadowOffset;
     wxBrush m_ShadowFill;
@@ -595,6 +601,19 @@ public:
 	 */
 	inline void SetGrid(wxSize grid) { m_Settings.m_nGridSize = grid; }
 	/*!
+	 * \brief Set grid line multiple.
+	 * 
+	 * Grid lines will be drawn in a distance calculated as grid size multiplicated by this value.
+	 * Default value is 1.
+	 * \param multiple Multiple value
+	 */
+	inline void SetGridLineMult(int multiple) { m_Settings.m_nGridLineMult = multiple; }
+	/**
+	 * \brief Get grid line multiple.
+	 * \return Value by which a grid size will be multiplicated to determine grid lines distance
+	 */
+	inline int GetGrigLineMult() const { return m_Settings.m_nGridLineMult; }
+	/*!
 	 * \brief Set grid color.
 	 * \param col Grid color
 	 */
@@ -604,6 +623,16 @@ public:
 	 * \return Grid color
 	 */
 	inline wxColour GetGridColour() const { return m_Settings.m_nGridColor; }
+	/*!
+	 * \brief Set grid line style.
+	 * \param style Line style
+	 */
+	inline void SetGridStyle(int style) { m_Settings.m_nGridStyle = style; }
+	/*!
+	 * \brief Get grid line style.
+	 * \return Line style
+	 */
+	inline int GetGridStyle() const {return m_Settings.m_nGridStyle; }
 	/*!
 	 * \brief Set shadow offset.
 	 * \param offset Shadow offset
@@ -725,6 +754,8 @@ public:
 	void UpdateVirtualSize();
 	/*! \brief Move all shapes so none of it will be located in negative position */
 	void MoveShapesFromNegatives();
+	/*! \brief Center diagram in accordance to the shape canvas extent. */
+	void CenterShapes();
     /*!
      * \brief Validate selection (remove redundantly selected shapes etc...).
      * \param selection List of selected shapes that should be validated
@@ -896,6 +927,14 @@ public:
 	 * \sa wxSFShapeCanvas::Paste(), wxSFShapePasteEvent
 	 */
 	virtual void OnPaste(const ShapeList& pasted);
+	
+	/*!
+	 * \brief Event handler called if canvas virtual size is going to be updated.
+	 * The default implementation does nothing but the function can be overrided by
+	 * a user to modify calculated virtual canvas size.
+	 * \param virtrct Calculated canvas virtual size
+	 */
+	virtual void OnUpdateVirtualSize(wxRect &virtrct);
 
 
 protected:

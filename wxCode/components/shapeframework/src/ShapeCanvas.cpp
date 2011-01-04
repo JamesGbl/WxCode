@@ -28,6 +28,7 @@
 #include "wx/wxsf/SFEvents.h"
 #include "wx/wxsf/CommonFcn.h"
 #include "wx/wxsf/ControlShape.h"
+#include "wx/wxsf/CommonFcn.h"
 
 #ifndef __WXMSW__
 
@@ -141,6 +142,8 @@ wxBitmap wxSFShapeCanvas::m_OutBMP;
 // this flag has sense only if wxUSE_GRAPHICS_CONTEXT is present...
 bool wxSFShapeCanvas::m_fEnableGC = false;
 
+using namespace wxSFCommonFcn;
+
 IMPLEMENT_DYNAMIC_CLASS(wxSFCanvasSettings, xsSerializable);
 
 wxSFCanvasSettings::wxSFCanvasSettings() : xsSerializable()
@@ -149,7 +152,9 @@ wxSFCanvasSettings::wxSFCanvasSettings() : xsSerializable()
     m_nBackgroundColor = sfdvSHAPECANVAS_BACKGROUNDCOLOR;
     m_nCommonHoverColor = sfdvSHAPECANVAS_HOVERCOLOR;
     m_nGridSize = sfdvSHAPECANVAS_GRIDSIZE;
+	m_nGridLineMult = sfdvSHAPECANVAS_GRIDLINEMULT;
     m_nGridColor = sfdvSHAPECANVAS_GRIDCOLOR;
+	m_nGridStyle = sfdvSHAPECANVAS_GRIDSTYLE;
 	m_nGradientFrom = sfdvSHAPECANVAS_GRADIENT_FROM;
 	m_nGradientTo = sfdvSHAPECANVAS_GRADIENT_TO;
 	m_nStyle = sfdvSHAPECANVAS_STYLE;
@@ -166,7 +171,9 @@ wxSFCanvasSettings::wxSFCanvasSettings() : xsSerializable()
 	XS_SERIALIZE_EX(m_nGradientTo, wxT("gradient_to"), sfdvSHAPECANVAS_GRADIENT_TO);
     XS_SERIALIZE_EX(m_nCommonHoverColor, wxT("hover_color"), sfdvSHAPECANVAS_HOVERCOLOR);
     XS_SERIALIZE_EX(m_nGridSize, wxT("grid_size"), sfdvSHAPECANVAS_GRIDSIZE);
+    XS_SERIALIZE_EX(m_nGridLineMult, wxT("grid_line_mult"), sfdvSHAPECANVAS_GRIDLINEMULT);
     XS_SERIALIZE_EX(m_nGridColor, wxT("grid_color"), sfdvSHAPECANVAS_GRIDCOLOR);
+    XS_SERIALIZE_EX(m_nGridStyle, wxT("grid_style"), sfdvSHAPECANVAS_GRIDSTYLE);
     XS_SERIALIZE_EX(m_nShadowOffset, wxT("shadow_offset"), sfdvSHAPECANVAS_SHADOWOFFSET);
     XS_SERIALIZE_EX(m_ShadowFill, wxT("shadow_fill"), sfdvSHAPECANVAS_SHADOWBRUSH);
     XS_SERIALIZE_EX(m_nPrintHAlign, wxT("print_halign"), sfdvSHAPECANVAS_PRINT_HALIGN);
@@ -379,18 +386,23 @@ void wxSFShapeCanvas::DrawContent(wxDC& dc, bool fromPaint)
 	// show grid
 	if( ContainsStyle(sfsGRID_SHOW) )
 	{
-		wxRect gridRct(wxPoint(0, 0), GetVirtualSize()+m_Settings.m_nGridSize);
-		int maxx = int(gridRct.GetRight()/m_Settings.m_nScale);
-		int maxy = int(gridRct.GetBottom()/m_Settings.m_nScale);
+		int linedist = m_Settings.m_nGridSize.x * m_Settings.m_nGridLineMult;
+		
+		if( linedist * m_Settings.m_nScale > 3 )
+		{
+			wxRect gridRct(wxPoint(0, 0), GetVirtualSize()+m_Settings.m_nGridSize);
+			int maxx = int(gridRct.GetRight()/m_Settings.m_nScale);
+			int maxy = int(gridRct.GetBottom()/m_Settings.m_nScale);
 
-		dc.SetPen(wxColor(m_Settings.m_nGridColor));
-		for(int x = gridRct.GetLeft(); x <= maxx; x += m_Settings.m_nGridSize.x)
-		{
-			dc.DrawLine(x, 0, x, maxy);
-		}
-		for(int y = gridRct.GetTop(); y <= maxy; y += m_Settings.m_nGridSize.y)
-		{
-			dc.DrawLine(0, y, maxx, y);
+			dc.SetPen( wxPen(m_Settings.m_nGridColor, 1, m_Settings.m_nGridStyle) );
+			for(int x = gridRct.GetLeft(); x <= maxx; x += linedist)
+			{
+				dc.DrawLine(x, 0, x, maxy);
+			}
+			for(int y = gridRct.GetTop(); y <= maxy; y += linedist)
+			{
+				dc.DrawLine(0, y, maxx, y);
+			}
 		}
 	}
 
@@ -583,7 +595,7 @@ void wxSFShapeCanvas::RefreshCanvas(bool erase, wxRect rct)
 
 	wxPoint lpos = DP2LP(wxPoint(0, 0));
 
-	rct.Inflate(int(10/m_Settings.m_nScale), int(10/m_Settings.m_nScale));
+	rct.Inflate(int(20/m_Settings.m_nScale), int(20/m_Settings.m_nScale));
 	rct.Offset(-lpos.x, -lpos.y);
 
 	RefreshRect(wxRect(int(rct.x*m_Settings.m_nScale), int(rct.y*m_Settings.m_nScale), int(rct.width*m_Settings.m_nScale), int(rct.height*m_Settings.m_nScale)), erase);
@@ -775,6 +787,8 @@ void wxSFShapeCanvas::OnLeftDown(wxMouseEvent& event)
                         {
                             m_pNewLineShape->SetTrgShapeId(pShapeUnder->GetId());
                             m_pNewLineShape->CreateHandles();
+							
+                            m_pNewLineShape->SetEndingConnectionPoint( pShapeUnder->GetNearestConnectionPoint( Conv2RealPoint(lpos) ) );
 
                             // swith off the "under-construcion" mode
                             m_pNewLineShape->SetLineMode(wxSFLineShape::modeREADY);
@@ -1402,6 +1416,10 @@ void wxSFShapeCanvas::OnTextChange(wxSFEditTextShape* shape)
     ProcessEvent( event );
 }
 
+void wxSFShapeCanvas::OnUpdateVirtualSize(wxRect& virtrct)
+{
+	// HINT: override it for custom actions...
+}
 
 //----------------------------------------------------------------------------------//
 // Private event handlers functions
@@ -1915,8 +1933,11 @@ void wxSFShapeCanvas::StartInteractiveConnection(wxClassInfo* shapeInfo, const w
 
                  m_pNewLineShape->SetSrcShapeId(pShapeUnder->GetId());
 
-                 // swith on the "under-construcion" mode
+                 // switch on the "under-construcion" mode
                  m_pNewLineShape->SetUnfinishedPoint(lpos);
+				 // assign starting point of new line shapes to the nearest connection point of 
+				 // connected shape if exists
+				 m_pNewLineShape->SetStartingConnectionPoint( pShapeUnder->GetNearestConnectionPoint( Conv2RealPoint(lpos) ) );
 			}
             else if( err ) *err = wxSF::errNOT_CREATED;
         }
@@ -1956,6 +1977,10 @@ void wxSFShapeCanvas::StartInteractiveConnection(wxSFLineShape* shape, const wxP
 
                 // swith on the "under-construcion" mode
                 m_pNewLineShape->SetUnfinishedPoint(lpos);
+				 // assign starting point of new line shapes to the nearest connection point of 
+				 // connected shape if exists
+				 m_pNewLineShape->SetStartingConnectionPoint( pShapeUnder->GetNearestConnectionPoint( Conv2RealPoint(lpos) ) );
+
             }
 			else if( err ) *err = wxSF::errNOT_CREATED;
         }
@@ -2479,6 +2504,9 @@ wxRect wxSFShapeCanvas::GetSelectionBB()
 void wxSFShapeCanvas::UpdateVirtualSize()
 {
     wxRect virtRct = GetTotalBoundingBox();
+	
+	// allow user to modify calculated virtual canvas size
+	this->OnUpdateVirtualSize( virtRct );
 
     // update virtual area of the scrolled window if neccessary
     if(!virtRct.IsEmpty())
@@ -2510,51 +2538,26 @@ void wxSFShapeCanvas::DeleteAllTextCtrls()
 void wxSFShapeCanvas::MoveShapesFromNegatives()
 {
 	wxASSERT(m_pManager);
-	if(!m_pManager)return;
+	if( m_pManager ) m_pManager->MoveShapesFromNegatives();
+}
 
-	wxSFShapeBase *pShape;
-	wxRealPoint shapePos;
-	double minx = 0, miny = 0;
-
-	// find the maximal negative position value
-    ShapeList shapes;
-    m_pManager->GetShapes(CLASSINFO(wxSFShapeBase), shapes);
-
-	ShapeList::compatibility_iterator node = shapes.GetFirst();
-	while(node)
+void wxSFShapeCanvas::CenterShapes()
+{
+	wxRect rctBB = GetTotalBoundingBox();
+	wxRect rctPrevBB = rctBB;
+	
+	rctBB = rctBB.CenterIn( wxRect( wxPoint(0, 0), GetSize() ) );
+	
+	double nDx = rctBB.GetLeft() - rctPrevBB.GetLeft();
+	double nDy = rctBB.GetTop() - rctPrevBB.GetTop();
+	
+	for( ShapeList::iterator it = m_lstCurrentShapes.begin(); it != m_lstCurrentShapes.end(); ++it )
 	{
-		shapePos = node->GetData()->GetAbsolutePosition();
-
-		if(node == shapes.GetFirst())
-		{
-			minx = shapePos.x;
-			miny = shapePos.y;
-		}
-		else
-		{
-            if(shapePos.x < minx)minx = shapePos.x;
-            if(shapePos.y < miny)miny = shapePos.y;
-		}
-
-		node = node->GetNext();
+		wxSFShapeBase *pShape = *it;
+		if( ! pShape->GetParentShape() ) pShape->MoveBy( nDx, nDy );
 	}
-
-	// move all parents shape so they (and their children) will be located in the positive values only
-	if((minx < 0) || (miny < 0))
-	{
-		node = m_lstCurrentShapes.GetFirst();
-		while(node)
-		{
-			pShape = node->GetData();
-
-			if(pShape->GetParentShape() == NULL)
-			{
-				if(minx < 0)pShape->MoveBy(abs((int)minx), 0);
-				if(miny < 0)pShape->MoveBy(0, abs((int)miny));
-			}
-			node = node->GetNext();
-		}
-	}
+	
+	MoveShapesFromNegatives();
 }
 
 void wxSFShapeCanvas::AlignSelected(HALIGN halign, VALIGN valign)
@@ -3099,7 +3102,7 @@ void wxSFShapeCanvas::PrintPreview(wxSFPrintout *preview, wxSFPrintout *printout
     wxASSERT(preview);
 
 	DeselectAll();
-	
+
     // Pass two printout objects: for preview, and possible printing.
     wxPrintDialogData printDialogData(* g_printData);
     wxPrintPreview *prnPreview = new wxPrintPreview(preview, printout, &printDialogData);
@@ -3185,4 +3188,3 @@ wxDragResult wxSFCanvasDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def
 
 	return def;
 }
-

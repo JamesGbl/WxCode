@@ -16,6 +16,10 @@ FrameCanvas::FrameCanvas(wxSFDiagramManager* manager, wxWindow* parent, wxWindow
 	// initialize grid
 	AddStyle(sfsGRID_USE);
 	AddStyle(sfsGRID_SHOW);
+	// distances between grid lines can be modified via following function:
+	SetGridLineMult(10);
+	// grid line style can be set as follows:
+	SetGridStyle(wxSHORT_DASH);
 
 	// canvas background can be printed/ommited during the canvas printing job
     //AddStyle(sfsPRINT_BACKGROUND);
@@ -210,6 +214,16 @@ void FrameCanvas::OnLeftDown(wxMouseEvent& event)
 				
 				// child shapes can be locked accordingly to their parent's origin if the parent is resized
 				//pShape->AddStyle( wxSFShapeBase::sfsLOCK_CHILDREN );
+				
+				// shapes can have fixed connection points defined in the following way:
+				pShape->AddConnectionPoint( wxSFConnectionPoint::cpCENTERLEFT );
+				pShape->AddConnectionPoint( wxSFConnectionPoint::cpCENTERRIGHT );
+				// user can define also any number of CUSTOM connection points placed relatively to the 
+				// parent shape's bounding box ("25, 50" here means 25% of width and 50% of height):
+				pShape->AddConnectionPoint( wxRealPoint(25, 50) );
+				pShape->AddConnectionPoint( wxRealPoint(75, 50) );
+				// in this case the line connection can be assigned to the one of the defined
+				// fixed connection points only.
 			}
 		}
 		break;

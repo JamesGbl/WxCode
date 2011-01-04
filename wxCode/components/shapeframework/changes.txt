@@ -1,3 +1,27 @@
+Changes in version 1.10.0 beta (2010-12-22):
+--------------------------------------------
+- Switched to use wxXmlSerializer 1.3.3:
+  - SerializableList content can be directly serialized via XS_SERIALIZE macro.
+  
+- Added abbility to define fixed connection points for line connections. See wxSFShapeBase::AddConnectionPoint() functions
+  and related.
+- Implemented simple auto layout algorithms. For more details see wxSFAutoLayout class and wxSFDemo sample project.
+  Currently supported layouting algorithms are "Circle", "Mesh", "Horizontal Tree" and "Vertical Tree".
+- Added function wxSFDiagramManager::IsEmpty() which informs user whether the diagram manager contains any shapes.
+- Added function wxSFShapeCanvas::CenterShapes() which centers whole diagram in accordance to the shape canvas extent.
+- Update wxSFDemo project to reflect new features.
+
+Changes in version 1.9.3 beta (2010-12-08):
+--------------------------------------------
+- Editation of wxSFEditTextShape can be disabled by putting editDISABLED value to wxSFEditTextShape::SetEditType(EDITTYPE type) function.
+- Added functions void wxSFShapeCanvas::SetGridLineMult(int multiple) and int wxSFShapeCanvas::GetGridLineMult(). If used then grid lines
+  will be drawn in a distance calculated as grid size multiplicated by this value. Default value is 1.
+- Added functions void wxSFShapeCanvas::SetGridStyle(int style) and int wxSFShapeCanvas::GetGridStyle() allowing user
+  to define grid line style.
+- Update wxSFDemo project to reflect new features.
+- Added new virtual event handler void wxSFShapeCanvas::OnUpdateVirtualSize(wxRect &virtrct) called during canvas' virtual size update. The function
+  allows user to modify calculated virtual canvas size.
+
 Changes in version 1.9.2 beta (2010-06-24):
 --------------------------------------------
 - Switched to use wxXmlSerializer 1.3.2:
@@ -15,12 +39,12 @@ Changes in version 1.9.2 beta (2010-06-24):
 - Fixed drawing of non-transparent text shapes in Windows (shape border wasn't visible).
 - Added new virtual function wxSFShapeCanvas::OnPreConnectionFinished() and event wxEVT_SF_LINE_BEFORE_DONE suitable for
   canceling/vetoing creation of line shape if needed (patch by foldink).
-- Added new function wxSFShapeCanvas::StartInteractiveConnection(wxSFLineShape* shape, const wxPoint& pos, wxSF::ERROR *err = NULL)
+- Added new function wxSFShapeCanvas::StartInteractiveConnection(wxSFLineShape* shape, const wxPoint& pos, wxSF::ERRCODE *err = NULL)
   which can create an interactive connection from existing line shape object.
-- Added new function wxSFShapeCanvas::CreateConnection(long srcId, long trgId, wxSFLineShape *line, bool saveState = true, wxSF::ERROR *err = NULL)
+- Added new function wxSFShapeCanvas::CreateConnection(long srcId, long trgId, wxSFLineShape *line, bool saveState = true, wxSF::ERRCODE *err = NULL)
   which can create a connection from existing line shape object.
 - All prototypes of AddShape(), CreateConnection() and StartInteractiveConnection() functions now take one additional argument (pointer to variable)
-  which can return an operation result type defined if wxSF::ERROR enumeration. Note that this new argument can be NULL (which is its default value).  
+  which can return an operation result type defined if wxSF::ERRCODE enumeration. Note that this new argument can be NULL (which is its default value).  
 - Fixed update of grid shapes.
 - Fixed incorrect update of grid cell IDs at deserialization.
 - Added new function wxSFGridShape::RemoveFromGrid(long id).

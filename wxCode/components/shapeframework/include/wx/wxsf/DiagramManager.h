@@ -156,6 +156,9 @@ public:
 	/*! \brief Remove all shapes from canvas */
 	void Clear();
 	
+	/*! \brief Move all shapes so none of it will be located in negative position */
+	void MoveShapesFromNegatives();
+	
 	/*! \brief Update all shapes in the diagram manager */
 	void UpdateAll();
 
@@ -266,6 +269,11 @@ public:
 	 */
 	void GetShapesInside(const wxRect& rct, ShapeList& shapes);
 
+	/*!
+	 * \brief Determines whether the diagram manager contains some shapes.
+	 * \return TRUE if there are no shapes in the manager, otherwise FALSE
+	 */
+	inline bool IsEmpty() const { return ! GetRootItem()->HasChildren(); }
     /*!
      * \brief Function finds out whether given shape has some children.
      * \param parent Pointer to potential parent shape
