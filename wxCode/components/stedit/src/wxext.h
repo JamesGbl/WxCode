@@ -91,4 +91,10 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
 }
 #endif
 
+#if (wxVERSION_NUMBER >= 2900)
+   #define WX29CHAR(a) a
+#else
+   #define WX29CHAR wxT
+#endif
+
 #endif // __WXEXT_H__

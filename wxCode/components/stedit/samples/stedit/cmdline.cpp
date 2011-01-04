@@ -29,12 +29,6 @@ CommandLine::CommandLine()
     m_recurse = false;
 }
 
-#if (wxVERSION_NUMBER >= 2900)
-   #define WXT(a) a
-#else
-   #define WXT wxT
-#endif
-
 enum parm
 {
    enum_parm_single,
@@ -48,20 +42,20 @@ enum parm
 
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
-    { wxCMD_LINE_SWITCH, WXT("1"), WXT("single"), _("single file mode"),
+    { wxCMD_LINE_SWITCH, WX29CHAR("1"), WX29CHAR("single"), _("single file mode"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
-    { wxCMD_LINE_SWITCH, WXT("r"), WXT("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
+    { wxCMD_LINE_SWITCH, WX29CHAR("r"), WX29CHAR("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
-    { wxCMD_LINE_OPTION, WXT("c"), WXT("config"), _("use config file"),
+    { wxCMD_LINE_OPTION, WX29CHAR("c"), WX29CHAR("config"), _("use config file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_NEEDS_SEPARATOR },
 
-    { wxCMD_LINE_PARAM,  WXT(""),  WXT(""),       _("input filename(s)"),
+    { wxCMD_LINE_PARAM,  WX29CHAR(""),  WX29CHAR(""),       _("input filename(s)"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
 
-    { wxCMD_LINE_OPTION, WXT("l"), WXT("lang"),       _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-    { wxCMD_LINE_SWITCH, NULL,     WXT("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_OPTION, WX29CHAR("l"), WX29CHAR("lang"), _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_SWITCH, NULL, WX29CHAR("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 },
 };
