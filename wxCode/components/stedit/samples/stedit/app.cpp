@@ -40,6 +40,7 @@
 #endif
 
 #include "wx/filename.h"
+#include "wx/stockitem.h"
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
@@ -162,7 +163,8 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
-    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_F10, wxID_EXIT)); // adding one 'custom' accelerator
+    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator
+    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_HELP, wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
     wxSTEditorFrame* frame = new wxSTEditorFrame(NULL, wxID_ANY);
@@ -178,12 +180,8 @@ bool wxStEditApp::OnInit()
     // Get the "Help" menu
     wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
 
-    wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, _("&About..."), _("About this program"));
-    item->SetBitmap(wxBitmap(pencil16_xpm));
-    menu->Append(item);
-
     // Add our help dialogs
-    menu->Append(ID_SHOW_HELP, _("Help..."), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
+    menu->Append(ID_SHOW_HELP, wxGetStockLabel(wxID_HELP), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
     menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
 
     // just use connect here, we could also use static event tables, but this
@@ -203,7 +201,13 @@ bool wxStEditApp::OnInit()
     frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
-    frame->GetMenuBar()->Append(menu, _("&Help"));
+    menu->AppendSeparator();
+    wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
+    item->SetBitmap(wxBitmap(pencil16_xpm)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
+    menu->Append(item);
+
+    ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
+    frame->GetMenuBar()->Append(menu, wxGetStockLabelEx(wxID_HELP));
 
     // ------------------------------------------------------------------------
     // handle loading the files

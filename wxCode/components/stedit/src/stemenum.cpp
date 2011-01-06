@@ -113,8 +113,6 @@ void wxSTEditorMenuManager::InitAcceleratorArray()
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD, WXK_F9, ID_STE_PREFERENCES));
 
-  //m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // ID_SHOW_HELP is not in scope :-(
-
 #ifdef __UNIX__
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_CMD | wxACCEL_SHIFT, 'C', ID_STE_COPY_PRIMARY));
 #endif // __UNIX__
