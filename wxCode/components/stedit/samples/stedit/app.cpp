@@ -164,7 +164,7 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator
-    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_SHIFT, WXK_HELP, wxID_ABOUT)); // adding 'custom' accelerator
+    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
     wxSTEditorFrame* frame = new wxSTEditorFrame(NULL, wxID_ANY);

@@ -139,6 +139,7 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
         STOCKITEM(wxID_EXIT,                 wxACCEL_CMD, 'Q')
         STOCKITEM(wxID_CLOSE,                wxACCEL_CMD, 'W')
         STOCKITEM(wxID_CLEAR,                wxACCEL_NORMAL, WXK_DELETE)
+        STOCKITEM(wxID_ABOUT,                wxACCEL_SHIFT, WXK_HELP)
         default:
             ret = wxGetStockAccelerator(id);
             break;
