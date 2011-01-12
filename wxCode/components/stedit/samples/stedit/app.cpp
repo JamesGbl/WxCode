@@ -167,7 +167,8 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
-    wxSTEditorFrame* frame = new wxSTEditorFrame(NULL, wxID_ANY);
+    wxSTEditorFrame* frame = new wxSTEditorFrame();
+    frame->Create();
 
     // ------------------------------------------------------------------------
     // load the prefs/style/langs from the config, if we're using one
