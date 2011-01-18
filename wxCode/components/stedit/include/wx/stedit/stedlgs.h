@@ -23,6 +23,7 @@ class WXDLLIMPEXP_FWD_CORE wxListbook;
 class WXDLLIMPEXP_FWD_CORE wxImageList;
 class WXDLLIMPEXP_FWD_CORE wxListBox;
 class WXDLLIMPEXP_FWD_CORE wxStaticText;
+class WXDLLIMPEXP_FWD_CORE wxColourData;
 
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefDialog;
 
