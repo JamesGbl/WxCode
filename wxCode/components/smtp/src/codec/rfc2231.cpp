@@ -111,7 +111,7 @@ wxString wxRfc2231::Decode(const std::list<mimetic::FieldParam>& parameters_list
          unsigned long hex_val;
          remaining_content.AfterFirst('%').Mid(0, 2).ToULong(&hex_val, 16);
          decoded_string += wxString::Format(_T("%c"), int(hex_val));
-         remaining_content = remaining_content.AfterFirst('%').Mid(2, wxSTRING_MAXLEN);
+         remaining_content = remaining_content.AfterFirst('%').Mid(2);
       }
       decoded_string += remaining_content;
 

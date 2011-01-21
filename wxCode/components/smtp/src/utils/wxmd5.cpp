@@ -123,7 +123,7 @@ void MD5Init(struct MD5Context *ctx)
  * Update context to reflect the concatenation of another buffer full
  * of bytes.
  */
-void MD5Update(struct MD5Context *ctx, unsigned char *buf, unsigned len)
+void MD5Update(struct MD5Context *ctx, const unsigned char *buf, unsigned len)
 {
     uint32 t;
 
@@ -318,11 +318,11 @@ static void AppendSubHex(unsigned char val, wxString result)
 {
    if (val > 9)
    {
-      result.Append('a'+val-10);
+      result.Append((char)('a'+val-10));
    }
    else
    {
-      result.Append('0'+val);
+      result.Append((char)('0'+val));
    }
 }
 
@@ -339,7 +339,7 @@ wxString wxMD5::ComputeMd5(const wxString& content)
 
    MD5Init(&md5c);
 
-   MD5Update(&md5c, (unsigned char*)content.c_str(), content.length());
+   MD5Update(&md5c, (const unsigned char*)content.c_str(), content.length());
 
    MD5Final(signature, &md5c);
 

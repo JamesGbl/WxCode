@@ -167,13 +167,7 @@ class MessageDisplay : public wxFrame
       wxEmailMessage* message;
 };
 
-//IMPLEMENT_APP(App)
-IMPLEMENT_APP_NO_MAIN(App)
- 
-int main(int argc, char **argv)
-{
-   return wxEntry(argc, argv);
-}
+IMPLEMENT_APP(App)
 
 App::App()
     :download_headers_listener(*this),

@@ -67,7 +67,7 @@ wxString wxRfc2047::Decode(const wxString& encoded_str)
             *((unsigned char*)val) = (unsigned char)val_long;
             val[1] = 0;
 
-            str_content = str_content.Mid(0,index) << wxString(val, wxConvLocal) << str_content.Mid(index+3, wxSTRING_MAXLEN);
+            str_content = str_content.Mid(0,index) << wxString(val, wxConvLocal) << str_content.Mid(index+3);
          }
 
          /* Convert to local charset, if necessary */

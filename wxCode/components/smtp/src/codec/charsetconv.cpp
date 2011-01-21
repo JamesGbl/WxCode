@@ -64,11 +64,6 @@ wxString wxCharsetConverter::ConvertCharset(const wxString& str, const wxString&
    if (text_encoding == wxFONTENCODING_UTF8)
    {
       str_content = wxString::FromUTF8(AfterBOM(str.mb_str(wxConvLocal)));
-      if (str_content.mb_str(wxConvLocal) == NULL)
-      {
-         /* Proble during conversion... What can we do ??? */
-         str_content = str;
-      }
    }
    else if (system_encoding != text_encoding)
    {
