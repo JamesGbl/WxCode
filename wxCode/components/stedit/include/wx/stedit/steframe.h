@@ -177,7 +177,6 @@ protected:
 
 private:
     void Init();
-    void InitAcceleratorArray();
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxSTEditorFrame)
 };
