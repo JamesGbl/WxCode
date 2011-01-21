@@ -101,12 +101,23 @@ __wxsmtp_dll___depname =
 __wxsmtp_dll___depname = &
 	..\lib\wat_$(____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.dll
 !endif
+__WXLIB_HTML_NAME_p =
+!ifeq WX_MONOLITHIC 0
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib
+!endif
 ____wxsmtp_lib__DIRNAME_SHARED_SUFFIX_FILENAMES =
 !ifeq SHARED 0
 ____wxsmtp_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 !endif
 !ifeq SHARED 1
 ____wxsmtp_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+!endif
+____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES =
+!ifeq WX_SHARED 0
+____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
+!endif
+!ifeq WX_SHARED 1
+____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 !endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0
@@ -146,26 +157,19 @@ VAR = -ot -ox
 !ifeq WX_DEBUG 1
 VAR = -od
 !endif
-VAR_0 =
+VAR_2 =
 !ifeq WX_DEBUG 0
-VAR_0 = -d0
+VAR_2 = -d0
 !endif
 !ifeq WX_DEBUG 1
-VAR_0 = -d2
+VAR_2 = -d2
 !endif
-VAR_1 =
+VAR_3 =
 !ifeq WX_DEBUG 0
-VAR_1 = 
+VAR_3 = 
 !endif
 !ifeq WX_DEBUG 1
-VAR_1 = debug all
-!endif
-____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES =
-!ifeq WX_SHARED 0
-____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
-!endif
-!ifeq WX_SHARED 1
-____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+VAR_3 = debug all
 !endif
 __WXLIB_NET_NAME_p =
 !ifeq WX_MONOLITHIC 0
@@ -195,31 +199,101 @@ WXLIBPATH = \lib\wat_dll
 WXSMTP_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_2) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 WXSMTP_LIB_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxbase64.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxcmdprot.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxemail.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxmime.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxcmdprot.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxmd5.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_charsetconv.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rfc2047.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rfc2231.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtp.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxstates.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtpemail.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtpstates.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxpop3.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxpop3states.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_body.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentdescription.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentdisposition.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentid.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contenttransferencoding.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contenttype.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_fieldparam.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_header.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_message.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mimeentity.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mimeversion.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_strutils.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_utils.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_version.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_base64.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_qp.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_address.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_addresslist.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_datetime.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_field.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_fieldvalue.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_group.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mailbox.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mailboxlist.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_messageid.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rheader.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rmessage.obj
 WXSMTP_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -wx -i=..\include -dWXMAKINGDLL_WXSMTP $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_2) -wx -i=..\include -dWXMAKINGDLL_WXSMTP $(CPPFLAGS) $(CXXFLAGS)
 WXSMTP_DLL_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxbase64.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxcmdprot.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxemail.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxmime.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxcmdprot.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxmd5.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_charsetconv.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rfc2047.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rfc2231.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtp.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxstates.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtpemail.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtpstates.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxpop3.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxpop3states.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_body.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentdescription.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentdisposition.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentid.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contenttransferencoding.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contenttype.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_fieldparam.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_header.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_message.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mimeentity.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mimeversion.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_strutils.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_utils.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_version.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_base64.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_qp.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_address.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_addresslist.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_datetime.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_field.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_fieldvalue.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_group.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mailbox.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mailboxlist.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_messageid.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rheader.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rmessage.obj
 SENDMAIL_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_2) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 SENDMAIL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail_SendMail.obj
+POP3CLIENT_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
+	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
+	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
+	$(VAR_2) -wx -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+POP3CLIENT_OBJECTS =  &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client_Pop3Client.obj
 
 
 all : watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)
@@ -228,7 +302,7 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX) :
 
 ### Targets: ###
 
-all : .SYMBOLIC test_for_selected_wxbuild $(__wxsmtp_lib___depname) $(__wxsmtp_dll___depname) ..\samples\SendMail\SendMail.exe
+all : .SYMBOLIC test_for_selected_wxbuild $(__wxsmtp_lib___depname) $(__wxsmtp_dll___depname) ..\samples\SendMail\SendMail.exe ..\samples\Pop3Client\Pop3Client.exe
 
 clean : .SYMBOLIC 
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -240,6 +314,7 @@ clean : .SYMBOLIC
 	-if exist ..\lib\wat_$(____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.dll del ..\lib\wat_$(____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.dll
 	-if exist ..\lib\wat_$(____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.lib del ..\lib\wat_$(____wxsmtp_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.lib
 	-if exist ..\samples\SendMail\SendMail.exe del ..\samples\SendMail\SendMail.exe
+	-if exist ..\samples\Pop3Client\Pop3Client.exe del ..\samples\Pop3Client\Pop3Client.exe
 
 test_for_selected_wxbuild :  
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -269,7 +344,7 @@ make_dir_wxsmtp_lib :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_1) libpath ..$(WXLIBPATH) $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_3) libpath ..$(WXLIBPATH) $(LDFLAGS)
 	@for %i in ($(WXSMTP_DLL_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc file %i
 	@for %i in ( $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll.lbc
@@ -286,7 +361,7 @@ make_dir_wxsmtp_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc name $^@
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc option caseexact
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_1) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_3) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
 	@for %i in ($(SENDMAIL_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxsmtp_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.lib $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail.lbc
@@ -296,42 +371,252 @@ make_dir_wxsmtp_dll :
 make_sample_dir_SendMail :  
 	if not exist ..\samples\SendMail mkdir ..\samples\SendMail
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxbase64.obj :  .AUTODEPEND ..\src\wxbase64.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+..\samples\Pop3Client\Pop3Client.exe :  $(POP3CLIENT_OBJECTS) make_sample_dir_Pop3Client $(__wxsmtp_lib___depname)
+	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc option quiet
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc name $^@
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc option caseexact
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc  libpath $(WX_DIR)$(WXLIBPATH) $(VAR_3) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'  $(LDFLAGS)
+	@for %i in ($(POP3CLIENT_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc file %i
+	@for %i in ( ..\lib\wat_$(____wxsmtp_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxsmtp.lib $(__WXLIB_HTML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc library %i
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc
+	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc option stack=%i
+	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client.lbc
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxcmdprot.obj :  .AUTODEPEND ..\src\wxcmdprot.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+make_sample_dir_Pop3Client :  
+	if not exist ..\samples\Pop3Client mkdir ..\samples\Pop3Client
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxemail.obj :  .AUTODEPEND ..\src\wxemail.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxmime.obj :  .AUTODEPEND ..\src\wxmime.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxcmdprot.obj :  .AUTODEPEND ..\src\utils\wxcmdprot.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtp.obj :  .AUTODEPEND ..\src\wxsmtp.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxmd5.obj :  .AUTODEPEND ..\src\utils\wxmd5.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxstates.obj :  .AUTODEPEND ..\src\wxstates.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_charsetconv.obj :  .AUTODEPEND ..\src\codec\charsetconv.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxbase64.obj :  .AUTODEPEND ..\src\wxbase64.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rfc2047.obj :  .AUTODEPEND ..\src\codec\rfc2047.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxcmdprot.obj :  .AUTODEPEND ..\src\wxcmdprot.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rfc2231.obj :  .AUTODEPEND ..\src\codec\rfc2231.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtp.obj :  .AUTODEPEND ..\src\smtp\wxsmtp.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtpemail.obj :  .AUTODEPEND ..\src\smtp\wxsmtpemail.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxsmtpstates.obj :  .AUTODEPEND ..\src\smtp\wxsmtpstates.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxpop3.obj :  .AUTODEPEND ..\src\pop3\wxpop3.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_wxpop3states.obj :  .AUTODEPEND ..\src\pop3\wxpop3states.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_body.obj :  .AUTODEPEND ..\src\mimetic\body.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentdescription.obj :  .AUTODEPEND ..\src\mimetic\contentdescription.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentdisposition.obj :  .AUTODEPEND ..\src\mimetic\contentdisposition.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contentid.obj :  .AUTODEPEND ..\src\mimetic\contentid.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contenttransferencoding.obj :  .AUTODEPEND ..\src\mimetic\contenttransferencoding.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_contenttype.obj :  .AUTODEPEND ..\src\mimetic\contenttype.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_fieldparam.obj :  .AUTODEPEND ..\src\mimetic\fieldparam.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_header.obj :  .AUTODEPEND ..\src\mimetic\header.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_message.obj :  .AUTODEPEND ..\src\mimetic\message.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mimeentity.obj :  .AUTODEPEND ..\src\mimetic\mimeentity.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mimeversion.obj :  .AUTODEPEND ..\src\mimetic\mimeversion.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_strutils.obj :  .AUTODEPEND ..\src\mimetic\strutils.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_utils.obj :  .AUTODEPEND ..\src\mimetic\utils.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_version.obj :  .AUTODEPEND ..\src\mimetic\version.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_base64.obj :  .AUTODEPEND ..\src\mimetic\codec\base64.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_qp.obj :  .AUTODEPEND ..\src\mimetic\codec\qp.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_address.obj :  .AUTODEPEND ..\src\mimetic\rfc822\address.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_addresslist.obj :  .AUTODEPEND ..\src\mimetic\rfc822\addresslist.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_datetime.obj :  .AUTODEPEND ..\src\mimetic\rfc822\datetime.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_field.obj :  .AUTODEPEND ..\src\mimetic\rfc822\field.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_fieldvalue.obj :  .AUTODEPEND ..\src\mimetic\rfc822\fieldvalue.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_group.obj :  .AUTODEPEND ..\src\mimetic\rfc822\group.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mailbox.obj :  .AUTODEPEND ..\src\mimetic\rfc822\mailbox.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_mailboxlist.obj :  .AUTODEPEND ..\src\mimetic\rfc822\mailboxlist.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_messageid.obj :  .AUTODEPEND ..\src\mimetic\rfc822\messageid.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rheader.obj :  .AUTODEPEND ..\src\mimetic\rfc822\rheader.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_lib_rmessage.obj :  .AUTODEPEND ..\src\mimetic\rfc822\rmessage.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxemail.obj :  .AUTODEPEND ..\src\wxemail.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxmime.obj :  .AUTODEPEND ..\src\wxmime.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxcmdprot.obj :  .AUTODEPEND ..\src\utils\wxcmdprot.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtp.obj :  .AUTODEPEND ..\src\wxsmtp.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxmd5.obj :  .AUTODEPEND ..\src\utils\wxmd5.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxstates.obj :  .AUTODEPEND ..\src\wxstates.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_charsetconv.obj :  .AUTODEPEND ..\src\codec\charsetconv.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rfc2047.obj :  .AUTODEPEND ..\src\codec\rfc2047.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rfc2231.obj :  .AUTODEPEND ..\src\codec\rfc2231.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtp.obj :  .AUTODEPEND ..\src\smtp\wxsmtp.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtpemail.obj :  .AUTODEPEND ..\src\smtp\wxsmtpemail.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxsmtpstates.obj :  .AUTODEPEND ..\src\smtp\wxsmtpstates.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxpop3.obj :  .AUTODEPEND ..\src\pop3\wxpop3.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_wxpop3states.obj :  .AUTODEPEND ..\src\pop3\wxpop3states.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_body.obj :  .AUTODEPEND ..\src\mimetic\body.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentdescription.obj :  .AUTODEPEND ..\src\mimetic\contentdescription.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentdisposition.obj :  .AUTODEPEND ..\src\mimetic\contentdisposition.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contentid.obj :  .AUTODEPEND ..\src\mimetic\contentid.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contenttransferencoding.obj :  .AUTODEPEND ..\src\mimetic\contenttransferencoding.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_contenttype.obj :  .AUTODEPEND ..\src\mimetic\contenttype.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_fieldparam.obj :  .AUTODEPEND ..\src\mimetic\fieldparam.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_header.obj :  .AUTODEPEND ..\src\mimetic\header.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_message.obj :  .AUTODEPEND ..\src\mimetic\message.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mimeentity.obj :  .AUTODEPEND ..\src\mimetic\mimeentity.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mimeversion.obj :  .AUTODEPEND ..\src\mimetic\mimeversion.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_strutils.obj :  .AUTODEPEND ..\src\mimetic\strutils.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_utils.obj :  .AUTODEPEND ..\src\mimetic\utils.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_version.obj :  .AUTODEPEND ..\src\mimetic\version.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_base64.obj :  .AUTODEPEND ..\src\mimetic\codec\base64.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_qp.obj :  .AUTODEPEND ..\src\mimetic\codec\qp.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_address.obj :  .AUTODEPEND ..\src\mimetic\rfc822\address.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_addresslist.obj :  .AUTODEPEND ..\src\mimetic\rfc822\addresslist.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_datetime.obj :  .AUTODEPEND ..\src\mimetic\rfc822\datetime.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_field.obj :  .AUTODEPEND ..\src\mimetic\rfc822\field.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_fieldvalue.obj :  .AUTODEPEND ..\src\mimetic\rfc822\fieldvalue.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_group.obj :  .AUTODEPEND ..\src\mimetic\rfc822\group.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mailbox.obj :  .AUTODEPEND ..\src\mimetic\rfc822\mailbox.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_mailboxlist.obj :  .AUTODEPEND ..\src\mimetic\rfc822\mailboxlist.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_messageid.obj :  .AUTODEPEND ..\src\mimetic\rfc822\messageid.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rheader.obj :  .AUTODEPEND ..\src\mimetic\rfc822\rheader.cxx
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsmtp_dll_rmessage.obj :  .AUTODEPEND ..\src\mimetic\rfc822\rmessage.cxx
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSMTP_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail_SendMail.obj :  .AUTODEPEND ..\samples\SendMail\SendMail.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(SENDMAIL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\Pop3Client_Pop3Client.obj :  .AUTODEPEND ..\samples\Pop3Client\Pop3Client.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(POP3CLIENT_CXXFLAGS) $<
 

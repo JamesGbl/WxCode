@@ -62,273 +62,596 @@
 #endif
 
 #include "wx/wxemail.h"
-#include "wx/wxbase64.h"
 
+#include "wx/codec/rfc2231.h"
+#include "wx/codec/rfc2047.h"
 
-wxEmailMessage::wxEmailMessage(const wxString& subject, const wxString& text, const wxString& from)
+#include <wx/codec/charsetconv.h>
+
+#define CURRENT_FILE_ID 1
+
+wxEmailMessage::wxEmailMessage(const Address& from,
+                               const wxString& subject,
+                               const wxString& text)
                :m_subject(subject),
                 m_text(text),
-                m_from(from)
-{}
+                m_from(from),
+                has_html_alternative(false),
+                has_message_MIME_content(false)
+{
+   //TODO : il faufrait le coder dans l'envoi smtp
+   message_id.is_unique = false;
+   message_id.id = _T("");
+   m_date_time = wxDateTime::Now();
+}
 
-const wxString& wxEmailMessage::GetFrom()
+void wxEmailMessage::MIMEExtractBody(mimetic::MimeEntity& entity, std::ostream& stream, bool shall_recode)
+{
+   /* Try to get type */
+   wxString encoding_type;
+   if (entity.header().hasField("Content-Transfer-Encoding"))
+   {
+      encoding_type = wxString(entity.header().field("Content-Transfer-Encoding").value().c_str(), wxConvLocal);
+   }
+
+   /* Get charset */
+   wxString charset = wxRfc2231::Decode(entity.header().contentType().paramList(),
+                                        _T("charset"));
+
+   /* Try identifying the type */
+   if (encoding_type.CmpNoCase(_T("7bit")) == 0)
+   {
+      /* No need to perform conversion : everything is ASCII character... */
+      stream << entity.body().c_str();
+   }
+   else if (encoding_type.CmpNoCase(_T("8bit")) == 0)
+   {
+      /* Extract content */
+      wxString result = wxCharsetConverter::ConvertCharset(wxString(entity.body().c_str(), wxConvLocal), charset);
+
+      /* Send it to stream */
+      stream << result.mb_str(wxConvLocal);
+   }
+   else if (encoding_type.CmpNoCase(_T("base64")) == 0)
+   {
+      /* Instanciate decoder */
+      mimetic::Base64::Decoder b64;
+
+      if (shall_recode)
+      {
+         /* Decode base 64 data */
+         std::vector<unsigned char> buffer;
+         mimetic::decode(entity.body().begin(),
+                         entity.body().end(),
+                         b64,
+                         std::back_inserter(buffer));
+         buffer.push_back(0);
+
+         /* Flush content in a string */
+         wxString content((const char*)&buffer[0], wxConvLocal);
+
+         /* Convert it to proper charset */
+         wxString result = wxCharsetConverter::ConvertCharset(content, charset);
+
+         /* Send it to stream */
+         stream << result.mb_str(wxConvLocal);
+      }
+      else
+      {
+         std::vector<unsigned char> buffer;
+
+         mimetic::decode(entity.body().begin(),
+                         entity.body().end(),
+                         b64,
+                         std::back_inserter(buffer));
+       buffer.push_back(0);
+
+         for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()-1]; p++)
+         {
+            stream << *p;
+         }
+      }
+   }
+   else if (encoding_type.CmpNoCase(_T("quoted-printable")) == 0)
+   {
+      /* Instanciate decoder */
+      mimetic::QP::Decoder qp;
+
+      /* Decode base 64 data */
+      std::vector<unsigned char> buffer;
+      mimetic::decode(entity.body().begin(),
+                      entity.body().end(),
+                      qp,
+                      std::back_inserter(buffer));
+
+      /* Flush content in a string */
+      wxString content;
+      for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()]; p++)
+      {
+         content.Append(*p, 1);
+      }
+
+      /* Convert it to proper charset */
+      wxString result = wxCharsetConverter::ConvertCharset(content, charset);
+
+      /* Send it to stream */
+      stream << result.mb_str(wxConvLocal);
+   }
+   else if (encoding_type.CmpNoCase(_T("binary")) == 0)
+   {
+      /* Does not seem to be a valid encoding scheme in current MIME definition -> we will return data as is... */
+      stream << entity.body().c_str();
+   }
+   else if (encoding_type.CmpNoCase(_T("ietf-token")) == 0)
+   {
+      //TODO : to implement : ietf-token format
+      stream << _T("Not supported type ") << encoding_type.c_str();
+   }
+   else if (encoding_type.CmpNoCase(_T("x-token")) == 0)
+   {
+      //TODO : to implement : x-token format
+      stream << _T("Not supported type ") << encoding_type.c_str();
+   }
+   else
+   {
+      /* Not supported encoding type -> raise error */
+      //TODO... voir ce qu'on fait dans ce cas là...
+      stream << _T("Not supported type ") << encoding_type.c_str();
+   }
+}
+
+void wxEmailMessage::MIMEExtractAll(mimetic::MimeEntity& entity, bool& found_plain_text_body, bool& found_html_body)
+{
+   mimetic::Header& h = entity.header();                   // get header object
+
+   if (!h.contentType().isMultipart())
+   {
+      /* get type/subtype */
+      wxString type_subtype = wxString(h.contentType().type().c_str(), wxConvLocal) << _T("/") <<
+            wxString(h.contentType().subtype().c_str(), wxConvLocal);
+      if ((type_subtype.CmpNoCase(_T("text/plain")) == 0) &&
+          (!found_plain_text_body))
+      {
+         found_plain_text_body = true;
+
+         std::ostringstream os;
+         MIMEExtractBody(entity, os, true);
+
+         m_text = wxString(os.str().c_str(), wxConvLocal);
+      }
+      else if ((type_subtype.CmpNoCase(_T("text/html")) == 0) &&
+               (!found_html_body))
+      {
+         found_html_body = true;
+
+         std::ostringstream os;
+         MIMEExtractBody(entity, os, true);
+
+         has_html_alternative = true;
+         html_alternative = wxString(os.str().c_str(), wxConvLocal);
+      }
+      else
+      {
+         /* We will consider this as an attachment */
+
+         /* retrieve attachment name */
+         wxString original_name = wxRfc2231::Decode(entity.header().contentDisposition().paramList(),
+                                                    _T("filename"));
+
+         /* Get temporary file with this name */
+         wxString temp_file_name = wxFileName::CreateTempFileName(original_name);
+
+         /* Open the file as an std output stream */
+         std::ofstream file_stream;
+         file_stream.open(temp_file_name.c_str(),
+                          std::ios_base::out|
+                             std::ios_base::trunc|
+                             std::ios_base::binary);
+
+         /* Extract content in file */
+         MIMEExtractBody(entity, file_stream, false);
+
+         /* Close the file */
+         file_stream.close();
+
+         /* flush attachment */
+         AddAttachment(temp_file_name, original_name, wxString(entity.header().contentId().str().c_str(), wxConvLocal).AfterFirst('<').BeforeLast('>'));
+      }
+   }
+
+   mimetic::MimeEntityList& parts = entity.body().parts(); // list of sub entities obj
+   // cycle on sub entities list and print info of every item
+   mimetic::MimeEntityList::iterator mbit = parts.begin(), meit = parts.end();
+   for(; mbit != meit; ++mbit)
+   {
+      MIMEExtractAll(**mbit, found_plain_text_body, found_html_body);
+   }
+}
+
+wxEmailMessage::wxEmailMessage(const wxString& message_content, const MessageId& message_id, bool shall_extract_full_message)
+               :message_id(message_id),
+                has_html_alternative(false),
+                has_message_MIME_content(true),
+                message_MIME_content(message_content)
+{
+   LoadMimeContent(shall_extract_full_message);
+}
+
+void wxEmailMessage::LoadMimeContent(bool shall_extract_full_message)
+{
+   /* Get the mimeentity */
+   std::string stream_str((const char*)message_MIME_content.mb_str(wxConvLocal));
+   std::istringstream stream(stream_str);
+   mimetic::MimeEntity entity(stream);
+
+   /* Get from */
+   if (entity.header().from().size() > 0)
+   {
+      m_from = Address(wxString(entity.header().from().front().mailbox().c_str(), wxConvLocal)+_T("@")+wxString(entity.header().from().front().domain().c_str(), wxConvLocal),
+                       wxRfc2047::Decode(wxString(entity.header().from().front().label().c_str(), wxConvLocal)));
+   }
+
+   /* Get subject */
+   m_subject = wxRfc2047::Decode(wxString(entity.header().subject().c_str(), wxConvLocal));
+
+   /* Extract date */
+   if (entity.header().hasField("Date"))
+   {
+      /* Try RFC 822 format*/
+      if (m_date_time.ParseRfc822Date(wxString(entity.header().field("Date").value().c_str(), wxConvLocal)) == NULL)
+      {
+         /* If it fails, try a less-restrictive format */
+         if (m_date_time.ParseDateTime(wxString(entity.header().field("Date").value().c_str(), wxConvLocal)) == NULL)
+         {
+            /* OK, set current time then... */
+            m_date_time = wxDateTime::Now();
+         }
+      }
+   }
+   else
+   {
+      m_date_time = wxDateTime::Now();
+   }
+
+   /* Extract all to addresses */
+   std::vector<mimetic::Address>::iterator to_it;
+   for (to_it=entity.header().to().begin(); to_it != entity.header().to().end(); to_it++)
+   {
+      AddTo(Address(wxString(to_it->mailbox().mailbox().c_str(), wxConvLocal)+_T("@")+wxString(to_it->mailbox().domain().c_str(), wxConvLocal),
+                    wxRfc2047::Decode(wxString(to_it->mailbox().label().c_str(), wxConvLocal))));
+   }
+
+   /* Extract all cc addresses */
+   std::vector<mimetic::Address>::iterator cc_it;
+   for (cc_it=entity.header().cc().begin(); cc_it != entity.header().cc().end(); cc_it++)
+   {
+      AddCc(Address(wxString(cc_it->mailbox().mailbox().c_str(), wxConvLocal)+_T("@")+wxString(cc_it->mailbox().domain().c_str(), wxConvLocal),
+                    wxRfc2047::Decode(wxString(cc_it->mailbox().label().c_str(), wxConvLocal))));
+   }
+
+   /* Extract all bcc addresses */
+   std::vector<mimetic::Address>::iterator bcc_it;
+   for (bcc_it=entity.header().bcc().begin(); bcc_it != entity.header().bcc().end(); bcc_it++)
+   {
+      AddBcc(Address(wxString(bcc_it->mailbox().mailbox().c_str(), wxConvLocal)+_T("@")+wxString(bcc_it->mailbox().domain().c_str(), wxConvLocal),
+                     wxRfc2047::Decode(wxString(bcc_it->mailbox().label().c_str(), wxConvLocal))));
+   }
+
+   /* Check if we shall extract full message */
+   if (shall_extract_full_message)
+   {
+      /* Parse all parts of this mail */
+      bool found_plain_text_body = false;
+      bool found_html_body = false;
+      MIMEExtractAll(entity, found_plain_text_body, found_html_body);
+   }
+}
+
+const wxEmailMessage::Address& wxEmailMessage::GetFrom() const
 {
    return m_from;
 }
 
-void wxEmailMessage::AddRecipient(const wxString& address)
+void wxEmailMessage::AddTo(const Address& address)
 {
-   m_rcptArray.Add(address);
-   m_rcptAttempt.Add(address);
+   m_toArray.push_back(address);
 }
 
-void wxEmailMessage::AddTo(const wxString& address)
+void wxEmailMessage::AddCc(const Address& address)
 {
-   m_toArray.Add(address);
-   m_rcptArray.Add(address);
-   m_rcptAttempt.Add(address);
+   m_ccArray.push_back(address);
 }
 
-void wxEmailMessage::AddCc(const wxString& address)
+void wxEmailMessage::AddBcc(const Address& address)
 {
-   m_ccArray.Add(address);
-   m_rcptArray.Add(address);
-   m_rcptAttempt.Add(address);
+   m_bccArray.push_back(address);
 }
 
-void wxEmailMessage::AddBcc(const wxString& address)
+void wxEmailMessage::AddAlternativeHtmlBody(const wxString data)
 {
-   m_bccArray.Add(address);
-   m_rcptArray.Add(address);
-   m_rcptAttempt.Add(address);
+   has_html_alternative = true;
+   html_alternative = data;
 }
 
-//
-// this gets called with results of RCPT command, which are per-recipient
-//
-void wxEmailMessage::OnRecipientStatus(const wxString &recipient, disposition d)
+void wxEmailMessage::AddAttachment(const wxFileName& fileName, const wxString name, const wxString& mime_id)
 {
-   //
-   // yank from attempt list, place in appropriate disposition list
-   //
-   int goner = m_rcptAttempt.Index(recipient);
-   wxASSERT(goner != wxNOT_FOUND);
-   m_rcptAttempt.RemoveAt(goner, 1);
-
-   m_rcptDisp[d].Add(recipient);
-}
-
-//
-//
-// Here we get the final disposition of the message transaction with the
-// mail server. This enables us to adjust the per-recipient status and
-// prepare for the next retry (if any)
-//
-// Fail:
-// m_rcptAttempt  -> Fail
-// [Accept] -> Fail
-// [Retry]     -> m_rcptAttempt
-//
-// Retry:
-// m_rcptAttempt  -> m_rcptAttempt
-// [Retry]     -> m_rcptAttempt
-// [Accept] -> m_rcptAttempt
-//
-// Succeed:
-// m_rcptAttempt  -> m_rcptAttempt  // (not attempted yet)
-// [Accept] -> Succeed
-// [Retry]     -> m_rcptAttempt
-//
-// Accept: Not valid
-//
-void wxEmailMessage::OnMessageStatus(disposition d)
-{
-   switch (d)
+   /* Check if file exists */
+   if (!fileName.FileExists())
    {
+      return;
+   }
 
-      case dispFail:
-      {
-         for (unsigned int i = 0; i < m_rcptAttempt.GetCount(); ++i)
-         {
-            m_rcptDisp[dispFail].Add(m_rcptAttempt.Item(i));
-         }
-         m_rcptAttempt.Empty();
-
-         for (unsigned int i = 0; i < m_rcptDisp[dispAccept].GetCount(); ++i)
-         {
-            m_rcptDisp[dispFail].Add(m_rcptDisp[dispAccept].Item(i));
-         }
-         m_rcptDisp[dispAccept].Empty();
-
-         // m_rcptAttempt emptied above
-         for (unsigned int i = 0; i < m_rcptDisp[dispRetry].GetCount(); ++i)
-         {
-            m_rcptAttempt.Add(m_rcptDisp[dispRetry].Item(i));
-         }
-         m_rcptDisp[dispRetry].Empty();
-
+   /* extract file content */
+   wxFileInputStream stream(fileName.GetFullPath());
+   std::vector<unsigned char> content;
+   while (1)
+   {
+      int c = stream.GetC();
+      if (c == wxEOF)
          break;
-      }
+      content.push_back(c);
+   }
 
-      case dispRetry:
-      {
-         for (unsigned int i = 0; i < m_rcptDisp[dispRetry].GetCount(); ++i)
-         {
-            m_rcptAttempt.Add(m_rcptDisp[dispRetry].Item(i));
-         }
-         m_rcptDisp[dispRetry].Empty();
+   /* Flush file content */
+   attachments_contents.push_back(content);
 
-         for (unsigned int i = 0; i < m_rcptDisp[dispAccept].GetCount(); ++i)
-         {
-            m_rcptAttempt.Add(m_rcptDisp[dispAccept].Item(i));
-         }
-         m_rcptDisp[dispAccept].Empty();
+   /* Flush the name */
+   if (name.IsEmpty())
+   {
+      attachments_names.push_back(fileName.GetFullPath());
+   }
+   else
+   {
+      attachments_names.push_back(name);
+   }
 
-         break;
-      }
+   /* Flush the MIME id */
+   attachments_MIME_ids.push_back(mime_id);
+}
 
-      case dispSucceed:
-      {
-         for (unsigned int i = 0; i < m_rcptDisp[dispAccept].GetCount(); ++i)
-         {
-            m_rcptDisp[dispSucceed].Add(m_rcptDisp[dispAccept].Item(i));
-         }
-         m_rcptDisp[dispAccept].Empty();
+void wxEmailMessage::ExtractAttachment(const wxFileName& fileName, unsigned long id) const
+{
+   wxFileOutputStream stream(fileName.GetFullPath());
 
-         for (unsigned int i = 0; i < m_rcptDisp[dispRetry].GetCount(); ++i)
-         {
-            m_rcptAttempt.Add(m_rcptDisp[dispRetry].Item(i));
-         }
-         m_rcptDisp[dispRetry].Empty();
-
-         break;
-      }
-
-      default:
-         wxASSERT(0);
-         break;
+   std::vector<unsigned char>::const_iterator it;
+   for (it = attachments_contents.at(id).begin(); it != attachments_contents.at(id).end(); it++)
+   {
+      stream.PutC(*it);
    }
 }
 
-void wxEmailMessage::AddFile(const wxFileName& fileName,
-                             const wxString WXUNUSED(mimeMainType),
-                             const wxString WXUNUSED(mimeSubType))
+unsigned long wxEmailMessage::GetSize() const
 {
-   // add new entry
-   m_mimeParts.Add(wxMimePart(fileName));
+   /* check if we have MIME content */
+   if (has_message_MIME_content)
+   {
+      return message_MIME_content.size();
+   }
+   else
+   {
+      unsigned long size = m_subject.size() +
+                           m_text.size() +
+                           m_from.GetAddress().size()+
+                           m_from.GetName().size()+
+                           html_alternative.size();
+
+      std::list<Address>::const_iterator it;
+      for (it = m_toArray.begin(); it != m_toArray.end(); it++)
+         size += it->GetAddress().size() + it->GetName().size();
+      for (it = m_ccArray.begin(); it != m_ccArray.end(); it++)
+         size += it->GetAddress().size() + it->GetName().size();
+      for (it = m_bccArray.begin(); it != m_bccArray.end(); it++)
+         size += it->GetAddress().size() + it->GetName().size();
+
+      std::vector<std::vector<unsigned char> >::const_iterator it_2;
+      for (it_2 = attachments_contents.begin(); it_2 != attachments_contents.end(); it_2++)
+         size += it_2->size();
+
+      return size;
+   }
 }
 
-void wxEmailMessage::AddAlternative(const wxString data,
-                                    const wxString mimeMainType,
-                                    const wxString mimeSubType)
+void wxEmailMessage::SaveStringInFile(wxFileOutputStream& stream, const wxString& str)
 {
-   // Add alternative (normally html, but might there be others?
-   m_mimeAlternatives.Add(wxMimePart(data,TRUE,mimeMainType,mimeSubType));
+   unsigned long size = str.size()+1;
+   stream.Write(&size, sizeof(size));
+   stream.Write(str.c_str(), size);
 }
 
-void wxEmailMessage::Encode(wxOutputStream& out)
+wxString wxEmailMessage::LoadStringFromFile(wxFileInputStream& stream)
 {
-   // TODO: use only MIME if neccessary
-   wxString header;
-   wxString cr("\x00d\x00a");
-   //wxString cr("/n");
-   // TODO: calculate a more random boundary
+   unsigned long size;
+   stream.Read(&size, sizeof(size));
+   char* buffer = new char[size];
+   stream.Read(buffer, size);
+   wxString result(buffer, wxConvLocal);
+   delete[] buffer;
+   return result;
+}
 
-   wxString timestr = wxDateTime::Now().Format("%H%m%M%d%S%w%W");
-   wxString boundary = "---_" + timestr + "-boundary-" + timestr
-                       + "_---";
-   wxString boundary2 = "---_" + timestr + "-02-boundary-02-"
-                        + timestr + "_---";
-   wxString boundarySep = "--" + boundary + cr;
-   wxString boundarySep2 = "--" + boundary2 + cr;
+void wxEmailMessage::SaveToFile(const wxFileName& file_name)
+{
+   /* open the output stream */
+   wxFileOutputStream stream(file_name.GetFullPath());
 
-   header << "From: " << m_from << cr;
-   if(m_toArray.GetCount() > 0)
+   /* Put the current version ID */
+   unsigned long version_id = CURRENT_FILE_ID;
+   stream.Write(&version_id, sizeof(version_id));
+
+   /* put content of flag telling if MIME content exists */
+   stream.Write(&has_message_MIME_content, sizeof(has_message_MIME_content));
+
+   /* Check which version shall be saved */
+   if (has_message_MIME_content)
    {
-      header << "To: ";
-      for(unsigned int i = 0; i < m_toArray.GetCount() ; i++)
+      /* We simply load MIME message content */
+      SaveStringInFile(stream, message_MIME_content);
+   }
+   else
+   {
+      /* We flush all elements */
+      SaveStringInFile(stream, m_subject);
+      SaveStringInFile(stream, m_text);
+      SaveStringInFile(stream, m_from.GetAddress());
+      SaveStringInFile(stream, m_from.GetName());
+
+      SaveStringInFile(stream, m_date_time.Format(_T("%a, %d %b %Y %H:%M:%S %z")));
+
+      unsigned long nb_elements = m_toArray.size();
+      stream.Write(&nb_elements, sizeof(nb_elements));
+      std::list<Address>::const_iterator it;
+      for (it = m_toArray.begin(); it != m_toArray.end(); it++)
       {
-         if(i > 0)
-         {
-            header << "," << cr;
-         }
-         header << m_toArray[i];
+         SaveStringInFile(stream, it->GetAddress());
+         SaveStringInFile(stream, it->GetName());
       }
-      header << cr;
-   }
 
-   if(m_ccArray.GetCount() > 0)
-   {
-      header << "Cc: ";
-      for(unsigned int i = 0; i < m_ccArray.GetCount() ; i++)
+      nb_elements = m_ccArray.size();
+      stream.Write(&nb_elements, sizeof(nb_elements));
+      for (it = m_ccArray.begin(); it != m_ccArray.end(); it++)
       {
-         if(i > 0)
-         {
-            header << "," << cr;
-         }
-         header << m_ccArray[i];
+         SaveStringInFile(stream, it->GetAddress());
+         SaveStringInFile(stream, it->GetName());
       }
-      header << cr;
-   }
 
-   if(m_bccArray.GetCount() > 0)
-   {
-      header << "Cc: ";
-      for(unsigned int i = 0; i < m_bccArray.GetCount() ; i++)
+      nb_elements = m_bccArray.size();
+      stream.Write(&nb_elements, sizeof(nb_elements));
+      for (it = m_bccArray.begin(); it != m_bccArray.end(); it++)
       {
-         if(i > 0)
-         {
-            header << "," << cr;
-         }
-         header << m_bccArray[i];
+         SaveStringInFile(stream, it->GetAddress());
+         SaveStringInFile(stream, it->GetName());
       }
-      header << cr;
+
+      stream.Write(&has_html_alternative, sizeof(has_html_alternative));
+      SaveStringInFile(stream, html_alternative);
+
+      nb_elements = attachments_names.size();
+      stream.Write(&nb_elements, sizeof(nb_elements));
+
+      std::vector<wxString>::const_iterator it2;
+      for (it2 = attachments_names.begin(); it2 != attachments_names.end(); it2++)
+      {
+         SaveStringInFile(stream, *it2);
+      }
+
+      for (it2 = attachments_MIME_ids.begin(); it2 != attachments_MIME_ids.end(); it2++)
+      {
+         SaveStringInFile(stream, *it2);
+      }
+
+      std::vector<std::vector<unsigned char> >::const_iterator it3;
+      for (it3 = attachments_contents.begin(); it3 != attachments_contents.end(); it3++)
+      {
+         unsigned long size = it3->size();
+         stream.Write(&size, sizeof(size));
+         for (unsigned long i = 0; i < size; i ++)
+         {
+            stream.PutC(it3->at(i));
+         }
+      }
+
+      stream.Write(&message_id.is_unique, sizeof(message_id.is_unique));
+      SaveStringInFile(stream, message_id.id);
    }
+}
 
-   header << "Subject: " << m_subject << cr  // TODO: add Date:
-          << "MIME-Version: 1.0" << cr
-          << "Content-Type: multipart/mixed; boundary=\"" << boundary << "\"" << cr
-          << cr
-          << cr
-          << "This is a multi-part message in MIME format" << cr
-          << cr
-          << boundarySep;
+wxEmailMessage wxEmailMessage::LoadFromFile(const wxFileName& file_name)
+{
+   /* create resulting message */
+   wxEmailMessage msg;
 
-   if(m_mimeAlternatives.GetCount() > 0)
+   /* open the output stream */
+   wxFileInputStream stream(file_name.GetFullPath());
+
+   /* Get the current version ID */
+   unsigned long version_id;
+   stream.Read(&version_id, sizeof(version_id));
+   if (version_id != CURRENT_FILE_ID)
    {
-      header << "Content-Type: multipart/alternative; boundary=\""
-             << boundary2 << "\"" << cr << cr << boundarySep2;
+      wxASSERT(0);
+      return msg;
    }
 
-   header << "Content-Type: text/plain; charset=iso-8859-1" << cr
-          << "Content-Transfer-Encoding: 8bit" << cr
-          << cr
-          << m_text << cr;
+   /* get content of flag telling if MIME content exists */
+   stream.Read(&msg.has_message_MIME_content, sizeof(msg.has_message_MIME_content));
 
-   // TODO: is it possible in MIME message to have a single '.' on a line?
-   //cout << ">>" << header << "<<" << endl;
-   out.Write((const char*) header.GetData(), header.Length());
-
-   for (size_t i = 0; i < m_mimeAlternatives.GetCount(); i++)
+   /* Check which version shall be saved */
+   if (msg.has_message_MIME_content)
    {
-      // cout << ">>" << boundarySep2 << "<<" << endl;
-      out.Write((const char*) boundarySep2.GetData(), boundarySep2.Length());
-      m_mimeAlternatives[i].Encode(out);
+      /* We simply load MIME message content */
+      msg.message_MIME_content = LoadStringFromFile(stream);
+
+      /* OK, now generate corresponding message */
+      msg.LoadMimeContent();
    }
-   if(m_mimeAlternatives.GetCount() > 0)
+   else
    {
-      header = "--" + boundary2 + "--" + cr;
-      //cout << ">>" << header << "<<" << endl;
-      out.Write((const char*) header.GetData(), header.Length());
+      /* We flush all elements */
+      msg.m_subject = LoadStringFromFile(stream);
+      msg.m_text = LoadStringFromFile(stream);
+      wxString from_addr = LoadStringFromFile(stream);
+      wxString from_name = LoadStringFromFile(stream);
+      msg.m_from = Address(from_addr, from_name);
+
+      wxString date_str = LoadStringFromFile(stream);
+      msg.m_date_time.ParseRfc822Date(date_str.c_str());
+
+      unsigned long nb_elements;
+      stream.Read(&nb_elements, sizeof(nb_elements));
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         wxString address = LoadStringFromFile(stream);
+         wxString name = LoadStringFromFile(stream);
+         msg.m_toArray.push_back(Address(address, name));
+      }
+
+      stream.Read(&nb_elements, sizeof(nb_elements));
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         wxString address = LoadStringFromFile(stream);
+         wxString name = LoadStringFromFile(stream);
+         msg.m_ccArray.push_back(Address(address, name));
+      }
+
+      stream.Read(&nb_elements, sizeof(nb_elements));
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         wxString address = LoadStringFromFile(stream);
+         wxString name = LoadStringFromFile(stream);
+         msg.m_bccArray.push_back(Address(address, name));
+      }
+
+      stream.Read(&msg.has_html_alternative, sizeof(msg.has_html_alternative));
+      msg.html_alternative = LoadStringFromFile(stream);
+
+      stream.Read(&nb_elements, sizeof(nb_elements));
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         wxString attachment_name = LoadStringFromFile(stream);
+         msg.attachments_names.push_back(attachment_name);
+      }
+
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         wxString attachment_mime_id = LoadStringFromFile(stream);
+         msg.attachments_MIME_ids.push_back(attachment_mime_id);
+      }
+
+      for (unsigned int i = 0; i < nb_elements; i++)
+      {
+         std::vector<unsigned char> att_content;
+         unsigned long att_content_size;
+         stream.Read(&att_content_size, sizeof(att_content_size));
+         for (unsigned int j = 0; j < att_content_size; j++)
+         {
+            att_content.push_back(stream.GetC());
+         }
+         msg.attachments_contents.push_back(att_content);
+      }
+
+      stream.Read(&msg.message_id.is_unique, sizeof(msg.message_id.is_unique));
+      msg.message_id.id = LoadStringFromFile(stream);
    }
 
-   for (size_t i = 0; i < m_mimeParts.GetCount(); i++)
-   {
-      //cout << ">>" << boundarySep << "<<" << endl;
-      out.Write((const char*) boundarySep.GetData(), boundarySep.Length());
-      m_mimeParts[i].Encode(out);
-   }
-   wxString footer = "--" + boundary + "--" + cr + "." + cr;  // TODO: perhaps moving the '.\r\n' sequence to another place
-   //cout << ">>" << footer << "<<" << endl;
-   out.Write((const char*) footer.GetData(), footer.Length());
+   return msg;
 }

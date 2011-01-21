@@ -2,7 +2,7 @@
 
  Project     : wxSMTP
  Author      : Brice André
- Description : Sample illustrating the useage of wxSMTP library
+ Description : Sample illustrating the usage of wxSMTP library
 
  VERSION INFORMATION:
  File    : $Source$
@@ -12,7 +12,6 @@
  Licence : wxWidgets licence
 
  History:
- $Log: wxcmdprot.cpp,v $
 
 ****************************************************************************/
 
@@ -33,8 +32,7 @@
 #include "wx/wx.h"
 #include "wx/busyinfo.h"
 
-#include "wx/wxsmtp.h"
-#include "wx/wxemail.h"
+#include "wx/smtp/wxsmtp.h"
 
 class App : public wxApp
 {
@@ -48,55 +46,107 @@ class App : public wxApp
 
       bool OnInit();
 
-      wxSMTP*         smtp;
-      wxEmailMessage* msg;
+      wxSMTP*             smtp;
 
       wxBusyInfo* wait_msg;
 
       static wxString RequestUser(const wxString& message, bool is_multiline);
+
+      static bool AskUser(const wxString& message);
 
    DECLARE_NO_COPY_CLASS(App)
 };
 
 IMPLEMENT_APP(App)
 
-class MySMTPListener : public wxSMTPListener
+class MySMTPListener : public wxSMTP::Listener
 {
    public:
       MySMTPListener(App& app) : app(app) {}
 
    private:
-      void OnRecipientStatus(const wxString& address, wxEmailMessage::disposition u)
+
+      virtual void OnMessageStatus(const wxEmailMessage::MessageId&           WXUNUSED(message_id),
+                                   SendingStatus_t                            status,
+                                   unsigned long                              WXUNUSED(nb_pending_messages),
+                                   unsigned long                              WXUNUSED(nb_retry_messages),
+                                   const std::list<wxEmailMessage::Address>&  rejected_addresses,
+                                   const std::list<wxEmailMessage::Address>&  accepted_addresses,
+                                   bool&                                      shall_retry,
+                                   unsigned long&                             WXUNUSED(retry_delay_s),
+                                   bool&                                      shall_stop)
       {
+         /* Do not perform retry */
+         shall_retry = false;
+         shall_stop = false;
+
+         /* Construct list of accepted addresses */
+         wxString accepted_list;
+         std::list<wxEmailMessage::Address>::const_iterator it = accepted_addresses.begin();
+         for (;it != accepted_addresses.end(); it++)
+         {
+            if (!accepted_list.empty())
+            {
+               accepted_list += _T(", ");
+            }
+            accepted_list += it->GetAddress();
+         }
+
+         /* Construct list of rejected addresses */
+         wxString rejected_list;
+         it = rejected_addresses.begin();
+         for (;it != rejected_addresses.end(); it++)
+         {
+            if (!rejected_list.empty())
+            {
+               rejected_list += _T(", ");
+            }
+            rejected_list += it->GetAddress();
+         }
+
          wxMessageDialog dlg(NULL,
-                             wxString("The message has been sent to recipient address ") << address << " with status " <<
-                             (u==wxEmailMessage::dispFail?"'Failed'":
-                                  u==wxEmailMessage::dispRetry?"'Retry'":
-                                       u==wxEmailMessage::dispAccept?"'Accept'":
-                                            u==wxEmailMessage::dispSucceed?"'Succeed'":"'Unknown'"),
-                             "Message Notification Status",
+                             wxString(_T("The message has been sent to recipients addresses (")) <<  accepted_list
+                                      << _T(").\n\nThe following addresses have been rejected : (") <<
+                                      rejected_list << _T(").\n\n The sending process finished with status ") <<
+                             (status==SendingSucceeded?_T("'SendingSucceeded'"):
+                                status==SendingTimeout?_T("'SendingTimeout'"):
+                                  status==SendingDisconected?_T("'SendingDisconected'"):
+                                    status==SendingMessageRejected?_T("'SendingMessageRejected'"):
+                                      status==SendingNoValidRecipient?_T("'SendingNoValidRecipient'"):
+                                        status==SendingRetry?_T("'SendingRetry'"):
+                                          status==SendingError?_T("'SendingError'"):_T("'Unknown'")),
+                             _T("Message Notification Status"),
                              wxOK);
+
          dlg.ShowModal();
       }
 
-      void OnMessageStatus(wxEmailMessage::disposition u, bool& halt)
+      void OnDisconnect(DisconnectionStatus_t status,
+                        unsigned long         WXUNUSED(nb_pending_messages),
+                        unsigned long         WXUNUSED(nb_retry_messages),
+                        bool&                 shall_retry,
+                        unsigned long&        WXUNUSED(retry_delay_s))
       {
-         /* Do not stop ongoing process */
-         halt = false;
-
+         /* Display dialog warning user that SMTP client is disconnected */
          wxMessageDialog dlg(NULL,
-                             wxString("The message has been sent with status ") <<
-                             (u==wxEmailMessage::dispFail?"'Failed'":
-                                  u==wxEmailMessage::dispRetry?"'Retry'":
-                                       u==wxEmailMessage::dispAccept?"'Accept'":
-                                            u==wxEmailMessage::dispSucceed?"'Succeed'":"'Unknown'"),
-                             "Message Notification Status",
+                             wxString(_T("The SMTP client is now disconnected from server with status ")) <<
+                             (status==StatusOK?_T("'StatusOK'"):
+                                status==StatusTimeout?_T("'StatusTimeout'"):
+                                  status==StatusDisconnect?_T("'StatusDisconnect'"):
+                                    status==StatusRetry?_T("'StatusRetry'"):
+                                      status==StatusError?_T("StatusError"):
+                                        status==StatusUserAbort?_T("StatusUserAbort"):_T("'Unknown'")),
+                             _T("Server Disconnection Notification Status"),
                              wxOK);
          dlg.ShowModal();
 
          /* notify app that mail is sent */
          app.MailSent();
+
+         /* Request no restart */
+         shall_retry = false;
       }
+
 
    App& app;
 };
@@ -104,14 +154,12 @@ class MySMTPListener : public wxSMTPListener
 App::App()
 {
    smtp = NULL;
-   msg = NULL;
    wait_msg =  NULL;
 }
 
 App::~App()
 {
    delete smtp;
-   delete msg;
 
    /* If we reach this point, wait shall be destroyed, but in cas of... */
    delete wait_msg;
@@ -120,22 +168,55 @@ App::~App()
 bool App::OnInit()
 {
    /* Instanciate the message */
-   msg = new wxEmailMessage(RequestUser("Please enter the subject of the mail :", false),
-                            RequestUser("Please enter the content of the mail :", true),
-                            RequestUser("Please enter the address of the sender of the mail :", false));
+   wxEmailMessage msg(RequestUser(_T("Please enter the address of the sender of the mail :"), false),
+                      RequestUser(_T("Please enter the subject of the mail :"), false),
+                      RequestUser(_T("Please enter the content of the mail :"), true));
 
    /* Add the recipients of the mail */
-   msg->AddTo(RequestUser("Please enter the address of the recipient of the mail :", false));
+   while (AskUser(_T("Do you want to add a TO recipient to the mail ?")))
+   {
+      msg.AddTo(RequestUser(_T("Please enter the address of the recipient of the mail :"), false));
+   }
+   while (AskUser(_T("Do you want to add a CC recipient to the mail ?")))
+   {
+      msg.AddCc(RequestUser(_T("Please enter the address of the recipient of the mail :"), false));
+   }
+   while (AskUser(_T("Do you want to add a BCC recipient to the mail ?")))
+   {
+      msg.AddBcc(RequestUser(_T("Please enter the address of the recipient of the mail :"), false));
+   }
+
+   /* Add all attachments */
+   while (AskUser(_T("Do you want to add an attachment to the mail ?")))
+   {
+      wxFileDialog dlg(NULL,
+                       _T("Choose a file"),
+                       _T(""),
+                       _T(""),
+                       _T("*.*"),
+                       wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+      if (dlg.ShowModal() == wxID_OK)
+      {
+         msg.AddAttachment(wxFileName(dlg.GetPath()));
+      }
+   }
+
+   /* Add alternate html format */
+   if (AskUser(_T("Do you want to add an alternate html format ?")))
+   {
+      msg.AddAlternativeHtmlBody(RequestUser(_T("Please enter the alternate html content :"), true).c_str());
+   }
 
    /* Instanciate the smtp client */
-   smtp = new wxSMTP(new MySMTPListener(*this));
-   smtp->SetHost(RequestUser("Please enter the smtp server address (ex: relay.skynet.be) :", false));
+   smtp = new wxSMTP(RequestUser(_T("Please enter the smtp server address (ex: relay.skynet.be) :"), false),
+                     25,
+                     new MySMTPListener(*this));
 
    /* instanciate a busy info window that will be displayed until the message will be sent*/
-   wait_msg = new wxBusyInfo("Please wait while your mail is being processed");
+   wait_msg = new wxBusyInfo(_T("Please wait while your mail is being processed"));
 
    /* Initiate the sending process */
-   smtp->Send(msg);
+   smtp->SendMessage(msg);
 
    /* Mail will be sent during normal event processing loop */
    return true;
@@ -158,9 +239,15 @@ wxString App::RequestUser(const wxString& message, bool is_multiline)
 
    wxTextEntryDialog dlg(NULL,
                          message,
-                         "Send Mail",
-                         "",
+                         _T("Send Mail"),
+                         _T(""),
                          style);
    dlg.ShowModal();
    return dlg.GetValue();
+}
+
+bool App::AskUser(const wxString& message)
+{
+   wxMessageDialog dlg(NULL, message, _T("Send Mail"), wxYES_NO);
+   return dlg.ShowModal()==wxID_YES;
 }

@@ -11,7 +11,7 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 datarootdir = @datarootdir@
 INSTALL = @INSTALL@
-SHARED_LD_CXX = @SHARED_LD_CXX@
+SHARED_LD_CC = @SHARED_LD_CC@
 LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
 SO_SUFFIX = @SO_SUFFIX@
@@ -19,14 +19,12 @@ DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
 LN_S = @LN_S@
 SETFILE = @SETFILE@
-PIC_FLAG = @PIC_FLAG@
 SONAME_FLAG = @SONAME_FLAG@
 STRIP = @STRIP@
 NM = @NM@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
-BK_DEPS = @BK_DEPS@
 srcdir = @srcdir@
 libdir = @libdir@
 DLLPREFIX = @DLLPREFIX@
@@ -35,11 +33,8 @@ LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 AROPTIONS = @AROPTIONS@
 RANLIB = @RANLIB@
-CXX = @CXX@
-CXXFLAGS = @CXXFLAGS@
-CPPFLAGS = @CPPFLAGS@
+CC = @CC@
 LDFLAGS = @LDFLAGS@
-WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
 WX_VERSION_MAJOR = @WX_VERSION_MAJOR@
 WX_VERSION_MINOR = @WX_VERSION_MINOR@
@@ -48,53 +43,14 @@ WX_PORT = @WX_PORT@
 ### Variables: ###
 
 DESTDIR = 
-WXSMTP_LIB_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
-WXSMTP_LIB_OBJECTS =  \
-	wxsmtp_lib_wxbase64.o \
-	wxsmtp_lib_wxcmdprot.o \
-	wxsmtp_lib_wxemail.o \
-	wxsmtp_lib_wxmime.o \
-	wxsmtp_lib_wxsmtp.o \
-	wxsmtp_lib_wxstates.o
-WXSMTP_LIB_HEADERS =  \
-	include/wx/wxbase64.h \
-	include/wx/wxcmdprot.h \
-	include/wx/wxemail.h \
-	include/wx/wxmime.h \
-	include/wx/wxsmtp.h \
-	include/wx/wxsmtpdef.h \
-	include/wx/wxstates.h
-WXSMTP_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXSMTP $(PIC_FLAG) \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-WXSMTP_DLL_OBJECTS =  \
-	wxsmtp_dll_wxbase64.o \
-	wxsmtp_dll_wxcmdprot.o \
-	wxsmtp_dll_wxemail.o \
-	wxsmtp_dll_wxmime.o \
-	wxsmtp_dll_wxsmtp.o \
-	wxsmtp_dll_wxstates.o
-WXSMTP_DLL_HEADERS =  \
-	include/wx/wxbase64.h \
-	include/wx/wxcmdprot.h \
-	include/wx/wxemail.h \
-	include/wx/wxmime.h \
-	include/wx/wxsmtp.h \
-	include/wx/wxsmtpdef.h \
-	include/wx/wxstates.h
-SENDMAIL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-SENDMAIL_OBJECTS =  \
-	SendMail_SendMail.o
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_0@CXXC = $(CXX)
-@COND_DEPS_TRACKING_1@CXXC = $(BK_DEPS) $(CXX)
 @COND_WX_DEBUG_0_WX_UNICODE_1@WXLIBPOSTFIX = u
 @COND_WX_DEBUG_1_WX_UNICODE_0@WXLIBPOSTFIX = d
 @COND_WX_DEBUG_1_WX_UNICODE_1@WXLIBPOSTFIX = ud
 COND_SHARED_0___wxsmtp_lib___depname = \
-	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	$(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 @COND_SHARED_0@__wxsmtp_lib___depname = $(COND_SHARED_0___wxsmtp_lib___depname)
 @COND_SHARED_0@__install_wxsmtp_lib___depname = install_wxsmtp_lib
 @COND_SHARED_0@__uninstall_wxsmtp_lib___depname = uninstall_wxsmtp_lib
@@ -103,7 +59,7 @@ COND_SHARED_0___wxsmtp_lib___depname = \
 @COND_SHARED_0@__uninstall_wxsmtp_lib_headers___depname = \
 @COND_SHARED_0@	uninstall_wxsmtp_lib_headers
 COND_SHARED_1___wxsmtp_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3)
+	$(srcdir)/../lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3)
 @COND_SHARED_1@__wxsmtp_dll___depname = $(COND_SHARED_1___wxsmtp_dll___depname)
 @COND_SHARED_1@__install_wxsmtp_dll___depname = install_wxsmtp_dll
 @COND_SHARED_1@__uninstall_wxsmtp_dll___depname = uninstall_wxsmtp_dll
@@ -111,10 +67,10 @@ COND_PLATFORM_MACOSX_1___wxsmtp_dll___macinstnamecmd = -install_name \
 	$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf2)
 @COND_PLATFORM_MACOSX_1@__wxsmtp_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___wxsmtp_dll___macinstnamecmd)
 COND_PLATFORM_OS2_1___wxsmtp_dll___importlib = -import \
-	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	$(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_PLATFORM_OS2_1@__wxsmtp_dll___importlib = $(COND_PLATFORM_OS2_1___wxsmtp_dll___importlib)
 COND_WINDOWS_IMPLIB_1___wxsmtp_dll___importlib = \
-	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	-Wl,--out-implib=$(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_WINDOWS_IMPLIB_1@__wxsmtp_dll___importlib = $(COND_WINDOWS_IMPLIB_1___wxsmtp_dll___importlib)
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__wxsmtp_dll___targetsuf2 \
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
@@ -137,8 +93,8 @@ COND_USE_SOVERLINUX_1___wxsmtp_dll___soname_flags = \
 COND_USE_SOVERSOLARIS_1___wxsmtp_dll___soname_flags = \
 	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3)
 @COND_USE_SOVERSOLARIS_1@__wxsmtp_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___wxsmtp_dll___soname_flags)
-COND_USE_SOTWOSYMLINKS_1___wxsmtp_dll___so_symlinks_cmd = (cd $(srcdir)/lib/; \
-	rm -f \
+COND_USE_SOTWOSYMLINKS_1___wxsmtp_dll___so_symlinks_cmd = (cd \
+	$(srcdir)/../lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf2); \
 	$(LN_S) \
@@ -148,8 +104,8 @@ COND_USE_SOTWOSYMLINKS_1___wxsmtp_dll___so_symlinks_cmd = (cd $(srcdir)/lib/; \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf2) \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX))
 @COND_USE_SOTWOSYMLINKS_1@__wxsmtp_dll___so_symlinks_cmd = $(COND_USE_SOTWOSYMLINKS_1___wxsmtp_dll___so_symlinks_cmd)
-COND_USE_SOVERSOLARIS_1___wxsmtp_dll___so_symlinks_cmd = (cd $(srcdir)/lib/; \
-	rm -f \
+COND_USE_SOVERSOLARIS_1___wxsmtp_dll___so_symlinks_cmd = (cd \
+	$(srcdir)/../lib/; rm -f \
 	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX); \
 	$(LN_S) \
 	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3) \
@@ -185,7 +141,7 @@ COND_USE_SOVERSOLARIS_1___wxsmtp_dll___so_symlinks_uninst_cmd = rm -f \
 @COND_PLATFORM_MAC_0@__SendMail___mac_setfilecmd = @true
 @COND_PLATFORM_MAC_1@__SendMail___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
-@COND_PLATFORM_MAC_1@	$(srcdir)/samples/SendMail/SendMail$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(srcdir)/../samples/SendMail/SendMail$(EXEEXT)
 COND_PLATFORM_OS2_1___SendMail___os2_emxbindcmd = $(NM) SendMail$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep SendMail$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__SendMail___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___SendMail___os2_emxbindcmd)
@@ -193,7 +149,7 @@ COND_PLATFORM_OS2_1___SendMail___os2_emxbindcmd = $(NM) SendMail$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: $(__wxsmtp_lib___depname) $(__wxsmtp_dll___depname) $(srcdir)/samples/SendMail/SendMail$(EXEEXT)
+all: $(__wxsmtp_lib___depname) $(__wxsmtp_dll___depname) $(srcdir)/../samples/SendMail/SendMail$(EXEEXT)
 
 install: $(__install_wxsmtp_lib___depname) $(__install_wxsmtp_lib_headers___depname) $(__install_wxsmtp_dll___depname) $(__install_wxsmtp_dll_headers___depname)
 
@@ -205,50 +161,50 @@ install-strip: install
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3)
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf2)
-	rm -f $(srcdir)/samples/SendMail/SendMail$(EXEEXT)
+	rm -f $(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	rm -f $(srcdir)/../lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3)
+	rm -f $(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	rm -f $(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/../lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf2)
+	rm -f $(srcdir)/../samples/SendMail/SendMail$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
-@COND_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(WXSMTP_LIB_OBJECTS)
+@COND_SHARED_0@$(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): 
 @COND_SHARED_0@	rm -f $@
-@COND_SHARED_0@	$(AR) $(AROPTIONS) $@ $(WXSMTP_LIB_OBJECTS)
+@COND_SHARED_0@	$(AR) $(AROPTIONS) $@
 @COND_SHARED_0@	$(RANLIB) $@
 
 @COND_SHARED_0@install_wxsmtp_lib: $(__wxsmtp_lib___depname)
 @COND_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
+@COND_SHARED_0@	$(INSTALL_DATA) $(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_SHARED_0@uninstall_wxsmtp_lib: 
 @COND_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 
 @COND_SHARED_0@install_wxsmtp_lib_headers: 
 @COND_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_SHARED_0@	for f in $(WXSMTP_LIB_HEADERS); do \
+@COND_SHARED_0@	for f in ; do \
 @COND_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_SHARED_0@	fi; \
-@COND_SHARED_0@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_SHARED_0@	$(INSTALL_DATA) $(srcdir)/../$$f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_0@	done
 
 @COND_SHARED_0@uninstall_wxsmtp_lib_headers: 
-@COND_SHARED_0@	for f in $(WXSMTP_LIB_HEADERS); do \
+@COND_SHARED_0@	for f in ; do \
 @COND_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_0@	done
 
-@COND_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3): $(WXSMTP_DLL_OBJECTS)
-@COND_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSMTP_DLL_OBJECTS)  -L$(srcdir)/lib $(__wxsmtp_dll___macinstnamecmd) $(__wxsmtp_dll___importlib) $(__wxsmtp_dll___soname_flags) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
+@COND_SHARED_1@$(srcdir)/../lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3): 
+@COND_SHARED_1@	$(SHARED_LD_CC) $@   -L$(srcdir)/../lib $(__wxsmtp_dll___macinstnamecmd) $(__wxsmtp_dll___importlib) $(__wxsmtp_dll___soname_flags) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_SHARED_1@	
 @COND_SHARED_1@	$(__wxsmtp_dll___so_symlinks_cmd)
 
 @COND_SHARED_1@install_wxsmtp_dll: $(__wxsmtp_dll___depname)
 @COND_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3) $(DESTDIR)$(libdir)
+@COND_SHARED_1@	$(INSTALL_DATA) $(srcdir)/../lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
+@COND_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/../lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxsmtp_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxsmtp_dll___so_symlinks_inst_cmd))
 
 @COND_SHARED_1@uninstall_wxsmtp_dll: 
@@ -258,65 +214,26 @@ distclean: clean
 
 @COND_SHARED_1@install_wxsmtp_dll_headers: 
 @COND_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_SHARED_1@	for f in $(WXSMTP_DLL_HEADERS); do \
+@COND_SHARED_1@	for f in ; do \
 @COND_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_SHARED_1@	fi; \
-@COND_SHARED_1@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
+@COND_SHARED_1@	$(INSTALL_DATA) $(srcdir)/../$$f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_1@	done
 
 @COND_SHARED_1@uninstall_wxsmtp_dll_headers: 
-@COND_SHARED_1@	for f in $(WXSMTP_DLL_HEADERS); do \
+@COND_SHARED_1@	for f in ; do \
 @COND_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_1@	done
 
-$(srcdir)/samples/SendMail/SendMail$(EXEEXT): $(SENDMAIL_OBJECTS) make_sample_dir_SendMail $(__wxsmtp_lib___depname)
-	$(CXX) -o $@ $(SENDMAIL_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__SendMail_RPATH) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+$(srcdir)/../samples/SendMail/SendMail$(EXEEXT): make_sample_dir_SendMail $(__wxsmtp_lib___depname)
+	$(CC) -o $@  -L$(srcdir)/../lib  -L$(srcdir)/../lib $(LDFLAGS_GUI) $(__SendMail_RPATH) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxsmtp-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
 	
 	$(__SendMail___mac_setfilecmd)
 	$(__SendMail___os2_emxbindcmd)
 
 make_sample_dir_SendMail: 
-	@mkdir -p $(srcdir)/samples/SendMail
-
-wxsmtp_lib_wxbase64.o: $(srcdir)/src/wxbase64.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxbase64.cpp
-
-wxsmtp_lib_wxcmdprot.o: $(srcdir)/src/wxcmdprot.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxcmdprot.cpp
-
-wxsmtp_lib_wxemail.o: $(srcdir)/src/wxemail.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxemail.cpp
-
-wxsmtp_lib_wxmime.o: $(srcdir)/src/wxmime.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxmime.cpp
-
-wxsmtp_lib_wxsmtp.o: $(srcdir)/src/wxsmtp.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxsmtp.cpp
-
-wxsmtp_lib_wxstates.o: $(srcdir)/src/wxstates.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(srcdir)/src/wxstates.cpp
-
-wxsmtp_dll_wxbase64.o: $(srcdir)/src/wxbase64.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxbase64.cpp
-
-wxsmtp_dll_wxcmdprot.o: $(srcdir)/src/wxcmdprot.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxcmdprot.cpp
-
-wxsmtp_dll_wxemail.o: $(srcdir)/src/wxemail.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxemail.cpp
-
-wxsmtp_dll_wxmime.o: $(srcdir)/src/wxmime.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxmime.cpp
-
-wxsmtp_dll_wxsmtp.o: $(srcdir)/src/wxsmtp.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxsmtp.cpp
-
-wxsmtp_dll_wxstates.o: $(srcdir)/src/wxstates.cpp
-	$(CXXC) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(srcdir)/src/wxstates.cpp
-
-SendMail_SendMail.o: $(srcdir)/samples/SendMail/SendMail.cpp
-	$(CXXC) -c -o $@ $(SENDMAIL_CXXFLAGS) $(srcdir)/samples/SendMail/SendMail.cpp
+	@mkdir -p $(srcdir)/../samples/SendMail
 
 
 # Include dependency info, if present:

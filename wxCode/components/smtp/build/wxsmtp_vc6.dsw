@@ -29,3 +29,18 @@ End Project Dependency
 
 ###############################################################################
 
+Project: "Pop3Client"=wxsmtp_vc6_Pop3Client.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name wxsmtp
+End Project Dependency
+}}}
+
+###############################################################################
+

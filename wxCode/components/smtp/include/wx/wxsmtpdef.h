@@ -13,6 +13,44 @@
 
 ****************************************************************************/
 
+/*!
+ *
+ * \if coders
+ * \mainpage wxSMTP Project (Developpers version)
+ * \else
+ * \mainpage wxSMTP Project
+ * \endif
+ *
+ * \section intro_sec Introduction
+ *
+ * wxSMTP is a wxWidgets contrib that allows sending and receiving e-mails.
+ *
+ * \if coders
+ *
+ * This documentation is intended for persons willing to develop/support the wxSMTP
+ * project. If you only manage to use this library, you should envisage reading
+ * the user-documentation
+ *
+ * \endif
+ *
+ * It currently supports two protocols :
+ * \li \c SMTP This protocol is used for sending e-mails
+ * \li \c POP3 This protocol allows retrieving mails from (almost) all mailboxes
+ *
+ * \section smtp SMTP
+ *
+ * In order to use the SMTP protocol, two main classes shall be used :
+ * \li \c ::wxSmtpEmailMessage represents an e-mail message ready to be sent via SMTP protocol
+ * \li \c ::wxSMTP is the class handling the communication with an SMTP server
+ *
+ * \section pop3 POP-3
+ *
+ * In order to use the POP3 protocol, two main classes shall be used :
+ * \li \c ::wxPOP3EmailMessage represents an e-mail message as received from the main server
+ * \li \c ::wxPOP3 is the class handling the communication with a POP3 server
+ */
+
+
 #ifndef _WX_SMTP_DEFS_H_
 #define _WX_SMTP_DEFS_H_
 
@@ -47,7 +85,7 @@
 //    variable:
 //          WXDLLIMPEXP_DATA_SMTP(int) myGlobalIntVar;
 //
-#ifdef WXMAKINGDLL_WXSMTP
+#ifdef WXMAKINGDLL_SMTP
     #define WXDLLIMPEXP_SMTP                    WXEXPORT
     #define WXDLLIMPEXP_DATA_SMTP(type)         WXEXPORT type
 #elif defined(WXUSINGDLL)
@@ -56,6 +94,12 @@
 #else // not making nor using DLL
     #define WXDLLIMPEXP_SMTP
     #define WXDLLIMPEXP_DATA_SMTP(type)         type
+#endif
+
+#ifdef WX_SMTP_DEBUG
+#define WX_SMTP_PRINT_DEBUG(...) printf(__VA_ARGS__); fflush(stdout)
+#else
+#define WX_SMTP_PRINT_DEBUG(...)
 #endif
 
 #endif // _WX_SMTP_DEFS_H_

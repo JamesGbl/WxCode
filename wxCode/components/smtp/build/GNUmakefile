@@ -78,38 +78,182 @@ WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 WXSMTP_LIB_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXSMTP_LIB_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxbase64.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxcmdprot.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxemail.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxmime.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxcmdprot.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxmd5.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxstates.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtpemail.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtpstates.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxpop3.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxpop3states.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_body.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentdescription.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentdisposition.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentid.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contenttransferencoding.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contenttype.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_fieldparam.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_header.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_message.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mimeentity.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mimeversion.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_strutils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_utils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_version.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_base64.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_qp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_address.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_addresslist.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_datetime.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_field.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_fieldvalue.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_group.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mailbox.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mailboxlist.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_messageid.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_rheader.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_rmessage.o
 WXSMTP_LIB_HEADERS =  \
-	include/wx/wxbase64.h \
-	include/wx/wxcmdprot.h \
 	include/wx/wxemail.h \
-	include/wx/wxmime.h \
-	include/wx/wxsmtp.h \
 	include/wx/wxsmtpdef.h \
-	include/wx/wxstates.h
+	include/wx/utils/wxcmdprot.h \
+	include/wx/smtp/wxsmtp.h \
+	include/wx/smtp/wxsmtpemail.h \
+	include/wx/pop3/wxpop3.h \
+	include/wx/pop3/wxpop3email.h \
+	include/wx/mimetic/body.h \
+	include/wx/mimetic/circular_buffer.h \
+	include/wx/mimetic/contentdescription.h \
+	include/wx/mimetic/contentdisposition.h \
+	include/wx/mimetic/contentid.h \
+	include/wx/mimetic/contenttransferencoding.h \
+	include/wx/mimetic/contenttype.h \
+	include/wx/mimetic/fieldparam.h \
+	include/wx/mimetic/header.h \
+	include/wx/mimetic/message.h \
+	include/wx/mimetic/mimeentity.h \
+	include/wx/mimetic/mimeentitylist.h \
+	include/wx/mimetic/mimetic.h \
+	include/wx/mimetic/mimeversion.h \
+	include/wx/mimetic/streambufs.h \
+	include/wx/mimetic/strutils.h \
+	include/wx/mimetic/tokenizer.h \
+	include/wx/mimetic/tree.h \
+	include/wx/mimetic/utils.h \
+	include/wx/mimetic/version.h \
+	include/wx/mimetic/wxFileIterator.h \
+	include/wx/mimetic/codec/base64.h \
+	include/wx/mimetic/codec/code.h \
+	include/wx/mimetic/codec/codec.h \
+	include/wx/mimetic/codec/codec_base.h \
+	include/wx/mimetic/codec/codec_chain.h \
+	include/wx/mimetic/codec/other_codecs.h \
+	include/wx/mimetic/codec/qp.h \
+	include/wx/mimetic/parser/itparser.h \
+	include/wx/mimetic/parser/itparserdecl.h \
+	include/wx/mimetic/rfc822/address.h \
+	include/wx/mimetic/rfc822/addresslist.h \
+	include/wx/mimetic/rfc822/body.h \
+	include/wx/mimetic/rfc822/datetime.h \
+	include/wx/mimetic/rfc822/field.h \
+	include/wx/mimetic/rfc822/fieldvalue.h \
+	include/wx/mimetic/rfc822/group.h \
+	include/wx/mimetic/rfc822/header.h \
+	include/wx/mimetic/rfc822/mailbox.h \
+	include/wx/mimetic/rfc822/mailboxlist.h \
+	include/wx/mimetic/rfc822/message.h \
+	include/wx/mimetic/rfc822/messageid.h \
+	include/wx/mimetic/rfc822/rfc822.h
 WXSMTP_DLL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DWXMAKINGDLL_WXSMTP \
 	-fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXSMTP_DLL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxbase64.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxcmdprot.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxemail.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxmime.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxcmdprot.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxmd5.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxstates.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtpemail.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtpstates.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxpop3.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxpop3states.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_body.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentdescription.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentdisposition.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentid.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contenttransferencoding.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contenttype.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_fieldparam.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_header.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_message.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mimeentity.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mimeversion.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_strutils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_utils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_version.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_base64.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_qp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_address.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_addresslist.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_datetime.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_field.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_fieldvalue.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_group.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mailbox.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mailboxlist.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_messageid.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_rheader.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_rmessage.o
 WXSMTP_DLL_HEADERS =  \
-	include/wx/wxbase64.h \
-	include/wx/wxcmdprot.h \
 	include/wx/wxemail.h \
-	include/wx/wxmime.h \
-	include/wx/wxsmtp.h \
 	include/wx/wxsmtpdef.h \
-	include/wx/wxstates.h
+	include/wx/utils/wxcmdprot.h \
+	include/wx/smtp/wxsmtp.h \
+	include/wx/smtp/wxsmtpemail.h \
+	include/wx/pop3/wxpop3.h \
+	include/wx/pop3/wxpop3email.h \
+	include/wx/mimetic/body.h \
+	include/wx/mimetic/circular_buffer.h \
+	include/wx/mimetic/contentdescription.h \
+	include/wx/mimetic/contentdisposition.h \
+	include/wx/mimetic/contentid.h \
+	include/wx/mimetic/contenttransferencoding.h \
+	include/wx/mimetic/contenttype.h \
+	include/wx/mimetic/fieldparam.h \
+	include/wx/mimetic/header.h \
+	include/wx/mimetic/message.h \
+	include/wx/mimetic/mimeentity.h \
+	include/wx/mimetic/mimeentitylist.h \
+	include/wx/mimetic/mimetic.h \
+	include/wx/mimetic/mimeversion.h \
+	include/wx/mimetic/streambufs.h \
+	include/wx/mimetic/strutils.h \
+	include/wx/mimetic/tokenizer.h \
+	include/wx/mimetic/tree.h \
+	include/wx/mimetic/utils.h \
+	include/wx/mimetic/version.h \
+	include/wx/mimetic/wxFileIterator.h \
+	include/wx/mimetic/codec/base64.h \
+	include/wx/mimetic/codec/code.h \
+	include/wx/mimetic/codec/codec.h \
+	include/wx/mimetic/codec/codec_base.h \
+	include/wx/mimetic/codec/codec_chain.h \
+	include/wx/mimetic/codec/other_codecs.h \
+	include/wx/mimetic/codec/qp.h \
+	include/wx/mimetic/parser/itparser.h \
+	include/wx/mimetic/parser/itparserdecl.h \
+	include/wx/mimetic/rfc822/address.h \
+	include/wx/mimetic/rfc822/addresslist.h \
+	include/wx/mimetic/rfc822/body.h \
+	include/wx/mimetic/rfc822/datetime.h \
+	include/wx/mimetic/rfc822/field.h \
+	include/wx/mimetic/rfc822/fieldvalue.h \
+	include/wx/mimetic/rfc822/group.h \
+	include/wx/mimetic/rfc822/header.h \
+	include/wx/mimetic/rfc822/mailbox.h \
+	include/wx/mimetic/rfc822/mailboxlist.h \
+	include/wx/mimetic/rfc822/message.h \
+	include/wx/mimetic/rfc822/messageid.h \
+	include/wx/mimetic/rfc822/rfc822.h
 SENDMAIL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 SENDMAIL_OBJECTS =  \
@@ -309,40 +453,214 @@ endif
 make_sample_dir_SendMail: 
 	@mkdir -p ../samples/SendMail
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxbase64.o: ../src/wxbase64.cpp
-	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxcmdprot.o: ../src/wxcmdprot.cpp
-	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxemail.o: ../src/wxemail.cpp
 	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxmime.o: ../src/wxmime.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxcmdprot.o: ../src/utils/wxcmdprot.cpp
 	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtp.o: ../src/wxsmtp.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxmd5.o: ../src/utils/wxmd5.cpp
 	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxstates.o: ../src/wxstates.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtp.o: ../src/smtp/wxsmtp.cpp
 	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxbase64.o: ../src/wxbase64.cpp
-	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtpemail.o: ../src/smtp/wxsmtpemail.cpp
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxcmdprot.o: ../src/wxcmdprot.cpp
-	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxsmtpstates.o: ../src/smtp/wxsmtpstates.cpp
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxpop3.o: ../src/pop3/wxpop3.cpp
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_wxpop3states.o: ../src/pop3/wxpop3states.cpp
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_body.o: ../src/mimetic/body.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentdescription.o: ../src/mimetic/contentdescription.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentdisposition.o: ../src/mimetic/contentdisposition.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contentid.o: ../src/mimetic/contentid.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contenttransferencoding.o: ../src/mimetic/contenttransferencoding.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_contenttype.o: ../src/mimetic/contenttype.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_fieldparam.o: ../src/mimetic/fieldparam.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_header.o: ../src/mimetic/header.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_message.o: ../src/mimetic/message.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mimeentity.o: ../src/mimetic/mimeentity.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mimeversion.o: ../src/mimetic/mimeversion.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_strutils.o: ../src/mimetic/strutils.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_utils.o: ../src/mimetic/utils.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_version.o: ../src/mimetic/version.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_base64.o: ../src/mimetic/codec/base64.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_qp.o: ../src/mimetic/codec/qp.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_address.o: ../src/mimetic/rfc822/address.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_addresslist.o: ../src/mimetic/rfc822/addresslist.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_datetime.o: ../src/mimetic/rfc822/datetime.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_field.o: ../src/mimetic/rfc822/field.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_fieldvalue.o: ../src/mimetic/rfc822/fieldvalue.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_group.o: ../src/mimetic/rfc822/group.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mailbox.o: ../src/mimetic/rfc822/mailbox.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_mailboxlist.o: ../src/mimetic/rfc822/mailboxlist.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_messageid.o: ../src/mimetic/rfc822/messageid.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_rheader.o: ../src/mimetic/rfc822/rheader.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_lib_rmessage.o: ../src/mimetic/rfc822/rmessage.cxx
+	$(CXX) -c -o $@ $(WXSMTP_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxemail.o: ../src/wxemail.cpp
 	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxmime.o: ../src/wxmime.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxcmdprot.o: ../src/utils/wxcmdprot.cpp
 	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtp.o: ../src/wxsmtp.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxmd5.o: ../src/utils/wxmd5.cpp
 	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxstates.o: ../src/wxstates.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtp.o: ../src/smtp/wxsmtp.cpp
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtpemail.o: ../src/smtp/wxsmtpemail.cpp
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxsmtpstates.o: ../src/smtp/wxsmtpstates.cpp
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxpop3.o: ../src/pop3/wxpop3.cpp
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_wxpop3states.o: ../src/pop3/wxpop3states.cpp
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_body.o: ../src/mimetic/body.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentdescription.o: ../src/mimetic/contentdescription.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentdisposition.o: ../src/mimetic/contentdisposition.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contentid.o: ../src/mimetic/contentid.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contenttransferencoding.o: ../src/mimetic/contenttransferencoding.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_contenttype.o: ../src/mimetic/contenttype.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_fieldparam.o: ../src/mimetic/fieldparam.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_header.o: ../src/mimetic/header.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_message.o: ../src/mimetic/message.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mimeentity.o: ../src/mimetic/mimeentity.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mimeversion.o: ../src/mimetic/mimeversion.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_strutils.o: ../src/mimetic/strutils.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_utils.o: ../src/mimetic/utils.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_version.o: ../src/mimetic/version.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_base64.o: ../src/mimetic/codec/base64.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_qp.o: ../src/mimetic/codec/qp.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_address.o: ../src/mimetic/rfc822/address.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_addresslist.o: ../src/mimetic/rfc822/addresslist.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_datetime.o: ../src/mimetic/rfc822/datetime.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_field.o: ../src/mimetic/rfc822/field.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_fieldvalue.o: ../src/mimetic/rfc822/fieldvalue.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_group.o: ../src/mimetic/rfc822/group.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mailbox.o: ../src/mimetic/rfc822/mailbox.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_mailboxlist.o: ../src/mimetic/rfc822/mailboxlist.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_messageid.o: ../src/mimetic/rfc822/messageid.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_rheader.o: ../src/mimetic/rfc822/rheader.cxx
+	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxsmtp_dll_rmessage.o: ../src/mimetic/rfc822/rmessage.cxx
 	$(CXX) -c -o $@ $(WXSMTP_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/SendMail_SendMail.o: ../samples/SendMail/SendMail.cpp

@@ -2728,11 +2728,127 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\wxbase64.cpp"
+				RelativePath="..\src\mimetic\rfc822\address.cxx"
 				>
 			</File>
 			<File
-				RelativePath="..\src\wxcmdprot.cpp"
+				RelativePath="..\src\mimetic\rfc822\addresslist.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\codec\base64.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\body.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\codec\charsetconv.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\contentdescription.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\contentdisposition.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\contentid.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\contenttransferencoding.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\contenttype.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\datetime.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\field.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\fieldparam.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\fieldvalue.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\group.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\header.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\mailbox.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\mailboxlist.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\message.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\messageid.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\mimeentity.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\mimeversion.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\codec\qp.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\codec\rfc2047.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\codec\rfc2231.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\rheader.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\rfc822\rmessage.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\strutils.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\utils.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\mimetic\version.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\src\utils\wxcmdprot.cpp"
 				>
 			</File>
 			<File
@@ -2740,15 +2856,27 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\wxmime.cpp"
+				RelativePath="..\src\utils\wxmd5.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\wxsmtp.cpp"
+				RelativePath="..\src\pop3\wxpop3.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\wxstates.cpp"
+				RelativePath="..\src\pop3\wxpop3states.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\smtp\wxsmtp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\smtp\wxsmtpemail.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\smtp\wxsmtpstates.cpp"
 				>
 			</File>
 		</Filter>
@@ -2758,11 +2886,191 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\wx\wxbase64.h"
+				RelativePath="..\include\wx\mimetic\rfc822\address.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\wx\wxcmdprot.h"
+				RelativePath="..\include\wx\mimetic\rfc822\addresslist.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\base64.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\body.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\body.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\codec\charsetconv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\circular_buffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\code.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\codec.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\codec_base.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\codec_chain.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\contentdescription.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\contentdisposition.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\contentid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\contenttransferencoding.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\contenttype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\datetime.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\field.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\fieldparam.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\fieldvalue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\group.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\header.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\header.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\parser\itparser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\parser\itparserdecl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\mailbox.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\mailboxlist.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\message.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\message.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\messageid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\mimeentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\mimeentitylist.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\mimetic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\mimeversion.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\other_codecs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\codec\qp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\codec\rfc2047.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\codec\rfc2231.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\rfc822\rfc822.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\streambufs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\strutils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\tokenizer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\tree.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\utils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\version.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\mimetic\wxFileIterator.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\utils\wxcmdprot.h"
 				>
 			</File>
 			<File
@@ -2770,19 +3078,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\wx\wxmime.h"
+				RelativePath="..\include\wx\pop3\wxpop3.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\wx\wxsmtp.h"
+				RelativePath="..\include\wx\smtp\wxsmtp.h"
 				>
 			</File>
 			<File
 				RelativePath="..\include\wx\wxsmtpdef.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\wx\wxstates.h"
 				>
 			</File>
 		</Filter>
