@@ -19,6 +19,8 @@ class wxMD5
 {
    public:
       static wxString ComputeMd5(const wxString& content);
+
+      static wxString ComputeKeyedMd5(const wxString& content, const wxString& key);
 };
 
 #endif /* _WX_MD5_H_ */

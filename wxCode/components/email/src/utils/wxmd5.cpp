@@ -85,6 +85,7 @@ typedef struct MD5Context MD5_CTX;
 #define CHECK_HARDWARE_PROPERTIES
 
 #include <memory.h>      /* for memcpy() */
+#include <strings.h>
 
 #ifndef HIGHFIRST
 #define byteReverse(buf, len) /* Nothing */
@@ -314,7 +315,7 @@ void MD5Transform(uint32 buf[4], uint32 in[16])
 }
 
 
-static void AppendSubHex(unsigned char val, wxString result)
+static void AppendSubHex(unsigned char val, wxString& result)
 {
    if (val > 9)
    {
@@ -326,11 +327,72 @@ static void AppendSubHex(unsigned char val, wxString result)
    }
 }
 
-static void AppendHex(unsigned char val, wxString result)
+static void AppendHex(unsigned char val, wxString& result)
 {
    AppendSubHex((val >> 4) & 0xF, result);
    AppendSubHex(val&0xF, result);
 }
+
+void hmac_md5(
+const unsigned char*  text,                /* pointer to data stream */
+int             text_len,            /* length of data stream */
+const unsigned char*  key,                 /* pointer to authentication key */
+int             key_len,             /* length of authentication key */
+unsigned char*  digest)              /* caller digest to be filled in */
+
+{
+        struct MD5Context context;
+        unsigned char k_ipad[65];    /* inner padding -
+                                      * key XORd with ipad
+                                      */
+        unsigned char k_opad[65];    /* outer padding -
+                                      * key XORd with opad
+                                      */
+        unsigned char tk[16];
+        int i;
+        /* if key is longer than 64 bytes reset it to key=MD5(key) */
+        if (key_len > 64) {
+
+                MD5_CTX      tctx;
+
+                MD5Init(&tctx);
+                MD5Update(&tctx, key, key_len);
+                MD5Final(tk, &tctx);
+
+                key = tk;
+                key_len = 16;
+        }
+
+        /* start out by storing key in pads */
+        memset( k_ipad, 0, sizeof k_ipad);
+        memset( k_opad, 0, sizeof k_opad);
+        memmove( k_ipad, key, key_len);
+        memmove( k_opad, key, key_len);
+
+        /* XOR key with ipad and opad values */
+        for (i=0; i<64; i++) {
+                k_ipad[i] ^= 0x36;
+                k_opad[i] ^= 0x5c;
+        }
+        /*
+         * perform inner MD5
+         */
+        MD5Init(&context);                   /* init context for 1st
+                                              * pass */
+        MD5Update(&context, k_ipad, 64);      /* start with inner pad */
+        MD5Update(&context, text, text_len); /* then text of datagram */
+        MD5Final(digest, &context);          /* finish up 1st pass */
+        /*
+         * perform outer MD5
+         */
+        MD5Init(&context);                   /* init context for 2nd
+                                              * pass */
+        MD5Update(&context, k_opad, 64);     /* start with outer pad */
+        MD5Update(&context, digest, 16);     /* then results of 1st
+                                              * hash */
+        MD5Final(digest, &context);          /* finish up 2nd pass */
+}
+
 
 wxString wxMD5::ComputeMd5(const wxString& content)
 {
@@ -351,4 +413,18 @@ wxString wxMD5::ComputeMd5(const wxString& content)
    return result;
 }
 
+wxString wxMD5::ComputeKeyedMd5(const wxString& content, const wxString& key)
+{
+   unsigned char  digest[16];
+   hmac_md5((const unsigned char*)content.c_str(),                /* pointer to data stream */
+            content.Len(),            /* length of data stream */
+            (const unsigned char*)key.c_str(),                 /* pointer to authentication key */
+            key.Len(),             /* length of authentication key */
+            digest);
+   wxString result;
+   for (int j = 0; j < (int)sizeof digest; j++) {
+      AppendHex(digest[j], result);
+   }
 
+   return result;
+}

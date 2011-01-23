@@ -57,6 +57,7 @@
 #include <wx/sckstrm.h>
 
 #include "wx/smtp/wxsmtp.h"
+#include "wx/utils/wxmd5.hpp"
 
 /*!
  * The default timeout used for communication with SMTP server, in seconds
@@ -68,6 +69,7 @@
  */
 const wxSMTP::ConnectState      wxSMTP::g_connectState;
 const wxSMTP::HeloState         wxSMTP::g_heloState;
+const wxSMTP::AuthenticateState wxSMTP::g_authenticateState;
 const wxSMTP::SendMailFromState wxSMTP::g_sendMailFromState;
 const wxSMTP::RcptListState     wxSMTP::g_rcptListState;
 const wxSMTP::BeginDataState    wxSMTP::g_beginDataState;
@@ -86,7 +88,8 @@ wxSMTP::Listener wxSMTP::g_nullListener;
 wxSMTP::wxSMTP(const wxString& host,
                unsigned short port,
                Listener* listener)
-       :shall_trigger_disconnection_callback(0)
+       :shall_trigger_disconnection_callback(0),
+        authentication_scheme(NoAuthentication)
 {
    /* Configure host */
    SetHost(host, port);
@@ -108,6 +111,15 @@ wxSMTP::wxSMTP(const wxString& host,
 wxSMTP::~wxSMTP()
 {
    /* Nothing to do... */
+}
+
+void wxSMTP::ConfigureAuthenticationScheme(AuthenticationScheme_t authentication_scheme,
+                                          const wxString& user_name,
+                                          const wxString& password)
+{
+   this->authentication_scheme = authentication_scheme;
+   this->user_name = user_name;
+   this->password = password;
 }
 
 void wxSMTP::SendMessage(const wxEmailMessage& message, bool shall_start_sending_process)
@@ -157,4 +169,33 @@ unsigned long wxSMTP::GetNbRetryMessages() const
       }
    }
    return result;
+}
+
+wxString wxSMTP::ComputeAuthenticationDigest(const wxString& digest)
+{
+   /* Decode from base64 */
+   mimetic::Base64::Decoder b64;
+   char decoded_digest_buffer[digest.Len()+1];
+   memset(decoded_digest_buffer, 0, digest.Len()+1);
+   mimetic::encode((const char*)digest.c_str(),
+                   ((const char*)digest.c_str())+digest.Len(),
+                   b64,
+                   decoded_digest_buffer);
+   wxString decoded_digest(decoded_digest_buffer);
+
+   /* Compute hash */
+   wxString encoded_str = wxMD5::ComputeKeyedMd5(decoded_digest, password);
+
+   /* Compute complete response */
+   wxString response_scheme = user_name + " " + encoded_str;
+
+   /* code it in Base64 */
+   mimetic::Base64::Encoder b64_enc(0);
+   char encoded_digest_buffer[2*response_scheme.Len()+1];
+   memset(encoded_digest_buffer, 0, 2*response_scheme.Len()+1);
+   mimetic::encode((const char*)response_scheme.c_str(),
+                   ((const char*)response_scheme.c_str()) + response_scheme.Len(),
+                   b64_enc,
+                   encoded_digest_buffer);
+   return wxString(encoded_digest_buffer);
 }

@@ -598,9 +598,6 @@ MessageDisplay::MessageDisplay(App& app, wxEmailMessage* message)
                 app(app),
                 message(message)
 {
-   /* To remove... */
-   message->SaveToFile(wxFileName(_T("D:\\toto.eml")));
-
    /* Format the frame */
    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 

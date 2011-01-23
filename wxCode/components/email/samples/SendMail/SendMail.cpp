@@ -165,6 +165,8 @@ App::~App()
    delete wait_msg;
 }
 
+
+#include "wx/utils/wxmd5.hpp"
 bool App::OnInit()
 {
    /* Instanciate the message */
@@ -211,6 +213,14 @@ bool App::OnInit()
    smtp = new wxSMTP(RequestUser(_T("Please enter the smtp server address (ex: relay.skynet.be) :"), false),
                      25,
                      new MySMTPListener(*this));
+
+   /* Ask user if server requests authentication */
+   if (AskUser(_T("Does your server requests authentication ?\n\nNote that only SASL CRAM-MD5 authentication mechanism is currently implemented...")))
+   {
+      smtp->ConfigureAuthenticationScheme(wxSMTP::CramMd5Authentication,
+            RequestUser(_T("Please enter the user name used for SMTP server connection :"), false),
+            RequestUser(_T("Please enter the password used for SMTP server connection :"), false));
+   }
 
    /* instanciate a busy info window that will be displayed until the message will be sent*/
    wait_msg = new wxBusyInfo(_T("Please wait while your mail is being processed"));

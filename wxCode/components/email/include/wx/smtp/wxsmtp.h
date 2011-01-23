@@ -68,6 +68,7 @@
  *
  *    ConnectState [ label="ConnectState" URL="\ref wxSMTP::ConnectState"];
  *    HeloState [ label="HeloState" URL="\ref wxSMTP::HeloState"];
+ *    AuthenticateState [ label="AuthenticateState" URL="\ref wxSMTP::AuthenticateState"];
  *    SendMailFromState [ label="SendMailFromState" URL="\ref wxSMTP::SendMailFromState"];
  *    RcptListState [ label="RcptListState" URL="\ref wxSMTP::RcptListState"];
  *    BeginDataState [ label="BeginDataState" URL="\ref wxSMTP::BeginDataState"];
@@ -79,9 +80,14 @@
  *    ConnectState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
  *    ConnectState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
  *
- *    HeloState -> SendMailFromState [ label="OK", arrowhead="open", style="dashed" ];
+ *    HeloState -> SendMailFromState [ label="OK,NoAuth", arrowhead="open", style="dashed" ];
+ *    HeloState -> AuthenticateState [ label="OK,ShallAuth", arrowhead="open", style="dashed" ];
  *    HeloState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
  *    HeloState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
+ *
+ *    AuthenticateState -> SendMailFromState [ label="OK", arrowhead="open", style="dashed" ]
+ *    AuthenticateState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ]
+ *    AuthenticateState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ]
  *
  *    SendMailFromState -> RcptListState [ label="OK", arrowhead="open", style="dashed" ];
  *    SendMailFromState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
@@ -180,12 +186,13 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
              */
             typedef enum
             {
-               StatusOK,         /*!< The communication with server ended successfully */
-               StatusTimeout,    /*!< A timeout occurred while communicating with the server */
-               StatusDisconnect, /*!< The connection was lost during communication with server */
-               StatusRetry,      /*!< The server requests a retry of sending process */
-               StatusError,      /*!< The server rejected a command, which ended the sending process */
-               StatusUserAbort   /*!< The user requested an abort */
+               StatusOK,                     /*!< The communication with server ended successfully */
+               StatusTimeout,                /*!< A timeout occurred while communicating with the server */
+               StatusDisconnect,             /*!< The connection was lost during communication with server */
+               StatusRetry,                  /*!< The server requests a retry of sending process */
+               StatusError,                  /*!< The server rejected a command, which ended the sending process */
+               StatusUserAbort,              /*!< The user requested an abort */
+               StatusInvalidUserNamePassword /*!< The provided user name or password is invalid */
             } DisconnectionStatus_t;
 
             /*!
@@ -221,6 +228,27 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
       wxSMTP(const wxString& host,
              unsigned short port = 25,
              Listener* listener = NULL);
+
+      /*!
+       * This enumerates all implemented authentication schemes available
+       */
+      typedef enum
+      {
+         NoAuthentication, /*!< No authentication required */
+         CramMd5Authentication /*!< SASL CRAM-MD5 authentication scheme */
+      } AuthenticationScheme_t;
+
+      /*!
+       * This function allows configuring the authentication scheme used for connection
+       * to the SMTP server
+       *
+       * \param authentication_scheme The ::AuthenticationScheme_t used for the connection
+       * \param user_name The user name to be used, if requested
+       * \param password The password to be used, if requested
+       */
+      void ConfigureAuthenticationScheme(AuthenticationScheme_t authentication_scheme,
+                                         const wxString& user_name = wxT(""),
+                                         const wxString& password = wxT(""));
 
       /*!
        * This function posts the message in the list of messages to be sent.
@@ -440,11 +468,38 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        * When leaving this state, the timer is stopped.
        *
        * The following transitions are implemented:
-       *    \li ::wxSMTP::SendMailFromState If the server ACKS the connection
+       *    \li ::wxSMTP::SendMailFromState If the server ACKS the connection and no authentication is requested
        *    \li ::wxSMTP::QuitState In case of timeout or NACK sent by server, the wxSMTP#disconnection_status flag is updated accordingly
        *    \li ::wxSMTP::ClosedState In case of disconnection by the server, the wxSMTP#disconnection_status flag is updated accordingly
        */
       class HeloState : public SMTPState
+      {
+         public:
+            void onDisconnect(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onResponse(wxCmdlineProtocol& WXUNUSED(context), const wxString& WXUNUSED(line)) const;
+            void onTimeout(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onEnterState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onFlushMessages(wxCmdlineProtocol& WXUNUSED(context)) const;
+      };
+
+      /*!
+       * \internal
+       *
+       * When entering this state, the AUTHENTICATE  command is sent to server and
+       * a timeout is triggered. The authentication_digest_sent is set to false
+       *
+       * When a response is received from server, if authentication_digest_sent is false, the digest is sent
+       * accordingly to received response and flag authentication_digest_sent is set.
+       *
+       * When leaving this state, the timer is stopped.
+       *
+       * The following transitions are implemented:
+       *    \li ::wxSMTP::SendMailFromState If the server ACKS authentication
+       *    \li ::wxSMTP::QuitState In case of timeout or NACK sent by server, the wxSMTP#disconnection_status flag is updated accordingly
+       *    \li ::wxSMTP::ClosedState In case of disconnection by the server, the wxSMTP#disconnection_status flag is updated accordingly
+       */
+      class AuthenticateState : public SMTPState
       {
          public:
             void onDisconnect(wxCmdlineProtocol& WXUNUSED(context)) const;
@@ -681,6 +736,7 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
 
       static const ConnectState      g_connectState;
       static const HeloState         g_heloState;
+      static const AuthenticateState g_authenticateState;
       static const SendMailFromState g_sendMailFromState;
       static const RcptListState     g_rcptListState;
       static const BeginDataState    g_beginDataState;
@@ -784,6 +840,13 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        * timeout used for all states, expressed in seconds
        */
       static const unsigned long timeout;
+
+      AuthenticationScheme_t authentication_scheme;
+      wxString user_name;
+      wxString password;
+      bool authentication_digest_sent;
+
+      wxString ComputeAuthenticationDigest(const wxString& digest);
 };
 
 #endif

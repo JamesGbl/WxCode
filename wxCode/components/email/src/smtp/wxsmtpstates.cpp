@@ -119,11 +119,11 @@ void wxSMTP::ConnectState::onFlushMessages(wxCmdlineProtocol& context) const
 
 void wxSMTP::HeloState::onEnterState(wxCmdlineProtocol& context) const
 {
-   WX_SMTP_PRINT_DEBUG("Entering onEnterState\n");
+   WX_SMTP_PRINT_DEBUG("Entering HeloState\n");
 
    /* Send the HELLO command */
    //TODO replace localhost with name of machine
-   context.SendLine(_T("HELO localhost"));
+   context.SendLine(_T("EHLO localhost"));
 
    /* Start timer */
    context.TimerStart(((wxSMTP&)context).timeout);
@@ -131,7 +131,7 @@ void wxSMTP::HeloState::onEnterState(wxCmdlineProtocol& context) const
 
 void wxSMTP::HeloState::onLeaveState(wxCmdlineProtocol& context) const
 {
-   WX_SMTP_PRINT_DEBUG("Leaving onEnterState\n");
+   WX_SMTP_PRINT_DEBUG("Leaving HeloState\n");
    context.TimerStop();
 }
 
@@ -144,7 +144,22 @@ void wxSMTP::HeloState::onResponse(wxCmdlineProtocol& context, const wxString& l
    /* Check if command was successful */
    if (smtpCode == 250)
    {
-      context.ChangeState(g_sendMailFromState);
+      /* Check if this is the last answer */
+      if (line.StartsWith("250-"))
+      {
+         /* We shall wait next acceptance answer... */
+      }
+      else
+      {
+         if (((wxSMTP&)context).authentication_scheme == wxSMTP::NoAuthentication)
+         {
+            context.ChangeState(g_sendMailFromState);
+         }
+         else
+         {
+            context.ChangeState(g_authenticateState);
+         }
+      }
    }
    else
    {
@@ -173,6 +188,85 @@ void wxSMTP::HeloState::onTimeout(wxCmdlineProtocol& context) const
 }
 
 void wxSMTP::HeloState::onFlushMessages(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).messages_to_send.clear();
+}
+
+void wxSMTP::AuthenticateState::onEnterState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Entering AuthenticateState\n");
+
+   /* Send the HELLO command */
+   //TODO replace localhost with name of machine
+   context.SendLine(_T("AUTHENTICATE CRAM-MD5"));
+
+   /* Initialise internal state */
+   ((wxSMTP&)context).authentication_digest_sent = false;
+
+   /* Start timer */
+   context.TimerStart(((wxSMTP&)context).timeout);
+}
+
+void wxSMTP::AuthenticateState::onLeaveState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Leaving AuthenticateState\n");
+   context.TimerStop();
+}
+
+void wxSMTP::AuthenticateState::onResponse(wxCmdlineProtocol& context, const wxString& line) const
+{
+   /* Extract smpt code */
+   unsigned long smtpCode = 0;
+   line.ToULong(&smtpCode);
+
+   /* Check if we alreadysent authentication scheme */
+   if (((wxSMTP&)context).authentication_digest_sent)
+   {
+      /* Check if server acknowledged connection */
+      if (smtpCode == 235)
+      {
+         context.ChangeState(g_sendMailFromState);
+      }
+      else if (smtpCode == 535)
+      {
+         ((wxSMTP&)context).disconnection_status = Listener::StatusInvalidUserNamePassword;
+         context.ChangeState(g_quitState);
+      }
+      else
+      {
+         ((wxSMTP&)context).disconnection_status = Listener::StatusError;
+         context.ChangeState(g_quitState);
+      }
+   }
+   else
+   {
+      /* check is server accepted command */
+      if (smtpCode == 334)
+      {
+         /* Extract digest and send answer */
+         context.SendLine(((wxSMTP&)context).ComputeAuthenticationDigest(line.AfterFirst(' ')));
+      }
+      else
+      {
+         ((wxSMTP&)context).disconnection_status = Listener::StatusError;
+         context.ChangeState(g_quitState);
+      }
+   }
+}
+
+void wxSMTP::AuthenticateState::onDisconnect(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusDisconnect;
+   context.ChangeState(g_closedState);
+}
+
+void wxSMTP::AuthenticateState::onTimeout(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusTimeout;
+   context.ChangeState(g_quitState);
+}
+
+void wxSMTP::AuthenticateState::onFlushMessages(wxCmdlineProtocol& context) const
 {
    ((wxSMTP&)context).messages_to_send.clear();
 }
