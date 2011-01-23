@@ -158,7 +158,8 @@ T& Rfc822Header::getField(const std::string& name)
         T* pT = new T;
         assert(pT);
         it->m_pValue = pT;
-        assert(it->m_pValue->typeChecked());
+        //TODO : BAE : I don't think this assert is necessary....
+        //assert(it->m_pValue->typeChecked());
         return *pT;
     }
 }

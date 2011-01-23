@@ -544,8 +544,12 @@ void wxPOP3::SuppressingMessage::onLeaveState(wxCmdlineProtocol& context) const
 void wxPOP3::ExitState::onEnterState(wxCmdlineProtocol& context) const
 {
    WX_SMTP_PRINT_DEBUG("Entering ExitState\n");
-
-   context.SendLine(_T("QUIT"));
+   
+   /* Just hanlde special case where we enter this state at init */
+   if (!((wxPOP3&)context).in_init)
+   {
+      context.SendLine(_T("QUIT"));
+   }
 }
 
 void wxPOP3::ExitState::onDisconnect(wxCmdlineProtocol& context) const

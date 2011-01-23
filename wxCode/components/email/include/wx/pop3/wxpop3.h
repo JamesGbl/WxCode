@@ -498,6 +498,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
       unsigned long timeout_value;
 
       Listener::ExtractionMode_t extraction_mode;
+
+      bool in_init;
 };
 
 

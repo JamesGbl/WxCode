@@ -33,7 +33,8 @@ wxPOP3::wxPOP3(wxString client_name,
                Listener* default_listener)
       :default_instance_listener(default_listener),
        user_name(client_name),
-       user_password(client_password)
+       user_password(client_password),
+       in_init(true)
 {
    timeout_value = DEFAULT_TIMEOUT_VALUE;
 
@@ -43,8 +44,10 @@ wxPOP3::wxPOP3(wxString client_name,
    {
       default_instance_listener = &default_class_listener;
    }
-
+   
    ChangeState(exit_state);
+
+   in_init = false;
 }
 
 bool wxPOP3::OperationInProgress()
