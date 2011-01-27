@@ -44,6 +44,7 @@
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
+#include "wx/stedit/steart.h"
 #include "../../art/pencil16.xpm"
 
 #include "wx/cmdline.h"
@@ -91,6 +92,7 @@ bool wxStEditApp::OnInit()
 #endif
     ::wxLocale_Init(&m_locale, STE_APPNAME, m_cmdline.m_lang);
     wxSTEditorOptions::SetGlobalDefaultFileName(wxString(_("unnamed")) + wxT(".txt")); // translated
+    //wxSTEditorArtProvider::m_default_client = wxART_OTHER; // default is wxART_STEDIT
 
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically

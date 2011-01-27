@@ -46,39 +46,60 @@
 #include "../art/redo.xpm"
 #include "../art/cross.xpm"
 
-#define ART(artid, xpmRc) \
-    if (id == (artid)) return wxBitmap(xpmRc##_xpm);
-
-static wxBitmap wxSTEditorArtProvider_GetBitmap(const wxArtID& id)
+static wxBitmap DoGetBitmap(const wxArtID& id, const wxArtClient& client, const wxSize& reqSize)
 {
-    ART(wxART_STEDIT_NEW,            new)
-    ART(wxART_STEDIT_OPEN,           open)
-    ART(wxART_STEDIT_SAVE,           save)
-    ART(wxART_STEDIT_SAVEALL,        saveall)
-    ART(wxART_STEDIT_SAVEAS,         saveas)
-    ART(wxART_STEDIT_PRINT,          print)
-    ART(wxART_STEDIT_PRINTPREVIEW,   print_preview)
-    ART(wxART_STEDIT_PRINTSETUP,     print_setup)
-    ART(wxART_STEDIT_PRINTPAGESETUP, print_page_setup)
-    ART(wxART_STEDIT_EXIT,           x_red)
-    ART(wxART_STEDIT_CUT,            cut)
-    ART(wxART_STEDIT_COPY,           copy)
-    ART(wxART_STEDIT_PASTE,          paste)
-    ART(wxART_STEDIT_FIND,           find)
-    ART(wxART_STEDIT_FINDNEXT,       findnext)
-    ART(wxART_STEDIT_FINDUP,         findup)
-    ART(wxART_STEDIT_FINDDOWN,       finddown)
-    ART(wxART_STEDIT_REPLACE,        replace)
-    ART(wxART_STEDIT_UNDO,           undo)
-    ART(wxART_STEDIT_REDO,           redo)
-    ART(wxART_STEDIT_CLEAR,          cross)
+    static const struct art_item
+    {
+        wxArtID ste_id;
+        const char* const* xpm;
+        wxArtID wx_id;
+    } array[] =
+    {
+        { wxART_STEDIT_NEW,            new_xpm,             wxART_NEW          },
+        { wxART_STEDIT_OPEN,           open_xpm,            wxART_FILE_OPEN    },
+        { wxART_STEDIT_SAVE,           save_xpm,            wxART_FILE_SAVE    },
+        { wxART_STEDIT_SAVEALL,        saveall_xpm,         wxEmptyString},
+        { wxART_STEDIT_SAVEAS,         saveas_xpm,          wxART_FILE_SAVE_AS },
+        { wxART_STEDIT_PRINT,          print_xpm,           wxART_PRINT        },
+        { wxART_STEDIT_PRINTPREVIEW,   print_preview_xpm,   wxEmptyString},
+        { wxART_STEDIT_PRINTSETUP,     print_setup_xpm,     wxEmptyString},
+        { wxART_STEDIT_PRINTPAGESETUP, print_page_setup_xpm, wxEmptyString },
+        { wxART_STEDIT_EXIT,           x_red_xpm,           wxART_QUIT         },
+        { wxART_STEDIT_CUT,            cut_xpm,             wxART_CUT   },
+        { wxART_STEDIT_COPY,           copy_xpm,            wxART_COPY   },
+        { wxART_STEDIT_PASTE,          paste_xpm,           wxART_PASTE },
+        { wxART_STEDIT_FIND,           find_xpm,            wxART_FIND   },
+        { wxART_STEDIT_FINDNEXT,       findnext_xpm,        wxEmptyString },
+        { wxART_STEDIT_FINDUP,         findup_xpm,          wxEmptyString },
+        { wxART_STEDIT_FINDDOWN,       finddown_xpm,        wxEmptyString },
+        { wxART_STEDIT_REPLACE,        replace_xpm,         wxART_FIND_AND_REPLACE },
+        { wxART_STEDIT_UNDO,           undo_xpm,            wxART_UNDO  },
+        { wxART_STEDIT_REDO,           redo_xpm,            wxART_REDO },
+        { wxART_STEDIT_CLEAR,          cross_xpm,           wxART_DELETE }
+    };
 
+    for (size_t i = 0; i < WXSIZEOF(array); i++)
+    {
+        if (array[i].ste_id == id)
+        {
+            if ( (wxART_STEDIT == client) || array[i].wx_id.empty() )
+            {
+                return wxBitmap(array[i].xpm);
+            }
+            else
+            {
+                return wxArtProvider::GetBitmap(array[i].wx_id, client, reqSize);
+            }
+        }
+    }
     return wxNullBitmap;
 }
 
 wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider(), m_app_large(pencil32_xpm), m_app_small(pencil16_xpm)
 {
 }
+
+/*static*/ wxArtClient wxSTEditorArtProvider::m_default_client = wxART_STEDIT;
 
 wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
                                              const wxArtClient& client,
@@ -112,7 +133,7 @@ wxBitmap wxSTEditorArtProvider::CreateBitmap(const wxArtID& id,
     }
     else
     {
-        bmp = wxSTEditorArtProvider_GetBitmap(id);
+        bmp = DoGetBitmap(id, client, reqSize_);
         reqSize = reqSize_;
     }
 

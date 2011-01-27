@@ -65,6 +65,8 @@ class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 public:
     wxSTEditorArtProvider();
 
+    static wxArtClient m_default_client; // default is wxART_STEDIT
+
     virtual wxBitmap CreateBitmap(const wxArtID& id,
                                   const wxArtClient& client,
                                   const wxSize& size);
@@ -72,13 +74,13 @@ public:
     static wxBitmap GetBitmap(const wxArtID& id,
                               const wxSize& size = wxDefaultSize)
     {
-       return wxArtProvider::GetBitmap(id, wxART_STEDIT, size);
+       return wxArtProvider::GetBitmap(id, m_default_client, size);
     }
 
     static wxIcon GetIcon(const wxArtID& id,
                           const wxSize& size = wxDefaultSize)
     {
-       return wxArtProvider::GetIcon(id, wxART_STEDIT, size);
+       return wxArtProvider::GetIcon(id, m_default_client, size);
     }
     static wxIcon GetDefaultDialogIcon();
 
