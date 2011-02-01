@@ -325,7 +325,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPrefDialog : public wxDialog
 public:
     wxSTEditorPrefDialog() : wxDialog() { Init(); }
     wxSTEditorPrefDialog( const wxSTEditorPrefPageData& editorPrefData,
-                          wxWindow *parent, wxWindowID win_id,
+                          wxWindow *parent, wxWindowID win_id = wxID_ANY,
                           long style = wxDEFAULT_DIALOG_STYLE_RESIZE,
                           const wxString& name = wxT("wxSTEditorPrefDialog")) : wxDialog()
     {
@@ -353,6 +353,7 @@ public:
     void OnNotebookPageChanged(wxNotebookEvent &event);
     void OnUpdateUIApply(wxUpdateUIEvent& event);
 
+private:
     wxListbook  *m_noteBook;
     wxImageList *m_imageList;
     wxSTEditorPrefPageData m_prefData;       // local copy to modify

@@ -1021,7 +1021,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     m_notebook            = wxStaticCast(FindWindow(ID_STEDLG_LANG_NOTEBOOK), wxNotebook);
 
     // Create and add the style panel
-    wxPanel *stylePanel = new wxPanel(m_notebook, wxID_ANY);
+    wxPanel *stylePanel = new wxPanel(m_notebook);
     m_styleEditor = new wxSTEditor(stylePanel, ID_STEDLG_LANG_STYLE_EDITOR,
                                          wxDefaultPosition, wxDefaultSize);
     m_styleEditor->RegisterStyles(steStyles);
@@ -1055,7 +1055,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     }
 
     // Create and add the keyword panel
-    wxPanel *keywordPanel = new wxPanel(m_notebook, wxID_ANY);
+    wxPanel *keywordPanel = new wxPanel(m_notebook);
     wxSTEditorLangKeywordSizer(keywordPanel, true, true);
     m_notebook->AddPage(keywordPanel, _("Keywords"), false);
 
@@ -1063,7 +1063,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     m_keywordsTextCtrl     = wxStaticCast(FindWindow(ID_STEDLG_LANG_KEYWORD_TEXTCTRL    ), wxTextCtrl);
     m_userKeywordsTextCtrl = wxStaticCast(FindWindow(ID_STEDLG_LANG_USERKEYWORD_TEXTCTRL), wxTextCtrl);
 
-    m_helpEditor = new wxSTEditor(m_notebook, wxID_ANY);
+    m_helpEditor = new wxSTEditor(m_notebook);
     m_helpEditor->SetWrapMode(wxSTC_WRAP_WORD);
     m_helpEditor->SetText(sm_helpString);
     m_helpEditor->SetReadOnly(true);

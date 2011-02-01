@@ -2925,7 +2925,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                                   GetLanguageId(),
                                                   this);
 
-                wxSTEditorPrefDialog prefDialog(editorData, this, wxID_ANY);
+                wxSTEditorPrefDialog prefDialog(editorData, this);
 
                 prefDialog.ShowModal();
             }

@@ -146,7 +146,7 @@ public :
     // wxStyledTextCtrl doesn't have Create method in 2.4.x
     wxSTEditor() : wxStyledTextCtrl() { Init(); }
 
-    wxSTEditor(wxWindow *parent, wxWindowID id,
+    wxSTEditor(wxWindow *parent, wxWindowID id = wxID_ANY,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
                long style = 0, // wxStyledTextCtrl ors this with defaults
