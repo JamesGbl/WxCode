@@ -354,6 +354,7 @@ public:
     void OnUpdateUIApply(wxUpdateUIEvent& event);
 
 private:
+    static int ms_currentpage;
     wxListbook  *m_noteBook;
     wxImageList *m_imageList;
     wxSTEditorPrefPageData m_prefData;       // local copy to modify

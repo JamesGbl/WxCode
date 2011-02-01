@@ -1316,6 +1316,8 @@ END_EVENT_TABLE()
 
 extern void LangConfig(); // FIXME test code to dump languages (100Kb!, maybe not so good)
 
+/*static*/ int wxSTEditorPrefDialog::ms_currentpage = 0;
+
 void wxSTEditorPrefDialog::Init()
 {
     m_noteBook = NULL;
@@ -1424,9 +1426,10 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
                             _("Languages"), false, 7);
     }
 
+    m_noteBook->SetSelection(ms_currentpage);
 #ifdef __WXMSW__
     // the list is scrolled down a bit initially
-    m_noteBook->GetListView()->EnsureVisible(0);
+    m_noteBook->GetListView()->EnsureVisible(ms_currentpage);
 #endif
 
     // layout the buttons
@@ -1466,6 +1469,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
 wxSTEditorPrefDialog::~wxSTEditorPrefDialog()
 {
+    ms_currentpage = m_noteBook->GetSelection();
     delete m_imageList;
 }
 
