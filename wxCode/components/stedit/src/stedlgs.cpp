@@ -1424,7 +1424,10 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
                             _("Languages"), false, 7);
     }
 
-    m_noteBook->SetSelection(0);
+#ifdef __WXMSW__
+    // the list is scrolled down a bit initially
+    m_noteBook->GetListView()->EnsureVisible(0);
+#endif
 
     // layout the buttons
     wxButton *resetButton = new wxButton(panel, wxID_RESET, _("Default"));
