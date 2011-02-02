@@ -14,7 +14,7 @@
 #include "app.h"
 #include "doc.h"
 #include "view.h"
-#include "wx/ogl/basicp.h"
+#include <wx/ogl/basicp.h>
 
 IMPLEMENT_DYNAMIC_CLASS(csDiagramDocument, wxDocument)
 

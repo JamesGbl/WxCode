@@ -11,8 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
-
+#include <wx/ogl/ogl.h>
 
 IMPLEMENT_DYNAMIC_CLASS(wxDiagram, wxObject)
 

@@ -12,7 +12,7 @@
 #ifndef _STUDIO_DOC_H_
 #define _STUDIO_DOC_H_
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 #include "shapes.h"
 

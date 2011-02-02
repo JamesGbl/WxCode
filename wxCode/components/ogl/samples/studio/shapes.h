@@ -12,10 +12,10 @@
 #ifndef _STUDIO_SHAPES_H_
 #define _STUDIO_SHAPES_H_
 
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
-#include "wx/ogl/basicp.h"
-#include "wx/ogl/linesp.h"
-#include "wx/ogl/drawn.h"
+#include <wx/ogl/ogl.h> // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include <wx/ogl/basicp.h>
+#include <wx/ogl/linesp.h>
+#include <wx/ogl/drawn.h>
 
 class csDiagramDocument;
 

@@ -12,8 +12,8 @@
 #ifndef _OGLSAMPLE_PALETTE_H_
 #define _OGLSAMPLE_PALETTE_H_
 
-#include "wx/wx.h"
-#include "wx/string.h"
+#include <wx/wx.h>
+#include <wx/string.h>
 
 /*
  * Object editor tool palette

@@ -12,12 +12,12 @@
 #include "precomp.h"
 
 #if wxUSE_PROLOGIO
-#include "wx/deprecated/wxexpr.h"
+#include <wx/deprecated/wxexpr.h>
 #endif
 
-#include "wx/types.h"
+#include <wx/types.h>
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 
 wxFont*         g_oglNormalFont;

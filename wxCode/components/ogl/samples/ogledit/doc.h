@@ -12,7 +12,7 @@
 #ifndef _OGLSAMPLE_DOC_H_
 #define _OGLSAMPLE_DOC_H_
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 #if wxUSE_STD_IOSTREAM
  #include <iosfwd>

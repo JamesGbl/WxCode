@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include <wx/ogl/ogl.h> // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
 #include "app.h"
 #include "doc.h"

@@ -12,7 +12,7 @@
 #ifndef _OGL_OGLDIAG_H_
 #define _OGL_OGLDIAG_H_
 
-#include "wx/ogl/basic.h"
+#include <wx/ogl/basic.h>
 
 class WXDLLIMPEXP_OGL wxDiagram: public wxObject
 {

@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 class wxDividedShapeControlPoint: public wxControlPoint
 {

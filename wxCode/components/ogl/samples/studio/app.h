@@ -12,17 +12,17 @@
 #ifndef _STUDIO_STUDIO_H_
 #define _STUDIO_STUDIO_H_
 
-#include "wx/help.h"
-#include "wx/cshelp.h"
-#include "wx/helphtml.h"
+#include <wx/help.h>
+#include <wx/cshelp.h>
+#include <wx/helphtml.h>
 #ifdef __WXMSW__
-    #include "wx/msw/helpchm.h"
+    #include <wx/msw/helpchm.h>
 #else
-    #include "wx/html/helpctrl.h"
+    #include <wx/html/helpctrl.h>
 #endif
 
-#include "wx/ogl/ogl.h"
-#include "wx/ogl/canvas.h"
+#include <wx/ogl/ogl.h>
+#include <wx/ogl/canvas.h>
 #include "shapes.h"
 #include "wx29.h"
 

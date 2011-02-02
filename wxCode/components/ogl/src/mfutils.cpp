@@ -11,10 +11,10 @@
 
 #include "precomp.h"
 
-#include "wx/metafile.h"
-#include "wx/utils.h"
+#include <wx/metafile.h>
+#include <wx/utils.h>
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 static char _buf[1024]; // a temp buffer to use inplace of wxBuffer, which is deprecated.
 

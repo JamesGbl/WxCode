@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 // Line shape
 IMPLEMENT_DYNAMIC_CLASS(wxLineShape, wxShape)

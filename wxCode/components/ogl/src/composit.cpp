@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 #if wxUSE_PROLOGIO
 // Sometimes, objects need to access the whole database to

@@ -17,8 +17,8 @@
 #include "cspalette.h"
 #include "symbols.h"
 #include "dialogs.h"
-#include "wx/ogl/basicp.h"
-#include "wx/ogl/linesp.h"
+#include <wx/ogl/basicp.h>
+#include <wx/ogl/linesp.h>
 
 IMPLEMENT_DYNAMIC_CLASS(csDiagramView, wxView)
 

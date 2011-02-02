@@ -13,7 +13,7 @@
 #define _OGLSAMPLE_VIEW_H_
 
 #include "doc.h"
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 class MyCanvas: public wxShapeCanvas
 {

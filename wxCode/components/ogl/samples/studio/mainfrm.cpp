@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "precomp.h"
-#include "wx/aboutdlg.h"
+#include <wx/aboutdlg.h>
 
 #include "app.h"
 #include "view.h"

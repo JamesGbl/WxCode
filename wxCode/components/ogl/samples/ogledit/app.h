@@ -12,8 +12,8 @@
 #ifndef _OGLSAMPLE_OGLEDIT_H_
 #define _OGLSAMPLE_OGLEDIT_H_
 
-#include "wx/docview.h"
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include <wx/docview.h>
+#include <wx/ogl/ogl.h> // base header of OGL, includes and adjusts wx/deprecated/setup.h
 #include "wx29.h"
 
 // Define a new application

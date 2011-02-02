@@ -12,7 +12,7 @@
 #ifndef _STUDIO_CSPALETTE_H_
 #define _STUDIO_CSPALETTE_H_
 
-#include "wx/ogl/ogl.h" // base header of OGL, includes and adjusts wx/deprecated/setup.h
+#include <wx/ogl/ogl.h> // base header of OGL, includes and adjusts wx/deprecated/setup.h
 
 /*
  * Object editor tool palette

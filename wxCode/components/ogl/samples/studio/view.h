@@ -13,7 +13,7 @@
 #define _STUDIO_VIEW_H_
 
 #include "doc.h"
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 class WXDLLIMPEXP_FWD_CORE wxDocMDIChildFrame;
 

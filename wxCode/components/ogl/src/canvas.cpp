@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 #define CONTROL_POINT_SIZE       6
 

@@ -12,8 +12,8 @@
 #ifndef _STUDIO_PROJECT_H_
 #define _STUDIO_PROJECT_H_
 
-#include "wx/treectrl.h"
-#include "wx/imaglist.h"
+#include <wx/treectrl.h>
+#include <wx/imaglist.h>
 
 /*
  * This is the project tree control.

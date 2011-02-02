@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include "wx/ogl/ogl.h"
+#include <wx/ogl/ogl.h>
 
 #if wxUSE_PROLOGIO
 static void IntToHex(unsigned int dec, wxChar *buf);

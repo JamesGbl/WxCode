@@ -25,21 +25,21 @@
     #define WXDLLIMPEXP_FWD_OGL WXDLLIMPEXP_OGL
 #endif
 
-#include "wx/ogl/basic.h"      // Basic shapes
-#include "wx/ogl/basicp.h"
-#include "wx/ogl/lines.h"      // Lines and splines
-#include "wx/ogl/linesp.h"
-#include "wx/ogl/divided.h"    // Vertically-divided rectangle
-#include "wx/ogl/composit.h"   // Composite images
-#include "wx/ogl/canvas.h"     // wxShapeCanvas for displaying objects
-#include "wx/ogl/ogldiag.h"    // wxDiagram
+#include <wx/ogl/basic.h>      // Basic shapes
+#include <wx/ogl/basicp.h>
+#include <wx/ogl/lines.h>      // Lines and splines
+#include <wx/ogl/linesp.h>
+#include <wx/ogl/divided.h>    // Vertically-divided rectangle
+#include <wx/ogl/composit.h>   // Composite images
+#include <wx/ogl/canvas.h>     // wxShapeCanvas for displaying objects
+#include <wx/ogl/ogldiag.h>    // wxDiagram
 
-#include "wx/ogl/bmpshape.h"
-#include "wx/ogl/constrnt.h"
-#include "wx/ogl/drawn.h"
-#include "wx/ogl/drawnp.h"
-#include "wx/ogl/mfutils.h"
-#include "wx/ogl/misc.h"
+#include <wx/ogl/bmpshape.h>
+#include <wx/ogl/constrnt.h>
+#include <wx/ogl/drawn.h>
+#include <wx/ogl/drawnp.h>
+#include <wx/ogl/mfutils.h>
+#include <wx/ogl/misc.h>
 
 // TODO: replace with wxModule implementation
 extern WXDLLIMPEXP_OGL void wxOGLInitialize();
