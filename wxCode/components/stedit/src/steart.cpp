@@ -11,14 +11,14 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/stedefs.h"
-#include "wx/stedit/steart.h"
+#include <wx/stedit/stedefs.h>
+#include <wx/stedit/steart.h>
 #include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorArtProvider
 //-----------------------------------------------------------------------------
-#include "wx/image.h"
+#include <wx/image.h>
 
 // Bitmaps used for the toolbar in the wxSTEditorFrame
 #include "../art/pencil16.xpm"

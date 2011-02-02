@@ -11,10 +11,10 @@
 #ifndef _STEPRINT_H_
 #define _STEPRINT_H_
 
-#include "wx/print.h"
+#include <wx/print.h>
 
-#include "wx/stedit/stedefs.h"
-#include "wx/stedit/stestyls.h"
+#include <wx/stedit/stedefs.h>
+#include <wx/stedit/stestyls.h>
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrintout : A subclassed wxPrintout for printing the current

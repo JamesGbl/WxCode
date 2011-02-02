@@ -11,19 +11,19 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/steprint.h"
-#include "wx/stedit/stedit.h"
-#include "wx/stedit/steart.h"
+#include <wx/stedit/steprint.h>
+#include <wx/stedit/stedit.h>
+#include <wx/stedit/steart.h>
 #include "stedlgs_wdr.h"
 
-#include "wx/progdlg.h"   // wxProgressDialog
+#include <wx/progdlg.h>   // wxProgressDialog
 
 #if wxUSE_PRINTING_ARCHITECTURE
 
 //-----------------------------------------------------------------------------
 // wxSTEditorModule - setup anything after init and delete before closing
 //-----------------------------------------------------------------------------
-#include "wx/stedit/stemenum.h"
+#include <wx/stedit/stemenum.h>
 
 class wxSTEditorModule : public wxModule
 {

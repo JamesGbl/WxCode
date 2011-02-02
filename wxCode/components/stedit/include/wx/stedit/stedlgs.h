@@ -11,8 +11,8 @@
 #ifndef _STEDLGS_H_
 #define _STEDLGS_H_
 
-#include "wx/stedit/stedefs.h"
-#include "wx/stedit/stedit.h"
+#include <wx/stedit/stedefs.h>
+#include <wx/stedit/stedit.h>
 
 class WXDLLIMPEXP_FWD_CORE wxComboBox;
 class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;

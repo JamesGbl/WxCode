@@ -38,10 +38,10 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include "wx/stedit/stestyls.h"
-#include "wx/stedit/stedit.h"
+#include <wx/stedit/stestyls.h>
+#include <wx/stedit/stedit.h>
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArraySTEditorStyle);
 DEFINE_PAIRARRAY_INTKEY(wxSTEditorStyle, wxSTEPairArrayIntSTEStyle)
 

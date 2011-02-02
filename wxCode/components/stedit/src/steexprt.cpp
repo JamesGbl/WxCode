@@ -39,12 +39,12 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include "wx/stedit/stedit.h"    // for wxSTEEditorPrefs/Styles/Langs
-#include "wx/stedit/steexprt.h"
-#include "wx/stedit/steart.h"
+#include <wx/stedit/stedit.h>    // for wxSTEEditorPrefs/Styles/Langs
+#include <wx/stedit/steexprt.h>
+#include <wx/stedit/steart.h>
 #include "stedlgs_wdr.h"
 
-#include "wx/filesys.h"
+#include <wx/filesys.h>
 
 // ----------------------------------------------------------------------------
 // The code below is copied to avoid having to include the Scintilla headers

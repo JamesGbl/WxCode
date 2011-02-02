@@ -20,7 +20,7 @@
 //  wxArtProvider::PushProvider(new myArtProvider);
 //  and have it return your own bitmaps using the wxArtIDs set below.
 //-----------------------------------------------------------------------------
-#include "wx/artprov.h"
+#include <wx/artprov.h>
 
 #define wxART_STEDIT                wxART_MAKE_CLIENT_ID(wxART_STEDIT)
 

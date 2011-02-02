@@ -11,9 +11,9 @@
 #ifndef _STEFINDR_H_
 #define _STEFINDR_H_
 
-#include "wx/fdrepdlg.h"
+#include <wx/fdrepdlg.h>
 
-#include "wx/stedit/stedefs.h"
+#include <wx/stedit/stedefs.h>
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 class WXDLLIMPEXP_FWD_CORE wxRadioButton;
@@ -256,7 +256,7 @@ private:
 //-----------------------------------------------------------------------------
 // wxSTEditorFindReplaceDialog - enhanced wxFindReplaceDialog
 //-----------------------------------------------------------------------------
-#include "wx/minifram.h"
+#include <wx/minifram.h>
 
 WXDLLIMPEXP_DATA_STEDIT(extern const wxString) wxSTEditorFindReplaceDialogNameStr;
 

@@ -39,16 +39,16 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include "wx/printdlg.h"        // wxPageSetupDialog
-#include "wx/fileconf.h"        // wxFileConfig
-#include "wx/clipbrd.h"         // wxClipboard
-#include "wx/wfstream.h"        // wxFileInputStream
-#include "wx/numdlg.h"
-#include "wx/aboutdlg.h"
+#include <wx/printdlg.h>        // wxPageSetupDialog
+#include <wx/fileconf.h>        // wxFileConfig
+#include <wx/clipbrd.h>         // wxClipboard
+#include <wx/wfstream.h>        // wxFileInputStream
+#include <wx/numdlg.h>
+#include <wx/aboutdlg.h>
 
-#include "wx/stedit/stedit.h"
-#include "wx/stedit/steexprt.h"
-#include "wx/stedit/steart.h"
+#include <wx/stedit/stedit.h>
+#include <wx/stedit/steexprt.h>
+#include <wx/stedit/steart.h>
 
 #include "wxext.h"
 

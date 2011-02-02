@@ -11,8 +11,8 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/steopts.h"
-#include "wx/stedit/stedit.h"
+#include <wx/stedit/steopts.h>
+#include <wx/stedit/stedit.h>
 
 //-----------------------------------------------------------------------------
 // wxSTEditorOptions

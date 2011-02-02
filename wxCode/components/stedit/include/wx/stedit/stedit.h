@@ -11,11 +11,11 @@
 #ifndef _STEDIT_H_
 #define _STEDIT_H_
 
-#include "wx/defs.h"
-#include "wx/datetime.h"
-#include "wx/fdrepdlg.h"
-#include "wx/filename.h"
-#include "wx/treectrl.h"
+#include <wx/defs.h>
+#include <wx/datetime.h>
+#include <wx/fdrepdlg.h>
+#include <wx/filename.h>
+#include <wx/treectrl.h>
 
 class WXDLLIMPEXP_FWD_CORE wxMenu;
 class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
@@ -25,11 +25,11 @@ class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 class WXDLLIMPEXP_FWD_CORE wxFileHistory;
 class WXDLLIMPEXP_FWD_CORE wxDocument;
 
-#include "wx/stedit/stedefs.h"
-#include "wx/stedit/steprefs.h"
-#include "wx/stedit/stestyls.h"
-#include "wx/stedit/stelangs.h"
-#include "wx/stedit/steopts.h"
+#include <wx/stedit/stedefs.h>
+#include <wx/stedit/steprefs.h>
+#include <wx/stedit/stestyls.h>
+#include <wx/stedit/stelangs.h>
+#include <wx/stedit/steopts.h>
 
 //-----------------------------------------------------------------------------
 // wxSTERecursionGuard - a simple recursion guard to block reentrant functions
@@ -935,12 +935,12 @@ typedef void (wxEvtHandler::*wxSTEditorEventFunction)(wxSTEditorEvent&);
 
 
 // include the others so that only this file needs to be included for everything
-#include "wx/stedit/stenoteb.h"
-#include "wx/stedit/steframe.h"
-#include "wx/stedit/stesplit.h"
-#include "wx/stedit/steprint.h"
-#include "wx/stedit/stemenum.h"
-#include "wx/stedit/stedlgs.h"
-#include "wx/stedit/stefindr.h"
+#include <wx/stedit/stenoteb.h>
+#include <wx/stedit/steframe.h>
+#include <wx/stedit/stesplit.h>
+#include <wx/stedit/steprint.h>
+#include <wx/stedit/stemenum.h>
+#include <wx/stedit/stedlgs.h>
+#include <wx/stedit/stefindr.h>
 
 #endif  // _STEDIT_H_

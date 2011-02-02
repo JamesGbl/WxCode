@@ -10,15 +10,15 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/stedefs.h"
-#include "wx/dir.h"
-#include "wx/stdpaths.h"
-#include "wx/cmdline.h"
-#include "wx/clipbrd.h"         // wxClipboard
+#include <wx/stedit/stedefs.h>
+#include <wx/dir.h>
+#include <wx/stdpaths.h>
+#include <wx/cmdline.h>
+#include <wx/clipbrd.h>
 
 #include "wxext.h"
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(AcceleratorArray)
 
 const wxSize wxIconSize_System(wxSystemSettings::GetMetric(wxSYS_ICON_X     ), wxSystemSettings::GetMetric(wxSYS_ICON_Y     ));

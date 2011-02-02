@@ -12,14 +12,14 @@
 #define _STEDEFS_H_
 
 // this include is required for WXDLLEXPORT definition...
-#include "wx/defs.h"
-#include "wx/dlimpexp.h"
+#include <wx/defs.h>
+#include <wx/dlimpexp.h>
 
 // Include wxStyledTextCtrl
-#include "wx/stc/stc.h"
+#include <wx/stc/stc.h>
 
 #if (wxVERSION_NUMBER >= 2900)
-    // #include "wx/stc/private.h" // wx2stc() has been moved here, but isn't exported
+    // #include <wx/stc/private.h" // wx2stc() has been moved here, but isn't exported
     #define wx2stc(wxstr)    (wxstr).mb_str()
     #define stc2wx(char_str) wxString(char_str)
 #endif
@@ -29,7 +29,7 @@
 // If you get an error on this line, maybe you forgot to copy
 //   include/wx/stedit/setup0.h to include/wx/stedit/setup.h ?
 #if !defined(_STESETUP_H_)
-    #include "wx/stedit/setup.h"
+    #include <wx/stedit/setup.h>
 #endif // !defined(_STESETUP_H_)
 
 //-----------------------------------------------------------------------------

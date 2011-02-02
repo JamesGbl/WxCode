@@ -11,9 +11,9 @@
 #ifndef _STENOTEB_H_
 #define _STENOTEB_H_
 
-#include "wx/notebook.h"
+#include <wx/notebook.h>
 
-#include "wx/stedit/stedefs.h"
+#include <wx/stedit/stedefs.h>
 
 //-----------------------------------------------------------------------------
 // wxSTEditorNotebook - a wxNotebook of wxSTEditorSplitters

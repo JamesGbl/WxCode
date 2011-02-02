@@ -8,13 +8,13 @@
 // Copyright:   (c) John Labenski
 // Licence:     wxWidgets licence
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+// For compilers that support precompilation, includes <wx/wx.h".
+#include <wx/wxprec.h>
 
-#include "wx/cmdline.h"
-#include "wx/fileconf.h"
-#include "wx/msgdlg.h"
-#include "wx/stedit/stedit.h"
+#include <wx/cmdline.h>
+#include <wx/fileconf.h>
+#include <wx/msgdlg.h>
+#include <wx/stedit/stedit.h>
 #include "../../src/wxext.h"
 
 #include "app.h"

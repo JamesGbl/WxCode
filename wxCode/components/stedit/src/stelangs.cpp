@@ -10,8 +10,8 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/stelangs.h"
-#include "wx/stedit/stedit.h"
+#include <wx/stedit/stelangs.h>
+#include <wx/stedit/stedit.h>
 
 DEFINE_PAIRARRAY_INTKEY(wxString, wxSTEPairArrayIntString)
 
@@ -5483,7 +5483,7 @@ void wxSTEditorLangs::UpdateEditor( wxSTEditor *editor )
 // global precreated wxSTEditorLangs
 wxSTEditorLangs  s_wxSTEditorLangs(true);
 
-#include "wx/fileconf.h"
+#include <wx/fileconf.h>
 // FIXME - test code to see how it would look in a wxFileConfig
 void LangConfig()
 {

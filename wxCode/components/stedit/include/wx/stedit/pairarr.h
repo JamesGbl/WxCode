@@ -14,7 +14,7 @@
 
 // Note: there is no cpp file as all the code is contained in these macros.
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 
 // ============================================================================
 // Provides macros for creating your own (key, value) pair arrays using a binary

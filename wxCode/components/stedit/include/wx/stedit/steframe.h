@@ -11,9 +11,9 @@
 #ifndef _STEFRAME_H_
 #define _STEFRAME_H_
 
-#include "wx/frame.h"
-#include "wx/dnd.h"
-#include "wx/treectrl.h"
+#include <wx/frame.h>
+#include <wx/dnd.h>
+#include <wx/treectrl.h>
 
 class WXDLLIMPEXP_FWD_CORE wxFrame;
 class WXDLLIMPEXP_FWD_CORE wxSplitterWindow;
@@ -27,7 +27,7 @@ class WXDLLIMPEXP_FWD_CORE wxFileHistory;
 class WXDLLIMPEXP_FWD_CORE wxTreeCtrl;
 class WXDLLIMPEXP_FWD_CORE wxTreeEvent;
 
-#include "wx/stedit/stedefs.h"
+#include <wx/stedit/stedefs.h>
 
 //-----------------------------------------------------------------------------
 // wxSTEditorFrame - a generic frame to contain either a single editor

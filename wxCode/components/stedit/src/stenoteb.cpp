@@ -11,11 +11,11 @@
 
 #include "precomp.h"
 
-#include "wx/stedit/stedit.h"
-#include "wx/stedit/stenoteb.h"
-#include "wx/stedit/stedlgs.h"
+#include <wx/stedit/stedit.h>
+#include <wx/stedit/stenoteb.h>
+#include <wx/stedit/stedlgs.h>
 
-#include "wx/progdlg.h"   // wxProgressDialog
+#include <wx/progdlg.h>   // wxProgressDialog
 #include "wxext.h"   // wxClipboard_Get()
 
 //-----------------------------------------------------------------------------

@@ -27,8 +27,8 @@
 // ----------------------------------------------------------------------------
 
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+// For compilers that support precompilation, includes <wx/wx.h".
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -36,23 +36,23 @@
 
 // for all others, include the necessary headers
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
-#include "wx/filename.h"
-#include "wx/stockitem.h"
+#include <wx/filename.h>
+#include <wx/stockitem.h>
 
-#include "wx/stedit/stedit.h"
-#include "wx/stedit/steshell.h"
-#include "wx/stedit/steart.h"
+#include <wx/stedit/stedit.h>
+#include <wx/stedit/steshell.h>
+#include <wx/stedit/steart.h>
 #include "../../art/pencil16.xpm"
 
-#include "wx/cmdline.h"
-#include "wx/config.h"
-#include "wx/dir.h"
-#include "wx/filename.h"
-#include "wx/html/htmlwin.h"
-#include "wx/clipbrd.h"
+#include <wx/cmdline.h>
+#include <wx/config.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/html/htmlwin.h>
+#include <wx/clipbrd.h>
 
 #include "../../src/wxext.h" // wxLocale_Init()
 #include "app.h"
