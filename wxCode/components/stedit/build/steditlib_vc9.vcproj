@@ -275,7 +275,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\contrib\include;..\include"
+				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\contrib\include;..\include"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
