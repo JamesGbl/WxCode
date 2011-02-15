@@ -59,8 +59,10 @@
     <!-- sets the name of the folder which contains this component and thus
          should always be in lowercase, wxCode/component/MYCOMPONENT_NAME 
     -->
-    <set-comp-name>mycomp_name</set-comp-name>
+    <set-comp-name>timepickerctrl</set-comp-name>
 
+   <!-- the timepickerctrl library version -->
+   <set var="VERSION">0.1</set>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Library settings                                                  -->
@@ -86,35 +88,27 @@
                the root of your component and must always be relative paths.
     -->
 
-    <lib id="MYCOMPONENT_NAME_lib" template="wxcode-lib" cond="SHARED=='0'">
+    <lib id="timepickerctrl_lib" template="wxcode-lib" cond="SHARED=='0'">
+        <headers>include/timepickerctrl.h</headers>
+        <install-headers-to>$(PREFIX)</install-headers-to>
         <!-- here you can use any standard Bakefile tag. E.g. you may want to
              use <include> tag to add additional compiler include paths.
         -->
     </lib>
-    <dll id="MYCOMPONENT_NAME_dll" template="wxcode-dll" cond="SHARED=='1'">
+    <dll id="timepickerctrl_dll" template="wxcode-dll" cond="SHARED=='1'">
+        <headers>include/timepickerctrl.h</headers>
+        <install-headers-to>$(PREFIX)</install-headers-to>
         <!-- Remove the libraries which are not required by your project.
              Note : the linking order may be important for static objects
                     to be initialized correctly and even more important for
                     some linkers like GNU's linker. -->
-        <wx-lib>richtext</wx-lib>
-        <wx-lib>aui</wx-lib>
-        <wx-lib>qa</wx-lib>
-        <wx-lib>dbgrid</wx-lib>
-        <wx-lib>gl</wx-lib>
-        <wx-lib>odbc</wx-lib>
-        <wx-lib>xrc</wx-lib>
-        <wx-lib>html</wx-lib>
-        <wx-lib>media</wx-lib>
-        <wx-lib>adv</wx-lib>
-        <wx-lib>net</wx-lib>
-        <wx-lib>xml</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
     </dll>
 
     <!-- This makes the MSVC6 project files much nicer... -->
     <set var="MSVC6PRJ_MERGED_TARGETS">
-        MYCOMPONENT_NAME=MYCOMPONENT_NAME_lib+MYCOMPONENT_NAME_dll
+        timepickerctrl=timepickerctrl_lib+timepickerctrl_dll
     </set>
 
 
@@ -125,7 +119,7 @@
     <!-- For wxCode samples, don't use a simple <exe> tag but rather the more
          specific <wxcode-sample> tag: -->
 
-    <wxcode-sample id="MYSAMPLE_NAME">
+    <wxcode-sample id="sample1">
         <!-- Inside a <wxcode-sample> tag you _must_ use the <dir> tag
              to tell Bakefile in which directory is placed this sample.
 
@@ -145,19 +139,7 @@
         <!-- Remove the libraries which are not required by your project.
              Note : the linking order may by important for static objects
              to be initialized correctly. -->
-        <library>MYCOMPONENT_NAME_lib</library>
-        <wx-lib>richtext</wx-lib>
-        <wx-lib>aui</wx-lib>
-        <wx-lib>qa</wx-lib>
-        <wx-lib>dbgrid</wx-lib>
-        <wx-lib>gl</wx-lib>
-        <wx-lib>odbc</wx-lib>
-        <wx-lib>xrc</wx-lib>
-        <wx-lib>html</wx-lib>
-        <wx-lib>media</wx-lib>
-        <wx-lib>adv</wx-lib>
-        <wx-lib>net</wx-lib>
-        <wx-lib>xml</wx-lib>
+        <library>timepickerctrl_lib</library>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
     </wxcode-sample>

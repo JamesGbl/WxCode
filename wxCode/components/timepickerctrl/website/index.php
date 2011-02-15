@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
+  // Author: Paul Breen (greenbreen@yahoo.com); adapted from the generic wxSpinCtrl by Vadim Zeitlin
+  // Creation date: January 3, 2011
   // RCS-ID: $Id$
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "TimePickerCtrl";
+      $subdir = "timepickerctrl";
       require("compwebsite.inc.php");
   ?>
 
