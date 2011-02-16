@@ -198,6 +198,7 @@ WXSF_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(VAR_8) -wx -i=..\include -i=..\src -i=.\src $(CPPFLAGS) $(CXXFLAGS)
 WXSF_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ArrowBase.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_AutoLayout.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_BitmapShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_BitmapShapeXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_CanvasHistory.obj &
@@ -223,6 +224,7 @@ WXSF_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_PolygonShapeXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_Printout.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RectShape.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RoundOrthoShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RoundRectShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_SFEvents.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ScaledDC.obj &
@@ -230,6 +232,7 @@ WXSF_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeBaseXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeCanvas.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeDataObject.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeDockpoint.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeHandle.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_SolidArrow.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_TextShape.obj &
@@ -245,6 +248,7 @@ WXSF_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	-dWXMAKINGDLL_WXXS -dWXMAKINGDLL_WXSF $(CPPFLAGS) $(CXXFLAGS)
 WXSF_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ArrowBase.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_AutoLayout.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_BitmapShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_BitmapShapeXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_CanvasHistory.obj &
@@ -270,6 +274,7 @@ WXSF_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_PolygonShapeXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_Printout.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RectShape.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RoundOrthoShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RoundRectShape.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_SFEvents.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ScaledDC.obj &
@@ -277,6 +282,7 @@ WXSF_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeBaseXml.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeCanvas.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeDataObject.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeDockpoint.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeHandle.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_SolidArrow.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_TextShape.obj &
@@ -473,6 +479,9 @@ make_sample_dir_sfsample4 :
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ArrowBase.obj :  .AUTODEPEND ..\src\ArrowBase.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_AutoLayout.obj :  .AUTODEPEND ..\src\AutoLayout.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_BitmapShape.obj :  .AUTODEPEND ..\src\BitmapShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
@@ -548,6 +557,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_Printout.obj :  .AUTODE
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RectShape.obj :  .AUTODEPEND ..\src\RectShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RoundOrthoShape.obj :  .AUTODEPEND ..\src\RoundOrthoShape.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_RoundRectShape.obj :  .AUTODEPEND ..\src\RoundRectShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
@@ -567,6 +579,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeCanvas.obj :  .AUT
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeDataObject.obj :  .AUTODEPEND ..\src\ShapeDataObject.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeDockpoint.obj :  .AUTODEPEND ..\src\ShapeDockpoint.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_ShapeHandle.obj :  .AUTODEPEND ..\src\ShapeHandle.cpp
@@ -594,6 +609,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_lib_XmlSerializer.obj :  .A
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ArrowBase.obj :  .AUTODEPEND ..\src\ArrowBase.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_AutoLayout.obj :  .AUTODEPEND ..\src\AutoLayout.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_BitmapShape.obj :  .AUTODEPEND ..\src\BitmapShape.cpp
@@ -671,6 +689,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_Printout.obj :  .AUTODE
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RectShape.obj :  .AUTODEPEND ..\src\RectShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RoundOrthoShape.obj :  .AUTODEPEND ..\src\RoundOrthoShape.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_RoundRectShape.obj :  .AUTODEPEND ..\src\RoundRectShape.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
 
@@ -690,6 +711,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeCanvas.obj :  .AUT
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeDataObject.obj :  .AUTODEPEND ..\src\ShapeDataObject.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeDockpoint.obj :  .AUTODEPEND ..\src\ShapeDockpoint.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXSF_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxsf_dll_ShapeHandle.obj :  .AUTODEPEND ..\src\ShapeHandle.cpp

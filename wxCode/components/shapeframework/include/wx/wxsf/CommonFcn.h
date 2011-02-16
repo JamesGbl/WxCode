@@ -38,6 +38,8 @@ namespace wxSF
 		errNOT_ACCEPTED,
 		errINVALID_INPUT
 	};
+	
+	WXDLLIMPEXP_SF extern const double PI;
 }
 
 #endif //_WXSFCOMMONFCN_H

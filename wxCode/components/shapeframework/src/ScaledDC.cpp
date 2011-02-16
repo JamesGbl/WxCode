@@ -15,6 +15,7 @@
 #endif
 
 #include "wx/wxsf/ScaledDC.h"
+#include "wx/wxsf/CommonFcn.h"
 
 bool wxSFScaledDC::m_fEnableGC = false;
 
@@ -96,7 +97,7 @@ bool wxSFScaledDC::CanGetTextExtent() const
 {
 	return m_pTargetDC->CanGetTextExtent();
 }
-void wxSFScaledDC::Clear()
+void wxSFScaledDC::Clear() 
 {
 	m_pTargetDC->Clear();
 }
@@ -114,7 +115,29 @@ void wxSFScaledDC::DoCrossHair(wxCoord x, wxCoord y)
 }
 void wxSFScaledDC::DoDrawArc(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, wxCoord xc, wxCoord yc)
 {
-	m_pTargetDC->DrawArc(Scale(x1), Scale(y1), Scale(x2), Scale(y2), Scale(xc), Scale(yc));
+	if( m_fEnableGC )
+    {
+        #if wxUSE_GRAPHICS_CONTEXT
+        InitGC();
+		wxGraphicsPath path = m_pGC->CreatePath();
+		
+		double dist, sang, eang;
+		
+		dist = wxSFCommonFcn::Distance( wxRealPoint(x2, y2), wxRealPoint(xc, yc) );
+		sang = acos( (x2 - xc) / dist ) + ( yc > y2 ? wxSF::PI : 0 );
+		
+		dist = wxSFCommonFcn::Distance( wxRealPoint(x1, y1), wxRealPoint(xc, yc) );
+		eang = acos( (x1 - xc) / dist ) + ( yc > y1 ? wxSF::PI : 0 );
+		
+		path.AddArc( xc, yc, dist, sang, eang, true );
+		
+		m_pGC->StrokePath( path );
+		
+        UninitGC();
+        #endif
+    }
+    else
+		m_pTargetDC->DrawArc(Scale(x1), Scale(y1), Scale(x2), Scale(y2), Scale(xc), Scale(yc));
 }
 void wxSFScaledDC::DoDrawBitmap(const wxBitmap& bmp, wxCoord x, wxCoord y, bool useMask)
 {
