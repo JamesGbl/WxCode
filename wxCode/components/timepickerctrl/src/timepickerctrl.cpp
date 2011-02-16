@@ -56,13 +56,20 @@ protected:
 
     void OnMouse(wxMouseEvent& event)
     {
-    	int hr_min_boundary = 20;
-    	int min_sec_boundary = 40;
-    	int sec_xm_boundary = 60;
-    	int x, y;
-    	wxString str;
     	if(event.GetEventType()==wxEVT_LEFT_DOWN)
     	{
+			wxString s = GetValue();
+			long int pos1 = s.Find(':');
+			long int pos2 = s.Find(':',true);
+			long int pos3 = s.Find(' ',true);
+			int w,h;
+			GetTextExtent(s.SubString(0,pos1),&w,&h);
+			int hr_min_boundary = w;
+			GetTextExtent(s.SubString(0,pos2),&w,&h);
+			int min_sec_boundary = w;
+			GetTextExtent(s.SubString(0,pos3),&w,&h);
+			int sec_xm_boundary = w;
+			int x, y;
     		m_keyPressedQ = false;
     		SetFocus();
     		event.GetPosition(&x,&y);
