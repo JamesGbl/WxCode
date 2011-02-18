@@ -24,7 +24,7 @@
 # wxCode DB backup
 # ================
 
-( cd /home/groups/w/wx/wxcode/htdocs/scripts && ./helper_backupdb.sh )
+( cd /home/project-web/wxcode/htdocs/scripts && ./helper_backupdb.sh )
 
 
 # Wiki backup
@@ -50,7 +50,7 @@
 # Old backup removal
 # ==================
 
-olds=`find /home/groups/w/wx/wxcode/htdocs/backup -type f -mtime +30 -name "*.gz" 2>/dev/null`
+olds=`find /home/project-web/wxcode/htdocs/backup -type f -mtime +30 -name "*.gz" 2>/dev/null`
 
 # NB: don't check the $? var as find will sometimes set it to != 0 just because
 #     e.g. it's unable to walk into a directory...

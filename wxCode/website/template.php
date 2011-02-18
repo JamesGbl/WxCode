@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
     <?php
-        $filename="bakefile";
+        $filename="template";
         $pagetitle="Template guide";
         $menuentry=writeMenuEntry("maintguide", "Maintainer guide");
         require("header.inc.php");
@@ -38,34 +38,32 @@
        'template' folder described in the text <a href="http://wxcode.svn.sourceforge.net/viewvc/wxcode/trunk/wxCode/template/">here</a>.</p>
 
     <p>Remember that the format &amp; the structure explained in this file will make your
-        component not only standardized and thus easier to use into bigger projects but
-        will also make possible to eventually integrate it into the official wxWidgets
+        component not only standardized and thus easier to use in bigger projects but
+        will also make possible to integrate it into the official wxWidgets
         distribution.</p>
 
     <p>If you need further info/assistance with the structure of your component,
     please ask in the wxcode-users mailing list at <a href="mailto:wxcode-users@lists.sourceforge.net">wxcode-users@lists.sourceforge.net</a>.</p>
 
 
-
-
     <br/><?php write_h1("Source &amp; header files", "files"); ?>
-    <p>You should keep your sources in a "src" folder; they should all have a .CPP or .C
-    extension (avoid .CXX or .C++ extensions); your include files should instead go into
-    a "include\wx" folder so that they can be included as any other standard wxWidgets
+    <p>You should keep your sources in a "src" folder; they should all have a .cpp or .c
+    extension (avoid .cxx or .c++ extensions); your include files should instead go into
+    a "include/wx" folder so that they can be included as any other standard wxWidgets
     include file:</p>
 
     <div style="text-align:center"><tt>#include &lt;wx/comp.h&gt;</tt></div>
 
-    <p>they should have a .H extension (avoid .HPP extensions).</p>
+    <p>they should have a .h extension (avoid .hpp extensions).</p>
 
     <p>To be able to support precompiled headers and also to be sure that your license applies
     to every piece of your code, you must always start your header and source files with
-    some standard contents shown in <tt>wxCode\template\include\wx\mycomp.h</tt> and <tt>wxCode\template\src\mycomp.cpp</tt>.</p>
+    some standard contents shown in <tt>wxCode/template/include/wx/mycomp.h</tt> and <tt>wxCode/template/src/mycomp.cpp</tt>.</p>
 
     <p>Also, to support shared builds you should always include in your component the
     WXDLLIMPEXP_MYCOMP symbols in the declaration of each class, function, event...
     you should keep these defines in a separate include file (since they must be
-    included in all the files of your project), look at <tt>wxCode\template\include\wx\mycompdef.h</tt>
+    included in all the files of your project), look at <tt>wxCode/template/include/wx/mycompdef.h</tt>
     for a more detailed explanation about the things you need to support shared builds
     and also for an example of the declaration of WXDLLIMPEXP_MYCOMP macros.</p>
 
@@ -77,19 +75,16 @@
     <p>for more info search in wxWidgets documentation.</p>
 
 
-
-
-
     <br/><?php write_h1("Documentation", "docs"); ?>
     <p>In order to make your component easily integrable in other applications, you need to provide
-    a good documentation of it. Since you probably need to create a simple documentation and you want to do it quickly, 
+    a good documentation for it. Since you probably need to create a simple documentation and you want to do it quickly, 
     I suggest to use doxygen (http://www.doxygen.org); it's a free program which creates the
     documentation of a project extracting the comments you put in your source and header files.</p>
 
-    <p>In this template component, you'll find a simple "Doxyfile" in docs\ folder.
+    <p>In this template component, you'll find a simple "Doxyfile" in docs/ folder.
     If you have already used the doxygen comment syntax in your component source files, then you
     probably need only to change the PROJECT_NAME field in the Doxyfile and then you can run
-    doxygen to get your fresh docs !</p>
+    doxygen to get your fresh docs!</p>
 
     <p id="readme"><strong>&rsaquo; The ReadMe</strong></p>
     <div style="margin-left: 1em">
@@ -107,11 +102,9 @@
     </div>
 
 
-
-
     <br/><?php write_h1("The build system", "build"); ?>
     <p>Even if it's not required that you use Bakefile as build system for your component you are
-    strongly encouraged to do because it's almost impossible to handle all build settings for
+    strongly encouraged to do so because it's almost impossible to handle all build settings for
     all possible builds writing manually the makefiles or, even worse, editing the IDE project
     files: if you support ANSI/Unicode + static/shared + debug/release builds for your component's
     library and your component's sample you'll have up to 16 different configurations.</p>
@@ -123,10 +116,8 @@
     there are various win32 compilers: borland, watcom, digitalmars, msvc, mingw...).</p>
 
     <p>Bakefile is very extensible and you can handle any required build option with it.<br/>
-    So, look at <tt>wxCode\build\bakefiles\ReadMe.txt</tt> for a quick-start guide on the generation 
+    So, look at <tt>wxCode/build/bakefiles/ReadMe.txt</tt> for a quick-start guide on the generation 
     (a matter of few minutes!) of the bakefile for your component.</p>
-
-
 
 
     <br/><?php write_h1("The samples", "samples"); ?>
@@ -139,9 +130,7 @@
 
     <p>In conclusion, you should always provide at least one sample per component.
     The easiest way to create a sample is to modify the "minimal" sample; look at 
-    <tt>wxCode\template\samples</tt> folder for the required file for a minimal sample.</p>
-
-
+    <tt>wxCode/template/samples</tt> folder for the required file for a minimal sample.</p>
 
 
     <br/><?php write_h1("The website", "website"); ?>
@@ -164,26 +153,27 @@
     <li>upload your DOCUMENTATION to the wxCode website <tt>docs</tt> folder.
     You have to do this using some SFTP/SCP client (I use WinSCP on Windows - see <a href="www.winscp.net">www.winscp.net</a>).
     Here is some detailed information to configure your client: 
-    <a href="http://apps.sourceforge.net/trac/sourceforge/wiki/Shell%20service">SF shell service documentation page</a>.
+    <a href="http://sourceforge.net/apps/trac/sourceforge/wiki/SFTP">SF SFTP service documentation page</a>.
 
-    Note that if the folder <tt>/home/groups/w/wx/wxcode/htdocs/docs/YOURCOMPNAME</tt> does not exists,
+    Note that if the folder <tt>/home/project-web/wxcode/htdocs/docs/YOURCOMPNAME</tt> does not exists,
     then you should create it.<br/>
-    Also note that you must use your private SSH key to log in the webserver.</li>
+    Also note that you must use your private SSH key to log in to the webserver.</li>
 
     <li>using the same settings used for step #4, upload your SCREENSHOTS to the 
-    <tt>/home/groups/w/wx/wxcode/htdocs/screenshots/YOURCOMPNAME</tt> directory.<br/>
-    Note that if the folder <tt>/home/groups/w/wx/wxcode/htdocs/screenshots/YOURCOMPNAME</tt> 
+    <tt>/home/project-web/wxcode/htdocs/screenshots/YOURCOMPNAME</tt> directory.<br/>
+    Note that if the folder <tt>/home/projcet-web/wxcode/htdocs/screenshots/YOURCOMPNAME</tt> 
     does not exists, then you should create it.</li>
     </ol>
 
-    <p id="autosync"><strong>&rsaquo; About automatic SVN/CVS-website synchronization</strong></p>
+    <p><strong>Note:</strong> Website write access is currently not automatically granted. Please ask a wxCode administrator to grant write access rights to you.</p>
+
+    <p id="autosync"><strong>&rsaquo; About SVN-website synchronization</strong></p>
     <div style="margin-left: 1em">
-    <p>The wxCode website is synchronized each 24 hours with the CVS/SVN version.
-    Also all component's "website" folders are updated in the server.
-    So, all the files you put in YOURCOMP/website folder should be under CVS/SVN control
+    <p>Automatically synchronizing the wxCode website is not supported by SourceForge anymore. wxCode has to be synchronized manually with the SVN version. That will be done by one of the wxCode administrators in irregular intervals.
+    Also all component's "website" folders are updated on the server.
+    So, all the files you put in YOURCOMP/website folder should be under SVN control
     and will be used to keep your component website up to date.</p>
     </div>
-
 
 
     <br/><?php write_h1("Other docs for wxCode", "other"); ?>
@@ -193,11 +183,11 @@
 
     <div style="text-align:center"><a href="http://wxcode.sourceforge.net/faq.php">http://wxcode.sourceforge.net/faq.php</a></div>
 
-    <p>For help on CVS/SVN operations and Sourceforge file release system, look at:</p>
+    <p>For help on SVN operations and SourceForge file release system, look at:</p>
 
-    <div style="text-align:center"><a href="http://wxcode.sourceforge.net/faq.php">http://wxcode.sourceforge.net/maintguide.php</a></div>
+    <div style="text-align:center"><a href="http://wxcode.sourceforge.net/maintguide.php">http://wxcode.sourceforge.net/maintguide.php</a></div>
 
-    <p>If you still need help then just ask at wxcode-users mailing list.</p>
+    <p>If you still need help then just ask on the wxcode-users mailing list.</p>
 
 
     <br/><?php require("footer.inc.php"); ?>

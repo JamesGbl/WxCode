@@ -12,7 +12,7 @@
     require("../dbconnection.inc.php");
 
     // be sure that the backup folder exists
-    define("BACKUP_FOLDER", "/home/groups/w/wx/wxcode/htdocs/backup");
+    define("BACKUP_FOLDER", "/home/project-web/wxcode/htdocs/backup");
     if (!file_exists(BACKUP_FOLDER))
         mkdir(BACKUP_FOLDER);
 

@@ -15,7 +15,7 @@
     require("../dbquery.inc.php");
     require("../globals.inc.php");
 
-    define("OUTPUT_DIR", "/home/groups/w/wx/wxcode/htdocs/");
+    define("OUTPUT_DIR", "/home/project-web/wxcode/htdocs/");
 
 
     function db_getnames()

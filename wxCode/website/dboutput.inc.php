@@ -238,7 +238,7 @@ class DbOutput {
         $compurl['showthisonly'] = SITEBASEURL . "showcomp.php?name=$comp[name]";
         $compurl['cvs'] = "http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/$comp[location]";
         $compurl['svn'] = "http://wxcode.svn.sourceforge.net/viewvc/wxcode/trunk/wxCode/components/$comp[location]";
-        $compurl['download'] = "https://sourceforge.net/project/showfiles.php?group_id=51305&amp;package_id=45182";
+        $compurl['download'] = "https://sourceforge.net/projects/wxcode/files/Components";
         $compurl['mail'] = "mailto:" . str_replace("@", "@NOSPAM!@", $maintainer['mail']);
 
         /* for more info about this url see edit.php; it uses a POST/GET variable currcomp

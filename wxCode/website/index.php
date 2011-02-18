@@ -27,20 +27,25 @@
 
     <p>wxCode hosts code snippets and libraries related to <a href="http://www.wxwidgets.org">wxWidgets</a>.
     The management of the various components is decided by their maintainers or by the wxCode administrators.
-    A maintainer may resign anytime so any component can be marked as maintained or not; unmaintained components can be took-over by other developers.</p>
+    A maintainer may resign anytime so any component can be marked as maintained or not; unmaintained components can be taken over by other developers.</p>
 
-    <p><strong>wxCode tries to offer high-quality libraries and add-on components for wxWidgets</strong>, so that anytime a component is added, the author should commit himself in the process of maintainance of his code with regards to new version of wxWidgets, bugs and problems reported by the users, etc.
+    <p><strong>wxCode tries to offer high-quality libraries and add-on components for wxWidgets</strong>, so that anytime a component is added, the author should commit himself in the process of maintenance of his code in respect to new versions of wxWidgets, bugs and problems reported by the users, etc.
 
     <p>To know more about wxCode management rules, look at the <a href="rules.php">rules</a> page; if you'd like to help, then you can look at the <a href="help.php">help</a> page.</p>
 
     <p>wxCode is a project hosted by <a href="http://www.sourceforge.net">SourceForge.net</a>; you can visit the <a href="http://sourceforge.net/projects/wxcode">wxCode project page</a> for additional info on this project.</p>
 
-    <p>The <a href="http://wxcode.com">wxCode.com</a> domain name is <strong>sponsored by <a href="http://angelo.mandato.com/">Angelo Mandato</a></strong>. Thanks !</p>
+    <p>Currently the wxCode project has two alias domain names:</p>
+    <ul>
+    <li>The <b><a href="http://wxcode.com">wxCode.com</a></b> domain name is <strong>sponsored by <a href="http://angelo.mandato.com/">Angelo Mandato</a></strong>.</li>
+    <li><p>The <b><a href="http://wxcode.org">wxCode.org</a></b> domain name is <strong>sponsored by Bryan Petty</strong>.</li>
+    </ul>
+    <p>Thanks !</p>
 
 
     <!-- INTRODUCTION SECTION -->
     <?php write_h1("About this website", "website", FALSE); ?>
-    <p>This is a frame-free website; it uses XHTML 1.0 strict and CSS 2.0; if you have problems viewing this site with your browser you can change the style used to render this page clicking on the &quot;Frame-like&quot; link placed in the top-right corner of each page. A cookie will be saved to remember the CSS style you prefer so that you don't have to set it for each page or in each browsing session.</p>
+    <p>This is a frame-free website; it uses XHTML 1.0 strict and CSS 2.0; if you have problems viewing this site with your browser you can change the style used to render this page clicking on the &quot;Frame-like&quot; link placed in the top-right corner of each page. A cookie will be saved to remember the CSS style you prefer so that you don't have to set it for each page or in each browser session.</p>
     <p>To wxCode maintainers: please note that your browser must have cookie support enabled for the login system to work.</p>
 
     <p><strong>Don't miss the <a href="complist.php">component list page</a> to view all of the

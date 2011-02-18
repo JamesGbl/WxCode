@@ -7,10 +7,10 @@ php_flag session.use_trans_sid off
 
 # this is because of the issue described at:
 #     http://sourceforge.net/docman/display_doc.php?docid=14267&group_id=1#webphpsession
-php_value session.save_path /tmp/persistent/wxcode/phpsessions
+php_value session.save_path /home/project-web/wxcode/persistent/phpsessions
 
 # this is to make wiki, phpTumb & beautifier work
-php_value include_path "/home/groups/w/wx/wxcode/htdocs:/home/groups/w/wx/wxcode/htdocs/wiki:/home/groups/w/wx/wxcode/htdocs/phpTumb:/home/groups/w/wx/wxcode/htdocs/wiki/cookbook/beautifier/php/"
+php_value include_path ".:/home/project-web/wxcode/htdocs:/home/project-web/wxcode/htdocs/phpTumb:/usr/share/pear:/usr/share/php"
 
 # this is to make Apache see index.php before index.html
 # NOTE: keep index.html listed somewhere otherwise DOCUMENTATION folders won't open 'index.html' automatically...

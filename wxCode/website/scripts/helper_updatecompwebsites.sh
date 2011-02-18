@@ -14,7 +14,7 @@
     // constants:
     define("CVSROOT", ':pserver:anonymous@wxcode.cvs:/cvsroot/wxcode');
     define("SVNROOT", 'https://wxcode.svn.sourceforge.net/svnroot/wxcode/trunk/wxCode');
-    define("COMP_WEBSITE", '/home/groups/w/wx/wxcode/htdocs/components');
+    define("COMP_WEBSITE", '/home/project-web/wxcode/htdocs/components');
 
     echo "Updating the component websites...";
 

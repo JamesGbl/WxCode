@@ -15,7 +15,7 @@ function restorepermissions
 {
     # after all the updates, restore the permissions for the GROUP
     echo "Restoring permissions..."
-    cd /home/groups/w/wx/wxcode/htdocs
+    cd /home/project-web/wxcode/htdocs
 
     # note: the user permissions must be set, too otherwise the owner
     #       won't be able to run the files. To suppress errors which
@@ -32,7 +32,7 @@ function restorepermissions
 
 # update the global site
 echo "Updating wxCode website..."
-cd /home/groups/w/wx/wxcode/htdocs
+cd /home/project-web/wxcode/htdocs
 svn -q update
 
 # if user called this with a non-empty argument, limit the
@@ -44,7 +44,7 @@ if [ ! -z "$1" ]; then
 fi
 
 # update project news
-cd /home/groups/w/wx/wxcode/htdocs/scripts
+cd /home/project-web/wxcode/htdocs/scripts
 ./helper_exportnews.sh
 
 # update single component websites

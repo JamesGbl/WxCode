@@ -188,13 +188,13 @@ if ($showcompform) {
 
     <!-- COMPONENT INFO BLOCK -->
     <?php if ($labels == "new") { ?>
-    <p>Now, some <strong>basic informations about the component</strong>; remember that component name can be freely chosen but but it has to consist of only lowercase letters, has to be unique within wxCode and must not contain spaces. Please don't use dashes or underscores.</p>
+    <p>Now, some <strong>basic informations about the component</strong>; remember that component name can be freely chosen but it has to consist of only lowercase letters, has to be unique within wxCode and must not contain spaces. Please don't use dashes or underscores.</p>
 
     <p>Also the &quot;Subdir&quot; must be a valid unix file name and must consist of lowercase letters and digits only and should in some way match the component name. It has to be unique within all the components of wxCode and it <strong>should not start with the 'wx' prefix</strong>.</p>
 
-    <p>The &quot;Repository&quot; radio buttons allow you to inform wxCode administrators about your repository type preference: the <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">Concurrent Versioning System (CVS)</a> or the <a href="http://en.wikipedia.org/wiki/Subversion_%28software%29">Subversion</a> one. The latter is the most modern system and thus unless you have valid reasons to prefer CVS over Subversion, you're encouraged to choose the latter.</p>
+    <p>Starting in February 2011 all wxCode components reside in a <a href="http://en.wikipedia.org/wiki/Subversion_%28software%29">Subversion (SVN)</a> repository. It is no longer possible to opt for the <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">Concurrent Versioning System (CVS)</a>.</p>
 
-    <p>The &quot;Component wiki&quot; field allows you to choose if you want to keep a wiki dedicated for this component as the component website (when using value '<em>as website</em>'), if you want to keep the wiki '<em>enabled</em>' but separed from the actual component website (which you have to create in the CVS using the given XHTML template...) or if you do not want any wiki for this component (in this case select '<em>disabled</em>').</p>
+    <p>The &quot;Component wiki&quot; field allows you to choose if you want to keep a wiki dedicated for this component as the component website (when using value '<em>as website</em>'), if you want to keep the wiki '<em>enabled</em>' but separated from the actual component website (which you have to create in the SVN using the given XHTML template...) or if you do not want any wiki for this component (in this case select '<em>disabled</em>').</p>
     <?php } ?>
 
     <?php if ($labels == "new") { ?>
@@ -218,9 +218,10 @@ if ($showcompform) {
         <td>Repository:</td>
         <td>
             <?php
-                writeRepoRadio("CVS");
-                echo "\n&nbsp;&nbsp;&nbsp;\n";
-                writeRepoRadio("Subversion");
+//                writeRepoRadio("CVS");
+//                echo "\n&nbsp;&nbsp;&nbsp;\n";
+//                writeRepoRadio("Subversion");
+                echo "<input type=\"hidden\" name=\"inCVS\" value=\"0\"/>Subversion";
             ?>
         </td>
       </tr>

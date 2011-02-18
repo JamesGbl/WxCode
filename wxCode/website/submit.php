@@ -31,7 +31,7 @@
     <li>Wait: this submission will generate a message in wxcode-users mailing list where you can check your entered values and where <strong>your submission will be checked by wxCode administrators</strong>.
     You will receive as soon as possible a reply from wxCode administrators...</li>
     <li>Look at the &quot;<strong><a href="maintguide.php">wxCode maintainer guide</a></strong>&quot; to learn how
-    to access the CVS of your component; how to make a new release for your component, how to create your component
+    to access the SVN repository of your component; how to make a new release for your component, how to create your component
     website, etc...</li>
     </ol>
     

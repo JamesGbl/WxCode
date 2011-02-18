@@ -39,7 +39,15 @@
     <p>The <strong><a href="http://wxforum.shadonet.com/viewforum.php?f=30">wxCode forum</a></strong> is a good place where you can find a lot of other wx developers and perhaps someone who had your same problem and can help you. Definitively don't miss it.</p>
 
     <br/><?php write_h1("Last resource: wxCode administrators"); ?>
-    <p>As a last resort you can send a mail to one of wxCode administrators: <a href="mailto:wyo@nospam@users.sourceforge.net">Otto Wyss</a>, <a href="mailto:jrl1@nospam@users.sourceforge.net">John Labenski</a> or <a href="mailto:frm@nospam@users.sourceforge.net">Francesco Montorsi</a>...</p>
+    <p>As a last resort you can send a mail to one of wxCode administrators: <a href="mailto:utelle@nospam@users.sourceforge.net">Ulrich Telle</a> or <a href="mailto:frm@nospam@users.sourceforge.net">Francesco Montorsi</a>...</p>
+
+    <p><b>Acknowlegdements</b></p>
+    <p>Many thanks go to the past wxCode administrators for their great work:<br/>
+    <ul>
+    <li>Otto Wyss (2002 - 2006)</li>
+    <li>John Labenski (2006 - 2007)</li>
+    </ul>
+    </p>
 
     <br/><?php require("footer.inc.php"); ?>
 </html>

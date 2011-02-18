@@ -84,7 +84,7 @@
             if ($result != FALSE) {
 
               // tell the user how many results we have found
-              echo "<p>I've found <strong>$numrows results</strong> for the query: &quot;<em>$query</em>&quot;...</p>";
+              echo "<p><strong>$numrows components</strong> found matching your query...</p>";
 
               // place here query results
               $view->write_all_page_links($filename, $numrows, TRUE);

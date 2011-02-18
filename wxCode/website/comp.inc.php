@@ -77,7 +77,8 @@ class Component {
         $this->cdate = $arrvar['cdate'];
 
         // booleans
-        $this->inCVS = (bool)( $arrvar['inCVS'] );
+//        $this->inCVS = (bool)( $arrvar['inCVS'] );
+        $this->inCVS = FALSE;
 
         $this->check_set_array($this->category);
         $this->check_set_array($this->buildsys);

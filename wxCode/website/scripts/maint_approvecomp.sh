@@ -45,7 +45,7 @@
 
     // create a new folder for this component in the website so that our "updatesite.sh" script will be able
     // to keep that folder synchronized with the CVS
-    exec("mkdir -p /home/groups/w/wx/wxcode/htdocs/components/" . strtolower($argv[1]));
+    exec("mkdir -p /home/project-web/wxcode/htdocs/components/" . strtolower($argv[1]));
 
     // call the update scripts
     echo "Calling ./maint_updatesite.sh\n";

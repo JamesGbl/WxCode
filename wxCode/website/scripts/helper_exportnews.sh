@@ -6,7 +6,7 @@
 #          modified to generate XHTML code
 
 # where the news.inc.php file will be put
-destdir=/home/groups/w/wx/wxcode/htdocs
+destdir=/home/project-web/wxcode/htdocs
 
 # get the exported HTML
 /usr/bin/wget -q -O $destdir/news.inc.html 'http://sourceforge.net/export/projnews.php?group_id=51305&limit=4&flat=0&show_summaries=1'  > /dev/null
