@@ -14,6 +14,10 @@
 #define WXK_HELP       WXK_F1
 #define WXK_FULLSCREEN WXK_F11
 
+#if (wxVERSION_NUMBER < 2812)
+   #define wxT_2 wxT
+#endif
+
 WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 
@@ -89,12 +93,6 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
 {
    wxAboutBox(info);
 }
-#endif
-
-#if (wxVERSION_NUMBER >= 2900) // trac.wxwidgets.org/ticket/12925
-   #define WX29CHAR(a) a
-#else
-   #define WX29CHAR wxT
 #endif
 
 #endif // __WXEXT_H__
