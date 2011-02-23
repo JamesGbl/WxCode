@@ -231,6 +231,8 @@ public :
     // Get the row/col representation of the position
     bool PositionToXY(long pos, long *x, long *y) const;
 
+    void SetReadOnly(bool readOnly);
+
 #if (wxVERSION_NUMBER >= 2900)
     void GetSelection(long *iStart, long *iEnd) const
     {
@@ -765,6 +767,8 @@ public :
     //   Otherwise the int/long values are those in the wxCommandEvent
     bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
                    const wxString &evtStr = wxEmptyString, bool do_post = false );
+
+    bool SendFilenameEvent();
 
     // ------------------------------------------------------------------------
     // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl

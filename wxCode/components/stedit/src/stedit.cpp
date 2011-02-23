@@ -739,6 +739,15 @@ bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
     return true;
 }
 
+void wxSTEditor::SetReadOnly(bool readOnly)
+{
+    if (GetReadOnly() != readOnly)
+    {
+        wxStyledTextCtrl::SetReadOnly(readOnly);
+        SendFilenameEvent();
+    }
+}
+
 bool wxSTEditor::TranslatePos(int  start_pos,       int  end_pos,
                               int* trans_start_pos, int* trans_end_pos,
                               STE_TranslatePosType type)
@@ -2074,7 +2083,9 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
     {
         GetSTERefData()->m_fileName = fileName;
         if (send_event)
-            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), fileName.GetFullPath());
+        {
+            SendFilenameEvent();
+        }
     }
 }
 
@@ -2809,7 +2820,6 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
 
         case ID_STE_READONLY :
             SetReadOnly(event.IsChecked());
-            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
             return true;
 
         case ID_STE_COMPLETEWORD : StartAutoCompleteWord(false, true); return true;
@@ -3887,6 +3897,11 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
    return GetEventHandler()->ProcessEvent(event);
 }
 
+bool wxSTEditor::SendFilenameEvent()
+{
+    return SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+}
+
 wxTreeItemId wxSTEditor::GetTreeItemId() const
 {
     return GetSTERefData()->m_treeItemId;
@@ -3897,7 +3912,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 1562")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2648")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
