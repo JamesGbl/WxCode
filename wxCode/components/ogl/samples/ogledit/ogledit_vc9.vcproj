@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_mswu/ogledit.exe"
+				OutputFile="..\..\bin/ogledit.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
@@ -180,7 +180,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_msw/ogledit.exe"
+				OutputFile="..\..\bin/ogledit95.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
@@ -279,10 +279,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswddll/ogledit.exe"
+				OutputFile="..\..\bin/ogledit95d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\..\lib\vc9_dll"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\vc9_mswddll/ogledit.pdb"
 				SubSystem="2"
@@ -380,7 +380,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswuddll/ogledit.exe"
+				OutputFile="..\..\bin/ogleditd.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"

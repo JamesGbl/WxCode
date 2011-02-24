@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswuddll/studio.exe"
+				OutputFile="..\..\bin/oglstudiod.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
@@ -184,10 +184,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\vc9_mswddll/studio.exe"
+				OutputFile="..\..\bin/oglstudio95d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll,..\..\lib\vc9_dll"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\vc9_mswddll/studio.pdb"
 				SubSystem="2"
@@ -282,7 +282,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_msw/studio.exe"
+				OutputFile="..\..\bin/oglstudio95.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
@@ -381,7 +381,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\vc9_mswu/studio.exe"
+				OutputFile="..\..\bin/oglstudio.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"

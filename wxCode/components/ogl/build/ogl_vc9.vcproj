@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="..\lib\vc9_dll\wxmsw28d_ogl_vc_custom.dll"
+				OutputFile="..\bin\wxmsw28d_ogl_vc_custom.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
@@ -335,7 +335,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile="..\lib\vc9_dll\wxmsw28ud_ogl_vc_custom.dll"
+				OutputFile="..\bin\wxmsw28ud_ogl_vc_custom.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
