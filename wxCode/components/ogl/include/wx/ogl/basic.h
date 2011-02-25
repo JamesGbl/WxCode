@@ -111,7 +111,7 @@ class WXDLLEXPORT wxExprDatabase;
 #endif
 
 // Round up
-#define WXROUND(x) ( (long) (x + 0.5) )
+#define WXROUND(x) wxRound(x)
 
 
 // logical function to use when drawing rubberband boxes, etc.
