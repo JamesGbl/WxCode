@@ -18,6 +18,7 @@
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-D_UNICODE" />
 					<Add option="-DWXUSINGDLL" />
+					<Add option="-DWXUSINGDLL_OGL" />
 					<Add directory=".\..\..\..\..\lib\gcc_dll\mswud" />
 					<Add directory=".\..\..\..\..\include" />
 					<Add directory="." />
@@ -76,6 +77,7 @@
 					<Add option="-D_DEBUG" />
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DWXUSINGDLL" />
+					<Add option="-DWXUSINGDLL_OGL" />
 					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)\mswd" />
 				</Compiler>
 				<ResourceCompiler>
@@ -212,8 +214,8 @@
 		<Linker>
 			<Add directory="$(#WX.lib)" />
 		</Linker>
-		<Unit filename="doc.cpp" />
 		<Unit filename="app.cpp" />
+		<Unit filename="doc.cpp" />
 		<Unit filename="ogledit.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
