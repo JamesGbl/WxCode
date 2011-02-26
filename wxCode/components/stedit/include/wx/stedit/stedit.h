@@ -99,7 +99,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorRefData : public wxObjectRefData
 {
 public:
     wxSTEditorRefData();
-    virtual ~wxSTEditorRefData() { m_editors.Clear(); }
+    virtual ~wxSTEditorRefData();
 
     // Find/Add/Remove editors that share this data
     size_t GetEditorCount() const { return m_editors.GetCount(); }
@@ -111,11 +111,24 @@ public:
                                                   if (n != wxNOT_FOUND)
                                                       m_editors.RemoveAt(n); }
 
+    wxFileName GetFilename() const
+    {
+        return m_fileName;
+    }
+
+    virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
+    {
+        wxUnusedVar(notifyViews);
+        m_fileName = fileName;
+    }
+
     // -----------------------------------------------------------------------
     // implementation
+protected:
     wxArrayPtrVoid m_editors;       // editors that share this data
-
     wxFileName   m_fileName;        // current filename for the editor
+
+public:
     wxDateTime   m_modifiedTime;    // file modification time, else invalid
     wxTreeItemId m_treeItemId;      // the treeitem if tracked in a wxTreeCtrl
 
@@ -132,6 +145,16 @@ public:
     wxSTEditorPrefs  m_stePrefs;
     wxSTEditorStyles m_steStyles;
     wxSTEditorLangs  m_steLangs;
+
+    static const wxClassInfo* ms_refdata_classinfo;
+};
+
+class WXDLLIMPEXP_STEDIT wxSTEditorRefDataImpl : public wxObject, public wxSTEditorRefData
+{
+    DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataImpl)
+public:
+    wxSTEditorRefDataImpl();
+    virtual ~wxSTEditorRefDataImpl();
 };
 
 //-----------------------------------------------------------------------------

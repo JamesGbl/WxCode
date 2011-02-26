@@ -79,12 +79,30 @@ wxString STE_DefaultFileExtensions(
                                     );
 
 //-----------------------------------------------------------------------------
-// wxSTEditorData - data that the styled text editor shares with refed ones
+// wxSTEditorRefData - data that the styled text editor shares with refed ones
 //-----------------------------------------------------------------------------
+
+/*static*/ const wxClassInfo* wxSTEditorRefData::ms_refdata_classinfo = CLASSINFO(wxSTEditorRefDataImpl);
+
 wxSTEditorRefData::wxSTEditorRefData()
                   :wxObjectRefData(), m_last_autoindent_line(-1),
                                       m_last_autoindent_len(0),
                                       m_steLang_id(STE_LANG_NULL)
+{
+}
+
+wxSTEditorRefData::~wxSTEditorRefData()
+{
+    m_editors.Clear();
+}
+
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataImpl, wxObject)
+
+wxSTEditorRefDataImpl::wxSTEditorRefDataImpl() : wxObject(), wxSTEditorRefData()
+{
+}
+
+wxSTEditorRefDataImpl::~wxSTEditorRefDataImpl()
 {
 }
 
@@ -128,7 +146,8 @@ END_EVENT_TABLE()
 
 void wxSTEditor::Init()
 {
-    m_refData = new wxSTEditorRefData;
+    m_refData = dynamic_cast<wxSTEditorRefData*>(wxSTEditorRefData::ms_refdata_classinfo->CreateObject());
+
     m_sendEvents = false;
     m_activating = false;
     m_state = 0;
@@ -2074,14 +2093,14 @@ bool wxSTEditor::CopyPath()
 
 wxFileName wxSTEditor::GetFileName() const
 {
-    return GetSTERefData()->m_fileName;
+    return GetSTERefData()->GetFilename();
 }
 
 void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
 {
-    if (GetSTERefData()->m_fileName != fileName)
+    if (GetSTERefData()->GetFilename() != fileName)
     {
-        GetSTERefData()->m_fileName = fileName;
+        GetSTERefData()->SetFilename(fileName);
         if (send_event)
         {
             SendFilenameEvent();
@@ -3912,7 +3931,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2648")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2653")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
