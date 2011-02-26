@@ -226,6 +226,7 @@
 		</Linker>
 		<Unit filename="app.cpp" />
 		<Unit filename="cmdline.cpp" />
+		<Unit filename="stedoc.cpp" />
 		<Unit filename="wxstedit.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

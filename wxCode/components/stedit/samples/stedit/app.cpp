@@ -60,6 +60,13 @@
 #include "wxstedit_htm.hpp" // include docs
 #include "readme_htm.hpp"
 
+// uncomment the next line to wire into the wxWidgets doc/view framework
+//#include <wx/docview.h>
+
+#ifdef _WX_DOCH__
+    #include "stedoc.h"
+#endif
+
 // ----------------------------------------------------------------------------
 
 enum Menu_IDs
@@ -85,6 +92,12 @@ bool wxStEditApp::OnInit()
 {
     if (!wxApp::OnInit()) // parse command line
         return false;
+
+#ifdef _WX_DOCH__
+    new wxDocManager();
+    wxSTEditorDocTemplate::Create(wxDocManager::GetDocumentManager());
+    wxSTEditorRefData::ms_refdata_classinfo = CLASSINFO(wxSTEditorDoc);
+#endif
 
     SetAppName(STE_APPNAME);
 #if (wxVERSION_NUMBER >= 2900)
@@ -301,6 +314,9 @@ bool wxStEditApp::OnInit()
 
 int wxStEditApp::OnExit()
 {
+#ifdef _WX_DOCH__
+    delete wxDocManager::GetDocumentManager();
+#endif
     wxTheClipboard->Flush();
     delete wxConfigBase::Set(NULL);
     return wxApp::OnExit();

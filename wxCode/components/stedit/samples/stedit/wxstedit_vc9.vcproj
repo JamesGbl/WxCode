@@ -836,6 +836,17 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stedoc.cpp"
+				>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\wxstedit.rc"
 				>
 			</File>
@@ -843,6 +854,14 @@
 		<Filter
 			Name="Header Files"
 			>
+			<File
+				RelativePath=".\app.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stedoc.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
