@@ -57,8 +57,8 @@
 #define wxART_STEDIT_PREFDLG_STYLES     wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_STYLES)
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
-#define wxDialogIconSize wxIconSize_Small
-#define wxMenuIconSize   wxIconSize_Small
+#define wxDialogIconSize wxIconSize_SystemSmall
+#define wxMenuIconSize   wxIconSize_SystemSmall
 
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {

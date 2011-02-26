@@ -47,7 +47,8 @@ WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&)
 WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray& accel, int id);
 
 WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_System;
-WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_Small;
+WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_SystemSmall;
+//WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_CustomSmall;
 
 #if (wxVERSION_NUMBER >= 2900)
 #define wxMessageBoxCaption wxTheApp->GetAppDisplayName()
