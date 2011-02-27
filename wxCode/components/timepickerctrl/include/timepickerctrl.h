@@ -1,7 +1,7 @@
 // Doxygen documentation follows:
 /** @mainpage TimePickerCtrl
 *
-* @version 0.1
+* @version 0.2
 *
 * @authors Paul Breen (greenbreen@yahoo.com); adapted from the generic wxSpinCtrl by Vadim Zeitlin
 *

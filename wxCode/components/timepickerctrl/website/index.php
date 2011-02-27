@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
    <body>
       <br/>
-      <H1 align="center">TimePickerCtrl version 0.1</H1>
+      <H1 align="center">TimePickerCtrl version 0.2</H1>
       <H2>Screenshots</H2>
          <table width="100%">
             <tr><td width="50%">
