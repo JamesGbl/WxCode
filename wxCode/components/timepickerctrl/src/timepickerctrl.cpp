@@ -146,7 +146,7 @@ protected:
     		switch(m_timepicker->GetTimeField())
     		{
 			case TIME_FIELD_HOUR:
-				m_timepicker->setSel(0,2);
+				m_timepicker->SetSelection(0,2);
 				break;
 			case TIME_FIELD_MINUTE:
 				m_timepicker->SetTimeField(TIME_FIELD_HOUR);
@@ -174,7 +174,7 @@ protected:
 				m_timepicker->SetTimeField(TIME_FIELD_AM_PM);
 				break;
 			case TIME_FIELD_AM_PM:
-				m_timepicker->setSel(9,-1);
+				m_timepicker->SetSelection(9,-1);
 				break;
     		}
     	}
@@ -420,16 +420,56 @@ void TimePickerCtrl::SetValue(int val)
 	switch(m_timeField)
 	{
 	case TIME_FIELD_HOUR:
-		setSel(0,2);
+		SetSelection(0,2);
 		break;
 	case TIME_FIELD_MINUTE:
-		setSel(3,5);
+		SetSelection(3,5);
 		break;
 	case TIME_FIELD_SECOND:
-		setSel(6,8);
+		SetSelection(6,8);
 		break;
 	case TIME_FIELD_AM_PM:
-		setSel(9,-1);
+		SetSelection(9,-1);
+		break;
+	}
+}
+
+void TimePickerCtrl::SetValue(wxDateTime dt)
+{
+	m_time = dt;
+	int val;
+    switch(m_timeField)
+    {
+	case TIME_FIELD_HOUR:
+		m_btn->SetValue(m_time.GetHour());
+		break;
+	case TIME_FIELD_MINUTE:
+		m_btn->SetValue(m_time.GetMinute());
+		break;
+	case TIME_FIELD_SECOND:
+		m_btn->SetValue(m_time.GetSecond());
+		break;
+	case TIME_FIELD_AM_PM:
+		if(pmQ())
+			m_btn->SetValue(1);
+		else
+			m_btn->SetValue(0);
+		break;
+    }
+	m_text->SetValue(wxString::Format(_("%2d:%02d:%02d %s"),GetHour(false),GetMinute(),GetSecond(),(pmQ()?_("PM"):_("AM"))));
+	switch(m_timeField)
+	{
+	case TIME_FIELD_HOUR:
+		SetSelection(0,2);
+		break;
+	case TIME_FIELD_MINUTE:
+		SetSelection(3,5);
+		break;
+	case TIME_FIELD_SECOND:
+		SetSelection(6,8);
+		break;
+	case TIME_FIELD_AM_PM:
+		SetSelection(9,-1);
 		break;
 	}
 }
@@ -439,13 +479,6 @@ void TimePickerCtrl::SetRange(int min, int max)
     wxCHECK_RET( m_btn, _T("invalid call to wxSpinCtrlg::SetRange") );
 
     m_btn->SetRange(min, max);
-}
-
-void TimePickerCtrl::SetSelection(long from, long to)
-{
-    wxCHECK_RET( m_text, _T("invalid call to wxSpinCtrlg::SetSelection") );
-
-    m_text->SetSelection(from, to);
 }
 
 wxSize TimePickerCtrl::DoGetBestSize() const
@@ -568,25 +601,25 @@ bool TimePickerCtrl::SetTimeField(wxTimeField f)
 		m_btn->SetRange(0,23);
 		m_btn->SetValue(GetHour());
 		m_timeField = f;
-		setSel(0,2);
+		SetSelection(0,2);
 		return true;
 	case TIME_FIELD_MINUTE:
 		m_btn->SetRange(0,59);
 		m_btn->SetValue(GetMinute());
 		m_timeField = f;
-		setSel(3,5);
+		SetSelection(3,5);
 		return true;
 	case TIME_FIELD_SECOND:
 		m_btn->SetRange(0,59);
 		m_btn->SetValue(GetSecond());
 		m_timeField = f;
-		setSel(6,8);
+		SetSelection(6,8);
 		return true;
 	case TIME_FIELD_AM_PM:
 		m_btn->SetRange(1,2);
 		m_btn->SetValue((pmQ())?2:1);
 		m_timeField = f;
-		setSel(9,-1);
+		SetSelection(9,-1);
 		return true;
 	default:
 		return false;

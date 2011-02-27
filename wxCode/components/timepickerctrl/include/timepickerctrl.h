@@ -71,14 +71,29 @@ public:
 	virtual ~TimePickerCtrl();
 
 	//	operations
+	/// This function sets the currently selected field
 	void SetValue(int val);
+
+	/// This function sets the TimePickerCtrl's wxDateTime to the given wxDateTime
+	void SetValue(wxDateTime dt);
+
+	/// This function sets the minimum and maximum values allowed in the currently selected field
 	void SetRange(int min, int max);
-	void SetSelection(long from, long to);
+
+	/// This function highlights the text in the TimePickerCtrl's associated wxTextCtrl between the given indices
+	void SetSelection(long from, long to) const {m_text->SetSelection(from,to);}
 
     // accessors
+    /// This function returns the value of the currently selected field
     int GetValue() const;
+
+    /// This function returns the minimum value allowed in the currently selected field
     int GetMin() const;
+
+    /// This function returns the maximum value allowed in the currently selected field
     int GetMax() const;
+
+    /// This function returns the wxDateTime currently entered in the TimePickerCtrl
     wxDateTime GetDateTime() const {return m_time;}
 
     // implementation from now on
@@ -111,8 +126,6 @@ public:
     /// Put the time value of the string in the text control into time and return
     /// true or return false if the text ctrl doesn't contain a valid time.
     bool GetTextValue(wxDateTime* const time) const;
-
-    void setSel(int start, int end) const {m_text->SetSelection(start,end);}
 
 protected:
     /// Override the base class virtuals involved into geometry calculations.

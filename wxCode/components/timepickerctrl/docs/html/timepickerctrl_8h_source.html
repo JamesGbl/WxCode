@@ -89,86 +89,91 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00071"></a>00071         <span class="keyword">virtual</span> <a class="code" href="classTimePickerCtrl.html#af2994941ba64122f0ce9e1dbfc9efa82">~TimePickerCtrl</a>();
 <a name="l00072"></a>00072 
 <a name="l00073"></a>00073         <span class="comment">//      operations</span>
-<a name="l00074"></a>00074         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#ade894df9b0a1c39d7412f2ec907f5ce7">SetValue</a>(<span class="keywordtype">int</span> val);
-<a name="l00075"></a>00075         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#a44e33d64d182b2ced903d221a954f5b1">SetRange</a>(<span class="keywordtype">int</span> min, <span class="keywordtype">int</span> max);
-<a name="l00076"></a>00076         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#a7de32e90a2d1133c6aae5d6fde74f8d4">SetSelection</a>(<span class="keywordtype">long</span> from, <span class="keywordtype">long</span> to);
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078     <span class="comment">// accessors</span>
-<a name="l00079"></a>00079     <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a2004605824a6b3e5e1d7a9b6292c6624">GetValue</a>() <span class="keyword">const</span>;
-<a name="l00080"></a>00080     <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a77b4fcf9f361503fec90d8e7a0c7d26d">GetMin</a>() <span class="keyword">const</span>;
-<a name="l00081"></a>00081     <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a873f95ff77cb22d5e7dfe8729e9d3aa0">GetMax</a>() <span class="keyword">const</span>;
-<a name="l00082"></a><a class="code" href="classTimePickerCtrl.html#aadae48bd4c361f5af61573b7b123a8bb">00082</a>     wxDateTime <a class="code" href="classTimePickerCtrl.html#aadae48bd4c361f5af61573b7b123a8bb">GetDateTime</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time;}
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084     <span class="comment">// implementation from now on</span>
+<a name="l00075"></a>00075 <span class="comment"></span>        <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#ade894df9b0a1c39d7412f2ec907f5ce7" title="This function sets the currently selected field.">SetValue</a>(<span class="keywordtype">int</span> val);
+<a name="l00076"></a>00076 
+<a name="l00078"></a>00078         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#ade894df9b0a1c39d7412f2ec907f5ce7" title="This function sets the currently selected field.">SetValue</a>(wxDateTime dt);
+<a name="l00079"></a>00079 
+<a name="l00081"></a>00081         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#a44e33d64d182b2ced903d221a954f5b1" title="This function sets the minimum and maximum values allowed in the currently selected...">SetRange</a>(<span class="keywordtype">int</span> min, <span class="keywordtype">int</span> max);
+<a name="l00082"></a>00082 
+<a name="l00084"></a><a class="code" href="classTimePickerCtrl.html#ae412b97a10ffac61d0fb5fbba34575b5">00084</a>         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#ae412b97a10ffac61d0fb5fbba34575b5" title="This function highlights the text in the TimePickerCtrl&amp;#39;s associated wxTextCtrl...">SetSelection</a>(<span class="keywordtype">long</span> from, <span class="keywordtype">long</span> to)<span class="keyword"> const </span>{m_text-&gt;SetSelection(from,to);}
 <a name="l00085"></a>00085 
-<a name="l00086"></a>00086     <span class="comment">// forward these functions to all subcontrols</span>
-<a name="l00087"></a>00087     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a3f86c04a4a0ce4b1375ee36c6eff563f">Enable</a>(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>);
-<a name="l00088"></a>00088         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ad3e5ba1e03d4d7b8f90ed1b6ffa58a3a">Show</a>(<span class="keywordtype">bool</span> show = <span class="keyword">true</span>);
-<a name="l00089"></a>00089         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ad310de16adc5fefbeb38b6a67c2539f0">Reparent</a>(wxWindow *newParent);
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091     <span class="comment">// get the subcontrols</span>
-<a name="l00092"></a><a class="code" href="classTimePickerCtrl.html#a986c4218242b91139c3cda8fe3e066ff">00092</a>     <a class="code" href="timepickerctrl_8h.html#af69ba3601b133fd7fd07d747de567a67">wxTextCtrl</a> *<a class="code" href="classTimePickerCtrl.html#a986c4218242b91139c3cda8fe3e066ff">GetText</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_text; }
-<a name="l00093"></a><a class="code" href="classTimePickerCtrl.html#a4ed762585e006ccfed66752261f83806">00093</a>     <a class="code" href="timepickerctrl_8h.html#ae29abfa5d5cc3877fcaf3c798e00f542">wxSpinButton</a> *<a class="code" href="classTimePickerCtrl.html#a4ed762585e006ccfed66752261f83806">GetSpinButton</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_btn; }
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#a65230c44ec7061f386c8d54af1d5fb7a">GetHour</a>(<span class="keywordtype">bool</span> militaryQ = <span class="keyword">true</span>) <span class="keyword">const</span>;
-<a name="l00096"></a><a class="code" href="classTimePickerCtrl.html#aa0c41b8506c896f72c86068391ea2379">00096</a>         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#aa0c41b8506c896f72c86068391ea2379">GetMinute</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetMinute();}
-<a name="l00097"></a><a class="code" href="classTimePickerCtrl.html#a5fbdaa60c140d465ae85d1d26a8a7a67">00097</a>         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#a5fbdaa60c140d465ae85d1d26a8a7a67">GetSecond</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetSecond();}
-<a name="l00099"></a><a class="code" href="classTimePickerCtrl.html#a8e7b1eca235c55ea49845f5f7479f1e3">00099</a>         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a8e7b1eca235c55ea49845f5f7479f1e3" title="Returns true if the time contained in the control falls between noon and just before...">pmQ</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetHour()&gt;=12;}
+<a name="l00086"></a>00086     <span class="comment">// accessors</span>
+<a name="l00088"></a>00088 <span class="comment"></span>    <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a2004605824a6b3e5e1d7a9b6292c6624" title="This function returns the value of the currently selected field.">GetValue</a>() <span class="keyword">const</span>;
+<a name="l00089"></a>00089 
+<a name="l00091"></a>00091     <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a77b4fcf9f361503fec90d8e7a0c7d26d" title="This function returns the minimum value allowed in the currently selected field.">GetMin</a>() <span class="keyword">const</span>;
+<a name="l00092"></a>00092 
+<a name="l00094"></a>00094     <span class="keywordtype">int</span> <a class="code" href="classTimePickerCtrl.html#a873f95ff77cb22d5e7dfe8729e9d3aa0" title="This function returns the maximum value allowed in the currently selected field.">GetMax</a>() <span class="keyword">const</span>;
+<a name="l00095"></a>00095 
+<a name="l00097"></a><a class="code" href="classTimePickerCtrl.html#aadae48bd4c361f5af61573b7b123a8bb">00097</a>     wxDateTime <a class="code" href="classTimePickerCtrl.html#aadae48bd4c361f5af61573b7b123a8bb" title="This function returns the wxDateTime currently entered in the TimePickerCtrl.">GetDateTime</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time;}
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099     <span class="comment">// implementation from now on</span>
 <a name="l00100"></a>00100 
-<a name="l00101"></a>00101         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ab633d813144d2949658a61fe57cd9bac">SetHour</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> h);
-<a name="l00102"></a>00102         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a4b5451a3bdab32e96ae5c51c3b60512b">SetMinute</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> m);
-<a name="l00103"></a>00103         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#abdd45bb7735b268ec2e4a2d895cf4ecc">SetSecond</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> s);
-<a name="l00104"></a>00104 
-<a name="l00106"></a><a class="code" href="classTimePickerCtrl.html#a1008e7c535dade43785fb5ff7edca449">00106</a>         <a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> <a class="code" href="classTimePickerCtrl.html#a1008e7c535dade43785fb5ff7edca449" title="Get which field is currently selected.">GetTimeField</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_timeField;}
-<a name="l00107"></a>00107 
-<a name="l00109"></a>00109         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a09e89cc8036812d154947a67c28997b3" title="Set which field is currently selected.">SetTimeField</a>(<a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> f);
-<a name="l00110"></a>00110 
-<a name="l00113"></a>00113     <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ac6c7310e713c51b881f4fa89fc9ed2ba">GetTextValue</a>(wxDateTime* <span class="keyword">const</span> time) <span class="keyword">const</span>;
-<a name="l00114"></a>00114 
-<a name="l00115"></a><a class="code" href="classTimePickerCtrl.html#afe45d3bef202c36f58eb08547f7b6ca0">00115</a>     <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#afe45d3bef202c36f58eb08547f7b6ca0">setSel</a>(<span class="keywordtype">int</span> start, <span class="keywordtype">int</span> end)<span class="keyword"> const </span>{m_text-&gt;SetSelection(start,end);}
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 <span class="keyword">protected</span>:
-<a name="l00119"></a>00119         wxSize <a class="code" href="classTimePickerCtrl.html#af904ff61d6af6a6a03446d6579b37188" title="Override the base class virtuals involved into geometry calculations.">DoGetBestSize</a>() <span class="keyword">const</span>;
-<a name="l00120"></a>00120         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#a1322d766c6d1a3377d11f7f27dc2b598">DoMoveWindow</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);
-<a name="l00121"></a>00121 
-<a name="l00123"></a>00123     <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#afc3c1a772629a0cac03f8b58a0cb609b" title="Common part of all constructors.">Init</a>();
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125 <span class="keyword">private</span>:
-<a name="l00126"></a>00126     <span class="comment">// the subcontrols</span>
-<a name="l00127"></a>00127         <a class="code" href="timepickerctrl_8h.html#af69ba3601b133fd7fd07d747de567a67">wxTextCtrl</a> *m_text;
-<a name="l00128"></a>00128         <a class="code" href="timepickerctrl_8h.html#ae29abfa5d5cc3877fcaf3c798e00f542">wxSpinButton</a> *m_btn;
-<a name="l00129"></a>00129         <a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> m_timeField;
-<a name="l00130"></a>00130         wxDateTime m_time;
-<a name="l00131"></a>00131         wxString m_format;
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 <span class="keyword">private</span>:
-<a name="l00134"></a>00134     DECLARE_DYNAMIC_CLASS(<a class="code" href="classTimePickerCtrl.html">TimePickerCtrl</a>)
-<a name="l00135"></a>00135 };
-<a name="l00136"></a>00136 
-<a name="l00137"></a><a class="code" href="classTimePickerEvent.html">00137</a> <span class="keyword">class </span><a class="code" href="classTimePickerEvent.html">TimePickerEvent</a> : <span class="keyword">public</span> wxEvent
-<a name="l00138"></a>00138 {
-<a name="l00139"></a>00139 <span class="keyword">public</span>:
-<a name="l00140"></a>00140         <a class="code" href="classTimePickerEvent.html#aef57d8419a97b962c456ac8ff5565304">TimePickerEvent</a>(wxWindow* win = (wxWindow*)NULL);
-<a name="l00141"></a><a class="code" href="classTimePickerEvent.html#ab319d5aca3ae3323eacfb31d181ebfb1">00141</a>         wxEvent* <a class="code" href="classTimePickerEvent.html#ab319d5aca3ae3323eacfb31d181ebfb1">Clone</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classTimePickerEvent.html#aef57d8419a97b962c456ac8ff5565304">TimePickerEvent</a>(*<span class="keyword">this</span>);}
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143         DECLARE_DYNAMIC_CLASS(<a class="code" href="classTimePickerEvent.html">TimePickerEvent</a>)
-<a name="l00144"></a>00144 };
+<a name="l00101"></a>00101     <span class="comment">// forward these functions to all subcontrols</span>
+<a name="l00102"></a>00102     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a3f86c04a4a0ce4b1375ee36c6eff563f">Enable</a>(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>);
+<a name="l00103"></a>00103         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ad3e5ba1e03d4d7b8f90ed1b6ffa58a3a">Show</a>(<span class="keywordtype">bool</span> show = <span class="keyword">true</span>);
+<a name="l00104"></a>00104         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ad310de16adc5fefbeb38b6a67c2539f0">Reparent</a>(wxWindow *newParent);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106     <span class="comment">// get the subcontrols</span>
+<a name="l00107"></a><a class="code" href="classTimePickerCtrl.html#a986c4218242b91139c3cda8fe3e066ff">00107</a>     <a class="code" href="timepickerctrl_8h.html#af69ba3601b133fd7fd07d747de567a67">wxTextCtrl</a> *<a class="code" href="classTimePickerCtrl.html#a986c4218242b91139c3cda8fe3e066ff">GetText</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_text; }
+<a name="l00108"></a><a class="code" href="classTimePickerCtrl.html#a4ed762585e006ccfed66752261f83806">00108</a>     <a class="code" href="timepickerctrl_8h.html#ae29abfa5d5cc3877fcaf3c798e00f542">wxSpinButton</a> *<a class="code" href="classTimePickerCtrl.html#a4ed762585e006ccfed66752261f83806">GetSpinButton</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_btn; }
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#a65230c44ec7061f386c8d54af1d5fb7a">GetHour</a>(<span class="keywordtype">bool</span> militaryQ = <span class="keyword">true</span>) <span class="keyword">const</span>;
+<a name="l00111"></a><a class="code" href="classTimePickerCtrl.html#aa0c41b8506c896f72c86068391ea2379">00111</a>         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#aa0c41b8506c896f72c86068391ea2379">GetMinute</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetMinute();}
+<a name="l00112"></a><a class="code" href="classTimePickerCtrl.html#a5fbdaa60c140d465ae85d1d26a8a7a67">00112</a>         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classTimePickerCtrl.html#a5fbdaa60c140d465ae85d1d26a8a7a67">GetSecond</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetSecond();}
+<a name="l00114"></a><a class="code" href="classTimePickerCtrl.html#a8e7b1eca235c55ea49845f5f7479f1e3">00114</a>         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a8e7b1eca235c55ea49845f5f7479f1e3" title="Returns true if the time contained in the control falls between noon and just before...">pmQ</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_time.GetHour()&gt;=12;}
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ab633d813144d2949658a61fe57cd9bac">SetHour</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> h);
+<a name="l00117"></a>00117         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a4b5451a3bdab32e96ae5c51c3b60512b">SetMinute</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> m);
+<a name="l00118"></a>00118         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#abdd45bb7735b268ec2e4a2d895cf4ecc">SetSecond</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> s);
+<a name="l00119"></a>00119 
+<a name="l00121"></a><a class="code" href="classTimePickerCtrl.html#a1008e7c535dade43785fb5ff7edca449">00121</a>         <a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> <a class="code" href="classTimePickerCtrl.html#a1008e7c535dade43785fb5ff7edca449" title="Get which field is currently selected.">GetTimeField</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_timeField;}
+<a name="l00122"></a>00122 
+<a name="l00124"></a>00124         <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#a09e89cc8036812d154947a67c28997b3" title="Set which field is currently selected.">SetTimeField</a>(<a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> f);
+<a name="l00125"></a>00125 
+<a name="l00128"></a>00128     <span class="keywordtype">bool</span> <a class="code" href="classTimePickerCtrl.html#ac6c7310e713c51b881f4fa89fc9ed2ba">GetTextValue</a>(wxDateTime* <span class="keyword">const</span> time) <span class="keyword">const</span>;
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 <span class="keyword">protected</span>:
+<a name="l00132"></a>00132         wxSize <a class="code" href="classTimePickerCtrl.html#af904ff61d6af6a6a03446d6579b37188" title="Override the base class virtuals involved into geometry calculations.">DoGetBestSize</a>() <span class="keyword">const</span>;
+<a name="l00133"></a>00133         <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#a1322d766c6d1a3377d11f7f27dc2b598">DoMoveWindow</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);
+<a name="l00134"></a>00134 
+<a name="l00136"></a>00136     <span class="keywordtype">void</span> <a class="code" href="classTimePickerCtrl.html#afc3c1a772629a0cac03f8b58a0cb609b" title="Common part of all constructors.">Init</a>();
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 <span class="keyword">private</span>:
+<a name="l00139"></a>00139     <span class="comment">// the subcontrols</span>
+<a name="l00140"></a>00140         <a class="code" href="timepickerctrl_8h.html#af69ba3601b133fd7fd07d747de567a67">wxTextCtrl</a> *m_text;
+<a name="l00141"></a>00141         <a class="code" href="timepickerctrl_8h.html#ae29abfa5d5cc3877fcaf3c798e00f542">wxSpinButton</a> *m_btn;
+<a name="l00142"></a>00142         <a class="code" href="timepickerctrl_8h.html#ab54d76c1ad13c244579e41a34587366f">wxTimeField</a> m_timeField;
+<a name="l00143"></a>00143         wxDateTime m_time;
+<a name="l00144"></a>00144         wxString m_format;
 <a name="l00145"></a>00145 
-<a name="l00146"></a><a class="code" href="timepickerctrl_8h.html#a77455b7aa79eea375f0c0b9493267479">00146</a> <span class="keyword">typedef</span> void (wxEvtHandler::*<a class="code" href="timepickerctrl_8h.html#a77455b7aa79eea375f0c0b9493267479">TimePickerEventFunction</a>)(<a class="code" href="classTimePickerEvent.html">TimePickerEvent</a>&amp;);
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148 BEGIN_DECLARE_EVENT_TYPES()
-<a name="l00149"></a>00149         DECLARE_EVENT_TYPE(ptb3EVT_TIMEPICKEREVENT,1)
-<a name="l00150"></a>00150 END_DECLARE_EVENT_TYPES()
-<a name="l00151"></a>00151 
-<a name="l00152"></a><a class="code" href="timepickerctrl_8h.html#a8a720874089f1b481364a6fd474e9c8c">00152</a> <span class="preprocessor">#define EVT_TIMEPICKER(func)                              \</span>
-<a name="l00153"></a>00153 <span class="preprocessor">        DECLARE_EVENT_TABLE_ENTRY( ptb3EVT_TIMEPICKEREVENT,      \</span>
-<a name="l00154"></a>00154 <span class="preprocessor">                -1,                                    \</span>
-<a name="l00155"></a>00155 <span class="preprocessor">                -1,                                    \</span>
-<a name="l00156"></a>00156 <span class="preprocessor">                (wxObjectEventFunction)                \</span>
-<a name="l00157"></a>00157 <span class="preprocessor">                (TimePickerEventFunction) &amp; func,              \</span>
-<a name="l00158"></a>00158 <span class="preprocessor">                (wxObject *) NULL ),</span>
-<a name="l00159"></a>00159 <span class="preprocessor"></span>
-<a name="l00160"></a>00160 <span class="preprocessor">#endif // TIMEPICKERCTRL_H_INCLUDED</span>
+<a name="l00146"></a>00146 <span class="keyword">private</span>:
+<a name="l00147"></a>00147     DECLARE_DYNAMIC_CLASS(<a class="code" href="classTimePickerCtrl.html">TimePickerCtrl</a>)
+<a name="l00148"></a>00148 };
+<a name="l00149"></a>00149 
+<a name="l00150"></a><a class="code" href="classTimePickerEvent.html">00150</a> <span class="keyword">class </span><a class="code" href="classTimePickerEvent.html">TimePickerEvent</a> : <span class="keyword">public</span> wxEvent
+<a name="l00151"></a>00151 {
+<a name="l00152"></a>00152 <span class="keyword">public</span>:
+<a name="l00153"></a>00153         <a class="code" href="classTimePickerEvent.html#aef57d8419a97b962c456ac8ff5565304">TimePickerEvent</a>(wxWindow* win = (wxWindow*)NULL);
+<a name="l00154"></a><a class="code" href="classTimePickerEvent.html#ab319d5aca3ae3323eacfb31d181ebfb1">00154</a>         wxEvent* <a class="code" href="classTimePickerEvent.html#ab319d5aca3ae3323eacfb31d181ebfb1">Clone</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classTimePickerEvent.html#aef57d8419a97b962c456ac8ff5565304">TimePickerEvent</a>(*<span class="keyword">this</span>);}
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156         DECLARE_DYNAMIC_CLASS(<a class="code" href="classTimePickerEvent.html">TimePickerEvent</a>)
+<a name="l00157"></a>00157 };
+<a name="l00158"></a>00158 
+<a name="l00159"></a><a class="code" href="timepickerctrl_8h.html#a77455b7aa79eea375f0c0b9493267479">00159</a> <span class="keyword">typedef</span> void (wxEvtHandler::*<a class="code" href="timepickerctrl_8h.html#a77455b7aa79eea375f0c0b9493267479">TimePickerEventFunction</a>)(<a class="code" href="classTimePickerEvent.html">TimePickerEvent</a>&amp;);
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161 BEGIN_DECLARE_EVENT_TYPES()
+<a name="l00162"></a>00162         DECLARE_EVENT_TYPE(ptb3EVT_TIMEPICKEREVENT,1)
+<a name="l00163"></a>00163 END_DECLARE_EVENT_TYPES()
+<a name="l00164"></a>00164 
+<a name="l00165"></a><a class="code" href="timepickerctrl_8h.html#a8a720874089f1b481364a6fd474e9c8c">00165</a> <span class="preprocessor">#define EVT_TIMEPICKER(func)                              \</span>
+<a name="l00166"></a>00166 <span class="preprocessor">        DECLARE_EVENT_TABLE_ENTRY( ptb3EVT_TIMEPICKEREVENT,      \</span>
+<a name="l00167"></a>00167 <span class="preprocessor">                -1,                                    \</span>
+<a name="l00168"></a>00168 <span class="preprocessor">                -1,                                    \</span>
+<a name="l00169"></a>00169 <span class="preprocessor">                (wxObjectEventFunction)                \</span>
+<a name="l00170"></a>00170 <span class="preprocessor">                (TimePickerEventFunction) &amp; func,              \</span>
+<a name="l00171"></a>00171 <span class="preprocessor">                (wxObject *) NULL ),</span>
+<a name="l00172"></a>00172 <span class="preprocessor"></span>
+<a name="l00173"></a>00173 <span class="preprocessor">#endif // TIMEPICKERCTRL_H_INCLUDED</span>
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -184,7 +189,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Feb 16 10:46:25 2011 for TimePickerCtrl by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Feb 27 07:20:16 2011 for TimePickerCtrl by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
