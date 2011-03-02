@@ -49,7 +49,7 @@ bool DiagramView::OnCreate(wxDocument* doc, long flags)
     return ok;
 }
 
-DiagramDocument* DiagramView::GetDocument()
+DiagramDocument* DiagramView::GetDocument() const
 {
    return wxStaticCast(wxView::GetDocument(), DiagramDocument);
 }

@@ -67,7 +67,7 @@ public:
    virtual void OnUpdate(wxView *sender, wxObject *hint = NULL);
    virtual bool OnClose(bool deleteWindow = true);
    
-   csDiagramDocument* GetDocument();
+   csDiagramDocument* GetDocument() const;
    wxFrame* GetFrame() const { return wxStaticCast(base::GetFrame(), wxFrame); }
 
    wxShape *FindFirstSelectedShape(void);

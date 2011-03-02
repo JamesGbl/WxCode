@@ -279,7 +279,7 @@ void csDiagramView::OnNeedSelection(wxUpdateUIEvent& event)
     event.Enable(m_selections.GetCount() > 0);
 }
 
-csDiagramDocument* csDiagramView::GetDocument()
+csDiagramDocument* csDiagramView::GetDocument() const
 {
    return wxStaticCast(base::GetDocument(), csDiagramDocument);
 }

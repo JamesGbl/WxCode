@@ -61,7 +61,7 @@ public:
   virtual ~DiagramView(void) {}
   virtual void OnChangeFilename();
 
-  DiagramDocument* GetDocument();
+  DiagramDocument* GetDocument() const;
 
   virtual bool OnCreate(wxDocument*, long flags);
   virtual void OnDraw(wxDC*);
