@@ -2539,7 +2539,7 @@ static const char* STE_WordList1_STE_LANG_SQUIRREL =
 #define STE_LexerFilePatterns_STE_LANG_PYTHON     "*.py;*.pyw"
 #define STE_LexerFilePatterns_STE_LANG_CPP        "*.c;*.cc;*.cpp;*.cxx;*.h;*.hh;*.hpp;*.hxx;*.sma"
 #define STE_LexerFilePatterns_STE_LANG_HTML       "*.html;*.htm;*.asp;*.shtml;*.htd;*.jsp;*.php3;*.phtml;*.php;*.htt;*.cfm;*.tpl;*.dtd;*.hta"
-#define STE_LexerFilePatterns_STE_LANG_XML        "*.vxml;*.xml;*.xsl;*.svg;*.xul;*.xsd;*.dtd;*.xslt;*.axl;*.xrc;*.rdf"
+#define STE_LexerFilePatterns_STE_LANG_XML        "*.vxml;*.xml;*.xaml;*.xsl;*.svg;*.xul;*.xsd;*.dtd;*.xslt;*.axl;*.xrc;*.rdf"
 #define STE_LexerFilePatterns_STE_LANG_PERL       "*.pl;*.pm;*.cgi;*.pod"
 #define STE_LexerFilePatterns_STE_LANG_SQL        "*.sql"
 #define STE_LexerFilePatterns_STE_LANG_VB         "*.vb;*.bas;*.frm;*.cls;*.ctl;*.pag;*.dsr;*.dob"
