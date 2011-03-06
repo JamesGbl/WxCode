@@ -148,7 +148,7 @@
             <dirname>$(SRCDIR)/$(value)</dirname>
             <res-include>$(SRCDIR)/$(value)</res-include>
 
-            <sources>$(fileList(value + '/*.c*'))</sources>
+            <sources>$(fileList(value + '/*.c' + '/*.cc' + '/*.cpp' + '/*.cxx'))</sources>
             <headers>$(fileList(value + '/*.h*'))</headers>
 
 
