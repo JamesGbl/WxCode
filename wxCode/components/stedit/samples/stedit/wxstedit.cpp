@@ -1,11 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Name:        app.cpp
+// Name:        wxstedit.cpp
 // Purpose:     Simple wxSTEditor app
-// Author:      John Labenski
+// Author:      John Labenski, Troels K
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: wxstedit.cpp,v 1.18 2007/07/23 00:28:46 jrl1 Exp $
-// Copyright:   (c) John Labenski
+// Copyright:   (c) John Labenski, Troels K
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,10 +25,6 @@
 */
 // ----------------------------------------------------------------------------
 
-
-// For compilers that support precompilation, includes <wx/wx.h".
-#include <wx/wxprec.h>
-
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
@@ -48,6 +43,7 @@
 #include "../../art/pencil16.xpm"
 
 #include <wx/cmdline.h>
+#include <wx/fileconf.h>
 #include <wx/config.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
@@ -55,7 +51,8 @@
 #include <wx/clipbrd.h>
 
 #include "../../src/wxext.h" // wxLocale_Init()
-#include "app.h"
+
+#include "wxstedit.h"
 
 #include "wxstedit_htm.hpp" // include docs
 #include "readme_htm.hpp"
@@ -80,12 +77,53 @@ enum Menu_IDs
 };
 
 // ----------------------------------------------------------------------------
+// wxCmdLineParser functions
+// ----------------------------------------------------------------------------
+
+enum wxCmdLineEntries_Type
+{
+    CMDLINE_PARAM_SINGLE,
+    CMDLINE_PARAM_RECURSE,
+    CMDLINE_PARAM_CONFIG,
+    CMDLINE_PARAM_FILENAMES,
+    CMDLINE_PARAM_LANG,
+    CMDLINE_PARAM_LANGDIALOG,
+    CMDLINE_PARAM__COUNT
+};
+
+static const wxCmdLineEntryDesc cmdLineDesc[] =
+{
+    { wxCMD_LINE_SWITCH, wxT_2("1"), wxT_2("single"), _("single file mode"),
+        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+
+    { wxCMD_LINE_SWITCH, wxT_2("r"), wxT_2("recurse"), _("open the given filespecs recursively, quote values \"*.txt\""),
+        wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+
+    { wxCMD_LINE_OPTION, wxT_2("c"), wxT_2("config"), _("use config file"),
+        wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_NEEDS_SEPARATOR },
+
+    { wxCMD_LINE_PARAM,  wxT_2(""),  wxT_2(""),       _("input filename(s)"),
+        wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE },
+
+    { wxCMD_LINE_OPTION, wxT_2("l"), wxT_2("lang"), _("Specify language"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+    { wxCMD_LINE_SWITCH, NULL, wxT_2("langdialog"), _("Language dialog"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+
+    { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 },
+};
+
+#define C_ASSERT_(n,e) typedef char __C_ASSERT__##n[(e)?1:-1]
+C_ASSERT_(1,WXSIZEOF(cmdLineDesc) == (CMDLINE_PARAM__COUNT + 1));
+
+// ----------------------------------------------------------------------------
 
 IMPLEMENT_APP(wxStEditApp)
 
 wxStEditApp::wxStEditApp() : wxApp(),
             m_steOptions(STE_DEFAULT_OPTIONS, STS_DEFAULT_OPTIONS, STN_DEFAULT_OPTIONS, STF_DEFAULT_OPTIONS)
 {
+    m_frame = NULL;
+    m_lang = wxLANGUAGE_DEFAULT;
+    m_recurse_dirs = false;
 }
 
 bool wxStEditApp::OnInit()
@@ -103,7 +141,7 @@ bool wxStEditApp::OnInit()
 #if (wxVERSION_NUMBER >= 2900)
     SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
-    ::wxLocale_Init(&m_locale, STE_APPNAME, m_cmdline.m_lang);
+    ::wxLocale_Init(&m_locale, STE_APPNAME, m_lang);
     wxSTEditorOptions::SetGlobalDefaultFileName(wxString(_("unnamed")) + wxT(".txt")); // translated
     //wxSTEditorArtProvider::m_default_client = wxART_OTHER; // default is wxART_STEDIT
 
@@ -182,16 +220,16 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
-    wxSTEditorFrame* frame = new wxSTEditorFrame();
-    frame->Create();
+    m_frame = new wxSTEditorFrame();
+    m_frame->Create();
 
     // ------------------------------------------------------------------------
     // load the prefs/style/langs from the config, if we're using one
-    if (frame->GetConfigBase())
-        m_steOptions.LoadConfig(*frame->GetConfigBase());
+    if (m_frame->GetConfigBase())
+        m_steOptions.LoadConfig(*m_frame->GetConfigBase());
 
     // must call this if you want any of the options, else blank frame
-    frame->CreateOptions(m_steOptions);
+    m_frame->CreateOptions(m_steOptions);
 
     // Get the "Help" menu
     wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
@@ -202,19 +240,19 @@ bool wxStEditApp::OnInit()
 
     // just use connect here, we could also use static event tables, but this
     //  is easy enough to do.
-    frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
+    m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-    frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
+    m_frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 #if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
     menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), wxString::Format(_("Show command line help")));
-    frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
+    m_frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 #endif
     // add menu item for testing the shell
     menu->AppendSeparator();
     menu->Append(ID_TEST_STESHELL, _("Test STE shell..."), _("Test the STE shell component"));
-    frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
+    m_frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 
     menu->AppendSeparator();
@@ -223,18 +261,18 @@ bool wxStEditApp::OnInit()
     menu->Append(item);
 
     ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
-    frame->GetMenuBar()->Append(menu, wxGetStockLabelEx(wxID_HELP));
+    m_frame->GetMenuBar()->Append(menu, wxGetStockLabelEx(wxID_HELP));
 
     // ------------------------------------------------------------------------
     // handle loading the files
     size_t n;
     wxArrayString badFileNames;
-    wxArrayString fileNames = m_cmdline.m_fileNames;
+    wxArrayString fileNames;
 
     // handle recursive file loading
-    if (m_cmdline.m_recurse && frame->GetEditorNotebook())
+    if (m_recurse_dirs && m_frame->GetEditorNotebook())
     {
-        int max_page_count = frame->GetEditorNotebook()->GetMaxPageCount();
+        int max_page_count = m_frame->GetEditorNotebook()->GetMaxPageCount();
 
         wxArrayString recurseFileNames;
         for (n = 0; n < fileNames.GetCount(); n++)
@@ -248,7 +286,7 @@ bool wxStEditApp::OnInit()
             if ((int)recurseFileNames.GetCount() >= max_page_count)
             {
                 wxString msg = wxString::Format(_("Opening %d files, unable to open any more."), max_page_count);
-                wxMessageBox(msg, _("Maximum number of files"), wxOK|wxICON_ERROR, frame);
+                wxMessageBox(msg, _("Maximum number of files"), wxOK|wxICON_ERROR, m_frame);
                 recurseFileNames.RemoveAt(max_page_count - 1, recurseFileNames.GetCount() - max_page_count);
                 break;
             }
@@ -280,23 +318,23 @@ bool wxStEditApp::OnInit()
     if (fileNames.GetCount() > 0u)
     {
         if (wxFileExists(fileNames[0]))
-            frame->GetEditor()->LoadFile( fileNames[0] );
+            m_frame->GetEditor()->LoadFile( fileNames[0] );
         else
         {
             // fix the path to the new file using the command line path
             wxFileName fn(fileNames[0]);
             fn.Normalize();
-            frame->GetEditor()->NewFile( fn.GetFullPath() );
+            m_frame->GetEditor()->NewFile( fn.GetFullPath() );
         }
 
         fileNames.RemoveAt(0);
         if (m_steOptions.HasFrameOption(STF_CREATE_NOTEBOOK) && fileNames.GetCount())
-            frame->GetEditorNotebook()->LoadFiles( &fileNames );
+            m_frame->GetEditorNotebook()->LoadFiles( &fileNames );
     }
     //frame->ShowSidebar(false);
     //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX; // trac.wxwidgets.org/ticket/11947
-    frame->Show();
-    SetTopWindow(frame);
+    m_frame->Show();
+    SetTopWindow(m_frame);
 
     // filenames had *, ? or other junk so we didn't load them
     if (badFileNames.GetCount())
@@ -306,7 +344,7 @@ bool wxStEditApp::OnInit()
             msg += wxT("'") + badFileNames[n] + wxT("'\n");
 
         wxMessageBox(msg, _("Unable to load file(s)"), wxOK|wxICON_ERROR,
-                     frame);
+                     m_frame);
     }
 
     return true;
@@ -322,16 +360,106 @@ int wxStEditApp::OnExit()
     return wxApp::OnExit();
 }
 
-wxSTEditorFrame* wxStEditApp::GetTopWindow()
+void wxStEditApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-    return wxStaticCast(wxApp::GetTopWindow(), wxSTEditorFrame);
+    parser.SetDesc(cmdLineDesc);
+    wxApp::OnInitCmdLine(parser);
+}
+
+bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+    // use single page, else use a notebook of editors
+    if (parser.Found(cmdLineDesc[CMDLINE_PARAM_SINGLE].longName))
+    {
+        m_steOptions.SetFrameOption(STF_CREATE_NOTEBOOK, false);
+        m_steOptions.SetFrameOption(STF_CREATE_SINGLEPAGE, true);
+        m_steOptions.GetMenuManager()->CreateForSinglePage();
+    }
+    else
+    {
+        m_steOptions.SetFrameOption(STF_CREATE_SIDEBAR, true);
+        m_steOptions.GetMenuManager()->CreateForNotebook();
+    }
+
+    // use specified config file to load saved prefs, styles, langs
+    wxString configFile;
+    if (parser.Found(cmdLineDesc[CMDLINE_PARAM_CONFIG].longName, &configFile))
+    {
+        wxFileName fN(configFile);
+
+        if ( !fN.FileExists() )
+        {
+            //wxLogMessage(wxT("Config file '")+configFile+wxT("' does not exist."));
+            if (configFile.IsEmpty() || !fN.IsOk() || wxIsWild(configFile))
+            {
+                int ret = wxMessageBox(wxString::Format(_("Config file '%s' has an invalid name.\nContinue without using a config file?"), configFile.wx_str()),
+                                       _("Invalid config file name"),
+                                       wxICON_QUESTION|wxYES_NO);
+                if (ret == wxNO)
+                    return false;
+
+                configFile = wxEmptyString;
+            }
+            else // file doesn't exist, ask if they want to create a new one
+            {
+                int ret = wxMessageBox(wxString::Format(_("Config file '%s' does not exist.\nWould you like to create a new one?"), configFile.wx_str()),
+                                       _("Invalid config file"),
+                                       wxICON_QUESTION|wxYES_NO|wxCANCEL);
+                if (ret == wxCANCEL)
+                    return false;
+                else if (ret == wxNO)
+                    configFile = wxEmptyString;
+            }
+        }
+
+        // use the specified config file, if it's still set
+        if ( configFile.Length() )
+        {
+            wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
+                                                    configFile, wxEmptyString,
+                                                    wxCONFIG_USE_RELATIVE_PATH);
+            wxConfigBase::Set((wxConfigBase*)config);
+        }
+        else // don't use any config file at all, disable saving
+        {
+            m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_PREFS_MENU, STE_MENU_PREFS_SAVE, false);
+        }
+    }
+    else
+    {
+        // Always use a wxFileConfig since I don't care for registry entries.
+        wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"));
+        wxConfigBase::Set((wxConfigBase*)config);
+    }
+
+    // they want to open the files recursively
+    if (parser.Found(cmdLineDesc[CMDLINE_PARAM_RECURSE].longName))
+        m_recurse_dirs = true;
+
+    // gather up all the filenames to load
+    size_t n, count = parser.GetParamCount();
+    for (n = 0; n < count; n++)
+        m_fileNames.Add(parser.GetParam(n));
+
+    wxString str;
+    if (parser.Found(cmdLineDesc[CMDLINE_PARAM_LANG].longName, &str))
+    {
+        if (str.Length()) wxLocale_Find(str, &m_lang);
+    }
+
+    if (parser.Found(cmdLineDesc[CMDLINE_PARAM_LANGDIALOG].longName))
+    {
+        LanguageArray array;
+        wxLocale_GetSupportedLanguages(&array);
+        wxLocale_SingleChoice(array, &m_lang);
+    }
+
+    return wxApp::OnCmdLineParsed(parser);
 }
 
 void wxStEditApp::CreateShell()
 {
-    wxSTEditorFrame* frame = GetTopWindow();
-
-    wxDialog dialog(frame, wxID_ANY, wxT("wxSTEditorShell"),
+    wxDialog dialog(m_frame, wxID_ANY, wxT("wxSTEditorShell"),
                     wxDefaultPosition, wxDefaultSize,
                     wxDEFAULT_DIALOG_STYLE_RESIZE);
     wxSTEditorShell* shell = new wxSTEditorShell(&dialog, wxID_ANY);
@@ -344,8 +472,8 @@ void wxStEditApp::CreateShell()
     prefs.SetPrefInt(STE_PREF_VIEW_MARKERMARGIN, 1);
     prefs.SetPrefInt(STE_PREF_VIEW_FOLDMARGIN, 0);
     shell->RegisterPrefs(prefs);
-    shell->RegisterStyles(frame->GetOptions().GetEditorStyles());
-    shell->RegisterLangs(frame->GetOptions().GetEditorLangs());
+    shell->RegisterStyles(m_frame->GetOptions().GetEditorStyles());
+    shell->RegisterLangs(m_frame->GetOptions().GetEditorLangs());
     shell->SetLanguage(STE_LANG_PYTHON); // arbitrarily set to python
 
     shell->BeginWriteable();
@@ -403,7 +531,7 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
             break;
 #if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
         case ID_SHOW_USAGE:
-            ::wxCommandLineUsage(GetTopWindow());
+            ::wxCommandLineUsage(m_frame);
             break;
 #endif
         case ID_TEST_STESHELL :

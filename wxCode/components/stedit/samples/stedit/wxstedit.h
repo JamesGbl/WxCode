@@ -1,19 +1,17 @@
-// app.h
+///////////////////////////////////////////////////////////////////////////////
+// Name:        wxstedit.h
+// Purpose:     Simple wxSTEditor app
+// Author:      John Labenski, Troels K
+// Modified by:
+// Created:     04/01/98
+// Copyright:   (c) John Labenski, Troels K
+// Licence:     wxWidgets licence
+///////////////////////////////////////////////////////////////////////////////
+
+// For compilers that support precompilation, includes <wx/wx.h".
+#include <wx/wxprec.h>
 
 #include <wx/app.h>
-
-class CommandLine
-{
-// Attributes
-public:
-   enum wxLanguage m_lang;
-   wxArrayString m_fileNames;
-   bool m_recurse;
-
-// Construction
-public:
-   CommandLine();
-};
 
 // ----------------------------------------------------------------------------
 // wxStEditApp - the application class
@@ -35,10 +33,12 @@ public:
     void OnMenuEvent(wxCommandEvent& event);
     void OnSTEShellEvent(wxSTEditorEvent& event);
 
-    wxSTEditorFrame* GetTopWindow();
-
 protected:
+    wxSTEditorFrame* m_frame;
+
     wxSTEditorOptions m_steOptions;
-    CommandLine m_cmdline;
+    wxArrayString m_fileNames;      // command line filenames
+    bool m_recurse_dirs;            // command line option to recurse dirs
+    enum wxLanguage m_lang;         // command line language
     wxLocale m_locale;
 };
