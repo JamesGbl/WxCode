@@ -349,7 +349,9 @@ public :
     // Get the text between the GetTargetStart and GetTargetEnd
     wxString GetTargetText();
 
-    bool GetClipboardText(wxString*) const;
+    // Get the current text of the clipboard into the buf and translate the 
+    // line endings to the current GetEOLMode()
+    bool GetClipboardText(wxString& buf) const;
 
     // Paste the text from the clipboard into the text at the current cursor
     //  position preserving the linefeeds in the text using PasteRectangular
@@ -511,6 +513,9 @@ public :
     // Get/Set the current filename, including path
     wxFileName GetFileName() const;
     void SetFileName(const wxFileName&, bool send_event = false);
+
+    // Copy the current filename and path to the clipboard
+    bool CopyFilePathToClipboard();
 
     // If there's a valid filename, return false if it's modification time is
     //   before the current doc's times if the time is valid.
@@ -782,16 +787,12 @@ public :
     //   if add_keywords then also add the keywords from the langs
     bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
 
-    bool CopyPath();
-
     // ------------------------------------------------------------------------
     // Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
     //   extra_long is the state values.
     //   Otherwise the int/long values are those in the wxCommandEvent
     bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
                    const wxString &evtStr = wxEmptyString, bool do_post = false );
-
-    bool SendFilenameEvent();
 
     // ------------------------------------------------------------------------
     // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl

@@ -6,6 +6,8 @@ dnl Do not modify, all changes will be overwritten!
 
 BAKEFILE_AUTOCONF_INC_M4_VERSION="0.2.9"
 
+dnl ### begin block 10_AC_BAKEFILE_PRECOMP_HEADERS[wxstedit.bkl] ###
+AC_BAKEFILE_PRECOMP_HEADERS
 dnl ### begin block 20_COND_DEPS_TRACKING_0[wxstedit.bkl,wxxml2.bkl] ###
     COND_DEPS_TRACKING_0="#"
     if test "x$DEPS_TRACKING" = "x0" ; then
@@ -18,6 +20,18 @@ dnl ### begin block 20_COND_DEPS_TRACKING_1[wxstedit.bkl,wxxml2.bkl] ###
         COND_DEPS_TRACKING_1=""
     fi
     AC_SUBST(COND_DEPS_TRACKING_1)
+dnl ### begin block 20_COND_GCC_PCH_1[wxstedit.bkl] ###
+    COND_GCC_PCH_1="#"
+    if test "x$GCC_PCH" = "x1" ; then
+        COND_GCC_PCH_1=""
+    fi
+    AC_SUBST(COND_GCC_PCH_1)
+dnl ### begin block 20_COND_ICC_PCH_1[wxstedit.bkl] ###
+    COND_ICC_PCH_1="#"
+    if test "x$ICC_PCH" = "x1" ; then
+        COND_ICC_PCH_1=""
+    fi
+    AC_SUBST(COND_ICC_PCH_1)
 dnl ### begin block 20_COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1[wxstedit.bkl,wxxml2.bkl] ###
     COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1="#"
     if test "x$PLATFORM_MACOSX" = "x0" -a "x$USE_SOVERCYGWIN" = "x0" -a "x$USE_SOVERSION" = "x1" ; then
@@ -72,6 +86,12 @@ dnl ### begin block 20_COND_SHARED_1[wxstedit.bkl] ###
         COND_SHARED_1=""
     fi
     AC_SUBST(COND_SHARED_1)
+dnl ### begin block 20_COND_USE_PCH_1[wxstedit.bkl] ###
+    COND_USE_PCH_1="#"
+    if test "x$USE_PCH" = "x1" ; then
+        COND_USE_PCH_1=""
+    fi
+    AC_SUBST(COND_USE_PCH_1)
 dnl ### begin block 20_COND_USE_SOSYMLINKS_1[wxxml2.bkl] ###
     COND_USE_SOSYMLINKS_1="#"
     if test "x$USE_SOSYMLINKS" = "x1" ; then

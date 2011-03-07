@@ -763,7 +763,7 @@ void wxSTEditor::SetReadOnly(bool readOnly)
     if (GetReadOnly() != readOnly)
     {
         wxStyledTextCtrl::SetReadOnly(readOnly);
-        SendFilenameEvent();
+        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
     }
 }
 
@@ -883,13 +883,13 @@ static wxTextFileType wxSTEConvertEOLMode(int scintillaMode)
 
 #endif // wxUSE_DATAOBJ
 
-bool wxSTEditor::GetClipboardText(wxString* text) const
+bool wxSTEditor::GetClipboardText(wxString& text) const
 {
     wxString str;
     bool ok = ::wxClipboard_Get(&str);
     if (ok)
     {
-        text->operator=(wxTextBuffer::Translate(str, wxSTEConvertEOLMode(GetEOLMode())));
+        text.operator=(wxTextBuffer::Translate(str, wxSTEConvertEOLMode(GetEOLMode())));
     }
     return ok;
 }
@@ -897,11 +897,10 @@ bool wxSTEditor::GetClipboardText(wxString* text) const
 bool wxSTEditor::PasteRectangular()
 {
     wxString text;
-    bool ok = GetClipboardText(&text);
+    bool ok = GetClipboardText(text);
     if (ok)
-    {
         PasteRectangular(text, -1);
-    }
+
     return ok;
 }
 void wxSTEditor::PasteRectangular(const wxString& str, int pos)
@@ -2080,17 +2079,6 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
         return true;
 }
 
-bool wxSTEditor::CopyPath()
-{
-    bool ok = wxTheClipboard->Open();
-    if (ok)
-    {
-        ok = wxTheClipboard->SetData(new wxTextDataObject(GetFileName().GetFullPath()));
-        wxTheClipboard->Close();
-    }
-    return ok;
-}
-
 wxFileName wxSTEditor::GetFileName() const
 {
     return GetSTERefData()->GetFilename();
@@ -2102,10 +2090,25 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
     {
         GetSTERefData()->SetFilename(fileName);
         if (send_event)
-        {
-            SendFilenameEvent();
-        }
+            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
     }
+}
+
+bool wxSTEditor::CopyFilePathToClipboard()
+{
+    bool is_opened = wxTheClipboard->IsOpened();
+
+    if (is_opened || wxTheClipboard->Open())
+    {
+        wxString text(GetSelectedText());
+        wxTheClipboard->SetData(new wxTextDataObject(GetFileName().GetFullPath()));
+        if (!is_opened)
+            wxTheClipboard->Close();
+
+        return true;
+    }
+
+    return false;
 }
 
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
@@ -2842,7 +2845,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             return true;
 
         case ID_STE_COMPLETEWORD : StartAutoCompleteWord(false, true); return true;
-        case ID_STE_COPYPATH     : CopyPath(); return true;
+        case ID_STE_COPYPATH     : CopyFilePathToClipboard(); return true;
 
         // Tools menu items ---------------------------------------------------
         case ID_STE_UPPERCASE   : UpperCase(); /* CmdKeyExecute(wxSTC_CMD_UPPERCASE); */ return true;
@@ -3914,11 +3917,6 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
     }
 
    return GetEventHandler()->ProcessEvent(event);
-}
-
-bool wxSTEditor::SendFilenameEvent()
-{
-    return SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
 }
 
 wxTreeItemId wxSTEditor::GetTreeItemId() const

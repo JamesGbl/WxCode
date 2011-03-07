@@ -26,7 +26,9 @@ NM = @NM@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
+ICC_PCH_USE_SWITCH = @ICC_PCH_USE_SWITCH@
 BK_DEPS = @BK_DEPS@
+BK_MAKE_PCH = @BK_MAKE_PCH@
 srcdir = @srcdir@
 libdir = @libdir@
 DLLPREFIX = @DLLPREFIX@
@@ -49,8 +51,8 @@ WX_PORT = @WX_PORT@
 ### Variables: ###
 
 DESTDIR = 
-STEDIT_LIB_CXXFLAGS = -I$(srcdir)/include -I$(WXWIN)/contrib/include \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+STEDIT_LIB_CXXFLAGS = $(__stedit_lib_PCH_INC) -I$(srcdir)/include \
+	-I$(WXWIN)/contrib/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 STEDIT_LIB_OBJECTS =  \
 	stedit_lib_precomp.o \
 	stedit_lib_steart.o \
@@ -89,9 +91,10 @@ STEDIT_LIB_HEADERS =  \
 	include/wx/stedit/steshell.h \
 	include/wx/stedit/stesplit.h \
 	include/wx/stedit/stestyls.h
-STEDIT_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_STEDIT \
-	-I$(WXWIN)/contrib/include $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+STEDIT_LIB_ODEP =  $(_____pch_prec_stedit_lib_precomp_h_gch___depname)
+STEDIT_DLL_CXXFLAGS = $(__stedit_dll_PCH_INC) -I$(srcdir)/include \
+	-DWXMAKINGDLL_STEDIT -I$(WXWIN)/contrib/include $(PIC_FLAG) $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 STEDIT_DLL_OBJECTS =  \
 	stedit_dll_precomp.o \
 	stedit_dll_steart.o \
@@ -130,6 +133,7 @@ STEDIT_DLL_HEADERS =  \
 	include/wx/stedit/steshell.h \
 	include/wx/stedit/stesplit.h \
 	include/wx/stedit/stestyls.h
+STEDIT_DLL_ODEP =  $(_____pch_prec_stedit_dll_precomp_h_gch___depname)
 WXSTEDIT_CXXFLAGS = -I$(srcdir)/include -I$(WXWIN)/contrib/include \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXSTEDIT_OBJECTS =  \
@@ -154,6 +158,11 @@ COND_WX_SHARED_0___stedit_lib___depname = \
 @COND_WX_SHARED_0@	= install_stedit_lib_headers
 @COND_WX_SHARED_0@__uninstall_stedit_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_stedit_lib_headers
+@COND_GCC_PCH_1@__stedit_lib_PCH_INC = -I./.pch/prec_stedit_lib
+@COND_ICC_PCH_1@__stedit_lib_PCH_INC = $(ICC_PCH_USE_SWITCH) \
+@COND_ICC_PCH_1@	./.pch/prec_stedit_lib/precomp.h.gch
+@COND_USE_PCH_1@_____pch_prec_stedit_lib_precomp_h_gch___depname \
+@COND_USE_PCH_1@	= ./.pch/prec_stedit_lib/precomp.h.gch
 COND_WX_SHARED_1___stedit_dll___depname = \
 	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3)
 @COND_WX_SHARED_1@__stedit_dll___depname = $(COND_WX_SHARED_1___stedit_dll___depname)
@@ -234,6 +243,11 @@ COND_USE_SOVERSOLARIS_1___stedit_dll___so_symlinks_uninst_cmd = rm -f \
 @COND_WX_SHARED_1@	= install_stedit_dll_headers
 @COND_WX_SHARED_1@__uninstall_stedit_dll_headers___depname \
 @COND_WX_SHARED_1@	= uninstall_stedit_dll_headers
+@COND_GCC_PCH_1@__stedit_dll_PCH_INC = -I./.pch/prec_stedit_dll
+@COND_ICC_PCH_1@__stedit_dll_PCH_INC = $(ICC_PCH_USE_SWITCH) \
+@COND_ICC_PCH_1@	./.pch/prec_stedit_dll/precomp.h.gch
+@COND_USE_PCH_1@_____pch_prec_stedit_dll_precomp_h_gch___depname \
+@COND_USE_PCH_1@	= ./.pch/prec_stedit_dll/precomp.h.gch
 @COND_PLATFORM_MAC_0@__wxstedit___mac_setfilecmd = @true
 @COND_PLATFORM_MAC_1@__wxstedit___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
@@ -293,6 +307,9 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
+@COND_USE_PCH_1@./.pch/prec_stedit_lib/precomp.h.gch: 
+@COND_USE_PCH_1@	$(BK_MAKE_PCH) ./.pch/prec_stedit_lib/precomp.h.gch precomp.h $(CXX) $(STEDIT_LIB_CXXFLAGS)
+
 @COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3): $(STEDIT_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(STEDIT_DLL_OBJECTS)  -L$(srcdir)/lib $(__stedit_dll___macinstnamecmd) $(__stedit_dll___importlib) $(__stedit_dll___soname_flags) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
 @COND_WX_SHARED_1@	
@@ -323,6 +340,9 @@ distclean: clean
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
+@COND_USE_PCH_1@./.pch/prec_stedit_dll/precomp.h.gch: 
+@COND_USE_PCH_1@	$(BK_MAKE_PCH) ./.pch/prec_stedit_dll/precomp.h.gch precomp.h $(CXX) $(STEDIT_DLL_CXXFLAGS)
+
 $(srcdir)/samples/stedit/wxstedit$(EXEEXT): $(WXSTEDIT_OBJECTS) make_sample_dir_wxstedit $(__wxstedit___win32rc) $(__stedit_lib___depname)
 	$(CXX) -o $@ $(WXSTEDIT_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxstedit_RPATH) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
 	
@@ -332,112 +352,112 @@ $(srcdir)/samples/stedit/wxstedit$(EXEEXT): $(WXSTEDIT_OBJECTS) make_sample_dir_
 make_sample_dir_wxstedit: 
 	@mkdir -p $(srcdir)/samples/stedit
 
-stedit_lib_precomp.o: $(srcdir)/src/precomp.cpp
+stedit_lib_precomp.o: $(srcdir)/src/precomp.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/precomp.cpp
 
-stedit_lib_steart.o: $(srcdir)/src/steart.cpp
+stedit_lib_steart.o: $(srcdir)/src/steart.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steart.cpp
 
-stedit_lib_stedit.o: $(srcdir)/src/stedit.cpp
+stedit_lib_stedit.o: $(srcdir)/src/stedit.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stedit.cpp
 
-stedit_lib_stedlgs.o: $(srcdir)/src/stedlgs.cpp
+stedit_lib_stedlgs.o: $(srcdir)/src/stedlgs.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stedlgs.cpp
 
-stedit_lib_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp
+stedit_lib_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stedlgs_wdr.cpp
 
-stedit_lib_steexprt.o: $(srcdir)/src/steexprt.cpp
+stedit_lib_steexprt.o: $(srcdir)/src/steexprt.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steexprt.cpp
 
-stedit_lib_stefindr.o: $(srcdir)/src/stefindr.cpp
+stedit_lib_stefindr.o: $(srcdir)/src/stefindr.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stefindr.cpp
 
-stedit_lib_steframe.o: $(srcdir)/src/steframe.cpp
+stedit_lib_steframe.o: $(srcdir)/src/steframe.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steframe.cpp
 
-stedit_lib_stelangs.o: $(srcdir)/src/stelangs.cpp
+stedit_lib_stelangs.o: $(srcdir)/src/stelangs.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stelangs.cpp
 
-stedit_lib_stemenum.o: $(srcdir)/src/stemenum.cpp
+stedit_lib_stemenum.o: $(srcdir)/src/stemenum.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stemenum.cpp
 
-stedit_lib_stenoteb.o: $(srcdir)/src/stenoteb.cpp
+stedit_lib_stenoteb.o: $(srcdir)/src/stenoteb.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stenoteb.cpp
 
-stedit_lib_steopts.o: $(srcdir)/src/steopts.cpp
+stedit_lib_steopts.o: $(srcdir)/src/steopts.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steopts.cpp
 
-stedit_lib_steprefs.o: $(srcdir)/src/steprefs.cpp
+stedit_lib_steprefs.o: $(srcdir)/src/steprefs.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steprefs.cpp
 
-stedit_lib_steprint.o: $(srcdir)/src/steprint.cpp
+stedit_lib_steprint.o: $(srcdir)/src/steprint.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steprint.cpp
 
-stedit_lib_steshell.o: $(srcdir)/src/steshell.cpp
+stedit_lib_steshell.o: $(srcdir)/src/steshell.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steshell.cpp
 
-stedit_lib_stesplit.o: $(srcdir)/src/stesplit.cpp
+stedit_lib_stesplit.o: $(srcdir)/src/stesplit.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stesplit.cpp
 
-stedit_lib_stestyls.o: $(srcdir)/src/stestyls.cpp
+stedit_lib_stestyls.o: $(srcdir)/src/stestyls.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stestyls.cpp
 
-stedit_lib_wxext.o: $(srcdir)/src/wxext.cpp
+stedit_lib_wxext.o: $(srcdir)/src/wxext.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/wxext.cpp
 
-stedit_dll_precomp.o: $(srcdir)/src/precomp.cpp
+stedit_dll_precomp.o: $(srcdir)/src/precomp.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/precomp.cpp
 
-stedit_dll_steart.o: $(srcdir)/src/steart.cpp
+stedit_dll_steart.o: $(srcdir)/src/steart.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steart.cpp
 
-stedit_dll_stedit.o: $(srcdir)/src/stedit.cpp
+stedit_dll_stedit.o: $(srcdir)/src/stedit.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stedit.cpp
 
-stedit_dll_stedlgs.o: $(srcdir)/src/stedlgs.cpp
+stedit_dll_stedlgs.o: $(srcdir)/src/stedlgs.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stedlgs.cpp
 
-stedit_dll_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp
+stedit_dll_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stedlgs_wdr.cpp
 
-stedit_dll_steexprt.o: $(srcdir)/src/steexprt.cpp
+stedit_dll_steexprt.o: $(srcdir)/src/steexprt.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steexprt.cpp
 
-stedit_dll_stefindr.o: $(srcdir)/src/stefindr.cpp
+stedit_dll_stefindr.o: $(srcdir)/src/stefindr.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stefindr.cpp
 
-stedit_dll_steframe.o: $(srcdir)/src/steframe.cpp
+stedit_dll_steframe.o: $(srcdir)/src/steframe.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steframe.cpp
 
-stedit_dll_stelangs.o: $(srcdir)/src/stelangs.cpp
+stedit_dll_stelangs.o: $(srcdir)/src/stelangs.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stelangs.cpp
 
-stedit_dll_stemenum.o: $(srcdir)/src/stemenum.cpp
+stedit_dll_stemenum.o: $(srcdir)/src/stemenum.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stemenum.cpp
 
-stedit_dll_stenoteb.o: $(srcdir)/src/stenoteb.cpp
+stedit_dll_stenoteb.o: $(srcdir)/src/stenoteb.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stenoteb.cpp
 
-stedit_dll_steopts.o: $(srcdir)/src/steopts.cpp
+stedit_dll_steopts.o: $(srcdir)/src/steopts.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steopts.cpp
 
-stedit_dll_steprefs.o: $(srcdir)/src/steprefs.cpp
+stedit_dll_steprefs.o: $(srcdir)/src/steprefs.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steprefs.cpp
 
-stedit_dll_steprint.o: $(srcdir)/src/steprint.cpp
+stedit_dll_steprint.o: $(srcdir)/src/steprint.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steprint.cpp
 
-stedit_dll_steshell.o: $(srcdir)/src/steshell.cpp
+stedit_dll_steshell.o: $(srcdir)/src/steshell.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steshell.cpp
 
-stedit_dll_stesplit.o: $(srcdir)/src/stesplit.cpp
+stedit_dll_stesplit.o: $(srcdir)/src/stesplit.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stesplit.cpp
 
-stedit_dll_stestyls.o: $(srcdir)/src/stestyls.cpp
+stedit_dll_stestyls.o: $(srcdir)/src/stestyls.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stestyls.cpp
 
-stedit_dll_wxext.o: $(srcdir)/src/wxext.cpp
+stedit_dll_wxext.o: $(srcdir)/src/wxext.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/wxext.cpp
 
 wxstedit_link.o: $(srcdir)/samples/stedit/link.cpp

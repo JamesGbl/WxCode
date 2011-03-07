@@ -31,6 +31,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_lib.pch"
 				ObjectFile="vcmsw\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -84,6 +87,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmsw_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -137,6 +143,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_lib.pch"
 				ObjectFile="vcmsw\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -190,6 +199,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmsw_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -246,6 +258,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_lib.pch"
 				ObjectFile="vcmswd\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -302,6 +317,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswd_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -358,6 +376,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_lib.pch"
 				ObjectFile="vcmswd\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -414,6 +435,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswd_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -468,6 +492,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_lib.pch"
 				ObjectFile="vcmswu\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -522,6 +549,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswu_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -576,6 +606,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_lib.pch"
 				ObjectFile="vcmswu\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -630,6 +663,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswu_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -687,6 +723,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_lib.pch"
 				ObjectFile="vcmswud\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -744,6 +783,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswud_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -801,6 +843,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_lib.pch"
 				ObjectFile="vcmswud\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -858,6 +903,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_lib.pch"
 				ObjectFile="vcmswud_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -911,6 +959,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_dll.pch"
 				ObjectFile="vcmsw\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -971,6 +1022,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmsw_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -1031,6 +1085,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_dll.pch"
 				ObjectFile="vcmsw\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -1091,6 +1148,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmsw_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
@@ -1154,6 +1214,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_dll.pch"
 				ObjectFile="vcmswd\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -1218,6 +1281,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswd_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -1282,6 +1348,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_dll.pch"
 				ObjectFile="vcmswd\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -1346,6 +1415,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswd_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
@@ -1408,6 +1480,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_dll.pch"
 				ObjectFile="vcmswu\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -1469,6 +1544,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswu_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -1530,6 +1608,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_dll.pch"
 				ObjectFile="vcmswu\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -1591,6 +1672,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswu_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
@@ -1655,6 +1739,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_dll.pch"
 				ObjectFile="vcmswud\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -1720,6 +1807,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswud_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -1785,6 +1875,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_dll.pch"
 				ObjectFile="vcmswud\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -1850,6 +1943,9 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="precomp.h"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswud_dll\stedit\"
 				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
@@ -1907,6 +2003,198 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
 				RelativePath="..\src\precomp.cpp">
+				<FileConfiguration
+					Name="Static ANSI Release Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Release Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Release Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Release Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Debug Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Debug Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Debug Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static ANSI Debug Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Release Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Release Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Release Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Release Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Debug Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Debug Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Debug Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Unicode Debug Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Release Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Release Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Release Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Release Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Debug Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Debug Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Debug Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL ANSI Debug Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Release Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Release Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Release Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Release Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Debug Multilib Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Debug Multilib DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Debug Monolithic Static|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Debug Monolithic DLL|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\steart.cpp">

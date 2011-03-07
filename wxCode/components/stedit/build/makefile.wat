@@ -199,8 +199,9 @@ WXLIBPATH = \lib\wat_dll
 STEDIT_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -wx -i=..\include -i=$(WXWIN)\contrib\include $(CPPFLAGS) &
-	$(CXXFLAGS)
+	$(VAR_0) -wx -i=..\include -i=$(WXWIN)\contrib\include &
+	/fh=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\prec_stedit_lib.pch &
+	$(CPPFLAGS) $(CXXFLAGS)
 STEDIT_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_precomp.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steart.obj &
@@ -224,6 +225,7 @@ STEDIT_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
 	$(VAR_0) -wx -i=..\include -dWXMAKINGDLL_STEDIT -i=$(WXWIN)\contrib\include &
+	/fh=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\prec_stedit_dll.pch &
 	$(CPPFLAGS) $(CXXFLAGS)
 STEDIT_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_precomp.obj &

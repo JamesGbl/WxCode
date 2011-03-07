@@ -66,7 +66,9 @@ STEDIT_LIB_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
 	$(VAR_0) $(VAR_2) \
 	/Fd..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.pdb \
-	/W4 /I..\include /I$(WXWIN)\contrib\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/W4 /I..\include /I$(WXWIN)\contrib\include /GR /EHsc /Yu"precomp.h" \
+	/Fp"vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\prec_stedit_lib.pch" \
+	$(CPPFLAGS) $(CXXFLAGS)
 STEDIT_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_precomp.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steart.obj \
@@ -92,6 +94,8 @@ STEDIT_DLL_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	$(VAR_0) $(VAR_2) \
 	/Fd..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.pdb \
 	/W4 /I..\include /DWXMAKINGDLL_STEDIT /I$(WXWIN)\contrib\include /GR /EHsc \
+	/Yu"precomp.h" \
+	/Fp"vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\prec_stedit_dll.pch" \
 	$(CPPFLAGS) $(CXXFLAGS)
 STEDIT_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_precomp.obj \
@@ -144,16 +148,16 @@ __stedit_dll___depname = \
 	..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll
 !endif
 !if "$(WX_DEBUG)" == "0"
-____stedit_dll__DEBUGINFO_21 = 
+____stedit_dll__DEBUGINFO_22 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-____stedit_dll__DEBUGINFO_21 = $(VAR_4)
+____stedit_dll__DEBUGINFO_22 = $(VAR_4)
 !endif
 !if "$(WX_SHARED)" == "0"
-____WX_SHARED_25_p_1 = 
+____WX_SHARED_27_p_1 = 
 !endif
 !if "$(WX_SHARED)" == "1"
-____WX_SHARED_25_p_1 = /d WXUSINGDLL
+____WX_SHARED_27_p_1 = /d WXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p_4 = /d _UNICODE
@@ -162,16 +166,16 @@ __WXUNICODE_DEFINE_p_4 = /d _UNICODE
 __WXDEBUG_DEFINE_p_4 = /d __WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
-______wxstedit__DEBUGINFO_29_p_1 = 
+______wxstedit__DEBUGINFO_31_p_1 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-______wxstedit__DEBUGINFO_29_p_1 = /d _DEBUG
+______wxstedit__DEBUGINFO_31_p_1 = /d _DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
-____wxstedit__DEBUGINFO_32 = 
+____wxstedit__DEBUGINFO_34 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-____wxstedit__DEBUGINFO_32 = $(VAR_4)
+____wxstedit__DEBUGINFO_34 = $(VAR_4)
 !endif
 !if "$(SHARED)" == "0"
 ____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
@@ -299,7 +303,7 @@ test_for_selected_wxbuild:
 	exit 1
 
 !if "$(WX_SHARED)" == "0"
-..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib: make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
+..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib: vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_precomp.obj make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
 	$(STEDIT_LIB_OBJECTS)
@@ -310,8 +314,8 @@ make_dir_stedit_lib:
 	if not exist ..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
 !if "$(WX_SHARED)" == "1"
-..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll: make_dir_stedit_dll  $(STEDIT_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_1) /pdb:"..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.pdb" $(____stedit_dll__DEBUGINFO_21) /LIBPATH:..$(WXLIBPATH) $(LDFLAGS) @<<
+..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll: vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_precomp.obj make_dir_stedit_dll  $(STEDIT_DLL_OBJECTS)
+	link /DLL /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_1) /pdb:"..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.pdb" $(____stedit_dll__DEBUGINFO_22) /LIBPATH:..$(WXLIBPATH) $(LDFLAGS) @<<
 	$(STEDIT_DLL_OBJECTS)   wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_stc.lib $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib
 <<
 !endif
@@ -320,7 +324,7 @@ make_dir_stedit_dll:
 	if not exist ..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\vc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
 ..\samples\stedit\wxstedit.exe: $(WXSTEDIT_OBJECTS) make_sample_dir_wxstedit vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxstedit_wxstedit.res $(__stedit_lib___depname)
-	link /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_1) /pdb:"..\samples\stedit\wxstedit.pdb" $(____wxstedit__DEBUGINFO_32) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS  $(LDFLAGS) @<<
+	link /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_1) /pdb:"..\samples\stedit\wxstedit.pdb" $(____wxstedit__DEBUGINFO_34) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS  $(LDFLAGS) @<<
 	$(WXSTEDIT_OBJECTS) $(WXSTEDIT_RESOURCES)  ..\lib\vc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_stc.lib $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -328,7 +332,7 @@ make_sample_dir_wxstedit:
 	if not exist ..\samples\stedit mkdir ..\samples\stedit
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_precomp.obj: ..\src\precomp.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\precomp.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) /Ycprecomp.h ..\src\precomp.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steart.obj: ..\src\steart.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\steart.cpp
@@ -382,7 +386,7 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.obj: ..\src\wxex
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\wxext.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_precomp.obj: ..\src\precomp.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\precomp.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) /Ycprecomp.h ..\src\precomp.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steart.obj: ..\src\steart.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\steart.cpp
@@ -445,5 +449,5 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxstedit_wxstedit.obj: ..\samples
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSTEDIT_CXXFLAGS) ..\samples\stedit\wxstedit.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxstedit_wxstedit.res: ..\samples\stedit\wxstedit.rc
-	rc /fo$@  /d WIN32 $(____WX_SHARED_25_p_1) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(______wxstedit__DEBUGINFO_29_p_1) /i ..\include /d _WINDOWS /i ..\samples\stedit /i $(WXWIN)\contrib\include ..\samples\stedit\wxstedit.rc
+	rc /fo$@  /d WIN32 $(____WX_SHARED_27_p_1) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(______wxstedit__DEBUGINFO_31_p_1) /i ..\include /d _WINDOWS /i ..\samples\stedit /i $(WXWIN)\contrib\include ..\samples\stedit\wxstedit.rc
 

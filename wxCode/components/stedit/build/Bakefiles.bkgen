@@ -2,7 +2,7 @@
 
 <!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.4 2007/03/06 23:58:00 jrl1 Exp $ -->
 
-<bakefile-gen>
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
 
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
 
