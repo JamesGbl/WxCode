@@ -146,6 +146,8 @@ END_EVENT_TABLE()
 
 void wxSTEditor::Init()
 {
+    // This is the same as CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
+    // unless the user initializes wxSTEditorRefData::ms_refdata_classinfo to something else
     m_refData = dynamic_cast<wxSTEditorRefData*>(wxSTEditorRefData::ms_refdata_classinfo->CreateObject());
 
     m_sendEvents = false;

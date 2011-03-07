@@ -149,6 +149,16 @@ public:
     static const wxClassInfo* ms_refdata_classinfo;
 };
 
+//-----------------------------------------------------------------------------
+// wxSTEditorRefDataImpl
+// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and 
+// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance 
+// can be created like this,
+// CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
+//
+// Maybe "wxSTEditorRefDataObject" is a better name?
+//-----------------------------------------------------------------------------
+
 class WXDLLIMPEXP_STEDIT wxSTEditorRefDataImpl : public wxObject, public wxSTEditorRefData
 {
     DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataImpl)
