@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="stedit">
-		<Project filename="stedit\wxstedit.cbp" active="1">
-			<Depends filename="..\build\steditlib.cbp" />
+		<Project filename="../build/steditlib.cbp" />
+		<Project filename="stedit/wxstedit.cbp" active="1">
+			<Depends filename="../build/steditlib.cbp" />
 		</Project>
-		<Project filename="..\build\steditlib.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -37,7 +37,6 @@
 					<Add directory="$(WXWIN)\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="wxmsw28ud_ogl" />
 					<Add library="wxmsw28ud_adv" />
 					<Add library="wxmsw28ud_html" />
 					<Add library="wxbase28ud_xml" />
@@ -123,7 +122,6 @@
 					<Add directory="$(WXWIN)\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="wxmsw28u_ogl" />
 					<Add library="wxmsw28u_adv" />
 					<Add library="wxmsw28u_html" />
 					<Add library="wxbase28u_xml" />
@@ -181,7 +179,6 @@
 					<Add directory="$(WXWIN)\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="wxmsw28_ogl" />
 					<Add library="wxmsw28_adv" />
 					<Add library="wxmsw28_html" />
 					<Add library="wxbase28_xml" />
@@ -224,9 +221,8 @@
 		<Linker>
 			<Add directory="$(#WX.lib)" />
 		</Linker>
-		<Unit filename="app.cpp" />
-		<Unit filename="cmdline.cpp" />
 		<Unit filename="stedoc.cpp" />
+		<Unit filename="wxstedit.cpp" />
 		<Unit filename="wxstedit.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

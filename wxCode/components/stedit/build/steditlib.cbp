@@ -22,24 +22,15 @@
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-D_UNICODE" />
 					<Add option="-DWXUSINGDLL" />
-					<Add option="-DWXMAKINGDLL_OGL" />
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_dll\mswud" />
-					<Add directory="..\..\src\ogl\..\..\..\include" />
-					<Add directory="..\..\src\ogl\..\..\include" />
 					<Add directory="$(WXWIN)\lib\vc_dll\mswud" />
 					<Add directory="$(WXWIN)\include" />
 					<Add directory="..\include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_dll\mswud" />
-					<Add directory="..\..\src\ogl\..\..\..\include" />
-					<Add directory="..\..\src\ogl\..\..\include" />
 					<Add directory="$(WXWIN)\lib\vc_dll\mswud" />
 					<Add directory="$(WXWIN)\include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="--implib ..\..\src\ogl\..\..\..\lib\gcc_dll\wxmsw28ud_ogl.lib" />
-					<Add option="--implib ..\lib\gcc_dll\wxmsw28ud_ogl.lib" />
 					<Add library="wxtiffd" />
 					<Add library="wxjpegd" />
 					<Add library="wxpngd" />
@@ -63,9 +54,6 @@
 					<Add library="odbc32" />
 					<Add library="wxmsw28ud_core" />
 					<Add library="wxbase28ud" />
-					<Add library='&quot;..\..\src\ogl\..\..\..\lib\gcc_dll\wxmsw28ud_ogl' />
-					<Add library='&quot;..\lib\gcc_dll\wxmsw28ud_ogl' />
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_dll" />
 					<Add directory="$(WXWIN)\lib\vc_dll" />
 				</Linker>
 			</Target>
@@ -84,13 +72,9 @@
 					<Add option="-D_DEBUG" />
 					<Add option="-D__WXDEBUG__" />
 					<Add option="-DWXUSINGDLL" />
-					<Add option="-DWXMAKINGDLL_OGL" />
 					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)\mswd" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_dll\mswd" />
-					<Add directory="..\..\src\ogl\..\..\..\include" />
-					<Add directory="..\..\src\ogl\..\..\include" />
 					<Add directory="$(WXWIN)\lib\vc_dll\mswd" />
 					<Add directory="$(WXWIN)\include" />
 				</ResourceCompiler>
@@ -113,9 +97,6 @@
 					<Add option="-O2" />
 					<Add option="-D_LIB" />
 					<Add option="-D_UNICODE" />
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_lib\mswu" />
-					<Add directory="..\..\src\ogl\..\..\..\include" />
-					<Add directory="..\..\src\ogl\..\..\include" />
 					<Add directory="$(WXWIN)\lib\vc_lib\mswu" />
 					<Add directory="$(WXWIN)\include" />
 					<Add directory="..\include" />
@@ -132,9 +113,6 @@
 					<Add option="-Wall" />
 					<Add option="-O2" />
 					<Add option="-D_LIB" />
-					<Add directory="..\..\src\ogl\..\..\..\lib\gcc_lib\msw" />
-					<Add directory="..\..\src\ogl\..\..\..\include" />
-					<Add directory="..\..\src\ogl\..\..\include" />
 					<Add directory="$(WXWIN)\lib\vc_lib\msw" />
 					<Add directory="$(WXWIN)\include" />
 					<Add directory="..\include" />
