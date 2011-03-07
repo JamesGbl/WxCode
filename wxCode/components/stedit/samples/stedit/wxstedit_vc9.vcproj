@@ -824,27 +824,16 @@
 			Name="Source Files"
 			>
 			<File
-				RelativePath=".\app.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\cmdline.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\link.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\stedoc.cpp"
 				>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\wxstedit.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\wxstedit.rc"
