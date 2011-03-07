@@ -61,8 +61,8 @@ APPEXTRALIBS = -l$(WXSTC_LIB) $(PROFILE)
 PROGRAM = wxstedit
 
 OBJECTS = \
-    app.o \
-    cmdline.o \
+    wxstedit.o \
+    stedoc.o \
     link.o
 
 DEPFILES := $(OBJECTS:.o=.d)
