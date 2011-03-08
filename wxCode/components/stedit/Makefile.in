@@ -50,7 +50,7 @@ WX_PORT = @WX_PORT@
 
 ### Variables: ###
 
-DESTDIR =
+DESTDIR = 
 STEDIT_LIB_CXXFLAGS = $(__stedit_lib_PCH_INC) -I$(srcdir)/include \
 	-I$(WXWIN)/contrib/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 STEDIT_LIB_OBJECTS =  \
@@ -269,7 +269,7 @@ uninstall: $(__uninstall_stedit_lib___depname) $(__uninstall_stedit_lib_headers_
 install-strip: install
 	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3)
 
-clean:
+clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
@@ -290,10 +290,10 @@ distclean: clean
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
 
-@COND_WX_SHARED_0@uninstall_stedit_lib:
+@COND_WX_SHARED_0@uninstall_stedit_lib: 
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 
-@COND_WX_SHARED_0@install_stedit_lib_headers:
+@COND_WX_SHARED_0@install_stedit_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
 @COND_WX_SHARED_0@	for f in $(STEDIT_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
@@ -302,17 +302,17 @@ distclean: clean
 @COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_0@uninstall_stedit_lib_headers:
+@COND_WX_SHARED_0@uninstall_stedit_lib_headers: 
 @COND_WX_SHARED_0@	for f in $(STEDIT_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_USE_PCH_1@./.pch/prec_stedit_lib/precomp.h.gch: @COND_USE_PCH_1@
-	$(BK_MAKE_PCH) ./.pch/prec_stedit_lib/precomp.h.gch precomp.h $(CXX) $(STEDIT_LIB_CXXFLAGS)
+@COND_USE_PCH_1@./.pch/prec_stedit_lib/precomp.h.gch: 
+@COND_USE_PCH_1@	$(BK_MAKE_PCH) ./.pch/prec_stedit_lib/precomp.h.gch precomp.h $(CXX) $(STEDIT_LIB_CXXFLAGS)
 
 @COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3): $(STEDIT_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(STEDIT_DLL_OBJECTS)  -L$(srcdir)/lib $(__stedit_dll___macinstnamecmd) $(__stedit_dll___importlib) $(__stedit_dll___soname_flags) $(LDFLAGS)  $(WX_LIBS) $(LIBS)
-@COND_WX_SHARED_1@
+@COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__stedit_dll___so_symlinks_cmd)
 
 @COND_WX_SHARED_1@install_stedit_dll: $(__stedit_dll___depname)
@@ -321,12 +321,12 @@ distclean: clean
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__stedit_dll___so_symlinks_inst_cmd))
 
-@COND_WX_SHARED_1@uninstall_stedit_dll:
+@COND_WX_SHARED_1@uninstall_stedit_dll: 
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__stedit_dll___targetsuf3)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__stedit_dll___so_symlinks_uninst_cmd))
 
-@COND_WX_SHARED_1@install_stedit_dll_headers:
+@COND_WX_SHARED_1@install_stedit_dll_headers: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
 @COND_WX_SHARED_1@	for f in $(STEDIT_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
@@ -335,21 +335,21 @@ distclean: clean
 @COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/$$f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
-@COND_WX_SHARED_1@uninstall_stedit_dll_headers:
+@COND_WX_SHARED_1@uninstall_stedit_dll_headers: 
 @COND_WX_SHARED_1@	for f in $(STEDIT_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
-@COND_USE_PCH_1@./.pch/prec_stedit_dll/precomp.h.gch: @COND_USE_PCH_1@
-	$(BK_MAKE_PCH) ./.pch/prec_stedit_dll/precomp.h.gch precomp.h $(CXX) $(STEDIT_DLL_CXXFLAGS)
+@COND_USE_PCH_1@./.pch/prec_stedit_dll/precomp.h.gch: 
+@COND_USE_PCH_1@	$(BK_MAKE_PCH) ./.pch/prec_stedit_dll/precomp.h.gch precomp.h $(CXX) $(STEDIT_DLL_CXXFLAGS)
 
 $(srcdir)/samples/stedit/wxstedit$(EXEEXT): $(WXSTEDIT_OBJECTS) make_sample_dir_wxstedit $(__wxstedit___win32rc) $(__stedit_lib___depname)
 	$(CXX) -o $@ $(WXSTEDIT_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxstedit_RPATH) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
-
+	
 	$(__wxstedit___mac_setfilecmd)
 	$(__wxstedit___os2_emxbindcmd)
 
-make_sample_dir_wxstedit:
+make_sample_dir_wxstedit: 
 	@mkdir -p $(srcdir)/samples/stedit
 
 stedit_lib_precomp.o: $(srcdir)/src/precomp.cpp $(STEDIT_LIB_ODEP)

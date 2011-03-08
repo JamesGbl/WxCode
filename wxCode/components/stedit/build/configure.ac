@@ -10,7 +10,7 @@
 
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
-AC_INIT([wxstedit], [1.2.4], [jrl1@sourceforge.net])
+AC_INIT([wxstedit], [1.2.6], [jrl1@sourceforge.net])
 AC_CONFIG_AUX_DIR(build)
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
@@ -44,7 +44,7 @@ WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 ## required options (version, build settings, etc)
 #####################################################################
 
-WXCODE_CHECKS([2.6.0], [stc,html,adv,core,base])      # we need at least wxWidgets 2.6 to work
+WXCODE_CHECKS([2.8.0], [stc,html,adv,core,base])      # we need at least wxWidgets 2.8 to work
 
 
 # end in a nice way the configure script
