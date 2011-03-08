@@ -125,6 +125,11 @@
     </ol>
     <p>If all points above have been checked, then you can run the script:</p>
     <div style="text-align:center"><tt>./acregen.sh</tt></div>
+
+    <p>If you have a compiled and want to use a local build of bakefile,
+    but have a system-wide bakefile package installed you will need to force <tt>aclocal</tt> to use the local build's bakefile*.m4 files.</p>
+    <div style="text-align:center"><tt>./acregen.sh "--acdir=/path/to/bakefile-x.y.z/share/aclocal"</tt></div>
+
     <br/>
     <p>This little script will run <tt>aclocal</tt> (a little utility which collects all macro definitions used by your configure.ac), <tt>autoconf</tt> and then will move the <tt>configure</tt> script in the root folder of your component.</p>
 
