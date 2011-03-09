@@ -149,6 +149,8 @@ IMPLEMENT_DYNAMIC_CLASS(wxSFCanvasSettings, xsSerializable);
 wxSFCanvasSettings::wxSFCanvasSettings() : xsSerializable()
 {
     m_nScale = 1;
+	m_nMinScale = sfdvSHAPECANVAS_SCALE_MIN;
+	m_nMaxScale = sfdvSHAPECANVAS_SCALE_MAX;	
     m_nBackgroundColor = sfdvSHAPECANVAS_BACKGROUNDCOLOR;
     m_nCommonHoverColor = sfdvSHAPECANVAS_HOVERCOLOR;
     m_nGridSize = sfdvSHAPECANVAS_GRIDSIZE;
@@ -165,6 +167,8 @@ wxSFCanvasSettings::wxSFCanvasSettings() : xsSerializable()
 	m_nPrintMode = sfdvSHAPECANVAS_PRINT_MODE;
 
     XS_SERIALIZE(m_nScale, wxT("scale"));
+	XS_SERIALIZE_EX(m_nMinScale, wxT("min_scale"), sfdvSHAPECANVAS_SCALE_MIN);
+    XS_SERIALIZE_EX(m_nMaxScale, wxT("max_scale"), sfdvSHAPECANVAS_SCALE_MAX);
 	XS_SERIALIZE_EX(m_nStyle, wxT("style"), sfdvSHAPECANVAS_STYLE);
     XS_SERIALIZE_EX(m_nBackgroundColor, wxT("background_color"), sfdvSHAPECANVAS_BACKGROUNDCOLOR);
 	XS_SERIALIZE_EX(m_nGradientFrom, wxT("gradient_from"), sfdvSHAPECANVAS_GRADIENT_FROM);
@@ -194,6 +198,7 @@ BEGIN_EVENT_TABLE(wxSFShapeCanvas, wxScrolledWindow)
 	EVT_LEFT_DCLICK(wxSFShapeCanvas::_OnLeftDoubleClick)
 	EVT_RIGHT_DCLICK(wxSFShapeCanvas::_OnRightDoubleClick)
 	EVT_MOTION(wxSFShapeCanvas::_OnMouseMove)
+	EVT_MOUSEWHEEL(wxSFShapeCanvas::_OnMouseWheel)
 	EVT_KEY_DOWN(wxSFShapeCanvas::_OnKeyDown)
 	EVT_ENTER_WINDOW(wxSFShapeCanvas::_OnEnterWindow)
 	EVT_LEAVE_WINDOW(wxSFShapeCanvas::_OnLeaveWindow)
@@ -801,9 +806,9 @@ void wxSFShapeCanvas::OnLeftDown(wxMouseEvent& event)
                             if( !OnPreConnectionFinished(m_pNewLineShape) )
 							{
 								m_pManager->RemoveShape( m_pNewLineShape );
-								m_pNewLineShape = NULL;
 								
-								SaveCanvasState();
+								m_nWorkingMode = modeREADY;
+								m_pNewLineShape = NULL;
 								return;
 							}
 							
@@ -1246,6 +1251,25 @@ void wxSFShapeCanvas::OnMouseMove(wxMouseEvent& event)
 	}
 }
 
+void wxSFShapeCanvas::OnMouseWheel(wxMouseEvent& event)
+{
+    // HINT: override it for custom actions...
+	
+	if( event.ControlDown() )
+	{
+		double nScale = GetScale();
+		nScale += (double)event.GetWheelRotation()/(event.GetWheelDelta()*10);
+		
+		if( nScale < m_Settings.m_nMinScale ) nScale = m_Settings.m_nMinScale;
+		if( nScale > m_Settings.m_nMaxScale ) nScale = m_Settings.m_nMaxScale;
+		
+		SetScale( nScale );
+		Refresh(false);
+	}
+
+	event.Skip();
+}
+
 void wxSFShapeCanvas::OnKeyDown(wxKeyEvent &event)
 {
 	// HINT: override it for custom actions...
@@ -1536,6 +1560,14 @@ void wxSFShapeCanvas::_OnMouseMove(wxMouseEvent& event)
 
     event.Skip();
 }
+
+void wxSFShapeCanvas::_OnMouseWheel(wxMouseEvent& event)
+{
+	if( ContainsStyle( sfsPROCESS_MOUSEWHEEL ) ) this->OnMouseWheel(event);
+
+    event.Skip();
+}
+
 void wxSFShapeCanvas::_OnKeyDown(wxKeyEvent& event)
 {
     this->OnKeyDown(event);

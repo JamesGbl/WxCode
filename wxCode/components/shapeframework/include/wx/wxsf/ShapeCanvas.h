@@ -77,6 +77,11 @@ extern wxPrintData *g_printData;
 #define sfdvSHAPECANVAS_PRINT_VALIGN wxSFShapeCanvas::valignMIDDLE
 /*! \brief Default value of wxSFCanvasSettings::m_nPrintMode data member */
 #define sfdvSHAPECANVAS_PRINT_MODE wxSFShapeCanvas::prnFIT_TO_MARGINS
+/*! \brief Default value of wxSFCanvasSettings::m_nMinScale data member */
+#define sfdvSHAPECANVAS_SCALE_MIN 0.1
+/*! \brief Default value of wxSFCanvasSettings::m_nMaxScale data member */
+#define sfdvSHAPECANVAS_SCALE_MAX 5
+
 
 class wxSFCanvasDropTarget;
 
@@ -123,6 +128,8 @@ public:
     wxArrayString m_arrAcceptedShapes;
 
     double m_nScale;
+	double m_nMinScale;
+	double m_nMaxScale;
 
 	long m_nStyle;
 
@@ -253,6 +260,8 @@ public:
 		sfsGRADIENT_BACKGROUND = 512,
 		/*! \brief Print also canvas background. */
 		sfsPRINT_BACKGROUND = 1024,
+		/*! \brief Process mouse wheel by the canvas (canvas scale will be changed). */
+		sfsPROCESS_MOUSEWHEEL = 2048,
 		/*! \brief Default canvas style. */
 		sfsDEFAULT_CANVAS_STYLE = sfsMULTI_SELECTION | sfsMULTI_SIZE_CHANGE | sfsDND | sfsUNDOREDO | sfsCLIPBOARD | sfsHOVERING | sfsHIGHLIGHTING
 	};
@@ -695,6 +704,26 @@ public:
 	 */
 	void SetScale(double scale);
 	/*!
+	 * \brief Set minimal allowed scale (for mouse wheel scale change).
+	 * \param scale Minimal scale
+	 */
+	void SetMinScale(double scale) { m_Settings.m_nMinScale = scale; }
+	/*!
+	 * \brief Get minimal allowed scale (for mouse wheel scale change).
+	 * \return Minimal scale
+	 */
+	double GetMinScale() { return m_Settings.m_nMinScale; }
+	/*!
+	 * \brief Set maximal allowed scale (for mouse wheel scale change).
+	 * \param scale Maximal scale
+	 */
+	void SetMaxScale(double scale) { m_Settings.m_nMaxScale = scale; }
+	/*!
+	 * \brief Set maximal allowed scale (for mouse wheel scale change).
+	 * \return Maximal scale
+	 */
+	double GetMaxScale() { return m_Settings.m_nMaxScale; }
+	/*!
 	 * \brief Get the canvas scale.
 	 * \return Canvas scale
 	 */
@@ -863,6 +892,18 @@ public:
      * \sa _OnMouseMove()
      */
 	virtual void OnMouseMove(wxMouseEvent& event);
+	/*!
+     * \brief Event handler called when the mouse wheel position is changed.
+     * The function can be overrided if necessary.
+     *
+     * The function is called by the framework and provides basic functionality
+     * needed for proper management of displayed shape. It is necessary to call
+     * this function from overrided methods if the default canvas behaviour
+     * should be preserved.
+     * \param event Mouse event
+     * \sa _OnMouseWheel()
+     */
+	virtual void OnMouseWheel(wxMouseEvent& event);
     /*!
      * \brief Event handler called when any key is pressed.
      * The function can be overrided if necessary.
@@ -1086,6 +1127,14 @@ private:
 	 * \sa wxSFShapeCanvas::OnMouseMove
 	 */
 	void _OnMouseMove(wxMouseEvent& event);
+	/*!
+	 * \brief Original private event handler called when the mouse wheel pocition is changed.
+	 * The handler calls user-overridable event handler function and skips the event
+	 * for next possible processing.
+	 * \param event Mouse event
+	 * \sa wxSFShapeCanvas::OnMouseWheel
+	 */
+	void _OnMouseWheel(wxMouseEvent& event);
 	/*!
 	 * \brief Original private event handler called when any key is pressed.
 	 * The handler calls user-overridable event handler function
