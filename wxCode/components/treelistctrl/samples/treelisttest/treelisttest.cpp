@@ -3,7 +3,7 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.34 2010-10-16 15:04:44 pgriddev Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.34 2010/10/16 15:04:44 pgriddev Exp $
 // Copyright:   (c) 2004-2010 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -272,6 +272,8 @@ public:
     // tree events
     void OnVetoingEvent (wxTreeEvent &event);
     void OnTreeGeneric (wxTreeEvent &event);
+    // mouse events --normally not propagated, but under GTK 2 events are
+    void OnMouseGeneric(wxMouseEvent &event);
 
 private:
     int m_alignment;
@@ -508,6 +510,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_TREE_ITEM_GETTOOLTIP(-1,        AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
     EVT_TREE_ITEM_MENU(-1,              AppFrame::OnTreeGeneric)
     EVT_TREE_STATE_IMAGE_CLICK(-1,      AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
+    // mouse events --normally not propagated, but under GTK 2 events are
+    EVT_MOUSE_EVENTS(                   AppFrame::OnMouseGeneric)
 END_EVENT_TABLE ()
 
 
@@ -569,7 +573,8 @@ AppFrame::AppFrame (const wxString &title)
     m_treelist->AddColumn (_("Second"), k, wxALIGN_LEFT);
     m_treelist->SetColumnEditable (1, true);
     m_treelist->SetColumnAlignment (1, wxALIGN_LEFT);
-    m_treelist->AddColumn (_("Third"), k, wxALIGN_CENTER);
+//    m_treelist->AddColumn (_("Third"), k, wxALIGN_CENTER);
+    m_treelist->AddColumn (_("Third"), 0);
     m_treelist->SetColumnEditable (2, true);
     m_treelist->SetColumnAlignment (2, wxALIGN_CENTER);
     FillTree();
@@ -972,7 +977,7 @@ const wxChar *name;
         wxArrayTreeItemIds aId;
         for (unsigned int i=0; i<m_treelist->GetSelections(aId); i++) {
             wxString s;
-            s.Printf("%X ", (unsigned int)(aId[i].m_pItem));
+            s.Printf(_("%X "), (unsigned int)(aId[i].m_pItem));
             sSel += s;
         }
 //        wxLogMessage(_("selected: ") + sSel);
@@ -982,6 +987,29 @@ const wxChar *name;
     }
 
     event.Skip();  // safer, and necessary for default behavior of double-click
+}
+
+
+// mouse events are normally not propagated, but under GTK 2 events are:
+void AppFrame::OnMouseGeneric(wxMouseEvent &event) {
+const wxChar *name;
+
+// log event name
+    if (event.GetEventType() == wxEVT_ENTER_WINDOW) {
+        name = _("wxEVT_ENTER_WINDOW");
+    } else
+    if (event.GetEventType() == wxEVT_LEAVE_WINDOW) {
+        name = _("wxEVT_LEAVE_WINDOW");
+    } else
+    {
+        name = _("BUG,unexpected");
+    }
+    wxLogMessage(_("MOUSE    type=<%s (%d)>    point=(%d, %d)"),
+        name, event.GetEventType(),
+        event.GetX(), event.GetY()
+    );
+
+    event.Skip();
 }
 
 
