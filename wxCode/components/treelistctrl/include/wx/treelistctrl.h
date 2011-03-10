@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.36 2010-04-19 17:49:41 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.36 2010/04/19 17:49:41 pgriddev Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -339,7 +339,7 @@ public:
     // ---------------------
 
     // is the item visible (it might be outside the view or not expanded)?
-    bool IsVisible (const wxTreeItemId& item, bool fullRow = false) const;
+    bool IsVisible (const wxTreeItemId& item, bool fullRow = false, bool within = true) const;
     // does the item has any children?
     bool HasChildren (const wxTreeItemId& item) const;
     // is the item expanded (only makes sense if HasChildren())?
@@ -408,9 +408,11 @@ public:
     wxTreeItemId GetPrevExpanded(const wxTreeItemId& item) const;
 
     // get visible item, see IsVisible()
-    wxTreeItemId GetFirstVisibleItem(bool fullRow = false) const;
-    wxTreeItemId GetNextVisible(const wxTreeItemId& item, bool fullRow = false) const;
-    wxTreeItemId GetPrevVisible(const wxTreeItemId& item, bool fullRow = false) const;
+    wxTreeItemId GetFirstVisibleItem(                      bool fullRow = false) const;
+    wxTreeItemId GetFirstVisible(                          bool fullRow = false, bool within = true) const;
+    wxTreeItemId GetNextVisible (const wxTreeItemId& item, bool fullRow = false, bool within = true) const;
+    wxTreeItemId GetPrevVisible (const wxTreeItemId& item, bool fullRow = false, bool within = true) const;
+    wxTreeItemId GetLastVisible (                          bool fullRow = false, bool within = true) const;
 
     // operations
     // ----------
