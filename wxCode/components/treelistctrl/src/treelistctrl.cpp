@@ -522,6 +522,9 @@ public:
     // toggles the current state
     void Toggle(const wxTreeItemId& item);
 
+    // set cursor item (indicated by black rectangle)
+    void SetCurrentItem(const wxTreeItemId& item);
+
     // remove the selection from currently selected item (if any)
     void Unselect();
     void UnselectAll();
@@ -2440,9 +2443,7 @@ wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
 #else
         wxTreeItemIdValue cookie = 0;
 #endif
-        // TODO: suspect that deleting and recreating a root can leave a number of members dangling
-        //  (here m_curItem should actually be set via SetCurrentItem() )
-        m_curItem = (wxTreeListItem*)GetFirstChild (m_rootItem, cookie).m_pItem;
+        SetCurrentItem(GetFirstChild(m_rootItem, cookie));
     }
     return m_rootItem;
 }
@@ -2594,6 +2595,9 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
 
 // ----------------------------------------------------------------------------
 
+void wxTreeListMainWindow::SetCurrentItem(const wxTreeItemId& itemId) {
+  SetCurrentItem((wxTreeListItem *)(itemId ? itemId.m_pItem : NULL));
+}
 void wxTreeListMainWindow::SetCurrentItem(wxTreeListItem *item) {
 wxTreeListItem *old_item;
 
@@ -3864,7 +3868,11 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
         x += m_editItem->GetTextX() - 2;  // wrong by 2, don't know why
         w += m_editItem->GetWidth();
     } else {
-        for (int i = 0; i < column; ++i) x += header_win->GetColumnWidth (i); // start of column
+        for (int i = 0; i < column; ++i) {
+            if ( header_win->IsColumnShown(i) ) {
+                x += header_win->GetColumnWidth (i); // start of column
+            }
+		}
         w += header_win->GetColumnWidth (column);  // currently non-main column width not pre-computed
     }
     switch (header_win->GetColumnAlignment (column)) {
@@ -5079,3 +5087,6 @@ void wxTreeListCtrl::SetItemToolTip(const wxTreeItemId& item, const wxString &ti
     m_main_win->SetItemToolTip(item, tip);
 }
 
+void wxTreeListCtrl::SetCurrentItem(const wxTreeItemId& itemId) {
+    m_main_win->SetCurrentItem(itemId);
+}

@@ -21,8 +21,10 @@ Known problems:
 Release History:
 ================
 * next release
+  - Fixed: position of editor when a column is hidden [wxPack]
   - Added: make scroll events accessible to child class [#3082693]
   - Added: test program includes demonstrates capturing mouse events in child class (compile option WITH_CHILD_CLASS) [#3082693]
+  - Added: SetCurrentItem() allows to set/reset the current item (cursor indicated by the black rectangle) [Remigius]
 
 * treelistctrl_2010-06.26.tar.gz
   - Fixed: improved support for GCC 4.x & compiling under Linux/GTK [#2858731]

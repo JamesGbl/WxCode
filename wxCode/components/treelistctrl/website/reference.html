@@ -1,19 +1,28 @@
 <html>
-<head><title>wxTreeListCtrl</title></head>
+<head>
+  <style type="text/css">
+    h2, h3 { color: maroon; }
+    table { }
+    td { vertical-align: top; }
+    tt { color: navy; }
+  </style>
+  <title>wxTreeListCtrl</title>
+</head>
 
-<body BGCOLOR=#FFFFFF>
+<body>
 <a name="wxtreelistctrl"></a>
 
 <h2>wxTreeListCtrl</h2>
+
 <p>
 A tree list control presents information as a hierarchy, with items that may be expanded to show further items. Items in a tree list control are referenced by <tt>wxTreeItemId</tt> handles, which may be tested for validity by calling <tt>wxTreeItemId::IsOk()</tt>.
 </p>
 <p>
 To intercept events from a tree list control, use the event table macros described in <tt>wxTreeEvent</tt> (see <a href="#eventhandling">below</a> for a detailed description of events).
 </p>
-<p>
+
 <h3>Derived from</h3>
-</p>
+
 <p>
 <tt>
 wxControl<br>
@@ -39,75 +48,80 @@ wxTreeCtrl<br>
 &lt;wx/treelistctrl.h&gt;
 </tt>
 </p>
-<p>
+
 <h3>Window styles</h3>
-</p>
+
 <table>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_EDIT_LABELS</b></font></td>
-<td valign=TOP>Use this style if you wish the user to be able to edit labels in the tree list control.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_NO_BUTTONS</b></font></td>
-<td valign=TOP>For convenience to document that no buttons are to be drawn.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_HAS_BUTTONS</b></font></td>
-<td valign=TOP>Use this style to show + and - buttons to the left of parent items.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_TWIST_BUTTONS</b></font></td>
-<td valign=TOP>Use this style to show Mac-style twister buttons to the left of parent items. If both <tt>wxTR_HAS_BUTTONS</tt> and <tt>wxTR_TWIST_BUTTONS</tt> are given, twister buttons are generated.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_NO_LINES</b></font></td>
-<td valign=TOP>Use this style to hide vertical level connectors.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_FULL_ROW_HIGHLIGHT</b></font></td>
-<td valign=TOP>Use this style to have the background colour and the selection highlight  extend over the entire horizontal row of the tree list control window. (This flag is ignored under Windows unless you specify wxTR_NO_LINES as well.)</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_LINES_AT_ROOT</b></font></td>
-<td valign=TOP>Use this style to show lines between root nodes. Only applicable if wxTR_HIDE_ROOT is set and wxTR_NO_LINES is not set.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_HIDE_ROOT</b></font></td>
-<td valign=TOP>Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_ROW_LINES</b></font></td>
-<td valign=TOP>Use this style to draw a contrasting border between displayed rows.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>xTR_HAS_VARIABLE_ROW_HEIGHT</b></font></td>
-<td valign=TOP>Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.</td>
-</tr>
-<tr><td valign=TOP width=198><tt><b>wxTR_SINGLE</b></font></td>
-<td valign=TOP>For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected.  This is the default.</td>
-</tr>
-<tr><td valign=TOP width=198><tt><b>wxTR_MULTIPLE</b></font></td>
-<td valign=TOP>Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.</td>
-</tr>
-<tr><td valign=TOP width=198><tt><b>wxTR_EXTENDED</b></font></td>
-<td valign=TOP>Use this style to allow disjoint items to be selected.  (Only partially implemented; may not work in all cases.)</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_DEFAULT_STYLE</b></font></td>
-<td valign=TOP>The set of flags that are closest to the defaults for the native control for a particular toolkit.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt><b>wxTR_VIRTUAL</b></font></td>
-<td valign=TOP>The application provides items text on demand.</td>
-</tr>
+  <col width="198">
+  <col>
+  <tbody>
+    <tr>
+    <td><tt><b>wxTR_EDIT_LABELS</b></tt></td>
+    <td>Use this style if you wish the user to be able to edit labels in the tree list control.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_NO_BUTTONS</b></tt></td>
+    <td>For convenience to document that no buttons are to be drawn.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_HAS_BUTTONS</b></tt></td>
+    <td>Use this style to show + and - buttons to the left of parent items.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_TWIST_BUTTONS</b></tt></td>
+    <td>Use this style to show Mac-style twister buttons to the left of parent items. If both <tt>wxTR_HAS_BUTTONS</tt> and <tt>wxTR_TWIST_BUTTONS</tt> are given, twister buttons are generated.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_NO_LINES</b></tt></td>
+    <td>Use this style to hide vertical level connectors.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_FULL_ROW_HIGHLIGHT</b></tt></td>
+    <td>Use this style to have the background colour and the selection highlight  extend over the entire horizontal row of the tree list control window. (This flag is ignored under Windows unless you specify wxTR_NO_LINES as well.)</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_LINES_AT_ROOT</b></tt></td>
+    <td>Use this style to show lines between root nodes. Only applicable if wxTR_HIDE_ROOT is set and wxTR_NO_LINES is not set.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_HIDE_ROOT</b></tt></td>
+    <td>Use this style to suppress the display of the root node, effectively causing the first-level nodes to appear as a series of root nodes.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_ROW_LINES</b></tt></td>
+    <td>Use this style to draw a contrasting border between displayed rows.</td>
+    </tr>
+    <tr>
+    <td><tt><b>xTR_HAS_VARIABLE_ROW_HEIGHT</b></tt></td>
+    <td>Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.</td>
+    </tr>
+    <tr><td><tt><b>wxTR_SINGLE</b></tt></td>
+    <td>For convenience to document that only one item may be selected at a time. Selecting another item causes the current selection, if any, to be deselected.  This is the default.</td>
+    </tr>
+    <tr><td><tt><b>wxTR_MULTIPLE</b></tt></td>
+    <td>Use this style to allow a range of items to be selected. If a second range is selected, the current range, if any, is deselected.</td>
+    </tr>
+    <tr><td><tt><b>wxTR_EXTENDED</b></tt></td>
+    <td>Use this style to allow disjoint items to be selected.  (Only partially implemented; may not work in all cases.)</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_DEFAULT_STYLE</b></tt></td>
+    <td>The set of flags that are closest to the defaults for the native control for a particular toolkit.</td>
+    </tr>
+    <tr>
+    <td><tt><b>wxTR_VIRTUAL</b></tt></td>
+    <td>The application provides items text on demand.</td>
+    </tr>
+  </tbody>
 </table>
+
 <p>
 See also window styles overview.
 </p>
-<p>
+
 <a name="eventhandling"></a>
 <h3>Event handling</h3>
-</p>
+
 <p>
 To process input from a tree list control, use these event handler macros to direct input to member functions that take a <tt>wxTreeEvent</tt> argument.
 In addition to the methods documented for <tt>wxTreeEvent</tt>, the method <tt>GetInt()</tt> will return the relevant column for mouse events (and -1 otherwise).
@@ -115,91 +129,97 @@ In addition to the methods documented for <tt>wxTreeEvent</tt>, the method <tt>G
 <p>
 The sample program includes a log pane reporting events as they are fired.
 </p>
+
 <table>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_DRAG(id, func)</b></font></td>
-<td valign=TOP>Begin dragging with the left mouse button (see also note below).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_RDRAG(id, func)</b></font></td>
-<td valign=TOP>Begin dragging with the right mouse button (see also note below).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_END_DRAG(id, func)</b></font></td>
-<td valign=TOP>End dragging with the left or right mouse button (see also note below).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_BEGIN_LABEL_EDIT(id, func)</b></font></td>
-<td valign=TOP>Begin editing a label. This can be prevented by calling Veto().</td>
-</tr>
-<tr><td valign=TOP width=277><tt><b>EVT_TREE_END_LABEL_EDIT(id, func)</b></font></td>
-<td valign=TOP>Finish editing a label. This can be prevented by calling Veto().</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_DELETE_ITEM(id, func)</b></font></td>
-<td valign=TOP>Delete an item.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_GET_INFO(id, func)</b></td>
-<td valign=TOP><i>-----NOT IMPLEMENTED-----</i></td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_SET_INFO(id, func)</b></font></td>
-<td valign=TOP><i>-----NOT IMPLEMENTED-----</i></td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_ACTIVATED(id, func)</b></font></td>
-<td valign=TOP>The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_COLLAPSED(id, func)</b></font></td>
-<td valign=TOP>The item has been collapsed.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_COLLAPSING(id, func)</b></font></td>
-<td valign=TOP>The item is being collapsed. This can be prevented by calling Veto().</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_EXPANDED(id, func)</b></font></td>
-<td valign=TOP>The item has been expanded.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_EXPANDING(id, func)</b></font></td>
-<td valign=TOP>The item is being expanded. This can be prevented by calling Veto().</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_RIGHT_CLICK(id, func)</b></font></td>
-<td valign=TOP>The user has clicked the item with the right mouse button  (changes selection unless item is already selected or CTRL is pressed).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_MIDDLE_CLICK(id, func)</b></font></td>
-<td valign=TOP>The user has clicked the item with the middle mouse button (this does not change the selection).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_SEL_CHANGED(id, func)</b></font></td>
-<td valign=TOP>Selection has changed.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_SEL_CHANGING(id, func)</b></font></td>
-<td valign=TOP>Selection is changing. This can be prevented by calling Veto().</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_KEY_DOWN(id, func)</b></font></td>
-<td valign=TOP>A key has been pressed.</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_GETTOOLTIP(id, func)</b></font></td>
-<td valign=TOP><i>-----NOT IMPLEMENTED-----</i></td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_ITEM_MENU(id, func)</b></font></td>
-<td valign=TOP>The context menu for the selected item has been requested by a right click (by using the menu key is untested).</td>
-</tr>
-<tr>
-<td valign=TOP width=277><tt><b>EVT_TREE_STATE_IMAGE_CLICK(id, func)</b></font></td>
-<td valign=TOP><i>-----NOT IMPLEMENTED-----</i></td>
-</tr>
+  <col width="277">
+  <col>
+  <tbody>
+    <tr>
+    <td><tt><b>EVT_TREE_BEGIN_DRAG(id, func)</b></tt></td>
+    <td>Begin dragging with the left mouse button (see also note below).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_BEGIN_RDRAG(id, func)</b></tt></td>
+    <td>Begin dragging with the right mouse button (see also note below).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_END_DRAG(id, func)</b></tt></td>
+    <td>End dragging with the left or right mouse button (see also note below).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_BEGIN_LABEL_EDIT(id, func)</b></tt></td>
+    <td>Begin editing a label. This can be prevented by calling Veto().</td>
+    </tr>
+    <tr><td><tt><b>EVT_TREE_END_LABEL_EDIT(id, func)</b></tt></td>
+    <td>Finish editing a label. This can be prevented by calling Veto().</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_DELETE_ITEM(id, func)</b></tt></td>
+    <td>Delete an item.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_GET_INFO(id, func)</b></td>
+    <td><i>-----NOT IMPLEMENTED-----</i></td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_SET_INFO(id, func)</b></tt></td>
+    <td><i>-----NOT IMPLEMENTED-----</i></td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_ACTIVATED(id, func)</b></tt></td>
+    <td>The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_COLLAPSED(id, func)</b></tt></td>
+    <td>The item has been collapsed.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_COLLAPSING(id, func)</b></tt></td>
+    <td>The item is being collapsed. This can be prevented by calling Veto().</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_EXPANDED(id, func)</b></tt></td>
+    <td>The item has been expanded.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_EXPANDING(id, func)</b></tt></td>
+    <td>The item is being expanded. This can be prevented by calling Veto().</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_RIGHT_CLICK(id, func)</b></tt></td>
+    <td>The user has clicked the item with the right mouse button  (changes selection unless item is already selected or CTRL is pressed).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_MIDDLE_CLICK(id, func)</b></tt></td>
+    <td>The user has clicked the item with the middle mouse button (this does not change the selection).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_SEL_CHANGED(id, func)</b></tt></td>
+    <td>Selection has changed.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_SEL_CHANGING(id, func)</b></tt></td>
+    <td>Selection is changing. This can be prevented by calling Veto().</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_KEY_DOWN(id, func)</b></tt></td>
+    <td>A key has been pressed.</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_GETTOOLTIP(id, func)</b></tt></td>
+    <td><i>-----NOT IMPLEMENTED-----</i></td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_ITEM_MENU(id, func)</b></tt></td>
+    <td>The context menu for the selected item has been requested by a right click (by using the menu key is untested).</td>
+    </tr>
+    <tr>
+    <td><tt><b>EVT_TREE_STATE_IMAGE_CLICK(id, func)</b></tt></td>
+    <td><i>-----NOT IMPLEMENTED-----</i></td>
+    </tr>
+  </tbody>
 </table>
+
 <p>
 <br>
 <b>Note on drag &amp; drop in the current implementation: </b>
@@ -211,9 +231,9 @@ To implement drag &amp; drop over multiple windows, the application shoud only
 process the first drag begin event and then wait for the mouse button to be
 released.
 </p>
-<p>
+
 <h3>See also</h3>
-</p>
+
 <p>
 <tt>
 wxTreeCtrl, wxTreeItemData, wxTreeEvent,
@@ -221,9 +241,9 @@ wxListBox, wxListCtrl,
 wxImageList
 </tt>
 </p>
-<p>
+
 <h3>Members (<i>wxTreeListCtrl</i> specific)</h3>
-</p>
+
 <p><b>
 <a href="#wxtreelistctrlconstr">wxTreeListCtrl::wxTreeListCtrl</a><br>
 <a href="#topic2">wxTreeListCtrl::~wxTreeListCtrl</a><br>
@@ -303,21 +323,20 @@ wxImageList
 <a href="#wxtreelistctrlprependitem">wxTreeListCtrl::PrependItem</a><br>
 <a href="#wxtreelistctrlrefresh">wxTreeListCtrl::Refresh</a><br>
 <a href="#wxtreelistctrlremovecolumn">wxTreeListCtrl::RemoveColumn</a><br>
+<a href="#wxtreelistctrlscrollto">wxTreeListCtrl::ScrollTo</a><br>
+<a href="#wxtreelistctrlselectitem">wxTreeListCtrl::SelectItem</a><br>
 <a href="#wxtreelistctrlsetbackgroundcolour">wxTreeListCtrl::SetBackgroundColour</a><br>
+<a href="#wxtreelistctrlsetbuttonsimagelist">wxTreeListCtrl::SetButtonsImageList</a><br>
 <a href="#wxtreelistctrlsetcolumn">wxTreeListCtrl::SetColumn</a><br>
 <a href="#wxtreelistctrlsetcolumnalignment">wxTreeListCtrl::SetColumnAlignment</a><br>
 <a href="#wxtreelistctrlsetcolumnimage">wxTreeListCtrl::SetColumnImage</a><br>
 <a href="#wxtreelistctrlsetcolumntext">wxTreeListCtrl::SetColumnText</a><br>
 <a href="#wxtreelistctrlsetcolumnwidth">wxTreeListCtrl::SetColumnWidth</a><br>
-<a href="#wxtreelistctrlsetmaincolumn">wxTreeListCtrl::SetMainColumn</a><br>
+<a href="#wxtreelistctrlsetcurrentitem">wxTreeListCtrl::SetCurrentItem</a><br>
 <a href="#wxtreelistctrlsetdragitem">wxTreeListCtrl::SetDragItem</a><br>
 <a href="#wxtreelistctrlsetfocus">wxTreeListCtrl::SetFocus</a><br>
 <a href="#wxtreelistctrlsetfont">wxTreeListCtrl::SetFont</a><br>
 <a href="#wxtreelistctrlsetforegroundcolour">wxTreeListCtrl::SetForegroundColour</a><br>
-<a href="#wxtreelistctrlsetwindowstyle">wxTreeListCtrl::SetWindowStyle</a><br>
-<a href="#wxtreelistctrlscrollto">wxTreeListCtrl::ScrollTo</a><br>
-<a href="#wxtreelistctrlselectitem">wxTreeListCtrl::SelectItem</a><br>
-<a href="#wxtreelistctrlsetbuttonsimagelist">wxTreeListCtrl::SetButtonsImageList</a><br>
 <a href="#wxtreelistctrlsetimagelist">wxTreeListCtrl::SetImageList</a><br>
 <a href="#wxtreelistctrlsetindent">wxTreeListCtrl::SetIndent</a><br>
 <a href="#wxtreelistctrlsetitembackgroundcolour">wxTreeListCtrl::SetItemBackgroundColour</a><br>
@@ -329,9 +348,11 @@ wxImageList
 <a href="#wxtreelistctrlsetitemtext">wxTreeListCtrl::SetItemText</a><br>
 <a href="#wxtreelistctrlsetitemtextcolour">wxTreeListCtrl::SetItemTextColour</a><br>
 <a href="#wxtreelistctrlsetitemtooltip">wxTreeListCtrl::SetItemToolTip</a><br>
-<a href="#wxtreelistctrlsetindent">wxTreeListCtrl::SetLineSpacing</a><br>
+<a href="#wxtreelistctrlsetlinespacing">wxTreeListCtrl::SetLineSpacing</a><br>
+<a href="#wxtreelistctrlsetmaincolumn">wxTreeListCtrl::SetMainColumn</a><br>
 <a href="#wxtreelistctrlsetstateimagelist">wxTreeListCtrl::SetStateImageList</a><br>
 <a href="#wxtreelistctrlsettooltip">wxTreeListCtrl::SetToolTip</a><br>
+<a href="#wxtreelistctrlsetwindowstyle">wxTreeListCtrl::SetWindowStyle</a><br>
 <a href="#wxtreelistctrlshowcolumn">wxTreeListCtrl::ShowColumn</a><br>
 <a href="#wxtreelistctrlsortchildren">wxTreeListCtrl::SortChildren</a><br>
 <a href="#wxtreelistctrltoggle">wxTreeListCtrl::Toggle</a><br>
@@ -608,39 +629,47 @@ The flags have the following meaning:
 Modes for navigation
 </p>
 <table>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_NAV_FULLTREE</font></td>
-<td valign=TOP>Searches within the full tree (default).</td>
-</tr>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_NAV_EXPANDED</font></td>
-<td valign=TOP>Searches within the expanded tree.</td>
-</tr>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_NAV_VISIBLE</font></td>
-<td valign=TOP>Searches within all visible items.</td>
-</tr>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_NAV_LEVEL</font></td>
-<td valign=TOP>Searches within only the current level.</td>
-</tr>
+  <col width="240">
+  <col>
+  <tbody>
+    <tr>
+    <td><tt>wxTL_MODE_NAV_FULLTREE</tt></td>
+    <td>Searches within the full tree (default).</td>
+    </tr>
+    <tr>
+    <td><tt>wxTL_MODE_NAV_EXPANDED</tt></td>
+    <td>Searches within the expanded tree.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTL_MODE_NAV_VISIBLE</tt></td>
+    <td>Searches within all visible items.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTL_MODE_NAV_LEVEL</tt></td>
+    <td>Searches within only the current level.</td>
+    </tr>
+  </tbody>
 </table>
 <p>
 Modes for find match
 </p>
 <table>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_FIND_EXACT</font></td>
-<td valign=TOP>Matches exact the submitted text (default).</td>
-</tr>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_FIND_PARTIAL</font></td>
-<td valign=TOP>Matches only partial up to the submitted text length.</td>
-</tr>
-<tr>
-<td valign=TOP width=240><tt>wxTL_MODE_FIND_NOCASE</font></td>
-<td valign=TOP>Matches case insensitive.</td>
-</tr>
+  <col width="240">
+  <col>
+  <tbody>
+    <tr>
+    <td><tt>wxTL_MODE_FIND_EXACT</tt></td>
+    <td>Matches exact the submitted text (default).</td>
+    </tr>
+    <tr>
+    <td><tt>wxTL_MODE_FIND_PARTIAL</tt></td>
+    <td>Matches only partial up to the submitted text length.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTL_MODE_FIND_NOCASE</tt></td>
+    <td>Matches case insensitive.</td>
+    </tr>
+  </tbody>
 </table>
 
 <hr>
@@ -656,10 +685,10 @@ Retrieves the rectangle bounding the <i>item</i>. If <i>textOnly</i> is TRUE, on
 The return value is TRUE if the rectangle was successfully retrieved or false if it was not (in this case <i>rect</i> is not changed) - for example, if the item is currently invisible.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> The wxPython version of this method requires only the <tt>item</tt> and <tt>textOnly</tt> parameters.  The return value is either a <tt>wxRect</tt> object or <tt>None</tt>.
+<b class="note">wxPython note:</b> The wxPython version of this method requires only the <tt>item</tt> and <tt>textOnly</tt> parameters.  The return value is either a <tt>wxRect</tt> object or <tt>None</tt>.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method only takes the parameters <tt>item</tt> and <tt>textOnly</tt>, and returns a Wx::Rect ( or undef ).
+<b class="note">wxPerl note:</b> In wxPerl this method only takes the parameters <tt>item</tt> and <tt>textOnly</tt>, and returns a Wx::Rect ( or undef ).
 </p>
 
 <hr>
@@ -789,23 +818,23 @@ Returns the tree item data associated with the item.
 wxTreeItemData
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> wxPython provides the following shortcut method:
+<b class="note">wxPython note:</b> wxPython provides the following shortcut method:
 </p>
 <table>
-<tr>
-<td valign=TOP>
-<tt><b>GetPyData(item)</b></font></td>
-<td valign=TOP>Returns the Python Object associated with the wxTreeItemData for the given item Id.</td>
-</tr>
+  <tr>
+  <td>
+  <tt><b>GetPyData(item)</b></tt></td>
+  <td>Returns the Python Object associated with the wxTreeItemData for the given item Id.</td>
+  </tr>
 </table>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> wxPerl provides the following shortcut method:
+<b class="note">wxPerl note:</b> wxPerl provides the following shortcut method:
 </p>
 <table>
-<tr>
-<td valign=TOP><tt><b>GetPlData( item )</b></font></td>
-<td valign=TOP>Returns the Perl data associated with the Wx::TreeItemData ( it is just the same as tree-&gt;GetItemData( item )-&gt;GetData(); ).</td>
-</tr>
+  <tr>
+  <td><tt><b>GetPlData( item )</b></tt></td>
+  <td>Returns the Perl data associated with the Wx::TreeItemData ( it is just the same as tree-&gt;GetItemData( item )-&gt;GetData(); ).</td>
+  </tr>
 </table>
 
 <hr>
@@ -928,10 +957,10 @@ Returns the space above and below the text on each line.
 Returns the pointer to the main window.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
+<b class="note">wxPython note:</b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method only takes the <tt>item</tt> parameter, and returns a 2-element list <tt>( item, cookie )</tt>.
+<b class="note">wxPerl note:</b> In wxPerl this method only takes the <tt>item</tt> parameter, and returns a 2-element list <tt>( item, cookie )</tt>.
 </p>
 
 <hr>
@@ -970,10 +999,10 @@ Returns an invalid tree item if there are no further children.
 <a href="#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</a>, <a href="#wxtreelistctrlgetprevchild">wxTreeListCtrl::GetPrevChild</a>
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
+<b class="note">wxPython note:</b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method returns a 2-element list <tt>( item, cookie )</tt>, instead of modifying its parameters.
+<b class="note">wxPerl note:</b> In wxPerl this method returns a 2-element list <tt>( item, cookie )</tt>, instead of modifying its parameters.
 </p>
 
 <hr>
@@ -1052,10 +1081,10 @@ Returns an invalid tree item if there are no further children.
 <a href="#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</a>, <a href="#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</a>
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
+<b class="note">wxPython note:</b> In wxPython the returned wxTreeItemId and the new cookie value are both returned as a tuple containing the two values.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method returns a 2-element list <tt>( item, cookie )</tt>, instead of modifying its parameters.
+<b class="note">wxPerl note:</b> In wxPerl this method returns a 2-element list <tt>( item, cookie )</tt>, instead of modifying its parameters.
 </p>
 
 <hr>
@@ -1132,10 +1161,10 @@ Fills the array of tree items passed in with the currently selected items. This 
 Returns the number of selected items.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> The wxPython version of this method accepts no parameters and returns a Python list of <tt>wxTreeItemId</tt>s.
+<b class="note">wxPython note:</b> The wxPython version of this method accepts no parameters and returns a Python list of <tt>wxTreeItemId</tt>s.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method takes no parameters and returns a list of <tt>Wx::TreeItemId</tt>s.
+<b class="note">wxPerl note:</b> In wxPerl this method takes no parameters and returns a list of <tt>Wx::TreeItemId</tt>s.
 </p>
 
 <hr>
@@ -1194,58 +1223,62 @@ Returns TRUE if the item has children.
 Calculates which (if any) item is under the given point, returning the tree item id at this point plus extra information <i>flags</i>. <i>flags</i> is a bitlist of the following:
 </p>
 <table>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ABOVE</font></td>
-<td valign=TOP>Above the client area.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_BELOW</font></td>
-<td valign=TOP>Below the client area.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_NOWHERE</font></td>
-<td valign=TOP>In the client area but below the last item.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMBUTTON</font></td>
-<td valign=TOP>On the button associated with an item.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMCOLUMN</font></td>
-<td valign=TOP>On a normal item column (not main column).</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMICON</font></td>
-<td valign=TOP>On the bitmap associated with an item.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMINDENT</font></td>
-<td valign=TOP>In the indentation associated with an item.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMLABEL</font></td>
-<td valign=TOP>On the label (string) associated with an item.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMRIGHT</font></td>
-<td valign=TOP>In the area to the right of an item.</td>
-</tr>
-<tr><td valign=TOP width=198><tt>wxTREE_HITTEST_ONITEMSTATEICON</font></td>
-<td valign=TOP>On the state icon for a tree view item that is in a user-defined state.</td>
-</tr>
-<tr>
-<td valign=TOP width=198><tt>wxTREE_HITTEST_TOLEFT</font></td>
-<td valign=TOP>To the right of the client area.</td>
-</tr>
-<tr><td valign=TOP width=198><tt>wxTREE_HITTEST_TORIGHT</font></td>
-<td valign=TOP>To the left of the client area.</font></td>
-</tr>
+  <col width="198">
+  <col>
+  <tbody>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ABOVE</tt></td>
+    <td>Above the client area.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_BELOW</tt></td>
+    <td>Below the client area.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_NOWHERE</tt></td>
+    <td>In the client area but below the last item.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMBUTTON</tt></td>
+    <td>On the button associated with an item.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMCOLUMN</tt></td>
+    <td>On a normal item column (not main column).</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMICON</tt></td>
+    <td>On the bitmap associated with an item.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMINDENT</tt></td>
+    <td>In the indentation associated with an item.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMLABEL</tt></td>
+    <td>On the label (string) associated with an item.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_ONITEMRIGHT</tt></td>
+    <td>In the area to the right of an item.</td>
+    </tr>
+    <tr><td><tt>wxTREE_HITTEST_ONITEMSTATEICON</tt></td>
+    <td>On the state icon for a tree view item that is in a user-defined state.</td>
+    </tr>
+    <tr>
+    <td><tt>wxTREE_HITTEST_TOLEFT</tt></td>
+    <td>To the right of the client area.</td>
+    </tr>
+    <tr><td><tt>wxTREE_HITTEST_TORIGHT</tt></td>
+    <td>To the left of the client area.</tt></td>
+    </tr>
+  <tbody>
 </table>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> in wxPython both the wxTreeItemId and the flags are returned as a tuple.
+<b class="note">wxPython note:</b> in wxPython both the wxTreeItemId and the flags are returned as a tuple.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> In wxPerl this method only takes the <tt>point</tt> parameter and returns a 2-element list <tt>( item, flags )</tt>.
+<b class="note">wxPerl note:</b> In wxPerl this method only takes the <tt>point</tt> parameter and returns a 2-element list <tt>( item, flags )</tt>.
 </p>
 
 <hr>
@@ -1264,7 +1297,7 @@ Inserts an item after a given one (<i>previous</i>) or before one identified by 
 The <i>image</i> and <i>selImage</i> parameters are an index within the normal image list specifying the image to use for unselected and selected items, respectively. If <i>image</i> &gt; -1 and <i>selImage</i> is -1, the same image is used for both selected and unselected items.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> The second form of this method is called <tt>InsertItemBefore</tt> in wxPython.
+<b class="note">wxPython note:</b> The second form of this method is called <tt>InsertItemBefore</tt> in wxPython.
 </p>
 
 <hr>
@@ -1474,6 +1507,16 @@ See also <a href="#wxtreelistctrlassignbuttonsimagelist">AssignButtonsImageList<
 </p>
 
 <hr>
+<a name="wxtreelistctrlsetcurrentitem"></a>
+<h3>wxTreeListCtrl::SetCurrentItem</h3>
+<p>
+<b>void</b> <b>SetCurrentItem</b> ()
+</p>
+<p>
+Sets the current cursor item (marked by a black rectangle). This is the item on which keyboard operations apply, for instance. Set to <tt>(wxTreeItemId*)NULL</tt> to reset.
+</p>
+
+<hr>
 <a name="wxtreelistctrlsetimagelist"></a>
 <h3>wxTreeListCtrl::SetImageList</h3>
 <p>
@@ -1529,21 +1572,21 @@ See also: <a href="#wxtreelistctrlisbold">IsBold</a>
 Sets the item client data.
 </p>
 <p>
-<b><font COLOR="#0000C8">wxPython note:</font></b> wxPython provides the following shortcut method:
+<b class="note">wxPython note:</b> wxPython provides the following shortcut method:
 </p>
 <table>
-<tr>
-<td valign=TOP><b>SetPyData(item, obj)</b></td>
-<td valign=TOP>Associate the given Python Object with the wxTreeItemData for the given item Id.</td>
-</tr>
+  <tr>
+  <td><b>SetPyData(item, obj)</b></td>
+  <td>Associate the given Python Object with the wxTreeItemData for the given item Id.</td>
+  </tr>
 </table>
 <p>
-<b><font COLOR="#0000C8">wxPerl note:</font></b> wxPerl provides the following shortcut method:
+<b class="note">wxPerl note:</b> wxPerl provides the following shortcut method:
 </p>
 <table>
-<tr><td valign=TOP><b>SetPlData( item, data )</b></td>
-<td valign=TOP>Sets the Perl data associated with the Wx::TreeItemData ( it is just the same as tree-&gt;GetItemData( item )-&gt;SetData( data ); ).</td>
-</tr>
+  <tr><td><b>SetPlData( item, data )</b></td>
+  <td>Sets the Perl data associated with the Wx::TreeItemData ( it is just the same as tree-&gt;GetItemData( item )-&gt;SetData( data ); ).</td>
+  </tr>
 </table>
 
 <hr>
@@ -1931,4 +1974,5 @@ Shows/hides the column.
 Returns the item bold status.
 </p>
 
-</font></body></html>
+</body>
+</html>

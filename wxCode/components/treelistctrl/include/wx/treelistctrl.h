@@ -466,6 +466,9 @@ public:
     // toggles the current state
     void Toggle (const wxTreeItemId& item);
 
+    // set cursor item (indicated by black rectangle)
+    void SetCurrentItem(const wxTreeItemId& item = (wxTreeItemId*)NULL);
+
     // remove the selection from currently selected item (if any)
     void Unselect();
     void UnselectAll();
