@@ -261,6 +261,7 @@ wxImageList
 <a href="#wxtreelistctrldeleteroot">wxTreeListCtrl::DeleteRoot</a><br>
 <a href="#wxtreelistctrledit">wxTreeListCtrl::Edit</a><br>
 <a href="#wxtreelistctrleditlabel">wxTreeListCtrl::EditLabel</a><br>
+<a href="#wxtreelistctrlendedit">wxTreeListCtrl::EndEdit</a><br>
 <a href="#wxtreelistctrlensurevisible">wxTreeListCtrl::EnsureVisible</a><br>
 <a href="#wxtreelistctrlexpand">wxTreeListCtrl::Expand</a><br>
 <a href="#wxtreelistctrlexpandall">wxTreeListCtrl::ExpandAll</a><br>
@@ -561,7 +562,7 @@ Deletes the root node of the tree and all its children. <tt>EVT_TREE_DELETE_ITEM
 <b>void</b> <b>Edit</b> (<b>const wxTreeItemId&amp;</b><i> item</i>)
 </p>
 <p>
-The same as <b><a href="#wxtreelistctrleditlabel">EditLabel()</a></b>.
+The same as <a href="#wxtreelistctrleditlabel">EditLabel()</a>.
 </p>
 
 <hr>
@@ -574,13 +575,28 @@ The same as <b><a href="#wxtreelistctrleditlabel">EditLabel()</a></b>.
 Starts editing the label of the given item. This function generates a EVT_TREE_BEGIN_LABEL_EDIT event which can be vetoed so that no text control will appear for in-place editing.
 </p>
 <p>
-If the user changed the label, i.e. s/he does not press ESC or leave the text control without changes, a EVT_TREE_END_LABEL_EDIT event will be sent which can be vetoed as well.
+A matching EVT_TREE_END_LABEL_EDIT event will be sent once the editing ends. If the user changed the label, i.e. s/he does not press ESC or leave the text control without changes, the event can be vetoed as well.
 </p>
 <p>
 <b>See also</b>
+  <br><a href="#wxtreelistctrlendedit">EndEdit()</a>
+</p>
+
+<hr>
+<a name="wxtreelistctrlendedit"></a>
+<h3>wxTreeListCtrl::EndEdit</h3>
+<p>
+<b>void</b> <b>EndEdit</b> (<b>bool</b><i> isCancelled</i>)
 </p>
 <p>
-wxTreeEvent
+Terminates any ongoing editing of a label, hidding the editing control.
+</p>
+<p>
+An EVT_TREE_END_LABEL_EDIT event will be generated.
+</p>
+<p>
+<b>See also </b>
+  <br><a href="#wxtreelistctrleditlabel">EditLabel()</a>
 </p>
 
 <hr>

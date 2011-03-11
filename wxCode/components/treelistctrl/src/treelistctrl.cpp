@@ -557,6 +557,7 @@ public:
     // with a one line edit control. The item will be selected if it hadn't
     // been before.
     void EditLabel (const wxTreeItemId& item, int column);
+    void EndEdit(bool isCancelled);
 
     // sorting
     // this function is called to compare 2 items and should return -1, 0
@@ -1503,6 +1504,8 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
         }
 
         if (event.LeftDown() || event.RightUp()) {
+            m_owner->EndEdit(true);  // cancelled
+
             if (hit_border && event.LeftDown()) {
                 m_isDragging = true;
                 CaptureMouse();
@@ -2546,9 +2549,8 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     m_dirty = true; // do this first so stuff below doesn't cause flicker
 
     // cancel any editing
-    if (m_editControl) {
-        m_editControl->EndEdit(true);  // cancelled
-    }
+
+    if (m_editControl) { m_editControl->EndEdit(true); }  // cancelled
 
     // cancel any dragging
     if (item == m_dragItem) {
@@ -3842,9 +3844,7 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
     if (!((column >= 0) && (column < GetColumnCount()))) return;
 
 // cancel any editing
-    if (m_editControl) {
-        m_editControl->EndEdit(true);  // cancelled
-    }
+    if (m_editControl) { m_editControl->EndEdit(true); }  // cancelled
 
 // prepare edit (position)
     m_editItem = (wxTreeListItem*) item.m_pItem;
@@ -3914,6 +3914,10 @@ void wxTreeListMainWindow::OnRenameAccept(bool isCancelled) {
     {
         SetItemText (m_editItem, le.GetInt(), le.GetLabel());
     }
+}
+
+void wxTreeListMainWindow::EndEdit(bool isCancelled) {
+    if (m_editControl) { m_editControl->EndEdit(true); }
 }
 
 void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
@@ -4922,7 +4926,9 @@ bool wxTreeListCtrl::GetBoundingRect(const wxTreeItemId& item, wxRect& rect,
 { return m_main_win->GetBoundingRect(item, rect, textOnly); }
 
 void wxTreeListCtrl::EditLabel (const wxTreeItemId& item, int column)
-{ m_main_win->EditLabel (item, column); }
+    { m_main_win->EditLabel (item, column); }
+void wxTreeListCtrl::EndEdit(bool isCancelled)
+    { m_main_win->EndEdit(isCancelled); }
 
 int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
                                    const wxTreeItemId& item2)

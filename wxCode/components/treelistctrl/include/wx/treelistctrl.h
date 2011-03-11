@@ -5,8 +5,8 @@
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
 // RCS-ID:      $Id: treelistctrl.h,v 1.36 2010/04/19 17:49:41 pgriddev Exp $
-// Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
-//              Vadim Zeitlin, Otto Wyss
+// Copyright:   (c) 2004-2011 Robert Roebling, Julian Smart, Alberto Griggio,
+//              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
@@ -503,6 +503,7 @@ public:
         { EditLabel (item, GetMainColumn()); }
     // edit item's label of the given column
     void EditLabel (const wxTreeItemId& item, int column);
+    void EndEdit(bool isCancelled);
 
     // virtual mode
     virtual wxString OnGetItemText( wxTreeItemData* item, long column ) const;
@@ -514,7 +515,7 @@ public:
     // of item labels (GetText)
     virtual int OnCompareItems (const wxTreeItemId& item1, const wxTreeItemId& item2);
     // sort the children of this item using OnCompareItems
-    // NB: this function is not reentrant and not MT-safe (FIXME)!
+    // NB: this function is not reentrant and not MT-safe (TODO)!
     void SortChildren(const wxTreeItemId& item);
 
     // searching
