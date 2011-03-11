@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
   <style type="text/css">
@@ -1375,13 +1376,14 @@ Returns TRUE if the item has children.
 <a name="wxtreelistctrloncompareitems"></a>
 <h3>wxTreeListCtrl::OnCompareItems</h3>
 <p>
-<b>int</b> <b>OnCompareItems</b> (<b>const wxTreeItemId&amp; </b><i>item1</i>, <b>const wxTreeItemId&amp; </b><i>item2</i>)
+<b>int</b> <b>OnCompareItems</b> (<b>const wxTreeItemId&amp; </b><i>item1</i>, <b>const wxTreeItemId&amp; </b><i>item2</i>) &nbsp;&nbsp;&nbsp;(legacy method)
+<br><b>int</b> <b>OnCompareItems</b> (<b>const wxTreeItemId&amp; </b><i>item1</i>, <b>const wxTreeItemId&amp; </b><i>item2</i>, <b>int</b><i> column</i>)
 </p>
 <p>
 Override this function in the derived class to change the sort order of the items in the tree list control. The function should return a negative, zero or positive value if the first item is less than, equal to or greater than the second one.
-</p>
+<br>The base class version compares items alphabetically.</p>
 <p>
-The base class version compares items alphabetically.
+The first form is used when no <code>column</code> parameter is provided in <a href="#wxtreelistctrlsortchildren">SortChildren</a> (column is <code>-1</code>).
 </p>
 <p>
 See also: <a href="#wxtreelistctrlsortchildren">SortChildren</a>
@@ -1740,9 +1742,14 @@ This tooltip is <strong>not</strong> shown for individual items if <a href="#wxt
 <a name="wxtreelistctrlsortchildren"></a>
 <h3>wxTreeListCtrl::SortChildren</h3>
 <p>
-<b>void</b> <b>SortChildren</b> (<b>const wxTreeItemId&amp;</b><i> item</i>)
+<br><b>void</b> <b>SortChildren</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column = -1</i>, <b>bool</b><i> reverseOrder = false</i>)
+</p>
 <p>
-Sorts the children of the given item using <a href="#wxtreelistctrloncompareitems">OnCompareItems</a> method of wxTreeListCtrl. You should override that method to change the sort order (the default is ascending case-sensitive alphabetical order).
+Sorts the children of the given item using <a href="#wxtreelistctrloncompareitems">OnCompareItems</a> method of wxTreeListCtrl.
+You should override that method to change the sort order (the default is ascending case-sensitive alphabetical order).
+</p>
+<p>
+A column value of <code>-1</code> will cause the legacy form of <a href="#wxtreelistctrloncompareitems">OnCompareItems</a> method to be called (and <code>reverseOrder</code> to be ignored).
 </p>
 <p>
 <b>See also</b>

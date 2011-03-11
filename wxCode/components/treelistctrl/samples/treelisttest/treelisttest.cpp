@@ -69,8 +69,8 @@ const wxString APP_NAME = _("wxTreeListCtrl");
 const wxString APP_VENDOR = _("wxCode");
 const wxString APP_VERSION = _("2010_06_26");
 const wxString APP_MAINT = _("Ronan Chartois");
-const wxString APP_LICENCE = _("wxWindows");
-const wxString APP_COPYRIGTH = _("(C) 2005-2010 Otto Wyss && others");
+const wxString APP_LICENCE = _("wxWidgets");
+const wxString APP_COPYRIGTH = _("(C) 2005-2011 Otto Wyss && others");
 
 const wxString APP_DESCR = _("\
 A tree list control presents information as a hierarchy, with \n\
@@ -105,6 +105,11 @@ enum {
     myID_ATTRFONTSTYLE,
     myID_ATTRITEMIMAGE,
     myID_ATTRITEMTOOLTIP,
+    myID_CELLATTRTEXTCOLOUR,
+    myID_CELLATTRBACKCOLOUR,
+    myID_CELLATTRBOLDFONT,
+    myID_CELLATTRFONTSTYLE,
+    myID_CELLATTRITEMIMAGE,
     myID_SETALIGNMENT,
     myID_SETALIGNLEFT,
     myID_SETALIGNCENTER,
@@ -238,12 +243,20 @@ public:
     void OnDelete (wxCommandEvent &event);
     void OnFindItem (wxCommandEvent &event);
     void OnGotoItem (wxCommandEvent &event);
+    // item
     void OnAttrTextColour (wxCommandEvent &event);
     void OnAttrBackColour (wxCommandEvent &event);
     void OnBoldFont (wxCommandEvent &event);
     void OnFontStyle (wxCommandEvent &event);
     void OnItemImage (wxCommandEvent &event);
     void OnItemToolTip (wxCommandEvent &event);
+    // cell
+    void OnCellAttrTextColour (wxCommandEvent &event);
+    void OnCellAttrBackColour (wxCommandEvent &event);
+    void OnCellBoldFont (wxCommandEvent &event);
+    void OnCellFontStyle (wxCommandEvent &event);
+    void OnCellItemImage (wxCommandEvent &event);
+    //
     void OnAlignment (wxCommandEvent &event);
     void OnButtonsNormals (wxCommandEvent &event);
     void OnButtonsTwister (wxCommandEvent &event);
@@ -286,6 +299,7 @@ private:
     // the listbox for logging messages
     wxLog *m_logOld;
 #endif // wxUSE_LOG
+    int m_currentCol;
 
     //! creates the application menu bar
     void CreateMenu ();
@@ -452,12 +466,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_FINDVISIBLE,        AppFrame::OnFindItem)
     EVT_MENU (myID_GOTO,               AppFrame::OnGotoItem)
     // view events
-    EVT_MENU (myID_ATTRTEXTCOLOUR,     AppFrame::OnAttrTextColour)
-    EVT_MENU (myID_ATTRBACKCOLOUR,     AppFrame::OnAttrBackColour)
-    EVT_MENU (myID_ATTRBOLDFONT,       AppFrame::OnBoldFont)
-    EVT_MENU (myID_ATTRFONTSTYLE,      AppFrame::OnFontStyle)
-    EVT_MENU (myID_ATTRITEMIMAGE,      AppFrame::OnItemImage)
-    EVT_MENU (myID_ATTRITEMTOOLTIP,    AppFrame::OnItemToolTip)
     EVT_MENU (myID_SETALIGNLEFT,       AppFrame::OnAlignment)
     EVT_MENU (myID_SETALIGNCENTER,     AppFrame::OnAlignment)
     EVT_MENU (myID_SETALIGNRIGHT,      AppFrame::OnAlignment)
@@ -476,6 +484,19 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_ITEMVIRTUAL,        AppFrame::OnItemVirtualMode)
     EVT_MENU (myID_SELECTMULTIPLE,     AppFrame::OnSelectMultiple)
     EVT_MENU (myID_SELECTEXTENDED,     AppFrame::OnSelectExtended)
+    // items
+    EVT_MENU (myID_ATTRTEXTCOLOUR,     AppFrame::OnAttrTextColour)
+    EVT_MENU (myID_ATTRBACKCOLOUR,     AppFrame::OnAttrBackColour)
+    EVT_MENU (myID_ATTRBOLDFONT,       AppFrame::OnBoldFont)
+    EVT_MENU (myID_ATTRFONTSTYLE,      AppFrame::OnFontStyle)
+    EVT_MENU (myID_ATTRITEMIMAGE,      AppFrame::OnItemImage)
+    EVT_MENU (myID_ATTRITEMTOOLTIP,    AppFrame::OnItemToolTip)
+    // cells
+    EVT_MENU (myID_CELLATTRTEXTCOLOUR, AppFrame::OnCellAttrTextColour)
+    EVT_MENU (myID_CELLATTRBACKCOLOUR, AppFrame::OnCellAttrBackColour)
+    EVT_MENU (myID_CELLATTRBOLDFONT,   AppFrame::OnCellBoldFont)
+    EVT_MENU (myID_CELLATTRFONTSTYLE,  AppFrame::OnCellFontStyle)
+    EVT_MENU (myID_CELLATTRITEMIMAGE,  AppFrame::OnCellItemImage)
     // extra events
     EVT_MENU (myID_GETCOUNT,           AppFrame::OnGetCount)
     EVT_MENU (myID_GETCHILDREN,        AppFrame::OnGetChildren)
@@ -520,16 +541,17 @@ AppFrame::AppFrame (const wxString &title)
         : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(1004,748),
                     wxDEFAULT_FRAME_STYLE ) {
 
+    // simple types init
+    m_alignment = wxALIGN_LEFT;
+    m_imgsize = -1;
+    m_vetoEvent = false;
+    m_currentCol = 0;
+
     // set icon and background
     SetIcon (wxICON (treelisttest));
 
     // create menu
     CreateMenu ();
-
-    // set image size
-    m_alignment = wxALIGN_LEFT;
-    m_imgsize = -1;
-    m_vetoEvent = false;
 
     wxPanel *m_panel = new wxPanel(this, wxID_ANY);
     wxSizer *sizerTop = new wxBoxSizer(wxVERTICAL);
@@ -669,22 +691,41 @@ void AppFrame::OnAttrTextColour (wxCommandEvent &WXUNUSED(event)) {
     wxColour col = wxGetColourFromUser (this, m_treelist->GetItemTextColour (c));
     if (col.Ok()) m_treelist->SetItemTextColour (c, col);
 }
+void AppFrame::OnCellAttrTextColour (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId c = m_treelist->GetSelection();
+    wxColour col = wxGetColourFromUser (this, m_treelist->GetItemTextColour (c));
+    if (col.Ok()) m_treelist->SetItemTextColour (c, m_currentCol, col);
+}
 
 void AppFrame::OnAttrBackColour (wxCommandEvent &WXUNUSED(event)) {
     wxTreeItemId c = m_treelist->GetSelection();
     wxColour col = wxGetColourFromUser (this, m_treelist->GetItemBackgroundColour (c));
     if (col.Ok()) m_treelist->SetItemBackgroundColour (c, col);
 }
+void AppFrame::OnCellAttrBackColour (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId c = m_treelist->GetSelection();
+    wxColour col = wxGetColourFromUser (this, m_treelist->GetItemBackgroundColour (c));
+    if (col.Ok()) m_treelist->SetItemBackgroundColour (c, m_currentCol, col);
+}
 
 void AppFrame::OnBoldFont (wxCommandEvent &WXUNUSED(event)) {
     bool bold = m_treelist->IsBold (m_treelist->GetSelection());
     m_treelist->SetItemBold (m_treelist->GetSelection(), !bold);
+}
+void AppFrame::OnCellBoldFont (wxCommandEvent &WXUNUSED(event)) {
+    bool bold = m_treelist->IsBold (m_treelist->GetSelection());
+    m_treelist->SetItemBold (m_treelist->GetSelection(), m_currentCol, !bold);
 }
 
 void AppFrame::OnFontStyle (wxCommandEvent &WXUNUSED(event)) {
     wxTreeItemId c = m_treelist->GetSelection();
     wxFont font = wxGetFontFromUser (this, m_treelist->GetItemFont (c));
     m_treelist->SetItemFont (c, font);
+}
+void AppFrame::OnCellFontStyle (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId c = m_treelist->GetSelection();
+    wxFont font = wxGetFontFromUser (this, m_treelist->GetItemFont (c));
+    m_treelist->SetItemFont (c, m_currentCol, font);
 }
 
 void AppFrame::OnItemImage (wxCommandEvent &WXUNUSED(event)) {
@@ -693,6 +734,13 @@ void AppFrame::OnItemImage (wxCommandEvent &WXUNUSED(event)) {
                                    _("Get number"), m_treelist->GetItemImage (c));
     if (num < 0) return;
     m_treelist->SetItemImage (c, wxTreeItemIcon_Normal, num);
+}
+void AppFrame::OnCellItemImage (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId c = m_treelist->GetSelection();
+    int num = wxGetNumberFromUser (_(""), _("Enter the image number"),
+                                   _("Get number"), m_treelist->GetItemImage (c));
+    if (num < 0) return;
+    m_treelist->SetItemImage (c, m_currentCol, num);
 }
 
 void AppFrame::OnItemToolTip (wxCommandEvent &WXUNUSED(event)) {
@@ -947,6 +995,7 @@ const wxChar *name;
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGED) {
         name = _("wxEVT_COMMAND_TREE_SEL_CHANGED");
+        m_currentCol = event.GetInt();
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGING) {
         name = _("wxEVT_COMMAND_TREE_SEL_CHANGING");
@@ -1042,21 +1091,11 @@ void AppFrame::CreateMenu () {
     menuEdit->Append (myID_FIND, _("&Find item"), menuFind);
     menuEdit->Append (myID_GOTO, _("&Goto item ..."));
 
-    // Attribute submenu
-    wxMenu *menuAttr = new wxMenu;
-    menuAttr->Append (myID_ATTRTEXTCOLOUR, _("Text colour ..."));
-    menuAttr->Append (myID_ATTRBACKCOLOUR, _("Background ..."));
-    menuAttr->AppendCheckItem (myID_ATTRBOLDFONT, _("Bold font"));
-    menuAttr->Append (myID_ATTRFONTSTYLE, _("Font style ..."));
-    menuAttr->Append (myID_ATTRITEMIMAGE, _("Item image ..."));
-    menuAttr->Append (myID_ATTRITEMTOOLTIP, _("Tooltip ..."));
-
     // Alignment submenu
     wxMenu *menuAlign = new wxMenu;
     menuAlign->Append (myID_SETALIGNLEFT, _("&Left"));
     menuAlign->Append (myID_SETALIGNCENTER, _("&Center"));
     menuAlign->Append (myID_SETALIGNRIGHT, _("&Right"));
-
     // view menu
     wxMenu *menuView = new wxMenu;
     menuView->AppendCheckItem (myID_BUTTONSNORMAL, _("Toggle &normal buttons"));
@@ -1077,8 +1116,24 @@ void AppFrame::CreateMenu () {
     menuView->AppendCheckItem (myID_SELECTMULTIPLE, _("Toggle select &multiple"));
     menuView->AppendCheckItem (myID_SELECTEXTENDED, _("Toggle select &extended"));
     menuView->AppendSeparator();
-    menuView->Append (myID_SETATTRIBUTE, _("Set &attribute"), menuAttr);
     menuView->Append (myID_SETALIGNMENT, _("Align &column"), menuAlign);
+
+    // item menu
+    wxMenu *menuItem = new wxMenu;
+    menuItem->Append (myID_ATTRTEXTCOLOUR, _("Text colour ..."));
+    menuItem->Append (myID_ATTRBACKCOLOUR, _("Background ..."));
+    menuItem->AppendCheckItem (myID_ATTRBOLDFONT, _("Bold font"));
+    menuItem->Append (myID_ATTRFONTSTYLE, _("Font style ..."));
+    menuItem->Append (myID_ATTRITEMIMAGE, _("Item image ..."));
+    menuItem->Append (myID_ATTRITEMTOOLTIP, _("Tooltip ..."));
+
+    // cell menu
+    wxMenu *menuCell = new wxMenu;
+    menuCell->Append (myID_CELLATTRTEXTCOLOUR, _("Text colour ..."));
+    menuCell->Append (myID_CELLATTRBACKCOLOUR, _("Background ..."));
+    menuCell->AppendCheckItem (myID_CELLATTRBOLDFONT, _("Bold font"));
+    menuCell->Append (myID_CELLATTRFONTSTYLE, _("Font style ..."));
+    menuCell->Append (myID_CELLATTRITEMIMAGE, _("Item image ..."));
 
     // extra menu
     wxMenu *menuExtra = new wxMenu;
@@ -1106,6 +1161,8 @@ void AppFrame::CreateMenu () {
     menuBar->Append (menuFile, _("&Tree"));
     menuBar->Append (menuEdit, _("&Edit"));
     menuBar->Append (menuView, _("&View"));
+    menuBar->Append (menuItem, _("&Item"));
+    menuBar->Append (menuCell, _("&Cell"));
     menuBar->Append (menuExtra, _("&Extra"));
     menuBar->Append (menuHelp, _("&Help"));
     SetMenuBar (menuBar);

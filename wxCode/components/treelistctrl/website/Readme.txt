@@ -1,6 +1,7 @@
 Latest information:
 ===================
 
+* 2011-0x-xx : new release ()
 * 2010-06-26 : new release (tooltips support, page-up/down, minor changes & bug fixes)
 * 2009-07-19 : new release (maintenance release)
 * 2008-12-05 : new release (fixed several crashes)
@@ -14,7 +15,6 @@ Latest information:
 Known problems:
 ===============
 
-- Bug #2815443 : Edit control does not move with columns
 - end of drag triggers a menu event (wrong) on the item at the new position (even more wrong)
 
 
@@ -29,6 +29,10 @@ Release History:
   - Added: test program includes demonstrates capturing mouse events in child class (compile option WITH_CHILD_CLASS) [#3082693]
   - Added: SetCurrentItem() allows to set/reset the current item (cursor indicated by the black rectangle) [Remigius]
   - Added: EndEdit() to match EditLabel() [#2815443]
+  - Added: multi-column support for various attribute (colors, font, ...) [#2823804 --thanks Chris Klecker]
+  - Added: extented Sort() method [--thanks Chris Klecker]
+  - Added: test program now has a 'Item' and 'Cell' menu to better play with attributes
+  NOTE for DLL builders: some methods were removed or changed
 
 * treelistctrl_2010-06.26.tar.gz
   - Fixed: improved support for GCC 4.x & compiling under Linux/GTK [#2858731]

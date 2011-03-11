@@ -136,8 +136,9 @@ friend class wxTreeListHeaderWindow;
 friend class wxTreeListMainWindow;
 friend class wxTreeListItem;
 public:
-    // creation
-    // --------
+
+    // ---------- creation ----------
+
     wxTreeListCtrl()
         : m_header_win(0), m_main_win(0), m_headerHeight(0)
     {}
@@ -164,8 +165,9 @@ public:
 
     void Refresh(bool erase=TRUE, const wxRect* rect=NULL);
     void SetFocus();
-    // accessors
-    // ---------
+
+
+    // ---------- general methods ----------
 
     // get the total number of items in the control
     size_t GetCount() const;
@@ -207,7 +209,7 @@ public:
     void SetToolTip (wxToolTip *tip);
     void SetItemToolTip(const wxTreeItemId& item, const wxString &tip);
 
-    // Functions to work with columns
+    // ---------- Functions to work with columns ----------
 
     // adds a column
     void AddColumn (const wxString& text,
@@ -265,75 +267,63 @@ public:
     void SetColumnEditable (int column, bool edit = true);
     bool IsColumnEditable (int column) const;
 
-    // Functions to work with items.
+    // ----------  Functions to work with items. ----------
 
-    // accessors
+    // accessors (most properties have a default at row/item level)
     // ---------
 
-    // retrieve item's label (of the main column)
-    wxString GetItemText (const wxTreeItemId& item) const
-        { return GetItemText (item, GetMainColumn()); }
-    // retrieves item's label of the given column
+    wxString GetItemText (const wxTreeItemId& item)             const { return GetItemText (item, GetMainColumn()); };
     wxString GetItemText (const wxTreeItemId& item, int column) const;
 
-    // get one of the images associated with the item (normal by default)
-    int GetItemImage (const wxTreeItemId& item,
-                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const
-    { return GetItemImage (item, GetMainColumn(), which); }
-    int GetItemImage (const wxTreeItemId& item, int column,
-                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
+    int GetItemImage (const wxTreeItemId& item, wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
+    int GetItemImage (const wxTreeItemId& item, int column) const;
 
-    // get the data associated with the item
-    wxTreeItemData *GetItemData (const wxTreeItemId& item) const;
+    wxTreeItemData *GetItemData (const wxTreeItemId& item)             const;
+    wxTreeItemData *GetItemData (const wxTreeItemId& item, int column) const;
 
-    bool GetItemBold (const wxTreeItemId& item) const;
-    wxColour GetItemTextColour (const wxTreeItemId& item) const;
-    wxColour GetItemBackgroundColour (const wxTreeItemId& item) const;
-    wxFont GetItemFont (const wxTreeItemId& item) const;
+    bool GetItemBold (const wxTreeItemId& item)             const;
+    bool GetItemBold (const wxTreeItemId& item, int column) const;
 
-    // modifiers
+    wxColour GetItemTextColour (const wxTreeItemId& item)             const;
+    wxColour GetItemTextColour (const wxTreeItemId& item, int column) const;
 
-    // set item's label
-    void SetItemText (const wxTreeItemId& item, const wxString& text)
-        { SetItemText (item, GetMainColumn(), text); }
+    wxColour GetItemBackgroundColour (const wxTreeItemId& item)             const;
+    wxColour GetItemBackgroundColour (const wxTreeItemId& item, int column) const;
+
+    wxFont GetItemFont (const wxTreeItemId& item)             const;
+    wxFont GetItemFont (const wxTreeItemId& item, int column) const;
+
+    // modifiers (most properties have a default at row/item level)
+    // ---------
+
+    void SetItemText (const wxTreeItemId& item,             const wxString& text);
     void SetItemText (const wxTreeItemId& item, int column, const wxString& text);
 
-    // get one of the images associated with the item (normal by default)
-    void SetItemImage (const wxTreeItemId& item, int image,
-                       wxTreeItemIcon which = wxTreeItemIcon_Normal)
-        { SetItemImage (item, GetMainColumn(), image, which); }
     // the which parameter is ignored for all columns but the main one
-    void SetItemImage (const wxTreeItemId& item, int column, int image,
-                       wxTreeItemIcon which = wxTreeItemIcon_Normal);
+    void SetItemImage (const wxTreeItemId& item, int image, wxTreeItemIcon which = wxTreeItemIcon_Normal);
+    void SetItemImage (const wxTreeItemId& item, int column, int image);
 
-    // associate some data with the item
-    void SetItemData (const wxTreeItemId& item, wxTreeItemData *data);
+    void SetItemData (const wxTreeItemId& item,             wxTreeItemData *data);
+    void SetItemData (const wxTreeItemId& item, int column, wxTreeItemData *data);
+
+    void SetItemBold (const wxTreeItemId& item,             bool bold = true);
+    void SetItemBold (const wxTreeItemId& item, int column, bool bold = true);
+
+    void SetItemTextColour (const wxTreeItemId& item,             const wxColour& colour);
+    void SetItemTextColour (const wxTreeItemId& item, int column, const wxColour& colour);
+
+    void SetItemBackgroundColour (const wxTreeItemId& item,             const wxColour& colour);
+    void SetItemBackgroundColour (const wxTreeItemId& item, int column, const wxColour& colour);
+
+    // font should be of the same height for all items
+    void SetItemFont (const wxTreeItemId& item,             const wxFont& font);
+    void SetItemFont (const wxTreeItemId& item, int column, const wxFont& font);
 
     // force appearance of [+] button near the item. This is useful to
     // allow the user to expand the items which don't have any children now
     // - but instead add them only when needed, thus minimizing memory
     // usage and loading time.
     void SetItemHasChildren(const wxTreeItemId& item, bool has = true);
-
-    // the item will be shown in bold
-    void SetItemBold (const wxTreeItemId& item, bool bold = true);
-
-    // set the item's text colour
-    void SetItemTextColour (const wxTreeItemId& item, const wxColour& colour);
-
-    // set the item's background colour
-    void SetItemBackgroundColour (const wxTreeItemId& item, const wxColour& colour);
-
-    // set the item's font (should be of the same height for all items)
-    void SetItemFont (const wxTreeItemId& item, const wxFont& font);
-
-    // set the window font
-    virtual bool SetFont ( const wxFont &font );
-
-    // set the styles.
-    void SetWindowStyle (const long styles);
-    long GetWindowStyle() const;
-    long GetWindowStyleFlag () const { return GetWindowStyle(); }
 
     // item status inquiries
     // ---------------------
@@ -347,8 +337,18 @@ public:
     // is this item currently selected (the same as has focus)?
     bool IsSelected (const wxTreeItemId& item) const;
     // is item text in bold font?
-    bool IsBold (const wxTreeItemId& item) const;
+    bool IsBold (const wxTreeItemId& item)             const { return IsBold(item, GetMainColumn()); };
+    bool IsBold (const wxTreeItemId& item, int column) const;
     // does the layout include space for a button?
+
+
+    // set the window font
+    virtual bool SetFont ( const wxFont &font );
+
+    // set the styles.
+    void SetWindowStyle (const long styles);
+    long GetWindowStyle() const;
+    long GetWindowStyleFlag () const { return GetWindowStyle(); }
 
     // number of children
     // ------------------
@@ -514,12 +514,14 @@ public:
     // second one. The base class version performs alphabetic comparaison
     // of item labels (GetText)
     virtual int OnCompareItems (const wxTreeItemId& item1, const wxTreeItemId& item2);
+    virtual int OnCompareItems (const wxTreeItemId& item1, const wxTreeItemId& item2, int column);
     // sort the children of this item using OnCompareItems
     // NB: this function is not reentrant and not MT-safe (TODO)!
-    void SortChildren(const wxTreeItemId& item);
+    void SortChildren(const wxTreeItemId& item, int column = -1, bool reverseOrder = false);
 
-    // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, int mode = 0);
+    // searching (by column only)
+    wxTreeItemId FindItem (const wxTreeItemId& item,             const wxString& str, int mode = 0) { return FindItem(item, GetMainColumn(), str, mode); };
+    wxTreeItemId FindItem (const wxTreeItemId& item, int column, const wxString& str, int mode = 0);
 
     // overridden base class virtuals
     virtual bool SetBackgroundColour (const wxColour& colour);
