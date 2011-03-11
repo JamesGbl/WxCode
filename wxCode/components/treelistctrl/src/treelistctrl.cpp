@@ -5,7 +5,7 @@
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
 // RCS-ID:      $Id: treelistctrl.cpp,v 1.116 2010-10-16 15:02:35 pgriddev Exp $
-// Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
+// Copyright:   (c) 2004-2011 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@
 class  wxTreeListItem;
 
 #if !wxCHECK_VERSION(2, 5, 0)
-2WX_DEFINE_ARRAY(wxTreeListItem *, wxArrayTreeListItems);
+WX_DEFINE_ARRAY(wxTreeListItem *, wxArrayTreeListItems);
 #else
 WX_DEFINE_ARRAY_PTR(wxTreeListItem *, wxArrayTreeListItems);
 #endif
@@ -567,7 +567,7 @@ public:
                                const wxTreeItemId& item2);
     // sort the children of this item using OnCompareItems
     //
-    // NB: this function is not reentrant and not MT-safe (FIXME)!
+    // NB: this function is not reentrant and not MT-safe (TODO)!
     void SortChildren(const wxTreeItemId& item);
 
     // searching
@@ -2932,7 +2932,7 @@ void wxTreeListMainWindow::ScrollTo (const wxTreeItemId &item) {
     }
 }
 
-// FIXME: tree sorting functions are not reentrant and not MT-safe!
+// TODO: tree sorting functions are not reentrant and not MT-safe!
 static wxTreeListMainWindow *s_treeBeingSorted = NULL;
 
 static int LINKAGEMODE tree_ctrl_compare_func(wxTreeListItem **item1,
@@ -4220,7 +4220,7 @@ void wxTreeListMainWindow::OnScroll (wxScrollWinEvent& event) {
     // send event to wxTreeListCtrl (for user code)
     if (m_owner->GetEventHandler()->ProcessEvent(event)) return; // handled (and not skipped) in user code
 
-    // FIXME
+    // TODO
 #if defined(__WXGTK__) && !defined(__WXUNIVERSAL__)
     wxScrolledWindow::OnScroll(event);
 #else
@@ -5066,8 +5066,9 @@ void wxTreeListCtrl::SetFocus()
 
 wxSize wxTreeListCtrl::DoGetBestSize() const
 {
-    // something is better than nothing...
-    return wxSize (200,200); // but it should be specified values! FIXME
+    wxSize bestSizeHeader = m_header_win->GetBestSize();
+    wxSize bestSizeMain = m_main_win->GetBestSize();
+    return wxSize (bestSizeHeader.x > bestSizeMain.x ? bestSizeHeader.x : bestSizeMain.x, bestSizeHeader.y + bestSizeMain.y);
 }
 
 wxString wxTreeListCtrl::OnGetItemText( wxTreeItemData* WXUNUSED(item), long WXUNUSED(column)) const
