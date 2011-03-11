@@ -3207,6 +3207,7 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
         if (!m_owner->GetHeaderWindow()->IsColumnShown(i)) continue;
 
         int col_w = m_owner->GetHeaderWindow()->GetColumnWidth(i);
+        if (col_w <= 0) continue;  // workaround for probable GTK2 bug [wxCode-Bugs-#3061215]
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
 
         int x = 0;

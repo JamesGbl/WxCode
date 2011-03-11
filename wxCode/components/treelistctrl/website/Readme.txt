@@ -22,6 +22,7 @@ Release History:
 ================
 * next release
   - Fixed: position of editor when a column is hidden [wxPack]
+  - Fixed: extra check to prevent painting of zero-width columns under GTK [#3061215]
   - Added: make scroll events accessible to child class [#3082693]
   - Added: test program includes demonstrates capturing mouse events in child class (compile option WITH_CHILD_CLASS) [#3082693]
   - Added: SetCurrentItem() allows to set/reset the current item (cursor indicated by the black rectangle) [Remigius]
