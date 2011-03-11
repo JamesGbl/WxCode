@@ -3931,7 +3931,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2658")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2683")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -3967,7 +3967,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
    wxAboutDialogInfo info;
    info.SetName(STE_APPDISPLAYNAME);
    info.SetDescription(msg);
-   info.SetWebSite(wxT("wxcode.sourceforge.net/showcomp.php?name=wxStEdit"));
+   info.SetWebSite(wxT(STE_WEBSITE));
    info.SetLicense(wxT("wxWindows"));
    info.AddDeveloper(wxT("John Labenski"));
    info.AddDeveloper(wxT("Troels K"));
