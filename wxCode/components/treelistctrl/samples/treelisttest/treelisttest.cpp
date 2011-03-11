@@ -1,10 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////
 // File:        treelisttest.cpp
 // Purpose:     wxTreeListCtrl test application
-// Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.34 2010/10/16 15:04:44 pgriddev Exp $
-// Copyright:   (c) 2004-2010 wxCode
+// Author:
+// Maintainer:  Ronan Chartois (pgriddev)
+// Version:     $Id$
+// Copyright:   (c) 2004-2011 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 

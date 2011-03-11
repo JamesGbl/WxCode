@@ -1,10 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        treelistctrl.h
 // Purpose:     wxTreeListCtrl class
-// Author:      Robert Roebling
-// Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.36 2010/04/19 17:49:41 pgriddev Exp $
+// Author:      Robert Roebling
+// Maintainer:  Ronan Chartois (pgriddev)
+// Version:     $Id$
 // Copyright:   (c) 2004-2011 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows

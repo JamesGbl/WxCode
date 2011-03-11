@@ -1,10 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
- "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<head>
+  <style type="text/css">
+    body { max-width: 60em; }
+    h2 { border: 1px solid #CCF; background-color: #EEF; padding: 1em; text-align: center; }
+    h2, h3 { color: maroon; }
+    h3 { margin-right: 1em; border-bottom: 1px dotted maroon; }
+    h4 { margin-top: 0; }
+    table { }
+    td { vertical-align: top; }
+    tt { color: navy; }
+  </style>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-  <meta name="description" content="Collection of sample code snippets for wxWidgets">
-  <meta name="keywords" content="sample, code, snippets, wxWidgets">
+  <meta name="description" content="Collection of contributed components and modules for wxWidgets">
+  <meta name="keywords" content="component, control, sample, code, snippets, wxWidgets">
   <meta name="robots" content="noindex, follow">
   <meta name="made" content="mailto:wyo@users.sourceforge.net">
   <meta name="language" content="en">
@@ -14,18 +22,18 @@
 </head>
 <body>
 
-<h2>
-<TT>wxCode : wxTreeListCtrl</TT>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="image.png" alt="Sorry no screenshot" align=top border=0 >
-</h2>
+<div>
+<h2><TT>wxCode : wxTreeListCtrl</TT></h2>
+</div>
 
 
-<h4>Synopsis</h4>
+<h3>Synopsis</h3>
 <p>
 A multi column tree control.
 </p>
 
-<h4>Description &amp; documentation</h4>
+<h3>Description &amp; documentation</h3>
+<img src="image.png" alt="Sorry no screenshot" style="margin: 0 2em; border: 1px solid silver; padding: 4px; float: right">
 <p>
 <tt>wxTreeListCtrl</tt> is able to show a tree with multiple colums. The main column is shown as a tree, the others just as lists.
 </p>
@@ -39,36 +47,47 @@ A multi column tree control.
 Here the <b><a href="reference.html" target=_top>API reference documentation</a></b>.
 </p>
 
-<h4>Download</h4>
+<h3>Download</h3>
+<h4>Latest version:</h4>
 <ul>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2010-06-26.tar.gz?download" target=_top><b>treelistctrl_2010-06-26.tar.gz</b></a> &nbsp; tooltips support, page-up/down, minor changes &amp; fixes</li>
+</ul>
+<h4>Previous versions:</h4>
+<ul>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2009-07-19.tar.gz?download" target=_top>treelistctrl_2009-07-19.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; maintenance release</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2008-12-05.tar.gz?download" target=_top>treelistctrl_2008-12-05.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; fixed several crashes</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2008-07-21.tar.gz?download" target=_top>treelistctrl_2008-07-21.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; important fixes &amp; enhancements to: events, selection, delete</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2008-06-18.tar.gz?download" target=_top>treelistctrl_2008-06-18.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; minor changes only</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2006-06-21.tar.gz?download" target=_top>treelistctrl_2006-06-21.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; -</li>
 </ul>
+<h4>Source:</h4>
 <p>
-Everything and more can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=51305" target=_top><IMG src="http://sourceforge.net/sflogo.php?group_id=51305" vspace="0" border="0" align=middle alt="sourceforge.net"></a> or you can browse the <a href="http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/treelistctrl" target=_top>CVS</a> source tree.
+Everything and more can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=51305" target=_top><IMG src="http://sourceforge.net/sflogo.php?group_id=51305" vspace="0" border="0" align=middle alt="sourceforge.net"></a>
+or you can browse the <a href="http://wxcode.svn.sourceforge.net/viewvc/wxcode/trunk/wxCode/components/treelistctrl/">SVN source tree</a>
 </p>
-
-<h4>New releases</h4>
+<div style="margin-left: 5em; padding: 1em; width: 30em; border: 1px solid yellow; background-color: #FFD">
+    <h4>NOTE: CVS is obsolete !</h4>
+    On February 12th, 2011 the <a href="http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/treelistctrl" target=_top>CVS repository</a> was migrated to SubVersion, including all revision history.
+    Although CVS is still available, it is no longer updated.
+</div>
+<h3>New releases</h3>
 <p>
 No releases are announced, you have to check the project homepage (this page) from time to time, or subscribe to the <a href="http://lists.sourceforge.net/lists/listinfo/wxcode-users" target=_top>wxCode mailing list</a>.
 </p>
 
-<h4>Support - Latest info, open issues, feedback etc.</h4>
+<h3>Support - Latest info, open issues, feedback etc.</h3>
 <ul>
 <li><b>bugs: </b>you can report bugs through the <a href="http://sourceforge.net/tracker/?atid=462816&group_id=51305&func=browse" target=_top>wxCode bug tracker</a></li>
 <li><b>enhancements: </b>requests for new features can be entered through the <a href="http://sourceforge.net/tracker/?atid=462819&group_id=51305&func=browse" target=_top>wxCode feature tracker</a></li>
 <li><b>feedback: </b>To develop <TT>wxTreeListCtrl</TT> further we need to know what others think about. What is perfect, what is missing, what is wrong. It would be nice if could write your experience after some use into the <a href="http://lists.sourceforge.net/lists/listinfo/wxcode-users" target=_top>wxCode mailing list</a> (or <a href="http://news.gmane.org/gmane.comp.lib.wxwidgets.wxcode.user" target=_top>GMane web interface</a>, a simpler interface for occasional users).
+<li><b>forum: </b>in addition to the mailing above, see also the <a href="http://wxforum.shadonet.com/viewforum.php?f=30">wxCode forum</a> on shadonet. Note however that bugs and enhancement requests belong to the corresponding trackers (links above)</li>
 <li>See also <a href="Readme.txt" target=_top>Readme.txt</a> and <a href="ToDo.txt" target=_top>ToDo.txt</a>.</li>
 </li>
 </ul>
 
-<h4>Author</h4>
+<h3>Author</h3>
 <p>
-<TT>wxTreeListCtrl</TT> was created by Robert Roebling and the following persons have made significant contributions: Julian Smart, Alberto Griggio, Vadim Zeitlin, Otto Wyss and maybe others.
+<TT>wxTreeListCtrl</TT> was created by Robert Roebling and the following persons have made significant contributions: Julian Smart, Alberto Griggio, Vadim Zeitlin, Otto Wyss, Ronan Chartois and maybe others.
 </p>
 
 <div class="FOOTER">
