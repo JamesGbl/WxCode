@@ -323,14 +323,14 @@ public:
 
 
 
-    // accessors (most properties have a default at row/item level)
+    // accessors (most props have a default at row/item level *and* a default at cell level)
     // ---------
 
-//    wxString GetItemText (const wxTreeItemId& item)             const { return GetItemText (item, GetMainColumn()); }
     wxString GetItemText (const wxTreeItemId& item, int column) const;
     wxString GetItemText (wxTreeItemData* item, int column) const;
 
-//    int GetItemImage (const wxTreeItemId& item,             wxTreeItemIcon which = wxTreeItemIcon_Normal) const  { return GetItemImage (item, GetMainColumn(), which); }
+    // ItemImage is special: main col has multiple images
+    int GetItemImage (const wxTreeItemId& item,             wxTreeItemIcon which = wxTreeItemIcon_Normal) const  { return GetItemImage (item, GetMainColumn(), which); }
     int GetItemImage (const wxTreeItemId& item, int column, wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
 
     // ItemData is special, there is a separate default at row/item level
@@ -351,7 +351,7 @@ public:
 
 
 
-    // modifiers (most properties have a default at row/item level)
+    // modifiers (most properties have a default at row/item level *and* a default at cell level)
     // ---------
 
     // force appearance of [+] button near the item. This is useful to
@@ -361,11 +361,10 @@ public:
     void SetItemHasChildren(const wxTreeItemId& item, bool has = true);
 
     // set item's label
-//    void SetItemText (const wxTreeItemId& item,             const wxString& text) { SetItemText (item, GetMainColumn(), text); }
     void SetItemText (const wxTreeItemId& item, int column, const wxString& text);
 
     // get one of the images associated with the item (normal by default)
-//    void SetItemImage (const wxTreeItemId& item,             int image, wxTreeItemIcon which = wxTreeItemIcon_Normal) { SetItemImage (item, GetMainColumn(), image, which); }
+    void SetItemImage (const wxTreeItemId& item,             int image, wxTreeItemIcon which = wxTreeItemIcon_Normal) { SetItemImage (item, GetMainColumn(), image, which); }
     void SetItemImage (const wxTreeItemId& item, int column, int image, wxTreeItemIcon which = wxTreeItemIcon_Normal);
 
     // associate some data with the item
@@ -611,6 +610,7 @@ public:
     { if ((column >= 0) && (column < GetColumnCount())) m_main_column = column; }
 
     int GetMainColumn() const { return m_main_column; }
+    int GetCurrentColumn() const { return m_curColumn >= 0 ? m_curColumn : m_main_column; }
 
     int GetBestColumnWidth (int column, wxTreeItemId parent = wxTreeItemId());
     int GetItemWidth (int column, wxTreeListItem *item);
@@ -3376,10 +3376,6 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
             }
         }
         dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
-/*
-    }else{
-        dc.SetTextForeground (GetItemTextColour(item));
-*/
     }
 
 // iterate through all cells
@@ -3435,28 +3431,39 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
         int text_x = x + image_w;
         if (i == GetMainColumn()) item->SetTextX (text_x);
 
-        // in non wxTR_FULL_ROW_HIGHLIGHT mode, draw background now
+        // draw background (in non wxTR_FULL_ROW_HIGHLIGHT mode)
         // cell-specific settings are used --excepted for selection:
         if ( ! HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
+            // cursor: indicate current cell
+            bool drawCursor = false;
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+            drawCursor = (item == m_curItem && i == m_curColumn && !m_isDragging && m_hasFocus);
+#endif // !__WXMAC__
+            // selection: main col only, overrides colors + separate draw
             if (item->IsSelected() && i == GetMainColumn()) {
-                dc.SetTextForeground (colTextHilight);
-                if (!m_isDragging && m_hasFocus) {
-                    dc.SetBrush (*m_hilightBrush);
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                    dc.SetPen (*wxBLACK_PEN);
-#endif // !__WXMAC__
-                }else{
-                    dc.SetBrush (*m_hilightUnfocusedBrush);
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                    dc.SetPen (*wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
-                }
-            } else {
-                dc.SetTextForeground (colText);
+                // draw normal background
+                dc.SetPen (*wxTRANSPARENT_PEN);
                 dc.SetBrush (wxBrush ( colBg, wxSOLID));
-                dc.SetPen ( item == m_curItem && i == GetMainColumn() && m_hasFocus ? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+                dc.DrawRectangle (x_colstart, item->GetY() + off_h, col_w, total_h - off_h);
+                // draw selection & optionally cursor
+                dc.SetPen (drawCursor ? *wxBLACK_PEN : *wxTRANSPARENT_PEN);
+                dc.SetBrush(!m_isDragging && m_hasFocus ? *m_hilightBrush : *m_hilightUnfocusedBrush);
+                dc.SetTextForeground (colTextHilight);
+                dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
+            // normal FG / BG from attributes
+            } else {
+                // draw normal background & optionally cursor
+                dc.SetPen (drawCursor && i != GetMainColumn() ? *wxBLACK_PEN : *wxTRANSPARENT_PEN);
+                dc.SetBrush (wxBrush ( colBg, wxSOLID));
+                dc.SetTextForeground (colText);
+                dc.DrawRectangle (x_colstart, item->GetY() + off_h, col_w, total_h - off_h);
+                // on main col draw a separate cursor
+                if (drawCursor && i == GetMainColumn()) {
+                    dc.SetPen (*wxBLACK_PEN);
+                    dc.SetBackgroundMode (wxTRANSPARENT);
+                    dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
+                }
             }
-            dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
         }
 
         // draw vertical column lines
@@ -3948,7 +3955,7 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
                 m_findTimer->Start (FIND_TIMER_TICKS, wxTIMER_ONE_SHOT);
                 wxTreeItemId prev = m_curItem? (wxTreeItemId*)m_curItem: (wxTreeItemId*)NULL;
                 while (true) {
-                    newItem = FindItem (prev, m_curColumn, m_findStr, wxTL_MODE_NAV_EXPANDED | wxTL_MODE_FIND_PARTIAL | wxTL_MODE_FIND_NOCASE);
+                    newItem = FindItem (prev, GetCurrentColumn(), m_findStr, wxTL_MODE_NAV_EXPANDED | wxTL_MODE_FIND_PARTIAL | wxTL_MODE_FIND_NOCASE);
                     if (newItem || (m_findStr.Length() <= 1)) break;
                     m_findStr.RemoveLast();
                 };
@@ -4085,7 +4092,7 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
 }
 
 void wxTreeListMainWindow::OnRenameTimer() {
-    EditLabel (m_curItem, m_curColumn);
+    EditLabel (m_curItem, GetCurrentColumn());
 }
 
 void wxTreeListMainWindow::OnRenameAccept(bool isCancelled) {
@@ -4363,7 +4370,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             // determine drag start
             } else {
                 m_dragStartPos = p;
-                m_dragCol = m_curColumn;
+                m_dragCol = GetCurrentColumn();
                 m_dragItem = item;
                 m_isDragStarted = true;
                 return;
@@ -4610,19 +4617,6 @@ void wxTreeListMainWindow::SetFocus() {
     wxWindow::SetFocus();
 }
 
-/*
-wxFont wxTreeListMainWindow::GetItemFont (wxTreeListItem *item) {
-    wxTreeItemAttr *attr = item->GetAttributes();
-
-    if (attr && attr->HasFont()) {
-        return attr->GetFont();
-    }else if (item->IsBold()) {
-        return m_boldFont;
-    }else{
-        return m_normalFont;
-   }
-}
-*/
 
 int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
     if (!item) return 0;

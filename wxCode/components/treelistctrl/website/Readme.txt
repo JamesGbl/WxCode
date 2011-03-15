@@ -25,6 +25,7 @@ Release History:
   - Fixed: extra check to prevent painting of zero-width columns under GTK [#3061215]
   - Fixed: improved computing of BestSize, non-expanded controls in a sizer keep their initial size [#3061207]
   - Fixed: Edit control does not move with columns (stop editing on column move) [#2815443]
+  - Changed: background color is applied to entire column width. Same for cursor and selection highlight excepted for main col [#2823804]
   - Added: make scroll events accessible to child class [#3082693]
   - Added: test program includes demonstrates capturing mouse events in child class (compile option WITH_CHILD_CLASS) [#3082693]
   - Added: SetCurrentItem() allows to set/reset the current item (cursor indicated by the black rectangle) [Remigius]
