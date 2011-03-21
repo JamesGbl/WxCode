@@ -29,7 +29,7 @@ csLabelEditingDialog::csLabelEditingDialog(wxWindow* parent)
     // Accelerators
     wxAcceleratorEntry entries[1];
     entries[0].Set(wxACCEL_CTRL, WXK_RETURN, wxID_OK);
-    wxAcceleratorTable accel(1, entries);
+    wxAcceleratorTable accel(WXSIZEOF(entries), entries);
     SetAcceleratorTable(accel);
 
     Centre();
