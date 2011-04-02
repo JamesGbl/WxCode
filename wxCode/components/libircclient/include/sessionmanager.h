@@ -16,11 +16,7 @@
 
 #include "defs.h"
 
-/* imports fron XVIRC */
 class IRCSession;
-
-/* imports from wxWidgets */
-//class wxPanel;
 
 /** define an array of session, to store any new session in this manager */
 WX_DEFINE_ARRAY(IRCSession*, IRCSessionArray);
