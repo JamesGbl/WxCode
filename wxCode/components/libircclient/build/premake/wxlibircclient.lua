@@ -11,12 +11,11 @@ project "wxLibIRCClient"
     files        { "../../include/**.h", "../../src/**.cpp" }
 
     libdirs      { "../../libircclient/src" }
-    links        { "libircclient" }
+    links        { "ircclient" }
 
     objdir =     buildDir
     targetdir    ( "../../lib" )
-    targetprefix ("")
-    targetname   ("wxlibircclient")
+    targetname   ("wxircclient")
 
     configuration "vs*"
         -- Windows and Visual C++ 2005/2008
