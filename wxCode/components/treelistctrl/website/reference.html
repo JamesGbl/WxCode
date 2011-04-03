@@ -17,6 +17,7 @@
 
 <p>
 A tree list control presents information as a hierarchy, with items that may be expanded to show further items. Items in a tree list control are referenced by <tt>wxTreeItemId</tt> handles, which may be tested for validity by calling <tt>wxTreeItemId::IsOk()</tt>.
+For each item several attributes can be set for each column (column numbering start with zero): text, colours, font, image, user data.
 </p>
 <p>
 To intercept events from a tree list control, use the event table macros described in <tt>wxTreeEvent</tt> (see <a href="#eventhandling">below</a> for a detailed description of events).
@@ -314,7 +315,7 @@ wxImageList
 <a href="#wxtreelistctrlhittest">wxTreeListCtrl::HitTest</a><br>
 <a href="#wxtreelistctrlinsertcolumn">wxTreeListCtrl::InsertColumn</a><br>
 <a href="#wxtreelistctrlinsertitem">wxTreeListCtrl::InsertItem</a><br>
-<a href="#wxtreelistctrlisbold">wxTreeListCtrl::IsBold</a><br>
+<a href="#wxtreelistctrlgetitembold">wxTreeListCtrl::IsBold</a><br>
 <a href="#wxtreelistctrliscolumnshown">wxTreeListCtrl::IsColumnShown</a><br>
 <a href="#wxtreelistctrlisexpanded">wxTreeListCtrl::IsExpanded</a><br>
 <a href="#wxtreelistctrlisselected">wxTreeListCtrl::IsSelected</a><br>
@@ -634,7 +635,8 @@ Expands the given item and all subitems recursively.
 <a name="wxtreelistctrlfinditem"></a>
 <h3>wxTreeListCtrl::FindItem</h3>
 <p>
-<b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i>flags=0</i>)
+    <b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i >flags=0</i>)
+<br><b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i> column</i>, <b>int</b><i> flags=0</i>)
 </p>
 <p>
 Returns the next visible item in the tree which matches the entered string, starting from the entered item. If no item the find starts a the beginning of the tree. If no item found an empty item (NULL) is returned.
@@ -813,20 +815,22 @@ Returns the current tree list control indentation.
 <a name="wxtreelistctrlgetitembackgroundcolour"></a>
 <h3>wxTreeListCtrl::GetItemBackgroundColour</h3>
 <p>
-<b>wxColour</b> <b>GetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>wxColour</b> <b>GetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>wxColour</b> <b>GetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the background colour of the item.
+Returns the background colour of the item/cell.
 </p>
 
 <hr>
 <a name="wxtreelistctrlgetitemdata"></a>
 <h3>wxTreeListCtrl::GetItemData</h3>
 <p>
-<b>wxTreeItemData*</b> <b>GetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>wxTreeItemData*</b> <b>GetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>wxTreeItemData*</b> <b>GetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the tree item data associated with the item.
+Returns the tree item data associated with the item/cell.
 </p>
 <p>
 <b>See also</b>
@@ -858,26 +862,22 @@ wxTreeItemData
 <a name="wxtreelistctrlgetitemfont"></a>
 <h3>wxTreeListCtrl::GetItemFont</h3>
 <p>
-<b>wxFont</b> <b>GetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>wxFont</b> <b>GetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>wxFont</b> <b>GetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the font of the item label.
+Returns the font of the item's or cell's label.
 </p>
 
 <hr>
 <a name="wxtreelistctrlgetitemimage"></a>
 <h3>wxTreeListCtrl::GetItemImage</h3>
 <p>
-<b>int</b> <b>GetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>) <b>const</b>
+    <b>int</b> <b>GetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>) <b>const</b>
+<br><b>int</b> <b>GetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>) <b>const</b>
 </p>
 <p>
-Gets the specified item image of the main column.
-</p>
-<p>
-<b>int</b> <b>GetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>) <b>const</b>
-</p>
-<p>
-Gets the specified item image of the entered column.
+Gets the specified item image of the main/entered column.
 </p>
 <p>
 The value of <i>which</i> may be:
@@ -903,26 +903,22 @@ Returns the item's parent.
 <a name="wxtreelistctrlgetitemtext"></a>
 <h3>wxTreeListCtrl::GetItemText</h3>
 <p>
-<b>wxString</b> <b>GetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>wxString</b> <b>GetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>wxString</b> <b>GetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the item text of the main column.
-</p>
-<p>
-<b>wxString</b> <b>GetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
-</p>
-<p>
-Returns the item text of the entered column.
+Returns the item text of the main/specified column.
 </p>
 
 <hr>
 <a name="wxtreelistctrlgetitemtextcolour"></a>
 <h3>wxTreeListCtrl::GetItemTextColour</h3>
 <p>
-<b>wxColour</b> <b>GetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>wxColour</b> <b>GetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>wxColour</b> <b>GetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the colour of the item label.
+Returns the colour of the item/cell label (foreground colour).
 </p>
 
 <hr>
@@ -1228,13 +1224,9 @@ Returns TRUE if the item has children.
 <a name="wxtreelistctrlhittest"></a>
 <h3>wxTreeListCtrl::HitTest</h3>
 <p>
-<b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>)
-</p>
-<p>
-<b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>, <b>int&amp; </b><i>flags</i>)
-</p>
-<p>
-<b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>, <b>int&amp; </b><i>flags</i>, <b>int&amp; </b><i>column</i>)
+    <b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>)
+<br><b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>, <b>int&amp; </b><i>flags</i>)
+<br><b>wxTreeItemId</b> <b>HitTest</b> (<b>const wxPoint&amp; </b><i>point</i>, <b>int&amp; </b><i>flags</i>, <b>int&amp; </b><i>column</i>)
 </p>
 <p>
 Calculates which (if any) item is under the given point, returning the tree item id at this point plus extra information <i>flags</i>. <i>flags</i> is a bitlist of the following:
@@ -1302,10 +1294,8 @@ Calculates which (if any) item is under the given point, returning the tree item
 <a name="wxtreelistctrlinsertitem"></a>
 <h3>wxTreeListCtrl::InsertItem</h3>
 <p>
-<b>wxTreeItemId</b> <b>InsertItem</b> (<b>const wxTreeItemId&amp; </b><i>parent</i>, <b>const wxTreeItemId&amp; </b><i>previous</i>, <b>const wxString&amp;</b><i> text</i>, <b>int</b><i> image = -1</i>, <b>int</b><i> selImage = -1</i>, <b>wxTreeItemData*</b><i> data = NULL</i>)
-</p>
-<p>
-<b>wxTreeItemId</b> <b>InsertItem</b> (<b>const wxTreeItemId&amp; </b><i>parent</i>, <b>size_t</b><i> index</i>, <b>const wxString&amp;</b><i> text</i>, <b>int</b><i> image = -1</i>, <b>int</b><i> selImage = -1</i>, <b>wxTreeItemData*</b><i> data = NULL</i>)
+    <b>wxTreeItemId</b> <b>InsertItem</b> (<b>const wxTreeItemId&amp; </b><i>parent</i>, <b>const wxTreeItemId&amp; </b><i>previous</i>, <b>const wxString&amp;</b><i> text</i>, <b>int</b><i> image = -1</i>, <b>int</b><i> selImage = -1</i>, <b>wxTreeItemData*</b><i> data = NULL</i>)
+<br><b>wxTreeItemId</b> <b>InsertItem</b> (<b>const wxTreeItemId&amp; </b><i>parent</i>, <b>size_t</b><i> index</i>, <b>const wxString&amp;</b><i> text</i>, <b>int</b><i> image = -1</i>, <b>int</b><i> selImage = -1</i>, <b>wxTreeItemData*</b><i> data = NULL</i>)
 </p>
 <p>
 Inserts an item after a given one (<i>previous</i>) or before one identified by its position (<i>before</i>). <i>before</i> must be less than the number of children.
@@ -1315,19 +1305,6 @@ The <i>image</i> and <i>selImage</i> parameters are an index within the normal i
 </p>
 <p>
 <b class="note">wxPython note:</b> The second form of this method is called <tt>InsertItemBefore</tt> in wxPython.
-</p>
-
-<hr>
-<a name="wxtreelistctrlisbold"></a>
-<h3>wxTreeListCtrl::IsBold</h3>
-<p>
-<b>bool</b> <b>IsBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>) <b>const</b>
-</p>
-<p>
-Returns TRUE if the given item is in bold state.
-</p>
-<p>
-See also: <a href="#wxtreelistctrlsetitembold">SetItemBold</a>
 </p>
 
 <hr>
@@ -1561,33 +1538,36 @@ Sets the indentation for the tree list control.
 <a name="wxtreelistctrlsetitembackgroundcolour"></a>
 <h3>wxTreeListCtrl::SetItemBackgroundColour</h3>
 <p>
-<b>void</b> <b>SetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxColour&amp; </b><i>colour</i>)
+    <b>void</b> <b>SetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxColour&amp; </b><i>colour</i>)
+<br><b>void</b> <b>SetItemBackgroundColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxColour&amp; </b><i>colour</i>)
 </p>
 <p>
-Sets the colour of the item's background.
+Sets the colour of the item's or cell's background.
 </p>
 
 <hr>
 <a name="wxtreelistctrlsetitembold"></a>
 <h3>wxTreeListCtrl::SetItemBold</h3>
 <p>
-<b>void</b> <b>SetItemBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>, <b>bool</b><i> bold = TRUE</i>)
+    <b>void</b> <b>SetItemBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>, <b>bool</b><i> bold = TRUE</i>)
+<br><b>void</b> <b>SetItemBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>, <b>int</b><i> column</i>, <b>bool</b><i> bold = TRUE</i>)
 </p>
 <p>
 Makes item appear in bold font if <i>bold</i> parameter is TRUE or resets it to the normal state.
 </p>
 <p>
-See also: <a href="#wxtreelistctrlisbold">IsBold</a>
+See also: <a href="#wxtreelistctrlgetitembold">GetItemBold</a>, <a href="#wxtreelistctrlsetitemfont">SetItemFont</a>
 </p>
 
 <hr>
 <a name="wxtreelistctrlsetitemdata"></a>
 <h3>wxTreeListCtrl::SetItemData</h3>
 <p>
-<b>void</b> <b>SetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>wxTreeItemData* </b><i>data</i>)
+    <b>void</b> <b>SetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>wxTreeItemData* </b><i>data</i>)
+<br><b>void</b> <b>SetItemData</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>wxTreeItemData* </b><i>data</i>)
 </p>
 <p>
-Sets the item client data.
+Sets the item/cell client data.
 </p>
 <p>
 <b class="note">wxPython note:</b> wxPython provides the following shortcut method:
@@ -1611,16 +1591,17 @@ Sets the item client data.
 <a name="wxtreelistctrlsetitemfont"></a>
 <h3>wxTreeListCtrl::SetItemFont</h3>
 <p>
-<b>void</b> <b>SetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxFont&amp; </b><i>font</i>)
+    <b>void</b> <b>SetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxFont&amp; </b><i>font</i>)
+<br><b>void</b> <b>SetItemFont</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxFont&amp; </b><i>font</i>)
 </p>
 <p>
-Sets the item's font. All items in the tree should have the same height to avoid text clipping, so the fonts height should be the same for all of them, although font attributes may vary.
+Sets the item's or cell's font. All items in the tree should have the same height to avoid text clipping, so the fonts height should be the same for all of them, although font attributes may vary.
 </p>
 <p>
 <b>See also</b>
 </p>
 <p>
-<a href="#wxtreelistctrlsetitembold">SetItemBold</a>
+<a href="#wxtreelistctrlgetitemfont">GetItemFont</a>, <a href="#wxtreelistctrlsetitembold">SetItemBold</a>
 </p>
 
 <hr>
@@ -1637,42 +1618,35 @@ Force appearance of the button next to the item. This is useful to allow the use
 <a name="wxtreelistctrlsetitemimage"></a>
 <h3>wxTreeListCtrl::SetItemImage</h3>
 <p>
-<b>void</b> <b>SetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> image</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>)
+    <b>void</b> <b>SetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> image</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>)
+<br><b>void</b> <b>SetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>int</b><i> image</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>)
 </p>
 <p>
-Sets the specified item image of the main column. See <a href="#wxtreelistctrlgetitemimage">GetItemImage</a> for the description of the <i>which</i> parameter.
+Sets the specified item image of the main/any column. See <a href="#wxtreelistctrlgetitemimage">GetItemImage</a> for the description of the <i>which</i> parameter.
+<br><strong>note:</strong> the <i>which</i> parameter is ignored for any other column than the main column.
 </p>
-<p>
-<b>void</b> <b>SetItemImage</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>int</b><i> image</i>, <b>wxTreeItemIcon</b><i> which = wxTreeItemIcon_Normal</i>)
-</p>
-<p>
-Sets the specified item image of the entered column. See <a href="#wxtreelistctrlgetitemimage">GetItemImage</a> for the description of the <i>which</i> parameter.
-</p>
+
 
 <hr>
 <a name="wxtreelistctrlsetitemtext"></a>
 <h3>wxTreeListCtrl::SetItemText</h3>
 <p>
-<b>void</b> <b>SetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> text</i>)
+    <b>void</b> <b>SetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> text</i>)
+<br><b>void</b> <b>SetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxString&amp;</b><i> text</i>)
 </p>
 <p>
-Sets the item text of the main column.
-</p>
-<p>
-<b>void</b> <b>SetItemText</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxString&amp;</b><i> text</i>)
-</p>
-<p>
-Sets the item text of the entered column.
+Sets the item text of the main/any column.
 </p>
 
 <hr>
 <a name="wxtreelistctrlsetitemtextcolour"></a>
 <h3>wxTreeListCtrl::SetItemTextColour</h3>
 <p>
-<b>void</b> <b>SetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxColour&amp;</b><i> colour</i>)
+    <b>void</b> <b>SetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxColour&amp;</b><i> colour</i>)
+<br><b>void</b> <b>SetItemTextColour</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxColour&amp;</b><i> colour</i>)
 </p>
 <p>
-Sets the colour of the item's text.
+Sets the colour of the item's or cell's text (foreground colour).
 </p>
 
 <hr>
@@ -1983,18 +1957,22 @@ Set the main column.
 <p>
 Shows/hides the column.
 </p>
-<p>
-<b>Members (item specific</b>
-</p>
 
 <hr>
 <a name="wxtreelistctrlgetitembold"></a>
-<h3>wxTreeListCtrl::GetItemBold</h3>
+<h3>wxTreeListCtrl::GetItemBold<br>wxTreeListCtrl::IsBold</h3>
 <p>
-<b>bool</b> <b>GetItemBold</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+    <b>bool</b> <b>GetItemBold</b> (<b>const wxTreeItemId&amp;</b><i> item</i>) <b>const</b>
+<br><b>bool</b> <b>GetItemBold</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>) <b>const</b>
+<br>
+<br><b>bool</b> <b>IsBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>) <b>const</b>
+<br><b>bool</b> <b>IsBold</b> (<b>const wxTreeItemId&amp; </b><i>item</i>, <b>int</b><i> column</i>) <b>const</b>
 </p>
 <p>
-Returns the item bold status.
+Returns the item/cell bold status.
+</p>
+<p>
+See also: <a href="#wxtreelistctrlsetitembold">SetItemBold</a>, <a href="#wxtreelistctrlgetitemfont">GetItemFont</a>
 </p>
 
 </body>

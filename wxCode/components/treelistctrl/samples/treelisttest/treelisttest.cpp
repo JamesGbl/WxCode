@@ -67,7 +67,7 @@
 
 const wxString APP_NAME = _("wxTreeListCtrl");
 const wxString APP_VENDOR = _("wxCode");
-const wxString APP_VERSION = _("2010_06_26");
+const wxString APP_VERSION = _("1104");
 const wxString APP_MAINT = _("Ronan Chartois");
 const wxString APP_LICENCE = _("wxWidgets");
 const wxString APP_COPYRIGTH = _("(C) 2005-2011 Otto Wyss && others");
@@ -589,7 +589,7 @@ AppFrame::AppFrame (const wxString &title)
     CheckStyle (myID_SELECTEXTENDED, wxTR_EXTENDED);
 
     // initialize tree
-    m_treelist->SetBackgroundColour(wxColour(240,240,192));
+    m_treelist->SetBackgroundColour(wxColour(240,240,240));
     int k = 250;
     m_treelist->AddColumn (_("Main"), k - 32, wxALIGN_LEFT);
     m_treelist->SetColumnEditable (0, true);
@@ -713,7 +713,7 @@ void AppFrame::OnBoldFont (wxCommandEvent &WXUNUSED(event)) {
     m_treelist->SetItemBold (m_treelist->GetSelection(), !bold);
 }
 void AppFrame::OnCellBoldFont (wxCommandEvent &WXUNUSED(event)) {
-    bool bold = m_treelist->IsBold (m_treelist->GetSelection());
+    bool bold = m_treelist->IsBold (m_treelist->GetSelection(), m_currentCol);
     m_treelist->SetItemBold (m_treelist->GetSelection(), m_currentCol, !bold);
 }
 
@@ -1174,58 +1174,74 @@ void AppFrame::FillTree () {
     int m = 0;
     // initialize tree
     wxTreeItemId root = m_treelist->AddRoot (_("Root"));
-    m_treelist->SetItemText (root, 1, wxString::Format (_("Root, text #%d"), 0));
-    m_treelist->SetItemText (root, 2, wxString::Format (_("Root, text #%d"), 0));
+    m_treelist->SetItemText (root, 1, wxString::Format (_("TOP-LEVEL"), 0));
+    m_treelist->SetItemText (root, 2, wxString::Format (_("TOP-LEVEL"), 0));
+    m_treelist->SetItemFont(root, wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD));
+    m_treelist->SetItemTextColour(root, 1, wxColour(_("#ff4040")));
+    m_treelist->SetItemBackgroundColour(root, wxColour(_("#c0c0f0")));
     wxTreeItemId parent;
     wxTreeItemId item;
     item = m_treelist->AppendItem (root, wxString::Format (_("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
     m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBold(item, 1, false);
+    m_treelist->SetItemBold(item);
+    m_treelist->SetItemBackgroundColour(item, wxColour(_("#d0d0ff")));
     parent = item;
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBackgroundColour(item, wxColour(_("#e8e8ff")));
+    m_treelist->SetItemBold(item, 0);
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBackgroundColour(item, wxColour(_("#e8e8ff")));
+    m_treelist->SetItemBold(item, 0, false);
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBold(item, 0, true);
+    m_treelist->SetItemTextColour(item, 1, wxColour(_("#4040ff")));
+    m_treelist->SetItemBackgroundColour(item, wxColour(_("#e8e8ff")));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBold(item, 0, true);
+    m_treelist->SetItemBackgroundColour(item, wxColour(_("#e8e8ff")));
     item = m_treelist->AppendItem (root, wxString::Format (_("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
     m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
     parent = item;
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemBackgroundColour(item, 1, wxColour(_("#ffe0c0")));
     item = m_treelist->AppendItem (root, wxString::Format (_("Item #%d"), ++n));
     m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
     m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
     parent = item;
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    item = m_treelist->AppendItem (parent, wxString::Format (_("Item #%d"), ++n), 4);
-    m_treelist->SetItemText (item, 1, wxString::Format (_("Item #%d, text #%d"), n, ++m));
-    m_treelist->SetItemText (item, 2, wxString::Format (_("Item #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    item = m_treelist->AppendItem (parent, wxString::Format (_("SubItem #%d"), ++n), 4);
+    m_treelist->SetItemText (item, 1, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
+    m_treelist->SetItemText (item, 2, wxString::Format (_("SubItem #%d, text #%d"), n, ++m));
     m_treelist->ExpandAll (root);
 }
 

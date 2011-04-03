@@ -3,8 +3,8 @@
   <style type="text/css">
     body { max-width: 60em; }
     h2 { border: 1px solid #CCF; background-color: #EEF; padding: 1em; text-align: center; }
-    h2, h3 { color: maroon; }
-    h3 { margin-right: 1em; border-bottom: 1px dotted maroon; }
+    h2, h3 { clear: both; color: maroon; }
+    h3 { margin-top: 2em; margin-right: 1em; border-bottom: 1px dotted maroon; }
     h4 { margin-top: 0; }
     table { }
     td { vertical-align: top; }
@@ -23,24 +23,20 @@
 <body>
 
 <div>
-<h2><TT>wxCode : wxTreeListCtrl</TT></h2>
+<h2>wxCode : <tt>wxTreeListCtrl</tt></h2>
 </div>
 
-
-<h3>Synopsis</h3>
-<p>
-A multi column tree control.
-</p>
-
 <h3>Description &amp; documentation</h3>
-<img src="image.png" alt="Sorry no screenshot" style="margin: 0 2em; border: 1px solid silver; padding: 4px; float: right">
+<img src="image.png" alt="Sorry no screenshot" title="the classical wxTreeListCtrl" style="margin: 0 1em; border: 1px solid silver; padding: 4px; float: right; background: white">
 <p>
-<tt>wxTreeListCtrl</tt> is able to show a tree with multiple colums. The main column is shown as a tree, the others just as lists.
+<tt>wxTreeListCtrl</tt> A multi column tree control.
+It is able to show a tree with multiple colums. The main column is shown as a tree, the others just as lists.
 </p>
 <ul>
 <li>Sorting after any column, incl. native numeric ordering</li>
 <li>Keyboard navigation, positioning via characters (main column)</li>
 <li>Show/hide any column (except main column)</li>
+<li>various attributes configurable for each row and cell: color, font, picture...</li>
 <li></li>
 </ul>
 <p>
@@ -48,12 +44,14 @@ Here the <b><a href="reference.html" target=_top>API reference documentation</a>
 </p>
 
 <h3>Download</h3>
+<img src="attributes.png" alt="Sorry no screenshot" title="showing off the eye candies" style="margin: 0 1em; border: 1px solid silver; padding: 4px; float: right; background: white">
 <h4>Latest version:</h4>
 <ul>
-<li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2010-06-26.tar.gz?download" target=_top><b>treelistctrl_2010-06-26.tar.gz</b></a> &nbsp; tooltips support, page-up/down, minor changes &amp; fixes</li>
+<li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_1104.zip?download" target=_top><b>treelistctrl_1104.zip</b></a> &nbsp; eye candies: colors, fonts &amp; more!</li>
 </ul>
 <h4>Previous versions:</h4>
 <ul>
+<li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2010-06-26.tar.gz?download" target=_top>treelistctrl_2010-06-26.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; tooltips support, page-up/down, minor changes &amp; fixes</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2009-07-19.tar.gz?download" target=_top>treelistctrl_2009-07-19.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; maintenance release</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2008-12-05.tar.gz?download" target=_top>treelistctrl_2008-12-05.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; fixed several crashes</li>
 <li><a href="http://prdownloads.sourceforge.net/wxcode/treelistctrl_2008-07-21.tar.gz?download" target=_top>treelistctrl_2008-07-21.tar.gz</a> &nbsp;&nbsp;&nbsp;&nbsp; important fixes &amp; enhancements to: events, selection, delete</li>
@@ -65,14 +63,14 @@ Here the <b><a href="reference.html" target=_top>API reference documentation</a>
 Everything and more can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=51305" target=_top><IMG src="http://sourceforge.net/sflogo.php?group_id=51305" vspace="0" border="0" align=middle alt="sourceforge.net"></a>
 or you can browse the <a href="http://wxcode.svn.sourceforge.net/viewvc/wxcode/trunk/wxCode/components/treelistctrl/">SVN source tree</a>
 </p>
-<div style="margin-left: 5em; padding: 1em; width: 30em; border: 1px solid yellow; background-color: #FFD">
+<div style="margin: 1em 3em; padding: 1em; border: 1px solid yellow; background-color: #FFD">
     <h4>NOTE: CVS is obsolete !</h4>
-    On February 12th, 2011 the <a href="http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/treelistctrl" target=_top>CVS repository</a> was migrated to SubVersion, including all revision history.
-    Although CVS is still available, it is no longer updated.
+    On February 12th, 2011 the <a href="http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/treelistctrl" target=_top>CVS repository</a> was migrated
+    to <a href="http://wxcode.svn.sourceforge.net/viewvc/wxcode/trunk/wxCode/components/treelistctrl/">SubVersion</a>, including all revision history. Although CVS is still available, it is no longer updated.
 </div>
 <h3>New releases</h3>
 <p>
-No releases are announced, you have to check the project homepage (this page) from time to time, or subscribe to the <a href="http://lists.sourceforge.net/lists/listinfo/wxcode-users" target=_top>wxCode mailing list</a>.
+Releases are not announced in advance, you have to check the project homepage (this page) from time to time, or subscribe to the <a href="http://lists.sourceforge.net/lists/listinfo/wxcode-users" target=_top>wxCode mailing list</a>.
 </p>
 
 <h3>Support - Latest info, open issues, feedback etc.</h3>

@@ -812,7 +812,7 @@ public:
     wxTreeItemData      *m_data;        // user-provided data
     short                m_image;       // images for the various columns (!= main)
     int                  m_isBold :1;   // render the label in bold font
-    int                  m_isBoldSet :1;   // render the label in bold font
+    int                  m_isBoldSet :1;   // was 'm_isBold' set ?
     int                  m_ownsAttr :1; // delete attribute when done
 };
 
@@ -926,6 +926,7 @@ public:
         if (entry == m_props_cell.end()) {
             m_props_cell[column] = new wxTreeListItemCellAttr();
             m_props_cell[column]->m_isBold = bold;
+            m_props_cell[column]->m_isBoldSet = 1;
         } else {
             entry->second->m_isBold = bold;
             entry->second->m_isBoldSet = 1;
@@ -1053,7 +1054,7 @@ public:
 private:
     wxTreeListMainWindow       *m_owner;        // control the item belongs to
 
-    wxArrayTreeListItems        m_children; // list of children
+    wxArrayTreeListItems        m_children;     // list of children
     wxTreeListItem             *m_parent;       // parent of this item
 
     // main column item positions
@@ -1072,7 +1073,7 @@ private:
     int                         m_isCollapsed :1;
     int                         m_hasHilight  :1; // same as focused
     int                         m_hasPlus     :1; // used for item which doesn't have
-                                          // children but has a [+] button
+                                                    // children but has a [+] button
 
     // here are all the properties which can be set per column
     wxArrayString               m_text;        // labels to be rendered for item
@@ -2271,10 +2272,10 @@ void wxTreeListMainWindow::SetItemBold (const wxTreeItemId& item,             bo
 void wxTreeListMainWindow::SetItemBold (const wxTreeItemId& item, int column, bool bold) {
     wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
-    if (pItem->IsBold(column) != bold) { // avoid redrawing if no real change
+//    if (pItem->IsBold(column) != bold) { // avoid redrawing if no real change
         pItem->SetBold (column, bold);
         RefreshLine (pItem);
-    }
+//    }
 }
 
 void wxTreeListMainWindow::SetItemTextColour (const wxTreeItemId& item,             const wxColour& colour) {
@@ -4942,9 +4943,6 @@ bool wxTreeListCtrl::IsExpanded(const wxTreeItemId& item) const
 
 bool wxTreeListCtrl::IsSelected(const wxTreeItemId& item) const
 { return m_main_win->IsSelected(item); }
-
-bool wxTreeListCtrl::IsBold(const wxTreeItemId& item, int column) const
-{ return m_main_win->IsBold(item, column); }
 
 size_t wxTreeListCtrl::GetChildrenCount(const wxTreeItemId& item, bool rec)
 { return m_main_win->GetChildrenCount(item, rec); }

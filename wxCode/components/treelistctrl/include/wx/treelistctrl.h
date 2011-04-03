@@ -338,7 +338,7 @@ public:
     bool IsSelected (const wxTreeItemId& item) const;
     // is item text in bold font?
     bool IsBold (const wxTreeItemId& item)             const { return IsBold(item, GetMainColumn()); };
-    bool IsBold (const wxTreeItemId& item, int column) const;
+    bool IsBold (const wxTreeItemId& item, int column) const { return GetItemBold(item, column); };
     // does the layout include space for a button?
 
 
