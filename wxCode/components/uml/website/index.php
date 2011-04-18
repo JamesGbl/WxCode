@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
-  // RCS-ID: $Id: index.php 505 2007-03-31 10:31:46Z frm $
+  // Author: Josef Musil
+  // Creation date: 18/04/2011
+  // RCS-ID: $Id: index.php,v 1.7 2005/09/01 22:26:16 frm Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
 ?>
@@ -11,7 +11,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
       $compname = "wxUML";
-      $subdir = "uml";
+      $subdir = "wxuml";
       require("compwebsite.inc.php");
   ?>
 
@@ -40,10 +40,13 @@
 
        block...
   -->
-	<br/><?php write_h1("Screenshots"); ?>
+	<br/><?php write_h1("Availability"); ?>
+    <p>First version of wxUML coming in the middle of May 2011. </p>
+    
+    <br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+    <?php writeScreenshotLink("myshot.png", "No screenshots available yet"); ?>
   </div>
 
 
@@ -68,8 +71,8 @@ newcomp->Show();
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
        see the ReadMe.txt file at wxCode\template... -->
   <br/><?php write_h1("Documentation"); ?>
-  <p>The documentation for this component is available online
-  <a href="../../docs/MYCOMPSUBDIR/">here</a>.</p>
+  <p>The documentation for this component is not yet available online
+  <a href="../../docs/shapeframework/">here</a>.</p>
 
 
 	<br/><?php write_h1("Known bugs"); ?>
