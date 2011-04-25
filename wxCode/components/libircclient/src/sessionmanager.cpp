@@ -31,200 +31,198 @@
 #include <wx/log.h>
 
 /** declare the global instance of this manager */
-IRCSessionManager* IRCSessionManager::m_instance = 0;
+wxLIRCCSessionManager* wxLIRCCSessionManager::m_instance = 0;
 
-void IRCSessionManager::on_connect ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_connect ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnConnect ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onConnect ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_nick ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_nick ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnNick ( event, origin, params, count );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onNick ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_quit ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_quit ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnQuit ( event, origin, params, count );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onQuit ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_join ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_join ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnJoin ( event, origin, params, count );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onJoin ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_part ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_part ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnPart ( event, origin, params, count );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onPart ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_mode ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_mode ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnMode ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onMode ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_umode ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_umode ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnUserMode ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onUserMode ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_topic ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_topic ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnTopic ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onTopic ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_kick ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_kick ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnKick ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onKick ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_channel ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_channel ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnChanMsg ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onChanMsg ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_privmsg ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_privmsg ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnPrivMsg ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onPrivMsg ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_notice ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_notice ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnNotice ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onNotice ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_channel_notice ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_channel_notice ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnChanNotice ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onChanNotice ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_invite ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_invite ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnInvite ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onInvite ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_ctcp_action ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_ctcp_action ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnCTCPAction ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onCTCPAction ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_ctcp_rep ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_ctcp_rep ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnCTCPRep ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onCTCPRep ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_ctcp_req ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSessionManager::on_ctcp_req ( irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count )
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnCTCPReq ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onCTCPReq ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_unknown (irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count)
+void wxLIRCCSessionManager::on_unknown (irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count)
 {
-	IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnUnknown ( event, origin, params, count );
+	wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onUnknown ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_numeric (irc_session_t * session, unsigned int event, const char * origin, const char ** params, unsigned int count)
+void wxLIRCCSessionManager::on_numeric (irc_session_t * session, unsigned int event, const char * origin, const char ** params, unsigned int count)
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnNumeric ( event, origin, params, count );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onNumeric ( event, origin, params, count );
 }
 
-void IRCSessionManager::on_dcc_chat_req (irc_session_t * session, const char * nick, const char * addr, irc_dcc_t dccid)
+void wxLIRCCSessionManager::on_dcc_chat_req (irc_session_t * session, const char * nick, const char * addr, irc_dcc_t dccid)
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnDCCChatReq ( nick, addr, dccid );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onDCCChatReq ( nick, addr, dccid );
 }
 
-void IRCSessionManager::on_dcc_send_req (irc_session_t * session, const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid)
+void wxLIRCCSessionManager::on_dcc_send_req (irc_session_t * session, const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid)
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnDCCSendReq( nick, addr, filename, size, dccid );
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onDCCSendReq( nick, addr, filename, size, dccid );
 }
 
-void IRCSessionManager::on_dcc_recv (irc_session_t * session, irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length)
+void wxLIRCCSessionManager::on_dcc_recv (irc_session_t * session, irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length)
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnDCCRecv(id, status, ctx, data, length);
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onDCCRecv(id, status, ctx, data, length);
 }
 
-void IRCSessionManager::on_dcc_file_recv (irc_session_t * session, irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length)
+void wxLIRCCSessionManager::on_dcc_file_recv (irc_session_t * session, irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length)
 {
-    IRCSession* IRCNetwork = IRCSessionManager::Get()->FindSession( session );
-	if( IRCNetwork != NULL )
-		IRCNetwork->OnDCCFileRecv(id, status, ctx, data, length);
+    wxLIRCCSession* pSession = wxLIRCCSessionManager::Get()->FindSession( session );
+	if( pSession != NULL )
+		pSession->onDCCFileRecv(id, status, ctx, data, length);
 }
 
-IRCSessionManager::IRCSessionManager():
-	wxEvtHandler()
-	
+wxLIRCCSessionManager::wxLIRCCSessionManager(): wxEvtHandler()
 {
 	memset (&m_callbacks, 0, sizeof(m_callbacks));
 
 	// declare callbacks for irc events
-	m_callbacks.event_dcc_chat_req = IRCSessionManager::on_dcc_chat_req;
-	m_callbacks.event_dcc_send_req = IRCSessionManager::on_dcc_send_req;
-	m_callbacks.event_ctcp_action = IRCSessionManager::on_ctcp_action;
-	m_callbacks.event_ctcp_rep = IRCSessionManager::on_ctcp_rep;
-	m_callbacks.event_ctcp_req = IRCSessionManager::on_ctcp_req;
-	m_callbacks.event_connect = IRCSessionManager::on_connect;
-	m_callbacks.event_channel = IRCSessionManager::on_channel;
-	m_callbacks.event_numeric = IRCSessionManager::on_numeric;
-	m_callbacks.event_privmsg = IRCSessionManager::on_privmsg;
-	m_callbacks.event_unknown = IRCSessionManager::on_unknown;
-	m_callbacks.event_invite = IRCSessionManager::on_invite;
-	m_callbacks.event_notice = IRCSessionManager::on_notice;
-	m_callbacks.event_channel_notice = IRCSessionManager::on_channel_notice;
-	m_callbacks.event_topic = IRCSessionManager::on_topic;
-	m_callbacks.event_umode = IRCSessionManager::on_umode;
-	m_callbacks.event_join = IRCSessionManager::on_join;
-	m_callbacks.event_kick = IRCSessionManager::on_kick;
-	m_callbacks.event_mode = IRCSessionManager::on_mode;
-	m_callbacks.event_nick = IRCSessionManager::on_nick;
-	m_callbacks.event_part = IRCSessionManager::on_part;
-	m_callbacks.event_quit = IRCSessionManager::on_quit;
+	m_callbacks.event_dcc_chat_req = wxLIRCCSessionManager::on_dcc_chat_req;
+	m_callbacks.event_dcc_send_req = wxLIRCCSessionManager::on_dcc_send_req;
+	m_callbacks.event_ctcp_action = wxLIRCCSessionManager::on_ctcp_action;
+	m_callbacks.event_ctcp_rep = wxLIRCCSessionManager::on_ctcp_rep;
+	m_callbacks.event_ctcp_req = wxLIRCCSessionManager::on_ctcp_req;
+	m_callbacks.event_connect = wxLIRCCSessionManager::on_connect;
+	m_callbacks.event_channel = wxLIRCCSessionManager::on_channel;
+	m_callbacks.event_numeric = wxLIRCCSessionManager::on_numeric;
+	m_callbacks.event_privmsg = wxLIRCCSessionManager::on_privmsg;
+	m_callbacks.event_unknown = wxLIRCCSessionManager::on_unknown;
+	m_callbacks.event_invite = wxLIRCCSessionManager::on_invite;
+	m_callbacks.event_notice = wxLIRCCSessionManager::on_notice;
+	m_callbacks.event_channel_notice = wxLIRCCSessionManager::on_channel_notice;
+	m_callbacks.event_topic = wxLIRCCSessionManager::on_topic;
+	m_callbacks.event_umode = wxLIRCCSessionManager::on_umode;
+	m_callbacks.event_join = wxLIRCCSessionManager::on_join;
+	m_callbacks.event_kick = wxLIRCCSessionManager::on_kick;
+	m_callbacks.event_mode = wxLIRCCSessionManager::on_mode;
+	m_callbacks.event_nick = wxLIRCCSessionManager::on_nick;
+	m_callbacks.event_part = wxLIRCCSessionManager::on_part;
+	m_callbacks.event_quit = wxLIRCCSessionManager::on_quit;
 }
 
-IRCSessionManager::~IRCSessionManager()
+wxLIRCCSessionManager::~wxLIRCCSessionManager()
 {
 	for( unsigned int i = 0; i < m_sessions.GetCount() ; ++i )
 		delete m_sessions[i];
@@ -232,21 +230,21 @@ IRCSessionManager::~IRCSessionManager()
 	m_sessions.Clear();
 }
 
-IRCSession* IRCSessionManager::FindSession( irc_session_t* session )
+wxLIRCCSession* wxLIRCCSessionManager::FindSession( irc_session_t* session )
 {
 	for( unsigned int i = 0; i < m_sessions.GetCount() ; ++i )
 	{
-		IRCSession* curr = m_sessions[i];
-		if( curr->Handle == session )
+		wxLIRCCSession* curr = m_sessions[i];
+		if( curr->handle == session )
 			return curr;
 	}
 	
 	return NULL;
 }
 
-IRCSession* IRCSessionManager::Create()
+wxLIRCCSession* wxLIRCCSessionManager::Create()
 {
-	IRCSession* new_session = new IRCSession( m_callbacks );
+	wxLIRCCSession* new_session = new wxLIRCCSession( m_callbacks );
 	if ( new_session->Create() != wxTHREAD_NO_ERROR )
 	{
 		wxLogError("Can't create the thread!");
@@ -260,12 +258,15 @@ IRCSession* IRCSessionManager::Create()
 	return new_session;
 }
 
-void IRCSessionManager::IRCSessionDestroy( irc_session_t* session )
+void wxLIRCCSessionManager::DestroySession( irc_session_t* session )
 {
-	if ( session != NULL )
-		irc_destroy_session( session );
-
-	IRCSession* found = IRCSessionManager::FindSession( session );
-	if ( found )
-		m_sessions.Remove( found );
+	if ( session )
+	{
+		wxLIRCCSession* found = wxLIRCCSessionManager::FindSession( session );
+		if ( found )
+		{
+			m_sessions.Remove( found );
+			irc_destroy_session( session );
+		}
+	}
 }

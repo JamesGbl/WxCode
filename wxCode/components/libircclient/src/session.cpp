@@ -30,33 +30,33 @@
 
 #include <wx/log.h>
 
-IRCSession::IRCSession( irc_callbacks_t Callbacks )
+wxLIRCCSession::wxLIRCCSession( irc_callbacks_t Callbacks )
 :
 wxThread()
 {
-	Handle = irc_create_session( &Callbacks );
-	wxLogDebug("<IRCSession::IRCSession> Started\n");
+	handle = irc_create_session( &Callbacks );
+	wxLogDebug("<wxLIRCCSession::wxLIRCCSession> Started\n");
 }
 
-void IRCSession::OnExit()
+void wxLIRCCSession::OnExit()
 {
-    wxLogDebug("<IRCSession::OnExit> Disconnected.\n");
+    wxLogDebug("<wxLIRCCSession::OnExit> Disconnected.\n");
 }
 
-void *IRCSession::Entry()
+void *wxLIRCCSession::Entry()
 {
 /*
-	if ( !Handle )
+	if ( !handle )
 	{
-        wxLogDebug("<*IRCSession::Entry> Session creation error.\n");
+        wxLogDebug("<*wxLIRCCSession::Entry> Session creation error.\n");
 		return NULL;
 	}
 */
-    irc_run ( Handle );
+    irc_run ( handle );
     return NULL;
 }
 
-int IRCSession::IRCConnect( const char * server,
+int wxLIRCCSession::Connect( const char * server,
                             unsigned short port,
                             const char * server_password,
                             const char * nickname,
@@ -70,7 +70,7 @@ int IRCSession::IRCConnect( const char * server,
     m_user = username;
     m_name = realname;
 
-    return irc_connect( this->Handle,
+    return irc_connect( this->handle,
                         server,
                         port,
                         server_password,
@@ -79,7 +79,7 @@ int IRCSession::IRCConnect( const char * server,
                         realname );
 }
 
-int IRCSession::IRCConnect6(const char * server,
+int wxLIRCCSession::ConnectIPV6(const char * server,
                             unsigned short port,
                             const char * server_password,
                             const char * nickname,
@@ -93,7 +93,7 @@ int IRCSession::IRCConnect6(const char * server,
     m_user = username;
     m_name = realname;
 
-    return irc_connect6( this->Handle,
+    return irc_connect6( this->handle,
                         server,
                         port,
                         server_password,
@@ -102,14 +102,14 @@ int IRCSession::IRCConnect6(const char * server,
                         realname );
 }
 
-void IRCSession::OnConnect( const char * event, const char * origin, const char ** params, unsigned int count)
+void wxLIRCCSession::onConnect( const char * event, const char * origin, const char ** params, unsigned int count)
 {
 /** No extra params supplied; params is 0. */
-//    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_CONNECT , -1 , this );
-    wxQueueEvent( IRCSessionManager::Get(), new IRCSessionEvent( wxEVT_THREAD_IRC_CONNECT ) );
+//    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CONNECT , -1 , this );
+    wxQueueEvent( wxLIRCCSessionManager::Get(), new wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CONNECT ) );
 }
 
-void IRCSession::OnNick ( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onNick ( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -118,12 +118,12 @@ void IRCSession::OnNick ( const char * event, const char * origin, const char **
     data.Add(sNick);       /** The person, who changes the nick. Note that it can be you! */
     data.Add(sNewNick);    /** Mandatory, contains the new nick. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_NICK , -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_NICK , -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnQuit( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onQuit( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -132,12 +132,12 @@ void IRCSession::OnQuit( const char * event, const char * origin, const char ** 
     data.Add(sNick);   /** The person, who is disconnected. */
     data.Add(sReason); /** Optional, contains the reason message (user-specified). */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_QUIT , -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_QUIT , -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnJoin( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onJoin( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -146,12 +146,12 @@ void IRCSession::OnJoin( const char * event, const char * origin, const char ** 
     data.Add(sNick); /** Who joins the channel. By comparing it with your own nickname, you can check whether your JOIN command succeed. */
     data.Add(sChan); /** Mandatory, contains the channel name. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_JOIN , -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_JOIN , -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnPart( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onPart( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -162,12 +162,12 @@ void IRCSession::OnPart( const char * event, const char * origin, const char ** 
     data.Add(sChan);   /** Mandatory, contains the channel name. */
     data.Add(sReason); /** Optional, contains the reason message (user-defined). */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_PART , -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_PART , -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnMode( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onMode( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -180,12 +180,12 @@ void IRCSession::OnMode( const char * event, const char * origin, const char ** 
     data.Add(sChanMode);   /** Mandatory, contains the changed channel mode, like '+t', '-s' and so on. */
     data.Add(sModeArg);    /** Optional, contains the mode argument
                                 (for example, a key for +k mode, or user who got the channel operator status for +o mode) */
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_MODE , -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_MODE , -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnUserMode( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onUserMode( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -194,12 +194,12 @@ void IRCSession::OnUserMode( const char * event, const char * origin, const char
     data.Add(sNick); /** Who changed the user mode. */
     data.Add(sMode); /** Mandatory, contains the user changed mode, like '+t', '-i' and so on. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_U_MODE, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_U_MODE, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnTopic( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onTopic( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -210,12 +210,12 @@ void IRCSession::OnTopic( const char * event, const char * origin, const char **
     data.Add(sChan);   /** Mandatory, contains the channel name. */
     data.Add(sTopic);  /** Optional, contains the new topic. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_TOPIC, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_TOPIC, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnKick( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onKick( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sNick(origin, wxConvUTF8);
@@ -228,12 +228,12 @@ void IRCSession::OnKick( const char * event, const char * origin, const char ** 
     data.Add(sKicked); /** Optional, contains the nick of kicked person. */
     data.Add(sReason); /** Optional, contains the kick text. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_KICK, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_KICK, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnChanMsg( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onChanMsg( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     if ( count != 2 ) return;
 
@@ -246,12 +246,12 @@ void IRCSession::OnChanMsg( const char * event, const char * origin, const char 
     data.Add(sChan);   /** Mandatory, contains the channel name. */
     data.Add(sMsg);    /** Optional, contains the message text. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_CHANMSG, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CHANMSG, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnPrivMsg( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onPrivMsg( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     if ( count != 2 ) return;
 
@@ -264,13 +264,13 @@ void IRCSession::OnPrivMsg( const char * event, const char * origin, const char 
     data.Add(sMe);     /** Mandatory, contains your nick. */
     data.Add(sMsg);    /** Optional, contains the message text. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_PRIVMSG, -1 , this );
-    m_event.SetParams(data);
-//    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
-	wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_PRIVMSG, -1 , this );
+    sessionevent.SetParams(data);
+//    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
+	wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnNotice( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onNotice( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     if ( count != 2 ) return;
 
@@ -283,12 +283,12 @@ void IRCSession::OnNotice( const char * event, const char * origin, const char *
     data.Add(sTarget); /** Mandatory, contains target name (nick or channel). */
     data.Add(sMsg);    /** Optional, contains the message text. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_NOTICE, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_NOTICE, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnChanNotice( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onChanNotice( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     if ( count != 2 ) return;
 
@@ -301,27 +301,27 @@ void IRCSession::OnChanNotice( const char * event, const char * origin, const ch
     data.Add(sTarget); /** Mandatory, contains target name (nick or channel). */
     data.Add(sMsg);    /** Optional, contains the message text. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_CHAN_NOTICE, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CHAN_NOTICE, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnInvite( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onInvite( const char * event, const char * origin, const char ** params, unsigned int count )
 {
 
 }
 
-void IRCSession::OnCTCPRep( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onCTCPRep( const char * event, const char * origin, const char ** params, unsigned int count )
 {
 
 }
 
-void IRCSession::OnCTCPReq( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onCTCPReq( const char * event, const char * origin, const char ** params, unsigned int count )
 {
 
 }
 
-void IRCSession::OnCTCPAction( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onCTCPAction( const char * event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
 //    wxString sEvent(event, wxConvUTF8);
@@ -333,17 +333,17 @@ void IRCSession::OnCTCPAction( const char * event, const char * origin, const ch
     data.Add(sChan);   /** Mandatory?, contains the channel name. */
     data.Add(sMsg);    /** Mandatory, the ACTION message. */
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_CTCPACT, -1 , this );
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CTCPACT, -1 , this );
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnUnknown ( const char * event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onUnknown ( const char * event, const char * origin, const char ** params, unsigned int count )
 {
 
 }
 
-void IRCSession::OnNumeric ( unsigned int event, const char * origin, const char ** params, unsigned int count )
+void wxLIRCCSession::onNumeric ( unsigned int event, const char * origin, const char ** params, unsigned int count )
 {
     wxArrayString data;
     wxString sOrigin(origin, wxConvUTF8);
@@ -355,30 +355,30 @@ void IRCSession::OnNumeric ( unsigned int event, const char * origin, const char
         data.Add(param);
     }
 
-    IRCSessionEvent m_event = IRCSessionEvent( wxEVT_THREAD_IRC_CHANMSG, -1 , this );
-    m_event.SetId(event);
-    m_event.SetCount(count);
-    m_event.SetOrigin(sOrigin);
-    m_event.SetParams(data);
-    wxQueueEvent( IRCSessionManager::Get(), m_event.Clone() );
+    wxLIRCCSessionEvent sessionevent = wxLIRCCSessionEvent( wxLIRCC_EVT_THREAD_CHANMSG, -1 , this );
+    sessionevent.SetId(event);
+    sessionevent.SetCount(count);
+    sessionevent.SetOrigin(sOrigin);
+    sessionevent.SetParams(data);
+    wxQueueEvent( wxLIRCCSessionManager::Get(), sessionevent.Clone() );
 }
 
-void IRCSession::OnDCCChatReq ( const char * nick, const char * addr, irc_dcc_t dccid )
+void wxLIRCCSession::onDCCChatReq ( const char * nick, const char * addr, irc_dcc_t dccid )
 {
 
 }
 
-void IRCSession::OnDCCSendReq ( const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid )
+void wxLIRCCSession::onDCCSendReq ( const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid )
 {
 
 }
 
-void IRCSession::OnDCCRecv( irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length )
+void wxLIRCCSession::onDCCRecv( irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length )
 {
 
 }
 
-void IRCSession::OnDCCFileRecv( irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length )
+void wxLIRCCSession::onDCCFileRecv( irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length )
 {
 
 }

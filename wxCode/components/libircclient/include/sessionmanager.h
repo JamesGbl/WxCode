@@ -24,8 +24,8 @@
  * @date 07-February-2010
  * @version 0.0.1
  */
-#ifndef __IRCSessionManager__
-#define __IRCSessionManager__
+#ifndef __LIRCCSESSIONMANAGER_H__
+#define __LIRCCSESSIONMANAGER_H__
 
 #include <wx/event.h>
 
@@ -33,26 +33,25 @@
 
 #include "defs.h"
 
-class IRCSession;
+class wxLIRCCSession;
 
 /** define an array of session, to store any new session in this manager */
-WX_DEFINE_ARRAY(IRCSession*, IRCSessionArray);
+WX_DEFINE_ARRAY(wxLIRCCSession*, wxLIRCCSessions);
 
 /**
- * @class IRCSessionManager
+ * @class wxLIRCCSessionManager
  * @brief This is the main class for Handling irc sessions and channels in XVIRC
  * 
  * This class is a global singleton, you cannot directly build this class. If you need to
- * deal with you have to call IRCSessionManager::Get() to access the global instance of this
+ * deal with you have to call wxLIRCCSessionManager::Get() to access the global instance of this
  * manager.
  * 
  * @author foldink (foldink@gmail.com)
  * @date 07-February-2010
  * @version 0.0.1
  */
-class WXDLLIMPEXP_LIBIRCLIENT IRCSessionManager : public wxEvtHandler
+class WXDLLIMPEXP_LIBIRCLIENT wxLIRCCSessionManager : public wxEvtHandler
 {
-	
 public :
 	
 	/** This method is used to access the global instance of this class
@@ -60,10 +59,10 @@ public :
 	 * call this method if you want to access global informations 
 	 * contained in this manager.
 	 */
-	static inline IRCSessionManager* Get() 
+	static inline wxLIRCCSessionManager* Get() 
 	{
 		if(m_instance == 0)
-            m_instance = new IRCSessionManager();
+            m_instance = new wxLIRCCSessionManager();
 
         return m_instance;
 	};
@@ -82,13 +81,13 @@ public :
 	};
 	
 	/** Get the registered irc sessions from this manager */
-	const IRCSessionArray& GetSessions() const {return m_sessions;};
+	const wxLIRCCSessions& GetSessions() const {return m_sessions;};
 	
-	/** Find a, IRCSession accordingly to its irc_session_t pointer
+	/** Find a, wxLIRCCSession accordingly to its irc_session_t pointer
 	 * @param session irc_session_t pointer to find
 	 * @return NULL if the session was not found
 	 */
-	IRCSession* FindSession( irc_session_t* session );
+	wxLIRCCSession* FindSession( irc_session_t* session );
 	
 	/** Create a new session and manage it in this manager
 	 * @param parent panel in which the session shall be attached (?)
@@ -96,17 +95,18 @@ public :
 	 * 
 	 * @note that this might change accordingly to RedTide requirements
 	 */
-	IRCSession* Create();
+	wxLIRCCSession* Create();
 
 	/** Remove a session from this manager */
-	void IRCSessionDestroy( irc_session_t* session );
+	void DestroySession( irc_session_t* session );
 
+private:
 	/***********************************************************************************************************************************
 	 * IRC SESSIONS CALLBACK POINTERS
 	 **********************************************************************************************************************************/
 	 
 	/* Can only use static void function and cannot used for processing events, we need redirect these 
-	 * for each session in the corresponding IRCSession. This is the aim of this class.
+	 * for each session in the corresponding wxLIRCCSession. This is the aim of this class.
 	 */
 	 
 	/** Callback used when irc library is connecting the session. Accordingly to libircclient documentation, 
@@ -432,36 +432,36 @@ private :
 	/**
 	 * Default constructor, the one you cannot use directly. This class is a singleton
 	 * if you don't know what it is refer to wikipedia or equivalent.
-	 * To access the globally managed instance of this class you have to call IRCSessionManager::Get(),
+	 * To access the globally managed instance of this class you have to call wxLIRCCSessionManager::Get(),
 	 * and all public non-static methods will be accessible from.
 	 */
-	IRCSessionManager();
+	wxLIRCCSessionManager();
 	
 	/**
 	 * Default destructor, the one you cannot use directly. This class is a singleton
 	 * if you don't know what it is refer to wikipedia or equivalent.
 	 * You shall never have to destroy this class by your own unless you are a XVIRC
-	 * developer. To destroy the global instance of this class you need to call IRCSessionManager::Free()
+	 * developer. To destroy the global instance of this class you need to call wxLIRCCSessionManager::Free()
 	 * after this call all global instance memory will be freed. All info will be lost and 
 	 * the instance pointer will be set to 0. This shall be done only at the very end of the program !
 	 */
-	~IRCSessionManager();
+	~wxLIRCCSessionManager();
 	
 	/** here the copy constructor does not exists */
-	explicit IRCSessionManager( const IRCSessionManager& ){};
+	explicit wxLIRCCSessionManager( const wxLIRCCSessionManager& ){};
 	
 	/** as for the copy ctor the operator = shall not exists too */
-	IRCSessionManager& operator=(IRCSessionManager const&){return *this;};
+	wxLIRCCSessionManager& operator=(wxLIRCCSessionManager const&){return *this;};
 		
 private :
 	/** define the static global instance for this manager */
-	static IRCSessionManager* m_instance;
+	static wxLIRCCSessionManager* m_instance;
 	
 	/** array containing all opened sessions */
-	IRCSessionArray m_sessions;
+	wxLIRCCSessions m_sessions;
 	
 	/** Callbacks data structure to handle on our delegate class */
 	irc_callbacks_t m_callbacks;
 };
 
-#endif
+#endif //__LIRCCSESSIONMANAGER_H__

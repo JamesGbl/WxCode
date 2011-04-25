@@ -24,36 +24,61 @@
  * @date 07-February-2010
  * @version 0.0.1
  */
-#ifndef __IRCSessionEvents__
-#define __IRCSessionEvents__
+#ifndef __LIRCCSESSIONEVENTS_H__
+#define __LIRCCSESSIONEVENTS_H__
 
 #include <wx/event.h>
 
 #include "defs.h"
 
+typedef enum
+{
+	ID_LIRCC_CONNECT,
+	ID_LIRCC_CHAN_NICK,
+	ID_LIRCC_CHAN_QUIT,
+	ID_LIRCC_CHAN_JOIN,
+	ID_LIRCC_CHAN_PART,
+	ID_LIRCC_CHAN_MODE,
+	ID_LIRCC_USER_MODE,
+	ID_LIRCC_CHAN_TOPIC,
+	ID_LIRCC_CHAN_KICK,
+	ID_LIRCC_CHAN_MSG,
+	ID_LIRCC_USER_MSG,
+	ID_LIRCC_USER_NOTICE,
+	ID_LIRCC_CHAN_NOTICE,
+	ID_LIRCC_INVITE,
+	ID_LIRCC_CTCP_REQ,
+	ID_LIRCC_CTCP_REP,
+	ID_LIRCC_CTCP_ACTION,
+	ID_LIRCC_UNKNOWN,
+	ID_LIRCC_NUMERIC,
+	ID_LIRCC_DCC_CHAT_REQ,
+	ID_LIRCC_DCC_SEND_REQ
+}
+wxLIRCCSessionID;
+
 /** xvirc imports */
-class IRCSession;
+class wxLIRCCSession;
 
 /**
- * @class IRCSessionEvent
+ * @class wxLIRCCSessionEvent
  * @brief This is the event class for managing information about events in session
  * 
  * @author foldink (foldink@gmail.com)
  * @date 07-February-2010
  * @version 0.0.1
  */
-class WXDLLIMPEXP_LIBIRCLIENT IRCSessionEvent : public wxThreadEvent
+class WXDLLIMPEXP_LIBIRCLIENT wxLIRCCSessionEvent : public wxThreadEvent
 {
-public :
-	
+public:
 	/**
 	 * Default constructor,
 	 * @param commandType type of event this events is 
 	 * @param id event id fot generation
 	 * @param session session concerned by the event
 	 */
-	IRCSessionEvent(wxEventType commandType = wxEVT_NULL, int id = 0, 
-				IRCSession* session = 0L )
+	wxLIRCCSessionEvent(wxEventType commandType = wxEVT_NULL, int id = 0, 
+				wxLIRCCSession* session = 0L )
 				: wxThreadEvent(commandType, id),
 				m_session(session),
 				m_X(0),
@@ -65,7 +90,7 @@ public :
 	 * Copy constructor
 	 * This one is needed by wxWidgets events system
 	 */
-    IRCSessionEvent(const IRCSessionEvent& event)
+    wxLIRCCSessionEvent(const wxLIRCCSessionEvent& event)
 				: wxThreadEvent(event),
 				m_session(event.m_session),
 				m_X(event.m_X),
@@ -78,13 +103,13 @@ public :
 	/** 
 	 * Clone method, this one is requested too...
 	 */
-    virtual wxEvent *Clone() const { return new IRCSessionEvent(*this); }
+    virtual wxEvent *Clone() const { return new wxLIRCCSessionEvent(*this); }
 	
 	/** Get the session concerned by this event */
-    IRCSession* GetSession() const { return m_session; }
+    wxLIRCCSession* GetSession() const { return m_session; }
 	
 	/** Set the session concerned by this event */
-    void SetSession(IRCSession* session) { m_session = session; }
+    void SetSession(wxLIRCCSession* session) { m_session = session; }
 
 	/** Get the mouse position if one */
     int GetX() const { return m_X; }
@@ -118,7 +143,7 @@ public :
 
 protected:
 
-    IRCSession* m_session;
+    wxLIRCCSession* m_session;
 
     int m_X;
     int m_Y;
@@ -128,79 +153,79 @@ protected:
 	wxArrayString m_params;
 
 private:
-    DECLARE_DYNAMIC_CLASS(IRCSessionEvent)
+    DECLARE_DYNAMIC_CLASS(wxLIRCCSessionEvent)
 };
 
 /** define an event function pointer for wxWidgets defines */
-typedef void (wxEvtHandler::*IRCSessionEventFunction)(IRCSessionEvent&);
+typedef void (wxEvtHandler::*wxLIRCCSessionEventFunction)(wxLIRCCSessionEvent&);
 
-#define IRCSessionEventHandler(func) \
-    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(IRCSessionEventFunction, &func)
+#define wxLIRCCSessionEventHandler(func) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxLIRCCSessionEventFunction, &func)
 
 /**********************************************************************************************
  * SESSION EVENTS
 **********************************************************************************************/
-extern const wxEventType wxEVT_THREAD_IRC_CONNECT;
-#define EVT_THREAD_IRC_CONNECT(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CONNECT, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CONNECT;
+#define LIRCC_EVT_THREAD_CONNECT(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CONNECT, ID_LIRCC_CONNECT, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_NICK;
-#define EVT_THREAD_IRC_NICK(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_NICK, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_NICK;
+#define LIRCC_EVT_THREAD_NICK(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_NICK, ID_LIRCC_CHAN_NICK, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_QUIT;
-#define EVT_THREAD_IRC_QUIT(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_QUIT, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_QUIT;
+#define LIRCC_EVT_THREAD_QUIT(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_QUIT, ID_LIRCC_CHAN_QUIT, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_JOIN;
-#define EVT_THREAD_IRC_JOIN(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_JOIN, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_JOIN;
+#define LIRCC_EVT_THREAD_JOIN(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_JOIN, ID_CHANNEL_JOIN, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_PART;
-#define EVT_THREAD_IRC_PART(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_PART, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_PART;
+#define LIRCC_EVT_THREAD_PART(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_PART, ID_LIRCC_CHAN_JOIN, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_MODE;
-#define EVT_THREAD_IRC_MODE(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_MODE, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_MODE;
+#define LIRCC_EVT_THREAD_MODE(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_MODE, ID_LIRCC_CHAN_MODE, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_U_MODE;
-#define EVT_THREAD_IRC_U_MODE(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_U_MODE, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_U_MODE;
+#define LIRCC_EVT_THREAD_U_MODE(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_U_MODE, ID_LIRCC_USER_MODE, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_TOPIC;
-#define EVT_THREAD_IRC_TOPIC(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_TOPIC, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_TOPIC;
+#define LIRCC_EVT_THREAD_TOPIC(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_TOPIC, ID_LIRCC_CHAN_TOPIC, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_KICK;
-#define EVT_THREAD_IRC_KICK(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_KICK, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_KICK;
+#define LIRCC_EVT_THREAD_KICK(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_KICK, ID_LIRCC_CHAN_KICK, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_CHANMSG;
-#define EVT_THREAD_IRC_CHANMSG(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CHANMSG, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CHANMSG;
+#define LIRCC_EVT_THREAD_CHANMSG(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CHANMSG, ID_LIRCC_CHAN_MSG, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_PRIVMSG;
-#define EVT_THREAD_IRC_PRIVMSG(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_PRIVMSG, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_PRIVMSG;
+#define LIRCC_EVT_THREAD_PRIVMSG(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_PRIVMSG, ID_LIRCC_USER_MSG, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_NOTICE;
-#define EVT_THREAD_IRC_NOTICE(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_NOTICE, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_NOTICE;
+#define LIRCC_EVT_THREAD_NOTICE(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_NOTICE, ID_LIRCC_USER_NOTICE, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_CHAN_NOTICE;
-#define EVT_THREAD_IRC_CHAN_NOTICE(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CHAN_NOTICE, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CHAN_NOTICE;
+#define LIRCC_EVT_THREAD_CHAN_NOTICE(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CHAN_NOTICE, ID_LIRCC_CHAN_NOTICE, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_INVITE;
-#define EVT_THREAD_IRC_INVITE(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_INVITE, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_INVITE;
+#define LIRCC_EVT_THREAD_INVITE(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_INVITE, ID_LIRCC_INVITE, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_CTCPREP;
-#define EVT_THREAD_IRC_CTCPREP(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CTCPREP, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CTCPREQ;
+#define LIRCC_EVT_THREAD_CTCPREQ(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CTCPREQ, ID_LIRCC_CTCP_REQ, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_CTCPREQ;
-#define EVT_THREAD_IRC_CTCPREQ(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CTCPREQ, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CTCPREP;
+#define LIRCC_EVT_THREAD_CTCPREP(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CTCPREP, ID_LIRCC_CTCP_REP, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_CTCPACT;
-#define EVT_THREAD_IRC_CTCPACT(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_CTCPACT, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_CTCPACT;
+#define LIRCC_EVT_THREAD_CTCPACT(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_CTCPACT, ID_LIRCC_CTCP_ACTION, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_UNKNOWN;
-#define EVT_THREAD_IRC_UNKNOWN(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_UNKNOWN, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_UNKNOWN;
+#define LIRCC_EVT_THREAD_UNKNOWN(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_UNKNOWN, ID_LIRCC_UNKNOWN, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_NUMERIC;
-#define EVT_THREAD_IRC_NUMERIC(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_NUMERIC, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_NUMERIC;
+#define LIRCC_EVT_THREAD_NUMERIC(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_NUMERIC, ID_LIRCC_NUMERIC, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_DCCCHAT;
-#define EVT_THREAD_IRC_DCCCHAT(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_DCCCHAT, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_DCCCHAT;
+#define LIRCC_EVT_THREAD_DCCCHAT(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_DCCCHAT, ID_LIRCC_DCC_CHAT_REQ, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL ),
 
-extern const wxEventType wxEVT_THREAD_IRC_DCCSEND;
-#define EVT_THREAD_IRC_DCCSEND(fn) DECLARE_EVENT_TABLE_ENTRY( wxEVT_THREAD_IRC_DCCSEND, -1, -1, (wxObjectEventFunction)(wxEventFunction)(IRCSessionEventFunction)&fn, (wxObject *) NULL ),
+extern const wxEventType wxLIRCC_EVT_THREAD_DCCSEND;
+#define LIRCC_EVT_THREAD_DCCSEND(fn) DECLARE_EVENT_TABLE_ENTRY( wxLIRCC_EVT_THREAD_DCCSEND, ID_LIRCC_DCC_SEND_REQ, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxLIRCCSessionEventFunction)&fn, (wxObject *) NULL )
 
-#endif
+#endif //__LIRCCSESSIONEVENTS_H__
