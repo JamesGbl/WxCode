@@ -1146,7 +1146,7 @@ void wxSTEditorMenuManager::DestroyMenuItem(wxMenu *menu, int menu_id, bool clea
 
     // find any separators that are next to each other and delete them
     wxMenuItemList &menuItems = menu->GetMenuItems();
-    wxwxMenuItemListNode *node = menuItems.GetFirst();
+    wxMenuItemList::compatibility_iterator node = menuItems.GetFirst();
 
     // delete leading separator
     if (node && wxStaticCast(node->GetData(), wxMenuItem)->IsSeparator())
