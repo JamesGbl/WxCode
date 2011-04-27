@@ -126,11 +126,11 @@ void wxDrawnShape::Rotate(double x, double y, double theta)
   // Rotate attachment points
   double sinTheta = (double)sin(actualTheta);
   double cosTheta = (double)cos(actualTheta);
-  for (wxNode* node = m_attachmentPoints.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_attachmentPoints.begin();
+       it != m_attachmentPoints.end();
+       it++)
   {
-    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
+    wxAttachmentPoint* point = wxStaticCast(*it, wxAttachmentPoint);
     double x1 = point->m_x;
     double y1 = point->m_y;
     point->m_x = x1*cosTheta - y1*sinTheta + x*(1.0 - cosTheta) + y*sinTheta;
@@ -182,9 +182,9 @@ void wxDrawnShape::OnDrawOutline(wxDC& dc, double x, double y, double w, double 
 {
     if (m_metafiles[m_currentAngle].GetOutlineOp() != -1)
     {
-        wxNode* node = m_metafiles[m_currentAngle].GetOps().Item(m_metafiles[m_currentAngle].GetOutlineOp());
+        wxObjectList::compatibility_iterator node = m_metafiles[m_currentAngle].GetOps().Item(m_metafiles[m_currentAngle].GetOutlineOp());
         wxASSERT (node);
-        wxDrawOp* op = (wxDrawOp*) node->GetData();
+        wxDrawOp* op = (wxDrawOp*)node->GetData();
 
         if (op->OnDrawOutline(dc, x, y, w, h, m_width, m_height))
             return;
@@ -202,8 +202,8 @@ bool wxDrawnShape::GetPerimeterPoint(double x1, double y1,
 {
     if (m_metafiles[m_currentAngle].GetOutlineOp() != -1)
     {
-        wxNode* node = m_metafiles[m_currentAngle].GetOps().Item(m_metafiles[m_currentAngle].GetOutlineOp());
-        wxASSERT (node != NULL);
+        wxObjectList::compatibility_iterator node = m_metafiles[m_currentAngle].GetOps().Item(m_metafiles[m_currentAngle].GetOutlineOp());
+        wxASSERT (node);
         wxDrawOp* op = (wxDrawOp*) node->GetData();
 
         if (op->GetPerimeterPoint(x1, y1, x2, y2, x3, y3, GetX(), GetY(), GetAttachmentMode()))
@@ -412,7 +412,7 @@ void wxOpSetGDI::Do(wxDC& dc, double WXUNUSED(xoffset), double WXUNUSED(yoffset)
       }
       else
       {
-        wxNode *node = m_image->m_gdiObjects.Item(m_gdiIndex);
+        wxObjectList::compatibility_iterator node = m_image->m_gdiObjects.Item(m_gdiIndex);
         if (node)
         {
           wxPen *pen = (wxPen *)node->GetData();
@@ -445,7 +445,7 @@ void wxOpSetGDI::Do(wxDC& dc, double WXUNUSED(xoffset), double WXUNUSED(yoffset)
       }
       else
       {
-        wxNode *node = m_image->m_gdiObjects.Item(m_gdiIndex);
+        wxObjectList::compatibility_iterator node = m_image->m_gdiObjects.Item(m_gdiIndex);
         if (node)
         {
           wxBrush *brush = (wxBrush *)node->GetData();
@@ -457,7 +457,7 @@ void wxOpSetGDI::Do(wxDC& dc, double WXUNUSED(xoffset), double WXUNUSED(yoffset)
     }
     case DRAWOP_SET_FONT:
     {
-      wxNode *node = m_image->m_gdiObjects.Item(m_gdiIndex);
+      wxObjectList::compatibility_iterator node = m_image->m_gdiObjects.Item(m_gdiIndex);
       if (node)
       {
         wxFont *font = (wxFont *)node->GetData();
@@ -1362,11 +1362,11 @@ wxPseudoMetaFile::~wxPseudoMetaFile()
 
 void wxPseudoMetaFile::Clear()
 {
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     delete op;
   }
   m_ops.Clear();
@@ -1378,22 +1378,22 @@ void wxPseudoMetaFile::Clear()
 
 void wxPseudoMetaFile::Draw(wxDC& dc, double xoffset, double yoffset)
 {
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     op->Do(dc, xoffset, yoffset);
   }
 }
 
 void wxPseudoMetaFile::Scale(double sx, double sy)
 {
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     op->Scale(sx, sy);
   }
   m_width *= sx;
@@ -1402,11 +1402,11 @@ void wxPseudoMetaFile::Scale(double sx, double sy)
 
 void wxPseudoMetaFile::Translate(double x, double y)
 {
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     op->Translate(x, y);
   }
 }
@@ -1418,11 +1418,11 @@ void wxPseudoMetaFile::Rotate(double x, double y, double theta)
   double cosTheta = (double)cos(theta1);
   double sinTheta = (double)sin(theta1);
 
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     op->Rotate(x, y, theta, sinTheta, cosTheta);
   }
   m_currentRotation = theta;
@@ -1748,7 +1748,7 @@ void wxPseudoMetaFile::ReadAttributes(wxExpr *clause, int whichAngle)
 // Does the copying for this object
 void wxPseudoMetaFile::Copy(wxPseudoMetaFile& copy)
 {
-  wxNode* node;
+  wxObjectList::iterator it;
 
   copy.Clear();
 
@@ -1761,35 +1761,35 @@ void wxPseudoMetaFile::Copy(wxPseudoMetaFile& copy)
   copy.m_outlineOp = m_outlineOp;
 
   // Copy the GDI objects
-  for (node = m_gdiObjects.GetFirst();
-       node;
-       node = node->GetNext())
+  for (it = m_gdiObjects.begin();
+       it != m_gdiObjects.end();
+       it++)
   {
-    wxObject *obj = (wxObject *)node->GetData();
+    wxObject* obj = *it;
     copy.m_gdiObjects.Append(obj);
   }
 
   // Copy the operations
-  for (node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp*op = (wxDrawOp*)*it;
     copy.m_ops.Append(op->Copy(&copy));
   }
 
   // Copy the outline/fill operations
-  for (node = m_outlineColours.GetFirst();
-       node;
-       node = node->GetNext())
+  for (it = m_outlineColours.begin();
+       it != m_outlineColours.end();
+       it++)
   {
-    copy.m_outlineColours.Append((wxObject *)node->GetData());
+    copy.m_outlineColours.Append(*it);
   }
-  for (node = m_fillColours.GetFirst();
-       node;
-       node = node->GetNext())
+  for (it = m_fillColours.begin();
+       it != m_fillColours.end();
+       it++)
   {
-    copy.m_fillColours.Append((wxObject *)node->GetData());
+    copy.m_fillColours.Append(*it);
   }
 }
 
@@ -1816,11 +1816,11 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
   double lastY = 0.0;
 
   // Convert from metafile records to wxDrawnShape records
-  for (wxNode* node = metaFile->metaRecords.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = metaFile->metaRecords.begin();
+       it != metaFile->metaRecords.end();
+       it++)
   {
-    wxMetaRecord *record = (wxMetaRecord *)node->GetData();
+    wxMetaRecord *record = (wxMetaRecord *)*it;
     switch (record->metaFunction)
     {
       case META_SETBKCOLOR:
@@ -1992,7 +1992,7 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
       {
         // The pen, brush etc. has already been created when the metafile
         // was read in, so we don't create it - we set it.
-        wxNode *recNode = metaFile->gdiObjects.Item((int)record->param2);
+        wxObjectList::compatibility_iterator recNode = metaFile->gdiObjects.Item((int)record->param2);
         if (recNode)
         {
           wxMetaRecord *gdiRec = (wxMetaRecord *)recNode->GetData();
@@ -2166,11 +2166,11 @@ void wxPseudoMetaFile::GetBounds(double *boundMinX, double *boundMinY, double *b
   double minX = (double) 99999.9;
   double minY = (double) 99999.9;
 
-  for (wxNode* node = m_ops.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_ops.begin();
+       it != m_ops.end();
+       it++)
   {
-    wxDrawOp *op = (wxDrawOp *)node->GetData();
+    wxDrawOp* op = (wxDrawOp*)*it;
     switch (op->GetOp())
     {
       case DRAWOP_DRAW_LINE:

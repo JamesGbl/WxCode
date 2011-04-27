@@ -84,11 +84,11 @@ void wxDividedShape::OnDrawContents(wxDC& dc)
   double yMargin = 2;
   dc.SetBackgroundMode(wxTRANSPARENT);
 
-  for (wxObjectList::compatibility_iterator node = GetRegions().GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = GetRegions().begin();
+       it != GetRegions().end();
+       it++)
   {
-    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
+    wxShapeRegion* region = wxStaticCast(*it, wxShapeRegion);
     dc.SetFont(* region->GetFont());
     dc.SetTextForeground(region->GetActualColourObject());
 
@@ -104,7 +104,7 @@ void wxDividedShape::OnDrawContents(wxDC& dc)
     oglDrawFormattedText(dc, &region->m_formattedText,
              (double)(centreX), (double)(centreY), (double)(m_width-2*xMargin), (double)(actualY - currentY - 2*yMargin),
              region->m_formatMode);
-    if ((y <= maxY) && (node->GetNext()))
+    if ((y <= maxY) && ((++it) != GetRegions().end()))
     {
       wxPen *regionPen = region->GetActualPen();
       if (regionPen)
@@ -138,11 +138,11 @@ void wxDividedShape::SetRegionSizes()
 //  double leftX = (double)(m_xpos - (m_width / 2.0));
 //  double rightX = (double)(m_xpos + (m_width / 2.0));
 
-  for (wxObjectList::compatibility_iterator node = GetRegions().GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = GetRegions().begin();
+       it != GetRegions().end();
+       it++)
   {
-    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
+    wxShapeRegion* region = wxStaticCast(*it, wxShapeRegion);
     double proportion =
       region->m_regionProportionY <= 0.0 ? defaultProportion : region->m_regionProportionY;
 
@@ -279,11 +279,11 @@ int wxDividedShape::GetNumberOfAttachments() const
   int n = (GetRegions().GetCount() * 2) + 2;
 
   int maxN = n - 1;
-  for (wxObjectList::compatibility_iterator node = m_attachmentPoints.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::const_iterator it = m_attachmentPoints.begin();
+       it != m_attachmentPoints.end();
+       it++)
   {
-    wxAttachmentPoint* point = wxStaticCast(node->GetData(), wxAttachmentPoint);
+    wxAttachmentPoint* point = wxStaticCast(*it, wxAttachmentPoint);
     if (point->m_id > maxN)
     {
       maxN = point->m_id;
@@ -325,18 +325,18 @@ void wxDividedShape::MakeMandatoryControlPoints()
   double maxY = (double)(GetY() + (m_height / 2.0));
 
   int i = 0;
-  for (wxObjectList::compatibility_iterator node = GetRegions().GetFirst();
-       node;
-       node = node->GetNext(), i++)
+  for (wxObjectList::iterator it = GetRegions().begin();
+       it != GetRegions().end();
+       it++, i++)
   {
-    wxShapeRegion* region = wxStaticCast(node->GetData(), wxShapeRegion);
+    wxShapeRegion* region = wxStaticCast(*it, wxShapeRegion);
 
     double proportion = region->m_regionProportionY;
 
     double y = currentY + m_height*proportion;
     double actualY = (double)(maxY < y ? maxY : y);
 
-    if (node->GetNext())
+    if ((it++) != GetRegions().end())
     {
       wxDividedShapeControlPoint *controlPoint =
         new wxDividedShapeControlPoint(m_canvas, this, i, CONTROL_POINT_SIZE, 0.0, (double)(actualY - GetY()), 0);
@@ -362,11 +362,11 @@ void wxDividedShape::ResetMandatoryControlPoints()
   double maxY = (double)(GetY() + (m_height / 2.0));
 
   int i = 0;
-  for (wxObjectList::compatibility_iterator node = m_controlPoints.GetFirst();
-       node;
-       node = node->GetNext())
+  for (wxObjectList::iterator it = m_controlPoints.begin();
+       it != m_controlPoints.end();
+       it++)
   {
-    wxControlPoint* controlPoint = wxStaticCast(node->GetData(), wxControlPoint);
+    wxControlPoint* controlPoint = wxStaticCast(*it, wxControlPoint);
     if (controlPoint->IsKindOf(CLASSINFO(wxDividedShapeControlPoint)))
     {
       wxObjectList::compatibility_iterator node1 = GetRegions().Item(i);
