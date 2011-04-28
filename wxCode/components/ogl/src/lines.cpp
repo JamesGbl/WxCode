@@ -1566,7 +1566,7 @@ void wxLineShape::Copy(wxShape& copy)
   wxObjectList::iterator it;
   for (it = m_lineOrientations.begin();
        it != m_lineOrientations.end();
-       it)
+       it++)
   {
     lineCopy.m_lineOrientations.Append(*it);
   }
