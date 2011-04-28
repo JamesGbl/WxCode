@@ -36,7 +36,7 @@
 class wxLIRCCSession;
 
 /** define an array of session, to store any new session in this manager */
-WX_DEFINE_ARRAY(wxLIRCCSession*, wxLIRCCSessions);
+WX_DEFINE_ARRAY_PTR( wxLIRCCSession *, wxLIRCCSessions );
 
 /**
  * @class wxLIRCCSessionManager

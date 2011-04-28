@@ -29,6 +29,7 @@
 IMPLEMENT_DYNAMIC_CLASS(wxLIRCCSessionEvent,wxCommandEvent);
 
 const wxEventType wxLIRCC_EVT_THREAD_CONNECT = wxNewEventType();
+const wxEventType wxLIRCC_EVT_THREAD_DISCONNECT = wxNewEventType();
 const wxEventType wxLIRCC_EVT_THREAD_NICK = wxNewEventType();
 const wxEventType wxLIRCC_EVT_THREAD_QUIT = wxNewEventType();
 const wxEventType wxLIRCC_EVT_THREAD_JOIN = wxNewEventType();
