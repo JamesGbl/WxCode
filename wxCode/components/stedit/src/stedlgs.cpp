@@ -1665,6 +1665,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
     m_listBox = wxStaticCast(FindWindow(ID_STEDLG_WINDOWS_LISTBOX), wxListBox);
 
     UpdateListBox();
+    m_listBox->SetSelection(m_notebook->GetSelection());
     UpdateButtons();
     Centre();
     SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
