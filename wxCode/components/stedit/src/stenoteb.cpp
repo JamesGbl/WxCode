@@ -744,15 +744,23 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
         {
             SetSelection(page);
         }
-        else
+        else if (GetEditor()->IsModified() || GetEditor()->GetDocumentSaved()) // non-empty editor?
         {
+            // new splitter+editor
             wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
             wxCHECK_MSG(splitter, false, wxT("Invalid splitter"));
-            splitter->GetEditor()->LoadFile(fileName);
-            ok = InsertEditorSplitter(-1, splitter, true);
+            ok = splitter->GetEditor()->LoadFile(fileName);
+            if (ok)
+            {
+                ok = InsertEditorSplitter(-1, splitter, true);
+            }
+        }
+        else // empty editor
+        {
+            // reuse editor
+            ok = GetEditor()->LoadFile(fileName);
         }
     }
-
     return ok;
 }
 
