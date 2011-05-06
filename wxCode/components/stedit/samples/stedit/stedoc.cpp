@@ -17,11 +17,13 @@ inline wxDocTemplate* wxDocManager_FindTemplate(wxDocManager* docManager, const 
 #else
 static wxDocTemplate* wxDocManager_FindTemplate(wxDocManager* docManager, const wxClassInfo* classinfo)
 {
-   for (wxList::compatibility_iterator node = docManager->GetTemplates().GetFirst();
-        node;
-        node = node->GetNext())
+   wxList& list = docManager->GetTemplates();
+   
+   for (wxList::iterator it = list.begin();
+        it != list.end();
+        it++)
    {
-      wxDocTemplate* t = wxStaticCast(node->GetData(), wxDocTemplate);
+      wxDocTemplate* t = wxStaticCast(*it, wxDocTemplate);
       if (classinfo == t->GetDocClassInfo())
       {
          return t;
