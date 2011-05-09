@@ -3,6 +3,14 @@
 //#define WX_PRECOMP
 #include <wx/wxprec.h>
 
+#ifndef WXPRECOMP
+    #include <wx/menu.h>
+    #include <wx/toolbar.h> 
+    #include <wx/combobox.h> 
+    #include <wx/msgdlg.h>
+    #include <wx/filedlg.h>
+#endif // WXPRECOMP
+
 #include <wx/tokenzr.h>
 #include <wx/config.h>
 #include <wx/filename.h>

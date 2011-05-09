@@ -1030,7 +1030,7 @@ wxAcceleratorTable wxSTEditorMenuManager::CreateAcceleratorTable(wxArrayPtrVoid&
         return wxAcceleratorTable();
 
     return wxAcceleratorTable(entries.GetCount(),
-                              (wxAcceleratorEntry*)entries.begin());
+                              (wxAcceleratorEntry*)&entries.Item(0));
 }
 wxAcceleratorTable wxSTEditorMenuManager::CreateAcceleratorTable(const wxMenu* menu,
                                                                  const wxMenuBar* menuBar)

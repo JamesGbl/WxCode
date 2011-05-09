@@ -17,6 +17,7 @@
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 class WXDLLIMPEXP_FWD_CORE wxRadioButton;
+class WXDLLIMPEXP_FWD_CORE wxComboBox;
 
 //-----------------------------------------------------------------------------
 // Static functions for prepending strings to wxArrayString and wxComboBoxes

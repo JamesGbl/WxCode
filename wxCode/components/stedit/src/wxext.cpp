@@ -18,6 +18,12 @@
 
 #include "wxext.h"
 
+#ifndef WXPRECOMP
+    #include <wx/settings.h>
+    #include <wx/app.h>
+    #include <wx/choicdlg.h>
+#endif // WXPRECOMP
+
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(AcceleratorArray)
 

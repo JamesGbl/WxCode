@@ -45,6 +45,9 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/wfstream.h>        // wxFileInputStream
 #include <wx/numdlg.h>
 #include <wx/aboutdlg.h>
+#include <wx/scrolbar.h>
+#include <wx/choicdlg.h>
+#include <wx/textdlg.h>
 
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steexprt.h>
@@ -1898,8 +1901,9 @@ wxString wxSTEditor::GetAutoCompleteKeyWords(const wxString& root)
     wxString words;
     if (root.IsEmpty()) return words;
 
-    wxSortedArrayString wordArray;
+    wxArrayString wordArray;
     DoGetAutoCompleteKeyWords(root, wordArray);
+    wordArray.Sort();
 
     size_t n, word_count = wordArray.GetCount();
     if (word_count > 0)
@@ -2028,10 +2032,13 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
 
         // wordsNear contains a list of words separated by single spaces and with a space
         // at the start and end. This makes it easy to search for words.
-        wxSortedArrayString wordsNear; //(autoCompleteIgnoreCase ? wxSTE_StringSortNoCase : wxSTE_StringSort);
+        wxArrayString wordsNear; //(autoCompleteIgnoreCase ? wxSTE_StringSortNoCase : wxSTE_StringSort);
 
         if (add_keywords)
+        {
             DoGetAutoCompleteKeyWords(root, wordsNear);
+            wordsNear.Sort();
+        }
 
         for (;;) {      // search all the document
                 //ft.chrg.cpMax = doclen;

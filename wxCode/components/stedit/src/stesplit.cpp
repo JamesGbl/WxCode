@@ -16,6 +16,12 @@
 #include <wx/stedit/steprefs.h>
 #include <wx/stedit/stedlgs.h>
 
+#ifndef WXPRECOMP
+    #include <wx/scrolbar.h>
+    #include <wx/button.h>
+    #include <wx/dcclient.h>
+#endif // WXPRECOMP
+
 //-----------------------------------------------------------------------------
 // wxSTEditorScrollBar
 //-----------------------------------------------------------------------------

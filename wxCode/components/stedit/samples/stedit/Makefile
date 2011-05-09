@@ -27,13 +27,14 @@ WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
 # ----------------------------------------------------------------------------
 # Settings for the library
 
-WXSTEDIT_LIBDIR  = $(WXLIBDIR)
+#WXSTEDIT_LIBDIR  = $(WXLIBDIR)
+WXSTEDIT_LIBDIR  = ../../lib
 WXSTEDIT_LIBNAME = $(WXBASENAME)_stedit-$(WXRELEASE)
 WXSTEDIT_LIBNAME := $(patsubst wx_%,wxcode_%,$(WXSTEDIT_LIBNAME))
 
 LIBVERSION_CURRENT  = 1
-LIBVERSION_REVISION = 0
-LIBVERSION_AGE      = 0
+LIBVERSION_REVISION = 2
+LIBVERSION_AGE      = 6
 
 TARGET_LIBNAME = lib$(WXSTEDIT_LIBNAME)
 TARGET_LIBNAME_STATIC = $(TARGET_LIBNAME).a
@@ -81,8 +82,7 @@ $(WXSTEDIT_LIBNAME) :
 #	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
 
 $(PROGRAM): $(OBJECTS) $(TARGET_LIB_SHARED)
-	$(CXX) $(LDFLAGS_EXE) -o wxstedit $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
-
+	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath ../../lib -o wxstedit $(OBJECTS) $(LDLIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
 
 
 # wxstedit program using static stedit library
