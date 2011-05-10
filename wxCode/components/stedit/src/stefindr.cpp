@@ -214,11 +214,11 @@ wxSizer *FindSizerWindow(wxWindow *win, wxSizer *topSizer)
 {
     wxSizerItemList &sizerList = topSizer->GetChildren();
 
-    for (wxSizerItemList::compatibility_iterator node = sizerList.GetFirst();
-         node;
-         node = node->GetNext())
+    for (wxSizerItemList::iterator it = sizerList.begin();
+         it != sizerList.end();
+         it++)
     {
-        wxSizerItem *item = (wxSizerItem*)node->GetData();
+        wxSizerItem *item = (wxSizerItem*)*it;
         if (item->IsWindow() && (item->GetWindow() == win))
             return topSizer;
         else if (item->IsSizer())

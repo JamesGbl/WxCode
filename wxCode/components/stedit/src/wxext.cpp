@@ -368,11 +368,13 @@ static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxAcceleratorEntry& 
 
 static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
 {
-   for (wxMenuItemList::compatibility_iterator node = menu->GetMenuItems().GetFirst();
-        node;
-        node = node->GetNext())
+   wxMenuItemList& list = menu->GetMenuItems();
+
+   for (wxMenuItemList::iterator it = list.begin();
+        it != list.end();
+        it++)
    {
-      wxMenuItem* item = node->GetData();
+      wxMenuItem* item = *it;
       if (item->IsSubMenu())
       {
          wxMenu_SetAccelText(item->GetSubMenu(), accel);

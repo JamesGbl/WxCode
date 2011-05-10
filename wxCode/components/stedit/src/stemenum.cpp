@@ -971,11 +971,12 @@ static bool AddAccelFromMenuItem(const wxMenu* menu, wxArrayPtrVoid& entries)
 
     bool ret = false;
     const wxMenuItemList& itemList = menu->GetMenuItems();
-    for ( wxMenuItemList::compatibility_iterator node = itemList.GetFirst();
-          node;
-          node = node->GetNext() )
+    
+    for ( wxMenuItemList::const_iterator it = itemList.begin();
+          it != itemList.end();
+          it++)
     {
-        wxMenuItem *menuItem = node->GetData();
+        wxMenuItem *menuItem = *it;
         if (!menuItem)
             continue;
 
