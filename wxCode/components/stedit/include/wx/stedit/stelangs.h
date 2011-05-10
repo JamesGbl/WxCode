@@ -282,11 +282,11 @@ typedef struct STE_Language
     const char* filePattern;    // file extensions, "*.c;*.cc;*.cpp..."
     STE_LexerStyles* styles;    // maps Scintilla styles to STE, always have 1
     size_t  styles_count;       // number of styles mapped
-    STE_LexerWords* words;      // may be NULL for no words
+    const STE_LexerWords* words;      // may be NULL for no words
     size_t words_count;         // number of words
-    STE_LexerComments* comment; // may be NULL for no comments
-    STE_LexerBlock*    block;   // may be NULL for no blocks
-    STE_LexerPreproc*  preproc; // may be NULL for no preprocessor
+    const STE_LexerComments* comment; // may be NULL for no comments
+    const STE_LexerBlock*    block;   // may be NULL for no blocks
+    const STE_LexerPreproc*  preproc; // may be NULL for no preprocessor
     int braces_style;           // Scintilla style used for braces
     int folds;                  // what folds are available STE_FOLD_XXX (FIXME unused)
     int flags;                  // user defined flags
