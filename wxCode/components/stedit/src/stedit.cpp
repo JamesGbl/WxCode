@@ -2587,15 +2587,19 @@ static bool IsTextAvailable()
     {
         wxDF_TEXT,
         // wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
-        wxDF_UNICODETEXT
-#ifdef __WXMSW__
+
+#   if wxUSE_UNICODE
+        wxDF_UNICODETEXT // asserts in ANSI build
+#   endif // wxUSE_UNICODE
+
+#   ifdef __WXMSW__
         ,wxDF_HTML         // Only supported in MSW
-#endif 
+#   endif // __WXMSW__
     };
     return wxClipboard_IsAvailable(text, WXSIZEOF(text));
-#else
+#else 
     return false;
-#endif
+#endif // wxUSE_CLIPBOARD
 }
 
 void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
