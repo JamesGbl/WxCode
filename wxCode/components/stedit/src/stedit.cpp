@@ -2585,11 +2585,11 @@ static bool IsTextAvailable()
 #if wxUSE_CLIPBOARD
     const enum wxDataFormatId text[] =
     {
-        wxDF_TEXT,
-        // wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
+        wxDF_TEXT
+      //,wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
 
 #   if wxUSE_UNICODE
-        wxDF_UNICODETEXT // asserts in ANSI build
+        ,wxDF_UNICODETEXT // asserts in ANSI build
 #   endif // wxUSE_UNICODE
 
 #   ifdef __WXMSW__
@@ -3942,7 +3942,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2712")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2715")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
