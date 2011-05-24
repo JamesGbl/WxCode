@@ -20,6 +20,7 @@
 
 WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
+WX_DECLARE_OBJARRAY(wxFileName, FileNameArray);
 
 WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
 WXDLLIMPEXP_STEDIT bool wxLocale_GetSupportedLanguages(LanguageArray*);

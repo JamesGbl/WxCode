@@ -26,6 +26,7 @@
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(AcceleratorArray)
+WX_DEFINE_OBJARRAY(FileNameArray)
 
 const wxSize wxIconSize_System     (wxSystemSettings::GetMetric(wxSYS_ICON_X     ), wxSystemSettings::GetMetric(wxSYS_ICON_Y     ));
 const wxSize wxIconSize_SystemSmall(wxSystemSettings::GetMetric(wxSYS_SMALLICON_X), wxSystemSettings::GetMetric(wxSYS_SMALLICON_Y));

@@ -12,8 +12,9 @@
 #define _STENOTEB_H_
 
 #include <wx/notebook.h>
-
 #include <wx/stedit/stedefs.h>
+
+class FileNameArray;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorNotebook - a wxNotebook of wxSTEditorSplitters
@@ -104,8 +105,11 @@ public:
     // Load file(s) into new page(s), if filenames is NULL, use wxFileDialog
     virtual bool LoadFiles( wxArrayString *fileNames = NULL,
                             const wxString &extensions = wxEmptyString  );
+    bool LoadFiles( const FileNameArray *fileNames,
+                    const wxString &extensions = wxEmptyString  );
     // Save all the opened files if modified
     virtual void SaveAllFiles();
+
 
     // Runs through all pages and if IsModified popup a message box asking if the user wants to save the file
     //   returns false if wxCANCEL was pressed, else true

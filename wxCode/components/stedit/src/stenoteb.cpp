@@ -831,6 +831,23 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
     return true;
 }
 
+bool wxSTEditorNotebook::LoadFiles( const FileNameArray* filePaths_,
+                                    const wxString &extensions)
+{
+    wxArrayString filePaths;
+
+    if (filePaths_)
+    {
+        for (size_t i = 0, count = filePaths_->GetCount();
+             i < count;
+             i++)
+        {
+            filePaths.Add(filePaths_->Item(i).GetFullPath());
+        }
+    }
+    return LoadFiles(filePaths_ ? &filePaths : NULL, extensions);
+}
+
 void wxSTEditorNotebook::SaveAllFiles()
 {
     int n_page = GetPageCount();
