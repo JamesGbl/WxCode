@@ -39,7 +39,7 @@ protected:
     wxSTEditorFrame* m_frame;
 
     wxSTEditorOptions m_steOptions;
-    wxArrayString m_fileNames;      // command line filenames
+    FileNameArray m_fileNames;      // command line filenames
     bool m_recurse_dirs;            // command line option to recurse dirs
     enum wxLanguage m_lang;         // command line language
     wxLocale m_locale;

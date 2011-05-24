@@ -288,8 +288,8 @@ bool wxStEditApp::OnInit()
     // ------------------------------------------------------------------------
     // handle loading the files
     size_t n;
-    wxArrayString badFileNames;
-    wxArrayString fileNames = m_fileNames;
+    FileNameArray badFileNames;
+    FileNameArray fileNames = m_fileNames;
 
     // handle recursive file loading
     if (m_recurse_dirs && m_frame->GetEditorNotebook())
@@ -316,20 +316,24 @@ bool wxStEditApp::OnInit()
 
         //for (n=0; n < recurseFileNames.GetCount(); n++)
         //  { wxPrintf(wxT("Loading file '%s'\n"), recurseFileNames[n].wx_str()); fflush(stdout); }
-
-        fileNames = recurseFileNames; // these are really the files to open
+        
+        fileNames.Clear();
+        for (n = 0; n < recurseFileNames.GetCount(); n++)
+        {
+            fileNames.Add(wxFileName(recurseFileNames.Item(n))); // these are really the files to open
+        }
     }
 
     // if the files have *, ? or are directories, don't try to load them
     for (n = 0; n < fileNames.GetCount(); n++)
     {
-        if (wxIsWild(fileNames[n]))
+        if (wxIsWild(fileNames[n].GetFullPath()))
         {
             badFileNames.Add(fileNames[n]);
             fileNames.RemoveAt(n);
             n--;
         }
-        else if (wxDirExists(fileNames[n]))
+        else if (wxDirExists(fileNames[n].GetFullPath()))
         {
             fileNames.RemoveAt(n);
             n--;
@@ -339,7 +343,7 @@ bool wxStEditApp::OnInit()
     // If there are any good files left, try to load them
     if (fileNames.GetCount() > 0u)
     {
-        if (wxFileExists(fileNames[0]))
+        if (fileNames[0].FileExists())
             m_frame->GetEditor()->LoadFile( fileNames[0] );
         else
         {
@@ -362,7 +366,7 @@ bool wxStEditApp::OnInit()
     {
         wxString msg(_("There was a problem trying to load file(s):\n"));
         for (n=0; n < badFileNames.GetCount(); n++)
-            msg += wxT("'") + badFileNames[n] + wxT("'\n");
+            msg += wxT("'") + badFileNames[n].GetFullPath() + wxT("'\n");
 
         wxMessageBox(msg, _("Unable to load file(s)"), wxOK|wxICON_ERROR,
                      m_frame);
@@ -460,7 +464,7 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
     // gather up all the filenames to load
     size_t n, count = parser.GetParamCount();
     for (n = 0; n < count; n++)
-        m_fileNames.Add(parser.GetParam(n));
+        m_fileNames.Add(wxFileName(parser.GetParam(n)));
 
     wxString str;
     if (parser.Found(cmdLineDesc[CMDLINE_PARAM_LANG].longName, &str))
