@@ -28,7 +28,9 @@ public:
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
+protected:
     void CreateShell();
+    wxSTEditorFrame* CreateMainFrame();
     wxFrame* CreateHelpFrame(const wxString& caption, const char* text);
     void OnMenuEvent(wxCommandEvent& event);
     void OnSTEShellEvent(wxSTEditorEvent& event);

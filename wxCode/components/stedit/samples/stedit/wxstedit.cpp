@@ -73,7 +73,8 @@ enum Menu_IDs
 #if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
     ID_SHOW_USAGE,
 #endif
-    ID_TEST_STESHELL
+    ID_TEST_STESHELL,
+    ID_NEW_WINDOW
 };
 
 // ----------------------------------------------------------------------------
@@ -124,6 +125,68 @@ wxStEditApp::wxStEditApp() : wxApp(),
     m_frame = NULL;
     m_lang = wxLANGUAGE_DEFAULT;
     m_recurse_dirs = false;
+}
+
+wxSTEditorFrame* wxStEditApp::CreateMainFrame()
+{
+    wxSTEditorFrame* frame = new wxSTEditorFrame();
+    if (frame->Create())
+    {
+        // ------------------------------------------------------------------------
+        // load the prefs/style/langs from the config, if we're using one
+        if (frame->GetConfigBase())
+            m_steOptions.LoadConfig(*frame->GetConfigBase());
+
+        // must call this if you want any of the options, else blank frame
+        frame->CreateOptions(m_steOptions);
+
+        // Get the "Help" menu
+        wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
+
+        // Add our help dialogs
+        menu->Append(ID_SHOW_HELP, wxGetStockLabel(wxID_HELP), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
+        menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
+
+        // just use connect here, we could also use static event tables, but this
+        //  is easy enough to do.
+        frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
+                         wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
+        frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
+                         wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
+    #if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
+        menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), wxString::Format(_("Show command line help")));
+        frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
+                         wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
+    #endif
+        // add menu item for testing the shell
+        menu->AppendSeparator();
+        menu->Append(ID_TEST_STESHELL, _("Test STE shell..."), _("Test the STE shell component"));
+        frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
+                         wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
+
+        menu->AppendSeparator();
+        wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
+        item->SetBitmap(wxBitmap(pencil16_xpm)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
+        menu->Append(item);
+
+        ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
+        
+        wxMenuBar* menubar = frame->GetMenuBar();
+        menubar->Append(menu, wxGetStockLabelEx(wxID_HELP));
+
+        item = menubar->FindItem(ID_STN_WINDOWS);
+        if (item)
+        {
+            item->GetMenu()->Append(ID_NEW_WINDOW, _("&New"));
+            frame->Connect(ID_NEW_WINDOW, wxEVT_COMMAND_MENU_SELECTED,
+                         wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
+        }    
+    }
+    else
+    {
+       wxDELETE(frame);
+    }
+    return frame;
 }
 
 bool wxStEditApp::OnInit()
@@ -220,48 +283,7 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
-    m_frame = new wxSTEditorFrame();
-    m_frame->Create();
-
-    // ------------------------------------------------------------------------
-    // load the prefs/style/langs from the config, if we're using one
-    if (m_frame->GetConfigBase())
-        m_steOptions.LoadConfig(*m_frame->GetConfigBase());
-
-    // must call this if you want any of the options, else blank frame
-    m_frame->CreateOptions(m_steOptions);
-
-    // Get the "Help" menu
-    wxMenu* menu = new wxMenu; //frame->GetMenuBar()->GetMenu(frame->GetMenuBar()->GetMenuCount()-1);
-
-    // Add our help dialogs
-    menu->Append(ID_SHOW_HELP, wxGetStockLabel(wxID_HELP), wxString::Format(_("Show help on using %s"), STE_APPDISPLAYNAME));
-    menu->Append(ID_SHOW_README, _("Programming help..."), wxString::Format(_("Show help on the %s library"), STE_APPDISPLAYNAME));
-
-    // just use connect here, we could also use static event tables, but this
-    //  is easy enough to do.
-    m_frame->Connect(ID_SHOW_HELP, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-    m_frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-#if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
-    menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), wxString::Format(_("Show command line help")));
-    m_frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-#endif
-    // add menu item for testing the shell
-    menu->AppendSeparator();
-    menu->Append(ID_TEST_STESHELL, _("Test STE shell..."), _("Test the STE shell component"));
-    m_frame->Connect(ID_TEST_STESHELL, wxEVT_COMMAND_MENU_SELECTED,
-                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-
-    menu->AppendSeparator();
-    wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
-    item->SetBitmap(wxBitmap(pencil16_xpm)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
-    menu->Append(item);
-
-    ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
-    m_frame->GetMenuBar()->Append(menu, wxGetStockLabelEx(wxID_HELP));
+    m_frame = CreateMainFrame();
 
     // ------------------------------------------------------------------------
     // handle loading the files
@@ -536,6 +558,15 @@ void wxStEditApp::OnMenuEvent(wxCommandEvent& event)
         case ID_TEST_STESHELL :
             CreateShell();
             break;
+        case ID_NEW_WINDOW:
+        {
+            wxFrame* frame = CreateMainFrame();
+            if (frame)
+            {
+                frame->Show();
+            }
+            break;
+        }
         default:
             event.Skip();
             break;
