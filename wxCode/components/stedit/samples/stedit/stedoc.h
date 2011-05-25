@@ -60,8 +60,10 @@ public:
 class wxSTEditorDocTemplate : public wxDocTemplate
 {
    wxSTEditorDocTemplate(wxDocManager*);
+   static wxDocTemplate* ms_instance;
 public:
-   static wxSTEditorDocTemplate* Create(wxDocManager*);
+   static wxDocTemplate* Create(wxDocManager*);
+   static wxDocTemplate* GetInstance() { return ms_instance; }
 };
 
 #endif  // _STEDOC_H_

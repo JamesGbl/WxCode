@@ -9,53 +9,30 @@
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorDoc, wxDocument)
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorView, wxView)
 
-#if (wxVERSION_NUMBER >= 2902)
-inline wxDocTemplate* wxDocManager_FindTemplate(wxDocManager* docManager, const wxClassInfo* docClassInfo)
-{
-   return docManager->FindTemplate(docClassInfo);
-}
-#else
-static wxDocTemplate* wxDocManager_FindTemplate(wxDocManager* docManager, const wxClassInfo* classinfo)
-{
-   wxList& list = docManager->GetTemplates();
-   
-   for (wxList::iterator it = list.begin();
-        it != list.end();
-        it++)
-   {
-      wxDocTemplate* t = wxStaticCast(*it, wxDocTemplate);
-      if (classinfo == t->GetDocClassInfo())
-      {
-         return t;
-      }
-   }
-   return NULL;
-}
-#endif
-
 wxSTEditorDoc::wxSTEditorDoc() : wxDocument(), wxSTEditorRefData()
 {
-    wxDocManager* docManager = wxDocManager::GetDocumentManager();
-    wxDocTemplate* docTemplate = wxDocManager_FindTemplate(docManager, CLASSINFO(wxSTEditorDoc));
-    docTemplate->InitDocument(this, wxEmptyString);
+    wxSTEditorDocTemplate::GetInstance()->InitDocument(this, wxEmptyString);
 }
 
 wxSTEditorDoc::~wxSTEditorDoc()
 {
     // Normally you destroy a document by calling wxDocManager::CloseDocument()
     // but wxSTEditorDoc is destroyed from elsewhere (from wxObject::UnRef).
-    // Hence this:
+    // Hence this roundabout method:
     GetFirstView()->SetDocument(NULL); // decouple, so the view can be destroyed without this document being deleting once more
     DeleteAllViews(); // destroy view
 }
+
+/*static*/ wxDocTemplate* wxSTEditorDocTemplate::ms_instance = NULL;
 
 wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager) : wxDocTemplate(docManager, _("Editor Files"), wxT("*.txt"),
       wxT(""), wxT("txt"), wxT("Editor doc"), wxT("Editor view"),
           CLASSINFO(wxSTEditorDoc), CLASSINFO(wxSTEditorView))
 {
+    ms_instance = this;
 }
 
-/*static*/ wxSTEditorDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)
+/*static*/ wxDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)
 {
    return new wxSTEditorDocTemplate(docManager);
 }
