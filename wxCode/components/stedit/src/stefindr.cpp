@@ -190,11 +190,13 @@ void wxSTEditorFindReplacePanel::Init()
 wxSizer *FindSizerSizer(wxSizer *sizer, wxSizer *topSizer)
 {
     wxSizerItemList &sizerList = topSizer->GetChildren();
+
     for (wxSizerItemList::iterator it = sizerList.begin();
          it != sizerList.end();
          it++)
     {
-        wxSizerItem *item = wxStaticCast(*it, wxSizerItem);
+        wxSizerItem *item = *it;
+
         if (item->IsSizer())
         {
             if (item->GetSizer() == sizer)
@@ -218,7 +220,8 @@ wxSizer *FindSizerWindow(wxWindow *win, wxSizer *topSizer)
          it != sizerList.end();
          it++)
     {
-        wxSizerItem *item = (wxSizerItem*)*it;
+        wxSizerItem *item = *it;
+
         if (item->IsWindow() && (item->GetWindow() == win))
             return topSizer;
         else if (item->IsSizer())
