@@ -36,6 +36,11 @@ public:
         wxSTEditorRefData::SetFilename(fileName, notifyViews);
         wxDocument::SetFilename(fileName.GetFullPath(), notifyViews);
     }
+    virtual void Modify(bool mod)
+    {
+        wxSTEditorRefData::Modify(mod);
+        wxDocument::Modify(mod);
+    }
 };
 
 class wxSTEditorView : public wxView

@@ -111,6 +111,8 @@ public:
                                                   if (n != wxNOT_FOUND)
                                                       m_editors.RemoveAt(n); }
 
+    virtual void Modify(bool WXUNUSED(mod)) {}
+
     wxFileName GetFilename() const
     {
         return m_fileName;

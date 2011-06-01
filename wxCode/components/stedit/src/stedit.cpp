@@ -2608,6 +2608,11 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
     wxMenuBar *menuBar = GetOptions().GetMenuBar();
     wxToolBar *toolBar = GetOptions().GetToolBar();
 
+    if (event.HasStateChange(STE_MODIFIED))
+    {
+        GetSTERefData()->Modify(GetModify());
+    }
+
     if (!menu && !menuBar && !toolBar)
         return;
 
@@ -3939,7 +3944,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2722")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2723")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
