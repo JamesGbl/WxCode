@@ -2327,8 +2327,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     // if not a valid filename or it wasn't loaded from disk - force dialog
     if (fileName.GetFullPath().Length())
     {
-        wxFileName fName(fileName);
-        if (!fName.IsOk())
+        if (!fileName.IsOk())
             use_dialog = true;
         // make them specify if file wasn't actually loaded from disk
         else if (!GetDocumentSaved())
@@ -2341,16 +2340,14 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 
         if (fileName.GetFullPath().Length())
         {
-            wxFileName fn(fileName);
-            fileName = wxFileName(wxEmptyString, fn.GetFullName());
-            wxString fileNamePath = fn.GetPath();
+            wxString fileNamePath = fileName.GetPath();
             if (fileNamePath.Length())
                 path = fileNamePath;
         }
 
-        fileName = wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
+        fileName = wxFileName(wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
                                    wxEmptyString, extensions,
-                                   wxFD_DEFAULT_STYLE_SAVE, this );
+                                   wxFD_DEFAULT_STYLE_SAVE, this ));
 
         if (fileName.GetFullPath().IsEmpty())
         {
@@ -2381,10 +2378,10 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     if (file.Write(st, *wxConvCurrent))
     {
         file.Close();
-        wxFileName fName(fileName);
-        SetFileModificationTime(fName.GetModificationTime());
+
+        SetFileModificationTime(fileName.GetModificationTime());
         if (use_dialog)
-            GetOptions().SetDefaultFilePath(fName.GetPath(wxPATH_GET_VOLUME));
+            GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
 
         SetSavePoint();
         SetFileName(fileName, true);
@@ -3942,7 +3939,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2718")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2722")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
