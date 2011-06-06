@@ -2222,7 +2222,7 @@ static const char* STE_WordList1_STE_LANG_SQUIRREL =
 #define STE_LexerName_STE_LANG_JAVA       "Java"
 #define STE_LexerName_STE_LANG_JAVASCRIPT "JavaScript"
 #define STE_LexerName_STE_LANG_RC         "RC"
-#define STE_LexerName_STE_LANG_CS         "CS"
+#define STE_LexerName_STE_LANG_CS         "C#"
 #define STE_LexerName_STE_LANG_D          "D"
 #define STE_LexerName_STE_LANG_IDL        "IDL"
 #define STE_LexerName_STE_LANG_PLSQL      "PL-SQL"
