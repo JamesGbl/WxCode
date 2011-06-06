@@ -1030,15 +1030,15 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
 
 size_t wxSTEditor::GetWordCount(const wxString& text) const
 {
-    size_t n, len = text.Length();
-    const wxChar *c = text.GetData();
     size_t count = 0;
     bool new_word = false;
 
     // a word is a series of wxIsalnum
-    for (n = 0; n < len; ++n, ++c)
+    for (wxString::const_iterator it = text.begin();
+         it != text.end();
+         it++)
     {
-        if (wxIsalnum(*c))
+        if (wxIsalnum(*it))
         {
             if (!new_word)
             {
@@ -1052,6 +1052,7 @@ size_t wxSTEditor::GetWordCount(const wxString& text) const
 
     return count;
 }
+
 size_t wxSTEditor::GetWordCount(int start_pos, int end_pos, STE_TranslatePosType type)
 {
     wxString text;
@@ -1305,22 +1306,26 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
     return done;
 }
 
-int wxString_FindFromPos(const wxString& str, const wxString& chars,
-                         size_t start_pos = 0)
+static int wxString_FindFromPos(const wxString& str, const wxString& chars, size_t start_pos)
 {
-    const wxChar *c = str.GetData() + start_pos;
-    size_t len      = str.Length();
+    const wxString temp = str.Mid(start_pos);
+    wxChar chPrev = 0;
+    size_t n = start_pos;
 
-    for (size_t n = start_pos; n < len; n++, c++)
+    for (wxString::const_iterator it = temp.begin();
+         it != temp.end();
+         it++, n++)
     {
-        int idx = chars.Find(*c);
+        wxChar ch = *it;
+        int idx = chars.Find(ch);
 
         // char in str is in chars and is not a " preceeded by a \, eg. \"
         if ((idx != wxNOT_FOUND) &&
-            ( (n == 0) || (*c != wxT('\"')) || (*(c-1) != wxT('\\')) ) )
+            ( (n == 0) || (ch != wxT('\"')) || (chPrev != wxT('\\')) ) )
         {
             return (int)n;
         }
+        chPrev = ch;
     }
     return wxNOT_FOUND;
 }
@@ -3944,7 +3949,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2723")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2725")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
