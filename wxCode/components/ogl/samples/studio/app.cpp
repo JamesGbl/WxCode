@@ -181,8 +181,6 @@ bool csApp::OnInit(void)
 
     frame->Show();
 
-    SetTopWindow(frame);
-
     docManager->CreateDocument(wxEmptyString, wxDOC_NEW);
 
     return true;
