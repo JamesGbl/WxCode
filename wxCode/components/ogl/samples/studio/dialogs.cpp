@@ -27,10 +27,11 @@ csLabelEditingDialog::csLabelEditingDialog(wxWindow* parent)
     //wxLoadFromResource(this, parent, wxT("shape_label_dialog"));
 
     // Accelerators
-    wxAcceleratorEntry entries[1];
-    entries[0].Set(wxACCEL_CTRL, WXK_RETURN, wxID_OK);
-    wxAcceleratorTable accel(WXSIZEOF(entries), entries);
-    SetAcceleratorTable(accel);
+    const wxAcceleratorEntry accel[] =
+    {
+        wxAcceleratorEntry(wxACCEL_CTRL, WXK_RETURN, wxID_OK)
+    };
+    SetAcceleratorTable(wxAcceleratorTable(WXSIZEOF(accel), accel));
 
     Centre();
 
