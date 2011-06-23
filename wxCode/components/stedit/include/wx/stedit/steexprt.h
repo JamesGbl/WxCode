@@ -44,7 +44,7 @@ public:
 
     // Get a HTML representation of the text, w/ styles
     //  code originally from wxHatch by Chris Elliott
-    wxString RenderAsHTML();
+    wxString RenderAsHTML(int from, int to) const;
     bool SaveToHTML(const wxFileName&);
 
     // Export to the file_format (enum STE_Export_Type) to the given fileName

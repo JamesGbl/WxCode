@@ -537,4 +537,110 @@ bool wxClipboard_Get(wxString* str)
 #endif
     return ok;
 }
+
+bool wxClipboard_Set(const wxString& str, bool UsePrimarySelection)
+{
+    bool is_opened = wxTheClipboard->IsOpened();
+    bool ok = is_opened || wxTheClipboard->Open();
+    if (ok)
+    {
+        wxTheClipboard->UsePrimarySelection(UsePrimarySelection);
+        ok = wxTheClipboard->SetData(new wxTextDataObject(str));
+        if (!is_opened)
+        {
+            wxTheClipboard->Close();
+        }
+    }
+    return ok;
+}
+
+#ifdef __WXMSW__
+#define NEWLINE "\r\n"
+bool wxClipboard_SetHtml(const wxString& htmldata)
+{
+    static int CF_HTML = RegisterClipboardFormat(_T("HTML Format"));
+    // Create temporary buffer for HTML header...
+    const wxCharBuffer html(htmldata.mb_str());
+    size_t buf_len = 400 + strlen(html.data());
+    char* buf = new char [buf_len];
+
+    // Create a template string for the HTML header...
+    strcpy(buf,
+        "Version:0.9"NEWLINE
+        "StartHTML:00000000"NEWLINE
+        "EndHTML:00000000"NEWLINE
+        "StartFragment:00000000"NEWLINE
+        "EndFragment:00000000"NEWLINE
+        "<html><body>"NEWLINE
+        "<!--StartFragment -->"NEWLINE
+        );
+
+    // Append the HTML...
+    strcat(buf, html.data());
+    strcat(buf, NEWLINE);
+    // Finish up the HTML format...
+    strcat(buf,
+        "<!--EndFragment-->"NEWLINE
+        "</body></html>"
+        );
+
+    // Now go back, calculate all the lengths, and write out the
+    // necessary header information. Note, sprintf() truncates the
+    // string when you overwrite it so you follow up with code to replace
+    // the 0 appended at the end with a '\r'...
+    char *ptr = strstr(buf, "StartHTML");
+    sprintf(ptr+10, "%08u", strstr(buf, "<html>") - buf);
+    *(ptr+10+8) = '\r';
+
+    ptr = strstr(buf, "EndHTML");
+    sprintf(ptr+8, "%08u", strlen(buf));
+    *(ptr+8+8) = '\r';
+
+    ptr = strstr(buf, "StartFragment");
+    sprintf(ptr+14, "%08u", strstr(buf, "<!--StartFrag") - buf);
+    *(ptr+14+8) = '\r';
+
+    ptr = strstr(buf, "EndFragment");
+    sprintf(ptr+12, "%08u", strstr(buf, "<!--EndFrag") - buf);
+    *(ptr+12+8) = '\r';
+
+    // Now you have everything in place ready to put on the
+    // clipboard.
+
+    // Open the clipboard...
+    bool ok = OpenClipboard(0) ? true : false;
+    if (ok)
+    {        
+        HGLOBAL hText;
+        char* ptr;
+
+        // Empty what's in there...
+        EmptyClipboard();
+
+        // Allocate global memory for transfer...
+        hText = GlobalAlloc(GMEM_MOVEABLE |GMEM_DDESHARE, strlen(buf)+4);
+        // Put your string in the global memory...
+        ptr = (char*)GlobalLock(hText);
+        strcpy(ptr, buf);
+        GlobalUnlock(hText);        
+        ok = (NULL != SetClipboardData(CF_HTML, hText));
+        // Free memory...
+        GlobalFree(hText);        
+        if (ok)
+        {
+            // also add plain text version
+            hText = GlobalAlloc(GMEM_MOVEABLE |GMEM_DDESHARE, strlen(html.data()) + 1);
+            ptr = (char*)GlobalLock(hText);
+            strcpy(ptr, html.data());
+            GlobalUnlock(hText);        
+            ok = (NULL != SetClipboardData(CF_TEXT, hText));
+            GlobalFree(hText);        
+        }        
+        CloseClipboard();
+    }
+    // Clean up...
+    delete [] buf;
+    return ok;
+}
+#endif
 #endif

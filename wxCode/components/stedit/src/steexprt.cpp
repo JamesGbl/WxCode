@@ -1809,7 +1809,7 @@ bool wxSTEditorExporter::SaveToHTML(const wxFileName& saveName)
     FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
     if (fp)
     {
-        fputs(wx2stc(RenderAsHTML()), fp);
+        fputs(wx2stc(RenderAsHTML(0, m_editor->GetLength())), fp);
         fclose(fp);
     } else {
         return false;
@@ -1853,7 +1853,7 @@ void STEExporterHTML_Font(int style_n, int old_style_n,
 }
 
 // This modified code is from wxHatch, Copyright Chris Elliott
-wxString wxSTEditorExporter::RenderAsHTML()
+wxString wxSTEditorExporter::RenderAsHTML(int from, int to) const
 {
     wxCHECK_MSG(m_editor, wxEmptyString, wxT("Invalid editor"));
     wxBusyCursor busy;
@@ -1886,10 +1886,9 @@ wxString wxSTEditorExporter::RenderAsHTML()
     htmlString << wxT("<BODY><TT><PRE>\n");
 
     int style_n = 0, old_style_n = -1;  // start with invalid style
-    int n, len = m_editor->GetLength();
 
     // read document letter by letter
-    for (n = 0; n < len; n++)
+    for (int n = from; n < to; n++)
     {
         style_n = m_editor->GetStyleAt(n); // | 31;
         if (style_n > STYLE_MAX) style_n = 0;  // should never happen
@@ -1908,7 +1907,7 @@ wxString wxSTEditorExporter::RenderAsHTML()
             case wxT('\r') :
             {
                 // if CRLF just skip this, it'll get added by our \n
-                if ((n < len - 1) && (m_editor->GetCharAt(n+1) == wxT('\n')))
+                if ((n < (to - 1)) && (m_editor->GetCharAt(n+1) == wxT('\n')))
                     break;
             }
             //case wxT('\n') : htmlString << wxT("\n<BR>"); break; // not if using PRE

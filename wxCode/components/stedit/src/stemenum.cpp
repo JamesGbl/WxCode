@@ -509,6 +509,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         if (!HasMenuOptionType(STE_MENU_READONLY))
             menu->Append(MenuItem(menu, wxID_CUT,  wxGetStockLabel(wxID_CUT), _("Cut selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_CUT)));
         menu->Append(MenuItem(menu, wxID_COPY,  wxGetStockLabel(wxID_COPY), _("Copy selected text to clipboard"), wxITEM_NORMAL, STE_ARTBMP(wxART_STEDIT_COPY)));
+        menu->Append(ID_STE_COPY_HTML, _("Copy as &HTML"), _("Copy selected text to clipboard with text markup"));
 #ifdef __UNIX__
         menu->Append(ID_STE_COPY_PRIMARY,  _("Copy primary"), _("Copy selected text to primary clipboard"));
 #endif // __UNIX__

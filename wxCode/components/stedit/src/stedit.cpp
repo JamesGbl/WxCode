@@ -2630,6 +2630,7 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
     {
         STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY, event.GetStateValue(STE_CANCOPY));
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY, event.GetStateValue(STE_CANCOPY));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML, event.GetStateValue(STE_CANCOPY));
     }
     if (event.HasStateChange(STE_CANPASTE))
     {
@@ -2673,6 +2674,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsTextAvailable());
@@ -2782,20 +2784,21 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             Clear();  
             return true;
         }
-        case ID_STE_COPY_PRIMARY :
+        case ID_STE_COPY_HTML:
         {
-            bool is_opened = wxTheClipboard->IsOpened();
-
-            if (is_opened || wxTheClipboard->Open())
-            {
-                wxString text(GetSelectedText());
-                wxTheClipboard->UsePrimarySelection(true);
-                wxTheClipboard->SetData(new wxTextDataObject(text));
-                if (!is_opened)
-                    wxTheClipboard->Close();
-            }
+            wxSTEditorExporter steExport(this);
+            wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
+            
+        #ifdef __WXMSW__
+            ::wxClipboard_SetHtml(text);
+        #else
+            ::wxClipboard_Set(text, false);
+        #endif
             return true;
         }
+        case ID_STE_COPY_PRIMARY :
+            ::wxClipboard_Set(GetSelectedText(), true);
+            return true;
         case wxID_PASTE            : Paste(); return true;
         case ID_STE_PASTE_RECT     : PasteRectangular(); return true;
         case ID_STE_PREF_SELECTION_MODE    :
@@ -3949,7 +3952,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2725")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2730")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

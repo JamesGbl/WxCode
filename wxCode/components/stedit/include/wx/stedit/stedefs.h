@@ -307,6 +307,7 @@ enum
     // Edit menu items --------------------------------------------------------
     //wxID_CUT,
     //wxID_COPY,
+    ID_STE_COPY_HTML,
     ID_STE_COPY_PRIMARY,  // unix copy to primary selection
     //wxID_PASTE,
     ID_STE_PASTE_NEW,
