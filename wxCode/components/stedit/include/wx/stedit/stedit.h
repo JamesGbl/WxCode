@@ -190,7 +190,7 @@ public :
     virtual ~wxSTEditor();
     virtual bool Destroy();
 
-    bool Create( wxWindow *parent, wxWindowID id,
+    bool Create( wxWindow *parent, wxWindowID id = wxID_ANY,
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style = 0, // wxStyledTextCtrl ors this with defaults
@@ -199,7 +199,7 @@ public :
     // Clone this editor, uses wxClassInfo so derived classes should work.
     // Override if you want to create your own type for the splitter to use in
     //   wxSTEditorSplitter::CreateEditor.
-    virtual wxSTEditor* Clone(wxWindow *parent, wxWindowID id,
+    virtual wxSTEditor* Clone(wxWindow *parent, wxWindowID id = wxID_ANY,
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,
                               long style = 0, // wxStyledTextCtrl ors this with defaults

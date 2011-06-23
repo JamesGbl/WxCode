@@ -65,7 +65,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorFrame : public wxFrame
 {
 public:
     wxSTEditorFrame() : wxFrame() { Init(); }
-    wxSTEditorFrame(wxWindow *parent, wxWindowID id,
+    wxSTEditorFrame(wxWindow *parent, wxWindowID id = wxID_ANY,
                     const wxString& title = STE_APPDISPLAYNAME,
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize,

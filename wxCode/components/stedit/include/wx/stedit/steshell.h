@@ -46,7 +46,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorShell : public wxSTEditor
 public :
     wxSTEditorShell() : wxSTEditor() { Init(); }
 
-    wxSTEditorShell( wxWindow *parent, wxWindowID id,
+    wxSTEditorShell( wxWindow *parent, wxWindowID id = wxID_ANY,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
                      long style = 0,
@@ -58,7 +58,7 @@ public :
 
     virtual ~wxSTEditorShell();
 
-    bool Create( wxWindow *parent, wxWindowID id,
+    bool Create( wxWindow *parent, wxWindowID id = wxID_ANY,
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style = 0,
