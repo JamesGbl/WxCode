@@ -36,9 +36,7 @@ WXDLLIMPEXP_STEDIT void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NU
 WXDLLIMPEXP_STEDIT bool wxClipboard_IsAvailable(const enum wxDataFormatId* array, size_t array_count);
 WXDLLIMPEXP_STEDIT bool wxClipboard_Get(wxString*);
 WXDLLIMPEXP_STEDIT bool wxClipboard_Set(const wxString& str, bool UsePrimarySelection = false);
-#ifdef __WXMSW__
 WXDLLIMPEXP_STEDIT bool wxClipboard_SetHtml(const wxString&);
-#endif
 #endif
 
 WXDLLIMPEXP_STEDIT void wxCommandLineUsage(wxWindow* parent);

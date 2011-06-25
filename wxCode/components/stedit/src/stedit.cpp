@@ -2789,11 +2789,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             wxSTEditorExporter steExport(this);
             wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
             
-        #ifdef __WXMSW__
             ::wxClipboard_SetHtml(text);
-        #else
-            ::wxClipboard_Set(text, false);
-        #endif
             return true;
         }
         case ID_STE_COPY_PRIMARY :
@@ -3952,7 +3948,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2730")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2731")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
