@@ -2788,7 +2788,10 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         {
             wxSTEditorExporter steExport(this);
             wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
-            
+
+        #ifdef __WXMSW__
+            text.Replace(wxT("\n"), wxT("\r\n")); // to make Notepad happy
+        #endif            
             ::wxClipboard_SetHtml(text);
             return true;
         }
@@ -3948,7 +3951,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2731")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2732")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

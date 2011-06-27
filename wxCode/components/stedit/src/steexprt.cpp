@@ -1909,6 +1909,7 @@ wxString wxSTEditorExporter::RenderAsHTML(int from, int to) const
                 // if CRLF just skip this, it'll get added by our \n
                 if ((n < (to - 1)) && (m_editor->GetCharAt(n+1) == wxT('\n')))
                     break;
+                // else fall through
             }
             //case wxT('\n') : htmlString << wxT("\n<BR>"); break; // not if using PRE
             case wxT('<')  : htmlString << wxT("&lt;");   break;

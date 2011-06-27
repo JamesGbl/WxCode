@@ -570,7 +570,7 @@ bool wxClipboard_SetHtml(const wxString& htmldata)
         wxCloseClipboard();
     }
 #else
-    ok = wxClipboard_Set(text);
+    ok = wxClipboard_Set(htmldata);
 #endif
     return ok;
 }
