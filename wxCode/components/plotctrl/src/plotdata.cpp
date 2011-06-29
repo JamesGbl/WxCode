@@ -392,7 +392,7 @@ wxPlotData wxPlotData::Insert(int index, size_t src_count,
 
     int count     = M_PLOTDATA->m_count;
 
-    wxPlotData newCurve(count + src_count, false);
+    wxPlotData newCurve((int)(count + src_count), false);
     if (!newCurve.Ok()) return newCurve;
 
     double *x_data  = M_PLOTDATA->m_Xdata;
@@ -587,7 +587,7 @@ int NumberParse(double *nums, const wxString &string, int max_nums)
     const wxChar *s = string.GetData();
     wxChar c = 0;
 
-    int i, count = string.Length();
+    size_t i, count = string.Length();
     double number;
 
     int n = 0;
@@ -611,7 +611,8 @@ int NumberParse(double *nums, const wxString &string, int max_nums)
                     return n;
             }
         }
-        else if (start_word == -1) start_word = i;
+        else if (start_word == -1) 
+            start_word = (int)i;
 
         if (c == d4 || c == d5) return n;
 
@@ -673,7 +674,7 @@ bool wxPlotData::LoadFile( const wxString &filename, int x_col, int y_col, int o
             if (read_buf_pos == readBuf.GetDataLen()) // initially both 0
             {
                 if (fileStream.Eof()) break; // all done
-                int len = fileStream.Read(readBuf.GetWriteBuf(10000), 10000).LastRead();
+                size_t len = fileStream.Read(readBuf.GetWriteBuf(10000), 10000).LastRead();
                 readBuf.SetDataLen(len);
                 read_buf_pos = 0;
                 if (len == 0) break;
@@ -687,7 +688,7 @@ bool wxPlotData::LoadFile( const wxString &filename, int x_col, int y_col, int o
                 {
                     if ((read_buf_pos == readBuf.GetDataLen()) && !fileStream.Eof())
                     {
-                        int len = fileStream.Read(readBuf.GetWriteBuf(10000), 10000).LastRead();
+                        size_t len = fileStream.Read(readBuf.GetWriteBuf(10000), 10000).LastRead();
                         readBuf.SetDataLen(len);
                         read_buf_pos = 0;
                     }
@@ -1408,7 +1409,7 @@ int wxPlotData::GetMinMaxAve( const wxRangeIntSelection& rangeSel,
     double x_min_x = x, x_max_x = x;
     double y_min_y = y, y_max_y = y;
     double ave_x = 0, ave_y = 0;
-    int i, j, sel_count = rangeSel.GetCount(), sel_point_count = 0;
+    int i, j, sel_count = (int)rangeSel.GetCount(), sel_point_count = 0;
 
     for (i = 0; i < sel_count; i++)
     {
@@ -1506,7 +1507,7 @@ int wxPlotData::GetMaxYIndex(int start_index, int end_index) const
     CHECK_START_END_INDEX_MSG(start_index, end_index, count, 0);
 
     double *y_data = &M_PLOTDATA->m_Ydata[start_index];
-    double max_y = *y_data;
+    double max_y = *y_data++;
     int max_y_index = start_index;
 
     for (int i = start_index+1; i < end_index; i++)

@@ -236,7 +236,7 @@ int wxPlotCurve::SetOption(const wxString& name, const wxString& value, bool upd
     int n = M_PLOTCURVEDATA->m_optionNames.Index(name);
     if (n == wxNOT_FOUND)
     {
-        n = M_PLOTCURVEDATA->m_optionNames.Add(name);
+        n = (int)M_PLOTCURVEDATA->m_optionNames.Add(name);
         M_PLOTCURVEDATA->m_optionValues.Insert(value, n);
     }
     else if (update)

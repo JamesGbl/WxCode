@@ -292,7 +292,7 @@ public:
     bool DeleteCurve( int curve_index, bool send_event=false );
 
     // Total number of curves associated with the plotctrl
-    int GetCurveCount() const { return m_curves.GetCount(); }
+    size_t GetCurveCount() const { return m_curves.GetCount(); }
     bool CurveIndexOk(int curve_index) const
         { return (curve_index>=0) && (curve_index < int(m_curves.GetCount())); }
 
@@ -481,8 +481,8 @@ public:
 
     // The history of mouse drag rects are saved (mouseFunc_zoom)
     void NextHistoryView(bool foward, bool send_event=false);
-    int  GetHistoryViewCount() const { return m_historyViews.GetCount(); }
-    int  GetHistoryViewIndex() const { return m_history_views_index; }
+    size_t GetHistoryViewCount() const { return m_historyViews.GetCount(); }
+    int GetHistoryViewIndex() const { return m_history_views_index; }
 
     // Fix the aspect ratio of the x and y axes, if set then when the zoom is
     //  set the smaller of the two (x or y) zooms is multiplied by the ratio

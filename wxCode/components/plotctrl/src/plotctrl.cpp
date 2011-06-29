@@ -1055,7 +1055,7 @@ void wxPlotCtrl::SetKeyPosition(const wxPoint &pos, bool stay_inside)
 void wxPlotCtrl::CreateKeyString()
 {
     m_keyString.Clear();
-    int n, count = m_curves.GetCount();
+    size_t n, count = m_curves.GetCount();
     for (n = 0; n < count; n++)
     {
         wxString key;
@@ -1092,7 +1092,7 @@ bool wxPlotCtrl::AddCurve( wxPlotCurve *curve, bool select, bool send_event )
     if (send_event)
     {
         wxPlotCtrlEvent event(wxEVT_PLOTCTRL_ADD_CURVE, GetId(), this);
-        event.SetCurve(curve, m_curves.GetCount()-1);
+        event.SetCurve(curve, (int)m_curves.GetCount()-1);
         (void)DoSendEvent( event );
     }
 
@@ -1166,7 +1166,7 @@ bool wxPlotCtrl::DeleteCurve( int n, bool send_event )
     if (old_active_index >= int(m_curves.GetCount()))
     {
         // force this invalid, can't override this, the curve is "gone"
-        SetActiveIndex( m_curves.GetCount() - 1, send_event );
+        SetActiveIndex( (int)m_curves.GetCount() - 1, send_event );
     }
     else if (old_active_index >= 0)
     {
@@ -1191,7 +1191,7 @@ bool wxPlotCtrl::DeleteCurve( int n, bool send_event )
 
 wxPlotCurve* wxPlotCtrl::GetCurve( int n ) const
 {
-    wxCHECK_MSG((n >= 0) && (n < GetCurveCount()), NULL, wxT("Invalid index"));
+    wxCHECK_MSG((n >= 0) && (n < (int)GetCurveCount()), NULL, wxT("Invalid index"));
     return &(m_curves.Item(n));
 }
 
@@ -1207,7 +1207,7 @@ void wxPlotCtrl::SetActiveCurve( wxPlotCurve* current, bool send_event )
 
 void wxPlotCtrl::SetActiveIndex( int curve_index, bool send_event )
 {
-    wxCHECK_RET((curve_index < GetCurveCount()), wxT("Invalid index"));
+    wxCHECK_RET((curve_index < (int)GetCurveCount()), wxT("Invalid index"));
 
     if (send_event)
     {
@@ -1244,7 +1244,7 @@ wxArrayInt wxPlotCtrl::GetPlotDataIndexes() const
     for (n = 0; n < count; n++)
     {
         if (wxDynamicCast(&m_curves.Item(n), wxPlotData))
-            array.Add(n);
+            array.Add((int)n);
     }
     return array;
 }
@@ -1255,7 +1255,7 @@ wxArrayInt wxPlotCtrl::GetPlotFunctionIndexes() const
     for (n = 0; n < count; n++)
     {
         if (wxDynamicCast(&m_curves.Item(n), wxPlotFunction))
-            array.Add(n);
+            array.Add((int)n);
     }
     return array;
 }
@@ -1268,7 +1268,7 @@ int wxPlotCtrl::AddMarker( const wxPlotMarker& marker )
 {
     m_plotMarkers.Add(marker);
     Redraw(wxPLOTCTRL_REDRAW_PLOT);
-    return m_plotMarkers.GetCount() - 1;
+    return (int)m_plotMarkers.GetCount() - 1;
 }
 
 void wxPlotCtrl::RemoveMarker(int marker)
@@ -1488,7 +1488,7 @@ bool wxPlotCtrl::HasSelection(int curve_index) const
 {
     if (curve_index == -1)
     {
-        int n, count = m_curveSelections.GetCount();
+        size_t n, count = m_curveSelections.GetCount();
         for ( n = 0; n < count; n++ )
         {
             if ((m_curveSelections[n].GetCount() > 0) ||
@@ -1530,7 +1530,7 @@ bool wxPlotCtrl::UpdateSelectionState(int curve_index, bool send_event)
         }
         case wxPLOTCTRL_SELECT_SINGLE_CURVE :
         {
-            int n, count = m_curves.GetCount();
+            int n, count = (int)m_curves.GetCount();
             bool done = false;
             for ( n = 0; n < count; n++ )
             {
@@ -1763,9 +1763,9 @@ int wxPlotCtrl::GetSelectedRangeCount(int curve_index) const
     wxCHECK_MSG(CurveIndexOk(curve_index), 0, wxT("invalid plotcurve index"));
 
     if (GetDataCurve(curve_index))
-        return m_dataSelections[curve_index].GetCount();
+        return (int)m_dataSelections[curve_index].GetCount();
     else
-        return m_curveSelections[curve_index].GetCount();
+        return (int)m_curveSelections[curve_index].GetCount();
 }
 
 bool wxPlotCtrl::ClearSelectedRanges(int curve_index, bool send_event)
@@ -1887,7 +1887,7 @@ bool wxPlotCtrl::MakeCurveVisible(int curve_index, bool send_event)
     if (curve_index < 0)
         return SetZoom( -1, -1, 0, 0, send_event );
 
-    wxCHECK_MSG(curve_index < GetCurveCount(), false, wxT("Invalid curve index"));
+    wxCHECK_MSG(curve_index < (int)GetCurveCount(), false, wxT("Invalid curve index"));
     wxPlotCurve *curve = GetCurve(curve_index);
     wxCHECK_MSG(curve && curve->Ok(), false, wxT("Invalid curve"));
 
@@ -2095,7 +2095,7 @@ void wxPlotCtrl::AddHistoryView()
 
 void wxPlotCtrl::NextHistoryView(bool foward, bool send_event)
 {
-    int count = m_historyViews.GetCount();
+    int count = (int)m_historyViews.GetCount();
 
     // try to set it to the "current" history view
     if ((m_history_views_index > -1) && (m_history_views_index < count))
@@ -2318,7 +2318,7 @@ void wxPlotCtrl::DoSize(const wxRect &boundingRect, bool set_window_sizes)
 
 void wxPlotCtrl::CalcBoundingPlotRect()
 {
-    int i, count = m_curves.GetCount();
+    size_t i, count = m_curves.GetCount();
 
     if (count > 0)
     {
@@ -2448,7 +2448,7 @@ void wxPlotCtrl::DrawAreaWindow( wxDC *dc, const wxRect &rect )
 
     dc->DestroyClippingRegion();
 
-    int i;
+    size_t i;
     wxPlotCurve *curve;
     wxPlotCurve *activeCurve = GetActiveCurve();
     for (i = 0; i < GetCurveCount(); i++)
@@ -2676,9 +2676,9 @@ void wxPlotCtrl::DrawTickMarks( wxDC *dc, const wxRect& rect )
     int xtick_length = GetDrawGrid() ? clientRect.height : 10;
     int ytick_length = GetDrawGrid() ? clientRect.width  : 10;
 
-    int tick_pos, i;
+    int tick_pos;
     // X-axis ticks
-    int tick_count = m_xAxisTicks.GetCount();
+    size_t i, tick_count = m_xAxisTicks.GetCount();
     for (i = 0; i < tick_count; i++)
     {
         tick_pos = m_xAxisTicks[i];
@@ -3522,7 +3522,7 @@ void wxPlotCtrl::OnChar(wxKeyEvent &event)
         }
         else
         {
-            int count = GetCurveCount();
+            int count = (int)GetCurveCount();
             if ((count < 1) || ((count == 1) && (m_active_index == 0))) return;
             int index = (m_active_index + 1 > count - 1) ? 0 : m_active_index + 1;
             SetActiveIndex( index, true );
@@ -3693,7 +3693,7 @@ void wxPlotCtrl::OnChar(wxKeyEvent &event)
             {
                 bool has_cleared = false;
 
-                for (int i = 0; i < GetCurveCount(); i++)
+                for (size_t i = 0; i < GetCurveCount(); i++)
                 {
                     if (GetSelectedRangeCount(i) > 0)
                     {
@@ -3818,10 +3818,10 @@ bool wxPlotCtrl::FindCurve(const wxPoint2DDouble &pt, const wxPoint2DDouble &dpt
     if (!IsFinite(dpt.m_x, wxT("point is not finite"))) return false;
     if (!IsFinite(dpt.m_y, wxT("point is not finite"))) return false;
 
-    int curve_count = GetCurveCount();
+    int n, curve_count = (int)GetCurveCount();
     if (curve_count < 1) return false;
 
-    for (int n = -1; n < curve_count; n++)
+    for (n = -1; n < curve_count; n++)
     {
         // find the point in the selected curve first
         if (n == -1)

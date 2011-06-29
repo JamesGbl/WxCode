@@ -538,7 +538,7 @@ void wxPlotDrawerXAxis::Draw(wxDC *dc, bool refresh)
     dc->GetTextExtent(wxT("5"), &x, &y);
     int y_pos = (GetDCRect().height - y)/2 + 2; // FIXME I want to center this
     // double current = ceil(m_viewRect.GetLeft() / m_xAxisTick_step) * m_xAxisTick_step;
-    int i, count = m_tickPositions.GetCount();
+    size_t i, count = m_tickPositions.GetCount();
     for (i = 0; i < count; i++)
     {
         dc->DrawText(m_tickLabels[i], m_tickPositions[i], y_pos);
@@ -586,7 +586,7 @@ void wxPlotDrawerYAxis::Draw(wxDC *dc, bool refresh)
 
     wxString label;
     // double current = ceil(m_viewRect.GetTop() / m_yAxisTick_step) * m_yAxisTick_step;
-    int i, count = m_tickLabels.GetCount();
+    size_t i, count = m_tickLabels.GetCount();
     for (i = 0; i < count; i++)
     {
         dc->DrawText( m_tickLabels[i], 2, m_tickPositions[i] );
@@ -848,7 +848,7 @@ void wxPlotDrawerDataCurve::Draw(wxDC *dc, wxPlotData* curve, int curve_index)
 
     // handle the selected ranges and initialize the starting range
     const wxArrayRangeInt &ranges = m_owner->GetDataCurveSelection(curve_index)->GetRangeArray();
-    int n_range = 0, range_count = ranges.GetCount();
+    size_t n_range = 0, range_count = ranges.GetCount();
     int min_sel = -1, max_sel = -1;
     for (n_range = 0; n_range < range_count; n_range++)
     {
@@ -889,7 +889,7 @@ void wxPlotDrawerDataCurve::Draw(wxDC *dc, wxPlotData* curve, int curve_index)
         wxRangeDouble viewRange(viewRect.m_x, viewRect.GetRight());
         wxRangeDouble dcRange(dcRect.x, dcRect.GetRight());
 
-        for (int r = n_range; r < range_count; r++)
+        for (size_t r = n_range; r < range_count; r++)
         {
             wxRangeDouble plotRange(curve->GetXValue(ranges[r].m_min),
                                     curve->GetXValue(ranges[r].m_max));
@@ -1003,7 +1003,7 @@ void wxPlotDrawerMarker::Draw(wxDC *dc, const wxArrayPlotMarker& markers)
     wxRect2DDouble subViewRect = m_owner->GetPlotRectFromClientRect( dcRect );
 
     double x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-    int n, count = markers.GetCount();
+    size_t n, count = markers.GetCount();
     for (n = 0; n < count; n++)
     {
         const wxPlotMarker &marker = markers[n];
