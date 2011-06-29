@@ -1558,10 +1558,10 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
 #define SET_STATTEXT(win_id,val) wxStaticCast(FindWindow(win_id),wxStaticText)->SetLabel(val)
 
-wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor *edit,
+wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEditor *edit,
                                                        const wxString& title,
                                                        long style)
-                           :wxDialog(edit, wxID_ANY, title,
+                           :wxDialog(parent, wxID_ANY, title,
                                      wxDefaultPosition, wxDefaultSize, style)
 {
     wxSTEditorPropertiesSizer(this, true, true);

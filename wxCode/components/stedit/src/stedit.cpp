@@ -1513,7 +1513,7 @@ bool wxSTEditor::ShowInsertTextDialog()
 
     wxString initText = GetSelectedText();
 
-    wxSTEditorInsertTextDialog dialog(this);
+    wxSTEditorInsertTextDialog dialog(GetModalParent());
     dialog.SetText(initText);
 
     if ( dialog.ShowModal() != wxID_OK )
@@ -1550,7 +1550,7 @@ bool wxSTEditor::ShowColumnizeDialog()
     wxString text = GetSelectedText();
     if (text.IsEmpty()) return false;
 
-    wxSTEditorColumnizeDialog dialog(this);
+    wxSTEditorColumnizeDialog dialog(GetModalParent());
     dialog.GetTestEditor()->RegisterStyles(GetEditorStyles());
     dialog.GetTestEditor()->RegisterLangs(GetEditorLangs());
     dialog.GetTestEditor()->SetLanguage(GetLanguageId());
@@ -1574,7 +1574,7 @@ bool wxSTEditor::ShowConvertEOLModeDialog()
 {
     int eol_mode = GetEOLMode();
 
-    wxSingleChoiceDialog dialog(this,
+    wxSingleChoiceDialog dialog(GetModalParent(),
                       wxString(_("Current EOL : "))+EOLModeStrings[eol_mode],
                       _("Convert End of Line chars"), 3, EOLModeStrings);
     dialog.SetSelection(eol_mode);
@@ -1595,7 +1595,7 @@ bool wxSTEditor::ShowConvertEOLModeDialog()
 
 bool wxSTEditor::ShowSetZoomDialog()
 {
-    wxNumberEntryDialog numDlg(this,
+    wxNumberEntryDialog numDlg(GetModalParent(),
                                _("Scale font sizes : -10...20 (not all fonts supported)"),
                                wxEmptyString,
                                _("Change text font size"),
@@ -2279,7 +2279,7 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
 
         fileName = wxFileSelector(_("Open file"), path, fileName.GetFullPath(),
                                   wxEmptyString, extensions,
-                                  wxFD_DEFAULT_STYLE_OPEN, this);
+                                  wxFD_DEFAULT_STYLE_OPEN, GetModalParent());
 
         if (fileName.GetFullPath().IsEmpty())
             return false;
@@ -2299,7 +2299,7 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     if (statstr.st_size > 40000000)
     {
         wxMessageBox(_("This file is too large for this editor, sorry."),
-                     _("Error loading file"), wxOK|wxICON_EXCLAMATION, this);
+                     _("Error loading file"), wxOK|wxICON_EXCLAMATION, GetModalParent());
 
         return false;
     }
@@ -2352,7 +2352,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 
         fileName = wxFileName(wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
                                    wxEmptyString, extensions,
-                                   wxFD_DEFAULT_STYLE_SAVE, this ));
+                                   wxFD_DEFAULT_STYLE_SAVE, GetModalParent() ));
 
         if (fileName.GetFullPath().IsEmpty())
         {
@@ -2366,7 +2366,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     if (!file.IsOpened())
     {
         wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
-                     _("Save file error"), wxOK|wxICON_ERROR , this);
+                     _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
         return false;
     }
 
@@ -2408,7 +2408,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
     while (title.IsEmpty())
     {
         title = wxGetTextFromUser(_("New file name"), _("New file"),
-                                  GetOptions().GetDefaultFileName(), this);
+                                  GetOptions().GetDefaultFileName(), GetModalParent());
 
         if (title.IsEmpty())
             return false;
@@ -2417,7 +2417,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
         {
             int ret = wxMessageBox(_("The filename contains wildcard characters."),
                                    _("Invalid filename"),
-                                   wxOK|wxCANCEL|wxCENTRE|wxICON_ERROR, this);
+                                   wxOK|wxCANCEL|wxCENTRE|wxICON_ERROR, GetModalParent());
 
             if (ret == wxCANCEL)
                 return false;
@@ -2442,7 +2442,7 @@ bool wxSTEditor::Revert()
 {
    bool ok = (wxYES == wxMessageBox(_("Discard changes and load last saved version ?"),
                           wxMessageBoxCaptionStr,
-                          wxYES_NO | wxICON_QUESTION, this));
+                          wxYES_NO | wxICON_QUESTION, GetModalParent()));
    if (ok)
    {
       ok = LoadFile(GetFileName(), wxEmptyString, false);
@@ -2452,7 +2452,7 @@ bool wxSTEditor::Revert()
 
 bool wxSTEditor::ShowExportDialog()
 {
-    wxSTEditorExportDialog dialog(this);
+    wxSTEditorExportDialog dialog(GetModalParent());
     wxFileName fileName = GetFileName();
     int file_format   = dialog.GetFileFormat();
     fileName = dialog.FileNameExtChange(fileName, file_format);
@@ -2479,7 +2479,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), 
                                  GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                            _("Unsaved changes"),
-                           style|wxCENTRE|wxICON_QUESTION, this);
+                           style|wxCENTRE|wxICON_QUESTION, GetModalParent());
 
     m_sendEvents = sendEvents;
 
@@ -2517,7 +2517,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
             wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."), 
                            GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                           _("File removed from disk"),
-                          wxOK | wxICON_EXCLAMATION, this);
+                          wxOK | wxICON_EXCLAMATION, GetModalParent());
         }
 
         // reset to unknown, assume they know what they're doing
@@ -2532,7 +2532,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"),
                                     GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                                 _("File changed on disk"),
-                                wxYES_NO | wxICON_QUESTION, this);
+                                wxYES_NO | wxICON_QUESTION, GetModalParent());
         if (ret == wxYES)
         {
             // try to put the editor back on the same line after loading
@@ -2564,7 +2564,7 @@ void wxSTEditor::SetFileModificationTime(const wxDateTime &dt)
 
 void wxSTEditor::ShowPropertiesDialog()
 {
-    wxSTEditorPropertiesDialog(this, wxGetStockLabelEx(wxID_PROPERTIES, wxSTOCK_PLAINTEXT)).ShowModal();
+    wxSTEditorPropertiesDialog(GetModalParent(), this, wxGetStockLabelEx(wxID_PROPERTIES, wxSTOCK_PLAINTEXT)).ShowModal();
 }
 
 void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
@@ -2907,7 +2907,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             int num = wxGetNumberFromUser(_("Level to collapse all folds to"),
                                           wxEmptyString, _("Collapse folds to level"),
                                           (GetFoldLevel(GetCurrentLine())&wxSTC_FOLDLEVELNUMBERMASK)-wxSTC_FOLDLEVELBASE,
-                                          0, wxSTC_FOLDLEVELNUMBERMASK-wxSTC_FOLDLEVELBASE, this);
+                                          0, wxSTC_FOLDLEVELNUMBERMASK-wxSTC_FOLDLEVELBASE, GetModalParent());
             if (num >= 0)
                 CollapseFoldsToLevel(num);
             return true;
@@ -2917,7 +2917,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             int num = wxGetNumberFromUser(_("Level to expand all folds to"),
                                           wxEmptyString, _("Expand folds to level"),
                                           (GetFoldLevel(GetCurrentLine())&wxSTC_FOLDLEVELNUMBERMASK)-wxSTC_FOLDLEVELBASE,
-                                          0, wxSTC_FOLDLEVELNUMBERMASK-wxSTC_FOLDLEVELBASE, this);
+                                          0, wxSTC_FOLDLEVELNUMBERMASK-wxSTC_FOLDLEVELBASE, GetModalParent());
             if (num >= 0)
                 ExpandFoldsToLevel(num);
             return true;
@@ -2979,7 +2979,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                                                   GetLanguageId(),
                                                   this);
 
-                wxSTEditorPrefDialog prefDialog(editorData, this);
+                wxSTEditorPrefDialog prefDialog(editorData, GetModalParent());
 
                 prefDialog.ShowModal();
             }
@@ -2991,7 +2991,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             int val = wxGetNumberFromUser(_("Column to show long line marker"),
                                           wxEmptyString, _("Set long line marker"),
                                           GetEdgeColumn(),
-                                          0, 255, this);
+                                          0, 255, GetModalParent());
             if (val >= 0)
             {
                 if (GetEditorPrefs().IsOk())
@@ -3007,7 +3007,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             int val = wxGetNumberFromUser(_("Characters to expand tabs"),
                                           wxEmptyString, _("Set tab width"),
                                           GetTabWidth(),
-                                          0, 255, this);
+                                          0, 255, GetModalParent());
             if (val >= 0)
             {
                 if (GetEditorPrefs().IsOk())
@@ -3022,7 +3022,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         {
             int val = wxGetNumberFromUser(_("Characters to indent"), wxEmptyString, _("Set indentation width"),
                                           GetIndent(),
-                                          0, 255, this);
+                                          0, 255, GetModalParent());
             if (val >= 0)
             {
                 if (GetEditorPrefs().IsOk())
@@ -3037,7 +3037,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         {
             int eol_mode = GetEOLMode();
             int val = wxGetSingleChoiceIndex(wxString(_("Current EOL : "))+EOLModeStrings[eol_mode],
-                                             _("Select EOL mode"), 3, EOLModeStrings, this);
+                                             _("Select EOL mode"), 3, EOLModeStrings, GetModalParent());
 
             if ((val != -1) && (val != eol_mode))
             {
@@ -3340,7 +3340,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         wxWindow* parent = wxDynamicCast(event.GetEventObject(), wxWindow);
         wxMessageBox( msg, _("Finished replacing"),
                       wxOK|wxICON_INFORMATION,
-                      parent ? parent : this);
+                      parent ? parent : GetModalParent());
 
         SetStateSingle(STE_CANFIND, false);
     }
@@ -3629,7 +3629,7 @@ bool wxSTEditor::ShowGotoLineDialog()
 {
     wxString msg = wxString::Format(_("Line number : 1...%d"), GetLineCount());
     long line = wxGetNumberFromUser(msg, wxEmptyString, _("Goto line"),
-                                    GetCurrentLine()+1, 1, GetLineCount(), this);
+                                    GetCurrentLine()+1, 1, GetLineCount(), GetModalParent());
 
     if (line > 0)
     {
@@ -3661,12 +3661,12 @@ bool wxSTEditor::ShowPrintDialog()
     wxPrinter printer(&printDialogData);
     wxSTEditorPrintout printout(this);
 
-    if (!printer.Print(this, &printout, true))
+    if (!printer.Print(GetModalParent(), &printout, true))
     {
         if (wxPrinter::GetLastError() == wxPRINTER_ERROR)
         {
             wxMessageBox( _("A print error occurred, perhaps your printer is not correctly setup?"),
-                          _("Print error"), wxOK|wxICON_ERROR, this);
+                          _("Print error"), wxOK|wxICON_ERROR, GetModalParent());
             return false;
         }
     }
@@ -3703,7 +3703,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
         delete preview;
 
         wxMessageBox(_("A print error occurred, perhaps your printer is not correctly setup?"),
-                     _("Print preview error"), wxOK|wxICON_ERROR, this);
+                     _("Print preview error"), wxOK|wxICON_ERROR, GetModalParent());
         return false;
     }
 
@@ -3725,7 +3725,7 @@ bool wxSTEditor::ShowPrintSetupDialog()
     //    printData->SetColour(GetEditorPrefs().GetPrefInt(STE_PREF_PRINTCOLOURMODE) != wxSTC_PRINT_BLACKONWHITE);
 
     wxPrintDialogData printDialogData(*printData);
-    wxPrintDialog printerDialog(this, &printDialogData);
+    wxPrintDialog printerDialog(GetModalParent(), &printDialogData);
 
     bool ok = (wxID_CANCEL != printerDialog.ShowModal());
     if (ok)
@@ -3741,7 +3741,7 @@ bool wxSTEditor::ShowPrintPageSetupDialog()
     wxPrintData *printData = wxSTEditorPrintout::GetPrintData(true);
     *pageSetupData = *printData;
 
-    wxPageSetupDialog pageSetupDialog(this, pageSetupData);
+    wxPageSetupDialog pageSetupDialog(GetModalParent(), pageSetupData);
     bool ok = (wxID_CANCEL != pageSetupDialog.ShowModal());
     if (ok)
     {
@@ -3753,7 +3753,7 @@ bool wxSTEditor::ShowPrintPageSetupDialog()
 
 bool wxSTEditor::ShowPrintOptionsDialog()
 {
-    wxSTEditorPrintOptionsDialog dialog(this);
+    wxSTEditorPrintOptionsDialog dialog(GetModalParent());
     bool ok = (wxID_OK == dialog.ShowModal());
     if (ok)
     {
@@ -3951,7 +3951,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2732")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2736")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

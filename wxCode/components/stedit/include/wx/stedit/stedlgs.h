@@ -376,7 +376,7 @@ private:
 class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 {
 public:
-    wxSTEditorPropertiesDialog(wxSTEditor *editor,
+    wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEditor *editor,
                                const wxString& title,
                                long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 

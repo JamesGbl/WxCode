@@ -716,6 +716,8 @@ public :
     const wxSTEditorLangs& GetEditorLangs() const;
     wxSTEditorLangs& GetEditorLangs();
 
+    wxWindow* GetModalParent() { return this; }
+
     // -----------------------------------------------------------------------
     // implementation
     void OnKeyDown(wxKeyEvent& event);
