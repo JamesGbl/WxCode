@@ -368,6 +368,7 @@ bool wxSTEditorFindReplacePanel::Create(wxWindow *parent, wxWindowID winid,
 
     m_created = true;
 
+    FindWindow(wxID_CANCEL)->SetLabel(wxGetStockLabel(wxID_CLOSE, wxSTOCK_NOFLAGS));
     UpdateFindFlags();
     UpdateButtons();
     m_findCombo->SetFocus();
