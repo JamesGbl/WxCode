@@ -62,6 +62,18 @@
     <!-- Library settings                                                  -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
+    <!-- make sure setup.h is created as soon as possible: -->
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
+        <phony id="setup_h">
+            <dependency-of>all</dependency-of>
+        </phony>
+        <copy-file-to-file-if-not-exist id="master_setup.h">
+            <src>include/wx/stedit/setup0.h</src>
+            <dst>include/wx/stedit/setup.h</dst>
+            <dependency-of>setup_h</dependency-of>
+        </copy-file-to-file-if-not-exist>
+    </if>
+    
     <lib id="stedit_lib" template="wxcode-lib" cond="WX_SHARED=='0'">
         <include>$(DOLLAR)(WXWIN)/contrib/include</include>
 

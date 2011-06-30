@@ -225,7 +225,7 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__stedit_lib___depname) $(__stedit_dll___depname) ..\samples\stedit\wxstedit.exe
+all: test_for_selected_wxbuild setup_h $(__stedit_lib___depname) $(__stedit_dll___depname) ..\samples\stedit\wxstedit.exe
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
@@ -246,6 +246,11 @@ test_for_selected_wxbuild:
 	echo ----------------------------------------------------------------------------
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
+
+setup_h: include\wx\stedit\setup.h
+
+include\wx\stedit\setup.h: 
+	if not exist include\wx\stedit\setup.h copy include\wx\stedit\setup0.h include\wx\stedit\setup.h
 
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.a: make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
@@ -391,7 +396,7 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxstedit_wxstedit.o: ../samples/
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxstedit_wxstedit_rc.o: ../samples/stedit/wxstedit.rc
 	windres --use-temp-file -i$< -o$@  --define HAVE_W32API_H $(____WX_SHARED_11_p_1) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ../include --include-dir ../samples/stedit --include-dir $(WXWIN)/contrib/include
 
-.PHONY: all clean
+.PHONY: all clean setup_h
 
 
 SHELL := $(COMSPEC)

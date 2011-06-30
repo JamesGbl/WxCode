@@ -258,7 +258,7 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__stedit_lib___depname) $(__stedit_dll___depname) ../samples/stedit/wxstedit
+all: test_for_selected_wxbuild setup_h $(__stedit_lib___depname) $(__stedit_dll___depname) ../samples/stedit/wxstedit
 
 install: $(__install_stedit_lib___depname) $(__install_stedit_lib_headers___depname) $(__install_stedit_dll___depname) $(__install_stedit_dll_headers___depname)
 
@@ -274,6 +274,13 @@ clean:
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
+
+setup_h: include/wx/stedit/setup.h
+
+include/wx/stedit/setup.h: 
+	@if test ! -s include/wx/stedit/setup.h ; then \
+	cp -pf include/wx/stedit/setup0.h include/wx/stedit/setup.h
+	fi; \
 
 ifeq ($(WX_SHARED),0)
 ../lib/gcc_$(__stedit_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
@@ -476,10 +483,10 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxstedit_stedoc.o: ../samples/stedit/ste
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxstedit_wxstedit.o: ../samples/stedit/wxstedit.cpp
 	$(CXX) -c -o $@ $(WXSTEDIT_CXXFLAGS) $(CPPDEPS) $<
 
-.PHONY: all install uninstall clean install_stedit_lib uninstall_stedit_lib \
-	install_stedit_lib_headers uninstall_stedit_lib_headers install_stedit_dll \
-	uninstall_stedit_dll install_stedit_dll_headers \
-	uninstall_stedit_dll_headers
+.PHONY: all install uninstall clean setup_h install_stedit_lib \
+	uninstall_stedit_lib install_stedit_lib_headers \
+	uninstall_stedit_lib_headers install_stedit_dll uninstall_stedit_dll \
+	install_stedit_dll_headers uninstall_stedit_dll_headers
 
 
 # Dependencies tracking:

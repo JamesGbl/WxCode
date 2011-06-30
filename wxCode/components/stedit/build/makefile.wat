@@ -263,7 +263,7 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX) :
 
 ### Targets: ###
 
-all : .SYMBOLIC test_for_selected_wxbuild $(__stedit_lib___depname) $(__stedit_dll___depname) ..\samples\stedit\wxstedit.exe
+all : .SYMBOLIC test_for_selected_wxbuild setup_h $(__stedit_lib___depname) $(__stedit_dll___depname) ..\samples\stedit\wxstedit.exe
 
 clean : .SYMBOLIC 
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -287,6 +287,11 @@ test_for_selected_wxbuild :
 	echo ----------------------------------------------------------------------------
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
+
+setup_h : .SYMBOLIC include\wx\stedit\setup.h
+
+include\wx\stedit\setup.h :  
+	if not exist include\wx\stedit\setup.h copy include\wx\stedit\setup0.h include\wx\stedit\setup.h
 
 !ifeq WX_SHARED 0
 ..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib :  make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)

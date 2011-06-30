@@ -260,7 +260,7 @@ COND_PLATFORM_OS2_1___wxstedit___os2_emxbindcmd = $(NM) wxstedit$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: $(__stedit_lib___depname) $(__stedit_dll___depname) $(srcdir)/samples/stedit/wxstedit$(EXEEXT)
+all: setup_h $(__stedit_lib___depname) $(__stedit_dll___depname) $(srcdir)/samples/stedit/wxstedit$(EXEEXT)
 
 install: $(__install_stedit_lib___depname) $(__install_stedit_lib_headers___depname) $(__install_stedit_dll___depname) $(__install_stedit_dll_headers___depname)
 
@@ -280,6 +280,13 @@ clean:
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
+
+setup_h: include/wx/stedit/setup.h
+
+include/wx/stedit/setup.h: 
+	@if test ! -s include/wx/stedit/setup.h ; then \
+	cp -pf include/wx/stedit/setup0.h include/wx/stedit/setup.h
+	fi; \
 
 @COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(STEDIT_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
@@ -476,7 +483,7 @@ wxstedit_wxstedit_rc.o: $(srcdir)/samples/stedit/wxstedit.rc
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include ./.deps/*.d
 
-.PHONY: all install uninstall clean distclean install_stedit_lib \
+.PHONY: all install uninstall clean distclean setup_h install_stedit_lib \
 	uninstall_stedit_lib install_stedit_lib_headers \
 	uninstall_stedit_lib_headers install_stedit_dll uninstall_stedit_dll \
 	install_stedit_dll_headers uninstall_stedit_dll_headers
