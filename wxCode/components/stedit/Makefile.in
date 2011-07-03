@@ -281,11 +281,11 @@ clean:
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
-setup_h: include/wx/stedit/setup.h
+setup_h: $(srcdir)/include/wx/stedit/setup.h
 
-include/wx/stedit/setup.h: 
-	@if test ! -s include/wx/stedit/setup.h ; then \
-	cp -pf include/wx/stedit/setup0.h include/wx/stedit/setup.h
+$(srcdir)/include/wx/stedit/setup.h: 
+	@if test ! -s $(srcdir)/include/wx/stedit/setup.h ; then \
+	cp -pf $(srcdir)/include/wx/stedit/setup0.h $(srcdir)/include/wx/stedit/setup.h
 	fi; \
 
 @COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(STEDIT_LIB_OBJECTS)

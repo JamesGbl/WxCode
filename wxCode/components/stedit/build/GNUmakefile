@@ -275,11 +275,11 @@ clean:
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
 
-setup_h: include/wx/stedit/setup.h
+setup_h: ../include/wx/stedit/setup.h
 
-include/wx/stedit/setup.h: 
-	@if test ! -s include/wx/stedit/setup.h ; then \
-	cp -pf include/wx/stedit/setup0.h include/wx/stedit/setup.h
+../include/wx/stedit/setup.h: 
+	@if test ! -s ../include/wx/stedit/setup.h ; then \
+	cp -pf ../include/wx/stedit/setup0.h ../include/wx/stedit/setup.h
 	fi; \
 
 ifeq ($(WX_SHARED),0)

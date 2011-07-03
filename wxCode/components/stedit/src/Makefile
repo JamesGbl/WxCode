@@ -45,6 +45,12 @@ TARGET_LIB_LINK1  = $(TARGET_LIBNAME).so.$(LIBVERSION_CURRENT)
 TARGET_LIB_LINK2  = $(TARGET_LIBNAME).so
 
 # ----------------------------------------------------------------------------
+# Copy setup0.h to setup.h is they haven't done so already
+
+copy_setup0 := $(shell test -f ../include/wx/stedit/setup.h || \
+                 (cp -v ../include/wx/stedit/setup0.h ../include/wx/stedit/setup.h))
+
+# ----------------------------------------------------------------------------
 # CXX flags and libs
 
 CXXFLAGS = $(WXCXXFLAGS) -MMD -g  -Wall -Wunused -Wunused-parameter -fPIC -DPIC
@@ -94,6 +100,8 @@ DEPFILES := $(OBJECTS:.o=.d)
 	$(CXX) -c $(CXXFLAGS) $(APPEXTRADEFS) -o $@ $<
 
 all: $(TARGET_LIB_STATIC) $(TARGET_LIB_SHARED)
+	@echo $(copy_setup0)
+
 
 $(TARGET_LIB_STATIC) : $(OBJECTS)
 		@$(RM) $(TARGET_LIB_STATIC)
@@ -114,6 +122,7 @@ clean:
 		$(WXSTEDIT_LIBDIR)/$(TARGET_LIB_LINK1) \
 		$(WXSTEDIT_LIBDIR)/$(TARGET_LIB_LINK2)
 
+-include $(DEPFILES)
 
 -include $(DEPFILES)
 

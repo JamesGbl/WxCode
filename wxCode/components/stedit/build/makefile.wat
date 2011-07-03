@@ -288,10 +288,10 @@ test_for_selected_wxbuild :
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
 
-setup_h : .SYMBOLIC include\wx\stedit\setup.h
+setup_h : .SYMBOLIC ..\include\wx\stedit\setup.h
 
-include\wx\stedit\setup.h :  
-	if not exist include\wx\stedit\setup.h copy include\wx\stedit\setup0.h include\wx\stedit\setup.h
+..\include\wx\stedit\setup.h :  
+	if not exist ..\include\wx\stedit\setup.h copy ..\include\wx\stedit\setup0.h ..\include\wx\stedit\setup.h
 
 !ifeq WX_SHARED 0
 ..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib :  make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
