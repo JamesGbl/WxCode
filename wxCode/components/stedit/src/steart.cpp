@@ -129,7 +129,7 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
             (size.GetHeight() > m_app_small.GetHeight() + 5))
             bmp = m_app_large;
         else
-           bmp = m_app_large;
+           bmp = m_app_small;
     }
     else
     {
