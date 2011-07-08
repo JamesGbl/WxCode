@@ -61,10 +61,7 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
         return false;
 
     // Set the frame's icons
-    wxIconBundle iconBundle;
-    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxIconSize_System));
-    iconBundle.AddIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP, wxIconSize_SystemSmall));
-    SetIcons(iconBundle);
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 
     ::wxFrame_SetInitialPosition(this, pos, size);
     return true;

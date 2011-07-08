@@ -3,7 +3,7 @@
 // Purpose:     wxWidgets extensions
 // Author:      Troels K
 // Created:     2009-11-11
-// RCS-ID:      
+// RCS-ID:
 // Copyright:   (c) John Labenski, Troels K
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,9 +18,11 @@
    #define wxT_2 wxT
 #endif
 
-WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AcceleratorArray);
+class WXDLLIMPEXP_FWD_CORE wxMenuBar;
+
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
-WX_DECLARE_OBJARRAY(wxFileName, FileNameArray);
+WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, AcceleratorArray, class WXDLLIMPEXP_STEDIT);
+WX_DECLARE_OBJARRAY_WITH_DECL(wxFileName, FileNameArray, class WXDLLIMPEXP_STEDIT);
 
 WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
 WXDLLIMPEXP_STEDIT bool wxLocale_GetSupportedLanguages(LanguageArray*);
@@ -44,14 +46,9 @@ WXDLLIMPEXP_STEDIT void wxCommandLineUsage(wxWindow* parent);
 WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
 
 WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&);
-class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
 WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray& accel, int id);
-
-WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_System;
-WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_SystemSmall;
-//WXDLLIMPEXP_STEDIT extern const wxSize wxIconSize_CustomSmall;
 
 #if (wxVERSION_NUMBER >= 2900)
 #define wxMessageBoxCaption wxTheApp->GetAppDisplayName()

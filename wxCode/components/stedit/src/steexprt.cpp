@@ -1973,9 +1973,9 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
     m_fileFormatChoice->SetSelection(sm_file_format);
 
     wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
-    bmpButton->SetBitmapLabel(STE_ARTBMP(wxART_STEDIT_OPEN));
+    bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }
 
 wxFileName wxSTEditorExportDialog::GetFileName() const

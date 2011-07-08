@@ -170,7 +170,7 @@ wxSTEditorFrame* wxStEditApp::CreateMainFrame()
         menu->Append(item);
 
         ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
-        
+
         wxMenuBar* menubar = frame->GetMenuBar();
         menubar->Append(menu, wxGetStockLabelEx(wxID_HELP));
 
@@ -180,7 +180,7 @@ wxSTEditorFrame* wxStEditApp::CreateMainFrame()
             item->GetMenu()->Append(ID_NEW_WINDOW, _("&New"));
             frame->Connect(ID_NEW_WINDOW, wxEVT_COMMAND_MENU_SELECTED,
                          wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
-        }    
+        }
     }
     else
     {
@@ -206,7 +206,6 @@ bool wxStEditApp::OnInit()
 #endif
     ::wxLocale_Init(&m_locale, STE_APPNAME, m_lang);
     wxSTEditorOptions::SetGlobalDefaultFileName(wxString(_("unnamed")) + wxT(".txt")); // translated
-    //wxSTEditorArtProvider::m_default_client = wxART_OTHER; // default is wxART_STEDIT
 
     // Create a set of options for your editing "system."
     //  These options control what components will be automatically
@@ -316,7 +315,7 @@ bool wxStEditApp::OnInit()
 
         //for (n=0; n < recurseFileNames.GetCount(); n++)
         //  { wxPrintf(wxT("Loading file '%s'\n"), recurseFileNames[n].wx_str()); fflush(stdout); }
-        
+
         fileNames.Clear();
         for (n = 0; n < recurseFileNames.GetCount(); n++)
         {

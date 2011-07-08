@@ -11,43 +11,38 @@
 #ifndef _STEART_H_
 #define _STEART_H_
 
-//-----------------------------------------------------------------------------
-// wxSTEditorArtProvider - a holding place for our art for menu items and
-//  toolbar tools.
-//
-// The XPM files located in the "art" directory contain the images used by
-//  this art provider. If you wish to use you own images then just call
-//  wxArtProvider::PushProvider(new myArtProvider);
-//  and have it return your own bitmaps using the wxArtIDs set below.
-//-----------------------------------------------------------------------------
 #include <wx/artprov.h>
 
-#define wxART_STEDIT                wxART_MAKE_CLIENT_ID(wxART_STEDIT)
+// --------------------------------------------------------------------------
+// wxArtIDs used by the wxStEditor classes to get bitmaps
+// Note: We cannot use the default wxArtProvider icons since we require a few
+//       extra ones and mixing the two will look strange at best.
 
-#define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)
-#define wxART_STEDIT_NEW            wxART_MAKE_ART_ID(wxART_STEDIT_NEW)
-#define wxART_STEDIT_OPEN           wxART_MAKE_ART_ID(wxART_STEDIT_OPEN)
-#define wxART_STEDIT_SAVE           wxART_MAKE_ART_ID(wxART_STEDIT_SAVE)
+#define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)     // the pencil icon
+
+#define wxART_STEDIT_NEW            wxART_MAKE_ART_ID(wxART_STEDIT_NEW)     // wxART_NEW
+#define wxART_STEDIT_OPEN           wxART_MAKE_ART_ID(wxART_STEDIT_OPEN)    // wxART_FILE_OPEN
+#define wxART_STEDIT_SAVE           wxART_MAKE_ART_ID(wxART_STEDIT_SAVE)    // wxART_FILE_SAVE
 #define wxART_STEDIT_SAVEALL        wxART_MAKE_ART_ID(wxART_STEDIT_SAVEALL)
-#define wxART_STEDIT_SAVEAS         wxART_MAKE_ART_ID(wxART_STEDIT_SAVEAS)
-#define wxART_STEDIT_PRINT          wxART_MAKE_ART_ID(wxART_STEDIT_PRINT)
+#define wxART_STEDIT_SAVEAS         wxART_MAKE_ART_ID(wxART_STEDIT_SAVEAS)  // wxART_FILE_SAVE_AS
+#define wxART_STEDIT_PRINT          wxART_MAKE_ART_ID(wxART_STEDIT_PRINT)   // wxART_PRINT
 #define wxART_STEDIT_PRINTPREVIEW   wxART_MAKE_ART_ID(wxART_STEDIT_PRINTPREVIEW)
 #define wxART_STEDIT_PRINTSETUP     wxART_MAKE_ART_ID(wxART_STEDIT_PRINTSETUP)
 #define wxART_STEDIT_PRINTPAGESETUP wxART_MAKE_ART_ID(wxART_STEDIT_PRINTPAGESETUP)
-#define wxART_STEDIT_EXIT           wxART_MAKE_ART_ID(wxART_STEDIT_EXIT)
-#define wxART_STEDIT_CUT            wxART_MAKE_ART_ID(wxART_STEDIT_CUT)
-#define wxART_STEDIT_COPY           wxART_MAKE_ART_ID(wxART_STEDIT_COPY)
-#define wxART_STEDIT_PASTE          wxART_MAKE_ART_ID(wxART_STEDIT_PASTE)
-#define wxART_STEDIT_FIND           wxART_MAKE_ART_ID(wxART_STEDIT_FIND)
+#define wxART_STEDIT_QUIT           wxART_MAKE_ART_ID(wxART_STEDIT_QUIT)    // wxART_QUIT
+#define wxART_STEDIT_CUT            wxART_MAKE_ART_ID(wxART_STEDIT_CUT)     // wxART_CUT
+#define wxART_STEDIT_COPY           wxART_MAKE_ART_ID(wxART_STEDIT_COPY)    // wxART_COPY
+#define wxART_STEDIT_PASTE          wxART_MAKE_ART_ID(wxART_STEDIT_PASTE)   // wxART_PASTE
+#define wxART_STEDIT_FIND           wxART_MAKE_ART_ID(wxART_STEDIT_FIND)    // wxART_FIND
 #define wxART_STEDIT_FINDNEXT       wxART_MAKE_ART_ID(wxART_STEDIT_FINDNEXT)
 #define wxART_STEDIT_FINDUP         wxART_MAKE_ART_ID(wxART_STEDIT_FINDUP)
 #define wxART_STEDIT_FINDDOWN       wxART_MAKE_ART_ID(wxART_STEDIT_FINDDOWN)
-#define wxART_STEDIT_REPLACE        wxART_MAKE_ART_ID(wxART_STEDIT_REPLACE)
-#define wxART_STEDIT_UNDO           wxART_MAKE_ART_ID(wxART_STEDIT_UNDO)
-#define wxART_STEDIT_REDO           wxART_MAKE_ART_ID(wxART_STEDIT_REDO)
-#define wxART_STEDIT_CLEAR          wxART_MAKE_ART_ID(wxART_STEDIT_CLEAR)
+#define wxART_STEDIT_REPLACE        wxART_MAKE_ART_ID(wxART_STEDIT_REPLACE) // wxART_FIND_AND_REPLACE
+#define wxART_STEDIT_UNDO           wxART_MAKE_ART_ID(wxART_STEDIT_UNDO)    // wxART_UNDO
+#define wxART_STEDIT_REDO           wxART_MAKE_ART_ID(wxART_STEDIT_REDO)    // wxART_REDO
+#define wxART_STEDIT_CLEAR          wxART_MAKE_ART_ID(wxART_STEDIT_CLEAR)   // wxART_DELETE
 
-// Art for each preference dialog page
+// wxArtIDs for each preference dialog page
 #define wxART_STEDIT_PREFDLG_VIEW       wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_VIEW)
 #define wxART_STEDIT_PREFDLG_TABSEOL    wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_TABSEOL)
 #define wxART_STEDIT_PREFDLG_FOLDWRAP   wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_FOLDWRAP)
@@ -57,38 +52,71 @@
 #define wxART_STEDIT_PREFDLG_STYLES     wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_STYLES)
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
-#define wxDialogIconSize wxIconSize_SystemSmall
-#define wxMenuIconSize   wxIconSize_SystemSmall
+// --------------------------------------------------------------------------
+// System default sizes
+
+WXDLLIMPEXP_STEDIT extern const wxSize wxSTEIconSize;      // Normal icon size for this platform
+WXDLLIMPEXP_STEDIT extern const wxSize wxSTESmallIconSize; // Small icon size for this platform
+
+// --------------------------------------------------------------------------
+// Convenience macros to reduce typing, gets an appropriate bitmap for the client
+
+#define STE_ARTMENU(id) wxArtProvider::GetBitmap(id, wxART_MENU)
+#define STE_ARTTOOL(id) wxArtProvider::GetBitmap(id, wxART_TOOLBAR)
+
+// --------------------------------------------------------------------------
+// wxSTEditorArtProvider - a holding place for our art for menu items and
+//  toolbar tools.
+//
+// The XPM files located in the "art" directory contain the images used by
+//  this art provider.
+// If you wish to use your own images, create your own wxArtProvider and call
+//  wxArtProvider::PushProvider(new myArtProvider);
+//  and have it return your own bitmaps using the wxArtIDs set above
+//  in your overridden virtual CreateBitmap(...) function.
+// --------------------------------------------------------------------------
 
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {
 public:
     wxSTEditorArtProvider();
+    virtual ~wxSTEditorArtProvider() {}
 
-    static wxArtClient m_default_client; // default is wxART_STEDIT
+    // ----------------------------------------------------------------------
+
+    // Get a wxBitmap for one of the wxART_STEDIT_* wxArtIDs.
+    //   returns an invalid bitmap for all other wxArtIDs
+    // Respects GetSizeHint(client) if size == wxDefaultSize
+    // User created wxArtProviders may call this function to guarantee that
+    //   they get one of our bitmaps if they wish.
+    static wxBitmap DoGetBitmap(const wxArtID& id,
+                                const wxArtClient& client,
+                                const wxSize& size = wxDefaultSize);
+
+    // Helper function to resize the input bitmap to have the given size
+    static wxBitmap Resize(const wxBitmap& bmp, const wxSize& size);
+
+    // Get a wxIconBundle of the wxART_STEDIT_APP icon for wxStEdit dialogs
+    // This function exists since static wxArtProvider::GetIconBundle()
+    //  is only in >= 2.9
+    static wxIconBundle GetDialogIconBundle();
+
+protected:
+
+    // ----------------------------------------------------------------------
+    // Overridden virtual functions from wxArtProvider to get bitmaps
+    // Always use the static wxArtProvider functions to get bitmaps
 
     virtual wxBitmap CreateBitmap(const wxArtID& id,
                                   const wxArtClient& client,
                                   const wxSize& size);
 
-    static wxBitmap GetBitmap(const wxArtID& id,
-                              const wxSize& size = wxDefaultSize)
-    {
-       return wxArtProvider::GetBitmap(id, m_default_client, size);
-    }
+    // This function is in wx >= 2.9
+    virtual wxIconBundle CreateIconBundle(const wxArtID& id,
+                                          const wxArtClient& client);
 
-    static wxIcon GetIcon(const wxArtID& id,
-                          const wxSize& size = wxDefaultSize)
-    {
-       return wxArtProvider::GetIcon(id, m_default_client, size);
-    }
-    static wxIcon GetDefaultDialogIcon();
-
-protected:
-    wxBitmap m_app_large;
-    wxBitmap m_app_small;
+    static wxBitmap m_app_large;
+    static wxBitmap m_app_small;
 };
-
-#define STE_ARTBMP(id) wxSTEditorArtProvider::GetBitmap(id)
 
 #endif  // _STEART_H_

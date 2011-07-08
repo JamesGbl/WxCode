@@ -25,12 +25,9 @@
 #endif // WXPRECOMP
 
 #include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(AcceleratorArray)
-WX_DEFINE_OBJARRAY(FileNameArray)
+WX_DEFINE_OBJARRAY(AcceleratorArray);
+WX_DEFINE_OBJARRAY(FileNameArray);
 
-const wxSize wxIconSize_System     (wxSystemSettings::GetMetric(wxSYS_ICON_X     ), wxSystemSettings::GetMetric(wxSYS_ICON_Y     ));
-const wxSize wxIconSize_SystemSmall(wxSystemSettings::GetMetric(wxSYS_SMALLICON_X), wxSystemSettings::GetMetric(wxSYS_SMALLICON_Y));
-//const wxSize wxIconSize_CustomSmall(16, 16);
 
 bool wxGetExeFolder(wxFileName* filename)
 {
@@ -405,7 +402,7 @@ wxPreviewFrameEx::wxPreviewFrameEx(wxPrintPreviewBase* preview,
                 const wxPoint& pos,
                 const wxSize& size,
                 long style,
-                const wxString& name) 
+                const wxString& name)
    : wxPreviewFrame(preview, parent, title, pos, size, style, name)
 {
 }
@@ -465,9 +462,9 @@ void wxFrame_SetInitialPosition(wxFrame* wnd, const wxPoint& pos, const wxSize& 
    {
       wxRect rect = wxGetClientDisplayRect();
       wxSize size(
-         (rect.width  * (100 - margin_pct*2))/100, 
+         (rect.width  * (100 - margin_pct*2))/100,
          (rect.height * (100 - margin_pct*2))/100);
-         
+
       wnd->SetSize(size);
    }
    if (pos == wxDefaultPosition)

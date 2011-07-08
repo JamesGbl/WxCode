@@ -150,7 +150,7 @@ wxSTEditorFindReplacePanel::~wxSTEditorFindReplacePanel()
 void wxSTEditorFindReplacePanel::Init()
 {
     m_created = false;
-    
+
     m_targetWin = NULL;
 
     m_flags = 0;
@@ -886,7 +886,7 @@ bool wxSTEditorFindReplaceDialog::Create(wxWindow *parent,
         SetSize(wxMax(dialogSize.x, size.x), wxMax(dialogSize.y, size.y));
     }
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetIcon((style & wxFR_REPLACEDIALOG) ? wxART_STEDIT_REPLACE : wxART_STEDIT_FIND, wxDialogIconSize));
+    SetIcon(wxArtProvider::GetIcon((style & wxFR_REPLACEDIALOG) ? wxART_STEDIT_REPLACE : wxART_STEDIT_FIND, wxART_FRAME_ICON));
     return true;
 }
 

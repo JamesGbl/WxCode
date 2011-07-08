@@ -76,6 +76,7 @@ LN_S      = ln -s
 
 OBJECTS = \
     precomp.o \
+    steart.o \
     stedit.o \
     stedlgs.o \
     stedlgs_wdr.o \
@@ -91,7 +92,6 @@ OBJECTS = \
     stesplit.o \
     steshell.o \
     stestyls.o \
-    steart.o \
     wxext.o
 
 DEPFILES := $(OBJECTS:.o=.d)
@@ -121,8 +121,6 @@ clean:
 		$(TARGET_LIB_SHARED) \
 		$(WXSTEDIT_LIBDIR)/$(TARGET_LIB_LINK1) \
 		$(WXSTEDIT_LIBDIR)/$(TARGET_LIB_LINK2)
-
--include $(DEPFILES)
 
 -include $(DEPFILES)
 

@@ -14,6 +14,7 @@
 #include <wx/stedit/steprint.h>
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steart.h>
+#include <wx/stedit/stemenum.h>
 #include "stedlgs_wdr.h"
 
 #include <wx/progdlg.h>   // wxProgressDialog
@@ -23,7 +24,6 @@
 //-----------------------------------------------------------------------------
 // wxSTEditorModule - setup anything after init and delete before closing
 //-----------------------------------------------------------------------------
-#include <wx/stedit/stemenum.h>
 
 class wxSTEditorModule : public wxModule
 {
@@ -254,7 +254,7 @@ void wxSTEditorPrintout::GetPageInfo(int *minPage, int *maxPage,
     int lines  = m_editor->GetLineCount();
     int pages  = 1;
     m_pages.Clear();
-    
+
     wxWindow* parent = wxGetTopLevelParent(wxWindow::FindFocus()); // find wxPreviewFrame
 
     // Using the default wxPD_APP_MODAL flag, or using the frame window or NULL as parent, will mess up the z-order when displaying wxPreviewFrame
@@ -372,7 +372,7 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
                                        wxDefaultPosition, wxDefaultSize,
                                        wxDEFAULT_DIALOG_STYLE_RESIZE)
 {
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
     wxSizer *sizer = wxSTEditorPrintPrefsSizer(this, true, true);
 
     wxSizer* stdButtonSizer = CreateStdDialogButtonSizer(wxOK|wxCANCEL);

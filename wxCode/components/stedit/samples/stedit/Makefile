@@ -55,7 +55,7 @@ CXX      = $(WXCXX)
 # -pg in libs and defs for profiling
 PROFILE = #-pg
 APPEXTRADEFS = -I../../include -I$(WXDIR)/contrib/include $(PROFILE)
-APPEXTRALIBS = -l$(WXSTC_LIB) $(PROFILE)
+APPEXTRALIBS = $(PROFILE)
 
 # ----------------------------------------------------------------------------
 # Source files, objects to link
@@ -83,15 +83,15 @@ $(WXSTEDIT_LIBNAME) :
 #	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
 
 $(PROGRAM): $(OBJECTS) $(TARGET_LIB_SHARED)
-	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o wxstedit $(OBJECTS) $(LDLIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
+	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o wxstedit $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
 
 
 # wxstedit program using static stedit library
-#$(PROGRAM): $(PROGRAM).o $(TARGET_LIB_STATIC)
-#	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(LDLIBS) $(TARGET_LIB_STATIC) $(APPEXTRALIBS)
+$(PROGRAM)-static: $(PROGRAM).o $(TARGET_LIB_STATIC)
+	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
 
 # wxstedit program using just object files and not the stedit lib
-#$(PROGRAM): $(PROGRAM).o $(OBJECTS)
+#$(PROGRAM)-objects: $(PROGRAM).o $(OBJECTS)
 #	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) $(APPEXTRALIBS)
 
 docs:
@@ -101,7 +101,7 @@ docs:
 	$(WXLUA)/bin/lua $(WXLUA)/util/bin2c/bin2c.lua -t -o readme_htm.hpp ../../docs/readme.htm
 
 clean:
-	rm -f $(OBJECTS) $(DEPFILES) $(PROGRAM) $(PROGRAM).o $(PROGRAM).d core
+	rm -f $(OBJECTS) $(DEPFILES) $(PROGRAM) $(PROGRAM)-static $(PROGRAM).o $(PROGRAM).d core
 
 cleanall: clean
 	@(cd ../../src && make clean)

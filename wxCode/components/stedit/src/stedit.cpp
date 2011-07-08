@@ -70,14 +70,14 @@ static const wxString EOLModeStrings[] =
 };
 
 wxString STE_DefaultFileName( wxT("untitled.txt") );
-wxString STE_DefaultFileExtensions( 
+wxString STE_DefaultFileExtensions(
                                     wxT("Text Files (txt text)|*.txt;*.text|")
                                     wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx|")
                                     wxT("H Files (h)|*.h|")
                                     wxT("Html Files (htm html)|*.htm;*.html|")
                                     wxT("XML Files (xml)|*.xml|")
                                     wxT("Lua Files (lua)|*.lua|")
-                                    wxT("Python Files (py)|*.py|") 
+                                    wxT("Python Files (py)|*.py|")
                                     wxT("All Files|")wxALL_FILES_PATTERN
                                     );
 
@@ -865,7 +865,7 @@ static wxTextFileType wxSTEConvertEOLMode(int scintillaMode)
 {
     wxTextFileType type;
 
-    switch (scintillaMode) 
+    switch (scintillaMode)
     {
         case wxSTC_EOL_CRLF:
             type = wxTextFileType_Dos;
@@ -2215,9 +2215,9 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                 str = wxString(charBuf.data(), *wxConvCurrent, last_read);
             }
 
-            if (    (i == 0) 
+            if (    (i == 0)
                  && (last_read >= xml_header_len)
-                 && want_lang 
+                 && want_lang
                  && (!found_lang)
                  && (0 == wxStrnicmp(str, xml_header, xml_header_len))
                )
@@ -2254,7 +2254,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
 
 bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool query_if_changed)
 {
-    if (query_if_changed && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) && 
+    if (query_if_changed && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) &&
         (QuerySaveIfModified(true) == wxCANCEL))
     {
         return false;
@@ -2476,7 +2476,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     bool sendEvents = m_sendEvents;
     m_sendEvents = false; // block focus when dialog closes
 
-    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"), 
+    int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"),
                                  GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                            _("Unsaved changes"),
                            style|wxCENTRE|wxICON_QUESTION, GetModalParent());
@@ -2514,7 +2514,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         // oops, file is gone, just tell them
         if (show_reload_dialog)
         {
-            wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."), 
+            wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."),
                            GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                           _("File removed from disk"),
                           wxOK | wxICON_EXCLAMATION, GetModalParent());
@@ -2599,7 +2599,7 @@ static bool IsTextAvailable()
 #   endif // __WXMSW__
     };
     return wxClipboard_IsAvailable(text, WXSIZEOF(text));
-#else 
+#else
     return false;
 #endif // wxUSE_CLIPBOARD
 }
@@ -2772,7 +2772,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         // Edit menu items ----------------------------------------------------
         case wxID_CUT            : Cut();   return true;
         case wxID_COPY           : Copy();  return true;
-        case wxID_CLEAR          : 
+        case wxID_CLEAR          :
         {
             if (!HasSelection())
             {
@@ -2781,7 +2781,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                CharRight(); // move right, jumping to next line if at cr+lf
                SetSelection(pos, GetCurrentPos());
             }
-            Clear();  
+            Clear();
             return true;
         }
         case ID_STE_COPY_HTML:
@@ -2791,7 +2791,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
 
         #ifdef __WXMSW__
             text.Replace(wxT("\n"), wxT("\r\n")); // to make Notepad happy
-        #endif            
+        #endif
             ::wxClipboard_SetHtml(text);
             return true;
         }
@@ -3140,7 +3140,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
 
     if (dialog)
     {
-        if ((  find  && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) || 
+        if ((  find  && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) ||
             ((!find) &&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
         {
             create = false;
@@ -3708,7 +3708,7 @@ bool wxSTEditor::ShowPrintPreviewDialog()
     }
 
     wxPreviewFrame *frame = new wxPreviewFrameEx(preview, this, wxGetStockLabelEx(wxID_PREVIEW, wxSTOCK_PLAINTEXT));
-    frame->SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon()); // use the pencil even in embedded wxStEdit
+    frame->SetIcons(wxSTEditorArtProvider::GetDialogIconBundle()); // use the pencil even in embedded wxStEdit
     ::wxFrame_ClonePosition(frame, this); // Clone main frame position
     frame->Initialize();
     frame->Show();
@@ -3992,7 +3992,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
    info.AddDeveloper(wxT("John Labenski"));
    info.AddDeveloper(wxT("Troels K"));
    info.AddDeveloper(wxT("Otto Wyss"));
-   info.SetIcon(wxSTEditorArtProvider::GetIcon(wxART_STEDIT_APP));
+   info.SetIcon(wxArtProvider::GetIcon(wxART_STEDIT_APP, wxART_MESSAGE_BOX));
    ::wxAboutBox(info, parent);
 }
 

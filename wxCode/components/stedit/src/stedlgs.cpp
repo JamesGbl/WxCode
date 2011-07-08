@@ -1321,7 +1321,7 @@ extern void LangConfig(); // FIXME test code to dump languages (100Kb!, maybe no
 void wxSTEditorPrefDialog::Init()
 {
     m_noteBook = NULL;
-    m_imageList = new wxImageList(wxIconSize_System.x, wxIconSize_System.y);
+    m_imageList = new wxImageList(wxSTEIconSize.x, wxSTEIconSize.y);
 }
 
 bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
@@ -1347,14 +1347,14 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     if (m_editorPrefData.GetLangs().IsOk())
         m_prefData.GetLangs().Copy(m_editorPrefData.GetLangs());
 
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_VIEW));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_TABSEOL));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_FOLDWRAP));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_PRINT));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_LOADSAVE));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_HIGHLIGHT));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_STYLES));
-    m_imageList->Add(STE_ARTBMP(wxART_STEDIT_PREFDLG_LANGS));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_VIEW,      wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_TABSEOL,   wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_FOLDWRAP,  wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_PRINT,     wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_LOADSAVE,  wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_HIGHLIGHT, wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_STYLES,    wxART_TOOLBAR, wxSTEIconSize));
+    m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_LANGS,     wxART_TOOLBAR, wxSTEIconSize));
 
     wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                  wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_BORDER);
@@ -1463,7 +1463,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
     Centre();
     SetMinSize(GetSize());
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
     return true;
 }
 
@@ -1630,7 +1630,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }
 
 //-----------------------------------------------------------------------------
@@ -1668,7 +1668,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
     m_listBox->SetSelection(m_notebook->GetSelection());
     UpdateButtons();
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
     ShowModal();
 }
 
@@ -1831,7 +1831,7 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     UpdateControls();
 
     Centre();
-    SetIcon(wxSTEditorArtProvider::GetDefaultDialogIcon());
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
