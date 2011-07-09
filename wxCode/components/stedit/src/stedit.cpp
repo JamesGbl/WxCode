@@ -900,6 +900,19 @@ wxString wxSTEditor::GetTargetText() const
         size_t i = 0;
         for (i = 0; i < array_count; i++)
         {
+        #ifdef __WXMSW__
+            // wxClipboard::IsSupported(wxDF_HTML) returns false always; handle it here instead
+            if (array[i] == wxDF_HTML)
+            {
+                static int CF_HTML = ::RegisterClipboardFormat(_T("HTML Format"));
+
+                if (::IsClipboardFormatAvailable(CF_HTML))
+                {
+                    break;
+                }
+            }
+            else
+        #endif
             if (clipboard->IsSupported(wxDataFormat(array[i]))) break;
         }
         ok = (i != array_count);
@@ -4042,7 +4055,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2744")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2745")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
