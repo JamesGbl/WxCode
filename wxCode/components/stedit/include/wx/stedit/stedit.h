@@ -16,6 +16,7 @@
 #include <wx/fdrepdlg.h>
 #include <wx/filename.h>
 #include <wx/treectrl.h>
+#include <wx/textbuf.h> // for wxTextFileType
 
 class WXDLLIMPEXP_FWD_CORE wxMenu;
 class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
@@ -30,6 +31,8 @@ class WXDLLIMPEXP_FWD_CORE wxDocument;
 #include <wx/stedit/stestyls.h>
 #include <wx/stedit/stelangs.h>
 #include <wx/stedit/steopts.h>
+
+class wxSTEditorFindReplaceDialog;
 
 //-----------------------------------------------------------------------------
 // wxSTERecursionGuard - a simple recursion guard to block reentrant functions
@@ -67,7 +70,7 @@ private:
 
 //-----------------------------------------------------------------------------
 // STE_FindStringType - options of what to do when finding strings
-//   see wxSTEditor::FindString
+//   see wxSTEditor::FindString()
 //-----------------------------------------------------------------------------
 
 enum STE_FindStringType
@@ -79,7 +82,7 @@ enum STE_FindStringType
 };
 
 //-----------------------------------------------------------------------------
-// STE_TranslatePosType - options of what to do for wxSTEditor::TranslateXXX
+// STE_TranslatePosType - options of what to do for wxSTEditor::TranslateXXX()
 //-----------------------------------------------------------------------------
 
 enum STE_TranslatePosType
@@ -87,6 +90,17 @@ enum STE_TranslatePosType
     STE_TRANSLATE_NOTHING   = 0, // take input literally
     STE_TRANSLATE_SELECTION = 1, // use selection to translate
     STE_TRANSLATE_TARGET    = 2  // use target to translate
+};
+
+//-----------------------------------------------------------------------------
+// STE_ClipboardType - options of how to get/set data from/to the clipboard
+//-----------------------------------------------------------------------------
+
+enum STE_ClipboardType
+{
+    STE_CLIPBOARD_DEFAULT = 1, // use the normal clipboard
+    STE_CLIPBOARD_PRIMARY = 2, // use the primary clipboard
+    STE_CLIPBOARD_BOTH    = 3  // use both clipboards (only valid for set functions)
 };
 
 //-----------------------------------------------------------------------------
@@ -102,21 +116,16 @@ public:
     virtual ~wxSTEditorRefData();
 
     // Find/Add/Remove editors that share this data
-    size_t GetEditorCount() const { return m_editors.GetCount(); }
+    size_t GetEditorCount() const            { return m_editors.GetCount(); }
     bool HasEditor(wxSTEditor* editor) const { return FindEditor(editor) != wxNOT_FOUND; }
     int FindEditor(wxSTEditor* editor) const { return m_editors.Index(editor); }
-    wxSTEditor *GetEditor(size_t n) const { return (wxSTEditor*)m_editors.Item(n); }
-    void AddEditor(wxSTEditor* editor) { if (!HasEditor(editor)) m_editors.Add(editor); }
-    void RemoveEditor(wxSTEditor* editor) { int n = FindEditor(editor);
-                                                  if (n != wxNOT_FOUND)
-                                                      m_editors.RemoveAt(n); }
+    wxSTEditor *GetEditor(size_t n) const    { return (wxSTEditor*)m_editors.Item(n); }
+    void AddEditor(wxSTEditor* editor)       { if (!HasEditor(editor)) m_editors.Add(editor); }
+    void RemoveEditor(wxSTEditor* editor)    { int n = FindEditor(editor); if (n != wxNOT_FOUND) m_editors.RemoveAt(n); }
 
     virtual void Modify(bool WXUNUSED(mod)) {}
 
-    wxFileName GetFilename() const
-    {
-        return m_fileName;
-    }
+    wxFileName GetFilename() const { return m_fileName; }
 
     virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
     {
@@ -124,8 +133,6 @@ public:
         m_fileName = fileName;
     }
 
-    // -----------------------------------------------------------------------
-    // implementation
 protected:
     wxArrayPtrVoid m_editors;       // editors that share this data
     wxFileName   m_fileName;        // current filename for the editor
@@ -153,8 +160,8 @@ public:
 
 //-----------------------------------------------------------------------------
 // wxSTEditorRefDataImpl
-// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and 
-// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance 
+// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and
+// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance
 // can be created like this,
 // CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
 //
@@ -173,12 +180,10 @@ public:
 // wxSTEditor
 //-----------------------------------------------------------------------------
 
-class wxSTEditorFindReplaceDialog;
 class WXDLLIMPEXP_STEDIT wxSTEditor : public wxStyledTextCtrl
 {
 public :
 
-    // wxStyledTextCtrl doesn't have Create method in 2.4.x
     wxSTEditor() : wxStyledTextCtrl() { Init(); }
 
     wxSTEditor(wxWindow *parent, wxWindowID id = wxID_ANY,
@@ -198,7 +203,7 @@ public :
 
     // Clone this editor, uses wxClassInfo so derived classes should work.
     // Override if you want to create your own type for the splitter to use in
-    //   wxSTEditorSplitter::CreateEditor.
+    //   wxSTEditorSplitter::CreateEditor().
     virtual wxSTEditor* Clone(wxWindow *parent, wxWindowID id = wxID_ANY,
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,
@@ -207,7 +212,7 @@ public :
 
     // Create any elements desired in the wxSTEditorOptions.
     //   This function is always called after creation by the parent splitter
-    //     with it's options and would be a good function to override to setup
+    //     with its options and would be a good function to override to setup
     //     the editor your own way.
     // This registers the prefs, styles, langs in the options,
     //   and creates any items set by the options.
@@ -217,7 +222,7 @@ public :
     wxSTEditorOptions& GetOptions();
     // Set the options, the options will now be refed copies of the ones you send
     // in. This can be used to detach the options for a particular editor from
-    // the rest of them. (See also CreateOptions)
+    // the rest of them. See also CreateOptions()
     void SetOptions(const wxSTEditorOptions& options);
 
     // ************************************************************************
@@ -242,16 +247,11 @@ public :
     // ------------------------------------------------------------------------
     // wxTextCtrl methods - this can be used as a replacement textctrl with
     //                      very few, if any, code changes.
+
     bool CanCopy() const { return GetSelectionEnd() != GetSelectionStart(); }
     bool CanCut()  const { return CanCopy() && IsEditable(); }
 
-    // FIXME gtk runs evt loop during CanPaste check causing a crash in
-    //   scintilla's drawing code, for now let's just assume you can always paste
-#ifdef __WXGTK__
-    bool CanPaste() { return IsEditable(); }
-#endif // __WXGTK__
-
-    // void Clear() { ClearAll(); } // wxSTC uses Clear to clear selection
+    // void Clear() { ClearAll(); }       // wxSTC uses Clear to clear selection
     void DiscardEdits()                   { SetSavePoint(); }
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
     wxString GetLineText(int line) const; // excluding any cr/lf at end
@@ -268,109 +268,108 @@ public :
 
     void SetReadOnly(bool readOnly);
 
+    bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
+    void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
+
+    // ------------------------------------------------------------------------
+    // wxWidgets 2.8 <--> 2.9 compatibility functions (most functions are const in wx2.9)
+
+    wxString GetTextRange(int startPos, int endPos) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTextRange(startPos, endPos); }
+
 #if (wxVERSION_NUMBER >= 2900)
-    void GetSelection(long *iStart, long *iEnd) const
-    {
-        long s=0,e=0; wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
-    }
-#else // wxVERSION_NUMBER < 2900
-    int GetEOLMode() const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode();
-    }
-    wxString GetLine(int line) const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line);
-    }
-    int GetLength() const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength();
-    }
-    int LineFromPosition(int pos) const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos);
-    }
-    int PositionFromLine(int line) const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line);
-    }
-    void GetSelection(long *iStart, long *iEnd) const
-    {
-        int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e;
-    }
-    void GetSelection(int* startPos, int* endPos)
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(startPos, endPos);
-    }
-    int GetSelectionStart() const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart();
-    }
-    int GetSelectionEnd() const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd();
-    }
-    bool GetReadOnly() const
-    {
-        return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly();
-    }
-    bool IsEditable() const
-    {
-        return !GetReadOnly();
-    }
-    int GetInsertionPoint() const
-    {
-        return wxConstCast(this, wxSTEditor)->GetCurrentPos();
-    }
-    long GetNumberOfLines() const
-    {
-        return wxConstCast(this, wxSTEditor)->GetLineCount();
-    }
-    bool IsModified() const
-    {
-        return wxConstCast(this, wxSTEditor)->GetModify();
-    }
-    bool HasSelection() const
-    {
-        return (GetSelectionStart() != GetSelectionEnd());
-    }
-    void RemoveSelection()
-    {
-        SetSelection(GetCurrentPos() , GetCurrentPos());
-    }
-#endif // wxVERSION_NUMBER < 2900
+
+    void GetSelection(int *iStart, int *iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
+        { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
+
+#else // (wxVERSION_NUMBER < 2900)
+
+    // FIXME gtk runs evt loop during CanPaste check causing a crash in
+    //   scintilla's drawing code, for now let's just assume you can always paste
+#ifdef __WXGTK__
+    bool CanPaste()       { return IsEditable(); }
+    bool CanPaste() const { return IsEditable(); }
+#endif // __WXGTK__
+
+    int GetEOLMode() const           { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode(); }
+    int GetInsertionPoint() const    { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
+
+    wxString GetLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line); }
+    int GetLength() const            { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength(); }
+    long GetNumberOfLines() const    { return wxConstCast(this, wxSTEditor)->GetLineCount(); } // not in wx2.8
+    bool GetReadOnly() const         { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); }
+
+    void GetSelection(long *iStart, long *iEnd) const // forwards compatibility, wx2.8 uses int*
+        { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
+    void GetSelection(int *iStart, int *iEnd) const
+        { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
+
+    int GetSelectionStart() const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart(); }
+    int GetSelectionEnd() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd(); }
+
+    bool GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
+    bool GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
+
+    bool IsEditable() const { return !GetReadOnly(); } // not in wx2.8
+    bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8
+
+    int LineFromPosition(int pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
+    int PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
+
+#endif // (wxVERSION_NUMBER >= 2900)
 
     // ------------------------------------------------------------------------
     // Convenience functions - other useful functions
 
     // Translate the start and end positions in the document, returns if !empty
-    //  If start_pos == end_pos == -1 use current selection/target
-    //    or if none use cursor line
+    //  If start_pos == end_pos == -1 use current selection, target,
+    //    or if none use cursor line based on the STE_TranslatePosType.
     //  To get the whole document use (0, GetLength()-1) or (0, -1).
     bool TranslatePos(int  start_pos,       int  end_pos,
                       int* trans_start_pos, int* trans_end_pos,
                       STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
     // Translate the top and bottom lines in the document, returns true if they differ
-    //  If top_line == bottom_line == -1 then use top/bottom line of selection/target
-    //    or if no selection/target use the cursor line.
+    //  If top_line == bottom_line == -1 then use top/bottom line of selection, target,
+    //    or if no selection/target use the cursor line based on STE_TranslatePosType.
     //  If top_line = 0 and bottom_line = -1 use (0, GetLineCount()-1)
     bool TranslateLines(int  top_line,       int  bottom_line,
                         int* trans_top_line, int* trans_bottom_line,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
 
-    // Get the text between the GetTargetStart and GetTargetEnd
-    wxString GetTargetText();
+    // Get the text between the GetTargetStart() and GetTargetEnd()
+    wxString GetTargetText() const;
 
-    // Get the current text of the clipboard into the buf and translate the 
-    // line endings to the current GetEOLMode()
-    bool GetClipboardText(wxString& buf) const;
+    // Is text available in the single specified clipboard in any usable text format.
+    // Formats tested are wxDF_TEXT and if avilable wxDF_UNICODETEXT and wxDF_HTML.
+    static bool IsClipboardTextAvailable(STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
+    // Returns true if there is data in the single specified clipboard with the given formats.
+    // This function takes an array since the clipboard has to be opened to test formats.
+    static bool IsClipboardFormatAvailable(const enum wxDataFormatId* array, size_t array_count,
+                                           STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
+    // Get the current text in the single specified clipboard into the buf.
+    // Returns true if the clipboard was opened and the buf is not empty.
+    static bool GetClipboardText(wxString* buf, STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
+    // Set the text to the specified clipboard(s).
+    static bool SetClipboardText(const wxString& str, STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
+    // Set the HTML text to the clipboard. In MSW the clipboard will contain
+    // a valid HTML data object and a text object, on other systems the
+    // clipboard only contains a text object.
+    static bool SetClipboardHtml(const wxString& htmldata);
 
     // Paste the text from the clipboard into the text at the current cursor
-    //  position preserving the linefeeds in the text using PasteRectangular
+    //  position preserving the linefeeds in the text using PasteRectangular()
     bool PasteRectangular();
     // Paste the text into the document using the column of pos, -1 means
     //   current cursor position, as the leftmost side for linefeeds.
     void PasteRectangular(const wxString& str, int pos = -1);
+
+    // Convert the wxSTC_EOL_CRLF, wxSTC_EOL_CR, wxSTC_EOL_LF type to the
+    // wxTextFileType wxTextFileType_Dos, wxTextFileType_Mac, wxTextFileType_Unix.
+    // Returns wxTextBuffer::typeDefault for unknown input.
+    wxTextFileType ConvertEOLModeType(int stc_eol_mode) const;
+
+    // Convert the input string to have the appropriate line endings for
+    // the wxSTC_EOL_XXX type.
+    wxString ConvertEOLMode(const wxString& str, int stc_eol_mode) const;
 
     // Get the wxSTC_EOL_XXX string "\r", "\n", "\r\n" as appropriate for
     //  Mac, Unix, DOS. default (-1) gets EOL string for current doc settings

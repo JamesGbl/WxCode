@@ -851,7 +851,7 @@ bool wxSTEditor::TranslateLines(int  top_line,       int  bottom_line,
     return top_line < bottom_line;
 }
 
-wxString wxSTEditor::GetTargetText()
+wxString wxSTEditor::GetTargetText() const
 {
     int target_start = GetTargetStart();
     int target_end   = GetTargetEnd();
@@ -859,52 +859,144 @@ wxString wxSTEditor::GetTargetText()
     return GetTextRange(wxMin(target_start, target_end), wxMax(target_start, target_end));
 }
 
-// function defined in ScintillaWX.cpp
-#if wxUSE_DATAOBJ
-static wxTextFileType wxSTEConvertEOLMode(int scintillaMode)
+/*static*/ bool wxSTEditor::IsClipboardTextAvailable(STE_ClipboardType clip_type)
 {
-    wxTextFileType type;
+    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
 
-    switch (scintillaMode)
+    bool ok = false;
+#if wxUSE_CLIPBOARD
+    const enum wxDataFormatId text[] =
     {
-        case wxSTC_EOL_CRLF:
-            type = wxTextFileType_Dos;
-            break;
+        wxDF_TEXT
+      //,wxDF_OEMTEXT,     // This is wxDF_TEXT in MSW, not supported in GTK/OSX
+#   if wxUSE_UNICODE
+        ,wxDF_UNICODETEXT  // asserts in ANSI build
+#   endif // wxUSE_UNICODE
+#   ifdef __WXMSW__
+        ,wxDF_HTML         // Only supported in MSW
+#   endif // __WXMSW__
+    };
 
-        case wxSTC_EOL_CR:
-            type = wxTextFileType_Mac;
-            break;
-
-        case wxSTC_EOL_LF:
-            type = wxTextFileType_Unix;
-            break;
-
-        default:
-            type = wxTextBuffer::typeDefault;
-            break;
-    }
-    return type;
+    ok = IsClipboardFormatAvailable(text, WXSIZEOF(text), clip_type);
+#endif // wxUSE_CLIPBOARD
+    return ok;
 }
 
-#endif // wxUSE_DATAOBJ
-
-bool wxSTEditor::GetClipboardText(wxString& text) const
+/*static*/ bool wxSTEditor::IsClipboardFormatAvailable(const enum wxDataFormatId* array, size_t array_count,
+                                                       STE_ClipboardType clip_type)
 {
-    wxString str;
-    bool ok = ::wxClipboard_Get(&str);
+    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
+
+    bool ok = false;
+#if wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
     if (ok)
     {
-        text.operator=(wxTextBuffer::Translate(str, wxSTEConvertEOLMode(GetEOLMode())));
+        clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
+
+        size_t i = 0;
+        for (i = 0; i < array_count; i++)
+        {
+            if (clipboard->IsSupported(wxDataFormat(array[i]))) break;
+        }
+        ok = (i != array_count);
+
+        if (!was_open)
+            clipboard->Close();
     }
+#endif // wxUSE_CLIPBOARD
+    return ok;
+}
+
+/*static*/ bool wxSTEditor::GetClipboardText(wxString* str, STE_ClipboardType clip_type)
+{
+    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
+
+    if (!str) return false;
+    bool ok = false;
+
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
+    if (ok)
+    {
+        wxTextDataObject temp;
+
+        clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
+        ok = clipboard->GetData(temp);
+
+        if (ok)
+            *str = temp.GetText();
+
+        if (!was_open)
+            clipboard->Close();
+    }
+#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    return ok && !str->empty();
+}
+
+/*static*/ bool wxSTEditor::SetClipboardText(const wxString& str, STE_ClipboardType clip_type)
+{
+    bool ok = false;
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
+    if (ok)
+    {
+        if (STE_HASBIT(clip_type, STE_CLIPBOARD_DEFAULT))
+            ok = clipboard->SetData(new wxTextDataObject(str));
+
+#ifndef __WINDOWS__
+        if (STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY))
+        {
+            ok = clipboard->SetData(new wxTextDataObject(str));
+            clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
+        }
+#endif // __WINDOWS__
+
+        if (!was_open)
+            clipboard->Close();
+    }
+#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    return ok;
+}
+
+/*static*/ bool wxSTEditor::SetClipboardHtml(const wxString& htmldata)
+{
+    bool ok;
+#ifdef __WXMSW__
+    ok = wxOpenClipboard();
+    if (ok)
+    {
+        EmptyClipboard();
+        const wxCharBuffer buf(htmldata.mb_str());
+        ok = wxSetClipboardData(wxDF_HTML, buf.data()); // save as html
+        wxSetClipboardData(wxDF_TEXT, buf.data());      // save also as plain text
+        wxCloseClipboard();
+    }
+#else
+    ok = SetClipboardText(htmldata);
+#endif
     return ok;
 }
 
 bool wxSTEditor::PasteRectangular()
 {
     wxString text;
-    bool ok = GetClipboardText(text);
+    bool ok = GetClipboardText(&text, STE_CLIPBOARD_DEFAULT);
+
     if (ok)
+    {
+        text = ConvertEOLMode(text, GetEOLMode()); // FIXME: is this really necessary?
         PasteRectangular(text, -1);
+    }
 
     return ok;
 }
@@ -941,6 +1033,27 @@ void wxSTEditor::PasteRectangular(const wxString& str, int pos)
 
     EndUndoAction();
     NotifyChange();
+}
+
+// function defined in ScintillaWX.cpp as wxConvertEOLMode()
+// Note: they #ifdef it for wxUSE_DATAOBJ, but that's not a requirement
+wxTextFileType wxSTEditor::ConvertEOLModeType(int stc_eol_mode) const
+{
+    wxTextFileType type;
+
+    switch (stc_eol_mode)
+    {
+        case wxSTC_EOL_CRLF : type = wxTextFileType_Dos; break;
+        case wxSTC_EOL_CR   : type = wxTextFileType_Mac; break;
+        case wxSTC_EOL_LF   : type = wxTextFileType_Unix; break;
+        default             : type = wxTextBuffer::typeDefault; break;
+    }
+    return type;
+}
+
+wxString wxSTEditor::ConvertEOLMode(const wxString& str, int stc_eol_mode) const
+{
+    return wxTextBuffer::Translate(str, ConvertEOLModeType(stc_eol_mode));
 }
 
 wxString wxSTEditor::GetEOLString(int stc_eol_mode)
@@ -2582,28 +2695,6 @@ void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
         event.Skip();
 }
 
-static bool IsTextAvailable()
-{
-#if wxUSE_CLIPBOARD
-    const enum wxDataFormatId text[] =
-    {
-        wxDF_TEXT
-      //,wxDF_OEMTEXT,   // This is wxDF_TEXT in MSW, not supported in GTK/OSX
-
-#   if wxUSE_UNICODE
-        ,wxDF_UNICODETEXT // asserts in ANSI build
-#   endif // wxUSE_UNICODE
-
-#   ifdef __WXMSW__
-        ,wxDF_HTML         // Only supported in MSW
-#   endif // __WXMSW__
-    };
-    return wxClipboard_IsAvailable(text, WXSIZEOF(text));
-#else
-    return false;
-#endif // wxUSE_CLIPBOARD
-}
-
 void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
 {
     STE_INITRETURN
@@ -2635,7 +2726,7 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
     if (event.HasStateChange(STE_CANPASTE))
     {
         STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, event.GetStateValue(STE_CANPASTE));
-        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsTextAvailable());
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsClipboardTextAvailable());
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, event.GetStateValue(STE_CANPASTE));
     }
     if (event.HasStateChange(STE_CANUNDO))
@@ -2677,7 +2768,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsTextAvailable());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsClipboardTextAvailable());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, CanPaste());
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_CUT,       !readonly);
@@ -2792,11 +2883,11 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         #ifdef __WXMSW__
             text.Replace(wxT("\n"), wxT("\r\n")); // to make Notepad happy
         #endif
-            ::wxClipboard_SetHtml(text);
+            SetClipboardHtml(text);
             return true;
         }
         case ID_STE_COPY_PRIMARY :
-            ::wxClipboard_Set(GetSelectedText(), true);
+            SetClipboardText(GetSelectedText(), STE_CLIPBOARD_BOTH);
             return true;
         case wxID_PASTE            : Paste(); return true;
         case ID_STE_PASTE_RECT     : PasteRectangular(); return true;

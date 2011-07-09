@@ -504,7 +504,7 @@ void wxSTEditorNotebook::OnLeftUp(wxMouseEvent &event)
 {
     wxPoint MClickPoint = event.GetPosition();
     int page = HitTest(MClickPoint, NULL);
-    
+
     if (page != wxNOT_FOUND)
     {
         GetEditor(page)->SetFocus();
@@ -640,7 +640,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
         case ID_STE_PASTE_NEW:
         {
             wxString text;
-            if (::wxClipboard_Get(&text))
+            if (wxSTEditor::GetClipboardText(&text))
             {
                 NewPage();
                 wxSTEditor* editor = GetEditor();
