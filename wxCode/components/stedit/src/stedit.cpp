@@ -748,6 +748,7 @@ void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
     m_activating = false;
 }
 
+#if (wxVERSION_NUMBER < 2900)
 bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
 {
     if ((pos < 0) || (pos > GetLength()))
@@ -762,6 +763,7 @@ bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
     if (col) *col = pos - PositionFromLine(r);
     return true;
 }
+#endif
 
 void wxSTEditor::SetReadOnly(bool readOnly)
 {
@@ -1095,6 +1097,7 @@ void wxSTEditor::AppendTextGotoEnd(const wxString &text, bool goto_end)
         GotoPos(GetLength());
 }
 
+#if (wxVERSION_NUMBER < 2900)
 int wxSTEditor::GetLineLength(int line) const
 {
     return (int)GetLineText(line).Length();
@@ -1120,6 +1123,7 @@ wxString wxSTEditor::GetLineText(int line) const
 
     return lineText; // shouldn't happen, but maybe?
 }
+#endif
 
 void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
 {
@@ -4043,7 +4047,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2747")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2748")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

@@ -251,33 +251,34 @@ public :
     // wxTextCtrl methods - this can be used as a replacement textctrl with
     //                      very few, if any, code changes.
 
+#if (wxVERSION_NUMBER < 2900)
     bool CanCopy() const { return GetSelectionEnd() != GetSelectionStart(); }
     bool CanCut()  const { return CanCopy() && IsEditable(); }
-
-    // void Clear() { ClearAll(); }       // wxSTC uses Clear to clear selection
-    void DiscardEdits()                   { SetSavePoint(); }
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
     wxString GetLineText(int line) const; // excluding any cr/lf at end
     void SetInsertionPoint(int pos)       { GotoPos(pos); }
     void SetInsertionPointEnd()           { GotoPos(GetLength()); }
-    void ShowPosition(int pos)            { GotoPos(pos); }
     void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + text.Len()); }
     long XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
     // Remove this section of text between markers
     void Remove(int iStart, int iEnd)     { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }
-
     // Get the row/col representation of the position
     bool PositionToXY(long pos, long *x, long *y) const;
-
-    void SetReadOnly(bool readOnly);
-
     bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
     void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
+#endif
+    // void Clear() { ClearAll(); }       // wxSTC uses Clear to clear selection
+    void DiscardEdits()                   { SetSavePoint(); }
+    void ShowPosition(int pos)            { GotoPos(pos); }
+    void SetReadOnly(bool readOnly);
 
     // ------------------------------------------------------------------------
     // wxWidgets 2.8 <--> 2.9 compatibility functions (most functions are const in wx2.9)
 
-    wxString GetTextRange(int startPos, int endPos) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTextRange(startPos, endPos); }
+#if (wxVERSION_NUMBER < 2900)
+    wxString GetRange(int startPos, int endPos) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTextRange(startPos, endPos); }
+#endif
+    wxString GetTextRange(int startPos, int endPos) const { return GetRange(startPos, endPos); }
 
 #if (wxVERSION_NUMBER >= 2900)
 
