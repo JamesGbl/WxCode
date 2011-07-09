@@ -266,13 +266,12 @@ public :
     bool PositionToXY(long pos, long *x, long *y) const;
     bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
     void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
-#endif
     // void Clear() { ClearAll(); }       // wxSTC uses Clear to clear selection
     void DiscardEdits()                   { SetSavePoint(); }
     void ShowPosition(int pos)            { GotoPos(pos); }
+#endif
 
     virtual void SetEditable(bool editable); // -> SendEvent(wxEVT_STE_STATE_CHANGED)
-
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
 
