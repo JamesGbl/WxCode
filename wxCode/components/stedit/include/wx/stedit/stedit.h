@@ -270,7 +270,11 @@ public :
     // void Clear() { ClearAll(); }       // wxSTC uses Clear to clear selection
     void DiscardEdits()                   { SetSavePoint(); }
     void ShowPosition(int pos)            { GotoPos(pos); }
-    void SetReadOnly(bool readOnly);
+
+    virtual void SetEditable(bool editable); // -> SendEvent(wxEVT_STE_STATE_CHANGED)
+
+    void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
+    bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
 
     // ------------------------------------------------------------------------
     // wxWidgets 2.8 <--> 2.9 compatibility functions (most functions are const in wx2.9)
@@ -305,7 +309,6 @@ public :
     wxString GetLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line); }
     int GetLength() const            { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength(); }
     long GetNumberOfLines() const    { return wxConstCast(this, wxSTEditor)->GetLineCount(); } // not in wx2.8
-    bool GetReadOnly() const         { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); }
 
     void GetSelection(long *iStart, long *iEnd) const // forwards compatibility, wx2.8 uses int*
         { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
@@ -318,8 +321,8 @@ public :
     int GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
     int GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
 
-    bool IsEditable() const { return !GetReadOnly(); } // not in wx2.8
-    bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8
+    virtual bool IsEditable() const { return !wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
+    virtual bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
 
     int LineFromPosition(int pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
     int PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }

@@ -765,11 +765,15 @@ bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
 }
 #endif
 
-void wxSTEditor::SetReadOnly(bool readOnly)
+void wxSTEditor::SetEditable(bool editable)
 {
-    if (GetReadOnly() != readOnly)
+    if (IsEditable() != editable)
     {
-        wxStyledTextCtrl::SetReadOnly(readOnly);
+    #if (wxVERSION_NUMBER >= 2900)
+        wxStyledTextCtrl::SetEditable(editable);
+    #else
+        wxStyledTextCtrl::SetReadOnly(!editable); // SetEditable() doesn't exist in wx28
+    #endif
         SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
     }
 }
@@ -4047,7 +4051,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2748")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2749")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
