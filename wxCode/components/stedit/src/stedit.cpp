@@ -2236,19 +2236,7 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
 
 bool wxSTEditor::CopyFilePathToClipboard()
 {
-    bool is_opened = wxTheClipboard->IsOpened();
-
-    if (is_opened || wxTheClipboard->Open())
-    {
-        wxString text(GetSelectedText());
-        wxTheClipboard->SetData(new wxTextDataObject(GetFileName().GetFullPath()));
-        if (!is_opened)
-            wxTheClipboard->Close();
-
-        return true;
-    }
-
-    return false;
+    return SetClipboardText(GetFileName().GetFullPath());
 }
 
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
@@ -4055,7 +4043,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2745")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2747")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
