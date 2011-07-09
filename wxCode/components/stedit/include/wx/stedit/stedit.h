@@ -281,6 +281,11 @@ public :
     void GetSelection(int *iStart, int *iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
         { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
 
+    bool GetIndentationGuides() const // changed from bool to int in wx trunk
+    {
+        return 0 != wxStyledTextCtrl::GetIndentationGuides(); // enum IndentView.ivNone = 0
+    }
+
 #else // (wxVERSION_NUMBER < 2900)
 
     // FIXME gtk runs evt loop during CanPaste check causing a crash in
