@@ -96,12 +96,15 @@ enum STE_TranslatePosType
 // STE_ClipboardType - options of how to get/set data from/to the clipboard
 //-----------------------------------------------------------------------------
 
+#ifndef STE_ClipboardType_DEFINED
+#define STE_ClipboardType_DEFINED
 enum STE_ClipboardType
 {
     STE_CLIPBOARD_DEFAULT = 1, // use the normal clipboard
     STE_CLIPBOARD_PRIMARY = 2, // use the primary clipboard
     STE_CLIPBOARD_BOTH    = 3  // use both clipboards (only valid for set functions)
 };
+#endif // STE_ClipboardType_DEFINED
 
 //-----------------------------------------------------------------------------
 // wxSTEditorRefData - ref counted data to share with refed editors
