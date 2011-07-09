@@ -306,8 +306,8 @@ public :
     int GetSelectionStart() const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart(); }
     int GetSelectionEnd() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd(); }
 
-    bool GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
-    bool GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
+    int GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
+    int GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
 
     bool IsEditable() const { return !GetReadOnly(); } // not in wx2.8
     bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8
