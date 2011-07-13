@@ -191,14 +191,14 @@ endif
 ifeq ($(SHARED),1)
 _BUILDDIR_SHARED_SUFFIX = _dll
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __stedit_lib___depname = \
 	../lib/gcc_$(__stedit_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __install_stedit_lib___depname = install_stedit_lib
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __uninstall_stedit_lib___depname = uninstall_stedit_lib
 endif
 ifeq ($(SHARED),0)
@@ -207,20 +207,20 @@ endif
 ifeq ($(SHARED),1)
 __stedit_lib__DIRNAME_SHARED_SUFFIX = dll
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __install_stedit_lib_headers___depname = install_stedit_lib_headers
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __uninstall_stedit_lib_headers___depname = uninstall_stedit_lib_headers
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __stedit_dll___depname = \
 	../lib/gcc_$(__stedit_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __install_stedit_dll___depname = install_stedit_dll
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __uninstall_stedit_dll___depname = uninstall_stedit_dll
 endif
 ifeq ($(WX_SHARED),0)
@@ -229,10 +229,10 @@ endif
 ifeq ($(WX_SHARED),1)
 __stedit_dll__DIRNAME_SHARED_SUFFIX = dll
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __install_stedit_dll_headers___depname = install_stedit_dll_headers
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __uninstall_stedit_dll_headers___depname = uninstall_stedit_dll_headers
 endif
 ifeq ($(SHARED),1)
@@ -282,20 +282,20 @@ setup_h: ../include/wx/stedit/setup.h
 	cp -pf ../include/wx/stedit/setup0.h ../include/wx/stedit/setup.h
 	fi; \
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 ../lib/gcc_$(__stedit_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(STEDIT_LIB_OBJECTS)
 	$(RANLIB) $@
 endif
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 install_stedit_lib: $(__stedit_lib___depname)
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
 	$(INSTALL) -m 644 ../lib/gcc_$(__stedit_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(DESTDIR)$(prefix)/lib
 endif
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 uninstall_stedit_lib: 
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
@@ -303,7 +303,7 @@ endif
 make_dir_stedit_lib: 
 	@mkdir -p ../lib/gcc_$(__stedit_lib__DIRNAME_SHARED_SUFFIX)
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 install_stedit_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
 	for f in $(STEDIT_LIB_HEADERS); do \
@@ -314,26 +314,26 @@ install_stedit_lib_headers:
 	done
 endif
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 uninstall_stedit_lib_headers: 
 	for f in $(STEDIT_LIB_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 ../lib/gcc_$(__stedit_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_stedit_dll  $(STEDIT_DLL_OBJECTS)
 	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(STEDIT_DLL_OBJECTS)  $(VAR_1) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs stc,html,adv,core,base`
 endif
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 install_stedit_dll: $(__stedit_dll___depname)
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
 	$(INSTALL) -m 644 ../lib/gcc_$(__stedit_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 	install -c ../lib/gcc_$(__stedit_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 endif
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 uninstall_stedit_dll: 
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stedit-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
@@ -342,7 +342,7 @@ endif
 make_dir_stedit_dll: 
 	@mkdir -p ../lib/gcc_$(__stedit_dll__DIRNAME_SHARED_SUFFIX)
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 install_stedit_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
 	for f in $(STEDIT_DLL_HEADERS); do \
@@ -353,7 +353,7 @@ install_stedit_dll_headers:
 	done
 endif
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 uninstall_stedit_dll_headers: 
 	for f in $(STEDIT_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \

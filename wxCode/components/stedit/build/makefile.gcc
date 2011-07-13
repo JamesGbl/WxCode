@@ -125,11 +125,11 @@ endif
 ifeq ($(SHARED),1)
 _BUILDDIR_SHARED_SUFFIX = _dll
 endif
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 __stedit_lib___depname = \
 	..\lib\gcc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.a
 endif
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 __stedit_dll___depname = \
 	..\lib\gcc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll
 endif
@@ -252,7 +252,7 @@ setup_h: ..\include\wx\stedit\setup.h
 ..\include\wx\stedit\setup.h: 
 	if not exist ..\include\wx\stedit\setup.h copy ..\include\wx\stedit\setup0.h ..\include\wx\stedit\setup.h
 
-ifeq ($(WX_SHARED),0)
+ifeq ($(SHARED),0)
 ..\lib\gcc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.a: make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(STEDIT_LIB_OBJECTS)
@@ -262,7 +262,7 @@ endif
 make_dir_stedit_lib: 
 	if not exist ..\lib\gcc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
-ifeq ($(WX_SHARED),1)
+ifeq ($(SHARED),1)
 ..\lib\gcc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll: make_dir_stedit_dll  $(STEDIT_DLL_OBJECTS)
 	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(STEDIT_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.a $(LDFLAGS)  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_stc $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif

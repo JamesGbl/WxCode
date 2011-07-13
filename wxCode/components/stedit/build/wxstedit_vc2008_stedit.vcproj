@@ -104,9 +104,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Multilib DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmsw_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -132,15 +132,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmsw_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -150,7 +150,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="__WXMSW__"
+				PreprocessorDefinitions="__WXMSW__;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -158,9 +158,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28_stc.lib wxmsw28_html.lib wxmsw28_adv.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28_stedit.dll"
+				LinkIncremental="1"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -173,7 +181,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -266,9 +274,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmsw_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -286,7 +294,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -294,15 +302,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmsw_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmsw_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -312,7 +320,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="__WXMSW__"
+				PreprocessorDefinitions="__WXMSW__;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -320,9 +328,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28_stc.lib    wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28_stedit.dll"
+				LinkIncremental="1"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -335,7 +351,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -430,9 +446,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswd_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -450,7 +466,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -458,7 +474,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -466,9 +482,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswd_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -478,7 +494,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -486,9 +502,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28d_stc.lib wxmsw28d_html.lib wxmsw28d_adv.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28d_stedit.dll"
+				LinkIncremental="2"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28d_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -501,7 +526,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -596,9 +621,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswd_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -616,7 +641,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -624,7 +649,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -632,9 +657,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswd_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswd_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -644,7 +669,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -652,9 +677,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28d_stc.lib    wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28d_stedit.dll"
+				LinkIncremental="2"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28d_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -667,7 +701,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -761,9 +795,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswu_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -782,7 +816,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -790,15 +824,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswu_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -808,7 +842,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -816,9 +850,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28u_stc.lib wxmsw28u_html.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28u_stedit.dll"
+				LinkIncremental="1"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28u_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -831,7 +873,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -925,9 +967,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswu_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -946,7 +988,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -954,15 +996,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswu_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswu_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -972,7 +1014,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -980,9 +1022,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28u_stc.lib    wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28u_stedit.dll"
+				LinkIncremental="1"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28u_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -995,7 +1045,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1091,9 +1141,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswud_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -1112,7 +1162,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1120,7 +1170,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -1128,9 +1178,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswud_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1140,7 +1190,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1148,9 +1198,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28ud_stc.lib wxmsw28ud_html.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28ud_stedit.dll"
+				LinkIncremental="2"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28ud_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1163,7 +1222,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1259,9 +1318,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic DLL|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswud_dll\stedit"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -1280,7 +1339,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1288,7 +1347,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -1296,9 +1355,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_lib.pch"
+				PrecompiledHeaderFile="vcmswud_dll\prec_stedit_dll.pch"
 				ObjectFile="vcmswud_dll\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1308,7 +1367,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1316,9 +1375,18 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_stedit.lib"
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wxmsw28ud_stc.lib    wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw28ud_stedit.dll"
+				LinkIncremental="2"
+				ImportLibrary="..\lib\vc_lib\wxcode_msw28ud_stedit.lib"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1331,7 +1399,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1343,9 +1411,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmsw\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1363,7 +1431,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXMSW__"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1371,15 +1439,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXMSW__"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmsw\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_lib.pch"
 				ObjectFile="vcmsw\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -1389,7 +1457,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1397,17 +1465,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28_stc.lib wxmsw28_html.lib wxmsw28_adv.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28_stedit.dll"
-				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1420,7 +1480,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1521,9 +1581,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmsw\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1541,7 +1601,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXMSW__"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1549,15 +1609,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXMSW__"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmsw\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmsw\prec_stedit_lib.pch"
 				ObjectFile="vcmsw\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -1567,7 +1627,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1575,17 +1635,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28_stc.lib    wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28_stedit.dll"
-				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1598,7 +1650,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1699,9 +1751,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswd\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1719,7 +1771,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1727,7 +1779,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -1735,9 +1787,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswd\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_lib.pch"
 				ObjectFile="vcmswd\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1747,7 +1799,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1755,18 +1807,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28d_stc.lib wxmsw28d_html.lib wxmsw28d_adv.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_stedit.dll"
-				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28d_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1779,7 +1822,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1883,9 +1926,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswd\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1903,7 +1946,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -1911,7 +1954,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -1919,9 +1962,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswd\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswd\prec_stedit_lib.pch"
 				ObjectFile="vcmswd\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1931,7 +1974,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -1939,18 +1982,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28d_stc.lib    wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_stedit.dll"
-				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28d_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1963,7 +1997,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2067,9 +2101,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswu\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -2088,7 +2122,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXMSW__"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -2096,15 +2130,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXMSW__"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswu\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_lib.pch"
 				ObjectFile="vcmswu\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -2114,7 +2148,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -2122,17 +2156,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28u_stc.lib wxmsw28u_html.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_stedit.dll"
-				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28u_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -2145,7 +2171,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2247,9 +2273,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswu\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -2268,7 +2294,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXMSW__"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -2276,15 +2302,15 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXMSW__"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswu\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswu\prec_stedit_lib.pch"
 				ObjectFile="vcmswu\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -2294,7 +2320,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -2302,17 +2328,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28u_stc.lib    wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_stedit.dll"
-				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28u_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -2325,7 +2343,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2427,9 +2445,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswud\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -2448,7 +2466,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -2456,7 +2474,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -2464,9 +2482,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswud\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_lib.pch"
 				ObjectFile="vcmswud\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -2476,7 +2494,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -2484,18 +2502,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28ud_stc.lib wxmsw28ud_html.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_stedit.dll"
-				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28ud_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -2508,7 +2517,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2613,9 +2622,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic Static|Win32"
-			OutputDirectory="..\lib\vc_dll"
+			OutputDirectory="..\lib\vc_lib"
 			IntermediateDirectory="vcmswud\stedit"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -2634,7 +2643,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
 			<Tool
@@ -2642,7 +2651,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
-				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WIN32;_LIB;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -2650,9 +2659,9 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				PrecompiledHeaderFile="vcmswud\prec_stedit_dll.pch"
+				PrecompiledHeaderFile="vcmswud\prec_stedit_lib.pch"
 				ObjectFile="vcmswud\stedit\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_stedit.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -2662,7 +2671,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_STEDIT"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;$(WXWIN)\contrib\include"
 			/>
@@ -2670,18 +2679,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions=""
-				AdditionalDependencies="wxmsw28ud_stc.lib    wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_stedit.dll"
-				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_stedit.lib"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\vc_lib\wxcode_msw28ud_stedit.lib"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
-				GenerateManifest="true"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_stedit.pdb"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -2694,7 +2694,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\wxstedit_vc2008_stedit.bsc"
+				OutputFile="..\lib\vc_lib\wxstedit_vc2008_stedit.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

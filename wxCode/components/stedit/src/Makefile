@@ -123,4 +123,3 @@ clean:
 		$(WXSTEDIT_LIBDIR)/$(TARGET_LIB_LINK2)
 
 -include $(DEPFILES)
-

@@ -25,7 +25,7 @@ WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,adv,core,base)
 WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
 
 # ----------------------------------------------------------------------------
-# Settings for the library
+# Settings for the stedit library
 
 #WXSTEDIT_LIBDIR  = $(WXLIBDIR)
 WXSTEDIT_LIBDIR  = ../../lib
@@ -72,27 +72,21 @@ DEPFILES := $(OBJECTS:.o=.d)
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $(APPEXTRADEFS) -o $@ $<
 
-all: $(WXSTEDIT_LIBNAME) $(PROGRAM)
+# ---------------------------------------------------------------------------
+# Targets
 
-$(WXSTEDIT_LIBNAME) :
+all: stedit_lib wxstedit
+
+stedit_lib :
 	@(cd ../../src && $(MAKE))
 
+# wxstedit program using shared stedit.so library
+wxstedit: $(OBJECTS) stedit_lib
+	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
 
-# wxstedit program using shared stedit library
-#$(PROGRAM): $(PROGRAM).o $(OBJECTS) $(TARGET_LIB_SHARED)
-#	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) -l$(WXSTEDIT_LIBNAME) $(APPEXTRALIBS)
-
-$(PROGRAM): $(OBJECTS) $(TARGET_LIB_SHARED)
-	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o wxstedit $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
-
-
-# wxstedit program using static stedit library
-$(PROGRAM)-static: $(PROGRAM).o $(TARGET_LIB_STATIC)
+# wxstedit program using static stedit.a library
+wxstedit-static: $(OBJECTS) stedit_lib
 	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
-
-# wxstedit program using just object files and not the stedit lib
-#$(PROGRAM)-objects: $(PROGRAM).o $(OBJECTS)
-#	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(OBJECTS) $(LDLIBS) $(APPEXTRALIBS)
 
 docs:
 	# requires wxLua's bin2c.lua program where $(WXLUA) is environment var
@@ -101,7 +95,7 @@ docs:
 	$(WXLUA)/bin/lua $(WXLUA)/util/bin2c/bin2c.lua -t -o readme_htm.hpp ../../docs/readme.htm
 
 clean:
-	rm -f $(OBJECTS) $(DEPFILES) $(PROGRAM) $(PROGRAM)-static $(PROGRAM).o $(PROGRAM).d core
+	rm -f $(OBJECTS) $(DEPFILES) $(PROGRAM) $(PROGRAM)-static core
 
 cleanall: clean
 	@(cd ../../src && make clean)

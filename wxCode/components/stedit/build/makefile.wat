@@ -92,12 +92,12 @@ _BUILDDIR_SHARED_SUFFIX =
 _BUILDDIR_SHARED_SUFFIX = _dll
 !endif
 __stedit_lib___depname =
-!ifeq WX_SHARED 0
+!ifeq SHARED 0
 __stedit_lib___depname = &
 	..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib
 !endif
 __stedit_dll___depname =
-!ifeq WX_SHARED 1
+!ifeq SHARED 1
 __stedit_dll___depname = &
 	..\lib\wat_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll
 !endif
@@ -293,7 +293,7 @@ setup_h : .SYMBOLIC ..\include\wx\stedit\setup.h
 ..\include\wx\stedit\setup.h :  
 	if not exist ..\include\wx\stedit\setup.h copy ..\include\wx\stedit\setup0.h ..\include\wx\stedit\setup.h
 
-!ifeq WX_SHARED 0
+!ifeq SHARED 0
 ..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.lib :  make_dir_stedit_lib  $(STEDIT_LIB_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib.lbc
 	@for %i in ($(STEDIT_LIB_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib.lbc +%i
@@ -303,7 +303,7 @@ setup_h : .SYMBOLIC ..\include\wx\stedit\setup.h
 make_dir_stedit_lib :  
 	if not exist ..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\wat_$(____stedit_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
-!ifeq WX_SHARED 1
+!ifeq SHARED 1
 ..\lib\wat_$(____stedit_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stedit.dll :  make_dir_stedit_dll  $(STEDIT_DLL_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll.lbc option quiet
