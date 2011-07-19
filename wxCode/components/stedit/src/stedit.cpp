@@ -1056,7 +1056,7 @@ void wxSTEditor::PasteRectangular(const wxString& str, int pos)
 
 // function defined in ScintillaWX.cpp as wxConvertEOLMode()
 // Note: they #ifdef it for wxUSE_DATAOBJ, but that's not a requirement
-wxTextFileType wxSTEditor::ConvertEOLModeType(int stc_eol_mode) const
+/*static*/ wxTextFileType wxSTEditor::ConvertEOLModeType(int stc_eol_mode)
 {
     wxTextFileType type;
 
@@ -1070,22 +1070,21 @@ wxTextFileType wxSTEditor::ConvertEOLModeType(int stc_eol_mode) const
     return type;
 }
 
-wxString wxSTEditor::ConvertEOLMode(const wxString& str, int stc_eol_mode) const
+/*static*/ wxString wxSTEditor::ConvertEOLMode(const wxString& str, int stc_eol_mode)
 {
     return wxTextBuffer::Translate(str, ConvertEOLModeType(stc_eol_mode));
 }
 
-wxString wxSTEditor::GetEOLString(int stc_eol_mode)
+wxString wxSTEditor::GetEOLString(int stc_eol_mode) const
 {
     if (stc_eol_mode < 0) stc_eol_mode = GetEOLMode();
 
-    switch (stc_eol_mode)
-    {
-        case wxSTC_EOL_CRLF : return wxT("\r\n");
-        case wxSTC_EOL_CR   : return wxT("\r");
-        case wxSTC_EOL_LF   : return wxT("\n");
-    }
+    wxTextFileType type = ConvertEOLModeType(stc_eol_mode);
 
+    if (type != wxTextFileType_None)
+    {
+        return wxTextBuffer::GetEOL(type);
+    }
     wxFAIL_MSG(wxT("Invalid EOL mode"));
     return wxT("\n");
 }
@@ -2890,7 +2889,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
 
         #ifdef __WXMSW__
-            text.Replace(wxT("\n"), wxT("\r\n")); // to make Notepad happy
+            text.Replace(wxT("\n"), wxTextBuffer::GetEOL(wxTextFileType_Dos)); // to make Notepad happy
         #endif
             SetClipboardHtml(text);
             return true;
@@ -4051,7 +4050,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2749")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2755")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

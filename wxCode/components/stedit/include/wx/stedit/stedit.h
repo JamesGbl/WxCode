@@ -378,15 +378,15 @@ public :
     // Convert the wxSTC_EOL_CRLF, wxSTC_EOL_CR, wxSTC_EOL_LF type to the
     // wxTextFileType wxTextFileType_Dos, wxTextFileType_Mac, wxTextFileType_Unix.
     // Returns wxTextBuffer::typeDefault for unknown input.
-    wxTextFileType ConvertEOLModeType(int stc_eol_mode) const;
+    static wxTextFileType ConvertEOLModeType(int stc_eol_mode);
 
     // Convert the input string to have the appropriate line endings for
     // the wxSTC_EOL_XXX type.
-    wxString ConvertEOLMode(const wxString& str, int stc_eol_mode) const;
+    static wxString ConvertEOLMode(const wxString& str, int stc_eol_mode);
 
     // Get the wxSTC_EOL_XXX string "\r", "\n", "\r\n" as appropriate for
     //  Mac, Unix, DOS. default (-1) gets EOL string for current doc settings
-    wxString GetEOLString(int stc_eol_mode = -1);
+    wxString GetEOLString(int stc_eol_mode = -1) const;
 
     // AppendText to the document and if the cursor was already at the end of
     //   the document keep the cursor at the end. This is useful for scrolling
