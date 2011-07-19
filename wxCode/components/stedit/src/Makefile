@@ -99,9 +99,11 @@ DEPFILES := $(OBJECTS:.o=.d)
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $(APPEXTRADEFS) -o $@ $<
 
-all: $(TARGET_LIB_STATIC) $(TARGET_LIB_SHARED)
+all: precomp.h.gch $(TARGET_LIB_STATIC) $(TARGET_LIB_SHARED)
 	@echo $(copy_setup0)
 
+precomp.h.gch:
+	$(CXX) -c $(CXXFLAGS) $(APPEXTRADEFS) -o precomp.h.gch precomp.h
 
 $(TARGET_LIB_STATIC) : $(OBJECTS)
 		@$(RM) $(TARGET_LIB_STATIC)
