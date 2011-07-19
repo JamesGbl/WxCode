@@ -2763,7 +2763,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
 
     const bool readonly = GetReadOnly();
     const bool fold = GetMarginWidth(STE_MARGIN_FOLD) > 0;
-    const bool sel = GetSelectionStart() != GetSelectionEnd();
+    const bool sel = HasSelection();
     const bool sel_lines = !sel ? false : (LineFromPosition(GetSelectionStart()) !=
                                           (LineFromPosition(GetSelectionEnd())));
 
@@ -4050,7 +4050,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2755")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2756")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

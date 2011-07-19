@@ -252,7 +252,7 @@ public :
     //                      very few, if any, code changes.
 
 #if (wxVERSION_NUMBER < 2900)
-    bool CanCopy() const { return GetSelectionEnd() != GetSelectionStart(); }
+    bool CanCopy() const { return HasSelection(); }
     bool CanCut()  const { return CanCopy() && IsEditable(); }
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
     wxString GetLineText(int line) const; // excluding any cr/lf at end
