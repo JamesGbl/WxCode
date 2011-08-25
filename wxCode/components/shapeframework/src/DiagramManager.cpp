@@ -38,7 +38,7 @@ wxSFDiagramManager::wxSFDiagramManager()
     m_pShapeCanvas = NULL;
     m_lstIDPairs.DeleteContents(true);
 
-    m_sSFVersion =  wxT("1.11.0 beta");
+    m_sSFVersion =  wxT("1.11.2 beta");
 
     SetSerializerOwner(wxT("wxShapeFramework"));
     SetSerializerVersion(wxT("1.0"));
@@ -126,10 +126,10 @@ wxSFShapeBase* wxSFDiagramManager::AddShape(wxSFShapeBase* shape, xsSerializable
 		    if( m_pShapeCanvas )
 		    {
                 wxPoint newPos = m_pShapeCanvas->FitPositionToGrid(m_pShapeCanvas->DP2LP(pos));
-                shape->SetRelativePosition(wxRealPoint(newPos.x, newPos.y));
+                shape->SetRelativePosition( Conv2RealPoint(newPos) );
 		    }
 		    else
-                shape->SetRelativePosition(wxRealPoint(pos.x, pos.y));
+                shape->SetRelativePosition( Conv2RealPoint(pos) );
 
             // add parent shape to the data manager (serializer)
             if(parent)
@@ -327,14 +327,14 @@ void wxSFDiagramManager::Clear()
 // Serialization/deserialization functions
 //----------------------------------------------------------------------------------//
 
-bool wxSFDiagramManager::SerializeToXml(const wxString& file)
+bool wxSFDiagramManager::SerializeToXml(const wxString& file, bool withroot)
 {
-    return wxXmlSerializer::SerializeToXml(file);
+    return wxXmlSerializer::SerializeToXml(file, withroot);
 }
 
-bool wxSFDiagramManager::SerializeToXml(wxOutputStream& outstream)
+bool wxSFDiagramManager::SerializeToXml(wxOutputStream& outstream, bool withroot)
 {
-    return wxXmlSerializer::SerializeToXml(outstream);
+    return wxXmlSerializer::SerializeToXml(outstream, withroot);
 }
 
 bool wxSFDiagramManager::DeserializeFromXml(const wxString& file)
@@ -344,11 +344,11 @@ bool wxSFDiagramManager::DeserializeFromXml(const wxString& file)
 	wxFileInputStream instream(file);
 	if(instream.IsOk())
 	{
-        m_pShapeCanvas->ClearCanvasHistory();
+        if( m_pShapeCanvas) m_pShapeCanvas->ClearCanvasHistory();
 
 		fSuccess = DeserializeFromXml(instream);
 
-        m_pShapeCanvas->SaveCanvasState();
+        if( m_pShapeCanvas) m_pShapeCanvas->SaveCanvasState();
 	}
 	else
 		wxMessageBox(wxT("Unable to initialize input stream."), wxT("ShapeFramework"), wxOK | wxICON_ERROR);
@@ -403,7 +403,7 @@ void wxSFDiagramManager::_DeserializeObjects(xsSerializable* parent, wxXmlNode* 
 {
 	wxSFShapeBase *pShape;
 	
-	IntArray arrNewIDs;
+	wxXS::IntArray arrNewIDs;
 	SerializableList lstForUpdate;
 
 	wxXmlNode* shapeNode = node->GetChildren();
@@ -411,7 +411,11 @@ void wxSFDiagramManager::_DeserializeObjects(xsSerializable* parent, wxXmlNode* 
 	{
 		if(shapeNode->GetName() == wxT("object"))
 		{
+#if wxVERSION_NUMBER < 2900
 			pShape = AddShape((wxSFShapeBase*)wxCreateDynamicObject(shapeNode->GetPropVal(wxT("type"), wxT(""))), parent, wxPoint(0, 0), true, sfDONT_SAVE_STATE);
+#else
+			pShape = AddShape((wxSFShapeBase*)wxCreateDynamicObject(shapeNode->GetAttribute(wxT("type"), wxT(""))), parent, wxPoint(0, 0), true, sfDONT_SAVE_STATE);
+#endif
 			if(pShape)
 			{
 				// store new assigned ID
@@ -465,6 +469,10 @@ void wxSFDiagramManager::_DeserializeObjects(xsSerializable* parent, wxXmlNode* 
 				wxMessageBox( wxT("Deserialization couldn't be completed because not of all shapes are accepted."), wxT("wxShapeFramework"), wxOK | wxICON_WARNING );
 				return;
 			}
+		}
+		else if(shapeNode->GetName() == m_sRootName + wxT("_properties"))
+		{
+		    m_pRoot->DeserializeObject(shapeNode->GetChildren());
 		}
 		shapeNode = shapeNode->GetNext();
 	}

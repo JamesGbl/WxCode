@@ -1,3 +1,12 @@
+Changes in version 1.3.6 beta (2011-08-24):
+--------------------------------------------
+- The source code is now compatible with wxWidgets 2.9 and higher.
+- Fixed Sample1 and Sample4 projects to respect wxXS namespace.
+
+Changes in version 1.3.5 beta (2011-06-10):
+--------------------------------------------
+- Data types defined in wxXmlSerializer are wrapped by wxXS namespace (e.g. IntArray -> wxXS::IntArray ).
+
 Changes in version 1.3.4 beta (2011-02-16):
 --------------------------------------------
 - Added functions xsSerializable::RemoveChild(xsSerializable *child) and xsSerializable::RemoveChildren().

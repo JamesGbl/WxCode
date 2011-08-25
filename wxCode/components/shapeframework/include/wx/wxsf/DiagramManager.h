@@ -19,8 +19,8 @@
 #define sfINITIALIZE true
 #define sfDONT_INITIALIZE false
 
-class WXDLLIMPEXP_SF wxSFShapeCanvas;
-class WXDLLIMPEXP_SF wxSFLineShape;
+class wxSFShapeCanvas;
+class wxSFLineShape;
 
 /*! \brief Auxiliary class encapsulation two variables suitable for shape IDs. It is
  * used for storing infomation about various relevant shape IDs */
@@ -165,9 +165,10 @@ public:
     /*!
      * \brief Serialize complete shape canvas to given file
      * \param file Output file
+	 * \param withroot If TRUE then the root item's properties are serialized as well
 	 * \return TRUE on success, otherwise FALSE
      */
-	virtual bool SerializeToXml(const wxString& file);
+	virtual bool SerializeToXml(const wxString& file, bool withroot = false);
     /*!
      * \brief Deserialize complete shape canvas from given file
      * \param file Input file
@@ -177,9 +178,10 @@ public:
     /*!
      * \brief Serialize complete shape canvas to given output stream
      * \param outstream Output stream
+	 * \param withroot If TRUE then the root item's properties are serialized as well
 	 * \return TRUE on success, otherwise FALSE
      */
-	virtual bool SerializeToXml(wxOutputStream& outstream);
+	virtual bool SerializeToXml(wxOutputStream& outstream, bool withroot = false);
     /*!
      * \brief Deserialize complete shape canvas from given input stream
      * \param instream Input stream

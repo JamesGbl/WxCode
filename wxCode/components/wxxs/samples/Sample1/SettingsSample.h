@@ -14,6 +14,8 @@
 #include "wx/wxxmlserializer/XmlSerializer.h"
 #include <wx/arrstr.h>
 
+using namespace wxXS;
+
 // some serializable class
 class SerializableObject : public xsSerializable
 {

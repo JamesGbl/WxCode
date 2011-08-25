@@ -106,8 +106,8 @@ bool wxSFPrintout::OnPrintPage(int page)
         // This offsets the image so that it is centered within the reference
         // rectangle defined above.
 
-        wxCoord xoff = (fitRect.width - maxX - totalBB.GetLeft()) / 2;
-        wxCoord yoff = (fitRect.height - maxY - totalBB.GetTop()) / 2;
+        wxCoord xoff = ((fitRect.width - maxX - totalBB.GetLeft()) / 2) - fitRect.x;
+        wxCoord yoff = ((fitRect.height - maxY - totalBB.GetTop()) / 2) - fitRect.y;
 
         switch( m_pCanvas->GetPrintHAlign() )
         {
@@ -153,6 +153,7 @@ bool wxSFPrintout::OnPrintPage(int page)
         }
 
         // draw the canvas content without any scale (dc is scaled by the printing framework)
+#if wxVERSION_NUMBER < 2900
 		double nScale = 1;
 		if( wxSFShapeCanvas::IsGCEnabled() ) dc->GetUserScale( &nScale, &nScale );
         m_pCanvas->SetScale(1);
@@ -166,6 +167,11 @@ bool wxSFPrintout::OnPrintPage(int page)
 		#endif
 
         m_pCanvas->SetScale(prevScale);
+#else
+		m_pCanvas->SetScale(1);
+		m_pCanvas->DrawContent(*dc, sfNOT_FROM_PAINT);
+		m_pCanvas->SetScale(prevScale);
+#endif
 
         // restore previous canvas properties if needed
         if( !m_pCanvas->ContainsStyle( wxSFShapeCanvas::sfsPRINT_BACKGROUND ) )
