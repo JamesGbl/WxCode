@@ -83,6 +83,8 @@
 
 #define STE_MM wxSTEditorMenuManager
 
+#define STE_TextPos wxTextPos
+
 //-----------------------------------------------------------------------------
 // Use wxHtmlEasyPrinting instead of normal printing
 //   eg. in your build files use compiler flag -D STE_USE_HTML_PRINT=1

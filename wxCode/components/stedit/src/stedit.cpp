@@ -605,7 +605,7 @@ void wxSTEditor::OnSTCCharAdded(wxStyledTextEvent &event)
     }
     else if (0)
     {
-        int pos = GetCurrentPos();
+        STE_TextPos pos = GetCurrentPos();
         int line_n = LineFromPosition(pos);
         wxSTEditor_SplitLines(this, pos, line_n);
         GotoPos(pos);
@@ -778,8 +778,8 @@ void wxSTEditor::SetEditable(bool editable)
     }
 }
 
-bool wxSTEditor::TranslatePos(int  start_pos,       int  end_pos,
-                              int* trans_start_pos, int* trans_end_pos,
+bool wxSTEditor::TranslatePos(STE_TextPos start_pos, STE_TextPos end_pos,
+                              STE_TextPos* trans_start_pos, STE_TextPos* trans_end_pos,
                               STE_TranslatePosType type)
 {
     int length = GetLength();
@@ -790,9 +790,9 @@ bool wxSTEditor::TranslatePos(int  start_pos,       int  end_pos,
     }
     else                                            // do selection
     {
-        int sel_start = (type == STE_TRANSLATE_SELECTION) ? GetSelectionStart() :
+        STE_TextPos sel_start = (type == STE_TRANSLATE_SELECTION) ? GetSelectionStart() :
                         (type == STE_TRANSLATE_SELECTION) ? GetTargetStart()    : start_pos;
-        int sel_end   = (type == STE_TRANSLATE_SELECTION) ? GetSelectionEnd()   :
+        STE_TextPos sel_end   = (type == STE_TRANSLATE_SELECTION) ? GetSelectionEnd()   :
                         (type == STE_TRANSLATE_SELECTION) ? GetTargetEnd()      : end_pos;
 
         if (start_pos < 0) start_pos = sel_start;
@@ -801,7 +801,8 @@ bool wxSTEditor::TranslatePos(int  start_pos,       int  end_pos,
 
     if (start_pos == end_pos)                       // do current line
     {
-        int pos   = GetCurrentPos();
+        STE_TextPos pos = GetCurrentPos();
+
         int line  = LineFromPosition(pos);
         start_pos = PositionFromLine(line);
         end_pos   = GetLineEndPosition(line);
@@ -833,9 +834,9 @@ bool wxSTEditor::TranslateLines(int  top_line,       int  bottom_line,
     }
     else                                            // do selection
     {
-        int sel_start = (type == STE_TRANSLATE_SELECTION) ? GetSelectionStart() :
+        STE_TextPos sel_start = (type == STE_TRANSLATE_SELECTION) ? GetSelectionStart() :
                         (type == STE_TRANSLATE_SELECTION) ? GetTargetStart()    : GetCurrentPos();
-        int sel_end   = (type == STE_TRANSLATE_SELECTION) ? GetSelectionEnd()   :
+        STE_TextPos sel_end   = (type == STE_TRANSLATE_SELECTION) ? GetSelectionEnd()   :
                         (type == STE_TRANSLATE_SELECTION) ? GetTargetEnd()      : GetCurrentPos();
 
         if (top_line < 0)
@@ -859,8 +860,9 @@ bool wxSTEditor::TranslateLines(int  top_line,       int  bottom_line,
 
 wxString wxSTEditor::GetTargetText() const
 {
-    int target_start = GetTargetStart();
-    int target_end   = GetTargetEnd();
+    STE_TextPos target_start = GetTargetStart();
+    STE_TextPos target_end   = GetTargetEnd();
+
     if (target_start == target_end) return wxEmptyString;
     return GetTextRange(wxMin(target_start, target_end), wxMax(target_start, target_end));
 }
@@ -1019,7 +1021,7 @@ bool wxSTEditor::PasteRectangular()
 
     return ok;
 }
-void wxSTEditor::PasteRectangular(const wxString& str, int pos)
+void wxSTEditor::PasteRectangular(const wxString& str, STE_TextPos pos)
 {
     BeginUndoAction();
     //ClearSelection(); // we don't paste into selection for this
@@ -1027,9 +1029,9 @@ void wxSTEditor::PasteRectangular(const wxString& str, int pos)
     pos = pos > -1 ? pos : GetCurrentPos();
 
     int line           = LineFromPosition(pos);
-    int line_start_pos = PositionFromLine(line);
-    int line_end_pos   = GetLineEndPosition(line);
-    int line_pos       = pos - line_start_pos;
+    STE_TextPos line_start_pos = PositionFromLine(line);
+    STE_TextPos line_end_pos   = GetLineEndPosition(line);
+    STE_TextPos line_pos       = pos - line_start_pos;
 
     wxString eolStr = GetEOLString();
 
@@ -1144,13 +1146,13 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
         AppendText(prepend);
     }
 
-    int pos = PositionFromLine(line);
+    STE_TextPos pos = PositionFromLine(line);
     int line_len = inc_newline ? (int)GetLine(line).Length() : GetLineEndPosition(line) - pos;
 
     //wxPrintf(wxT("SetLineText l %d lc %d added %d len %d end %d '%s'\n"), line, line_count, line-line_count, GetLine(line).Length() , GetLineEndPosition(line)-pos, text.wx_str()); fflush(stdout);
 
-    int target_start = GetTargetStart();
-    int target_end   = GetTargetEnd();
+    STE_TextPos target_start = GetTargetStart();
+    STE_TextPos target_end   = GetTargetEnd();
 
     SetTargetStart(pos);
     SetTargetEnd(pos + line_len);
@@ -1186,7 +1188,7 @@ size_t wxSTEditor::GetWordCount(const wxString& text) const
     return count;
 }
 
-size_t wxSTEditor::GetWordCount(int start_pos, int end_pos, STE_TranslatePosType type)
+size_t wxSTEditor::GetWordCount(STE_TextPos start_pos, STE_TextPos end_pos, STE_TranslatePosType type)
 {
     wxString text;
     if (TranslatePos(start_pos, end_pos, &start_pos, &end_pos, type))
@@ -1277,16 +1279,16 @@ void wxSTEditor::SetIndentation(int width, int top_line, int bottom_line,
     EndUndoAction();
 }
 
-size_t wxSTEditor::ConvertTabsToSpaces(bool to_spaces, int start_pos, int end_pos,
+size_t wxSTEditor::ConvertTabsToSpaces(bool to_spaces, STE_TextPos start_pos, STE_TextPos end_pos,
                                        STE_TranslatePosType type)
 {
     if (!TranslatePos(start_pos, end_pos, &start_pos, &end_pos, type))
         return 0;
 
-    int pos = GetCurrentPos();
+    STE_TextPos pos = GetCurrentPos();
 
-    int orig_sel_start = GetSelectionStart();
-    int orig_sel_end   = GetSelectionEnd();
+    STE_TextPos orig_sel_start = GetSelectionStart();
+    STE_TextPos orig_sel_end   = GetSelectionEnd();
 
     SetTargetStart(start_pos);
     SetTargetEnd(end_pos);
@@ -1300,7 +1302,7 @@ size_t wxSTEditor::ConvertTabsToSpaces(bool to_spaces, int start_pos, int end_po
     size_t count = 0;
 
     BeginUndoAction();
-    for (int find_pos = SearchInTarget(findString);
+    for (STE_TextPos find_pos = SearchInTarget(findString);
          find_pos >= 0;
          find_pos = SearchInTarget(findString))
     {
@@ -1333,9 +1335,10 @@ bool wxSTEditor::RemoveTrailingWhitespace(int top_line, int bottom_line)
     BeginUndoAction();
     for (int n = top_line; n <= bottom_line; n++)
     {
-        const int line_start = PositionFromLine(n);
-        const int line_end = GetLineEndPosition(n);
-        int pos;
+        const STE_TextPos line_start = PositionFromLine(n);
+        const STE_TextPos line_end = GetLineEndPosition(n);
+        STE_TextPos pos;
+
         for (pos = line_end; pos > line_start; pos--)
         {
             const char chr = (char)GetCharAt(pos-1);
@@ -1353,7 +1356,7 @@ bool wxSTEditor::RemoveTrailingWhitespace(int top_line, int bottom_line)
     return done;
 }
 
-bool wxSTEditor::RemoveCharsAroundPos(int pos, const wxString& remove)
+bool wxSTEditor::RemoveCharsAroundPos(STE_TextPos pos, const wxString& remove)
 {
     if (pos < 0)
         pos = GetCurrentPos();
@@ -1363,10 +1366,10 @@ bool wxSTEditor::RemoveCharsAroundPos(int pos, const wxString& remove)
 
     int n, line = LineFromPosition(pos);
     int line_start = LineFromPosition(line);
-    int line_end   = GetLineEndPosition(line);
+    STE_TextPos line_end   = GetLineEndPosition(line);
 
-    int space_start = pos;
-    int space_end   = pos;
+    STE_TextPos space_start = pos;
+    STE_TextPos space_end   = pos;
 
     for (n = pos; n > line_start; n--)
     {
@@ -1401,8 +1404,8 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
     if (text.IsEmpty())
         return false;
 
-    int sel_start = GetSelectionStart();
-    int sel_end   = GetSelectionEnd();
+    STE_TextPos sel_start = GetSelectionStart();
+    STE_TextPos sel_end   = GetSelectionEnd();
 
     TranslateLines(top_line, bottom_line, &top_line, &bottom_line);
 
@@ -1410,9 +1413,9 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
     BeginUndoAction();
     for (int n = top_line; n <= bottom_line; n++)
     {
-        const int line_start = PositionFromLine(n);
-        const int line_end   = GetLineEndPosition(n);
-        int pos = col >= 0 ? line_start + col : line_end;
+        const STE_TextPos line_start = PositionFromLine(n);
+        const STE_TextPos line_end   = GetLineEndPosition(n);
+        STE_TextPos pos = (col >= 0) ? (line_start + col) : line_end;
         wxString s(text);
 
         // if inserting before end of line then pad it
@@ -1632,8 +1635,8 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
 
 bool wxSTEditor::ShowInsertTextDialog()
 {
-    int sel_start  = GetSelectionStart();
-    int sel_end    = GetSelectionEnd();
+    STE_TextPos sel_start  = GetSelectionStart();
+    STE_TextPos sel_end    = GetSelectionEnd();
     int line_start = LineFromPosition(sel_start);
     int line_end   = LineFromPosition(sel_end);
 
@@ -1909,7 +1912,7 @@ bool wxSTEditor::DoFindMatchingBracePosition(int &braceAtCaret, int &braceOpposi
                          ? GetEditorLangs().GetBracesStyle(ste_languageID) : 10;
     int lexLanguage = GetLexer();
     int bracesStyleCheck = bracesStyle; // FIXME what is this?
-    int caretPos = GetCurrentPos();
+    STE_TextPos caretPos = GetCurrentPos();
     braceAtCaret = -1;
     braceOpposite = -1;
     char charBefore = '\0';
@@ -2027,10 +2030,10 @@ void wxSTEditor::DoBraceMatch() {
 
 // This code copied from SciTEBase.cxx
 // Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
-int wxSTEditor::GetCaretInLine() {
-        int caret = GetCurrentPos();            //SendEditor(SCI_GETCURRENTPOS);
+STE_TextPos wxSTEditor::GetCaretInLine() {
+        STE_TextPos caret = GetCurrentPos();            //SendEditor(SCI_GETCURRENTPOS);
         int line = LineFromPosition(caret);     //SendEditor(SCI_LINEFROMPOSITION, caret);
-        int lineStart = PositionFromLine(line); //SendEditor(SCI_POSITIONFROMLINE, line);
+        STE_TextPos lineStart = PositionFromLine(line); //SendEditor(SCI_POSITIONFROMLINE, line);
         return caret - lineStart;
 }
 
@@ -2164,7 +2167,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
         //ft.chrgText.cpMax = 0;
         int ft_chrg_cpMin = 0;
         const int flags = wxSTC_FIND_WORDSTART | (autoCompleteIgnoreCase ? 0 : wxSTC_FIND_MATCHCASE);
-        int posCurrentWord = GetCurrentPos() - (int)root.length();
+        STE_TextPos posCurrentWord = GetCurrentPos() - (int)root.length();
         unsigned int minWordLength = 0;
         unsigned int nwords = 0;
 
@@ -2180,7 +2183,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
 
         for (;;) {      // search all the document
                 //ft.chrg.cpMax = doclen;
-                int posFind = FindText(ft_chrg_cpMin, doclen, root, flags);
+                STE_TextPos posFind = FindText(ft_chrg_cpMin, doclen, root, flags);
                 if (posFind == -1 || posFind >= doclen)
                         break;
                 if (posFind == posCurrentWord) {
@@ -2658,7 +2661,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         {
             // try to put the editor back on the same line after loading
             int visibleLine = GetFirstVisibleLine() + LinesOnScreen();
-            int currentPos = GetCurrentPos();
+            STE_TextPos currentPos = GetCurrentPos();
             LoadFile(GetFileName());
             GotoLine(wxMin(visibleLine, GetNumberOfLines()));
             LineScroll(0, -2);
@@ -2876,7 +2879,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             if (!HasSelection())
             {
                // simulate default Del key behaviour
-               long pos = GetCurrentPos();
+               STE_TextPos pos = GetCurrentPos();
                CharRight(); // move right, jumping to next line if at cr+lf
                SetSelection(pos, GetCurrentPos());
             }
@@ -3314,7 +3317,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
     SetFindString(findString, true);
     SetFindFlags(flags, true);
 
-    int pos = GetCurrentPos();
+    STE_TextPos pos = GetCurrentPos();
     if ((eventType == wxEVT_COMMAND_FIND) && STE_HASBIT(flags, STE_FR_WHOLEDOC))
         pos = -1;
 
@@ -3322,7 +3325,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
     //   note cmp is ok since regexp doesn't handle searching backwards
     if ((eventType == wxEVT_COMMAND_FIND_NEXT) && !STE_HASBIT(flags, wxFR_DOWN))
     {
-        if ((labs(GetSelectionEnd() - GetSelectionStart()) == long(findString.Length()))
+        if ((labs(GetSelectionEnd() - GetSelectionStart()) == STE_TextPos(findString.Length()))
             && (GetFindReplaceData()->StringCmp(findString, GetSelectedText(), flags)))
                 pos -= findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
@@ -3475,11 +3478,11 @@ void wxSTEditor::SetFindFlags(long flags, bool send_evt)
     }
 }
 
-int wxSTEditor::FindString(const wxString &findString,
-                           int start_pos, int end_pos,
+STE_TextPos wxSTEditor::FindString(const wxString &findString,
+                           STE_TextPos start_pos, STE_TextPos end_pos,
                            int flags,
                            int action,
-                           int *found_start_pos, int *found_end_pos)
+                           STE_TextPos* found_start_pos, STE_TextPos* found_end_pos)
 {
     if (findString.IsEmpty())
         return wxNOT_FOUND;
@@ -3496,8 +3499,8 @@ int wxSTEditor::FindString(const wxString &findString,
     {
         start_pos = (start_pos == -1) ? GetCurrentPos() : wxMax(0, wxMin(start_pos, textLength));
         end_pos   = (end_pos   == -1) ? textLength      : wxMax(0, wxMin(end_pos,   textLength));
-        int s_pos = wxMin(start_pos, end_pos);
-        int e_pos = wxMax(start_pos, end_pos);
+        STE_TextPos s_pos = wxMin(start_pos, end_pos);
+        STE_TextPos e_pos = wxMax(start_pos, end_pos);
         start_pos = s_pos;
         end_pos   = e_pos;
     }
@@ -3505,22 +3508,22 @@ int wxSTEditor::FindString(const wxString &findString,
     {
         start_pos = (start_pos == -1) ? GetCurrentPos() : wxMax(0, wxMin(start_pos, textLength));
         end_pos   = (end_pos   == -1) ? 0               : wxMax(0, wxMin(end_pos,   textLength));
-        int s_pos = wxMax(start_pos, end_pos);
-        int e_pos = wxMin(start_pos, end_pos);
+        STE_TextPos s_pos = wxMax(start_pos, end_pos);
+        STE_TextPos e_pos = wxMin(start_pos, end_pos);
         start_pos = s_pos;
         end_pos   = e_pos;
     }
 
     // set the target to search within
-    int target_start = GetTargetStart();
-    int target_end   = GetTargetEnd();
+    STE_TextPos target_start = GetTargetStart();
+    STE_TextPos target_end   = GetTargetEnd();
     SetTargetStart(start_pos);
     SetTargetEnd(end_pos);
 
     // search for the string in target, target is changed to surround string
-    int pos = SearchInTarget(findString);
-    int search_target_start = GetTargetStart();
-    int search_target_end   = GetTargetEnd();
+    STE_TextPos pos = SearchInTarget(findString);
+    STE_TextPos search_target_start = GetTargetStart();
+    STE_TextPos search_target_end   = GetTargetEnd();
     if (found_start_pos) *found_start_pos = search_target_start;
     if (found_end_pos  ) *found_end_pos   = search_target_end;
 
@@ -3563,15 +3566,15 @@ bool wxSTEditor::SelectionIsFindString(const wxString &findString, int flags)
 
     flags &= (~STE_FR_WRAPAROUND); // just search selected text
 
-    int sel_start = GetSelectionStart();
-    int sel_end   = GetSelectionEnd();
+    STE_TextPos sel_start = GetSelectionStart();
+    STE_TextPos sel_end   = GetSelectionEnd();
 
     if (sel_start == sel_end) return false;
 
-    int found_start_pos = 0;
-    int found_end_pos   = 0;
+    STE_TextPos found_start_pos = 0;
+    STE_TextPos found_end_pos   = 0;
 
-    int find_pos = FindString(findString, sel_start, sel_end, flags, STE_FINDSTRING_NOTHING,
+    STE_TextPos find_pos = FindString(findString, sel_start, sel_end, flags, STE_FINDSTRING_NOTHING,
                               &found_start_pos, &found_end_pos);
 
     if ((find_pos != -1) && (found_start_pos == sel_start) && (found_end_pos == sel_end))
@@ -3591,11 +3594,11 @@ int wxSTEditor::ReplaceAllStrings(const wxString &findString,
     int replace_len = replaceString.Length();
     if (flags == -1) flags = GetFindFlags();
     flags = (flags | wxFR_DOWN) & (~STE_FR_WRAPAROUND); // do it in a single pass
-    int cursor_pos = GetCurrentPos();  // return here when done
+    STE_TextPos cursor_pos = GetCurrentPos();  // return here when done
 
-    int pos = 0;
-    int found_start_pos = 0;
-    int found_end_pos   = 0;
+    STE_TextPos pos = 0;
+    STE_TextPos found_start_pos = 0;
+    STE_TextPos found_end_pos   = 0;
 
     for (pos = FindString(findString, 0, -1, flags, STE_FINDSTRING_NOTHING,
                          &found_start_pos, &found_end_pos);
@@ -3637,9 +3640,9 @@ size_t wxSTEditor::FindAllStrings(const wxString &str, int flags,
     if (flags == -1) flags = GetFindFlags();
     flags = (flags | wxFR_DOWN) & (~STE_FR_WRAPAROUND); // do it in a single pass
 
-    int pos = 0;
-    int found_start_pos = 0;
-    int found_end_pos   = 0;
+    STE_TextPos pos = 0;
+    STE_TextPos found_start_pos = 0;
+    STE_TextPos found_end_pos   = 0;
     size_t count = 0;
 
     wxArrayInt positions;
@@ -4050,7 +4053,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2756")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2762")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

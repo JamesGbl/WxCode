@@ -256,18 +256,18 @@ public :
     bool CanCut()  const { return CanCopy() && IsEditable(); }
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
     wxString GetLineText(int line) const; // excluding any cr/lf at end
-    void SetInsertionPoint(int pos)       { GotoPos(pos); }
+    void SetInsertionPoint(STE_TextPos pos)       { GotoPos(pos); }
     void SetInsertionPointEnd()           { GotoPos(GetLength()); }
     void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + text.Len()); }
-    long XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
+    STE_TextPos XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
     // Remove this section of text between markers
     void Remove(int iStart, int iEnd)     { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }
     // Get the row/col representation of the position
-    bool PositionToXY(long pos, long *x, long *y) const;
+    bool PositionToXY(STE_TextPos, long *x, long *y) const;
     bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
     void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
     void DiscardEdits()                   { SetSavePoint(); }
-    void ShowPosition(int pos)            { GotoPos(pos); }
+    void ShowPosition(STE_TextPos pos)    { GotoPos(pos); }
     void SetValue(const wxString& text)   { SetText(text); }
     void ChangeValue(const wxString& text){ SetText(text); }
     wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
@@ -287,7 +287,7 @@ public :
 
 #if (wxVERSION_NUMBER >= 2900)
 
-    void GetSelection(int *iStart, int *iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
+    void GetSelection(STE_TextPos* iStart, STE_TextPos* iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
         { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
 
     bool GetIndentationGuides() const // changed from bool to int in wx trunk
@@ -305,28 +305,28 @@ public :
 #endif // __WXGTK__
 
     int GetEOLMode() const           { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode(); }
-    int GetInsertionPoint() const    { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
+    STE_TextPos GetInsertionPoint() const    { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
 
     wxString GetLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line); }
     int GetLength() const            { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength(); }
     long GetNumberOfLines() const    { return wxConstCast(this, wxSTEditor)->GetLineCount(); } // not in wx2.8
 
-    void GetSelection(long *iStart, long *iEnd) const // forwards compatibility, wx2.8 uses int*
+    void GetSelection(STE_TextPos* iStart, STE_TextPos* iEnd) const // forwards compatibility, wx2.8 uses int*
         { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
     void GetSelection(int *iStart, int *iEnd) const
         { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
 
-    int GetSelectionStart() const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart(); }
-    int GetSelectionEnd() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd(); }
+    STE_TextPos GetSelectionStart() const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionStart(); }
+    STE_TextPos GetSelectionEnd() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelectionEnd(); }
 
-    int GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
-    int GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
+    STE_TextPos GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
+    STE_TextPos GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
 
     virtual bool IsEditable() const { return !wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
     virtual bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
 
-    int LineFromPosition(int pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
-    int PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
+    int LineFromPosition(STE_TextPos pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
+    STE_TextPos PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
 
 #endif // (wxVERSION_NUMBER >= 2900)
 
@@ -337,8 +337,8 @@ public :
     //  If start_pos == end_pos == -1 use current selection, target,
     //    or if none use cursor line based on the STE_TranslatePosType.
     //  To get the whole document use (0, GetLength()-1) or (0, -1).
-    bool TranslatePos(int  start_pos,       int  end_pos,
-                      int* trans_start_pos, int* trans_end_pos,
+    bool TranslatePos(STE_TextPos start_pos, STE_TextPos end_pos,
+                      STE_TextPos* trans_start_pos, STE_TextPos* trans_end_pos,
                       STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
     // Translate the top and bottom lines in the document, returns true if they differ
     //  If top_line == bottom_line == -1 then use top/bottom line of selection, target,
@@ -373,7 +373,7 @@ public :
     bool PasteRectangular();
     // Paste the text into the document using the column of pos, -1 means
     //   current cursor position, as the leftmost side for linefeeds.
-    void PasteRectangular(const wxString& str, int pos = -1);
+    void PasteRectangular(const wxString& str, STE_TextPos pos = -1);
 
     // Convert the wxSTC_EOL_CRLF, wxSTC_EOL_CR, wxSTC_EOL_LF type to the
     // wxTextFileType wxTextFileType_Dos, wxTextFileType_Mac, wxTextFileType_Unix.
@@ -407,7 +407,7 @@ public :
     size_t GetWordCount(const wxString& text) const;
     // Get the number of words, counts words as contiguous isalnum
     //  See TranslatePos(start_pos, end_pos) for start/end interpretation
-    size_t GetWordCount(int start_pos = 0, int end_pos = -1,
+    size_t GetWordCount(STE_TextPos start_pos = 0, STE_TextPos end_pos = -1,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
     // Get the count of these "words", they may be single characters and
     // they may also be parts of other words. Returns total count.
@@ -436,14 +436,14 @@ public :
     // Convert tab characters to spaces uses GetTabWidth for # spaces to use
     //  returns the number of replacements.
     //  See TranslatePos(start_pos, end_pos) for start/end interpretation
-    size_t ConvertTabsToSpaces(bool to_spaces, int start_pos = -1, int end_pos = -1,
+    size_t ConvertTabsToSpaces(bool to_spaces, STE_TextPos start_pos = -1, STE_TextPos end_pos = -1,
                                STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
     // Remove all trailing spaces and tabs from the document
     //  See TranslateLines(top_line, bottom_line) for top/bottom interpretation
     bool RemoveTrailingWhitespace(int top_line = -1, int bottom_line = -1);
     // Remove chars before and after the position until char not in remove found
     //  only works on a single line, if pos == -1 then use GetCurrentPos()
-    bool RemoveCharsAroundPos(int pos = -1, const wxString& remove = wxT(" \t"));
+    bool RemoveCharsAroundPos(STE_TextPos pos = -1, const wxString& remove = wxT(" \t"));
     // Inserts specified text at the column (adding spaces as necessary)
     //  if col == 0, prepend text, < 0 then append text, else insert at column
     //  See TranslateLines(top_line, bottom_line) for top/bottom interpretation
@@ -586,11 +586,11 @@ public :
     //   found_start_pos/end_pos if !NULL are set to the start/end pos of string
     //     note found_end_pos - found_start_pos might not be string.length for regexp
     //   returns starting position of the found string
-    int FindString(const wxString &findString,
-                   int start_pos = -1, int end_pos = -1,
+    STE_TextPos FindString(const wxString &findString,
+                   STE_TextPos start_pos = -1, STE_TextPos end_pos = -1,
                    int flags = -1,
                    int action = STE_FINDSTRING_SELECT|STE_FINDSTRING_GOTO,
-                   int *found_start_pos = NULL, int *found_end_pos = NULL);
+                   STE_TextPos* found_start_pos = NULL, STE_TextPos* found_end_pos = NULL);
     // Does the current selection match the findString using the flags
     //   if flags = -1 uses GetFindFlags()
     bool SelectionIsFindString(const wxString &findString, int flags = -1);
@@ -793,7 +793,7 @@ public :
     void DoBraceMatch();
 
     // Get the position (col) of the caret in the line it's currently in
-    int GetCaretInLine();
+    STE_TextPos GetCaretInLine();
 
     // ------------------------------------------------------------------------
     // Autocomplete functions
