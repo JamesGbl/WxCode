@@ -5297,3 +5297,81 @@ void wxTreeListCtrl::SetItemToolTip(const wxTreeItemId& item, const wxString &ti
 void wxTreeListCtrl::SetCurrentItem(const wxTreeItemId& itemId) {
     m_main_win->SetCurrentItem(itemId);
 }
+
+//-----------------------------------------------------------------------------
+// wxTreeListCtrlXmlHandler - XRC support for wxTreeListCtrl
+//-----------------------------------------------------------------------------
+
+#if wxUSE_XRC
+
+IMPLEMENT_DYNAMIC_CLASS(wxTreeListCtrlXmlHandler, wxXmlResourceHandler)
+
+wxTreeListCtrlXmlHandler::wxTreeListCtrlXmlHandler() : wxXmlResourceHandler() {
+
+#define wxTR_NO_BUTTONS              0x0000     // for convenience
+#define wxTR_HAS_BUTTONS             0x0001     // draw collapsed/expanded btns
+#define wxTR_NO_LINES                0x0004     // don't draw lines at all
+#define wxTR_LINES_AT_ROOT           0x0008     // connect top-level nodes
+#define wxTR_TWIST_BUTTONS           0x0010     // still used by wxTreeListCtrl
+
+#define wxTR_SINGLE                  0x0000     // for convenience
+#define wxTR_MULTIPLE                0x0020     // can select multiple items
+#define wxTR_EXTENDED                0x0040     // TODO: allow extended selection
+#define wxTR_HAS_VARIABLE_ROW_HEIGHT 0x0080     // what it says
+
+#define wxTR_EDIT_LABELS             0x0200     // can edit item labels
+#define wxTR_ROW_LINES               0x0400     // put border around items
+#define wxTR_HIDE_ROOT               0x0800     // don't display root node
+
+#define wxTR_FULL_ROW_HIGHLIGHT      0x2000     // highlight full horz space
+
+#ifdef __WXGTK20__
+#define wxTR_DEFAULT_STYLE           (wxTR_HAS_BUTTONS | wxTR_NO_LINES)
+#else
+#define wxTR_DEFAULT_STYLE           (wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT)
+#endif
+
+// wxTreeCtrl styles, taken from treebase.h
+	XRC_ADD_STYLE(wxTR_NO_BUTTONS);
+	XRC_ADD_STYLE(wxTR_HAS_BUTTONS);
+	XRC_ADD_STYLE(wxTR_NO_LINES);
+	XRC_ADD_STYLE(wxTR_LINES_AT_ROOT);
+	XRC_ADD_STYLE(wxTR_TWIST_BUTTONS);
+
+	XRC_ADD_STYLE(wxTR_SINGLE);
+	XRC_ADD_STYLE(wxTR_MULTIPLE);
+#if WXWIN_COMPATIBILITY_2_8
+    // according to wxWidgets release notes, wxTR_EXTENDED is deprecated
+    XRC_ADD_STYLE(wxTR_EXTENDED);
+#endif // WXWIN_COMPATIBILITY_2_8
+    XRC_ADD_STYLE(wxTR_HAS_VARIABLE_ROW_HEIGHT);
+
+    XRC_ADD_STYLE(wxTR_EDIT_LABELS);
+    XRC_ADD_STYLE(wxTR_ROW_LINES);
+    XRC_ADD_STYLE(wxTR_HIDE_ROOT);
+
+    XRC_ADD_STYLE(wxTR_FULL_ROW_HIGHLIGHT);
+
+    XRC_ADD_STYLE(wxTR_DEFAULT_STYLE);
+
+// wxTreeListCtrl-specific styles
+    XRC_ADD_STYLE(wxTR_COLUMN_LINES);
+    XRC_ADD_STYLE(wxTR_VIRTUAL);
+
+// standard wxWidgets styles
+	AddWindowStyles();
+}
+
+wxObject *wxTreeListCtrlXmlHandler::DoCreateResource() {
+	XRC_MAKE_INSTANCE(tlc, wxTreeListCtrl);
+	tlc->Create(m_parentAsWindow, GetID(), GetPosition(), GetSize(), GetStyle(), wxDefaultValidator, GetName());
+    SetupWindow(tlc);
+	return tlc;
+}
+
+bool wxTreeListCtrlXmlHandler::CanHandle(wxXmlNode * node) {
+	return IsOfClass(node, wxT("TreeListCtrl"));
+}
+
+#endif  // wxUSE_XRC
+

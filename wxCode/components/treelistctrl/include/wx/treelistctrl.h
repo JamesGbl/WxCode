@@ -557,5 +557,26 @@ private:
     DECLARE_DYNAMIC_CLASS(wxTreeListCtrl)
 };
 
-#endif // TREELISTCTRL_H
+
+//----------------------------------------------------------------------------
+// wxTreeListCtrlXmlHandler - XRC support for wxTreeListCtrl
+//----------------------------------------------------------------------------
+
+#if wxUSE_XRC
+
+#include "wx/xrc/xmlres.h"
+
+class WXDLLIMPEXP_XRC wxTreeListCtrlXmlHandler : public wxXmlResourceHandler {
+	DECLARE_DYNAMIC_CLASS(wxTreeListCtrlXmlHandler)
+public:
+	wxTreeListCtrlXmlHandler();
+	virtual wxObject *DoCreateResource();
+	virtual bool CanHandle(wxXmlNode *node);
+};
+
+#endif /* wxUSE_XRC */
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif /* TREELISTCTRL_H */
 

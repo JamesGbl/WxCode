@@ -21,6 +21,7 @@ Known problems:
 Release History:
 ================
 * next release
+  - Added: resource files / XRC support [#3103099 --thanks Pascal Potvin]
 
 * treelistctrl_1104.zip
   - Fixed: position of editor when a column is hidden [wxPack]
