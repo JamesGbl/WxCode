@@ -21,8 +21,11 @@ Known problems:
 Release History:
 ================
 * next release
+  - Fixed: HitTest() was not working [#3093531 --thanks Yogeshg]
+  - Fixed: click events now return position (Point) in all cases
   - Changed: by default FindItem() searches all columns (instead of main) [#3246444]
   - Added: resource files / XRC support [#3103099 --thanks Pascal Potvin]
+  - Added: sample program now shows HitTest() output on middle-click
 
 * treelistctrl_1104.zip
   - Fixed: position of editor when a column is hidden [wxPack]

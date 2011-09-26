@@ -991,6 +991,11 @@ const wxChar *name;
         name = _("wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK");
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK) {
+        wxPoint p(event.GetPoint());
+        int flags, col;
+        wxTreeItemId item = m_treelist->HitTest(p, flags, col);
+        wxLogMessage("HitTest()    pos=%4d,%4d    item=<%X> flags=<%X> col=<%d>",
+            event.GetPoint().x, event.GetPoint().y, (unsigned int)(item.m_pItem), flags, col);
         name = _("wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK");
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGED) {

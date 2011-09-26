@@ -248,6 +248,10 @@ class wxEditTextCtrl;
 // this is the "true" control
 class  wxTreeListMainWindow: public wxScrolledWindow
 {
+friend class wxTreeListItem;
+friend class wxTreeListRenameTimer;
+friend class wxEditTextCtrl;
+
 public:
     // creation
     // --------
@@ -620,12 +624,6 @@ public:
 protected:
     wxTreeListCtrl* m_owner;
 
-    int m_main_column;
-
-    friend class wxTreeListItem;
-    friend class wxTreeListRenameTimer;
-    friend class wxEditTextCtrl;
-
     wxFont               m_normalFont;
     wxFont               m_boldFont;
 
@@ -634,6 +632,7 @@ protected:
     wxTreeListItem       *m_shiftItem; // item, where the shift key was pressed
     wxTreeListItem       *m_selectItem; // current selected item, not with wxTR_MULTIPLE
 
+    int                  m_main_column;
     int                  m_curColumn;
     int                  m_sortColumn;
     bool                 m_ReverseSortOrder;
@@ -4275,18 +4274,27 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
 
         // generate click & menu events
         if (event.MiddleDown()) {
-            bSkip = false;
-            SendEvent(wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK, item);
-        }
-        if (event.RightDown()) {
-            bSkip = false;
-            SendEvent(wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, item);
-        }
-        if (event.RightUp()) {
-            wxTreeEvent nevent(wxEVT_COMMAND_TREE_ITEM_MENU, 0);
+            // our own event to set point
+            wxTreeEvent nevent(0, 0);
             nevent.SetPoint(p);
             nevent.SetInt(m_curColumn);
-            SendEvent(0, item, &nevent);
+            bSkip = false;
+            SendEvent(wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK, item, &nevent);
+        }
+        if (event.RightDown()) {
+            // our own event to set point
+            wxTreeEvent nevent(0, 0);
+            nevent.SetPoint(p);
+            nevent.SetInt(m_curColumn);
+            bSkip = false;
+            SendEvent(wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, item, &nevent);
+        }
+        if (event.RightUp()) {
+            // our own event to set point
+            wxTreeEvent nevent(0, 0);
+            nevent.SetPoint(p);
+            nevent.SetInt(m_curColumn);
+            SendEvent(wxEVT_COMMAND_TREE_ITEM_MENU, 0, &nevent);
         }
 
         // if 2nd left click finishes on same item, will edit it
@@ -4360,10 +4368,11 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
                 RefreshSelected();
 
                 // send drag end event
-                wxTreeEvent event(wxEVT_COMMAND_TREE_END_DRAG, 0);
-                event.SetPoint(p);
-                event.SetInt(m_curColumn);
-                SendEvent(0, item, &event);
+                // our own event to set point
+                wxTreeEvent nevent(0, 0);
+                nevent.SetPoint(p);
+                nevent.SetInt(m_curColumn);
+                SendEvent(wxEVT_COMMAND_TREE_END_DRAG, item, &nevent);
             }
 
         // CASE 2: not were not dragging => continue, start
@@ -4392,13 +4401,14 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             RefreshSelected();
             CaptureMouse(); // TODO: usefulness unclear
 
-            wxTreeEvent nevent(event.LeftIsDown()
-                                  ? wxEVT_COMMAND_TREE_BEGIN_DRAG
-                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG, 0);
+            wxTreeEvent nevent(0, 0);
             nevent.SetPoint(p);
             nevent.SetInt(m_dragCol);
             nevent.Veto();
-            SendEvent(0, m_dragItem, &nevent);
+            SendEvent(event.LeftIsDown()
+                                  ? wxEVT_COMMAND_TREE_BEGIN_DRAG
+                                  : wxEVT_COMMAND_TREE_BEGIN_RDRAG,
+                      m_dragItem, &nevent);
         }
     }
 
@@ -4701,6 +4711,8 @@ wxTreeEvent nevent (event_type, 0);
     if (event == NULL) {
         event = &nevent;
         event->SetInt (m_curColumn); // the mouse colum
+    } else if (event_type) {
+        event->SetEventType(event_type);
     }
 
     event->SetEventObject (m_owner);
@@ -5120,7 +5132,7 @@ void wxTreeListCtrl::ScrollTo(const wxTreeItemId& item)
 
 wxTreeItemId wxTreeListCtrl::HitTest(const wxPoint& pos, int& flags, int& column)
 {
-    wxPoint p = m_main_win->ScreenToClient (ClientToScreen (pos));
+    wxPoint p = pos;
     return m_main_win->HitTest (p, flags, column);
 }
 

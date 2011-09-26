@@ -16,11 +16,13 @@
 <h2>wxTreeListCtrl</h2>
 
 <p>
-A tree list control presents information as a hierarchy, with items that may be expanded to show further items. Items in a tree list control are referenced by <tt>wxTreeItemId</tt> handles, which may be tested for validity by calling <tt>wxTreeItemId::IsOk()</tt>.
+A tree list control presents information as a hierarchy, with items that may be expanded to show further items.
+Items in a tree list control are referenced by <tt>wxTreeItemId</tt> handles, which may be tested for validity by calling <tt>wxTreeItemId::IsOk()</tt>.
 For each item several attributes can be set for each column (column numbering start with zero): text, colours, font, image, user data.
 </p>
 <p>
-To intercept events from a tree list control, use the event table macros described in <tt>wxTreeEvent</tt> (see <a href="#eventhandling">below</a> for a detailed description of events).
+To intercept events from a tree list control, use the event table macros described in <tt>wxTreeEvent</tt>
+(see <a href="#eventhandling">below</a> for a detailed description of events).
 </p>
 
 <h3>Derived from</h3>
@@ -127,6 +129,7 @@ See also window styles overview.
 <p>
 To process input from a tree list control, use these event handler macros to direct input to member functions that take a <tt>wxTreeEvent</tt> argument.
 In addition to the methods documented for <tt>wxTreeEvent</tt>, the method <tt>GetInt()</tt> will return the relevant column for mouse events (and -1 otherwise).
+The current location can be obtained for click and drag events by calling the method <tt>GetPoint()</tt> .
 </p>
 <p>
 The sample program includes a log pane reporting events as they are fired.
