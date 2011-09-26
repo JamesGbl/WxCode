@@ -636,10 +636,14 @@ Expands the given item and all subitems recursively.
 <h3>wxTreeListCtrl::FindItem</h3>
 <p>
     <b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i >flags=0</i>)
-<br><b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i> column</i>, <b>int</b><i> flags=0</i>)
+<br><b>wxTreeItemId</b> <b>FindItem</b> (<b>const wxTreeItemId&amp;</b><i> item</i>, <b>int</b><i> column</i>, <b>const wxString&amp;</b><i> str</i>, <b>int</b><i> flags=0</i>)
 </p>
 <p>
-Returns the next visible item in the tree which matches the entered string, starting from the entered item. If no item the find starts a the beginning of the tree. If no item found an empty item (NULL) is returned.
+Returns the next item in the tree which matches the entered string,
+starting from (but not including) the entered item.
+If no item is provided (NULL item) the search starts at the top of the tree.
+In the first form or if a negative column is provided, all columns are searched.
+If no item is found an empty item (NULL) is returned.
 </p>
 <p>
 The flags have the following meaning:

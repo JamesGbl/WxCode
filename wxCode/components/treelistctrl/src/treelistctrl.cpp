@@ -3160,7 +3160,7 @@ void wxTreeListMainWindow::SortChildren (const wxTreeItemId& itemId, int column,
 }
 
 wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, int column, const wxString& str, int mode) {
-    wxString itemText;
+
     // determine start item
     wxTreeItemId next = item;
     if (next.IsOk()) {
@@ -3189,17 +3189,25 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, int colum
     if (!next.IsOk()) return (wxTreeItemId*)NULL;
 
     // start checking the next items
+    wxString itemText;
+    int col, col_start, col_end;
+    if (column >= 0) { col_start = col_end = col; }
+    else { col_start = 0; col_end = GetColumnCount() - 1; }
     while (next.IsOk() && (next != item)) {
-        if (mode & wxTL_MODE_FIND_PARTIAL) {
-            itemText = GetItemText (next, column).Mid (0, str.Length());
-        }else{
-            itemText = GetItemText (next, column);
+        // check for a match
+        for (col=col_start; col<=col_end; col++) {
+            if (mode & wxTL_MODE_FIND_PARTIAL) {
+                itemText = GetItemText (next, col).Mid (0, str.Length());
+            }else{
+                itemText = GetItemText (next, col);
+            }
+            if (mode & wxTL_MODE_FIND_NOCASE) {
+                if (itemText.CmpNoCase (str) == 0) return next;
+            }else{
+                if (itemText.Cmp (str) == 0) return next;
+            }
         }
-        if (mode & wxTL_MODE_FIND_NOCASE) {
-            if (itemText.CmpNoCase (str) == 0) return next;
-        }else{
-            if (itemText.Cmp (str) == 0) return next;
-        }
+        // no match, go to next item
         if (mode & wxTL_MODE_NAV_LEVEL) {
             next = GetNextSibling (next);
         }else if (mode & wxTL_MODE_NAV_VISIBLE) { //
@@ -3956,7 +3964,7 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
                 m_findTimer->Start (FIND_TIMER_TICKS, wxTIMER_ONE_SHOT);
                 wxTreeItemId prev = m_curItem? (wxTreeItemId*)m_curItem: (wxTreeItemId*)NULL;
                 while (true) {
-                    newItem = FindItem (prev, GetCurrentColumn(), m_findStr, wxTL_MODE_NAV_EXPANDED | wxTL_MODE_FIND_PARTIAL | wxTL_MODE_FIND_NOCASE);
+                    newItem = FindItem (prev, -1, m_findStr, wxTL_MODE_NAV_EXPANDED | wxTL_MODE_FIND_PARTIAL | wxTL_MODE_FIND_NOCASE);
                     if (newItem || (m_findStr.Length() <= 1)) break;
                     m_findStr.RemoveLast();
                 };

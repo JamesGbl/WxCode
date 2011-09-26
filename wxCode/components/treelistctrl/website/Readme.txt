@@ -21,6 +21,7 @@ Known problems:
 Release History:
 ================
 * next release
+  - Changed: by default FindItem() searches all columns (instead of main) [#3246444]
   - Added: resource files / XRC support [#3103099 --thanks Pascal Potvin]
 
 * treelistctrl_1104.zip

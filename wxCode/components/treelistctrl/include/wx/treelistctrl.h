@@ -520,7 +520,7 @@ public:
     void SortChildren(const wxTreeItemId& item, int column = -1, bool reverseOrder = false);
 
     // searching (by column only)
-    wxTreeItemId FindItem (const wxTreeItemId& item,             const wxString& str, int mode = 0) { return FindItem(item, GetMainColumn(), str, mode); };
+    wxTreeItemId FindItem (const wxTreeItemId& item,             const wxString& str, int mode = 0) { return FindItem(item, -1, str, mode); };
     wxTreeItemId FindItem (const wxTreeItemId& item, int column, const wxString& str, int mode = 0);
 
     // overridden base class virtuals
