@@ -1087,7 +1087,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
     editor->SetFindString(findString, true);
     editor->SetFindFlags(flags, true);
 
-    int pos = editor->GetCurrentPos();
+    STE_TextPos pos = editor->GetCurrentPos();
     if ((eventType == wxEVT_COMMAND_FIND) && STE_HASBIT(flags, STE_FR_WHOLEDOC))
         pos = -1;
 
@@ -1155,7 +1155,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
             return;
         }
 
-        int pos = editor->GetSelectionStart();
+        STE_TextPos pos = editor->GetSelectionStart();
         wxString replaceString = event.GetReplaceString();
         editor->ReplaceSelection(replaceString);
         editor->EnsureCaretVisible();
@@ -1189,13 +1189,13 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
     }
 }
 
-int wxSTEditorNotebook::FindString(const wxString &str, int start_pos,
+int wxSTEditorNotebook::FindString(const wxString &str, STE_TextPos start_pos,
                                    int flags, int action)
 {
     int n_pages = GetPageCount();
     int n_sel = GetSelection();
     int n = -1;
-    int pos = start_pos;
+    STE_TextPos pos = start_pos;
     bool forward = STE_HASBIT(flags, wxFR_DOWN) != 0;
     int noteb_flags = flags & (~STE_FR_WRAPAROUND); // switch to new page
 

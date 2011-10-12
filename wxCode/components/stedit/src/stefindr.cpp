@@ -38,7 +38,7 @@ void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox
 {
     wxCHECK_RET(combo, wxT("Invalid combobox in wxSTEPrependComboBoxString"));
 
-    int pos = combo->FindString(str);
+    wxTextPos pos = combo->FindString(str);
     if (pos == 0)
         return;
     if (pos != wxNOT_FOUND)
@@ -536,7 +536,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         for (n = 0; n < count; n++)
         {
             str = findAllStrings->Item(n).AfterFirst(wxT('|'));
-            int pos = m_resultEditor->PositionFromLine((int)n);
+            STE_TextPos pos = m_resultEditor->PositionFromLine((int)n);
             m_resultEditor->StartStyling(pos, 31);
             int length = (int)str.BeforeFirst(wxT('(')).Length() - 1;
             m_resultEditor->SetStyling(length, 3);
@@ -625,7 +625,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
     {
         wxComboBox* cBox = wxStaticCast(m_insertMenu->GetClientData(), wxComboBox);
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
-        int pos = (cBox == m_findCombo) ? m_find_insert_pos : m_replace_insert_pos;
+        wxTextPos pos = (cBox == m_findCombo) ? m_find_insert_pos : m_replace_insert_pos;
 
         wxString s = cBox->GetValue();
 
@@ -798,7 +798,7 @@ void wxSTEditorFindReplacePanel::OnMarginClick( wxStyledTextEvent &event )
         return;
 
     wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
-    int pos = event.GetPosition();
+    STE_TextPos pos = event.GetPosition();
 
     if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
         pos = editor->GetCurrentPos();

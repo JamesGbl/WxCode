@@ -131,7 +131,7 @@ public:
     //   until one is found or wxNOT_FOUND (-1) for none found.
     //   returns the position in the page, use GetSelection to get new page number.
     //   action is of type STE_FindStringType selects, goto, or do nothing
-    int FindString(const wxString &str, int start_pos, int flags, int action);
+    int FindString(const wxString &str, STE_TextPos start_pos, int flags, int action);
     // Replace all occurances of the find string with the replace string in all pages
     //   if flags = -1 uses wxSTEditor::GetFindFlags()
     //   pages will be filled with the number of different pages that have been modified

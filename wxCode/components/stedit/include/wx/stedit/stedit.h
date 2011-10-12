@@ -258,7 +258,7 @@ public :
     wxString GetLineText(int line) const; // excluding any cr/lf at end
     void SetInsertionPoint(STE_TextPos pos)       { GotoPos(pos); }
     void SetInsertionPointEnd()           { GotoPos(GetLength()); }
-    void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + text.Len()); }
+    void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + (STE_TextPos)text.Len()); }
     STE_TextPos XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
     // Remove this section of text between markers
     void Remove(int iStart, int iEnd)     { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }

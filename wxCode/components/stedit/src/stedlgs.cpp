@@ -789,7 +789,7 @@ void wxSTEditorPrefDialogPageStyles::UpdateEditor(wxSTEditor* editor, wxArrayInt
         int line = n;
         wxString lineStr = editor->GetLine(line);
 
-        int pos = editor->PositionFromLine(line);
+        STE_TextPos pos = editor->PositionFromLine(line);
         int line_len = lineStr.Length(); // with \n at end for right length
 
         if (line_len < 2) // skip empty lines
@@ -1178,7 +1178,7 @@ void wxSTEditorPrefDialogPageLangs::SetControlValues()
         int line = n;
         wxString lineStr = m_styleEditor->GetLine(line);
 
-        int pos = m_styleEditor->PositionFromLine(line);
+        STE_TextPos pos = m_styleEditor->PositionFromLine(line);
         int line_len = lineStr.Length();
 
         if (line_len <= 2)
@@ -1217,7 +1217,7 @@ void wxSTEditorPrefDialogPageLangs::OnMarginClick(wxStyledTextEvent &event)
     if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
         return;
 
-    int pos = event.GetPosition();
+    STE_TextPos pos = event.GetPosition();
 
     if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
         pos = m_styleEditor->GetCurrentPos();
@@ -1959,7 +1959,7 @@ void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
     {
         wxComboBox* cBox = wxStaticCast(m_insertMenu->GetClientData(), wxComboBox);
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
-        int pos = cBox == m_prependCombo ? m_prepend_insert_pos : m_append_insert_pos;
+        wxTextPos pos = (cBox == m_prependCombo) ? m_prepend_insert_pos : m_append_insert_pos;
 
         wxString s = cBox->GetValue();
 

@@ -364,7 +364,7 @@ bool wxSTEditorSplitter::DoSplit(wxSplitMode mode, int sashPosition)
 
 void wxSTEditorSplitter::OnUnsplit( wxWindow *removed )
 {
-    int pos = GetEditor()->GetCurrentPos();
+    STE_TextPos pos = GetEditor()->GetCurrentPos();
     wxSplitterWindow::OnUnsplit(removed);
 
     if (m_is_resplitting)

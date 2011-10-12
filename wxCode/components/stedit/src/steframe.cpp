@@ -548,7 +548,7 @@ void wxSTEditorFrame::OnSTCUpdateUI(wxStyledTextEvent &event)
         return;
 
     wxStyledTextCtrl* editor = wxStaticCast(event.GetEventObject(), wxStyledTextCtrl);
-    int pos   = editor->GetCurrentPos();
+    STE_TextPos pos   = editor->GetCurrentPos();
     int line  = editor->GetCurrentLine() + 1; // start at 1
     int lines = editor->GetLineCount();
     int col   = editor->GetColumn(pos) + 1;   // start at 1
