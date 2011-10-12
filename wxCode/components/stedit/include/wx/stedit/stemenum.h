@@ -17,7 +17,7 @@ class WXDLLIMPEXP_FWD_CORE wxMenu;
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 class WXDLLIMPEXP_FWD_CORE wxMenuItem;
 class WXDLLIMPEXP_FWD_CORE wxToolBar;
-class WXDLLIMPEXP_FWD_CORE AcceleratorArray;
+class WXDLLIMPEXP_STEDIT AcceleratorArray;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - Menu creation for wxSTEditor and friends
