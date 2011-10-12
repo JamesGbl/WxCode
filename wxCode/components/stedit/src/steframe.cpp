@@ -366,7 +366,7 @@ static int Find_wxArrayTreeItemId(const wxArrayTreeItemIds& arrayIds, const wxTr
     for (n = 0; n < id_count; n++)
     {
         if (arrayIds[n] == id)
-            return n;
+            return (int)n;
     }
     return wxNOT_FOUND;
 }
@@ -379,7 +379,7 @@ void wxSTEditorFrame::UpdateFileTreeCtrl()
         return;
 
     int n;
-    int page_count = noteBook->GetPageCount();
+    int page_count = (int)noteBook->GetPageCount();
     int note_sel   = noteBook->GetSelection();
 
     wxTreeItemId id, selId;
@@ -861,7 +861,7 @@ wxTreeItemId wxSTETreeCtrlHelper::FindOrInsertItem(const wxArrayString& treePath
     wxCHECK_MSG(m_treeCtrl, wxTreeItemId(), wxT("Invalid wxTreeCtrl"));
     wxCHECK_MSG(treePath.GetCount() > 0, wxTreeItemId(), wxT("Nothing to insert"));
 
-    int n = 0, count = treePath.GetCount();
+    size_t n = 0, count = treePath.GetCount();
 
     // check for and add "Root" if not only_find
     wxTreeItemId parentId = m_treeCtrl->GetRootItem();

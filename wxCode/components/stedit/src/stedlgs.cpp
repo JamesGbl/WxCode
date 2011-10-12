@@ -161,7 +161,7 @@ wxSTEditorPrefDialogPagePrefs::wxSTEditorPrefDialogPagePrefs( const wxSTEditorPr
 void wxSTEditorPrefDialogPagePrefs::GetControlValues()
 {
     wxSTEditorPrefs stePrefs(GetPrefData().GetPrefs());
-    int n, count = m_prefsToIds.GetCount();
+    size_t n, count = m_prefsToIds.GetCount();
 
     for (n = 0; n < count; n++)
     {
@@ -208,7 +208,7 @@ void wxSTEditorPrefDialogPagePrefs::GetControlValues()
 void wxSTEditorPrefDialogPagePrefs::SetControlValues()
 {
     wxSTEditorPrefs stePrefs(GetPrefData().GetPrefs());
-    int n, count = m_prefsToIds.GetCount();
+    size_t n, count = m_prefsToIds.GetCount();
 
     for (n = 0; n < count; n++)
     {
@@ -226,7 +226,7 @@ void wxSTEditorPrefDialogPagePrefs::SetControlValues()
         if ((win_id == ID_STEDLG_FOLD_STYLES_LISTBOX) && wxDynamicCast(win, wxCheckListBox))
         {
             wxCheckListBox *listBox = wxDynamicCast(win, wxCheckListBox);
-            size_t i, lcount = listBox->GetCount();
+            unsigned int i, lcount = listBox->GetCount();
             int value = stePrefs.GetPrefInt(STE_PREF_FOLD_STYLES);
             for (i = 0; i < lcount; i++)
                 listBox->Check(i, (value & (1<<i)) != 0);
@@ -251,7 +251,7 @@ void wxSTEditorPrefDialogPagePrefs::Apply()
     GetControlValues();
     wxSTEditorPrefs editorPrefs(GetEditorPrefData().GetPrefs());
     wxSTEditorPrefs prefs(GetPrefData().GetPrefs());
-    int n, count = m_prefsToIds.GetCount();
+    size_t n, count = m_prefsToIds.GetCount();
 
     for (n = 0; n < count; n++)
     {
@@ -265,7 +265,7 @@ void wxSTEditorPrefDialogPagePrefs::Reset()
 {
     wxSTEditorPrefs prefs(GetPrefData().GetPrefs());
     wxSTEditorPrefs defaultPrefs(true); // defaults
-    int n, count = m_prefsToIds.GetCount();
+    size_t n, count = m_prefsToIds.GetCount();
 
     for (n = 0; n < count; n++)
     {
@@ -457,10 +457,10 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
     // find max length of all style names (for appending extra text)
     for (n = 0; n < count; n++)
     {
-        int len = steStyles.GetStyleName(m_styleArray[n]).Len() + 2;
+        size_t len = steStyles.GetStyleName(m_styleArray[n]).Len() + 2;
 
         if (len > m_style_max_len)
-            m_style_max_len = len;
+            m_style_max_len = (int)len;
     }
 
     FillStyleEditor(m_styleEditor);
@@ -470,7 +470,7 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
         if (m_styleArray[n] > STE_STYLE_LANG__MAX)
         {
             m_colourEditor->AddText(STYLE_SAMPLE_TEXT(n));
-            m_colourLineArray.Add(n);
+            m_colourLineArray.Add((int)n);
 
             // add the markers
             int marker_num = m_styleArray[n] - STE_STYLE_MARKER__FIRST;
@@ -776,32 +776,32 @@ void wxSTEditorPrefDialogPageStyles::UpdateEditor(wxSTEditor* editor, wxArrayInt
 
     steStyles.UpdateEditor(editor);
 
-    int n, count = lineArray.GetCount();
+    size_t n, count = lineArray.GetCount();
     for (n = 0; n < count; n++)
     {
         int style_index = lineArray[n];
         int ste_style = m_styleArray[style_index];
         // skip over default preset styles of scintilla
-        int sci_style = n < wxSTC_STYLE_DEFAULT ? n :
+        size_t sci_style = n < wxSTC_STYLE_DEFAULT ? n :
                                                   n + wxSTC_STYLE_INDENTGUIDE - wxSTC_STYLE_DEFAULT;
-        steStyles.SetEditorStyle(sci_style, ste_style, editor);
+        steStyles.SetEditorStyle((int)sci_style, ste_style, editor);
 
-        int line = n;
+        int line = (int)n;
         wxString lineStr = editor->GetLine(line);
 
         STE_TextPos pos = editor->PositionFromLine(line);
-        int line_len = lineStr.Length(); // with \n at end for right length
+        size_t line_len = lineStr.Length(); // with \n at end for right length
 
         if (line_len < 2) // skip empty lines
             continue;
 
         editor->StartStyling(pos, 0xff);
-        editor->SetStyling(line_len, sci_style);
+        editor->SetStyling((int)line_len, (int)sci_style);
 
         // Note: can't do this since using 7 style bits
         if ( (ste_style >= STE_STYLE_INDIC_0) && (ste_style <= STE_STYLE_INDIC_2))
         {
-            editor->SetIndicator(pos, line_len, steStyles.GetIndicatorMask(ste_style-STE_STYLE_INDIC_0));
+            editor->SetIndicator(pos, (int)line_len, steStyles.GetIndicatorMask(ste_style-STE_STYLE_INDIC_0));
         }
     }
 
@@ -911,9 +911,9 @@ void wxSTEditorPrefDialogPageStyles::SetControlValues()
         m_last_language_ID = GetPrefData().GetLanguageId();
         m_styleEditor->MarkerDeleteAll(1);
 
-        int style_count = steLangs.GetStyleCount(m_last_language_ID);
+        size_t style_count = steLangs.GetStyleCount(m_last_language_ID);
 
-        for (int s_n = 0; s_n < style_count; s_n++)
+        for (size_t s_n = 0; s_n < style_count; s_n++)
         {
             int s = steLangs.GetSTEStyle(m_last_language_ID, s_n);
             if (s >= 0)
@@ -1007,7 +1007,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     wxSTEditorLangs  steLangs(GetPrefData().GetLangs());
     wxSTEditorStyles steStyles(GetPrefData().GetStyles());
 
-    int n = 0, count;
+    size_t n = 0, count;
     m_style_editor_marker_handle = 0;
     m_current_lang         = GetPrefData().GetLanguageId();
     m_current_style_n      = 0;
@@ -1076,7 +1076,7 @@ wxSTEditorPrefDialogPageLangs::wxSTEditorPrefDialogPageLangs(const wxSTEditorPre
     {
         if (!steLangs.GetUseLanguage(n)) continue;
 
-        m_usedLangs.Add(n);
+        m_usedLangs.Add((int)n);
         m_languageChoice->Append(steLangs.GetName(n));
     }
 
@@ -1175,17 +1175,17 @@ void wxSTEditorPrefDialogPageLangs::SetControlValues()
 
         steStyles.SetEditorStyle(sci_style, ste_style, m_styleEditor);
 
-        int line = n;
+        int line = (int)n;
         wxString lineStr = m_styleEditor->GetLine(line);
 
         STE_TextPos pos = m_styleEditor->PositionFromLine(line);
-        int line_len = lineStr.Length();
+        size_t line_len = lineStr.Length();
 
         if (line_len <= 2)
             continue;
 
         m_styleEditor->StartStyling(pos, 0xff);
-        m_styleEditor->SetStyling(line_len, sci_style);
+        m_styleEditor->SetStyling((int)line_len, sci_style);
     }
 
     m_styleEditor->SetReadOnly(true);
@@ -1675,7 +1675,7 @@ wxSTEditorWindowsDialog::wxSTEditorWindowsDialog(wxSTEditorNotebook *notebook,
 void wxSTEditorWindowsDialog::UpdateListBox()
 {
     m_listBox->Clear();
-    int n, count = m_notebook->GetPageCount();
+    int n, count = (int)m_notebook->GetPageCount();
     for (n = 0; n < count; n++)
     {
         wxSTEditor* editor = m_notebook->GetEditor(n);
@@ -1882,8 +1882,8 @@ void wxSTEditorInsertTextDialog::FormatText()
         }
         case STE_INSERT_TEXT_SURROUND :
         {
-            int sel_start = 0; //GetSelectionStart();
-            int sel_end   = m_testEditor->GetLength(); //GetSelectionEnd();
+            STE_TextPos sel_start = 0; //GetSelectionStart();
+            STE_TextPos sel_end   = m_testEditor->GetLength(); //GetSelectionEnd();
             wxString prependText = GetPrependText();
             wxString appendText  = GetAppendText();
 
@@ -1892,8 +1892,8 @@ void wxSTEditorInsertTextDialog::FormatText()
             if (prependText.Length() > 0u)
                 m_testEditor->InsertText(sel_start, prependText);
 
-            sel_start -= prependText.Length();
-            sel_end   += prependText.Length();
+            sel_start -= (STE_TextPos)prependText.Length();
+            sel_end   += (STE_TextPos)prependText.Length();
             m_testEditor->SetSelection(sel_start, sel_end);
             break;
         }
@@ -1972,7 +1972,7 @@ void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
 
         cBox->SetValue(s);
         cBox->SetFocus();
-        cBox->SetInsertionPoint(pos + c.Length());
+        cBox->SetInsertionPoint(pos + (wxTextPos)c.Length());
     }
 
     FormatText();

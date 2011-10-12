@@ -2048,11 +2048,11 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
         //ft.chrg.cpMax = doclen;
         //ft.chrgText.cpMin = 0;
         //ft.chrgText.cpMax = 0;
-        int ft_chrg_cpMin = 0;
+        STE_TextPos ft_chrg_cpMin = 0;
         const int flags = wxSTC_FIND_WORDSTART | (autoCompleteIgnoreCase ? 0 : wxSTC_FIND_MATCHCASE);
-        STE_TextPos posCurrentWord = GetCurrentPos() - (int)root.length();
-        unsigned int minWordLength = 0;
-        unsigned int nwords = 0;
+        STE_TextPos posCurrentWord = GetCurrentPos() - (STE_TextPos)root.length();
+        size_t minWordLength = 0;
+        size_t nwords = 0;
 
         // wordsNear contains a list of words separated by single spaces and with a space
         // at the start and end. This makes it easy to search for words.
@@ -2083,7 +2083,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                         wordend++;
                 wordstart = wordstart.Mid(0, wordend);
                 //wxPrintf(wxT("%d %d '%s'\n"), posFind, wordstart.Find(wxT("current")), wordstart.wx_str());
-                unsigned int wordlen = wordstart.length();
+                size_t wordlen = wordstart.length();
                 if (wordlen > root.length()) {
                         if (wordsNear.Index(wordstart) == wxNOT_FOUND) {   // add a new entry
                                 wordsNear.Add(wordstart);
@@ -2096,7 +2096,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                                 }
                         }
                 }
-                ft_chrg_cpMin = posFind + wordlen;
+                ft_chrg_cpMin = posFind + (STE_TextPos)wordlen;
         }
 
         size_t length = wordsNear.GetCount();
@@ -3210,7 +3210,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
     {
         if ((labs(GetSelectionEnd() - GetSelectionStart()) == STE_TextPos(findString.Length()))
             && (GetFindReplaceData()->StringCmp(findString, GetSelectedText(), flags)))
-                pos -= findString.Length() + 1; // doesn't matter if it matches or not, skip it
+                pos -= (STE_TextPos)findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
 
     if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
@@ -3303,7 +3303,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         wxString replaceString = event.GetReplaceString();
         ReplaceSelection(replaceString);
         GotoPos(pos); // makes first part of selection visible
-        SetSelection(pos, pos + replaceString.Length());
+        SetSelection(pos, pos + (STE_TextPos)replaceString.Length());
         //SetFocus();
     }
     else if (eventType == wxEVT_COMMAND_FIND_REPLACE_ALL)
@@ -3474,7 +3474,7 @@ int wxSTEditor::ReplaceAllStrings(const wxString &findString,
         return 0;
 
     int count = 0;
-    int replace_len = replaceString.Length();
+    int replace_len = (int)replaceString.Length();
     if (flags == -1) flags = GetFindFlags();
     flags = (flags | wxFR_DOWN) & (~STE_FR_WRAPAROUND); // do it in a single pass
     STE_TextPos cursor_pos = GetCurrentPos();  // return here when done
@@ -3542,7 +3542,7 @@ size_t wxSTEditor::FindAllStrings(const wxString &str, int flags,
     return count;
 }
 
-void wxSTEditor::SetIndicator(int pos, int len, int indic)
+void wxSTEditor::SetIndicator(STE_TextPos pos, int len, int indic)
 {
     StartStyling(pos, wxSTC_INDICS_MASK);
     SetStyling(len, indic);
@@ -3779,7 +3779,7 @@ bool wxSTEditor::SetLanguage(int lang)
 
     GetSTERefData()->m_steLang_id = lang;
 
-    int n, editRefCount = GetSTERefData()->GetEditorCount();
+    size_t n, editRefCount = GetSTERefData()->GetEditorCount();
 
     if (GetEditorStyles().IsOk())
     {
@@ -3936,7 +3936,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2775")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2776")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

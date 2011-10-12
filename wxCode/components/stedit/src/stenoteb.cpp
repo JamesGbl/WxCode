@@ -90,7 +90,7 @@ bool wxSTEditorNotebook::Destroy()
 }
 void wxSTEditorNotebook::SetSendSTEEvents(bool send)
 {
-    size_t n, count = GetPageCount();
+    int n, count = (int)GetPageCount();
     for (n = 0; n < count; n++)
     {
         wxSTEditorSplitter *splitter = GetEditorSplitter(n);
@@ -176,7 +176,7 @@ wxSTEditor *wxSTEditorNotebook::GetEditor( int page )
 
 wxSTEditorSplitter *wxSTEditorNotebook::GetEditorSplitter( int page )
 {
-    int page_count = GetPageCount();
+    int page_count = (int)GetPageCount();
     if (page_count == 0)
         return NULL;
 
@@ -207,7 +207,7 @@ int wxSTEditorNotebook::FindEditorPage(const wxSTEditor* editor)
     }
     else
     {
-        int n, n_pages = GetPageCount();
+        int n, n_pages = (int)GetPageCount();
         for (n = 0; n < n_pages; n++)
         {
             if (n == sel) continue;
@@ -226,12 +226,12 @@ int wxSTEditorNotebook::FindEditorPage(const wxSTEditor* editor)
 
 int wxSTEditorNotebook::FindEditorPageByFileName(const wxFileName& filename)
 {
-    size_t n, count = GetPageCount();
+    int n, count = (int)GetPageCount();
     for (n = 0; n < count; n++)
     {
         wxSTEditor* editor = GetEditor(n);
         if (editor && (editor->GetFileName() == filename))
-            return n;
+            return (int)n;
     }
     return wxNOT_FOUND;
 }
@@ -336,7 +336,7 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
             nPage = names.Index(title+wxT("=999999"));
         }
         else
-            nPage = n_pages;
+            nPage = (int)n_pages;
     }
 
     if (n_pages < 1)
@@ -358,8 +358,8 @@ void wxSTEditorNotebook::SortTabs(int style)
     {
         int sel = GetSelection();
         int new_sel = sel;
-        int page_count = GetPageCount();
-        int n;
+        size_t page_count = GetPageCount();
+        size_t n;
 
         if (page_count < 2)
             return;
@@ -395,10 +395,10 @@ void wxSTEditorNotebook::SortTabs(int style)
                     sel_changed = true;
 
                     if (old_page == sel)
-                        new_sel = n;
+                        new_sel = (int)n;
 
                     if (n < page_count - 1)
-                        InsertPage(n+1, oldWin, oldName, old_page == sel);
+                        InsertPage((int)(n+1), oldWin, oldName, old_page == sel);
                     else
                         AddPage(oldWin, oldName, old_page == sel);
                 }
@@ -443,7 +443,7 @@ bool wxSTEditorNotebook::ClosePage(int n, bool query_save_if_modified)
 
     // Force selection for GTK, else if try to close the "current page" without
     //  first clicking in it you delete some other page
-    int page_count = GetPageCount();
+    int page_count = (int)GetPageCount();
     if ((sel >= page_count) && (page_count > 0))
         SetSelection(wxMax(0, wxMin(sel, page_count-1)));
 
@@ -468,7 +468,7 @@ bool wxSTEditorNotebook::CloseAllPages(bool query_save_if_modified)
 
 bool wxSTEditorNotebook::QuerySaveIfModified(int style)
 {
-    int n_pages = GetPageCount();
+    int n_pages = (int)GetPageCount();
 
     for (int n = 0; n < n_pages; n++)
     {
@@ -485,7 +485,7 @@ bool wxSTEditorNotebook::QuerySaveIfModified(int style)
 
 bool wxSTEditorNotebook::CanSaveAll()
 {
-    int n, n_pages = GetPageCount();
+    int n, n_pages = (int)GetPageCount();
     wxSTEditor *editor = NULL;
 
     for (n = 0; n < n_pages; n++)
@@ -552,7 +552,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
     wxSTERecursionGuard guard(m_rGuard_HandleMenuEvent);
     if (guard.IsInside()) return false;
 
-    int n_page = GetPageCount();
+    int n_page = (int)GetPageCount();
     int win_id = event.GetId();
 
     switch (win_id)
@@ -626,7 +626,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
             if ((GetPageCount() > 0) && (GetSelection() - 1 >= 0))
                 SetSelection(GetSelection() - 1);
             else if (GetPageCount() > 0)
-                SetSelection(GetPageCount() - 1);
+                SetSelection((int)GetPageCount() - 1);
             return true;
         case ID_STN_WIN_NEXT:
             if ((GetPageCount() > 0) && (GetSelection() + 1 < (int)GetPageCount()))
@@ -793,7 +793,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
 
     wxProgressDialog progDlg(_("Loading files..."),
                              wxString(wxT('-'), len + 10),
-                             filePaths.GetCount(), this,
+                             (int)filePaths.GetCount(), this,
                              wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_APP_MODAL|wxPD_AUTO_HIDE);
 
     // block updating the pages while loading them
@@ -803,7 +803,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
     for (n = 0; n < count; n++)
     {
         wxString fileName = filePaths[n];
-        if (!progDlg.Update(n, wxString::Format(wxT("%d/%d : "), (int)n+1, (int)count) + fileName))
+        if (!progDlg.Update((int)n, wxString::Format(wxT("%d/%d : "), (int)n+1, (int)count) + fileName))
             break;
 
         if (fileName.IsEmpty() || !wxFileExists(fileName))
@@ -850,7 +850,7 @@ bool wxSTEditorNotebook::LoadFiles( const FileNameArray* filePaths_,
 
 void wxSTEditorNotebook::SaveAllFiles()
 {
-    int n_page = GetPageCount();
+    int n_page = (int)GetPageCount();
     wxSTEditor *editor = NULL;
 
     for (int n = 0; n < n_page; n++)
@@ -865,8 +865,8 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
 {
     if (!menu) return;
 
-    int n, page_count = GetPageCount();
-    int item_count = menu->GetMenuItemCount();
+    size_t n, page_count = GetPageCount();
+    size_t item_count = menu->GetMenuItemCount();
 
 // ========  Radio items have problems in gtk
 /*
@@ -906,7 +906,7 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     if (page_count < item_count)
     {
         for (n = page_count; n < item_count; n++)
-            menu->Delete(startID+n);
+            menu->Delete(int(startID+n));
 
         item_count = page_count;
     }
@@ -917,14 +917,14 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     for (n = 0; n < item_count; n++)
     {
         label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str());
-        if (menu->GetLabel(startID+n) != label)
-            menu->SetLabel(startID+n, label);
+        if (menu->GetLabel(int(startID+n)) != label)
+            menu->SetLabel(int(startID+n), label);
 
-        menu->Check(startID+n, false);
+        menu->Check(int(startID+n), false);
     }
     // append new pages
     for (n = item_count; n < page_count; n++)
-        menu->AppendCheckItem(startID+n, wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
+        menu->AppendCheckItem(int(startID+n), wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
 
 /*
     // use check items
@@ -989,7 +989,7 @@ void wxSTEditorNotebook::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar
 
 void wxSTEditorNotebook::UpdatePageState()
 {
-    int page_count = GetPageCount();
+    int page_count = (int)GetPageCount();
     int selection  = GetSelection();
     if (page_count < 1) selection = -1; // force for gtk
 
@@ -1097,7 +1097,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
     {
         if ((labs(editor->GetSelectionEnd() - editor->GetSelectionStart()) == long(findString.Length()))
             && (editor->GetFindReplaceData()->StringCmp(findString, editor->GetSelectedText(), flags)))
-                pos -= findString.Length() + 1; // doesn't matter if it matches or not, skip it
+                pos -= (STE_TextPos)findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
 
     if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
@@ -1121,7 +1121,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
         else if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
         {
             // sum up all of the find strings in all editors
-            size_t n, count = GetPageCount();
+            int n, count = (int)GetPageCount();
 
             for (n = 0; n < count; n++)
             {
@@ -1159,7 +1159,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
         wxString replaceString = event.GetReplaceString();
         editor->ReplaceSelection(replaceString);
         editor->EnsureCaretVisible();
-        editor->SetSelection(pos, pos+replaceString.Length());
+        editor->SetSelection(pos, pos + (STE_TextPos)replaceString.Length());
         editor->UpdateCanDo(true);
         //editor->SetFocus();
     }
@@ -1192,7 +1192,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
 int wxSTEditorNotebook::FindString(const wxString &str, STE_TextPos start_pos,
                                    int flags, int action)
 {
-    int n_pages = GetPageCount();
+    int n_pages = (int)GetPageCount();
     int n_sel = GetSelection();
     int n = -1;
     STE_TextPos pos = start_pos;
@@ -1270,7 +1270,7 @@ int wxSTEditorNotebook::ReplaceAllStrings(const wxString &findString,
     }
 
     int count = 0, pages = 0;
-    int n_pages = GetPageCount();
+    int n_pages = (int)GetPageCount();
     for (int n = 0; n < n_pages; n++)
     {
         wxSTEditor *editor = GetEditor(n);

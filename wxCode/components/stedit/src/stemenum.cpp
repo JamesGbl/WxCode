@@ -1031,7 +1031,7 @@ wxAcceleratorTable wxSTEditorMenuManager::CreateAcceleratorTable(wxArrayPtrVoid&
     if (entries.GetCount() == 0)
         return wxAcceleratorTable();
 
-    return wxAcceleratorTable(entries.GetCount(),
+    return wxAcceleratorTable((int)entries.GetCount(),
                               (wxAcceleratorEntry*)&entries.Item(0));
 }
 wxAcceleratorTable wxSTEditorMenuManager::CreateAcceleratorTable(const wxMenu* menu,

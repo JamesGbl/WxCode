@@ -1000,7 +1000,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
             delete []offsetList;
         }
         void write(const char *objectData) {
-            unsigned int length = strlen(objectData);
+            size_t length = strlen(objectData);
             // note binary write used, open with "wb"
             fwrite(objectData, sizeof(char), length, fp);
         }

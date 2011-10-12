@@ -293,7 +293,7 @@ bool wxStEditApp::OnInit()
     // handle recursive file loading
     if (m_recurse_dirs && m_frame->GetEditorNotebook())
     {
-        int max_page_count = m_frame->GetEditorNotebook()->GetMaxPageCount();
+        size_t max_page_count = m_frame->GetEditorNotebook()->GetMaxPageCount();
 
         wxArrayString recurseFileNames;
         for (n = 0; n < fileNames.GetCount(); n++)

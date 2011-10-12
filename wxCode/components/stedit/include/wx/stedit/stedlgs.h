@@ -473,8 +473,8 @@ public:
     int      m_col;
     wxString m_prependString;
     wxString m_appendString;
-    int      m_prepend_insert_pos;
-    int      m_append_insert_pos;
+    wxTextPos m_prepend_insert_pos;
+    wxTextPos m_append_insert_pos;
     wxString m_initText;
 
     static int sm_radioID;                  // last set radio button Window ID

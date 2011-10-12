@@ -635,7 +635,7 @@ public :
     // Set/ClearIndicator methods
 
     // Indicate a section of text starting at pos to len, of indic type wxSTC_INDIC(0,1,2)_MASK
-    void SetIndicator(int pos, int len, int indic);
+    void SetIndicator(STE_TextPos pos, int len, int indic);
     // Indicates all strings using indic type wxSTC_INDIC(0,1,2)_MASK
     //   if str = wxEmptyString use GetFindString(), if flags = -1 use GetFindFlags()|STE_FR_WHOLEDOC
     bool IndicateAllStrings(const wxString &str=wxEmptyString, int flags = -1, int indic=wxSTC_INDIC0_MASK);

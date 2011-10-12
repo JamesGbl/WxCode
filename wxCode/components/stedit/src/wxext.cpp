@@ -169,7 +169,7 @@ void wxSetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
    {
       temp[i] = array.Item(i);
    }
-   wxAcceleratorTable accel(count, temp);
+   wxAcceleratorTable accel((int)count, temp);
    wnd->SetAcceleratorTable(accel);
    delete [] temp;
 }
