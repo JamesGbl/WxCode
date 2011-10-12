@@ -91,4 +91,35 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
 }
 #endif
 
+class WXDLLIMPEXP_STEDIT wxClipboardHelper
+{
+public:
+    enum Type
+    {
+        Default = 1, // use the normal clipboard
+        Primary = 2, // use the primary clipboard
+        Both    = 3  // use both clipboards (only valid for set functions)
+    };
+
+    // Is text available in the single specified clipboard in any usable text format.
+    // Formats tested are wxDF_TEXT and if avilable wxDF_UNICODETEXT and wxDF_HTML.
+    static bool IsTextAvailable(Type clip_type = Default);
+
+    // Returns true if there is data in the single specified clipboard with the given formats.
+    // This function takes an array since the clipboard has to be opened to test formats.
+    static bool IsFormatAvailable(const enum wxDataFormatId* array, size_t array_count, Type clip_type = Default);
+
+    // Get the current text in the single specified clipboard into the buf.
+    // Returns true if the clipboard was opened and the buf is not empty.
+    static bool GetText(wxString* buf, Type clip_type = Default);
+    
+    // Set the text to the specified clipboard(s).
+    static bool SetText(const wxString& str, Type clip_type = Default);
+    
+    // Set the HTML text to the clipboard. In MSW the clipboard will contain
+    // a valid HTML data object and a text object, on other systems the
+    // clipboard only contains a text object.
+    static bool SetHtmlText(const wxString& htmldata);
+};
+
 #endif // __WXEXT_H__

@@ -491,3 +491,150 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
       wnd->SetSize(rect);
    }
 }
+
+#define HASBIT(value, bit)      (((value) & (bit)) != 0)
+
+/*static*/ bool wxClipboardHelper::IsTextAvailable(Type clip_type)
+{
+    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+
+    bool ok = false;
+#if wxUSE_CLIPBOARD
+    const enum wxDataFormatId text[] =
+    {
+        wxDF_TEXT
+      //,wxDF_OEMTEXT,     // This is wxDF_TEXT in MSW, not supported in GTK/OSX
+#   if wxUSE_UNICODE
+        ,wxDF_UNICODETEXT  // asserts in ANSI build
+#   endif // wxUSE_UNICODE
+#   ifdef __WXMSW__
+        ,wxDF_HTML         // Only supported in MSW
+#   endif // __WXMSW__
+    };
+
+    ok = IsFormatAvailable(text, WXSIZEOF(text), clip_type);
+#endif // wxUSE_CLIPBOARD
+    return ok;
+}
+
+/*static*/ bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
+                                                     size_t array_count,
+                                                     Type clip_type)
+{
+    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+
+    bool ok = false;
+#if wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
+    if (ok)
+    {
+        size_t i;
+
+        clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+        for (i = 0; i < array_count; i++)
+        {
+        #ifdef __WXMSW__
+            // wxClipboard::IsSupported(wxDF_HTML) returns false always; handle it here instead
+            if (array[i] == wxDF_HTML)
+            {
+                static int CF_HTML = ::RegisterClipboardFormat(_T("HTML Format"));
+
+                if (::IsClipboardFormatAvailable(CF_HTML))
+                {
+                    break;
+                }
+            }
+            else
+        #endif
+            if (clipboard->IsSupported(wxDataFormat(array[i])))
+            {
+                break;
+            }
+        }
+        ok = (i != array_count);
+
+        if (!was_open)
+            clipboard->Close();
+    }
+#endif // wxUSE_CLIPBOARD
+    return ok;
+}
+
+/*static*/ bool wxClipboardHelper::GetText(wxString* str, Type clip_type)
+{
+    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+
+    if (!str) return false;
+    bool ok = false;
+
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
+    if (ok)
+    {
+        wxTextDataObject temp;
+
+        clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+        ok = clipboard->GetData(temp);
+
+        if (ok)
+            *str = temp.GetText();
+
+        if (!was_open)
+            clipboard->Close();
+    }
+#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    return ok && !str->empty();
+}
+
+/*static*/ bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
+{
+    bool ok = false;
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    wxClipboard* clipboard = wxTheClipboard;
+    bool was_open = clipboard->IsOpened();
+    ok = was_open || clipboard->Open();
+
+    if (ok)
+    {
+        if (HASBIT(clip_type, Default))
+            ok = clipboard->SetData(new wxTextDataObject(str));
+
+#ifndef __WINDOWS__
+        if (HASBIT(clip_type, Primary))
+        {
+            ok = clipboard->SetData(new wxTextDataObject(str));
+            clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+        }
+#endif // __WINDOWS__
+
+        if (!was_open)
+            clipboard->Close();
+    }
+#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    return ok;
+}
+
+/*static*/ bool wxClipboardHelper::SetHtmlText(const wxString& htmldata)
+{
+    bool ok;
+#ifdef __WXMSW__
+    ok = wxOpenClipboard();
+    if (ok)
+    {
+        EmptyClipboard();
+        const wxCharBuffer buf(htmldata.mb_str());
+        ok = wxSetClipboardData(wxDF_HTML, buf.data()); // save as html
+        wxSetClipboardData(wxDF_TEXT, buf.data());      // save also as plain text
+        wxCloseClipboard();
+    }
+#else
+    ok = SetText(htmldata);
+#endif
+    return ok;
+}

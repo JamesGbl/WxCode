@@ -855,145 +855,40 @@ wxString wxSTEditor::GetTargetText() const
     return GetTextRange(wxMin(target_start, target_end), wxMax(target_start, target_end));
 }
 
+static wxClipboardHelper::Type ClipboardTypeConv(STE_ClipboardType clip_type)
+{
+    if (clip_type == STE_CLIPBOARD_PRIMARY)
+        return wxClipboardHelper::Primary;
+    else if (clip_type == STE_CLIPBOARD_BOTH)
+        return wxClipboardHelper::Both;
+    else
+        return wxClipboardHelper::Default;
+}
+
 /*static*/ bool wxSTEditor::IsClipboardTextAvailable(STE_ClipboardType clip_type)
 {
-    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
-
-    bool ok = false;
-#if wxUSE_CLIPBOARD
-    const enum wxDataFormatId text[] =
-    {
-        wxDF_TEXT
-      //,wxDF_OEMTEXT,     // This is wxDF_TEXT in MSW, not supported in GTK/OSX
-#   if wxUSE_UNICODE
-        ,wxDF_UNICODETEXT  // asserts in ANSI build
-#   endif // wxUSE_UNICODE
-#   ifdef __WXMSW__
-        ,wxDF_HTML         // Only supported in MSW
-#   endif // __WXMSW__
-    };
-
-    ok = IsClipboardFormatAvailable(text, WXSIZEOF(text), clip_type);
-#endif // wxUSE_CLIPBOARD
-    return ok;
+    return wxClipboardHelper::IsTextAvailable(ClipboardTypeConv(clip_type));
 }
 
 /*static*/ bool wxSTEditor::IsClipboardFormatAvailable(const enum wxDataFormatId* array, size_t array_count,
                                                        STE_ClipboardType clip_type)
 {
-    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
-
-    bool ok = false;
-#if wxUSE_CLIPBOARD
-    wxClipboard* clipboard = wxTheClipboard;
-    bool was_open = clipboard->IsOpened();
-    ok = was_open || clipboard->Open();
-
-    if (ok)
-    {
-        clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
-
-        size_t i = 0;
-        for (i = 0; i < array_count; i++)
-        {
-        #ifdef __WXMSW__
-            // wxClipboard::IsSupported(wxDF_HTML) returns false always; handle it here instead
-            if (array[i] == wxDF_HTML)
-            {
-                static int CF_HTML = ::RegisterClipboardFormat(_T("HTML Format"));
-
-                if (::IsClipboardFormatAvailable(CF_HTML))
-                {
-                    break;
-                }
-            }
-            else
-        #endif
-            if (clipboard->IsSupported(wxDataFormat(array[i]))) break;
-        }
-        ok = (i != array_count);
-
-        if (!was_open)
-            clipboard->Close();
-    }
-#endif // wxUSE_CLIPBOARD
-    return ok;
+    return wxClipboardHelper::IsFormatAvailable(array, array_count, ClipboardTypeConv(clip_type));
 }
 
 /*static*/ bool wxSTEditor::GetClipboardText(wxString* str, STE_ClipboardType clip_type)
 {
-    wxCHECK_MSG(clip_type != STE_CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
-
-    if (!str) return false;
-    bool ok = false;
-
-#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    wxClipboard* clipboard = wxTheClipboard;
-    bool was_open = clipboard->IsOpened();
-    ok = was_open || clipboard->Open();
-
-    if (ok)
-    {
-        wxTextDataObject temp;
-
-        clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
-        ok = clipboard->GetData(temp);
-
-        if (ok)
-            *str = temp.GetText();
-
-        if (!was_open)
-            clipboard->Close();
-    }
-#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    return ok && !str->empty();
+    return wxClipboardHelper::GetText(str, ClipboardTypeConv(clip_type));
 }
 
 /*static*/ bool wxSTEditor::SetClipboardText(const wxString& str, STE_ClipboardType clip_type)
 {
-    bool ok = false;
-#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    wxClipboard* clipboard = wxTheClipboard;
-    bool was_open = clipboard->IsOpened();
-    ok = was_open || clipboard->Open();
-
-    if (ok)
-    {
-        if (STE_HASBIT(clip_type, STE_CLIPBOARD_DEFAULT))
-            ok = clipboard->SetData(new wxTextDataObject(str));
-
-#ifndef __WINDOWS__
-        if (STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY))
-        {
-            ok = clipboard->SetData(new wxTextDataObject(str));
-            clipboard->UsePrimarySelection(STE_HASBIT(clip_type, STE_CLIPBOARD_PRIMARY));
-        }
-#endif // __WINDOWS__
-
-        if (!was_open)
-            clipboard->Close();
-    }
-#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    return ok;
+    return wxClipboardHelper::SetText(str, ClipboardTypeConv(clip_type));
 }
 
 /*static*/ bool wxSTEditor::SetClipboardHtml(const wxString& htmldata)
 {
-    bool ok;
-#ifdef __WXMSW__
-    ok = wxOpenClipboard();
-    if (ok)
-    {
-        EmptyClipboard();
-        const wxCharBuffer buf(htmldata.mb_str());
-        ok = wxSetClipboardData(wxDF_HTML, buf.data()); // save as html
-        wxSetClipboardData(wxDF_TEXT, buf.data());      // save also as plain text
-        wxCloseClipboard();
-    }
-#else
-    ok = SetClipboardText(htmldata);
-#endif
-    return ok;
+    return wxClipboardHelper::SetHtmlText(htmldata);
 }
 
 bool wxSTEditor::PasteRectangular()
@@ -4041,7 +3936,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2762")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2774")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
