@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 // wxSTEditorShell
 //-----------------------------------------------------------------------------
-IMPLEMENT_CLASS(wxSTEditorShell, wxSTEditor)
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorShell, wxSTEditor)
 
 BEGIN_EVENT_TABLE(wxSTEditorShell, wxSTEditor)
     EVT_KEY_DOWN     (wxSTEditorShell::OnKeyDown)

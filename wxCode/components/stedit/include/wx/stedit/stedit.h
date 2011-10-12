@@ -32,7 +32,7 @@ class WXDLLIMPEXP_FWD_CORE wxDocument;
 #include <wx/stedit/stelangs.h>
 #include <wx/stedit/steopts.h>
 
-class wxSTEditorFindReplaceDialog;
+class WXDLLIMPEXP_STEDIT wxSTEditorFindReplaceDialog;
 
 //-----------------------------------------------------------------------------
 // wxSTERecursionGuard - a simple recursion guard to block reentrant functions
@@ -287,8 +287,8 @@ public :
 
 #if (wxVERSION_NUMBER >= 2900)
 
-    void GetSelection(STE_TextPos* iStart, STE_TextPos* iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
-        { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
+    //void GetSelection(STE_TextPos* iStart, STE_TextPos* iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
+    //    { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
 
     bool GetIndentationGuides() const // changed from bool to int in wx trunk
     {

@@ -33,7 +33,7 @@ public:
                                                    const wxString &title = wxT("Capture single frames"),
                                                    const wxPoint& pos = wxDefaultPosition,
                                                    const wxSize& size = wxDefaultSize,
-                                                   long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODELESS );
+                                                   long style = wxDEFAULT_DIALOG_STYLE );
 
     void OnCloseDialog(wxCloseEvent &event);
     void OnCapture(wxCommandEvent &event);
@@ -64,7 +64,7 @@ public:
             wxWindowID id = -1, const wxString &title = wxT("Capture Preferences"),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
-            long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODAL );
+            long style = wxDEFAULT_DIALOG_STYLE );
 
     void GetSetup();    // get the current wxVideoCaptureWindow settings
     void SetSetup();    // set capture settings to wxVideoCaptureWindow
@@ -128,7 +128,7 @@ public:
                     const wxString &title = wxT("Video Format Setup"),
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize,
-                    long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODELESS );
+                    long style = wxDEFAULT_DIALOG_STYLE );
 
     void GetSetup();
     void SetSetup();
@@ -163,7 +163,7 @@ public:
                     wxWindowID id = -1, const wxString &title = wxT("Sound Setup"),
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize,
-                    long style = wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODAL );
+                    long style = wxDEFAULT_DIALOG_STYLE );
 
     void GetSetup();
     void SetSetup();

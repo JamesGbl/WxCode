@@ -157,9 +157,9 @@ void MyFrame::CreateMenus()
     //---- File menu --------------------------------------------------------
     m_fileMenu = new wxMenu;
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_fileMenu->Append(ID_SETCAPFILENAME, wxT("Set Capture File&name..."), wxT("Set capture filename"));
-    m_fileMenu->Append(ID_SETCAPFILESIZE, wxT("Set Capture File&size..."), wxT("Set capture filesize"));
-    m_fileMenu->Append(ID_SAVECAPTUREDVIDEOAS, wxT("&Extract video to file"), wxT("After capture save video to new file"), true);
+    m_fileMenu->Append(ID_SETCAPFILENAME,      wxT("Set Capture File&name..."), wxT("Set capture filename"));
+    m_fileMenu->Append(ID_SETCAPFILESIZE,      wxT("Set Capture File&size..."), wxT("Set capture filesize"));
+    m_fileMenu->Append(ID_SAVECAPTUREDVIDEOAS, wxT("&Extract video to file"),   wxT("After capture save video to new file"), true);
 
     m_fileMenu->AppendSeparator();
 #endif // WXVIDCAP_AVI_SUPPORT
@@ -170,8 +170,8 @@ void MyFrame::CreateMenus()
     m_processMenu = new wxMenu;
 
     m_processMenu->Append(ID_IMGPROCESS_NEGATIVE, wxT("&Negative"), wxT("Invert intensities"), true);
-    m_processMenu->Append(ID_IMGPROCESS_EDGE, wxT("&Edge detector"), wxT("Very simple edge detector"), true);
-    m_processMenu->Append(ID_IMGPROCESS_MOTION, wxT("&Motion"), wxT("Simple motion detector"), true);
+    m_processMenu->Append(ID_IMGPROCESS_EDGE,     wxT("&Edge detector"), wxT("Very simple edge detector"), true);
+    m_processMenu->Append(ID_IMGPROCESS_MOTION,   wxT("&Motion"), wxT("Simple motion detector"), true);
 
     //---- Video menu -------------------------------------------------------
     m_videoMenu = new wxMenu;
@@ -191,31 +191,31 @@ void MyFrame::CreateMenus()
     }
 
     m_videoMenu->AppendSeparator();
-    m_videoMenu->Append(ID_PREVIEW, wxT("&Preview\tCtrl-P"), wxT("Preview video"), true);
-    m_videoMenu->Append(ID_PREVIEWIMAGE, wxT("Preview wx&Image\tCtrl-I"), wxT("Preview using wxImages"), true);
+    m_videoMenu->Append(ID_PREVIEW,         wxT("&Preview\tCtrl-P"), wxT("Preview video"), true);
+    m_videoMenu->Append(ID_PREVIEWIMAGE,    wxT("Preview wx&Image\tCtrl-I"), wxT("Preview using wxImages"), true);
     m_videoMenu->Append(ID_IMGPROCESS_MENU, wxT("P&rocess wxImage"), m_processMenu, wxT("Simple image processing of wxImages"));
-    m_videoMenu->Append(ID_PREVIEWSCALED, wxT("Preview &Scaling\tCtrl-U"), wxT("Fit video size to window"), true);
-    m_videoMenu->Append(ID_PREVIEWRATE, wxT("Preview &Rate...\tCtrl-R"), wxT("Set preview rate"));
+    m_videoMenu->Append(ID_PREVIEWSCALED,   wxT("Preview &Scaling\tCtrl-U"), wxT("Fit video size to window"), true);
+    m_videoMenu->Append(ID_PREVIEWRATE,     wxT("Preview &Rate...\tCtrl-R"), wxT("Set preview rate"));
 
     m_videoMenu->Append(ID_OVERLAY, wxT("&Overlay\tCtrl-O"), wxT("Preview using hardware overlay"), true);
 
     m_videoMenu->AppendSeparator();
-    m_videoMenu->Append(ID_DLGSOURCE, wxT("So&urce..."), wxT("Set video source"));
-    m_videoMenu->Append(ID_DLGFORMAT, wxT("&Format..."), wxT("Set video format"));
+    m_videoMenu->Append(ID_DLGSOURCE,       wxT("So&urce..."), wxT("Set video source"));
+    m_videoMenu->Append(ID_DLGFORMAT,       wxT("&Format..."), wxT("Set video format"));
     m_videoMenu->Append(ID_DLGCUSTOMFORMAT, wxT("&Custom format..."), wxT("Set custom video format"));
-    m_videoMenu->Append(ID_DLGDISPLAY, wxT("&Display..."), wxT("Set video display"));
-    m_videoMenu->Append(ID_DLGPROPERTIES, wxT("Properties..."), wxT("Video properties"));
+    m_videoMenu->Append(ID_DLGDISPLAY,      wxT("&Display..."), wxT("Set video display"));
+    m_videoMenu->Append(ID_DLGPROPERTIES,   wxT("Properties..."), wxT("Video properties"));
 
     //---- Capture menu ------------------------------------------------------
     m_captureMenu = new wxMenu;
 
-    m_captureMenu->Append(ID_SNAPTOWINDOW, wxT("Snapshot to &window\tCtrl-W"), wxT("View the current frame"));
+    m_captureMenu->Append(ID_SNAPTOWINDOW,    wxT("Snapshot to &window\tCtrl-W"), wxT("View the current frame"));
     m_captureMenu->Append(ID_SNAPTOCLIPBOARD, wxT("Snapshot to &clipboard\tCtrl-C"), wxT("Capture a frame to the clipboard"));
-    m_captureMenu->Append(ID_SNAPTOFILE, wxT("Snapshot to &file...\tCtrl-F"), wxT("Capture and save a frame to an image file"));
-    m_captureMenu->Append(ID_SNAPTOBMP, wxT("Snapshot to &BMP file...\tCtrl-B"), wxT("Capture and save a frame as a BMP file"));
+    m_captureMenu->Append(ID_SNAPTOFILE,      wxT("Snapshot to &file...\tCtrl-F"), wxT("Capture and save a frame to an image file"));
+    m_captureMenu->Append(ID_SNAPTOBMP,       wxT("Snapshot to &BMP file...\tCtrl-B"), wxT("Capture and save a frame as a BMP file"));
 
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_captureMenu->Append(ID_CAPVIDEO, wxT("Capture &video"), wxT("Capture video"));
+    m_captureMenu->Append(ID_CAPVIDEO,        wxT("Capture &video"), wxT("Capture video"));
     m_captureMenu->Append(ID_CAPSINGLEFRAMES, wxT("Capture &single frames..."), wxT("Capture a series of single frames as video"));
 #endif // WXVIDCAP_AVI_SUPPORT
 
@@ -226,7 +226,7 @@ void MyFrame::CreateMenus()
 
 #ifdef WXVIDCAP_AVI_SUPPORT
     m_captureMenu->Append(ID_DLGCAPPREFERENCES, wxT("Capture &preferences..."), wxT("Capture preferences dialog"));
-    m_captureMenu->Append(ID_DLGCOMPRESSION, wxT("&Compression..."), wxT("Set recorded video compression"));
+    m_captureMenu->Append(ID_DLGCOMPRESSION,    wxT("&Compression..."), wxT("Set recorded video compression"));
 #endif // WXVIDCAP_AVI_SUPPORT
 
 #ifdef WXVIDCAP_AUDIO_SUPPORT
@@ -235,33 +235,33 @@ void MyFrame::CreateMenus()
 
     //---- Help menu --------------------------------------------------------
     m_helpMenu = new wxMenu;
-    m_helpMenu->Append(ID_ABOUT, wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
+    m_helpMenu->Append(ID_ABOUT,   wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
     m_helpMenu->Append(ID_SHOWLOG, wxT("&Show log\tCtrl-L"), wxT("Show log window"), true);
 
     // now append the freshly created menu to the menu bar...
-    m_menubar->Append(m_fileMenu, wxT("&File"));
-    m_menubar->Append(m_videoMenu, wxT("&Video"));
+    m_menubar->Append(m_fileMenu,    wxT("&File"));
+    m_menubar->Append(m_videoMenu,   wxT("&Video"));
     m_menubar->Append(m_captureMenu, wxT("&Capture"));
-    m_menubar->Append(m_helpMenu, wxT("&Help"));
+    m_menubar->Append(m_helpMenu,    wxT("&Help"));
 }
 
 void MyFrame::CreateToolbar()
 {
-    m_toolBar->AddCheckTool(ID_PREVIEWBUTTON, wxT("Preview"), ToolBarBitmaps(0), wxNullBitmap, wxT("Preview"));
+    m_toolBar->AddCheckTool(ID_PREVIEWBUTTON, wxT("Preview"),        ToolBarBitmaps(0), wxNullBitmap, wxT("Preview"));
     m_toolBar->AddCheckTool(ID_PREVIEWSCALED, wxT("Preview scaled"), ToolBarBitmaps(1), ToolBarBitmaps(2), wxT("Preview scaled"));
 
     m_toolBar->AddSeparator();
 
-    m_toolBar->AddTool(ID_SNAPTOCLIPBOARD, ToolBarBitmaps(3), wxT("Capture image to clipboard"));
-    m_toolBar->AddTool(ID_SNAPTOFILE, ToolBarBitmaps(4), wxT("Capture single image to file"));
+    m_toolBar->AddTool(ID_SNAPTOCLIPBOARD, wxT("Snap to clipboard"), ToolBarBitmaps(3), wxT("Capture image to clipboard"));
+    m_toolBar->AddTool(ID_SNAPTOFILE,      wxT("Snap to file"),      ToolBarBitmaps(4), wxT("Capture single image to file"));
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_toolBar->AddTool(ID_CAPSINGLEFRAMES, ToolBarBitmaps(5), wxT("Capture single frames to AVI file"));
-    m_toolBar->AddTool(ID_CAPVIDEO, ToolBarBitmaps(6), wxT("Capture video to AVI file"));
+    m_toolBar->AddTool(ID_CAPSINGLEFRAMES, wxT("Cap Frame"), ToolBarBitmaps(5), wxT("Capture single frames to AVI file"));
+    m_toolBar->AddTool(ID_CAPVIDEO,        wxT("Cap Video"), ToolBarBitmaps(6), wxT("Capture video to AVI file"));
 
     m_toolBar->AddSeparator();
 
-    m_toolBar->AddTool(ID_SETCAPFILENAME, ToolBarBitmaps(7), "Set capture filename");
-    m_toolBar->AddTool(ID_DLGCAPPREFERENCES, ToolBarBitmaps(8), "Capture preferences...");
+    m_toolBar->AddTool(ID_SETCAPFILENAME,    wxT("Set filename"), ToolBarBitmaps(7), wxT("Set capture filename"));
+    m_toolBar->AddTool(ID_DLGCAPPREFERENCES, wxT("Preferences"),  ToolBarBitmaps(8), wxT("Capture preferences..."));
 #endif // WXVIDCAP_AVI_SUPPORT
 
     m_toolBar->Realize();
@@ -541,7 +541,7 @@ void MyFrame::OnSnapshotToFile(wxCommandEvent &)
                                      wxFileNameFromPath(m_image_filename),
                                      wxT("*.*"),
                                      wxT("BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPEG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif|TIFF files (*.tif)|*.tif|PCX files (*.pcx)|*.pcx"),
-                                     wxSAVE|wxOVERWRITE_PROMPT);
+                                     wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
     if (filename == wxEmptyString)  return;
 
@@ -576,7 +576,7 @@ void MyFrame::OnSnapshotToBMP(wxCommandEvent &)
                                         wxFileNameFromPath(m_bmp_filename),
                                         wxT("*.bmp"),
                                         wxT("BMP files (*.bmp)|*.bmp"),
-                                        wxSAVE|wxOVERWRITE_PROMPT);
+                                        wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
     if (filename == wxEmptyString)  return;
 
@@ -633,7 +633,7 @@ void MyFrame::OnCaptureVideo(wxCommandEvent &)
                                                 wxT(""),
                                                 wxT("avi"),
                                                 wxT("AVI files (*.avi)|*.avi"),
-                                                wxSAVE|wxOVERWRITE_PROMPT);
+                                                wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
         if (!savefilename.IsNull()) m_vidCapWin->SaveCapturedFileAs(savefilename);
     }

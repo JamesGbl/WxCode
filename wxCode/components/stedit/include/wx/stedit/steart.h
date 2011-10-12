@@ -12,6 +12,7 @@
 #define _STEART_H_
 
 #include <wx/artprov.h>
+#include <wx/stedit/stedefs.h>
 
 // --------------------------------------------------------------------------
 // wxArtIDs used by the wxStEditor classes to get bitmaps
@@ -55,8 +56,8 @@
 // --------------------------------------------------------------------------
 // System default sizes
 
-WXDLLIMPEXP_STEDIT extern const wxSize wxSTEIconSize;      // Normal icon size for this platform
-WXDLLIMPEXP_STEDIT extern const wxSize wxSTESmallIconSize; // Small icon size for this platform
+WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTEIconSize;      // Normal icon size for this platform
+WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize; // Small icon size for this platform
 
 // --------------------------------------------------------------------------
 // Convenience macros to reduce typing, gets an appropriate bitmap for the client

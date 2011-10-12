@@ -152,7 +152,7 @@ protected:
 private:
     void Init();
     DECLARE_EVENT_TABLE();
-    DECLARE_CLASS(wxSTEditorShell);
+    DECLARE_DYNAMIC_CLASS(wxSTEditorShell);
 };
 
 #endif  // _STESHELL_H_

@@ -14,6 +14,8 @@
 #define WXK_HELP       WXK_F1
 #define WXK_FULLSCREEN WXK_F11
 
+#include <wx/stedit/stedefs.h>
+
 #if (wxVERSION_NUMBER < 2812)
    #define wxT_2 wxT
 #endif

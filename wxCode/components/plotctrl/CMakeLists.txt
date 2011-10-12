@@ -1,0 +1,130 @@
+# ---------------------------------------------------------------------------
+# CMake build file
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Project name, sets ${wxPlotCtrl_SOURCE_DIR} and ${wxPlotCtrl_BINARY_DIR}
+
+project( wxPlotCtrl )
+
+# ===========================================================================
+# General settings for CMake
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# Use a minimum version of CMake of 2.8, >= 2.8.3 is prefered
+
+cmake_minimum_required( VERSION 2.8 )
+
+# ---------------------------------------------------------------------------
+# Setup the CMake environment
+
+include( build/CMakewxAppLib.cmake )
+include( build/CMakeFunctions.txt )
+
+# ===========================================================================
+# Add subdirectories containing CMakeLists.txt files or specify projects
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# We link to the wxThings library that is part of wxCode
+# ---------------------------------------------------------------------------
+
+# Start with a test to see if this is a full wxCode SVN checkout
+# If it fails, leave wxThings_ROOT_DIR empty to make it clear that it needs to be set.
+
+if ("${wxThings_ROOT_DIR}" STREQUAL "")
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../wxthings/include/wx/things/genergdi.h)
+        if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../wxthings/CMakeLists.txt)
+            get_filename_component(wxThings_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../wxthings" ABSOLUTE)
+        endif()
+    endif()
+endif()
+
+set( wxThings_ROOT_DIR ${wxThings_ROOT_DIR} CACHE PATH "Specify the path to the root directory wxThings library" FORCE)
+
+if (NOT EXISTS ${wxThings_ROOT_DIR}/include/wx/things/genergdi.h)
+    MESSAGE(FATAL_ERROR "Unable to find \"wx/things/genergdi.h\", please set variable -DwxThings_ROOT_DIR=/path/to/wxThings")
+endif()
+
+# add_subdirectory() errors on multiple calls, only add it once per project
+# We also have to specify a binary dir, so we'll make it a child dir of our binary dir.
+if (NOT TARGET wxThingsLib)
+    add_subdirectory(${wxThings_ROOT_DIR} ${CMAKE_CURRENT_BINARY_DIR}/wxthings)
+endif()
+
+# ---------------------------------------------------------------------------
+
+set( wxPlotCtrl_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxPlotCtrl" FORCE)
+
+# ---------------------------------------------------------------------------
+# CMake build file for wxPlotCtrl Library
+# ---------------------------------------------------------------------------
+
+if (NOT TARGET wxPlotCtrlLib)
+
+# wxThings_ROOT_DIR is set when add_subdirectory( wxThings/build ) has been called
+include_directories( ${wxThings_ROOT_DIR}/include/ )
+include_directories( ${wxPlotCtrl_ROOT_DIR}/include/ )
+
+
+ADD_LIBRARY_FULL(wxPlotCtrlLib
+    HEADERS 
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fourier.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fparser.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/lm_lsqr.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotctrl.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotcurv.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdata.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdefs.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdraw.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotfunc.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotmark.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotprnt.h
+    SOURCES 
+        ${wxPlotCtrl_ROOT_DIR}/src/fourier.c
+        ${wxPlotCtrl_ROOT_DIR}/src/fparser.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/fparser.hh
+        ${wxPlotCtrl_ROOT_DIR}/src/fpconfig.hh
+        ${wxPlotCtrl_ROOT_DIR}/src/fpoptimizer.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/fptypes.hh
+        ${wxPlotCtrl_ROOT_DIR}/src/lm_lsqr.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotctrl.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotcurv.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotdata.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotdraw.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotfunc.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotmark.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp
+    LINK_LIBRARIES 
+        wxThingsLib
+        ${wxWidgets_LIBRARIES}
+    PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_PLOTCTRL"
+    PROPERTIES FOLDER "wxPlotCtrl")
+    
+# ---------------------------------------------------------------------------
+
+install(FILES 
+    ${wxPlotCtrl_ROOT_DIR}/docs/changelog.txt 
+    ${wxPlotCtrl_ROOT_DIR}/docs/readme.htm
+    ${wxPlotCtrl_ROOT_DIR}/src/fparser.htm
+    ${wxPlotCtrl_ROOT_DIR}/src/fparser.txt
+    ${wxPlotCtrl_ROOT_DIR}/src/fourier.txt
+    DESTINATION "doc")
+
+# ---------------------------------------------------------------------------
+# CMake build file for wxPlotCtrl sample
+# ---------------------------------------------------------------------------
+
+ADD_EXECUTABLE_FULL( wxPlotCtrlDemo WIN32
+    HEADERS 
+        ""
+    SOURCES 
+        ${wxPlotCtrl_ROOT_DIR}/samples/plotctrl/wxplotctrl.cpp
+        ${wxPlotCtrl_ROOT_DIR}/samples/plotctrl/wxplotctrl.rc
+    LINK_LIBRARIES 
+        wxPlotCtrlLib
+        ${wxWidgets_LIBRARIES}        
+    PROPERTIES FOLDER "wxPlotCtrl")
+
+endif(NOT TARGET wxPlotCtrlLib)

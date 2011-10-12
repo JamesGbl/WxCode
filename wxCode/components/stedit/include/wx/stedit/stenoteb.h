@@ -14,7 +14,7 @@
 #include <wx/notebook.h>
 #include <wx/stedit/stedefs.h>
 
-class FileNameArray;
+class WXDLLIMPEXP_STEDIT FileNameArray;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorNotebook - a wxNotebook of wxSTEditorSplitters

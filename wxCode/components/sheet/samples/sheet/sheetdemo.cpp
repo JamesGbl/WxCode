@@ -486,7 +486,7 @@ GridFrame::GridFrame()
 
     logger = new wxLogTextCtrl( logWin );
     m_logOld = logger->SetActiveTarget( logger );
-    logger->SetTimestamp( NULL );
+    //logger->SetTimestamp( NULL );
 
 /*
     int nrows = 200;

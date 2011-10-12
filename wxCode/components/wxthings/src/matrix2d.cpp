@@ -32,6 +32,8 @@
 #include <string.h>
 #include <stdio.h>
 
+namespace wxthings {
+
 //----------------------------------------------------------------------------
 //  wxMatrix2DRefData
 //----------------------------------------------------------------------------
@@ -963,3 +965,5 @@ wxString wxMatrix2D::ToString(const wxString& colSep, const wxString& rowSep) co
 
     return str;
 }
+
+} // end namespace wxthings

@@ -14,6 +14,18 @@
 #include <wx/stedit/steopts.h>
 #include <wx/stedit/stedit.h>
 
+wxString STE_DefaultFileName( wxT("untitled.txt") );
+wxString STE_DefaultFileExtensions(
+                                    wxT("Text Files (txt text)|*.txt;*.text|")
+                                    wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx|")
+                                    wxT("H Files (h)|*.h|")
+                                    wxT("Html Files (htm html)|*.htm;*.html|")
+                                    wxT("XML Files (xml)|*.xml|")
+                                    wxT("Lua Files (lua)|*.lua|")
+                                    wxT("Python Files (py)|*.py|")
+                                    wxT("All Files|")wxALL_FILES_PATTERN
+                                    );
+
 //-----------------------------------------------------------------------------
 // wxSTEditorOptions
 //-----------------------------------------------------------------------------
@@ -309,6 +321,16 @@ void *wxSTEditorOptions::GetClientData() const
     wxCHECK_MSG(STEO_REFDATA, NULL, wxT("invalid wxSTEditorOptions"));
     return STEO_REFDATA->GetClientData();
 }
+
+// static 
+wxString wxSTEditorOptions::GetGlobalDefaultFileName() { return STE_DefaultFileName; }
+// static 
+void wxSTEditorOptions::SetGlobalDefaultFileName(const wxString& fileName) { STE_DefaultFileName = fileName; }
+
+// static 
+wxString wxSTEditorOptions::GetGlobalDefaultExtensions() { return STE_DefaultFileExtensions; }
+// static 
+void wxSTEditorOptions::SetGlobalDefaultFileExtensions(const wxString& fileExt) { STE_DefaultFileExtensions = fileExt; }
 
 wxString wxSTEditorOptions::GetConfigPath(size_t path_option_n) const
 {

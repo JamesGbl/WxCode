@@ -234,7 +234,7 @@ public:
 extern const wxSheetIntString wxNullSheetIntString;
 
 extern int wxCMPFUNC_CONV wxSheetIntStringCmp(wxSheetIntString* pItem1, wxSheetIntString* pItem2);
-WX_DEFINE_SORTED_ARRAY(wxSheetIntString*, wxSheetIntStringSortedArray);
+WX_DEFINE_SORTED_USER_EXPORTED_ARRAY(wxSheetIntString*, wxSheetIntStringSortedArray, WXDLLIMPEXP_SHEET);
 DECLARE_SORTED_OBJARRAY_INTUPDATEPOS_CMP(wxSheetIntString, wxSheetIntStringSortedArray,
                                          wxSheetIntStringSortedObjArray, wxSheetIntStringCmp, class WXDLLIMPEXP_SHEET)
 
@@ -256,7 +256,7 @@ public:
 };
 
 extern int wxCMPFUNC_CONV wxSheetIntArrayIntStringCmp(wxSheetIntArrayIntString* pItem1, wxSheetIntArrayIntString* pItem2);
-WX_DEFINE_SORTED_ARRAY(wxSheetIntArrayIntString*, wxSheetIntArrayIntStringSortedArray);
+WX_DEFINE_SORTED_USER_EXPORTED_ARRAY(wxSheetIntArrayIntString*, wxSheetIntArrayIntStringSortedArray, WXDLLIMPEXP_SHEET);
 DECLARE_SORTED_OBJARRAY_INTUPDATEPOS_CMP(wxSheetIntArrayIntString, wxSheetIntArrayIntStringSortedArray,
                                          wxSheetIntArrayIntStringSortedObjArray, wxSheetIntArrayIntStringCmp, class WXDLLIMPEXP_SHEET)
 

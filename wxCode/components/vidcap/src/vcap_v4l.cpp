@@ -348,7 +348,8 @@ void wxVideoCaptureWindowV4L::VideoCustomFormatDialog()
     {
         if (!FindWindow(IDD_wxVIDCAP_VIDEOFORMATDLG))
         {
-            new wxVideoCaptureWindowCustomVideoFormatDialog(this, IDD_wxVIDCAP_VIDEOFORMATDLG);
+            wxVideoCaptureWindowCustomVideoFormatDialog* dlg = new wxVideoCaptureWindowCustomVideoFormatDialog(this, IDD_wxVIDCAP_VIDEOFORMATDLG);
+            dlg->Show();
         }
     }
 }

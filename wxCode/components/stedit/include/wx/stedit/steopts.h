@@ -345,11 +345,11 @@ public:
 
     // -----------------------------------------------------------------------
     // Global settings, these are values that this class will be initialized with
-    static wxString GetGlobalDefaultFileName() { return STE_DefaultFileName; }
-    static void SetGlobalDefaultFileName(const wxString& fileName) { STE_DefaultFileName = fileName; }
+    static wxString GetGlobalDefaultFileName();
+    static void SetGlobalDefaultFileName(const wxString& fileName);
 
-    static wxString GetGlobalDefaultExtensions() { return STE_DefaultFileExtensions; }
-    static void SetGlobalDefaultFileExtensions(const wxString& fileExt) { STE_DefaultFileExtensions = fileExt; }
+    static wxString GetGlobalDefaultExtensions();
+    static void SetGlobalDefaultFileExtensions(const wxString& fileExt);
 
     // -----------------------------------------------------------------------
     // Register wxStEdits menu id's so that they do not collide with the id's of the calling app

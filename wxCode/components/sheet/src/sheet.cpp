@@ -43,6 +43,7 @@
 #include "wx/sheet/sheet.h"
 #include "wx/sheet/sheetspt.h" // for wxSheetSplitterEvent, wxEVT_SHEET_SPLIT_BEGIN
 
+#include "wx/event.h"
 #include "wx/timer.h"
 #include "wx/clipbrd.h"
 #include "wx/renderer.h"
@@ -662,9 +663,11 @@ bool wxSheet::Create( wxWindow *parent, wxWindowID id,
 
     GetSheetRefData()->AddSheet(this);
 
-#if wxCHECK_VERSION(2,5,2)
+#if wxCHECK_VERSION(2,8,0)
+    SetInitialSize(size);
+#else
 	SetBestFittingSize(size);
-#endif // wxCHECK_VERSION(2,5,2)
+#endif // wxCHECK_VERSION(2,9,0)
 
     return true;
 }
@@ -2617,7 +2620,8 @@ bool wxSheetDataObject::SetData(size_t len, const void *buf)
     if (len < 2u)
         return false; // I guess?
 
-    wxString strBuf(wxConvertMB2WX((const char *)buf), len); // probably not Unicode safe
+    //wxString strBuf(wxConvertMB2WX((const char *)buf), len); // probably not Unicode safe
+    wxString strBuf((wxChar*)buf, len);
     m_data = strBuf;
 
     //wxPrintf(wxT("Data len %d %d\n"), m_data.Len(), len);
@@ -4106,7 +4110,7 @@ void wxSheet::DrawAllGridLines( wxDC& dc, const wxRegion & WXUNUSED(reg) )
         }
 
         if (done)
-            dc.SetClippingRegion( clippedcells );
+            dc.SetDeviceClippingRegion( clippedcells );
     }
 
     dc.SetPen( wxPen(GetGridLineColour(), 1, wxSOLID) );
@@ -4277,7 +4281,7 @@ void wxSheet::DrawRowColResizingMarker( int newDragPos )
         }
     }
 
-    int log_fn = dc.GetLogicalFunction();
+    wxRasterOperationMode log_fn = dc.GetLogicalFunction();
     dc.SetLogicalFunction(wxINVERT);
 
     if (m_dragLastPos >= 0)
@@ -4504,8 +4508,8 @@ void wxSheet::DrawTextRectangle( wxDC& dc, const wxArrayString& lines,
 
     int l;
     float x = 0.0, y = 0.0;
-    long text_width=0, text_height=0;
-    long line_width=0, line_height=0;
+    wxCoord text_width=0, text_height=0;
+    wxCoord line_width=0, line_height=0;
     wxArrayInt lineWidths, lineHeights;
 
     // Measure the text extent once, Gtk2 is slow (takes 2sec off 23sec run)
@@ -4641,7 +4645,7 @@ int wxSheet::StringToLines( const wxString& value, wxArrayString& lines ) const
 bool wxSheet::GetTextBoxSize( wxDC& dc, const wxArrayString& lines,
                               long *width, long *height ) const
 {
-    long w = 0, h = 0, lineW = 0, lineH = 0;
+    wxCoord w = 0, h = 0, lineW = 0, lineH = 0;
     size_t i, count = lines.GetCount();
     for ( i = 0; i < count; i++ )
     {
@@ -6482,12 +6486,12 @@ void wxSheet::OnChar( wxKeyEvent& event )
 
             break;
         }
-        case WXK_PRIOR:
+        case WXK_PAGEUP:
         {
             MoveCursorUpPage( event.ShiftDown() );
             break;
         }
-        case WXK_NEXT:
+        case WXK_PAGEDOWN:
         {
             MoveCursorDownPage( event.ShiftDown() );
             break;
@@ -6643,7 +6647,7 @@ void wxSheet::OnMouseTimer( wxTimerEvent &WXUNUSED(event) )
     mEvt.m_x = m_mousePos.x;
     mEvt.m_y = m_mousePos.y;
 
-    win->ProcessEvent(mEvt);
+    win->GetEventHandler()->ProcessEvent(mEvt);
     StartMouseTimer();
 }
 

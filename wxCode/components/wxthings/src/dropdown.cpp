@@ -181,7 +181,7 @@ void DropDownPopup::OnMouse( wxMouseEvent& event )
 
 void DropDownPopup::OnKeyDown( wxKeyEvent &event )
 {
-    if (GetChild() && GetChild()->ProcessEvent(event))
+    if (GetChild() && GetChild()->GetEventHandler()->ProcessEvent(event))
         event.Skip(false);
     else
         event.Skip(true);

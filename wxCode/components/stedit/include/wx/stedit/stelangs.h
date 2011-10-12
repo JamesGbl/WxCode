@@ -47,7 +47,7 @@ DECLARE_PAIRARRAY_INTKEY(wxString, wxArrayString, wxSTEPairArrayIntString, class
 //   correct it and send me a patch.
 //----------------------------------------------------------------------------
 
-struct STE_Language;
+struct WXDLLIMPEXP_STEDIT STE_Language;
 
 class WXDLLIMPEXP_STEDIT wxSTEditorLangs : public wxSTEditorPrefBase
 {
@@ -225,7 +225,7 @@ private:
 
 // ---------------------------------------------------------------------------
 // Styles used for the language, maps enum STE_StyleType to Scintilla styles
-typedef struct STE_LexerStyles
+typedef struct WXDLLIMPEXP_STEDIT STE_LexerStyles
 {
     int         ste_style;   // STE style to use
     int         sci_style;   // Scintilla style to map to
@@ -234,7 +234,7 @@ typedef struct STE_LexerStyles
 
 // ---------------------------------------------------------------------------
 // Word list and it's Scintilla style for the lexer
-typedef struct STE_LexerWords
+typedef struct WXDLLIMPEXP_STEDIT STE_LexerWords
 {
     int         sci_style; // Scintilla style used for the words
     const char* words;     // List of words, for cpp "and and_eq asm auto..."
@@ -242,7 +242,7 @@ typedef struct STE_LexerWords
 
 // ---------------------------------------------------------------------------
 // Block start and end (ie. {}) and the styles for the start/end blocks
-typedef struct STE_LexerBlock
+typedef struct WXDLLIMPEXP_STEDIT STE_LexerBlock
 {
     int         sci_start_style; // Scintilla style to use for block start
     const char* start;           // for cpp "{"
@@ -252,7 +252,7 @@ typedef struct STE_LexerBlock
 
 // ---------------------------------------------------------------------------
 // Comments for the lexers or NULL for none
-typedef struct STE_LexerComments
+typedef struct WXDLLIMPEXP_STEDIT STE_LexerComments
 {
     int         blockAtLineStart;
     const char* block;            // for cpp "//"
@@ -265,7 +265,7 @@ typedef struct STE_LexerComments
 
 // ---------------------------------------------------------------------------
 // Preprocessor symbols used for the lexers or NULL for none
-typedef struct STE_LexerPreproc
+typedef struct WXDLLIMPEXP_STEDIT STE_LexerPreproc
 {
     const char* symbol;           // for cpp "#"
     const char* boxStart;         // for cpp "if ifdef ifndef"
@@ -275,7 +275,7 @@ typedef struct STE_LexerPreproc
 
 // ---------------------------------------------------------------------------
 // A complete description for the lexer languages
-typedef struct STE_Language
+typedef struct WXDLLIMPEXP_STEDIT STE_Language
 {
     const char* name;           // readable name of the language
     int lexer;                  // Scintilla lexer number eg. wxSTC_LEX_CPP

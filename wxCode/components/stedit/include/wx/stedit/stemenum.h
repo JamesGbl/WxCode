@@ -17,6 +17,7 @@ class WXDLLIMPEXP_FWD_CORE wxMenu;
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
 class WXDLLIMPEXP_FWD_CORE wxMenuItem;
 class WXDLLIMPEXP_FWD_CORE wxToolBar;
+class WXDLLIMPEXP_FWD_CORE AcceleratorArray;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorMenuManager - Menu creation for wxSTEditor and friends
@@ -196,7 +197,6 @@ enum STE_InsertCharsMenuType
 //  creates virtually identical menus as the editor's popup menu.
 //-----------------------------------------------------------------------------
 
-class AcceleratorArray;
 class WXDLLIMPEXP_STEDIT wxSTEditorMenuManager
 {
 public:
