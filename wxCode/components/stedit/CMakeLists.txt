@@ -70,12 +70,16 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steshell.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stesplit.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stestyls.h
-    SOURCES
+
         ${wxStEdit_ROOT_DIR}/src/wxext.h
         ${wxStEdit_ROOT_DIR}/src/precomp.h
         ${wxStEdit_ROOT_DIR}/src/stedlgs_wdr.h
 
-        ${wxStEdit_ROOT_DIR}/src/precomp.cpp
+    SOURCES 
+
+        #${wxStEdit_ROOT_DIR}/src/precomp.h
+        #${wxStEdit_ROOT_DIR}/src/precomp.cpp
+
         ${wxStEdit_ROOT_DIR}/src/steart.cpp
         ${wxStEdit_ROOT_DIR}/src/stedit.cpp
         ${wxStEdit_ROOT_DIR}/src/stedlgs.cpp
@@ -93,7 +97,11 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/src/stesplit.cpp
         ${wxStEdit_ROOT_DIR}/src/stestyls.cpp
         ${wxStEdit_ROOT_DIR}/src/wxext.cpp
-    LINK_LIBRARIES
+        
+    PRECOMPILED_INCLUDE precomp.h
+    PRECOMPILED_HEADER  ${wxStEdit_ROOT_DIR}/src/precomp.h
+    PRECOMPILED_SOURCE  ${wxStEdit_ROOT_DIR}/src/precomp.cpp
+    LINK_LIBRARIES 
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_STEDIT"
     PROPERTIES FOLDER "wxStEdit")

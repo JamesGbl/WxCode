@@ -1,15 +1,18 @@
 // precomp.h
 
-//#define WX_PRECOMP
+#ifndef _STEDIT_PRECOMP_H_
+#define _STEDIT_PRECOMP_H_
+
+// For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#ifndef WXPRECOMP
+#ifndef WX_PRECOMP
     #include <wx/menu.h>
     #include <wx/toolbar.h> 
     #include <wx/combobox.h> 
     #include <wx/msgdlg.h>
     #include <wx/filedlg.h>
-#endif // WXPRECOMP
+#endif // WX_PRECOMP
 
 #include <wx/tokenzr.h>
 #include <wx/config.h>
@@ -26,3 +29,5 @@
 
 #define wxMODIFIED_ASTERISK wxT("*")
 #define wxDEFAULT_ASTERISK  wxT("*")
+
+#endif // _STEDIT_PRECOMP_H_

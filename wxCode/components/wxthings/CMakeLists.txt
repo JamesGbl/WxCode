@@ -50,14 +50,14 @@ endif()
 # For MSW DLLs we need to replace WXDLLEXPORT with WXDLLIMPEXP_THINGS in
 # wx/include/wx/generic/filedlgg.h
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h)
-
-    # Include this dir first so our filedlgg.h is found first.
-    #include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/ )
+if( ${BUILDING_DLLS} )
 
     # Use configure since it'll create the dirs for us too.
     configure_file(${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h
-                   ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h COPYONLY)
+                   ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h_ COPYONLY)
+
+    # Include this dir first so our filedlgg.h is found first.
+    include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/ )
 
     file(READ ${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h WXFILEDLGG_H_STRING)
 
@@ -73,7 +73,10 @@ if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h)
                    "class WXDLLIMPEXP_THINGS wxFileCtrl"
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
 
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h "${WXFILEDLGG_H_STRING}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h_ "${WXFILEDLGG_H_STRING}")
+    
+    configure_file(${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h_
+                   ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h COPYONLY)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -127,6 +130,7 @@ ADD_LIBRARY_FULL(wxThingsLib
         ${WXTHINGS_DIR}/src/dropdown.cpp
         ${WXTHINGS_DIR}/src/filebrws.cpp
 
+        # This file is configured before compliation, see above.
         #${WXTHINGS_DIR}/src/filedlgg.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp
 

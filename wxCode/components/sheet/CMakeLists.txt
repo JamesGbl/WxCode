@@ -33,11 +33,11 @@ set( wxSheet_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wx
 # ---------------------------------------------------------------------------
 
 if (NOT TARGET wxSheetLib)
- 
+
 include_directories(${wxSheet_ROOT_DIR}/include/)
 
 ADD_LIBRARY_FULL(wxSheetLib
-    HEADERS 
+    HEADERS
         ${wxSheet_ROOT_DIR}/include/wx/sheet/pairarr.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheet.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetatr.h
@@ -51,7 +51,7 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetval.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/srtobjar.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/wx24defs.h
-    SOURCES 
+    SOURCES
         ${wxSheet_ROOT_DIR}/src/sheet.cpp
         ${wxSheet_ROOT_DIR}/src/sheetatr.cpp
         ${wxSheet_ROOT_DIR}/src/sheetedg.cpp
@@ -61,15 +61,20 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/src/sheetspt.cpp
         ${wxSheet_ROOT_DIR}/src/sheettbl.cpp
         ${wxSheet_ROOT_DIR}/src/sheetval.cpp
-    LINK_LIBRARIES 
+
+    PRECOMPILED_INCLUDE precomp.h
+    PRECOMPILED_HEADER  ${wxSheet_ROOT_DIR}/src/precomp.h
+    PRECOMPILED_SOURCE  ${wxSheet_ROOT_DIR}/src/precomp.cpp
+
+    LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_SHEET"
     PROPERTIES FOLDER "wxSheet")
 
 # ---------------------------------------------------------------------------
 
-install(FILES 
-        ${wxSheet_ROOT_DIR}/docs/ChangeLog.txt 
+install(FILES
+        ${wxSheet_ROOT_DIR}/docs/ChangeLog.txt
         ${wxSheet_ROOT_DIR}/docs/README.txt
         ${wxSheet_ROOT_DIR}/docs/readme.htm
         DESTINATION "doc")
@@ -79,14 +84,19 @@ install(FILES
 # ---------------------------------------------------------------------------
 
 ADD_EXECUTABLE_FULL( wxSheetDemo WIN32
-    HEADERS 
+    HEADERS
         ${wxSheet_ROOT_DIR}/samples/sheet/sheetdemo.h
-    SOURCES 
+    SOURCES
         ${wxSheet_ROOT_DIR}/samples/sheet/sheetdemo.cpp
         ${wxSheet_ROOT_DIR}/samples/sheet/sheetdemo.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxSheetLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxSheet")
 
 endif(NOT TARGET wxSheetLib)
+
+
+
+
+

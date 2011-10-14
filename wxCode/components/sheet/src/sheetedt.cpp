@@ -13,6 +13,8 @@
     #pragma implementation "sheetedt.h"
 #endif
 
+#include "precomp.h"
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__

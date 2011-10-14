@@ -421,11 +421,21 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
             string(REGEX MATCH "gtk" wxWidgets_PLATFORM "${wxWidgets_LIBRARIES}")
         endif()
 
+        if (NOT wxWidgets_PLATFORM)
+            string(REGEX MATCH "mswuniv" wxWidgets_PLATFORM "${wxWidgets_LIBRARIES}")
+        endif()
+
+        if (NOT wxWidgets_PLATFORM)
+            string(REGEX MATCH "msw" wxWidgets_PLATFORM "${wxWidgets_LIBRARIES}")
+        endif()
+
         set(wxWidgets_PLATFORM ${wxWidgets_PLATFORM} CACHE STRING "" FORCE)
 
         # Set the values from the wxWidgets_CONFIG_EXECUTABLE
-        execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE wxWidgets_ROOT_DIR)
-        string(STRIP "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR) 
+        if (EXISTS ${wxWidgets_CONFIG_EXECUTABLE})
+            execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE wxWidgets_ROOT_DIR)
+            string(STRIP "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR) 
+        endif()
     else()
         # Do not exit here since they may want to do something else
         message(STATUS "* WARNING: Could not find wxWidgets! Please see help above.")

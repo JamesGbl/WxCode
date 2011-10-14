@@ -13,6 +13,8 @@
     #pragma implementation "sheetren.h"
 #endif
 
+#include "precomp.h"
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
