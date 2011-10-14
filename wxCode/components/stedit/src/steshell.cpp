@@ -183,7 +183,7 @@ void wxSTEditorShell::OnSTCUpdateUI(wxStyledTextEvent &event)
 
 wxString wxSTEditorShell::GetNextHistoryLine(bool forwards, const wxString &line)
 {
-    size_t count = m_lineHistoryArray.GetCount();
+    int count = (int)m_lineHistoryArray.GetCount();
 
     // no history, just return ""
     if (count == 0)

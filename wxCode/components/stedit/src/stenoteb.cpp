@@ -16,7 +16,7 @@
 #include <wx/stedit/stedlgs.h>
 
 #include <wx/progdlg.h>   // wxProgressDialog
-#include "wxext.h"   // wxClipboard_Get()
+#include "wxext.h"   // FileNameArray
 
 //-----------------------------------------------------------------------------
 // sorting function for strings, after = is the page #, don't sort by that

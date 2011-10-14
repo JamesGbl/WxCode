@@ -457,10 +457,9 @@ wxSTEditorPrefDialogPageStyles::wxSTEditorPrefDialogPageStyles(const wxSTEditorP
     // find max length of all style names (for appending extra text)
     for (n = 0; n < count; n++)
     {
-        size_t len = steStyles.GetStyleName(m_styleArray[n]).Len() + 2;
+        int len = (int)steStyles.GetStyleName(m_styleArray[n]).Len() + 2;
 
-        if (len > m_style_max_len)
-            m_style_max_len = (int)len;
+        m_style_max_len = wxMax(m_style_max_len, len);
     }
 
     FillStyleEditor(m_styleEditor);
