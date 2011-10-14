@@ -120,6 +120,8 @@ public:
     // a valid HTML data object and a text object, on other systems the
     // clipboard only contains a text object.
     static bool SetHtmlText(const wxString& htmldata);
+
+    static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
 #endif // __WXEXT_H__

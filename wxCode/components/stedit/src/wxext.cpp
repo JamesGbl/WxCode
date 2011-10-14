@@ -592,36 +592,58 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok && !str->empty();
 }
 
-/*static*/ bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
+/*static*/ bool wxClipboardHelper::Set(wxDataObject* def, wxDataObject* primary)
 {
-    bool ok = false;
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
     wxClipboard* clipboard = wxTheClipboard;
     bool was_open = clipboard->IsOpened();
-    ok = was_open || clipboard->Open();
-
+    bool ok = was_open || clipboard->Open();
+    
     if (ok)
     {
-        if (HASBIT(clip_type, Default))
+        if (def)
         {
             clipboard->UsePrimarySelection(false);
-            ok = clipboard->SetData(new wxTextDataObject(str));
+            ok = clipboard->SetData(def);
+            if (ok)
+            {
+                def = NULL;
+            }
         }
-
-#ifndef __WINDOWS__
-        if (HASBIT(clip_type, Primary))
+    #ifndef __WXMSW__
+        if (primary)
         {
             clipboard->UsePrimarySelection(true);
-            ok = clipboard->SetData(new wxTextDataObject(str));
+            ok = clipboard->SetData(primary);
             clipboard->UsePrimarySelection(false);
+            if (ok)
+            {
+                primary = NULL;
+            }
         }
-#endif // __WINDOWS__
-
+    #endif // __WXMSW__
         if (!was_open)
+        {
             clipboard->Close();
+        }
+        //clipboard->Flush(); // else emu and wxc is freezing
     }
-#endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    delete def;
+    delete primary;
     return ok;
+#else
+    return false;
+#endif
+}
+
+/*static*/ bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
+{
+#if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
+    return Set(HASBIT(clip_type, Default) ? new wxTextDataObject(str) : NULL, 
+               HASBIT(clip_type, Primary) ? new wxTextDataObject(str) : NULL);
+#else
+    return false;
+#endif
 }
 
 /*static*/ bool wxClipboardHelper::SetHtmlText(const wxString& htmldata)
