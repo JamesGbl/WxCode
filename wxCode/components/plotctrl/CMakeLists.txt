@@ -67,9 +67,17 @@ if (NOT TARGET wxPlotCtrlLib)
 include_directories( ${wxThings_ROOT_DIR}/include/ )
 include_directories( ${wxPlotCtrl_ROOT_DIR}/include/ )
 
+# We use some functions from GTK directly
+if ("${wxWidgets_PLATFORM}" STREQUAL "gtk2")
+    find_package(GTK2)
+    include_directories( ${GTK2_INCLUDE_DIRS} )
+elseif ("${wxWidgets_PLATFORM}" STREQUAL "gtk")
+    find_package(GTK)
+    include_directories( ${GTK_INCLUDE_DIRS} )
+endif()
 
 ADD_LIBRARY_FULL(wxPlotCtrlLib
-    HEADERS 
+    HEADERS
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fourier.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fparser.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/lm_lsqr.h
@@ -81,7 +89,7 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotfunc.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotmark.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotprnt.h
-    SOURCES 
+    SOURCES
         ${wxPlotCtrl_ROOT_DIR}/src/fourier.c
         ${wxPlotCtrl_ROOT_DIR}/src/fparser.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/fparser.hh
@@ -96,16 +104,16 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxPlotCtrl_ROOT_DIR}/src/plotfunc.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotmark.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_PLOTCTRL"
     PROPERTIES FOLDER "wxPlotCtrl")
-    
+
 # ---------------------------------------------------------------------------
 
-install(FILES 
-    ${wxPlotCtrl_ROOT_DIR}/docs/changelog.txt 
+install(FILES
+    ${wxPlotCtrl_ROOT_DIR}/docs/changelog.txt
     ${wxPlotCtrl_ROOT_DIR}/docs/readme.htm
     ${wxPlotCtrl_ROOT_DIR}/src/fparser.htm
     ${wxPlotCtrl_ROOT_DIR}/src/fparser.txt
@@ -117,14 +125,14 @@ install(FILES
 # ---------------------------------------------------------------------------
 
 ADD_EXECUTABLE_FULL( wxPlotCtrlDemo WIN32
-    HEADERS 
+    HEADERS
         ""
-    SOURCES 
+    SOURCES
         ${wxPlotCtrl_ROOT_DIR}/samples/plotctrl/wxplotctrl.cpp
         ${wxPlotCtrl_ROOT_DIR}/samples/plotctrl/wxplotctrl.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxPlotCtrlLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxPlotCtrl")
 
 endif(NOT TARGET wxPlotCtrlLib)

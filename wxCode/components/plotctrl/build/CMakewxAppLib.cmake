@@ -2,8 +2,8 @@
 # CMakewxWidgets.txt - Initialize CMake for wxWidgets projects
 #
 # This file should be suitable for use with a variety of wxWidgets projects
-# without modification. 
-# 
+# without modification.
+#
 # Usage: In your CMakeLists.txt write code along these lines:
 #
 # project( MyProject )
@@ -72,12 +72,12 @@ message( STATUS "*   MSVC GUI : You need only choose msw, mswu, mswuniv, mswuniv
 message( STATUS "*              release or debug mode is chosen in the GUI." )
 message( STATUS "* -DwxWidgets_COMPONENTS=[...stc;html;adv;core;base or mono] : ")
 message( STATUS "*   For non-monolithic builds choose the wxWidgets libs to link to.")
-message( STATUS "*    xrc;xml;gl;net;media;propgrid;richtext;aui;stc;html;adv;core;base") 
+message( STATUS "*    xrc;xml;gl;net;media;propgrid;richtext;aui;stc;html;adv;core;base")
 message( STATUS "*   For monolithic builds choose mono and the contribs libs.")
-message( STATUS "*    stc;mono") 
-message( STATUS "*   The extra decorations, e.g. wxmsw28ud_adv.lib, will be searched for.") 
-message( STATUS "*   Libs that cannot be found will be printed below, please fix/remove") 
-message( STATUS "*   them to be able to build this project.") 
+message( STATUS "*    stc;mono")
+message( STATUS "*   The extra decorations, e.g. wxmsw28ud_adv.lib, will be searched for.")
+message( STATUS "*   Libs that cannot be found will be printed below, please fix/remove")
+message( STATUS "*   them to be able to build this project.")
 message( STATUS "*   You will get strange compilation/linker errors if wxWidgets is not found.")
 message( STATUS "* ")
 message( STATUS "* Finding wxWidgets for GCC and Unix type systems")
@@ -193,6 +193,15 @@ if( "${BUILD_SHARED_LIBS}" STREQUAL "" )
     endif()
 endif()
 
+# Set if we are building DLLs, MSWindows and shared libraries
+set(BUILDING_DLLS FALSE)
+
+if (${BUILD_SHARED_LIBS}) # CMake has problems with "if ("ON" AND "TRUE")
+    if (${WIN32})
+        set(BUILDING_DLLS TRUE)
+    endif()
+endif()
+
 # ---------------------------------------------------------------------------
 # RPath options to allow execution of Linux programs in the build tree to
 # find the shared libraries both in the build tree and those outside your project.
@@ -238,7 +247,7 @@ if (MSVC) # if (CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
     else()
         add_definitions( /W3 )
     endif()
-    
+
     # -----------------------------------------------------------------------
     # Use multiprocessor compliation if availiable
     # In some cases it is nice to turn it off since it can be hard tell where some
@@ -248,7 +257,7 @@ if (MSVC) # if (CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
     endif()
 
     set(BUILD_USE_MULTIPROCESSOR ${BUILD_USE_MULTIPROCESSOR} CACHE BOOL "Build in MSVC using multiple processors (TRUE) else single processor (FALSE)" FORCE)
-    
+
     if (BUILD_USE_MULTIPROCESSOR)
         add_definitions( /MP )
     endif()
@@ -260,9 +269,9 @@ elseif (UNIX) # elseif (CMAKE_BUILD_TOOL MATCHES "(gmake)")
     if (${BUILD_WARNINGS_HIGH})
         add_definitions( -Wall -Wextra ) # -Wextra gives warnings about unused parameters and others
     else()
-        add_definitions( -Wall ) 
+        add_definitions( -Wall )
     endif()
-        
+
     # -----------------------------------------------------------------------
     # Colorize the output of the Makefiles
     if (NOT DEFINED CMAKE_COLOR_MAKEFILE)
@@ -284,7 +293,7 @@ elseif (UNIX) # elseif (CMAKE_BUILD_TOOL MATCHES "(gmake)")
     if (NOT DEFINED BUILD_VERBOSELY_GCC)
         set(BUILD_VERBOSELY_GCC FALSE CACHE BOOL "Verbose build output for gcc compiler" )
     endif()
-    
+
     set( CMAKE_VERBOSE_MAKEFILE ${BUILD_VERBOSELY_GCC} CACHE BOOL "Verbose build output (set by BUILD_VERBOSELY_GCC)" FORCE)
 
 endif()
@@ -323,7 +332,7 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     set(wxWidgets_COMPONENTS ${${wxWidgets_COMPONENTS_}})
 
     # Eventually they will have found the wxWidgets dir
-    # and this will be correctly run 
+    # and this will be correctly run
     if (EXISTS "${wxWidgets_ROOT_DIR}/include/wx/version.h")
         FILE(STRINGS "${wxWidgets_ROOT_DIR}/include/wx/version.h" wxWidgets_MAJOR_VERSION  REGEX "#define wxMAJOR_VERSION[^0-9]*([0-9]+)")
         FILE(STRINGS "${wxWidgets_ROOT_DIR}/include/wx/version.h" wxWidgets_MINOR_VERSION  REGEX "#define wxMINOR_VERSION[^0-9]*([0-9]+)")
@@ -332,7 +341,7 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
         string(REGEX MATCH "([0-9]+)" wxWidgets_MAJOR_VERSION  "${wxWidgets_MAJOR_VERSION}")
         string(REGEX MATCH "([0-9]+)" wxWidgets_MINOR_VERSION  "${wxWidgets_MINOR_VERSION}")
         string(REGEX MATCH "([0-9]+)" wxWidgets_RELEASE_NUMBER "${wxWidgets_RELEASE_NUMBER}")
-    
+
         if (wxWidgets_MAJOR_VERSION) # AND wxWidgets_MINOR_VERSION AND wxWidgets_RELEASE_NUMBER)
             set( wxWidgets_VERSION "${wxWidgets_MAJOR_VERSION}.${wxWidgets_MINOR_VERSION}.${wxWidgets_RELEASE_NUMBER}")
         endif()
@@ -340,15 +349,15 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
         message(STATUS "* WARNING : Unable to find '${wxWidgets_ROOT_DIR}/include/wx/version.h'")
         message(STATUS "*           Please set wxWidgets_ROOT_DIR")
     endif()
-    
+
     set(DONT_RUN FALSE)
-        
+
     # wxWidgets has stc lib in < 2.9 and stc + scintilla lib in >= 2.9
     if (wxWidgets_VERSION VERSION_LESS 2.9)
         # remove these >= 2.9 libs, they should if #ifdefed it in the code
         # so we allow them to specify them as link libs, but remove them for 2.8
         list(REMOVE_ITEM wxWidgets_COMPONENTS propgrid)
-        
+
         list(FIND wxWidgets_COMPONENTS scintilla idx)
         if (idx GREATER "-1")
             message(STATUS "* Note: Linking to stc lib and not scintilla lib for wx < 2.9")
@@ -379,7 +388,7 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     if (MSVC)
 
         # We add the version so we can swap stc and scintilla libs
-        set( wxWidgets_VERSION       ${wxWidgets_VERSION}       CACHE string "wxWidgets version e.g. 2.8, 2.9.2..." FORCE)    
+        set( wxWidgets_VERSION       ${wxWidgets_VERSION}       CACHE string "wxWidgets version e.g. 2.8, 2.9.2..." FORCE)
         # These are used by FindwxWidgets.cmake
         set( wxWidgets_ROOT_DIR      ${wxWidgets_ROOT_DIR}      CACHE PATH   "Root directory of wxWidgets install (set 1st)" FORCE)
         set( wxWidgets_LIB_DIR       ${wxWidgets_LIB_DIR}       CACHE PATH   "Lib directory of wxWidgets install (set 2nd)" FORCE)
@@ -404,6 +413,19 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
 
     if( wxWidgets_FOUND )
         message(STATUS "* Found wxWidgets :" )
+
+        # Get the platform, gtk, gtk2, msw, univ...  TODO
+        set(wxWidgets_PLATFORM)
+        string(REGEX MATCH "gtk2" wxWidgets_PLATFORM "${wxWidgets_LIBRARIES}" )
+        if (NOT "${wxWidgets_PLATFORM}" STREQUAL "gtk2")
+            string(REGEX MATCH "gtk" wxWidgets_PLATFORM "${wxWidgets_LIBRARIES}")
+        endif()
+
+        set(wxWidgets_PLATFORM ${wxWidgets_PLATFORM} CACHE STRING "" FORCE)
+
+        # Set the values from the wxWidgets_CONFIG_EXECUTABLE
+        execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE wxWidgets_ROOT_DIR)
+        string(STRIP "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR) 
     else()
         # Do not exit here since they may want to do something else
         message(STATUS "* WARNING: Could not find wxWidgets! Please see help above.")
@@ -424,25 +446,25 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     # search through the list of components to see what we were able to find
 
     foreach( wx_comp ${wxWidgets_COMPONENTS} )
-        set(wx_comp_found "-1")
+        set(wx_comp_found FALSE)
         foreach( wx_comp_lib ${wxWidgets_LIBRARIES} )
             get_filename_component(wx_comp_lib_name ${wx_comp_lib} NAME_WE)
-            string(FIND ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
-            if (${wx_comp_found} GREATER "-1")
-                string(FIND ${wx_comp_lib_name} "wx" wx_comp_found)
-                if (${wx_comp_found} EQUAL "0")
+            string(REGEX MATCH ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
+            if (wx_comp_found)
+                string(REGEX MATCH ${wx_comp_lib_name} "wx" wx_comp_found)
+                if (wx_comp_found)
                     break()
                 endif()
             endif()
         endforeach()
-        
-        if (${wx_comp_found} EQUAL "-1")
+
+        if (wx_comp_found)
             message(STATUS "* WARNING: Unable to find requested wxWidgets component : ${wx_comp}")
         endif()
     endforeach()
 
     message(STATUS "* ")
-    
+
     unset(wx_comp)
     unset(wx_comp_found)
     unset(wx_comp_lib)
@@ -484,7 +506,7 @@ macro(PRINT_ALL_CMAKE_VARIABLES)
     list(REMOVE_DUPLICATES CMAKE_ALL_VARIABLES_LIST)
     foreach(var ${CMAKE_ALL_VARIABLES_LIST})
         list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} IS_CACHED)
-        if (IS_CACHED GREATER "-1")        
+        if (IS_CACHED GREATER "-1")
             message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
         else()
             message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
@@ -549,16 +571,16 @@ macro( PRINT_NEW_CMAKE_VARIABLES )
     list(REMOVE_DUPLICATES CMAKE_ALL_VARIABLES_LIST2)
     foreach(var ${CMAKE_ALL_VARIABLES_LIST2})
         list(FIND CMAKE_ALL_VARIABLES_LIST ${var} IS_NEW)
-        if (IS_NEW EQUAL "-1")  
+        if (IS_NEW EQUAL "-1")
             list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} IS_CACHED)
-            if (IS_NEW GREATER "-1")        
+            if (IS_NEW GREATER "-1")
                 message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
             else()
                 message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
             endif()
         endif()
     endforeach()
-    
+
     message( STATUS "@----------------------------------------------------------------------------")
     message( STATUS "@- End printing NEW internal CMake variables")
     message( STATUS "@----------------------------------------------------------------------------")

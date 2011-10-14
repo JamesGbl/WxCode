@@ -39,21 +39,21 @@ if (NOT DEFINED wxStEdit_SETUP_INCLUDE_PATH)
     set(wxStEdit_SETUP_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include CACHE INTERNAL "Path to the configured wxStEdit setup.h" FORCE)
 endif()
 
-# 
+#
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h)
-    configure_file(${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h 
-                   ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h COPYONLY) 
+    configure_file(${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
+                   ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h COPYONLY)
 endif()
- 
+
 include_directories(${wxStEdit_ROOT_DIR}/include/ ${wxStEdit_SETUP_INCLUDE_PATH})
- 
+
 
 ADD_LIBRARY_FULL(wxStEditLib
-    HEADERS 
+    HEADERS
         ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h
 
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/pairarr.h
-        ${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h    
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steart.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedefs.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedit.h
@@ -70,7 +70,7 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steshell.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stesplit.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stestyls.h
-    SOURCES 
+    SOURCES
         ${wxStEdit_ROOT_DIR}/src/wxext.h
         ${wxStEdit_ROOT_DIR}/src/precomp.h
         ${wxStEdit_ROOT_DIR}/src/stedlgs_wdr.h
@@ -93,15 +93,15 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/src/stesplit.cpp
         ${wxStEdit_ROOT_DIR}/src/stestyls.cpp
         ${wxStEdit_ROOT_DIR}/src/wxext.cpp
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_STEDIT"
     PROPERTIES FOLDER "wxStEdit")
 
 # ---------------------------------------------------------------------------
 
-install(FILES 
-        ${wxStEdit_ROOT_DIR}/docs/ChangeLog.txt 
+install(FILES
+        ${wxStEdit_ROOT_DIR}/docs/ChangeLog.txt
         ${wxStEdit_ROOT_DIR}/docs/readme.txt
         ${wxStEdit_ROOT_DIR}/docs/readme.htm
         ${wxStEdit_ROOT_DIR}/docs/wxstedit.htm
@@ -112,19 +112,19 @@ install(FILES
 # ---------------------------------------------------------------------------
 
 ADD_EXECUTABLE_FULL( wxStEdit WIN32
-    HEADERS 
+    HEADERS
         ${wxStEdit_ROOT_DIR}/samples/stedit/readme_htm.hpp
         #${wxStEdit_ROOT_DIR}/samples/stedit/stedoc.h
-        ${wxStEdit_ROOT_DIR}/samples/stedit/wxstedit.h 
+        ${wxStEdit_ROOT_DIR}/samples/stedit/wxstedit.h
         ${wxStEdit_ROOT_DIR}/samples/stedit/wxstedit_htm.hpp
-    SOURCES 
-        #${wxStEdit_ROOT_DIR}/samples/stedit/link.cpp        
+    SOURCES
+        #${wxStEdit_ROOT_DIR}/samples/stedit/link.cpp
         #${wxStEdit_ROOT_DIR}/samples/stedit/stedoc.cpp
         ${wxStEdit_ROOT_DIR}/samples/stedit/wxstedit.cpp
         ${wxStEdit_ROOT_DIR}/samples/stedit/wxstedit.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxStEditLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxStEdit")
 
 endif(NOT TARGET wxStEditLib)

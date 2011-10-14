@@ -31,17 +31,22 @@ set( wxVidCap_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of w
 # ---------------------------------------------------------------------------
 # CMake build file for wxVidCap Library
 # ---------------------------------------------------------------------------
- 
+
 if (NOT TARGET wxVidCapLib)
 
 include_directories( ${wxVidCap_ROOT_DIR}/include/ )
- 
+
+if (WIN32)
+    set(wxVidCapLib_EXTRA_LIBS vfw32)
+else()
+endif()
+
 ADD_LIBRARY_FULL(wxVidCapLib
-    HEADERS 
+    HEADERS
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_v4l.h
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_vfw.h
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcapwin.h
-    SOURCES 
+    SOURCES
         ${wxVidCap_ROOT_DIR}/src/vcap_v4l.cpp
         ${wxVidCap_ROOT_DIR}/src/vcap_vfw.cpp
         ${wxVidCap_ROOT_DIR}/src/vcapconv.cpp
@@ -49,15 +54,15 @@ ADD_LIBRARY_FULL(wxVidCapLib
         ${wxVidCap_ROOT_DIR}/src/vcapdlgs.cpp
         ${wxVidCap_ROOT_DIR}/src/vcapdlgs.h
         ${wxVidCap_ROOT_DIR}/src/vcapwin.cpp
-    LINK_LIBRARIES 
-        vfw32
+    LINK_LIBRARIES
+        ${wxVidCapLib_EXTRA_LIBS}
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_VIDCAP"
     PROPERTIES FOLDER "wxVidCap")
 
 # ---------------------------------------------------------------------------
 
-install(FILES 
+install(FILES
     ${wxVidCap_ROOT_DIR}/docs/README.txt
     DESTINATION "doc")
 
@@ -66,16 +71,16 @@ install(FILES
 # ---------------------------------------------------------------------------
 
 ADD_EXECUTABLE_FULL( wxVidCap WIN32
-    HEADERS 
+    HEADERS
         ${wxVidCap_ROOT_DIR}/samples/vidcap/wxvidcap.h
         ${wxVidCap_ROOT_DIR}/samples/vidcap/wxvidcap_wdr.h
-    SOURCES 
+    SOURCES
         ${wxVidCap_ROOT_DIR}/samples/vidcap/wxvidcap.cpp
         ${wxVidCap_ROOT_DIR}/samples/vidcap/wxvidcap_wdr.cpp
         ${wxVidCap_ROOT_DIR}/samples/vidcap/wxvidcap.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxVidCapLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxVidCap")
 
 endif(NOT TARGET wxVidCapLib)

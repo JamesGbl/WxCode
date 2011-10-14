@@ -6,6 +6,8 @@
 // License:     wxWidgets
 /////////////////////////////////////////////////////////////////////////////
 
+#include "wx/things/thingdef.h"
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -1050,7 +1052,11 @@ void wxFileBrowser::OnSize( wxSizeEvent &event )
 // The code in src/gtk/window.cpp wxWindow::DoSetSize fails since
 //  m_parent->m_wxwindow == NULL so nothing is done
 #ifdef __WXGTK__
+#if defined(__WXGTK20__)
+    #include <gtk-2.0/gtk/gtk.h>
+#else
     #include <gtk/gtk.h>
+#endif
     void GtkToolbarResizeWindow(wxWindow* win, const wxSize& size)
     {
         // don't take the x,y values, they're wrong because toolbar sets them
@@ -1060,6 +1066,8 @@ void wxFileBrowser::OnSize( wxSizeEvent &event )
         if (GTK_WIDGET_VISIBLE(widget))
             gtk_widget_queue_resize(widget);
     }
+#else
+    void GtkToolbarResizeWindow(wxWindow* , const wxSize& ) {}
 #endif //__WXGTK__
 
 void wxFileBrowser::DoSize()

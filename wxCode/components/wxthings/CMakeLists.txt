@@ -35,36 +35,45 @@ set( WXTHINGS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxThin
 if (NOT TARGET wxThingsLib)
 
 include_directories( ${WXTHINGS_DIR}/include/ )
- 
+
+# We use some functions from GTK directly
+if ("${wxWidgets_PLATFORM}" STREQUAL "gtk2")
+    find_package(GTK2)
+    include_directories( ${GTK2_INCLUDE_DIRS} )
+elseif ("${wxWidgets_PLATFORM}" STREQUAL "gtk")
+    find_package(GTK)
+    include_directories( ${GTK_INCLUDE_DIRS} )
+endif()
+
 # ---------------------------------------------------------------------------
 # wxFileBrowser uses /wx/generic/filedlgg.h which is not available in MSW.
 # For MSW DLLs we need to replace WXDLLEXPORT with WXDLLIMPEXP_THINGS in
 # wx/include/wx/generic/filedlgg.h
 
-if (NOT EXISTS ${CMAKE_BINARY_DIR}/include/wx/generic/filedlgg.h)
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h)
 
     # Include this dir first so our filedlgg.h is found first.
-    include_directories( BEFORE ${CMAKE_BINARY_DIR}/include/ )
+    #include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR}/include/ )
 
     # Use configure since it'll create the dirs for us too.
-    configure_file(${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h 
-                   ${CMAKE_BINARY_DIR}/include/wx/generic/filedlgg.h COPYONLY) 
+    configure_file(${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h
+                   ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h COPYONLY)
 
     file(READ ${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h WXFILEDLGG_H_STRING)
 
-    string(REPLACE "class WXDLLEXPORT wxGenericFileDialog" 
+    string(REPLACE "class WXDLLEXPORT wxGenericFileDialog"
                    "class WXDLLIMPEXP_THINGS wxGenericFileDialog"
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
 
-    string(REPLACE "class WXDLLEXPORT wxFileData" 
+    string(REPLACE "class WXDLLEXPORT wxFileData"
                    "class WXDLLIMPEXP_THINGS wxFileData"
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
 
-    string(REPLACE "class WXDLLEXPORT wxFileCtrl" 
+    string(REPLACE "class WXDLLEXPORT wxFileCtrl"
                    "class WXDLLIMPEXP_THINGS wxFileCtrl"
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
 
-    file(WRITE ${CMAKE_BINARY_DIR}/include/wx/generic/filedlgg.h "${WXFILEDLGG_H_STRING}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h "${WXFILEDLGG_H_STRING}")
 endif()
 
 # ---------------------------------------------------------------------------
@@ -74,7 +83,7 @@ endif()
 # and paste it into our code to get it.
 # If this breaks we can resort to some other means, but this works for wx 2.8 and 2.9
 
-if (${BUILD_SHARED_LIBS} AND ${WIN32})
+if ( ${BUILDING_DLLS} )
 
     file(READ ${wxWidgets_ROOT_DIR}/src/generic/dirctrlg.cpp WXDIRCTRLG_CPP_STRING)
 
@@ -92,12 +101,12 @@ else()
 endif()
 
 configure_file(${WXTHINGS_DIR}/src/filedlgg.cpp
-               ${CMAKE_BINARY_DIR}/src/filedlgg.cpp @ONLY) 
+               ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp @ONLY)
 
 # ---------------------------------------------------------------------------
 
 ADD_LIBRARY_FULL(wxThingsLib
-    HEADERS 
+    HEADERS
         ${WXTHINGS_DIR}/include/wx/things/block.h
         ${WXTHINGS_DIR}/include/wx/things/bmpcombo.h
         ${WXTHINGS_DIR}/include/wx/things/dropdown.h
@@ -112,15 +121,15 @@ ADD_LIBRARY_FULL(wxThingsLib
         ${WXTHINGS_DIR}/include/wx/things/spinctld.h
         ${WXTHINGS_DIR}/include/wx/things/thingdef.h
         ${WXTHINGS_DIR}/include/wx/things/toggle.h
-    SOURCES 
+    SOURCES
         ${WXTHINGS_DIR}/src/block.cpp
         ${WXTHINGS_DIR}/src/bmpcombo.cpp
         ${WXTHINGS_DIR}/src/dropdown.cpp
         ${WXTHINGS_DIR}/src/filebrws.cpp
-    
+
         #${WXTHINGS_DIR}/src/filedlgg.cpp
-        ${CMAKE_BINARY_DIR}/src/filedlgg.cpp
-    
+        ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp
+
         ${WXTHINGS_DIR}/src/genergdi.cpp
         ${WXTHINGS_DIR}/src/geometry.cpp
         ${WXTHINGS_DIR}/src/matrix2d.cpp
@@ -129,14 +138,16 @@ ADD_LIBRARY_FULL(wxThingsLib
         ${WXTHINGS_DIR}/src/range.cpp
         ${WXTHINGS_DIR}/src/spinctld.cpp
         ${WXTHINGS_DIR}/src/toggle.cpp
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_THINGS"
     PROPERTIES FOLDER "wxThings")
 
+ADD_TARGET_INCLUDE_PATHS(wxThingsLib ${CMAKE_CURRENT_BINARY_DIR}/include/)
+
 # ---------------------------------------------------------------------------
 
-install(FILES 
+install(FILES
     ${WXTHINGS_DIR}/docs/readme.txt
     DESTINATION "doc")
 
@@ -146,12 +157,12 @@ install(FILES
 
 ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
     HEADERS ""
-    SOURCES 
+    SOURCES
         ${WXTHINGS_DIR}/samples/things/thingsdemo.cpp
         ${WXTHINGS_DIR}/samples/things/thingsdemo.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxThingsLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxThings")
 
 # ---------------------------------------------------------------------------
@@ -160,12 +171,12 @@ ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
 
 ADD_EXECUTABLE_FULL( wxFileBrowser WIN32
     HEADERS ""
-    SOURCES 
+    SOURCES
         ${WXTHINGS_DIR}/samples/filebrws/wxfilebrowser.cpp
         ${WXTHINGS_DIR}/samples/filebrws/wxfilebrowser.rc
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         wxThingsLib
-        ${wxWidgets_LIBRARIES}        
+        ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxThings")
 
 endif(NOT TARGET wxThingsLib)
