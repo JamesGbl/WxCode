@@ -603,13 +603,17 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     if (ok)
     {
         if (HASBIT(clip_type, Default))
+        {
+            clipboard->UsePrimarySelection(false);
             ok = clipboard->SetData(new wxTextDataObject(str));
+        }
 
 #ifndef __WINDOWS__
         if (HASBIT(clip_type, Primary))
         {
+            clipboard->UsePrimarySelection(true);
             ok = clipboard->SetData(new wxTextDataObject(str));
-            clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+            clipboard->UsePrimarySelection(false);
         }
 #endif // __WINDOWS__
 
