@@ -84,6 +84,7 @@
 #define STE_MM wxSTEditorMenuManager
 
 #define STE_TextPos wxTextPos
+//#define STE_TextCoord wxTextCoord
 
 //-----------------------------------------------------------------------------
 // Use wxHtmlEasyPrinting instead of normal printing

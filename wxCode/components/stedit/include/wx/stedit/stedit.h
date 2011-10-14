@@ -786,10 +786,10 @@ public :
     int  IsLinePreprocessorCondition(const wxString &line);
     bool FindMatchingPreprocessorCondition(int &curLine, int direction,
                                            int condEnd1, int condEnd2);
-    bool FindMatchingPreprocCondPosition(bool isForward, int &mppcAtCaret,int &mppcMatch);
+    bool FindMatchingPreprocCondPosition(bool isForward, STE_TextPos& mppcAtCaret, STE_TextPos& mppcMatch);
 
     // for brace matching and highlighting other brace
-    bool DoFindMatchingBracePosition(int &braceAtCaret, int &braceOpposite, bool sloppy);
+    bool DoFindMatchingBracePosition(STE_TextPos& braceAtCaret, STE_TextPos& braceOpposite, bool sloppy);
     void DoBraceMatch();
 
     // Get the position (col) of the caret in the line it's currently in

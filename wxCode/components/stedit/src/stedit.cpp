@@ -737,7 +737,7 @@ void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
 }
 
 #if (wxVERSION_NUMBER < 2900)
-bool wxSTEditor::PositionToXY(long pos, long *col, long *row) const
+bool wxSTEditor::PositionToXY(STE_TextPos pos, long *col, long *row) const
 {
     if ((pos < 0) || (pos > GetLength()))
     {
@@ -1711,8 +1711,8 @@ bool wxSTEditor::FindMatchingPreprocessorCondition(
 // Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
 bool wxSTEditor::FindMatchingPreprocCondPosition(
     bool isForward,             ///< @c true if search forward
-    int &mppcAtCaret,           ///< Matching preproc. cond.: current position of caret
-    int &mppcMatch)             ///< Matching preproc. cond.: matching position
+    STE_TextPos& mppcAtCaret,           ///< Matching preproc. cond.: current position of caret
+    STE_TextPos& mppcMatch)             ///< Matching preproc. cond.: matching position
 {
     bool isInside = false;
     int curLine;
@@ -1784,7 +1784,7 @@ static bool IsBrace(char ch) {
 
 // This code copied from SciTEBase.cxx
 // Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
-bool wxSTEditor::DoFindMatchingBracePosition(int &braceAtCaret, int &braceOpposite, bool sloppy)
+bool wxSTEditor::DoFindMatchingBracePosition(STE_TextPos& braceAtCaret, STE_TextPos& braceOpposite, bool sloppy)
 {
     int maskStyle = (1 << GetStyleBitsNeeded()) - 1;
     bool isInside = false;
@@ -1869,8 +1869,8 @@ bool wxSTEditor::DoFindMatchingBracePosition(int &braceAtCaret, int &braceOpposi
 void wxSTEditor::DoBraceMatch() {
     //if (!bracesCheck)
     //        return;
-    int braceAtCaret = -1;
-    int braceOpposite = -1;
+    STE_TextPos braceAtCaret = -1;
+    STE_TextPos braceOpposite = -1;
     bool bracesSloppy = false; // FIXME added
     DoFindMatchingBracePosition(braceAtCaret, braceOpposite, bracesSloppy);
 
@@ -1893,8 +1893,8 @@ void wxSTEditor::DoBraceMatch() {
         if (chBrace == ':')
         {
             int lineStart = LineFromPosition(braceAtCaret);
-            int indentPos = GetLineIndentPosition(lineStart);
-            int indentPosNext = GetLineIndentPosition(lineStart + 1);
+            STE_TextPos indentPos = GetLineIndentPosition(lineStart);
+            STE_TextPos indentPosNext = GetLineIndentPosition(lineStart + 1);
             columnAtCaret = GetColumn(indentPos);
             int columnAtCaretNext = GetColumn(indentPosNext);
             int indentSize = GetIndent();
@@ -3936,7 +3936,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2779")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2780")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

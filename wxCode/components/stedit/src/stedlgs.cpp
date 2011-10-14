@@ -733,7 +733,7 @@ void wxSTEditorPrefDialogPageStyles::OnMarginClick( wxStyledTextEvent &event )
         return;
 
     wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
-    int pos = event.GetPosition();
+    STE_TextPos pos = event.GetPosition();
 
     if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
         pos = editor->GetCurrentPos();
