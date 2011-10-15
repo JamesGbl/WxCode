@@ -390,10 +390,6 @@ function( ADD_LIBRARY_FULL name )
         endif()
     ENDFOREACH(arg)
 
-    if (NOT "${PRECOMPILED_INCLUDE}" STREQUAL "")
-        ADD_PRECOMPILED_HEADER(${PRECOMPILED_INCLUDE} ${PRECOMPILED_HEADER} ${PRECOMPILED_SOURCE} SOURCE_FILES)
-    endif()
-
     SET("${name}_HEADER_FILES" ${HEADER_FILES} CACHE INTERNAL "")
     SET("${name}_SOURCE_FILES" ${SOURCE_FILES} CACHE INTERNAL "")
 
@@ -423,6 +419,10 @@ function( ADD_LIBRARY_FULL name )
     if (DEFINED PRECOMPILED_INCLUDE)
         SET_TARGET_PROPERTIES(${name} PROPERTIES XCODE_ATTRIBUTE_GCC_PRECOMPILE_PREFIX_HEADER YES)
         SET_TARGET_PROPERTIES(${name} PROPERTIES XCODE_ATTRIBUTE_GCC_PREFIX_HEADER "${PRECOMPILED_INCLUDE}")
+    endif()
+
+    if (NOT "${PRECOMPILED_INCLUDE}" STREQUAL "")
+        ADD_PRECOMPILED_HEADER(${name} ${PRECOMPILED_INCLUDE} ${PRECOMPILED_HEADER} ${PRECOMPILED_SOURCE} SOURCE_FILES)
     endif()
 
     # Set the install includes to use same dir structure as the source directories
@@ -689,9 +689,19 @@ endfunction()
 #  ADD_PRECOMPILED_HEADER( myproj/precomp.h include/myproj/precomp.h src/precomp.cpp MYPRJ_SOURCES )
 # ---------------------------------------------------------------------------
 
-function( ADD_PRECOMPILED_HEADER pch_include pch_header pch_source sources_)
+function( ADD_PRECOMPILED_HEADER target_name pch_include pch_header pch_source sources_)
+
+    # Make this shown to people to help debug if it actually works or not.
+    # GCC is a little tricky to get right since you have to compile it just right
+    # and CMake bizarrely hides flags passed to add_definitions() not starting with -D.
+    if ("${BUILD_USE_PRECOMPILED_HEADERS}" STREQUAL "")
+        set(BUILD_USE_PRECOMPILED_HEADERS TRUE)
+    endif()
+    set(BUILD_USE_PRECOMPILED_HEADERS ${BUILD_USE_PRECOMPILED_HEADERS} CACHE BOOL "Enable the use of precompiled headers?" FORCE)
 
     SET(sources ${${sources_}})
+
+    IF(${BUILD_USE_PRECOMPILED_HEADERS})
 
     IF(MSVC)
         get_filename_component(precomp_basename ${pch_header} NAME_WE)
@@ -708,51 +718,89 @@ function( ADD_PRECOMPILED_HEADER pch_include pch_header pch_source sources_)
             FILE(APPEND ${pch_source} "#include \"${pch_include}\"\n")
         endif()
 
-        APPEND_SOURCE_FILES_PROPERTIES(${pch_source}
-                                       PROPERTIES COMPILE_FLAGS "/Yc\"${pch_include}\" /Fp\"${pch_filename}\""
-                                       OBJECT_OUTPUTS "${pch_filename}")
-        APPEND_SOURCE_FILES_PROPERTIES(${sources}
-                                      #PROPERTIES COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" /FI\"${pch_include}\" "
-                                       PROPERTIES COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" "
-                                       OBJECT_DEPENDS "${pch_filename}")
+        file(TO_CMAKE_PATH "${pch_source}" native_pch_source)
 
-#        set_source_files_properties(${pch_source}
-#                                    PROPERTIES COMPILE_FLAGS "/Yc\"${pch_include}\" /Fp\"${pch_filename}\""
-#                                    OBJECT_OUTPUTS "${pch_filename}")
-#        set_source_files_properties(${sources}
-#                                    PROPERTIES COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" /FI\"${pch_include}\" "
-#                                    OBJECT_DEPENDS "${pch_filename}")
+        set(found_pch FALSE)
 
-        # Add precompiled header to sources
-        set(${sources_} ${sources} ${pch_source} PARENT_SCOPE)
+        foreach( f ${sources} )
+            file(TO_CMAKE_PATH "${f}" native_f)
 
+            if ("${native_pch_source}" STREQUAL "${native_f}") 
+                set(found_pch TRUE)
+
+                APPEND_SOURCE_FILES_PROPERTIES(${pch_source} PROPERTIES 
+                                               COMPILE_FLAGS "/Yc\"${pch_include}\" /Fp\"${pch_filename}\""
+                                               OBJECT_OUTPUTS "${pch_filename}")
+            else()
+                APPEND_SOURCE_FILES_PROPERTIES(${f} PROPERTIES
+                                              #COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" /FI\"${pch_include}\" "
+                                               COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" "
+                                               OBJECT_DEPENDS "${pch_filename}")
+            endif()
+        endforeach()       
+
+        if (NOT ${found_pch})
+            message(WARNING "* Unable to find precompiled source file '${pch_source}' normalized to '${native_pch_source}' in list of files '${sources}'")
+        endif()
     ELSEIF (CMAKE_COMPILER_IS_GNUCXX)
 
-        set(gch_filename "${CMAKE_CURRENT_BINARY_DIR}/${pch_include}.gch")
+        # We will create the pch in an include tree in the binary dir
+        get_filename_component(pch_include_path "${pch_include}" PATH)
+
+        if ("${pch_include_path}" STREQUAL "")
+            set(pch_filename "${pch_header}.gch")
+            message(STATUS "* NOTE: Precompiled header ${pch_header}.gch created in source dir since it has no path in #include statement and GCC always searches the current dir first.")
+        else()
+            file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/${pch_include_path}")
+            set(pch_filename "${CMAKE_CURRENT_BINARY_DIR}/include/${pch_include}.gch")
+            include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include") # find .gch file before .h file
+        endif()
 
         # need to delete this file for clean too, otherwise we get an error
         # about mismatched pch and pdb files.
         set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${pch_filename})
 
-        # Add precompiled header to sources
-        set(${sources_} ${sources} ${gch_filename} PARENT_SCOPE)
-
         # Compile the gch header using the same flags and includes as a normal cpp file.
         SET (cxx_flags ${CMAKE_CXX_FLAGS})
-        LIST(APPEND cxx_flags -c ${pch_header} -o ${gch_filename})
+
+        if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+            SET (cxx_flags ${cxx_flags} ${CMAKE_CXX_FLAGS_DEBUG})
+        endif()
+
+        get_target_property(target_type ${target_name} TYPE) 
+        if ("${target_type}" STREQUAL "SHARED_LIBRARY")    # (${BUILD_SHARED_LIBS})
+            SET (cxx_flags ${cxx_flags} ${CMAKE_SHARED_LIBRARY_CXX_FLAGS})
+        endif()
+
+        #get_target_property(target_defs  ${target_name} COMPILE_DEFINITIONS)
+        #get_target_property(target_flags ${target_name} COMPILE_FLAGS)
+
+        GET_DIRECTORY_PROPERTY( defs COMPILE_DEFINITIONS)
+        foreach (i ${defs})
+            LIST(APPEND cxx_flags "-D${i}")
+        endforeach()
 
         GET_DIRECTORY_PROPERTY(include_dirs INCLUDE_DIRECTORIES)
         foreach (i ${include_dirs})
-            LIST(APPEND cxx_flags "-I" ${i})
+            LIST(APPEND cxx_flags "-I${i}")
         endforeach()
 
+        LIST(APPEND cxx_flags -c ${pch_header} -o ${pch_filename})
+ 
         SEPARATE_ARGUMENTS(cxx_flags)
-        add_custom_command(OUTPUT ${gch_filename}
-            COMMAND rm -f ${gch_filename}
-            COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} ${cxx_flags}
-			    DEPENDS ${pch_header})
 
+        add_custom_command(OUTPUT "${pch_filename}"
+                           COMMAND rm -f ${pch_filename}
+                           COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} ${cxx_flags}
+			               DEPENDS "${pch_header}")
+
+        add_custom_target( "${target_name}_precomp" ALL DEPENDS "${pch_filename}")
+
+        add_dependencies(${target_name} ${target_name}_precomp)
     ENDIF()
+
+    ENDIF(${BUILD_USE_PRECOMPILED_HEADERS})
+
 endfunction()
 
 # ---------------------------------------------------------------------------

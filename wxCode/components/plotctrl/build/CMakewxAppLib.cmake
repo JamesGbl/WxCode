@@ -196,7 +196,7 @@ endif()
 # Set if we are building DLLs, MSWindows and shared libraries
 set(BUILDING_DLLS FALSE)
 
-if (${BUILD_SHARED_LIBS}) # CMake has problems with "if ("ON" AND "TRUE")
+if (${BUILD_SHARED_LIBS}) # CMake has problems with "if ("ON" AND "TRUE")"
     if (${WIN32})
         set(BUILDING_DLLS TRUE)
     endif()
@@ -231,6 +231,16 @@ if (NOT DEFINED CMAKE_INSTALL_RPATH_USE_LINK_PATH)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
+# ----------------------------------------------------------------------------
+# Turn on verbose Makefiles so Eclipse can discover -I include paths for
+# external libs instead of defaulting to /usr/include.
+# Also works for MSVC so you don't have to look at the BuildLog file.
+
+if (NOT DEFINED BUILD_VERBOSELY)
+    set(BUILD_VERBOSELY FALSE CACHE BOOL "Verbose compiler build output (enable if using Eclipse to help it discover paths)" )
+endif()
+
+set( CMAKE_VERBOSE_MAKEFILE ${BUILD_VERBOSELY} CACHE BOOL "Verbose build output (set by BUILD_VERBOSELY)" FORCE)
 
 # ---------------------------------------------------------------------------
 # Compiler specific settings
@@ -284,20 +294,7 @@ elseif (UNIX) # elseif (CMAKE_BUILD_TOOL MATCHES "(gmake)")
         add_definitions( -fPIC )
         set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} -fPIC)
     endif()
-
-    # -----------------------------------------------------------------------
-    # Turn on verbose Makefiles so Eclipse can discover -I include paths for
-    # vendor libs instead of defaulting to /usr/include
-    #
-
-    if (NOT DEFINED BUILD_VERBOSELY_GCC)
-        set(BUILD_VERBOSELY_GCC FALSE CACHE BOOL "Verbose build output for gcc compiler" )
-    endif()
-
-    set( CMAKE_VERBOSE_MAKEFILE ${BUILD_VERBOSELY_GCC} CACHE BOOL "Verbose build output (set by BUILD_VERBOSELY_GCC)" FORCE)
-
 endif()
-
 
 # ---------------------------------------------------------------------------
 # Print out the basic settings

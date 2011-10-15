@@ -51,7 +51,9 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetval.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/srtobjar.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/wx24defs.h
+        ${wxSheet_ROOT_DIR}/src/precomp.h
     SOURCES
+        ${wxSheet_ROOT_DIR}/src/precomp.cpp
         ${wxSheet_ROOT_DIR}/src/sheet.cpp
         ${wxSheet_ROOT_DIR}/src/sheetatr.cpp
         ${wxSheet_ROOT_DIR}/src/sheetedg.cpp
@@ -61,7 +63,6 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/src/sheetspt.cpp
         ${wxSheet_ROOT_DIR}/src/sheettbl.cpp
         ${wxSheet_ROOT_DIR}/src/sheetval.cpp
-
     PRECOMPILED_INCLUDE precomp.h
     PRECOMPILED_HEADER  ${wxSheet_ROOT_DIR}/src/precomp.h
     PRECOMPILED_SOURCE  ${wxSheet_ROOT_DIR}/src/precomp.cpp
