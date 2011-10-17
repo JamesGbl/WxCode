@@ -12,6 +12,8 @@
     #pragma implementation "plotprnt.h"
 #endif
 
+#include "precomp.h"
+
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 

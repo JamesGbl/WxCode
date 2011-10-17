@@ -347,8 +347,6 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
         message(STATUS "*           Please set wxWidgets_ROOT_DIR")
     endif()
 
-    set(DONT_RUN FALSE)
-
     # wxWidgets has stc lib in < 2.9 and stc + scintilla lib in >= 2.9
     if (wxWidgets_VERSION VERSION_LESS 2.9)
         # remove these >= 2.9 libs, they should if #ifdefed it in the code
@@ -431,7 +429,7 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
         # Set the values from the wxWidgets_CONFIG_EXECUTABLE
         if (EXISTS ${wxWidgets_CONFIG_EXECUTABLE})
             execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE wxWidgets_ROOT_DIR)
-            string(STRIP "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR) 
+            string(STRIP "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR)
         endif()
     else()
         # Do not exit here since they may want to do something else
@@ -478,135 +476,3 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     unset(wx_comp_lib_name)
 
 endmacro( FIND_WXWIDGETS )
-
-
-# ---------------------------------------------------------------------------
-# Dump all variables in CMake that we can possibly find
-# It can be very confusing to users when something goes wrong and maybe this will help.
-# ---------------------------------------------------------------------------
-
-macro(PRINT_ALL_CMAKE_VARIABLES)
-
-    message( STATUS " ")
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS "@- Begin printing internal CMake variables")
-    message( STATUS "@----------------------------------------------------------------------------")
-
-    set(CMAKE_ALL_VARIABLES_LIST)
-    set(CMAKE_ALL_CACHE_VARIABLES_LIST)
-
-    get_cmake_property(props VARIABLES)
-    foreach(var ${props})
-        #message( STATUS "@ VARIABLES: ${var} = \"${${var}}\"" )
-        set(CMAKE_ALL_VARIABLES_LIST ${CMAKE_ALL_VARIABLES_LIST} "${var}")
-    endforeach()
-
-    get_cmake_property(props CACHE_VARIABLES)
-    foreach(var ${props})
-        #message( STATUS "@ CACHE_VARIABLES: ${var} = \"${${var}}\"" )
-        set(CMAKE_ALL_VARIABLES_LIST       ${CMAKE_ALL_VARIABLES_LIST}       "${var}")
-        set(CMAKE_ALL_CACHE_VARIABLES_LIST ${CMAKE_ALL_CACHE_VARIABLES_LIST} "${var}")
-    endforeach()
-
-    # merge the VARIABLES and CACHE_VARIABLES since they're mostly the same
-    list(SORT CMAKE_ALL_VARIABLES_LIST)
-    list(REMOVE_DUPLICATES CMAKE_ALL_VARIABLES_LIST)
-    foreach(var ${CMAKE_ALL_VARIABLES_LIST})
-        list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} IS_CACHED)
-        if (IS_CACHED GREATER "-1")
-            message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
-        else()
-            message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
-        endif()
-    endforeach()
-
-    get_cmake_property(props COMMANDS)
-    foreach(var ${props})
-        message( STATUS "@ COMMANDS: ${var} = \"${${var}}\"" )
-    endforeach()
-
-    get_cmake_property(props MACROS)
-    foreach(var ${props})
-        message( STATUS "@ MACROS: ${var} = \"${${var}}\"" )
-    endforeach()
-
-    get_cmake_property(props COMPONENTS)
-    foreach(var ${props})
-        message( STATUS "@ COMPONENTS: ${var} = \"${${var}}\"" )
-    endforeach()
-
-
-    # Unset the variables for the PRINT_NEW_CMAKE_VARIABLES() macro
-    set(var)
-    set(props)
-    set(IS_CACHED)
-
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS "@- End printing internal CMake variables")
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS " ")
-
-endmacro()
-
-# ---------------------------------------------------------------------------
-# This simply does a diff between the last call to PRINT_ALL_CMAKE_VARIABLES
-# and this call
-
-macro( PRINT_NEW_CMAKE_VARIABLES )
-
-    message( STATUS " ")
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS "@- Begin printing NEW internal CMake variables")
-    message( STATUS "@----------------------------------------------------------------------------")
-
-    set(CMAKE_ALL_VARIABLES_LIST2)
-    set(CMAKE_ALL_CACHE_VARIABLES_LIST2)
-
-    get_cmake_property(props VARIABLES)
-    foreach(var ${props})
-        set(CMAKE_ALL_VARIABLES_LIST2 ${CMAKE_ALL_VARIABLES_LIST2} "${var}")
-    endforeach()
-
-    get_cmake_property(props CACHE_VARIABLES)
-    foreach(var ${props})
-        set(CMAKE_ALL_VARIABLES_LIST2       ${CMAKE_ALL_VARIABLES_LIST2}       "${var}")
-        set(CMAKE_ALL_CACHE_VARIABLES_LIST2 ${CMAKE_ALL_CACHE_VARIABLES_LIST2} "${var}")
-    endforeach()
-
-    # merge the VARIABLES and CACHE_VARIABLES since they're mostly the same
-    list(SORT CMAKE_ALL_VARIABLES_LIST2)
-    list(REMOVE_DUPLICATES CMAKE_ALL_VARIABLES_LIST2)
-    foreach(var ${CMAKE_ALL_VARIABLES_LIST2})
-        list(FIND CMAKE_ALL_VARIABLES_LIST ${var} IS_NEW)
-        if (IS_NEW EQUAL "-1")
-            list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} IS_CACHED)
-            if (IS_NEW GREATER "-1")
-                message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
-            else()
-                message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
-            endif()
-        endif()
-    endforeach()
-
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS "@- End printing NEW internal CMake variables")
-    message( STATUS "@----------------------------------------------------------------------------")
-    message( STATUS " ")
-
-endmacro()
-
-
-# ---------------------------------------------------------------------------
-
-if ( NOT CMAKE_DEBUG_VARIABLES )
-    set( CMAKE_DEBUG_VARIABLES FALSE )
-endif()
-
-set( CMAKE_DEBUG_VARIABLES ${CMAKE_DEBUG_VARIABLES} CACHE BOOL "Print all CMake internal variables" FORCE)
-
-if ( CMAKE_DEBUG_VARIABLES )
-    PRINT_ALL_CMAKE_VARIABLES()
-    set(AAA "5")
-    PRINT_NEW_CMAKE_VARIABLES()
-endif()
-

@@ -46,14 +46,20 @@ ADD_LIBRARY_FULL(wxVidCapLib
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_v4l.h
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_vfw.h
         ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcapwin.h
+        ${wxVidCap_ROOT_DIR}/src/precomp.h
+
+        ${wxVidCap_ROOT_DIR}/src/vcapconv.h
+        ${wxVidCap_ROOT_DIR}/src/vcapdlgs.h
     SOURCES
+        ${wxVidCap_ROOT_DIR}/src/precomp.cpp
         ${wxVidCap_ROOT_DIR}/src/vcap_v4l.cpp
         ${wxVidCap_ROOT_DIR}/src/vcap_vfw.cpp
         ${wxVidCap_ROOT_DIR}/src/vcapconv.cpp
-        ${wxVidCap_ROOT_DIR}/src/vcapconv.h
         ${wxVidCap_ROOT_DIR}/src/vcapdlgs.cpp
-        ${wxVidCap_ROOT_DIR}/src/vcapdlgs.h
         ${wxVidCap_ROOT_DIR}/src/vcapwin.cpp
+    PRECOMPILED_INCLUDE precomp.h
+    PRECOMPILED_HEADER  ${wxVidCap_ROOT_DIR}/src/precomp.h
+    PRECOMPILED_SOURCE  ${wxVidCap_ROOT_DIR}/src/precomp.cpp
     LINK_LIBRARIES
         ${wxVidCapLib_EXTRA_LIBS}
         ${wxWidgets_LIBRARIES}

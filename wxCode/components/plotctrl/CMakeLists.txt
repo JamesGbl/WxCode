@@ -89,13 +89,16 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotfunc.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotmark.h
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotprnt.h
-    SOURCES
-        ${wxPlotCtrl_ROOT_DIR}/src/fourier.c
-        ${wxPlotCtrl_ROOT_DIR}/src/fparser.cpp
+
         ${wxPlotCtrl_ROOT_DIR}/src/fparser.hh
         ${wxPlotCtrl_ROOT_DIR}/src/fpconfig.hh
-        ${wxPlotCtrl_ROOT_DIR}/src/fpoptimizer.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/fptypes.hh
+        ${wxPlotCtrl_ROOT_DIR}/src/precomp.h
+    SOURCES
+        ${wxPlotCtrl_ROOT_DIR}/src/precomp.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/fourier.c
+        ${wxPlotCtrl_ROOT_DIR}/src/fparser.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/fpoptimizer.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/lm_lsqr.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotctrl.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotcurv.cpp
@@ -104,6 +107,22 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxPlotCtrl_ROOT_DIR}/src/plotfunc.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotmark.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp
+    PRECOMPILED_INCLUDE precomp.h
+    PRECOMPILED_HEADER  ${wxPlotCtrl_ROOT_DIR}/src/precomp.h
+    PRECOMPILED_SOURCE  ${wxPlotCtrl_ROOT_DIR}/src/precomp.cpp
+    PRECOMPILED_SOURCES
+        ${wxPlotCtrl_ROOT_DIR}/src/precomp.cpp
+        #${wxPlotCtrl_ROOT_DIR}/src/fourier.c
+        ${wxPlotCtrl_ROOT_DIR}/src/fparser.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/fpoptimizer.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/lm_lsqr.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotctrl.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotcurv.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotdata.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotdraw.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotfunc.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotmark.cpp
+        ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp        
     LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}

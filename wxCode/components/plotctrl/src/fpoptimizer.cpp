@@ -13,6 +13,8 @@
  block (except the #include "fpconfig.hh" line).
 */
 
+#include "precomp.h"
+
 #include "wx/defs.h" // get __VISUALC__ defined
 
 #if defined(__VISUALC__)

@@ -11,6 +11,8 @@
     #pragma hdrstop
 #endif
 
+#include "precomp.h"
+
 #include "vcapconv.h"
 
 void Y8_to_RGB24(void *src, void *dst, int width, int height)
