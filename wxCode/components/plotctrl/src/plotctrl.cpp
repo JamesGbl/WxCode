@@ -1061,9 +1061,9 @@ void wxPlotCtrl::CreateKeyString()
     for (n = 0; n < count; n++)
     {
         wxString key;
-        if (GetDataCurve(n))
+        if (GetDataCurve(n) != NULL)
             key = GetDataCurve(n)->GetFilename();
-        else if (GetFunctionCurve(n))
+        else if (GetFunctionCurve(n) != NULL)
             key = GetFunctionCurve(n)->GetFunctionString();
         else
             key.Printf(wxT("Curve %d"), n);

@@ -66,7 +66,6 @@ ADD_LIBRARY_FULL(wxSheetLib
     PRECOMPILED_INCLUDE precomp.h
     PRECOMPILED_HEADER  ${wxSheet_ROOT_DIR}/src/precomp.h
     PRECOMPILED_SOURCE  ${wxSheet_ROOT_DIR}/src/precomp.cpp
-
     LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_SHEET"

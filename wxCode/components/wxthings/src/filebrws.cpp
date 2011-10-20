@@ -6,6 +6,8 @@
 // License:     wxWidgets
 /////////////////////////////////////////////////////////////////////////////
 
+#include "precomp.h"
+
 #include "wx/things/thingdef.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

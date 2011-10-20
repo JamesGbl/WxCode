@@ -333,7 +333,7 @@ public:
     // Is there any selection at all
     bool HasSelection() const { return m_blocks.GetCount() != 0; }
     // Get the number of different selections
-    int  GetCount() const     { return m_blocks.GetCount(); }
+    size_t GetCount() const   { return m_blocks.GetCount(); }
     // Has the selection been minimized, always is unless calling
     //   SelectBlock(... combine_now = false ...)
     bool IsMinimzed() const   { return m_minimized; }

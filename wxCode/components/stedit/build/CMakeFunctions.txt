@@ -2,6 +2,9 @@
 # This file contains a number of CMake functions/macros to make life easier.
 # It can be called multiple times, but it will only be read the first time.
 #
+# Author:  John Labenski
+# Created: Oct 15, 2011
+#
 # HAS_WILDCARD()     - checks if input string has * or ? in it
 # ADD_FILE_TO_LIST() - adds a file to a list after expanding wildcards and getting path
 # GET_OBJECT_FILES() - returns a list of object files CMake would create for a list of source files.
@@ -23,7 +26,7 @@
 # ADD_TARGET_INCLUDE_PATHS() - Easily add multiple include paths to a single target.
 # APPEND_TARGET_PROPERTIES() - Append instead of SET_TARGET_PROPERTIES()
 # APPEND_SOURCE_FILES_PROPERTIES() - Append instead of SET_SOURCE_FILES_PROPERTIES()
-# SET_PRECOMPILED_HEADER() - Set precomp header for a library or executable target.
+# TARGET_PRECOMPILED_HEADER() - Set precomp header for a library or executable target.
 # ADD_DOXYGEN() - Add a target for building Doxygen docs.
 #
 # GET_ALL_CMAKE_VARIABLES()   - Get all CMake vars into a list variable
@@ -47,20 +50,6 @@ endif()
 set_property(GLOBAL PROPERTY CMAKEFUNCTIONS_RUN_ONCE TRUE)
 
 # ===========================================================================
-# Find cppcheck for ADD_STATIC_ANALYSIS_TEST() function
-# ===========================================================================
-
-# Find the cppcheck program, the var ${cppcheck} will be either the path or "cppcheck-NOTFOUND"
-FIND_PROGRAM( cppcheck "cppcheck" )
-
-IF ( ${cppcheck} STREQUAL "cppcheck-NOTFOUND" )
-    MESSAGE( STATUS "* WARNING: cppcheck NOT found, NOT generating ADD_STATIC_ANALYSIS_TEST() tests" )
-ELSE()
-    MESSAGE( STATUS "* cppcheck found, generating ADD_STATIC_ANALYSIS_TEST() tests" )
-ENDIF()
-
-
-# ===========================================================================
 # Helper functions
 # ===========================================================================
 
@@ -68,7 +57,7 @@ ENDIF()
 # HAS_WILDCARD( has_wild file_name )
 #
 # Set variable has_wild to TRUE if the file_name contains either '*' or '?'
-# Usage : HAS_WILDCARD(has_wild "*.txt") ... if (${has_wild}) ...
+# Usage : HAS_WILDCARD(has_wild "*.txt") ... if (has_wild) ...
 # ---------------------------------------------------------------------------
 
 FUNCTION( HAS_WILDCARD has_wild file_name )
@@ -117,7 +106,7 @@ FUNCTION( ADD_FILE_TO_LIST file_list filename )
             # Cleanup the path
             file( GLOB filenames ${filename} )
             set(${file_list} ${${file_list}} ${filenames} PARENT_SCOPE)
-        elseif (${_ALLOW_MISSING})
+        elseif (_ALLOW_MISSING)
             # Just add the file which doesn't exist right now
             set(${file_list} ${${file_list}} ${f} PARENT_SCOPE)
         else()
@@ -297,11 +286,22 @@ ENDFUNCTION()
 # ---------------------------------------------------------------------------
 
 FUNCTION( ADD_STATIC_ANALYSIS_TEST name )
-    # Get the last part of the directory we're currently in
-    STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
+    IF ( "${cppcheck}" STREQUAL "")
+        # Find the program cppcheck; ${cppcheck} will be either the exe path or "cppcheck-NOTFOUND"
+        FIND_PROGRAM( cppcheck "cppcheck" )
+
+        IF ( "${cppcheck}" STREQUAL "cppcheck-NOTFOUND" )
+            MESSAGE( STATUS "* WARNING: cppcheck NOT found, NOT generating ADD_STATIC_ANALYSIS_TEST() tests" )
+        ELSE()
+            MESSAGE( STATUS "* cppcheck found, generating ADD_STATIC_ANALYSIS_TEST() tests" )
+        ENDIF()
+    ENDIF()
 
     # Do not add the test if cppcheck is not found
-    IF ( NOT ${cppcheck} STREQUAL "cppcheck-NOTFOUND" )
+    IF ( NOT "${cppcheck}" STREQUAL "cppcheck-NOTFOUND" )
+        # Get the last part of the directory we're currently in
+        STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
+
         LIST(FIND ADD_STATIC_ANALYSIS_TEST_DIR_LIST ${PROJ_DIR_TEMP} PROJ_DIR_IDX_TEMP)
 
         IF ("${PROJ_DIR_IDX_TEMP}" GREATER "-1")
@@ -330,6 +330,7 @@ ENDFUNCTION()
 #      [PRECOMPILED_HEADER]  include/foo/precomp.h # Path to the precomp header file.
 #      [PRECOMPILED_SOURCE]  src/precomp.cpp       # Path to the precomp cpp file that only includes the header
 #      [PRECOMPILED_SOURCES] src/a.cpp             # Full path to cpp files that include the precomp header.
+#      [PRECOMPILED_FORCED]                        # Force including the PRECOMPILED_INCLUDE by the compiler.
 #       LINK_LIBRARIES                             # Replaces TARGET_LINK_LIBRARIES(target_name lib1 lib2 ...)
 #           gtest ${Boost_LIBRARIES}
 #       PROPERTIES FOLDER "Foo/Bar"                # replaces SET_TARGET_PROPERTIES(target_name PROPERTIES ...)
@@ -360,6 +361,7 @@ function( ADD_LIBRARY_FULL target_name )
     set(_PRECOMPILED_SOURCES)      # list of source file that use the precomp header, optional.
                                    # Defaults to SOURCES, use this if not ALL SOURCES have
                                    # #include "PRECOMPILED_INCLUDE" since MSVC will give an error for missing include.
+    set(_PRECOMPILED_FORCED)       # Force including the PRECOMPILED_INCLUDE
     set(_LINK_LIBRARIES)           # TARGET_LINK_LIBRARIES's list of libraries to link to
     set(_PROPERTIES)               # SET_TARGET_PROPERTIES's list of PROPERTIES
 
@@ -396,6 +398,8 @@ function( ADD_LIBRARY_FULL target_name )
             set(cmd                  "PRECOMPILED_SOURCE")
         elseif ("${arg}" STREQUAL    "PRECOMPILED_SOURCES")
             set(cmd                  "PRECOMPILED_SOURCES")
+        elseif ("${arg}" STREQUAL    "PRECOMPILED_FORCED")
+            set(_PRECOMPILED_FORCED  "FORCE_INCLUDE")
         elseif ("${arg}" STREQUAL    "LINK_LIBRARIES")
             set(cmd                  "LINK_LIBRARIES")
         elseif ("${arg}" STREQUAL    "PROPERTIES")
@@ -404,7 +408,7 @@ function( ADD_LIBRARY_FULL target_name )
             set(read_args TRUE) # hopefully a file
         endif()
 
-        if (${read_args})
+        if (read_args)
             if ("${cmd}" STREQUAL "HEADERS")
                 set(_HEADERS ${_HEADERS} ${arg})
                 ADD_FILE_TO_LIST(HEADER_FILES ${arg} ${_ALLOW_MISSING_FILES})
@@ -445,6 +449,12 @@ function( ADD_LIBRARY_FULL target_name )
         MESSAGE(WARNING "NO files to compile for ${target_name} in ${CMAKE_CURRENT_SOURCE_DIR}!\n Input headers: '${_HEADERS}' and sources: '${_SOURCES}'")
     endif()
 
+    if (NOT "${_PRECOMPILED_INCLUDE}" STREQUAL "")
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include") # find .gch file before .h file
+        endif()
+    endif()
+
     if (_CUDA)
         CUDA_ADD_LIBRARY(${target_name} ${_SHARED} ${_STATIC} ${_MODULE} ${_EXCLUDE_FROM_ALL} ${HEADER_FILES} ${SOURCE_FILES})
     else()
@@ -457,11 +467,17 @@ function( ADD_LIBRARY_FULL target_name )
     endif()
 
     if (NOT "${_PRECOMPILED_INCLUDE}" STREQUAL "")
-        if (NOT "${PRECOMPILED_SOURCE_FILES}" STREQUAL "")
-            SET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_INCLUDE} ${_PRECOMPILED_HEADER} ${_PRECOMPILED_SOURCE} PRECOMPILED_SOURCE_FILES)
+        if ("${PRECOMPILED_SOURCE_FILES}" STREQUAL "")
+            set(PRECOMP_SRCS ${SOURCE_FILES})
         else()
-            SET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_INCLUDE} ${_PRECOMPILED_HEADER} ${_PRECOMPILED_SOURCE} SOURCE_FILES)
+            set(PRECOMP_SRCS ${PRECOMPILED_SOURCE_FILES})
         endif()
+
+        TARGET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_FORCED}
+                                  PCH_INCLUDE "${_PRECOMPILED_INCLUDE}"
+                                  PCH_HEADER  "${_PRECOMPILED_HEADER}"
+                                  PCH_SOURCE  "${_PRECOMPILED_SOURCE}"
+                                  SOURCES      ${PRECOMP_SRCS})
     endif()
 
     # Set the install includes to use same dir structure as the source directories
@@ -489,6 +505,7 @@ endfunction()
 #      [PRECOMPILED_HEADER]  include/foo/precomp.h # Path to the precomp header file.
 #      [PRECOMPILED_SOURCE]  src/precomp.cpp       # Path to the precomp cpp file that only includes the header
 #      [PRECOMPILED_SOURCES] src/a.cpp             # Full path to cpp files that include the precomp header.
+#      [PRECOMPILED_FORCED]                        # Force including the PRECOMPILED_INCLUDE by the compiler.
 #       LINK_LIBRARIES                             # Replaces TARGET_LINK_LIBRARIES(target_name lib1 lib2 ...)
 #           gtest ${Boost_LIBRARIES}
 #       PROPERTIES FOLDER "Foo/Bar"                # replaces SET_TARGET_PROPERTIES(target_name PROPERTIES ...)
@@ -517,6 +534,7 @@ function( ADD_EXECUTABLE_FULL target_name )
     set(_PRECOMPILED_SOURCES)      # list of source file that use the precomp header, optional.
                                    # Defaults to SOURCES, use this if not ALL SOURCES have
                                    # #include "PRECOMPILED_INCLUDE" since MSVC will give an error for missing include.
+    set(_PRECOMPILED_FORCED)       # Force including the PRECOMPILED_INCLUDE
     set(_LINK_LIBRARIES)           # TARGET_LINK_LIBRARIES's list of libraries to link to
     set(_PROPERTIES)               # SET_TARGET_PROPERTIES's list of PROPERTIES
 
@@ -549,6 +567,8 @@ function( ADD_EXECUTABLE_FULL target_name )
             set(cmd                  "PRECOMPILED_SOURCE")
         elseif ("${arg}" STREQUAL    "PRECOMPILED_SOURCES")
             set(cmd                  "PRECOMPILED_SOURCES")
+        elseif ("${arg}" STREQUAL    "PRECOMPILED_FORCED")
+            set(_PRECOMPILED_FORCED  "FORCE_INCLUDE")
         elseif ("${arg}" STREQUAL    "LINK_LIBRARIES")
             set(cmd                  "LINK_LIBRARIES")
         elseif ("${arg}" STREQUAL    "PROPERTIES")
@@ -557,7 +577,7 @@ function( ADD_EXECUTABLE_FULL target_name )
             set(read_args TRUE) # hopefully a file
         endif()
 
-        if (${read_args})
+        if (read_args)
             if ("${cmd}" STREQUAL "HEADERS")
                 set(_HEADERS ${_HEADERS} ${arg})
                 ADD_FILE_TO_LIST(HEADER_FILES ${arg} ${_ALLOW_MISSING_FILES})
@@ -598,6 +618,12 @@ function( ADD_EXECUTABLE_FULL target_name )
         MESSAGE(WARNING "NO files to compile for ${target_name} in ${CMAKE_CURRENT_SOURCE_DIR}!\n Input headers: '${_HEADERS}' and sources: '${_SOURCES}'")
     endif()
 
+    if (NOT "${_PRECOMPILED_INCLUDE}" STREQUAL "")
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include") # find .gch file before .h file
+        endif()
+    endif()
+
     ADD_EXECUTABLE(${target_name} ${_WIN32} ${_MACOSX_BUNDLE} ${_EXCLUDE_FROM_ALL} ${HEADER_FILES} ${SOURCE_FILES})
     TARGET_LINK_LIBRARIES(${target_name} ${_LINK_LIBRARIES})
 
@@ -606,11 +632,17 @@ function( ADD_EXECUTABLE_FULL target_name )
     endif()
 
     if (NOT "${_PRECOMPILED_INCLUDE}" STREQUAL "")
-        if (NOT "${PRECOMPILED_SOURCE_FILES}" STREQUAL "")
-            SET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_INCLUDE} ${_PRECOMPILED_HEADER} ${_PRECOMPILED_SOURCE} PRECOMPILED_SOURCE_FILES)
+        if ("${PRECOMPILED_SOURCE_FILES}" STREQUAL "")
+            set(PRECOMP_SRCS ${SOURCE_FILES})
         else()
-            SET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_INCLUDE} ${_PRECOMPILED_HEADER} ${_PRECOMPILED_SOURCE} SOURCE_FILES)
+            set(PRECOMP_SRCS ${PRECOMPILED_SOURCE_FILES})
         endif()
+
+        TARGET_PRECOMPILED_HEADER(${target_name} ${_PRECOMPILED_FORCED}
+                                  PCH_INCLUDE "${_PRECOMPILED_INCLUDE}"
+                                  PCH_HEADER  "${_PRECOMPILED_HEADER}"
+                                  PCH_SOURCE  "${_PRECOMPILED_SOURCE}"
+                                  SOURCES      ${PRECOMP_SRCS})
     endif()
 
     INSTALL(TARGETS ${target_name}
@@ -669,7 +701,7 @@ function(APPEND_TARGET_PROPERTIES)
 
     FOREACH(arg ${ARGN})
 
-        if (${PROPERTIES})
+        if (PROPERTIES)
 
             # We get the old prop value, append the new and apply it to each target
 
@@ -679,7 +711,7 @@ function(APPEND_TARGET_PROPERTIES)
                 foreach(t ${TARGETS})
                     GET_TARGET_PROPERTY(old_value ${t} ${PROP_NAME})
                     # If no old value ("old_value-NOTFOUND") then set the variable to empty string
-                    IF (NOT ${old_value})
+                    IF (NOT old_value)
                         SET(old_value "")
                     ENDIF()
 
@@ -689,14 +721,14 @@ function(APPEND_TARGET_PROPERTIES)
                 set(PROP_NAME "")
             endif()
 
-        elseif (${arg} STREQUAL "PROPERTIES")
+        elseif ("${arg}" STREQUAL "PROPERTIES")
             set(PROPERTIES TRUE)
         else()
             set(TARGETS ${TARGETS} ${arg})
         endif()
     ENDFOREACH(arg)
 
-    if (NOT ${PROPERTIES})
+    if (NOT PROPERTIES)
         message(FATAL_ERROR "Missing PROPERTIES directive in APPEND_TARGET_PROPERTY()")
     endif()
     if (NOT "${PROP_NAME}" STREQUAL "")
@@ -719,7 +751,7 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
 
     FOREACH(arg ${ARGN})
 
-        if (${PROPERTIES})
+        if (PROPERTIES)
 
             # We get the old prop value, append the new and apply it to each target
 
@@ -729,7 +761,7 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
                 foreach(f ${FILES})
                     get_source_file_property(old_value ${f} ${PROP_NAME})
                     # If no old value, it equals "NOTFOUND"
-                    IF (NOT ${old_value})
+                    IF (NOT old_value)
                         SET(old_value "")
                     ENDIF()
 
@@ -739,14 +771,14 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
                 set(PROP_NAME "")
             endif()
 
-        elseif (${arg} STREQUAL "PROPERTIES")
+        elseif ("${arg}" STREQUAL "PROPERTIES")
             set(PROPERTIES TRUE)
         else()
             set(FILES ${FILES} ${arg})
         endif()
     ENDFOREACH(arg)
 
-    if (NOT ${PROPERTIES})
+    if (NOT PROPERTIES)
         message(FATAL_ERROR "Missing PROPERTIES directive in APPEND_SOURCE_FILES_PROPERTIES()")
     endif()
     if (NOT "${PROP_NAME}" STREQUAL "")
@@ -755,87 +787,152 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
 endfunction()
 
 # ---------------------------------------------------------------------------
-# SET_PRECOMPILED_HEADER() function to add a precomp header to a target.
-# pch_include - Must be the identical path as used in the #include "pch_include"
-# pch_header  - Full path to the #include "pch_include"
-# pch_source  - Source file that only includes the pch_include.
-# sources     - List of source files including the pch_source file.
+# TARGET_PRECOMPILED_HEADER() function to add a precomp header to a target.
+#
+# Note that MSVC will error for SOURCES that do not have the line
+#   #include "PCH_INCLUDE" (where PCH_INCLUDE is identical to what's passed to this function)
+#   See FORCE_INCLUDE flag for a workaround.
+#
+# FORCE_INCLUDE flag may be used to tell the compiler to include the precomp header
+#               in cases where it is not explicitly included in the code.
+#               This can have great benefits in GCC and may be required in MSVC.
 #
 # Usage :
-#  set(MYPRJ_SOURCES src/a.cpp src/b.cpp)
-#  SET_PRECOMPILED_HEADER( myproj myproj/precomp.h include/myproj/precomp.h src/precomp.cpp MYPRJ_SOURCES )
+#  TARGET_PRECOMPILED_HEADER( myproj [FORCE_INCLUDE]
+#      PCH_INCLUDE myproj/precomp.h         # The path to precomp header as used exactly in #include "foo/precomp.h"
+#      PCH_HEADER  include/myproj/precomp.h # Path to the precomp header file on disk.
+#      PCH_SOURCE  src/precomp.cpp          # Path to the precomp cpp file that only includes the header
+#      SOURCES src/a.cpp src/b.cpp )        # Full path to cpp files that include the precomp header.
 # ---------------------------------------------------------------------------
 
-function( SET_PRECOMPILED_HEADER target_name pch_include pch_header pch_source sources_)
+function( TARGET_PRECOMPILED_HEADER target_name )
 
-    # Make this shown to people to help debug if it actually works or not.
-    # GCC is a little tricky to get right since you have to compile it exactly the same
+    # Allow people to en/disable precomp headers to test if it actually works or not.
+    # GCC is a little tricky to get right since you have to compile it exactly the same flags
     # and CMake bizarrely hides flags passed to add_definitions() not starting with -D.
+    # There will be no sign that the precomp header is not used other than a longer compilation time.
 
-    # Compilation times: GCC use $time make;
-    #                    MSVC 2008 Tools->Options->Projects and Solutions->VC++ Project Settings->Build Timing true
+    # How to measure compilation times:
+    #   GCC use $time make;
+    #   MSVC 2008 Tools->Options->Projects and Solutions->VC++ Project Settings->Build Timing [True]
 
     if ("${BUILD_USE_PRECOMPILED_HEADERS}" STREQUAL "")
         set(BUILD_USE_PRECOMPILED_HEADERS TRUE)
     endif()
     set(BUILD_USE_PRECOMPILED_HEADERS ${BUILD_USE_PRECOMPILED_HEADERS} CACHE BOOL "Enable the use of precompiled headers?" FORCE)
 
-    SET(sources ${${sources_}})
+    IF (NOT BUILD_USE_PRECOMPILED_HEADERS)
+        RETURN()
+    ENDIF()
 
-    IF(${BUILD_USE_PRECOMPILED_HEADERS})
+    # -----------------------------------------------------------------------
+
+    set(_FORCE_INCLUDE)      # Tell the compiler to #include this file
+    set(_PCH_INCLUDE)        # The #include "PCH_INCLUDE"
+    set(_PCH_HEADER)         # Path to the PCH_INCLUDE
+    set(_PCH_SOURCE)         # Source file that include PCH_INCLUDE
+    set(_SOURCES)            # All source files that include PCH_INCLUDE
+
+    set(cmd)                 # current directive we're processing
+    set(SOURCE_FILES)
+
+    FOREACH(arg ${ARGN})
+        set(read_args FALSE) # TRUE if we didn't find a keyword
+
+        if     ("${arg}" STREQUAL    "FORCE_INCLUDE")
+            set(_FORCE_INCLUDE       "FORCE_INCLUDE")
+        elseif ("${arg}" STREQUAL    "PCH_INCLUDE")
+            set(cmd                  "PCH_INCLUDE")
+        elseif ("${arg}" STREQUAL    "PCH_HEADER")
+            set(cmd                  "PCH_HEADER")
+        elseif ("${arg}" STREQUAL    "PCH_SOURCE")
+            set(cmd                  "PCH_SOURCE")
+        elseif ("${arg}" STREQUAL    "SOURCES")
+            set(cmd                  "SOURCES")
+        else()
+            set(read_args TRUE) # hopefully a file
+        endif()
+
+        if (read_args)
+            if ("${cmd}" STREQUAL "PCH_INCLUDE")
+                set(_PCH_INCLUDE ${arg})
+            elseif ("${cmd}" STREQUAL "PCH_HEADER")
+                #set(_PCH_HEADER ${arg})
+                ADD_FILE_TO_LIST(_PCH_HEADER ${arg})
+            elseif ("${cmd}" STREQUAL "PCH_SOURCE")
+                #set(_PCH_SOURCE ${arg})
+                ADD_FILE_TO_LIST(_PCH_SOURCE ${arg})
+            elseif ("${cmd}" STREQUAL "SOURCES")
+                set(_SOURCES ${_SOURCES} ${arg})
+                ADD_FILE_TO_LIST(SOURCE_FILES ${arg})
+            else()
+                MESSAGE(FATAL_ERROR "Unknown directive '${cmd}' in TARGET_PRECOMPILED_HEADER")
+            endif()
+        endif()
+    ENDFOREACH(arg)
+
 
     # For precompiled headers in XCode we can set this property, ignored for other compilers.
     SET_TARGET_PROPERTIES(${target_name} PROPERTIES XCODE_ATTRIBUTE_GCC_PRECOMPILE_PREFIX_HEADER YES)
-    SET_TARGET_PROPERTIES(${target_name} PROPERTIES XCODE_ATTRIBUTE_GCC_PREFIX_HEADER "${pch_include}")
+    SET_TARGET_PROPERTIES(${target_name} PROPERTIES XCODE_ATTRIBUTE_GCC_PREFIX_HEADER "${_PCH_INCLUDE}")
 
     IF(MSVC)
-        get_filename_component(precomp_basename ${pch_header} NAME_WE)
-        set(pch_filename "${CMAKE_CURRENT_BINARY_DIR}/$(IntDir)/${precomp_basename}.pch")
+        get_filename_component(PCH_BASENAME ${_PCH_HEADER} NAME_WE)
+        set(PCH_BINARY "${CMAKE_CURRENT_BINARY_DIR}/$(IntDir)/${PCH_BASENAME}.pch")
 
         # need to delete this file for clean too, otherwise we can get errors
         # about mismatched pch and pdb files.
-        set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${pch_filename})
+        set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${PCH_BINARY})
 
-        file(TO_CMAKE_PATH "${pch_source}" native_pch_source)
+        file(TO_CMAKE_PATH "${_PCH_SOURCE}" native_pch_source)
+
+        if (_FORCE_INCLUDE)
+            set(FORCE_INCLUDE_FLAG "/FI\"${_PCH_INCLUDE}\"")
+        endif()
 
         set(found_pch FALSE)
 
-        foreach( f ${sources} )
+        foreach ( f ${SOURCE_FILES} )
             file(TO_CMAKE_PATH "${f}" native_f)
 
             if ("${native_pch_source}" STREQUAL "${native_f}")
                 set(found_pch TRUE)
 
-                APPEND_SOURCE_FILES_PROPERTIES(${pch_source} PROPERTIES
-                                               COMPILE_FLAGS "/Yc\"${pch_include}\" /Fp\"${pch_filename}\""
-                                               OBJECT_OUTPUTS "${pch_filename}")
+                APPEND_SOURCE_FILES_PROPERTIES(${_PCH_SOURCE} PROPERTIES
+                                               COMPILE_FLAGS "/Yc\"${_PCH_INCLUDE}\" /Fp\"${PCH_BINARY}\""
+                                               OBJECT_OUTPUTS "${PCH_BINARY}")
             else()
                 APPEND_SOURCE_FILES_PROPERTIES(${f} PROPERTIES
-                                              #COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" /FI\"${pch_include}\" "
-                                               COMPILE_FLAGS "/Yu\"${pch_include}\" /Fp\"${pch_filename}\" "
-                                               OBJECT_DEPENDS "${pch_filename}")
+                                               COMPILE_FLAGS "/Yu\"${_PCH_INCLUDE}\" /Fp\"${PCH_BINARY}\" ${FORCE_INCLUDE_FLAG}"
+                                               OBJECT_DEPENDS "${PCH_BINARY}")
             endif()
         endforeach()
 
-        if (NOT ${found_pch})
-            message(WARNING "* Unable to find precompiled source file '${pch_source}' normalized to '${native_pch_source}' in list of files '${sources}'")
+        if (NOT found_pch)
+            message(WARNING "* Unable to find precompiled source file '${_PCH_SOURCE}' normalized to '${native_pch_source}' in list of files '${SOURCE_FILES}'")
         endif()
     ELSEIF (CMAKE_COMPILER_IS_GNUCXX)
 
         # We will try to create the pch in an include tree in the binary dir
-        get_filename_component(pch_include_path "${pch_include}" PATH)
+        get_filename_component(PCH_INCLUDE_PATH "${_PCH_INCLUDE}" PATH)
 
-        if ("${pch_include_path}" STREQUAL "")
-            set(pch_filename "${pch_header}.gch")
-            message(STATUS "* NOTE: Precompiled header ${pch_header}.gch created in source dir since it has no path in #include statement and GCC always searches the current dir first.")
+        if ("${PCH_INCLUDE_PATH}" STREQUAL "")
+            set(PCH_BINARY "${_PCH_HEADER}.gch")
+            message(STATUS "* NOTE: Precompiled header ${_PCH_HEADER}.gch created in source dir since it has no path in #include statement and GCC always searches the current dir first.")
         else()
-            file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/${pch_include_path}")
-            set(pch_filename "${CMAKE_CURRENT_BINARY_DIR}/include/${pch_include}.gch")
-            include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include") # find .gch file before .h file
+            file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/${PCH_INCLUDE_PATH}")
+            set(PCH_BINARY "${CMAKE_CURRENT_BINARY_DIR}/include/${_PCH_INCLUDE}.gch")
+            #include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include") # find .gch file before .h file
+            configure_file( "${_PCH_HEADER}" "${CMAKE_CURRENT_BINARY_DIR}/include/${_PCH_INCLUDE}" COPYONLY)
+        endif()
+
+        if (_FORCE_INCLUDE)
+            APPEND_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES
+                                           COMPILE_FLAGS "-include \"${_PCH_INCLUDE}\"")
         endif()
 
         # need to delete this file for clean too, otherwise we may be mismatched.
-        set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${pch_filename})
+        set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${PCH_BINARY})
 
         # Compile the gch header using the same flags and includes as a normal cpp file.
         set(cxx_flags ${CMAKE_CXX_FLAGS})
@@ -847,15 +944,22 @@ function( SET_PRECOMPILED_HEADER target_name pch_include pch_header pch_source s
         get_target_property(target_type ${target_name} TYPE)
         if ("${target_type}" STREQUAL "SHARED_LIBRARY")
             set(cxx_flags ${cxx_flags} ${CMAKE_SHARED_LIBRARY_CXX_FLAGS})
+
+            get_target_property(target_define_symbol ${target_name} DEFINE_SYMBOL)
+            if (target_define_symbol)
+                list(APPEND cxx_flags "-D${target_define_symbol}")
+            else()
+                list(APPEND cxx_flags "-D${target_name}_EXPORTS")
+            endif()
         endif()
 
         get_target_property(target_flags ${target_name} COMPILE_FLAGS)
-        if (NOT "${target_flags}" STREQUAL "")
+        if (target_flags)
             set(cxx_flags ${cxx_flags} ${target_flags})
         endif()
 
         get_target_property(target_defs ${target_name} COMPILE_DEFINITIONS)
-        if (NOT "${target_defs}" STREQUAL "")
+        if (target_defs)
             foreach (i ${target_defs})
                 list(APPEND cxx_flags "-D${i}")
             endforeach()
@@ -871,22 +975,19 @@ function( SET_PRECOMPILED_HEADER target_name pch_include pch_header pch_source s
             list(APPEND cxx_flags "-I${i}")
         endforeach()
 
-        list(APPEND cxx_flags -c ${pch_header} -o ${pch_filename})
+        list(APPEND cxx_flags -c ${_PCH_HEADER} -o ${PCH_BINARY})
 
         separate_arguments(cxx_flags)
 
-        add_custom_command(OUTPUT "${pch_filename}"
-                           COMMAND rm -f ${pch_filename}
-                           COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} ${cxx_flags}
-			               DEPENDS "${pch_header}")
+        add_custom_command(OUTPUT "${PCH_BINARY}"
+                           COMMAND rm -f ${PCH_BINARY}
+                           COMMAND ${CMAKE_CXX_COMPILER} ${cxx_flags}
+			               DEPENDS "${_PCH_HEADER}")
 
-        add_custom_target( "${target_name}_precomp" ALL DEPENDS "${pch_filename}")
+        add_custom_target( "${target_name}_precomp" ALL DEPENDS "${PCH_BINARY}")
 
         add_dependencies(${target_name} ${target_name}_precomp)
     ENDIF()
-
-    ENDIF(${BUILD_USE_PRECOMPILED_HEADERS})
-
 endfunction()
 
 # ---------------------------------------------------------------------------

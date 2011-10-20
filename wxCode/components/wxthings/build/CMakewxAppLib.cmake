@@ -196,8 +196,8 @@ endif()
 # Set if we are building DLLs, MSWindows and shared libraries
 set(BUILDING_DLLS FALSE)
 
-if (${BUILD_SHARED_LIBS}) # CMake has problems with "if ("ON" AND "TRUE")"
-    if (${WIN32})
+if (BUILD_SHARED_LIBS) # CMake has problems with "if ("ON" AND "TRUE")"
+    if (WIN32)
         set(BUILDING_DLLS TRUE)
     endif()
 endif()
@@ -252,7 +252,7 @@ if (MSVC) # if (CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
 
     # -----------------------------------------------------------------------
     # Set the compiler warning level
-    if (${BUILD_WARNINGS_HIGH})
+    if (BUILD_WARNINGS_HIGH)
         add_definitions( /W4 )
     else()
         add_definitions( /W3 )
@@ -276,7 +276,7 @@ elseif (UNIX) # elseif (CMAKE_BUILD_TOOL MATCHES "(gmake)")
 
     # -----------------------------------------------------------------------
     # Set compiler warning level
-    if (${BUILD_WARNINGS_HIGH})
+    if (BUILD_WARNINGS_HIGH)
         add_definitions( -Wall -Wextra ) # -Wextra gives warnings about unused parameters and others
     else()
         add_definitions( -Wall )

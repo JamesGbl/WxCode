@@ -26,7 +26,7 @@ include( build/CMakeFunctions.txt )
 # Add subdirectories containing CMakeLists.txt files or specify projects
 # ===========================================================================
 
-set( WXTHINGS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxThings" FORCE)
+set( wxThings_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxThings" FORCE)
 
 # ---------------------------------------------------------------------------
 # CMake build file for wxThings Library
@@ -34,7 +34,7 @@ set( WXTHINGS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxThin
 
 if (NOT TARGET wxThingsLib)
 
-include_directories( ${WXTHINGS_DIR}/include/ )
+include_directories( ${wxThings_ROOT_DIR}/include/ )
 
 # We use some functions from GTK directly
 if ("${wxWidgets_PLATFORM}" STREQUAL "gtk2")
@@ -50,7 +50,7 @@ endif()
 # For MSW DLLs we need to replace WXDLLEXPORT with WXDLLIMPEXP_THINGS in
 # wx/include/wx/generic/filedlgg.h
 
-if( ${BUILDING_DLLS} )
+if (BUILDING_DLLS)
 
     # Use configure since it'll create the dirs for us too.
     configure_file(${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h
@@ -74,7 +74,7 @@ if( ${BUILDING_DLLS} )
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
 
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h_ "${WXFILEDLGG_H_STRING}")
-    
+
     configure_file(${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h_
                    ${CMAKE_CURRENT_BINARY_DIR}/include/wx/generic/filedlgg.h COPYONLY)
 endif()
@@ -86,7 +86,7 @@ endif()
 # and paste it into our code to get it.
 # If this breaks we can resort to some other means, but this works for wx 2.8 and 2.9
 
-if ( ${BUILDING_DLLS} )
+if (BUILDING_DLLS)
 
     file(READ ${wxWidgets_ROOT_DIR}/src/generic/dirctrlg.cpp WXDIRCTRLG_CPP_STRING)
 
@@ -103,45 +103,51 @@ else()
 
 endif()
 
-configure_file(${WXTHINGS_DIR}/src/filedlgg.cpp
+configure_file(${wxThings_ROOT_DIR}/src/filedlgg.cpp
                ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp @ONLY)
 
 # ---------------------------------------------------------------------------
 
 ADD_LIBRARY_FULL(wxThingsLib
     HEADERS
-        ${WXTHINGS_DIR}/include/wx/things/block.h
-        ${WXTHINGS_DIR}/include/wx/things/bmpcombo.h
-        ${WXTHINGS_DIR}/include/wx/things/dropdown.h
-        ${WXTHINGS_DIR}/include/wx/things/filebrws.h
-        ${WXTHINGS_DIR}/include/wx/things/genergdi.h
-        ${WXTHINGS_DIR}/include/wx/things/geometry.h
-        ${WXTHINGS_DIR}/include/wx/things/matrix2d.h
-        ${WXTHINGS_DIR}/include/wx/things/medsort.h
-        ${WXTHINGS_DIR}/include/wx/things/menubtn.h
-        ${WXTHINGS_DIR}/include/wx/things/optvalue.h
-        ${WXTHINGS_DIR}/include/wx/things/range.h
-        ${WXTHINGS_DIR}/include/wx/things/spinctld.h
-        ${WXTHINGS_DIR}/include/wx/things/thingdef.h
-        ${WXTHINGS_DIR}/include/wx/things/toggle.h
+        ${wxThings_ROOT_DIR}/include/wx/things/block.h
+        ${wxThings_ROOT_DIR}/include/wx/things/bmpcombo.h
+        ${wxThings_ROOT_DIR}/include/wx/things/dropdown.h
+        ${wxThings_ROOT_DIR}/include/wx/things/filebrws.h
+        ${wxThings_ROOT_DIR}/include/wx/things/genergdi.h
+        ${wxThings_ROOT_DIR}/include/wx/things/geometry.h
+        ${wxThings_ROOT_DIR}/include/wx/things/matrix2d.h
+        ${wxThings_ROOT_DIR}/include/wx/things/medsort.h
+        ${wxThings_ROOT_DIR}/include/wx/things/menubtn.h
+        ${wxThings_ROOT_DIR}/include/wx/things/optvalue.h
+        ${wxThings_ROOT_DIR}/include/wx/things/range.h
+        ${wxThings_ROOT_DIR}/include/wx/things/spinctld.h
+        ${wxThings_ROOT_DIR}/include/wx/things/thingdef.h
+        ${wxThings_ROOT_DIR}/include/wx/things/toggle.h
+
+        ${wxThings_ROOT_DIR}/src/precomp.h
     SOURCES
-        ${WXTHINGS_DIR}/src/block.cpp
-        ${WXTHINGS_DIR}/src/bmpcombo.cpp
-        ${WXTHINGS_DIR}/src/dropdown.cpp
-        ${WXTHINGS_DIR}/src/filebrws.cpp
+        ${wxThings_ROOT_DIR}/src/block.cpp
+        ${wxThings_ROOT_DIR}/src/bmpcombo.cpp
+        ${wxThings_ROOT_DIR}/src/dropdown.cpp
+        ${wxThings_ROOT_DIR}/src/filebrws.cpp
 
         # This file is configured before compliation, see above.
-        #${WXTHINGS_DIR}/src/filedlgg.cpp
+        #${wxThings_ROOT_DIR}/src/filedlgg.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp
 
-        ${WXTHINGS_DIR}/src/genergdi.cpp
-        ${WXTHINGS_DIR}/src/geometry.cpp
-        ${WXTHINGS_DIR}/src/matrix2d.cpp
-        ${WXTHINGS_DIR}/src/menubtn.cpp
-        ${WXTHINGS_DIR}/src/optvalue.cpp
-        ${WXTHINGS_DIR}/src/range.cpp
-        ${WXTHINGS_DIR}/src/spinctld.cpp
-        ${WXTHINGS_DIR}/src/toggle.cpp
+        ${wxThings_ROOT_DIR}/src/genergdi.cpp
+        ${wxThings_ROOT_DIR}/src/geometry.cpp
+        ${wxThings_ROOT_DIR}/src/matrix2d.cpp
+        ${wxThings_ROOT_DIR}/src/menubtn.cpp
+        ${wxThings_ROOT_DIR}/src/optvalue.cpp
+        ${wxThings_ROOT_DIR}/src/precomp.cpp
+        ${wxThings_ROOT_DIR}/src/range.cpp
+        ${wxThings_ROOT_DIR}/src/spinctld.cpp
+        ${wxThings_ROOT_DIR}/src/toggle.cpp
+    PRECOMPILED_INCLUDE precomp.h
+    PRECOMPILED_HEADER  ${wxThings_ROOT_DIR}/src/precomp.h
+    PRECOMPILED_SOURCE  ${wxThings_ROOT_DIR}/src/precomp.cpp
     LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_THINGS"
@@ -152,7 +158,7 @@ ADD_TARGET_INCLUDE_PATHS(wxThingsLib ${CMAKE_CURRENT_BINARY_DIR}/include/)
 # ---------------------------------------------------------------------------
 
 install(FILES
-    ${WXTHINGS_DIR}/docs/readme.txt
+    ${wxThings_ROOT_DIR}/docs/readme.txt
     DESTINATION "doc")
 
 # ---------------------------------------------------------------------------
@@ -162,8 +168,8 @@ install(FILES
 ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
     HEADERS ""
     SOURCES
-        ${WXTHINGS_DIR}/samples/things/thingsdemo.cpp
-        ${WXTHINGS_DIR}/samples/things/thingsdemo.rc
+        ${wxThings_ROOT_DIR}/samples/things/thingsdemo.cpp
+        ${wxThings_ROOT_DIR}/samples/things/thingsdemo.rc
     LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}
@@ -176,8 +182,8 @@ ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
 ADD_EXECUTABLE_FULL( wxFileBrowser WIN32
     HEADERS ""
     SOURCES
-        ${WXTHINGS_DIR}/samples/filebrws/wxfilebrowser.cpp
-        ${WXTHINGS_DIR}/samples/filebrws/wxfilebrowser.rc
+        ${wxThings_ROOT_DIR}/samples/filebrws/wxfilebrowser.cpp
+        ${wxThings_ROOT_DIR}/samples/filebrws/wxfilebrowser.rc
     LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}

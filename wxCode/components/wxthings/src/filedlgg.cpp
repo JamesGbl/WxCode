@@ -16,6 +16,8 @@
 // different place. By #including the source from this file we can avoid this
 // and use the $(WXWIN) environment var in the -I include path.
 
+#include "precomp.h"
+
 #include "wx/things/thingdef.h"
 
 #include "wx/defs.h"
