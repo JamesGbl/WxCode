@@ -48,6 +48,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/scrolbar.h>
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
+//#include <wx/sstream.h> // wxStringInputStream
 
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steexprt.h>
@@ -2154,91 +2155,105 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             found_lang = SetLanguage(fileName);
         }
 
-        const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
-        const size_t unicode_signature_len = 2;
-        const wxChar xml_header[] = wxT("<?xml version=\"");
-        const size_t xml_header_len = WXSIZEOF(xml_header) - 1;
-        wxCharBuffer charBuf(buf_len + 2); // add room for terminators
-        bool unicode     = false;
-        bool has_unicode = false;
-
-        for (int i = 0; ok && !stream.Eof(); i++)
+/*
+    #if (wxVERSION_NUMBER >= 2813) // trac.wxwidgets.org/ticket/13597
+        wxStringInputStream* sin = dynamic_cast<wxStringInputStream*>(&stream);
+        
+        if (sin)
         {
-            stream.Read(charBuf.data(), buf_len);
-            const size_t last_read = stream.LastRead();
-            if (last_read == 0) break;
-
-            charBuf.data()[last_read+0] = 0; // zeroterminate
-            charBuf.data()[last_read+1] = 0; // zeroterminate again, could be unicode
-
-            if ( (i == 0) && (last_read >= unicode_signature_len) )
-            {
-                // check for unicode
-                has_unicode = ((unsigned char)(charBuf.data()[0]) == 0xff) &&
-                              ((unsigned char)(charBuf.data()[1]) == 0xfe);
-
-                // the default is to use unicode if it has it
-                unicode = has_unicode;
-
-                if (unicode && (flags == STE_LOAD_QUERY_UNICODE))
-                {
-                    int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
-                                           _("Load Unicode?"),
-                                           wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
-                                           parent);
-                    switch (ret)
-                    {
-                        case wxYES    : unicode = true;  break;
-                        case wxNO     : unicode = false; break;
-                        case wxCANCEL :
-                        default       : ok = false; break;
-                    }
-                }
-                else if (flags == STE_LOAD_ASCII)
-                    unicode = false;
-                else if (flags == STE_LOAD_UNICODE)
-                    unicode = false;
-            }
-
-            if (!ok) break;
-
-            wxString str;
-            if (unicode)
-            {
-                // Skip first 2 chars specifying that it's unicode at start,
-                //   but only it it really has them.
-                const size_t skip = ((i == 0) && has_unicode) ? unicode_signature_len : 0;
-                str = wxString((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
-
-                // this garbles text when compiled in unicode
-                //#ifdef wxUSE_UNICODE
-                //    AddTextRaw(wxConvertWX2MB(str).data());
-                //#else
-                //    AddTextRaw(str.GetData());
-                //#endif
-            }
-            else // not unicode text, set it as is
-            {
-                str = wxString(charBuf.data(), *wxConvCurrent, last_read);
-            }
-
-            if (    (i == 0)
-                 && (last_read >= xml_header_len)
-                 && want_lang
-                 && (!found_lang)
-                 && (0 == wxStrnicmp(str, xml_header, xml_header_len))
-               )
-            {
-                found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
-            }
-
-            AddText(str);
-
-            // at end or it was read all at once
-            if (last_read == (size_t)stream_len)
-                break;
+            // wxStringInputStream is for whichever reason utf8 always;
+            // use the wxString directly and skip conversion
+            SetText(sin->GetString());
         }
+        else
+    #endif
+*/
+        {
+            const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
+            const size_t unicode_signature_len = 2;
+            const wxChar xml_header[] = wxT("<?xml version=\"");
+            const size_t xml_header_len = WXSIZEOF(xml_header) - 1;
+            wxCharBuffer charBuf(buf_len + 2); // add room for terminators
+            bool unicode     = false;
+            bool has_unicode = false;
 
+            for (int i = 0; ok && !stream.Eof(); i++)
+            {
+                stream.Read(charBuf.data(), buf_len);
+                const size_t last_read = stream.LastRead();
+                if (last_read == 0) break;
+
+                charBuf.data()[last_read+0] = 0; // zeroterminate
+                charBuf.data()[last_read+1] = 0; // zeroterminate again, could be unicode
+
+                if ( (i == 0) && (last_read >= unicode_signature_len) )
+                {
+                    // check for unicode
+                    has_unicode = ((unsigned char)(charBuf.data()[0]) == 0xff) &&
+                                  ((unsigned char)(charBuf.data()[1]) == 0xfe);
+
+                    // the default is to use unicode if it has it
+                    unicode = has_unicode;
+
+                    if (unicode && (flags == STE_LOAD_QUERY_UNICODE))
+                    {
+                        int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
+                                               _("Load Unicode?"),
+                                               wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
+                                               parent);
+                        switch (ret)
+                        {
+                            case wxYES    : unicode = true;  break;
+                            case wxNO     : unicode = false; break;
+                            case wxCANCEL :
+                            default       : ok = false; break;
+                        }
+                    }
+                    else if (flags == STE_LOAD_ASCII)
+                        unicode = false;
+                    else if (flags == STE_LOAD_UNICODE)
+                        unicode = false;
+                }
+
+                if (!ok) break;
+
+                wxString str;
+                if (unicode)
+                {
+                    // Skip first 2 chars specifying that it's unicode at start,
+                    //   but only it it really has them.
+                    const size_t skip = ((i == 0) && has_unicode) ? unicode_signature_len : 0;
+                    str = wxString((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
+
+                    // this garbles text when compiled in unicode
+                    //#ifdef wxUSE_UNICODE
+                    //    AddTextRaw(wxConvertWX2MB(str).data());
+                    //#else
+                    //    AddTextRaw(str.GetData());
+                    //#endif
+                }
+                else // not unicode text, set it as is
+                {
+                    str = wxString(charBuf.data(), *wxConvCurrent, last_read);
+                }
+
+                if (    (i == 0)
+                     && (last_read >= xml_header_len)
+                     && want_lang
+                     && (!found_lang)
+                     && (0 == wxStrnicmp(str, xml_header, xml_header_len))
+                   )
+                {
+                    found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
+                }
+
+                AddText(str);
+
+                // at end or it was read all at once
+                if (last_read == (size_t)stream_len)
+                    break;
+            }
+        }
         if (ok)
         {
             UpdateCanDo(true);
