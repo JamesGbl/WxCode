@@ -48,7 +48,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/scrolbar.h>
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
-//#include <wx/sstream.h> // wxStringInputStream
 
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steexprt.h>
@@ -2136,7 +2135,8 @@ bool wxSTEditor::CopyFilePathToClipboard()
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                                  const wxFileName& fileName,
                                  int flags,
-                                 wxWindow* parent)
+                                 wxWindow* parent,
+                                 const wxMBConv* conv)
 {
     bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
@@ -2147,6 +2147,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
     {
         bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         bool found_lang = false;
+        wxCharBuffer charBuf(stream_len); // add room for terminators
 
         ClearAll();
 
@@ -2155,103 +2156,60 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             found_lang = SetLanguage(fileName);
         }
 
-/*
-    #if (wxVERSION_NUMBER >= 2813) // trac.wxwidgets.org/ticket/13597
-        wxStringInputStream* sin = dynamic_cast<wxStringInputStream*>(&stream);
-        
-        if (sin)
-        {
-            // wxStringInputStream is for whichever reason utf8 always;
-            // use the wxString directly and skip conversion
-            SetText(sin->GetString());
-        }
-        else
-    #endif
-*/
-        {
-            const size_t buf_len = wxMin(1024UL*1024UL, size_t(stream_len));
-            const size_t unicode_signature_len = 2;
-            const wxChar xml_header[] = wxT("<?xml version=\"");
-            const size_t xml_header_len = WXSIZEOF(xml_header) - 1;
-            wxCharBuffer charBuf(buf_len + 2); // add room for terminators
-            bool unicode     = false;
-            bool has_unicode = false;
+        ok = (stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
 
-            for (int i = 0; ok && !stream.Eof(); i++)
+        if (ok)
+        {
+            wxString str;
+
+            if (conv)
             {
-                stream.Read(charBuf.data(), buf_len);
-                const size_t last_read = stream.LastRead();
-                if (last_read == 0) break;
+                str = wxString(charBuf.data(), *conv, stream_len);
+            }
+            else
+            {
+                BOMType bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
 
-                charBuf.data()[last_read+0] = 0; // zeroterminate
-                charBuf.data()[last_read+1] = 0; // zeroterminate again, could be unicode
+                bool unicode = (bom == BOM_UTF16LE);
 
-                if ( (i == 0) && (last_read >= unicode_signature_len) )
+                if (unicode && (flags == STE_LOAD_QUERY_UNICODE))
                 {
-                    // check for unicode
-                    has_unicode = ((unsigned char)(charBuf.data()[0]) == 0xff) &&
-                                  ((unsigned char)(charBuf.data()[1]) == 0xfe);
-
-                    // the default is to use unicode if it has it
-                    unicode = has_unicode;
-
-                    if (unicode && (flags == STE_LOAD_QUERY_UNICODE))
+                    int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
+                                           _("Load Unicode?"),
+                                           wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
+                                           parent);
+                    switch (ret)
                     {
-                        int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
-                                               _("Load Unicode?"),
-                                               wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
-                                               parent);
-                        switch (ret)
-                        {
-                            case wxYES    : unicode = true;  break;
-                            case wxNO     : unicode = false; break;
-                            case wxCANCEL :
-                            default       : ok = false; break;
-                        }
+                        case wxYES    : unicode = true;  break;
+                        case wxNO     : unicode = false; break;
+                        case wxCANCEL :
+                        default       : ok = false; break;
                     }
-                    else if (flags == STE_LOAD_ASCII)
-                        unicode = false;
-                    else if (flags == STE_LOAD_UNICODE)
-                        unicode = false;
                 }
+                else if (flags == STE_LOAD_ASCII)
+                    unicode = false;
+                else if (flags == STE_LOAD_UNICODE)
+                    unicode = false;
 
-                if (!ok) break;
-
-                wxString str;
-                if (unicode)
+                if (ok)
                 {
-                    // Skip first 2 chars specifying that it's unicode at start,
-                    //   but only it it really has them.
-                    const size_t skip = ((i == 0) && has_unicode) ? unicode_signature_len : 0;
-                    str = wxString((wchar_t*)(charBuf.data() + skip), *wxConvCurrent, (last_read - skip)/sizeof(wchar_t));
-
-                    // this garbles text when compiled in unicode
-                    //#ifdef wxUSE_UNICODE
-                    //    AddTextRaw(wxConvertWX2MB(str).data());
-                    //#else
-                    //    AddTextRaw(str.GetData());
-                    //#endif
+                    str = wxString(charBuf.data(), wxConvAuto(), stream_len);
                 }
-                else // not unicode text, set it as is
-                {
-                    str = wxString(charBuf.data(), *wxConvCurrent, last_read);
-                }
+            }
+            if (ok)
+            {
+                const wxString xml_header = wxT("<?xml version=\"");
 
-                if (    (i == 0)
-                     && (last_read >= xml_header_len)
+                if (    (str.Length() >= xml_header.Length())
                      && want_lang
                      && (!found_lang)
-                     && (0 == wxStrnicmp(str, xml_header, xml_header_len))
+                     && (0 == xml_header.CmpNoCase(str.Left(xml_header.Length())))
                    )
                 {
                     found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
                 }
-
-                AddText(str);
-
-                // at end or it was read all at once
-                if (last_read == (size_t)stream_len)
-                    break;
+                
+                SetText(str);
             }
         }
         if (ok)
@@ -3951,7 +3909,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2780")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2790")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

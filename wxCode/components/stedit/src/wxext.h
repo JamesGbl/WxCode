@@ -124,4 +124,17 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
+enum BOMType
+{
+    BOM_Unknown = -1,
+    BOM_None,
+    BOM_UTF32BE,
+    BOM_UTF32LE,
+    BOM_UTF16BE,
+    BOM_UTF16LE,
+    BOM_UTF8
+};
+
+WXDLLIMPEXP_STEDIT BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen);
+
 #endif // __WXEXT_H__

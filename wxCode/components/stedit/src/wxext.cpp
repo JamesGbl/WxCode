@@ -664,3 +664,93 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 #endif
     return ok;
 }
+
+BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
+{
+    // examine the buffer for BOM presence
+    //
+    // quoting from http://www.unicode.org/faq/utf_bom.html#BOM:
+    //
+    //  Bytes           Encoding Form
+    //
+    //  00 00 FE FF     UTF-32, big-endian
+    //  FF FE 00 00     UTF-32, little-endian
+    //  FE FF           UTF-16, big-endian
+    //  FF FE           UTF-16, little-endian
+    //  EF BB BF        UTF-8
+    //
+    // as some BOMs are prefixes of other ones we may need to read more bytes
+    // to disambiguate them
+
+    switch ( srcLen )
+    {
+        case 0:
+            return BOM_Unknown;
+
+        case 1:
+            if ( src[0] == '\x00' || src[0] == '\xFF' ||
+                 src[0] == '\xFE' || src[0] == '\xEF')
+            {
+                // this could be a BOM but we don't know yet
+                return BOM_Unknown;
+            }
+            break;
+
+        case 2:
+        case 3:
+            if ( src[0] == '\xEF' && src[1] == '\xBB' )
+            {
+                if ( srcLen == 3 )
+                    return src[2] == '\xBF' ? BOM_UTF8 : BOM_None;
+
+                return BOM_Unknown;
+            }
+
+            if ( src[0] == '\xFE' && src[1] == '\xFF' )
+                return BOM_UTF16BE;
+
+            if ( src[0] == '\xFF' && src[1] == '\xFE' )
+            {
+                // if the next byte is 0, it could be an UTF-32LE BOM but if it
+                // isn't we can be sure it's UTF-16LE
+                if ( srcLen == 3 && src[2] != '\x00' )
+                    return BOM_UTF16LE;
+
+                return BOM_Unknown;
+            }
+
+            if ( src[0] == '\x00' && src[1] == '\x00' )
+            {
+                // this could only be UTF-32BE, check that the data we have so
+                // far allows for it
+                if ( srcLen == 3 && src[2] != '\xFE' )
+                    return BOM_None;
+
+                return BOM_Unknown;
+            }
+            break;
+
+        default:
+            // we have at least 4 characters so we may finally decide whether
+            // we have a BOM or not
+            if ( src[0] == '\xEF' && src[1] == '\xBB' && src[2] == '\xBF' )
+                return BOM_UTF8;
+
+            if ( src[0] == '\x00' && src[1] == '\x00' &&
+                 src[2] == '\xFE' && src[3] == '\xFF' )
+                return BOM_UTF32BE;
+
+            if ( src[0] == '\xFF' && src[1] == '\xFE' &&
+                 src[2] == '\x00' && src[3] == '\x00' )
+                return BOM_UTF32LE;
+
+            if ( src[0] == '\xFE' && src[1] == '\xFF' )
+                return BOM_UTF16BE;
+
+            if ( src[0] == '\xFF' && src[1] == '\xFE' )
+                return BOM_UTF16LE;
+    }
+
+    return BOM_None;
+}
+
