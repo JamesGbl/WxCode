@@ -54,6 +54,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/stedit/steart.h>
 
 #include "wxext.h"
+#include "wxtrunk.h"
 
 //-----------------------------------------------------------------------------
 // Global data
@@ -2134,20 +2135,20 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
-static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len, 
+static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len,
                              wxString* str, wxBOM* file_bom)
 {
     wxConvAuto conv_auto;
 
 #if (wxVERSION_NUMBER >= 2903)
     wxConvAuto& conv = conv_auto;
-    
+
     *str = wxString(buf.data(), conv, buf_len);
     *file_bom = conv.GetBOM();
 #else // wx 2.8
-    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own                    
+    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     *file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
-    
+
 #if (wxVERSION_NUMBER >= 2900) || !defined(wxUSE_UNICODE)
     wxConvAuto& conv = conv_auto; // fails for ISO8859_1 files, in wx 2.8 ansi
 #else // wx 2.8 ansi
@@ -2248,13 +2249,12 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                 {
                     found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
                 }
-                
+
                 SetText(str);
 
                 GetSTERefData()->m_encoding = encoding;
                 GetSTERefData()->m_file_bom = file_bom;
                 // TODO:
-                // - display m_encoding in Properties dialog
                 // - use encoding, and write out file bom in SaveFile()
                 // - deprecate STE_LOAD_QUERY_UNICODE flag
             }
@@ -3956,7 +3956,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2792")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2795")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

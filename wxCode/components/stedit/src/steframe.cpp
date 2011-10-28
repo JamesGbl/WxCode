@@ -64,6 +64,9 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 
     ::wxFrame_SetInitialPosition(this, pos, size);
+#ifdef x__WXDEBUG__
+    ::wxPostMenuCommand(this, ID_STE_PROPERTIES);
+#endif
     return true;
 }
 

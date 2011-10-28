@@ -13,14 +13,17 @@
 #include <wx/stedit/stedlgs.h>
 #include <wx/stedit/steexprt.h>
 #include <wx/stedit/steart.h>
-#include "stedlgs_wdr.h"
 
 #include <wx/fontenum.h>   // font support
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
 #include <wx/listbook.h>
 #include <wx/imaglist.h>
+#include <wx/mimetype.h>
+
 #include "wxext.h"
+#include "wxtrunk.h"
+#include "stedlgs_wdr.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrefPageData_RefData - data shared by multiple pages shown at once
@@ -1565,7 +1568,13 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
 {
     wxSTEditorPropertiesSizer(this, true, true);
 
-    wxFileName fileName = edit->GetFileName();
+    wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
+    buttons->SetCancelButton(new wxButton(this, wxID_CANCEL, _("Cl&ose")));
+    buttons->Realize();
+
+    GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+
+    const wxFileName fileName = edit->GetFileName();
 
     wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
     textCtrl->SetValue(fileName.GetFullPath());
@@ -1603,6 +1612,37 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
     SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), edit->GetTextLength()));
     SET_STATTEXT(ID_STEPROP_NUMWORDS_TEXT, wxString::Format(wxT("%d"), (int)edit->GetWordCount()));
 
+#if wxUSE_MIMETYPE
+    wxString mimeStr;
+    wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(fileName.GetExt());
+
+    if (ft)
+    {
+        ft->GetMimeType(&mimeStr);
+        delete ft;
+    }
+    SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
+#endif
+
+    const wxString strEncoding = _("None|UTF32BE|UTF32LE|UTF16BE|UTF16LE|UTF8");
+    STE_Encoding enc = edit->GetSTERefData()->m_encoding;
+    wxString encStr;
+
+    if (enc == wxBOM_Unknown)
+    {
+        encStr = _("Unknown");
+    }
+    else
+    {
+        wxArrayString as = wxSplit(strEncoding, '|');
+
+        if (enc < (int)as.GetCount())
+        {
+            encStr = as.Item(enc);
+        }
+    }
+    SET_STATTEXT(ID_STEPROP_ENCODING_TEXT, encStr);
+
     int crlf = 0, cr = 0, lf = 0, tabs = 0;
     edit->GetEOLCount(&crlf, &cr, &lf, &tabs);
     SET_STATTEXT(ID_STEPROP_NUMTABS_TEXT, wxString::Format(wxT("%d"), tabs));
@@ -1628,6 +1668,8 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
         eolStr = wxT("none");
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
+    Fit();
+    SetMinSize(GetSize());
     Centre();
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }
