@@ -18,6 +18,7 @@
 #include <wx/convauto.h>
 
 #include "wxext.h"
+#include "wxtrunk.h"
 
 #ifndef WXPRECOMP
     #include <wx/settings.h>
@@ -754,5 +755,16 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
     }
 
     return wxBOM_None;
+}
+#endif
+
+#if (wxVERSION_NUMBER < 2900)
+wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
+{
+   wxUnusedVar(escape);
+   wxStringTokenizerMode mode = wxTOKEN_RET_EMPTY;
+   wxArrayString temp = wxStringTokenize(str, wxString(sep), mode);
+
+   return temp;
 }
 #endif

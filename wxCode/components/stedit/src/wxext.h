@@ -16,8 +16,18 @@
 
 #include <wx/stedit/stedefs.h>
 
-#if (wxVERSION_NUMBER < 2812)
-   #define wxT_2 wxT
+#if defined(_WX_EVENT_H_) || defined(_WX_EVENT_H__)
+inline void wxPostCommandEvent(wxEvtHandler* dest, wxEventType commandType, int id)
+{
+   wxCommandEvent event(commandType, id);
+   if (dest == NULL) dest = wxTheApp->GetTopWindow();
+   wxPostEvent(dest, event);
+}
+
+inline void wxPostMenuCommand(wxEvtHandler* dest, int id)
+{
+   wxPostCommandEvent(dest, wxEVT_COMMAND_MENU_SELECTED, id);
+}
 #endif
 
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
@@ -84,13 +94,6 @@ protected:
 };
 #endif
 
-#if defined(_WX_ABOUTDLG_H_) && (wxVERSION_NUMBER < 2900)
-inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent))
-{
-   wxAboutBox(info);
-}
-#endif
-
 class WXDLLIMPEXP_STEDIT wxClipboardHelper
 {
 public:
@@ -123,26 +126,5 @@ public:
 
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
-
-#ifdef _WX_CONVAUTO_H_
-#if (wxVERSION_NUMBER >= 2903)
-inline wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
-{
-    return wxConvAuto::DetectBOM(src, srcLen);
-}
-#else
-enum wxBOM
-{
-    wxBOM_Unknown = -1,
-    wxBOM_None,
-    wxBOM_UTF32BE,
-    wxBOM_UTF32LE,
-    wxBOM_UTF16BE,
-    wxBOM_UTF16LE,
-    wxBOM_UTF8
-};
-WXDLLIMPEXP_STEDIT wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen);
-#endif
-#endif
 
 #endif // __WXEXT_H__
