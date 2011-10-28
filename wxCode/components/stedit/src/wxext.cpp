@@ -15,6 +15,7 @@
 #include <wx/stdpaths.h>
 #include <wx/cmdline.h>
 #include <wx/clipbrd.h>
+#include <wx/convauto.h>
 
 #include "wxext.h"
 
@@ -665,7 +666,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok;
 }
 
-BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
+#if (wxVERSION_NUMBER < 2903)
+wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 {
     // examine the buffer for BOM presence
     //
@@ -685,14 +687,14 @@ BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
     switch ( srcLen )
     {
         case 0:
-            return BOM_Unknown;
+            return wxBOM_Unknown;
 
         case 1:
             if ( src[0] == '\x00' || src[0] == '\xFF' ||
                  src[0] == '\xFE' || src[0] == '\xEF')
             {
                 // this could be a BOM but we don't know yet
-                return BOM_Unknown;
+                return wxBOM_Unknown;
             }
             break;
 
@@ -701,22 +703,22 @@ BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
             if ( src[0] == '\xEF' && src[1] == '\xBB' )
             {
                 if ( srcLen == 3 )
-                    return src[2] == '\xBF' ? BOM_UTF8 : BOM_None;
+                    return src[2] == '\xBF' ? wxBOM_UTF8 : wxBOM_None;
 
-                return BOM_Unknown;
+                return wxBOM_Unknown;
             }
 
             if ( src[0] == '\xFE' && src[1] == '\xFF' )
-                return BOM_UTF16BE;
+                return wxBOM_UTF16BE;
 
             if ( src[0] == '\xFF' && src[1] == '\xFE' )
             {
                 // if the next byte is 0, it could be an UTF-32LE BOM but if it
                 // isn't we can be sure it's UTF-16LE
                 if ( srcLen == 3 && src[2] != '\x00' )
-                    return BOM_UTF16LE;
+                    return wxBOM_UTF16LE;
 
-                return BOM_Unknown;
+                return wxBOM_Unknown;
             }
 
             if ( src[0] == '\x00' && src[1] == '\x00' )
@@ -724,9 +726,9 @@ BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
                 // this could only be UTF-32BE, check that the data we have so
                 // far allows for it
                 if ( srcLen == 3 && src[2] != '\xFE' )
-                    return BOM_None;
+                    return wxBOM_None;
 
-                return BOM_Unknown;
+                return wxBOM_Unknown;
             }
             break;
 
@@ -734,23 +736,23 @@ BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen)
             // we have at least 4 characters so we may finally decide whether
             // we have a BOM or not
             if ( src[0] == '\xEF' && src[1] == '\xBB' && src[2] == '\xBF' )
-                return BOM_UTF8;
+                return wxBOM_UTF8;
 
             if ( src[0] == '\x00' && src[1] == '\x00' &&
                  src[2] == '\xFE' && src[3] == '\xFF' )
-                return BOM_UTF32BE;
+                return wxBOM_UTF32BE;
 
             if ( src[0] == '\xFF' && src[1] == '\xFE' &&
                  src[2] == '\x00' && src[3] == '\x00' )
-                return BOM_UTF32LE;
+                return wxBOM_UTF32LE;
 
             if ( src[0] == '\xFE' && src[1] == '\xFF' )
-                return BOM_UTF16BE;
+                return wxBOM_UTF16BE;
 
             if ( src[0] == '\xFF' && src[1] == '\xFE' )
-                return BOM_UTF16LE;
+                return wxBOM_UTF16LE;
     }
 
-    return BOM_None;
+    return wxBOM_None;
 }
-
+#endif

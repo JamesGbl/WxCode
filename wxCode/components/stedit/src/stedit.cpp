@@ -78,7 +78,9 @@ static const wxString EOLModeStrings[] =
 wxSTEditorRefData::wxSTEditorRefData()
                   :wxObjectRefData(), m_last_autoindent_line(-1),
                                       m_last_autoindent_len(0),
-                                      m_steLang_id(STE_LANG_NULL)
+                                      m_steLang_id(STE_LANG_NULL),
+                                      m_encoding(STE_Encoding_Default),
+                                      m_file_bom(wxBOM_None)
 {
 }
 
@@ -2136,7 +2138,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                                  const wxFileName& fileName,
                                  int flags,
                                  wxWindow* parent,
-                                 const wxMBConv* conv)
+                                 STE_Encoding encoding)
 {
     bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
@@ -2161,40 +2163,61 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
         if (ok)
         {
             wxString str;
+            wxBOM file_bom = wxBOM_None;
 
-            if (conv)
+            switch (encoding)
             {
-                str = wxString(charBuf.data(), *conv, stream_len);
-            }
-            else
-            {
-                BOMType bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
-
-                bool unicode = (bom == BOM_UTF16LE);
-
-                if (unicode && (flags == STE_LOAD_QUERY_UNICODE))
+                case wxBOM_Unknown:
+                case wxBOM_None:
                 {
-                    int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
-                                           _("Load Unicode?"),
-                                           wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
-                                           parent);
-                    switch (ret)
+                    wxConvAuto conv;
+
+                    str = wxString(charBuf.data(), conv, stream_len);
+                #if (wxVERSION_NUMBER >= 2903)
+                    encoding = file_bom = conv.GetBOM();
+                #else
+                    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own                    
+                    encoding = file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
+                #endif
+
+                    switch (file_bom)
                     {
-                        case wxYES    : unicode = true;  break;
-                        case wxNO     : unicode = false; break;
-                        case wxCANCEL :
-                        default       : ok = false; break;
+                        case wxBOM_UTF16LE:
+                            if (flags == STE_LOAD_QUERY_UNICODE)
+                            {
+                                int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
+                                                       _("Load Unicode?"),
+                                                       wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
+                                                       parent);
+                                switch (ret)
+                                {
+                                    case wxYES:
+                                        break;
+                                    case wxNO:
+                                    case wxCANCEL:
+                                    default:
+                                        ok = false;
+                                        break;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
+                    break;
                 }
-                else if (flags == STE_LOAD_ASCII)
-                    unicode = false;
-                else if (flags == STE_LOAD_UNICODE)
-                    unicode = false;
-
-                if (ok)
-                {
+                case wxBOM_UTF32BE:
+                case wxBOM_UTF32LE:
+                case wxBOM_UTF16BE:
+                case wxBOM_UTF16LE:
                     str = wxString(charBuf.data(), wxConvAuto(), stream_len);
-                }
+                    break;
+                case wxBOM_UTF8:
+                    str = wxString(charBuf.data(), wxConvUTF8, stream_len);
+                    break;
+                default:
+                    ok = false;
+                    break;
             }
             if (ok)
             {
@@ -2210,6 +2233,13 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                 }
                 
                 SetText(str);
+
+                GetSTERefData()->m_encoding = encoding;
+                GetSTERefData()->m_file_bom = file_bom;
+                // TODO:
+                // - display m_encoding in Properties dialog
+                // - use encoding, and write out file bom in SaveFile()
+                // - deprecate STE_LOAD_QUERY_UNICODE flag
             }
         }
         if (ok)
@@ -3909,7 +3939,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2790")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2791")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

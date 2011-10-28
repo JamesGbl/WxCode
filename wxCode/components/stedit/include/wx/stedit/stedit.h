@@ -145,6 +145,8 @@ public:
     int m_last_autoindent_len;      // the length of the line before auto indenting
 
     int m_steLang_id;               // index into the wxSTEditorLangs used
+    STE_Encoding m_encoding;        // encoding specified by LoadInputStream parameter, or else, found inside file
+    STE_Encoding m_file_bom;        // bom found inside file
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -503,7 +505,7 @@ public :
     bool LoadInputStream(wxInputStream& stream, const wxFileName&,
                          int flags = STE_LOAD_QUERY_UNICODE,
                          wxWindow* parent = NULL,
-                         const wxMBConv* conv = NULL);
+                         STE_Encoding encoding = STE_Encoding_Default);
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
     //   if using wxFileSelector then if extensions is wxEmptyString use

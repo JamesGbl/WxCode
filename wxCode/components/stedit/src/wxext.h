@@ -124,17 +124,25 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
-enum BOMType
+#ifdef _WX_CONVAUTO_H_
+#if (wxVERSION_NUMBER >= 2903)
+inline wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 {
-    BOM_Unknown = -1,
-    BOM_None,
-    BOM_UTF32BE,
-    BOM_UTF32LE,
-    BOM_UTF16BE,
-    BOM_UTF16LE,
-    BOM_UTF8
+    return wxConvAuto::DetectBOM(src, srcLen);
+}
+#else
+enum wxBOM
+{
+    wxBOM_Unknown = -1,
+    wxBOM_None,
+    wxBOM_UTF32BE,
+    wxBOM_UTF32LE,
+    wxBOM_UTF16BE,
+    wxBOM_UTF16LE,
+    wxBOM_UTF8
 };
-
-WXDLLIMPEXP_STEDIT BOMType wxConvAuto_DetectBOM(const char *src, size_t srcLen);
+WXDLLIMPEXP_STEDIT wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen);
+#endif
+#endif
 
 #endif // __WXEXT_H__

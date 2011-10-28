@@ -84,7 +84,10 @@
 #define STE_MM wxSTEditorMenuManager
 
 #define STE_TextPos wxTextPos
-//#define STE_TextCoord wxTextCoord
+//#define STE_TextCoord wxTextCoord // row/col
+
+typedef int STE_Encoding; // = wxBOM
+#define STE_Encoding_Default 0 // = wxBOM_None
 
 //-----------------------------------------------------------------------------
 // Use wxHtmlEasyPrinting instead of normal printing
