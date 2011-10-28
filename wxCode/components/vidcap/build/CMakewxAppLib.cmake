@@ -259,19 +259,21 @@ if (MSVC) # if (CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
     endif()
 
     # -----------------------------------------------------------------------
-    # Use multiprocessor compliation if availiable
+    # Use multiprocessor compliation if MSVC > ver 6
     # In some cases it is nice to turn it off since it can be hard tell where some
     # pragma warnings come from if multiple files are compiled at once.
-    if (NOT DEFINED BUILD_USE_MULTIPROCESSOR)
-        set(BUILD_USE_MULTIPROCESSOR TRUE)
+    
+    if ("${MSVC_VERSION}" GREATER "1300")
+        if (NOT DEFINED BUILD_USE_MULTIPROCESSOR)
+            set(BUILD_USE_MULTIPROCESSOR TRUE)
+        endif()
+
+        set(BUILD_USE_MULTIPROCESSOR ${BUILD_USE_MULTIPROCESSOR} CACHE BOOL "Build in MSVC using multiple processors (TRUE) else single processor (FALSE)" FORCE)
+
+        if (BUILD_USE_MULTIPROCESSOR)
+            add_definitions( /MP )
+        endif()
     endif()
-
-    set(BUILD_USE_MULTIPROCESSOR ${BUILD_USE_MULTIPROCESSOR} CACHE BOOL "Build in MSVC using multiple processors (TRUE) else single processor (FALSE)" FORCE)
-
-    if (BUILD_USE_MULTIPROCESSOR)
-        add_definitions( /MP )
-    endif()
-
 elseif (UNIX) # elseif (CMAKE_BUILD_TOOL MATCHES "(gmake)")
 
     # -----------------------------------------------------------------------
@@ -454,17 +456,17 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
         set(wx_comp_found FALSE)
         foreach( wx_comp_lib ${wxWidgets_LIBRARIES} )
             get_filename_component(wx_comp_lib_name ${wx_comp_lib} NAME_WE)
-            string(REGEX MATCH ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
-            if (wx_comp_found)
-                string(REGEX MATCH ${wx_comp_lib_name} "wx" wx_comp_found)
-                if (wx_comp_found)
+            string(FIND ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
+            if ("${wx_comp_found}" GREATER "-1")
+                string(FIND ${wx_comp_lib_name} "wx" wx_comp_found)
+                if ("${wx_comp_found}" GREATER "-1")
                     break()
                 endif()
             endif()
         endforeach()
 
-        if (wx_comp_found)
-            message(STATUS "* WARNING: Unable to find requested wxWidgets component : ${wx_comp}")
+        if ("${wx_comp_found}" LESS "0")
+            message(" WARNING: Unable to find requested wxWidgets component : ${wx_comp}")
         endif()
     endforeach()
 

@@ -46,6 +46,8 @@
 #include "wx/vidcap/vcapwin.h"
 #include "vcapdlgs.h"
 
+#include <windows.h>
+
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
 //----------------------------------------------------------------------------
@@ -1333,7 +1335,11 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
         grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME_NOSTOP, 
                                         (WPARAM)0, (LPARAM)0L,
                                         SMTO_BLOCK, 4000, 
+#if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
                                         (PDWORD_PTR)0 ); // (LPDWORD)0 );
+#else
+                                        (LPDWORD)0 );
+#endif
     }
     else 
     {
@@ -1342,7 +1348,12 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
         grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME, 
                                         (WPARAM)0, (LPARAM)0L,
                                         SMTO_BLOCK, 4000, 
+#if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
                                         (PDWORD_PTR)0 ); // (LPDWORD)0 );
+#else
+                                        (LPDWORD)0 );
+#endif
+
         VFW_SetCallbackFrame(false);
     }
     
