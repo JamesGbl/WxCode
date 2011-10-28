@@ -2134,6 +2134,29 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
+static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len, 
+                             wxString* str, wxBOM* file_bom)
+{
+    wxConvAuto conv_auto;
+
+#if (wxVERSION_NUMBER >= 2903)
+    wxConvAuto& conv = conv_auto;
+    
+    *str = wxString(buf.data(), conv, buf_len);
+    *file_bom = conv.GetBOM();
+#else // wx 2.8
+    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own                    
+    *file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
+    
+#if (wxVERSION_NUMBER >= 2900) || !defined(wxUSE_UNICODE)
+    wxConvAuto& conv = conv_auto; // fails for ISO8859_1 files, in wx 2.8 ansi
+#else // wx 2.8 ansi
+    wxMBConv& conv = (*file_bom == wxBOM_None) ? *wxConvCurrent : conv_auto;
+#endif
+    *str = wxString(buf.data(), conv, buf_len);
+#endif // 2.9
+}
+
 bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                                  const wxFileName& fileName,
                                  int flags,
@@ -2145,11 +2168,12 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
 
     const wxFileOffset stream_len = stream.GetLength();
     bool ok = (stream_len <= 40000000);
+
     if (ok)
     {
         bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         bool found_lang = false;
-        wxCharBuffer charBuf(stream_len); // add room for terminators
+        wxCharBuffer charBuf(stream_len);
 
         ClearAll();
 
@@ -2169,17 +2193,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
             {
                 case wxBOM_Unknown:
                 case wxBOM_None:
-                {
-                    wxConvAuto conv;
-
-                    str = wxString(charBuf.data(), conv, stream_len);
-                #if (wxVERSION_NUMBER >= 2903)
-                    encoding = file_bom = conv.GetBOM();
-                #else
-                    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own                    
-                    encoding = file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
-                #endif
-
+                    DetectBomAndLoad(charBuf, stream_len, &str, &file_bom);
                     switch (file_bom)
                     {
                         case wxBOM_UTF16LE:
@@ -2204,8 +2218,11 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                         default:
                             break;
                     }
+                    if (ok)
+                    {
+                        encoding = file_bom;
+                    }
                     break;
-                }
                 case wxBOM_UTF32BE:
                 case wxBOM_UTF32LE:
                 case wxBOM_UTF16BE:
@@ -3939,7 +3956,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2791")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2792")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
