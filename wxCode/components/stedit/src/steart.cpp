@@ -70,7 +70,7 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
 {
     static const struct art_item
     {
-        wxArtID id;
+        const wxChar* id; // wxArtID id; - can't have wxString in struct for MSVC6
         const char* const* xpm;
     } s_xpm_array[] =
     {
@@ -137,7 +137,10 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
         for (size_t i = 0; i < s_xpm_array_size; ++i)
         {
             if (s_xpm_array[i].id == id)
+            {
                 bmp = wxBitmap(s_xpm_array[i].xpm);
+                break;
+            }
         }
     }
 

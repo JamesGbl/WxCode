@@ -3,6 +3,8 @@
 // Do not modify this file, all changes will be lost!
 //------------------------------------------------------------------------------
 
+#include "precomp.h"
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
     #pragma implementation "stedlgs_wdr.h"
 #endif

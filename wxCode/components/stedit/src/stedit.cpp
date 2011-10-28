@@ -2138,23 +2138,24 @@ bool wxSTEditor::CopyFilePathToClipboard()
 static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len,
                              wxString* str, wxBOM* file_bom)
 {
+    wxCHECK_RET((str != NULL) && (file_bom != NULL), wxT("Invalid string or bom"));
+
     wxConvAuto conv_auto;
 
 #if (wxVERSION_NUMBER >= 2903)
-    wxConvAuto& conv = conv_auto;
-
-    *str = wxString(buf.data(), conv, buf_len);
-    *file_bom = conv.GetBOM();
+    *str = wxString(buf.data(), conv_auto, buf_len);
+    *file_bom = conv_auto.GetBOM();
 #else // wx 2.8
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     *file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
 
-#if (wxVERSION_NUMBER >= 2900) || !defined(wxUSE_UNICODE)
-    wxConvAuto& conv = conv_auto; // fails for ISO8859_1 files, in wx 2.8 ansi
-#else // wx 2.8 ansi
-    wxMBConv& conv = (*file_bom == wxBOM_None) ? *wxConvCurrent : conv_auto;
-#endif
-    *str = wxString(buf.data(), conv, buf_len);
+    #if (wxVERSION_NUMBER >= 2900) || !defined(wxUSE_UNICODE)
+        // fails for ISO8859_1 files, in wx 2.8 ansi
+        *str = wxString(buf.data(), conv_auto, buf_len);
+    #else // wx 2.8 ansi
+        wxMBConv* conv = (*file_bom == wxBOM_None) ? wxConvCurrent : &conv_auto;
+        *str = wxString(buf.data(), *conv, buf_len);
+    #endif
 #endif // 2.9
 }
 
