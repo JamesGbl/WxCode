@@ -19,6 +19,13 @@
 
 #if defined(__VISUALC__)
     #pragma warning(disable: 4127)  // conditional expression is constant (for EAT macro)
+
+    // Visual C 6 has many warnings in its own stl headers
+    #if _MSC_VER < 1300
+        #pragma warning(disable: 4786)  // identifier was truncated to '255' characters in the debug information
+        #pragma warning(disable: 4284)  // return type for 'std::list.. Will produce errors if applied using infix notation)
+        #pragma warning(disable: 4018)  // std::vector '<' : signed/unsigned mismatch
+    #endif 
 #endif // defined(__VISUALC__)
 
 #include "fpconfig.hh"

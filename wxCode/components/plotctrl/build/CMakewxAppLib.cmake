@@ -46,7 +46,7 @@ message( STATUS "* -------------------------------------------------------------
 message( STATUS "* CMake command line options and tips specific to this project " )
 message( STATUS "* " )
 message( STATUS "* In the CMake GUI you can set values and press configure a few times since " )
-message( STATUS "* sometimes once is not enough, once it works, press generate." )
+message( STATUS "* sometimes once is not enough, after a few configurations, press generate." )
 message( STATUS "* " )
 message( STATUS "* Usage: cmake -D[OPTION_NAME]=[OPTION_VALUE] /path/to/CMakeLists.txt/" )
 message( STATUS "* ---------------------------------------------------------------------------" )
@@ -141,18 +141,26 @@ endif (DOXYGEN_FOUND)
 # Show the "install" target dir in the CMake GUI so people can change it.
 # ---------------------------------------------------------------------------
 
-set( CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "Install Directory prefix for INSTALL target" FORCE)
+if (NOT DEFINED BUILD_INSTALL_PREFIX)
+    # CMake defaults to C:/Program Files and /usr/local neither of which normal users have permissions to
+    set( BUILD_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/install" )
+endif()
+
+set( BUILD_INSTALL_PREFIX ${BUILD_INSTALL_PREFIX} CACHE PATH "Install Directory prefix for INSTALL target" FORCE)
+set( CMAKE_INSTALL_PREFIX ${BUILD_INSTALL_PREFIX})
 
 # ---------------------------------------------------------------------------
 # Set bool variables IS_32_BIT and IS_64_BIT
 # ---------------------------------------------------------------------------
 
-if (CMAKE_SIZEOF_VOID_P MATCHES 4)
+if ((CMAKE_SIZEOF_VOID_P MATCHES 4) OR (CMAKE_CL_64 MATCHES 0))
     set(IS_32_BIT TRUE)
     set(IS_64_BIT FALSE)
-else()
+elseif((CMAKE_SIZEOF_VOID_P MATCHES 8) OR (CMAKE_CL_64 MATCHES 1))
     set(IS_32_BIT FALSE)
     set(IS_64_BIT TRUE)
+else()
+    MESSAGE(WARNING "Oops, unable to determine if using 32 or 64 bit compilation.")
 endif()
 
 # ---------------------------------------------------------------------------
@@ -262,8 +270,8 @@ if (MSVC) # if (CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
     # Use multiprocessor compliation if MSVC > ver 6
     # In some cases it is nice to turn it off since it can be hard tell where some
     # pragma warnings come from if multiple files are compiled at once.
-    
-    if ("${MSVC_VERSION}" GREATER "1300")
+
+    if ("${MSVC_VERSION}" GREATER "1200")
         if (NOT DEFINED BUILD_USE_MULTIPROCESSOR)
             set(BUILD_USE_MULTIPROCESSOR TRUE)
         endif()
@@ -453,8 +461,16 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     # search through the list of components to see what we were able to find
 
     foreach( wx_comp ${wxWidgets_COMPONENTS} )
-        set(wx_comp_found FALSE)
+        set(wx_comp_found "-1")
+
         foreach( wx_comp_lib ${wxWidgets_LIBRARIES} )
+            if ("${wx_comp}" STREQUAL "mono")
+                if (WX_mono OR WX_monod)
+                    set(wx_comp_found "1")
+                    break()
+                endif()
+            endif()
+
             get_filename_component(wx_comp_lib_name ${wx_comp_lib} NAME_WE)
             string(FIND ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
             if ("${wx_comp_found}" GREATER "-1")

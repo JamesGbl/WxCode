@@ -72,9 +72,8 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stestyls.h
         ${wxStEdit_ROOT_DIR}/src/precomp.h
         ${wxStEdit_ROOT_DIR}/src/wxext.h
-        ${wxStEdit_ROOT_DIR}/src/precomp.h
         ${wxStEdit_ROOT_DIR}/src/stedlgs_wdr.h
-    SOURCES 
+    SOURCES
         ${wxStEdit_ROOT_DIR}/src/precomp.cpp
         ${wxStEdit_ROOT_DIR}/src/steart.cpp
         ${wxStEdit_ROOT_DIR}/src/stedit.cpp
@@ -96,7 +95,7 @@ ADD_LIBRARY_FULL(wxStEditLib
     PRECOMPILED_INCLUDE precomp.h
     PRECOMPILED_HEADER  ${wxStEdit_ROOT_DIR}/src/precomp.h
     PRECOMPILED_SOURCE  ${wxStEdit_ROOT_DIR}/src/precomp.cpp
-    LINK_LIBRARIES 
+    LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_STEDIT"
     PROPERTIES FOLDER "wxStEdit")
@@ -129,5 +128,9 @@ ADD_EXECUTABLE_FULL( wxStEdit WIN32
         wxStEditLib
         ${wxWidgets_LIBRARIES}
     PROPERTIES FOLDER "wxStEdit")
+
+if (BUILD_SHARED_LIBS)
+    APPEND_TARGET_PROPERTIES(wxStEdit PROPERTIES COMPILE_DEFINITIONS "WXUSINGDLL_STEDIT")
+endif()
 
 endif(NOT TARGET wxStEditLib)

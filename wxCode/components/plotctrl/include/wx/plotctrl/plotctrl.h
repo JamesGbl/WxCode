@@ -1077,6 +1077,9 @@ private:
 // wxPlotCtrlEvent event types
 // ----------------------------------------------------------------------------
 
+// Get the string name of the event from the wxEventType.
+WXDLLIMPEXP_PLOTCTRL wxString wxPlotCtrl_GetEventName(wxEventType eventType);
+
 BEGIN_DECLARE_EVENT_TYPES()
 
 // ----------------------------------------------------------------------------

@@ -135,7 +135,11 @@ FUNCTION( GET_OBJECT_FILES target_name object_file_list source_files )
             GET_FILENAME_COMPONENT(fname ${f} NAME)
             string(REPLACE ".cpp" ".obj" fname2 ${fname})
             string(REPLACE ".c"   ".obj" fname2 ${fname2})
-            set(objects ${objects} "${CMAKE_CURRENT_BINARY_DIR}/${target_name}.dir/${CMAKE_CFG_INTDIR}/${fname2}")
+            if (MSVC60)
+                set(objects ${objects} "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${fname2}")
+            else()
+                set(objects ${objects} "${CMAKE_CURRENT_BINARY_DIR}/${target_name}.dir/${CMAKE_CFG_INTDIR}/${fname2}")
+            endif()
         endforeach()
     else()
         foreach(f ${source_files})
@@ -481,9 +485,9 @@ function( ADD_LIBRARY_FULL target_name )
     endif()
 
     # Set the install includes to use same dir structure as the source directories
-    STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
-
-    INSTALL(FILES ${HEADER_FILES} DESTINATION "include/${PROJ_DIR_TEMP}")
+    #STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
+    #INSTALL(FILES 
+    #    ${HEADER_FILES} DESTINATION "include/${PROJ_DIR_TEMP}")
 
     INSTALL(TARGETS ${target_name}
         RUNTIME DESTINATION bin
@@ -807,6 +811,14 @@ endfunction()
 
 function( TARGET_PRECOMPILED_HEADER target_name )
 
+    # There is some problem that makes MSVC6 recompile the precomp header 
+    # and therefore every source file every build. 
+    if (MSVC60)
+        MESSAGE(STATUS "* WARNING: Disabling precomplied headers for MSVC6 for ${target_name}, sorry...")
+        return()
+    endif()
+
+
     # Allow people to en/disable precomp headers to test if it actually works or not.
     # GCC is a little tricky to get right since you have to compile it exactly the same flags
     # and CMake bizarrely hides flags passed to add_definitions() not starting with -D.
@@ -878,7 +890,8 @@ function( TARGET_PRECOMPILED_HEADER target_name )
 
     IF(MSVC)
         get_filename_component(PCH_BASENAME ${_PCH_HEADER} NAME_WE)
-        set(PCH_BINARY "${CMAKE_CURRENT_BINARY_DIR}/$(IntDir)/${PCH_BASENAME}.pch")
+        #set(PCH_BINARY "${CMAKE_CURRENT_BINARY_DIR}/$(IntDir)/${PCH_BASENAME}.pch")
+        set(PCH_BINARY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${PCH_BASENAME}.pch")
 
         # need to delete this file for clean too, otherwise we can get errors
         # about mismatched pch and pdb files.

@@ -106,6 +106,9 @@ endif()
 configure_file(${wxThings_ROOT_DIR}/src/filedlgg.cpp
                ${CMAKE_CURRENT_BINARY_DIR}/src/filedlgg.cpp @ONLY)
 
+configure_file(${wxThings_ROOT_DIR}/src/precomp.h
+               ${CMAKE_CURRENT_BINARY_DIR}/src/precomp.h COPYONLY)
+
 # ---------------------------------------------------------------------------
 
 ADD_LIBRARY_FULL(wxThingsLib
