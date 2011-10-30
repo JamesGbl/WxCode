@@ -86,7 +86,7 @@
 #define STE_TextPos wxTextPos
 //#define STE_TextCoord wxTextCoord // row/col
 
-typedef int STE_Encoding; // = wxBOM
+typedef int STE_Encoding; // = wxBOM (utf8 is the default in several wx classes, wxStringInputStream wxFile)
 #define STE_Encoding_Default 0 // = wxBOM_None
 
 //-----------------------------------------------------------------------------

@@ -499,13 +499,19 @@ public :
     // Can/Should this document be saved (has valid filename and is modified)
     bool CanSave() const { return !AlreadySaved(); }
 
+#if wxUSE_STREAMS
     // Load a file from the wxInputStream (probably a wxFileInputStream)
     //  The fileName is used only for the message on error
     //  flags is STE_LoadFileType
-    bool LoadInputStream(wxInputStream& stream, const wxFileName&,
-                         int flags = STE_LOAD_QUERY_UNICODE,
-                         wxWindow* parent = NULL,
-                         STE_Encoding encoding = STE_Encoding_Default);
+    bool LoadFile( wxInputStream& stream,
+                   const wxFileName& filename,
+                   int flags = STE_LOAD_QUERY_UNICODE,
+                   wxWindow* parent = NULL,
+                   STE_Encoding encoding = STE_Encoding_Default );
+
+    // Save the file to wxOutputStream
+    bool SaveFile( wxOutputStream& stream );
+#endif
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
     //   if using wxFileSelector then if extensions is wxEmptyString use

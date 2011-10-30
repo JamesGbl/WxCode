@@ -2159,11 +2159,11 @@ static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len,
 #endif // 2.9
 }
 
-bool wxSTEditor::LoadInputStream(wxInputStream& stream,
-                                 const wxFileName& fileName,
-                                 int flags,
-                                 wxWindow* parent,
-                                 STE_Encoding encoding)
+bool wxSTEditor::LoadFile( wxInputStream& stream,
+                           const wxFileName& fileName,
+                           int flags,
+                           wxWindow* parent,
+                           STE_Encoding encoding)
 {
     bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
@@ -2196,6 +2196,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                 case wxBOM_Unknown:
                 case wxBOM_None:
                     DetectBomAndLoad(charBuf, stream_len, &str, &file_bom);
+                //#if !(defined(wxUSE_UNICODE) || defined(wxUSE_UNICODE_UTF8))
                     switch (file_bom)
                     {
                         case wxBOM_UTF16LE:
@@ -2220,6 +2221,7 @@ bool wxSTEditor::LoadInputStream(wxInputStream& stream,
                         default:
                             break;
                     }
+                //#endif
                     if (ok)
                     {
                         encoding = file_bom;
@@ -2340,7 +2342,7 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     wxFileInputStream stream(fileName.GetFullPath());
     bool ok = stream.IsOk();
     if (ok)
-        ok = LoadInputStream(stream, fileName, load_flags);
+        ok = LoadFile(stream, fileName, load_flags);
 
     if (!ok)
         return false;
@@ -2350,6 +2352,18 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     UpdateCanDo(true);
 
     return ok;
+}
+
+bool wxSTEditor::SaveFile( wxOutputStream& stream )
+{
+    const wxMBConv& conv = *wxConvCurrent; // TODO: apply m_encoding
+    const wxString s = GetText();
+    const wxWX2MBbuf buf = s.mb_str(conv);
+
+    if (!buf)
+      return false;
+    size_t size = strlen(buf);
+    return size == stream.Write(buf, size).LastWrite();
 }
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
@@ -2406,9 +2420,8 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
             ConvertEOLs(GetEditorPrefs().GetPrefInt(STE_PREF_EOL_MODE));
     }
 
-    const wxString st = GetText();
-
-    if (file.Write(st, *wxConvCurrent))
+    wxFileOutputStream out(file);
+    if (SaveFile(out))
     {
         file.Close();
 
@@ -3957,7 +3970,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2795")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2799")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
