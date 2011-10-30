@@ -2362,7 +2362,7 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream )
 
     if (!buf)
       return false;
-    size_t size = strlen(buf);
+    const size_t size = ::wxWX2MBbuf_length(buf);
     return size == stream.Write(buf, size).LastWrite();
 }
 
@@ -3970,7 +3970,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2799")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2801")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

@@ -43,3 +43,12 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
    wxAboutBox(info);
 }
 #endif
+
+inline size_t wxWX2MBbuf_length(const wxWX2MBbuf& buf)
+{
+#if (wxVERSION_NUMBER >= 2900)
+    return buf.length(); // wxWX2MBbuf.length() not available in wx28
+#else
+    return strlen(buf);
+#endif
+}
