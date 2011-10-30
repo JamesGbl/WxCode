@@ -70,7 +70,12 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
 {
     static const struct art_item
     {
-        const wxChar* id; // wxArtID id; - can't have wxString in struct for MSVC6
+        // wxArtID id; - can't have wxString in struct for MSVC6
+#if (wxVERSION_NUMBER >= 2902)
+        const char* id;
+#else
+        const wxChar* id;
+#endif
         const char* const* xpm;
     } s_xpm_array[] =
     {
