@@ -719,20 +719,23 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
     return false;
 }
 
-bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_)
+bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_, STE_Encoding encoding)
 {
     wxFileName fileName = fileName_;
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
     if (fileName.GetFullPath().IsEmpty())
     {
-        wxFileDialog fileDialog( this, _("Open file into new notebook page"),
+        wxSTEditorFileDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
-                                 wxEmptyString, extensions,
-                                 wxFD_DEFAULT_STYLE_OPEN);
-        fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
+                                 extensions,
+                                 false);
+
         if (fileDialog.ShowModal() == wxID_OK)
+        {
             fileName = fileDialog.GetPath();
+            encoding = fileDialog.m_encoding;
+        }
         else
             return false;
     }
@@ -762,7 +765,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
         else // empty editor
         {
             // reuse editor
-            ok = GetEditor()->LoadFile(fileName);
+            ok = GetEditor()->LoadFile(fileName, wxEmptyString, true, encoding);
         }
     }
     return ok;
@@ -773,18 +776,22 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
 {
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
     wxArrayString filePaths;
+    STE_Encoding encoding = STE_Encoding_Default;
+
     if (filePaths_)
         filePaths = *filePaths_;
 
     if (filePaths.GetCount() < 1u)
     {
-        wxFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
+        wxSTEditorFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
-                                 wxEmptyString, extensions,
-                                 wxFD_DEFAULT_STYLE_OPEN | wxFD_MULTIPLE );
-        fileDialog.SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
+                                 extensions,
+                                 true);
         if (fileDialog.ShowModal() == wxID_OK)
+        {
             fileDialog.GetPaths(filePaths);
+            encoding = fileDialog.m_encoding;
+        }
         else
             return false;
     }
@@ -825,7 +832,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
         }
         else
         {
-            if (!LoadFile(fileName)) break;
+            if (!LoadFile(fileName, wxEmptyString, encoding)) break;
         }
     }
     }

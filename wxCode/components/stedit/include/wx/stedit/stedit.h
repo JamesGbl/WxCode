@@ -518,7 +518,8 @@ public :
     //   GetOptions().GetDefaultFileExtensions() else the ones supplied
     virtual bool LoadFile( const wxFileName& fileName = wxFileName(), // #define wxNullFileName wxFileName()
                            const wxString &extensions = wxEmptyString,
-                           bool query_if_changed = true );
+                           bool query_if_changed = true,
+                           STE_Encoding encoding = STE_Encoding_Default);
     // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector
     virtual bool SaveFile( bool use_dialog = true,
                            const wxString &extensions = wxEmptyString );

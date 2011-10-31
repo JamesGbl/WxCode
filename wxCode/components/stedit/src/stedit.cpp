@@ -48,6 +48,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/scrolbar.h>
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
+#include <wx/sstream.h>
 
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steexprt.h>
@@ -2185,6 +2186,13 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
         bool found_lang = false;
         wxCharBuffer charBuf(stream_len);
 
+        if (  (encoding == STE_Encoding_Default)
+            && dynamic_cast<wxStringInputStream*>(&stream))
+        {
+            // wxStringInputStream is utf8 always
+            encoding = wxBOM_UTF8;
+        }
+
         ClearAll();
 
         if (want_lang && !found_lang)
@@ -2287,7 +2295,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
     return ok;
 }
 
-bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool query_if_changed)
+bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extensions_, bool query_if_changed, STE_Encoding encoding)
 {
     if (query_if_changed && GetOptions().HasEditorOption(STE_QUERY_SAVE_MODIFIED) &&
         (QuerySaveIfModified(true) == wxCANCEL))
@@ -2347,7 +2355,7 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     wxFileInputStream stream(fileName.GetFullPath());
     bool ok = stream.IsOk();
     if (ok)
-        ok = LoadFile(stream, fileName, load_flags);
+        ok = LoadFile(stream, fileName, load_flags, NULL, encoding);
 
     if (!ok)
         return false;
@@ -4080,7 +4088,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2802")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2804")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

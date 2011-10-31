@@ -614,10 +614,10 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
 
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxFlexGridSizer *item7 = new wxFlexGridSizer( 3, 0, 0 );
+    wxFlexGridSizer *item7 = new wxFlexGridSizer( 3, 5, 5 );
 
     wxStaticText *item8 = new wxStaticText( parent, ID_STEDLG_INSERT_PREPEND_TEXT, _("Prepend"), wxDefaultPosition, wxDefaultSize, 0 );
-    item7->Add( item8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item7->Add( item8, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
     wxString strs9[] = 
     {
@@ -630,13 +630,13 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
     };
     wxComboBox *item9 = new wxComboBox( parent, ID_STEDLG_INSERT_PREPEND_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 6, strs9, wxCB_DROPDOWN );
     item9->SetToolTip( _("Text to prepend") );
-    item7->Add( item9, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item7->Add( item9, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxBitmapButton *item10 = new wxBitmapButton( parent, ID_STEDLG_INSERT_PREPEND_BITMAPBUTTON, wxSTEBitmapsFunc( 1 ), wxDefaultPosition, wxDefaultSize );
-    item7->Add( item10, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxTOP|wxBOTTOM, 5 );
+    item7->Add( item10, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-    wxStaticText *item11 = new wxStaticText( parent, ID_TEXT, _("Append"), wxDefaultPosition, wxDefaultSize, 0 );
-    item7->Add( item11, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    wxStaticText *item11 = new wxStaticText( parent, wxID_ANY, _("Append"), wxDefaultPosition, wxDefaultSize, 0 );
+    item7->Add( item11, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
     wxString strs12[] = 
     {
@@ -649,34 +649,18 @@ wxSizer *wxSTEditorInsertTextSizer( wxWindow *parent, bool call_fit, bool set_si
     };
     wxComboBox *item12 = new wxComboBox( parent, ID_STEDLG_INSERT_APPEND_COMBO, wxT(""), wxDefaultPosition, wxSize(100,-1), 6, strs12, wxCB_DROPDOWN );
     item12->SetToolTip( _("Text to append") );
-    item7->Add( item12, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item7->Add( item12, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxBitmapButton *item13 = new wxBitmapButton( parent, ID_STEDLG_INSERT_APPEND_BITMAPBUTTON, wxSTEBitmapsFunc( 1 ), wxDefaultPosition, wxDefaultSize );
-    item7->Add( item13, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxTOP|wxBOTTOM, 5 );
+    item7->Add( item13, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL, 5 );
 
     item7->AddGrowableCol( 1 );
 
-    item0->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
+    item0->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxWindow *item14 = parent->FindWindow( ID_STEDLG_INSERT_EDITOR );
     wxASSERT( item14 );
     item0->Add( item14, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-    wxStaticLine *item15 = new wxStaticLine( parent, ID_LINE, wxDefaultPosition, wxSize(20,-1), wxLI_HORIZONTAL );
-    item0->Add( item15, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-    wxBoxSizer *item16 = new wxBoxSizer( wxHORIZONTAL );
-
-    wxButton *item17 = new wxButton( parent, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    item17->SetDefault();
-    item16->Add( item17, 0, wxALIGN_CENTER|wxALL, 5 );
-
-    item16->Add( 10, 10, 0, wxALIGN_CENTER, 5 );
-
-    wxButton *item18 = new wxButton( parent, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    item16->Add( item18, 0, wxALIGN_CENTER|wxALL, 5 );
-
-    item0->Add( item16, 0, wxALIGN_CENTER, 5 );
 
     if (set_sizer)
     {
@@ -1267,10 +1251,10 @@ wxSizer *wxSTEditorExportSizer( wxWindow *parent, bool call_fit, bool set_sizer 
 {
     wxBoxSizer *item0 = new wxBoxSizer( wxVERTICAL );
 
-    wxFlexGridSizer *item1 = new wxFlexGridSizer( 3, 0, 0 );
+    wxFlexGridSizer *item1 = new wxFlexGridSizer( 3, 5, 5 );
 
-    wxStaticText *item2 = new wxStaticText( parent, ID_TEXT, _("File format"), wxDefaultPosition, wxDefaultSize, 0 );
-    item1->Add( item2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    wxStaticText *item2 = new wxStaticText( parent, wxID_ANY, _("File format"), wxDefaultPosition, wxDefaultSize, 0 );
+    item1->Add( item2, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
     wxString strs3[] = 
     {
@@ -1282,12 +1266,12 @@ wxSizer *wxSTEditorExportSizer( wxWindow *parent, bool call_fit, bool set_sizer 
         _("XML - Extensible Markup Language")
     };
     wxChoice *item3 = new wxChoice( parent, ID_STEDLG_EXPORT_FORMAT_CHOICE, wxDefaultPosition, wxDefaultSize, 6, strs3, 0 );
-    item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
-    item1->Add( 20, 20, 0, wxALIGN_CENTER|wxALL, 0 );
+    item1->Add( 20, 20, 0, wxALIGN_CENTER, 0 );
 
-    wxStaticText *item4 = new wxStaticText( parent, ID_TEXT, _("File name"), wxDefaultPosition, wxDefaultSize, 0 );
-    item1->Add( item4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    wxStaticText *item4 = new wxStaticText( parent, wxID_ANY, _("File name"), wxDefaultPosition, wxDefaultSize, 0 );
+    item1->Add( item4, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
     wxString strs5[] = 
     {
@@ -1299,37 +1283,23 @@ wxSizer *wxSTEditorExportSizer( wxWindow *parent, bool call_fit, bool set_sizer 
         _("Item")
     };
     wxComboBox *item5 = new wxComboBox( parent, ID_STEDLG_EXPORT_FILENAME_COMBO, wxT(""), wxDefaultPosition, wxDefaultSize, 6, strs5, wxCB_DROPDOWN );
-    item1->Add( item5, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item1->Add( item5, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxBitmapButton *item6 = new wxBitmapButton( parent, ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON, wxSTEBitmapsFunc( 0 ), wxDefaultPosition, wxDefaultSize );
     item6->SetToolTip( _("Choose file") );
-    item1->Add( item6, 0, wxALIGN_CENTER|wxALL, 5 );
+    item1->Add( item6, 0, wxALIGN_CENTER, 5 );
 
-    item1->Add( 10, 10, 0, wxALIGN_CENTER|wxALL, 5 );
+    item1->Add( 10, 10, 0, wxALIGN_CENTER, 5 );
 
     wxCheckBox *item7 = new wxCheckBox( parent, ID_STEDLG_EXPORT_EXTENSION_CHECKBOX, _("Automatic file name extension"), wxDefaultPosition, wxDefaultSize, 0 );
     item7->SetValue( TRUE );
-    item1->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    item1->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
-    item1->Add( 20, 20, 0, wxALIGN_CENTER|wxALL, 0 );
+    item1->Add( 20, 20, 0, wxALIGN_CENTER, 0 );
 
     item1->AddGrowableCol( 1 );
 
     item0->Add( item1, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-    wxStaticLine *item8 = new wxStaticLine( parent, ID_LINE, wxDefaultPosition, wxSize(20,-1), wxLI_HORIZONTAL );
-    item0->Add( item8, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-    wxBoxSizer *item9 = new wxBoxSizer( wxHORIZONTAL );
-
-    wxButton *item10 = new wxButton( parent, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    item10->SetDefault();
-    item9->Add( item10, 0, wxALIGN_CENTER|wxALL, 5 );
-
-    wxButton *item11 = new wxButton( parent, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    item9->Add( item11, 0, wxALIGN_CENTER|wxALL, 5 );
-
-    item0->Add( item9, 0, wxALIGN_CENTER, 5 );
 
     if (set_sizer)
     {
@@ -1487,6 +1457,34 @@ wxSizer *wxSTEditorLoadSavePrefsSizer( wxWindow *parent, bool call_fit, bool set
     item7->Add( item10, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     item0->Add( item7, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    if (set_sizer)
+    {
+        parent->SetSizer( item0 );
+        if (call_fit)
+            item0->SetSizeHints( parent );
+    }
+    
+    return item0;
+}
+
+wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit, bool set_sizer )
+{
+    wxBoxSizer *item0 = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticBox *item2 = new wxStaticBox( parent, -1, _("Encoding") );
+    wxStaticBoxSizer *item1 = new wxStaticBoxSizer( item2, wxVERTICAL );
+
+    wxString strs3[] = 
+    {
+        _("Default"), 
+        _("UTF8"), 
+        _("Unicode")
+    };
+    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 3, strs3, 0 );
+    item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
+
+    item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     if (set_sizer)
     {

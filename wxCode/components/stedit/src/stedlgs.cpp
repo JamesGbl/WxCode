@@ -20,6 +20,7 @@
 #include <wx/listbook.h>
 #include <wx/imaglist.h>
 #include <wx/mimetype.h>
+#include <wx/valgen.h>
 
 #include "wxext.h"
 #include "wxtrunk.h"
@@ -1371,42 +1372,42 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_VIEW))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorViewPrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("View"), false, 0);
         }
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_TABSEOL))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorTabsPrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("Tabs / EOL"), false, 1);
         }
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_FOLDWRAP))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorFoldPrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("Fold / Wrap"), false, 2);
         }
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_PRINT))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorPrintPrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("Printing"), false, 3);
         }
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_LOADSAVE))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorLoadSavePrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("Load / Save"), false, 4);
         }
         if (GetPrefData().HasOption(STE_PREF_PAGE_SHOW_HIGHLIGHT))
         {
-            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1);
+            page = new wxSTEditorPrefDialogPagePrefs(GetEditorPrefData(), GetPrefData(), m_noteBook);
             wxSTEditorHighlightingPrefsSizer(page, true, true);
             page->SetControlValues();
             m_noteBook->AddPage(page, _("Highlighting"), false, 5);
@@ -1416,7 +1417,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     if (GetPrefData().GetStyles().IsOk() && GetPrefData().HasOption(STE_PREF_PAGE_SHOW_STYLES))
     {
         m_noteBook->AddPage(
-            new wxSTEditorPrefDialogPageStyles(GetEditorPrefData(), GetPrefData(), m_noteBook, -1),
+            new wxSTEditorPrefDialogPageStyles(GetEditorPrefData(), GetPrefData(), m_noteBook),
                             _("Styles"), false, 6);
     }
 
@@ -1424,7 +1425,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
         GetPrefData().HasOption(STE_PREF_PAGE_SHOW_LANGS))
     {
         m_noteBook->AddPage(
-            new wxSTEditorPrefDialogPageLangs(GetEditorPrefData(), GetPrefData(), m_noteBook, -1),
+            new wxSTEditorPrefDialogPageLangs(GetEditorPrefData(), GetPrefData(), m_noteBook),
                             _("Languages"), false, 7);
     }
 
@@ -1439,11 +1440,12 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 #if wxUSE_TOOLTIPS
     resetButton->SetToolTip(_("Reset this page's values to their default"));
 #endif //wxUSE_TOOLTIPS
-    wxButton *okButton = new wxButton(panel, wxID_OK, _("OK"));
-    okButton->SetDefault();
-    wxButton *cancelButton = new wxButton(panel, wxID_CANCEL, _("Cancel"));
-    wxButton *applyButton = new wxButton(panel, wxID_APPLY, _("Apply"));
 
+    wxButton *okButton = new wxButton(panel, wxID_OK);
+    okButton->SetDefault();
+    wxButton *cancelButton = new wxButton(panel, wxID_CANCEL);
+    wxButton *applyButton = new wxButton(panel, wxID_APPLY);
+#ifndef skip
     wxFlexGridSizer *buttonpane = new wxFlexGridSizer(5, 10, 10);
     buttonpane->AddGrowableCol( 1 );
     buttonpane->Add(resetButton,  0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
@@ -1451,6 +1453,14 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     buttonpane->Add(okButton,     0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
     buttonpane->Add(cancelButton, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
     buttonpane->Add(applyButton,  0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
+#else
+    wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
+    buttonpane->AddButton(resetButton);
+    buttonpane->SetAffirmativeButton(okButton);
+    buttonpane->SetCancelButton(cancelButton);
+    buttonpane->AddButton(applyButton);
+    buttonpane->Realize();
+#endif
 
     // set sizer
     wxFlexGridSizer *panelSizer = new wxFlexGridSizer(1);
@@ -1612,8 +1622,8 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
     SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), edit->GetTextLength()));
     SET_STATTEXT(ID_STEPROP_NUMWORDS_TEXT, wxString::Format(wxT("%d"), (int)edit->GetWordCount()));
 
-#if wxUSE_MIMETYPE
     wxString mimeStr;
+#if wxUSE_MIMETYPE
     wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(fileName.GetExt());
 
     if (ft)
@@ -1621,8 +1631,8 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
         ft->GetMimeType(&mimeStr);
         delete ft;
     }
-    SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
 #endif
+    SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
 
     const wxString strEncoding = _("None|UTF32BE|UTF32LE|UTF16BE|UTF16LE|UTF8");
     STE_Encoding enc = edit->GetSTERefData()->m_encoding;
@@ -1665,7 +1675,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
         eolStr += wxString::Format(wxT("LF (Unix)=%d"), lf);
     }
     if (eolStr.IsEmpty())
-        eolStr = wxT("none");
+        eolStr = _("none");
 
     SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
     Fit();
@@ -1851,6 +1861,12 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
 
     wxSTEditorInsertTextSizer(this, true, true);
 
+    wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
+    buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
+    buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
+    buttons->Realize();
+    GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+
     m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
     m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
     m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
@@ -1871,6 +1887,8 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
 
     UpdateControls();
 
+    Fit();
+    SetMinSize(GetSize());
     Centre();
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }
@@ -2207,4 +2225,129 @@ void wxSTEditorColumnizeDialog::OnText(wxCommandEvent& event)
 
     if (m_updateCheckBox->GetValue())
         FormatText();
+}
+
+#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+// panel with custom controls for file dialog
+class wxSTEditorFileOpenPanel : public wxPanel
+{
+    DECLARE_CLASS(wxSTEditorFileOpenPanel)
+public:
+    wxSTEditorFileOpenPanel();
+
+    bool Create(wxWindow *parent);
+
+    enum encoding
+    {
+        encoding_default,
+        encoding_utf8,
+        encoding_unicode
+    };
+    int m_index; // enum encoding
+
+    wxChoice* GetChoice()
+    {
+        return wxStaticCast(FindWindow(ID_CHOICE), wxChoice);
+    }
+
+    static wxWindow* ControlCreator(wxWindow* parent)
+    {
+        wxSTEditorFileOpenPanel* wnd = new wxSTEditorFileOpenPanel();
+
+        if (!wnd->Create(parent))
+        {
+            wxDELETE(wnd);
+        }
+        return wnd;
+    }
+
+    virtual ~wxSTEditorFileOpenPanel()
+    {
+    }
+protected:
+    DECLARE_EVENT_TABLE()
+};
+
+IMPLEMENT_CLASS(wxSTEditorFileOpenPanel, wxPanel)
+
+wxSTEditorFileOpenPanel::wxSTEditorFileOpenPanel() : wxPanel(), m_index(encoding_default)
+{
+}
+
+BEGIN_EVENT_TABLE(wxSTEditorFileOpenPanel, wxPanel)
+END_EVENT_TABLE()
+
+bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
+{
+    bool ok = wxPanel::Create(parent);
+
+    if (ok)
+    {
+        wxSTEditorFileOpenSizer(this);
+        
+        if (parent->IsKindOf(CLASSINFO(wxSTEditorFileDialog)))
+        {
+            wxSTEditorFileDialog* dlg = (wxSTEditorFileDialog*)parent;
+
+            switch (dlg->m_encoding)
+            {
+                case wxBOM_UTF8:
+                    m_index = wxSTEditorFileOpenPanel::encoding_utf8;
+                    break;
+                case wxBOM_UTF16LE:
+                    m_index = wxSTEditorFileOpenPanel::encoding_unicode;
+                    break;
+            }
+
+            GetChoice()->SetValidator(wxGenericValidator(&m_index));
+            TransferDataToWindow();
+        }
+    }
+    return ok;
+}
+
+#endif
+
+IMPLEMENT_CLASS(wxSTEditorFileDialog, wxFileDialog)
+
+wxSTEditorFileDialog::wxSTEditorFileDialog(wxWindow* parent,
+                                           const wxString& message,
+                                           const wxString& defaultDir,
+                                           const wxString& extensions,
+                                           bool multiple) : 
+    wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, wxFD_DEFAULT_STYLE_OPEN | (multiple ? wxFD_MULTIPLE : 0))
+{
+    m_encoding = STE_Encoding_Default;
+    SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
+#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+    SetExtraControlCreator(&wxSTEditorFileOpenPanel::ControlCreator);
+#endif
+}
+
+int wxSTEditorFileDialog::ShowModal()
+{
+    int n = wxFileDialog::ShowModal();
+
+#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+    if (n == wxID_OK)
+    {
+        wxSTEditorFileOpenPanel* wnd = wxStaticCast(GetExtraControl(), wxSTEditorFileOpenPanel);
+
+        //wnd->TransferDataFromWindow();
+        //trac.wxwidgets.org/ticket/13611
+
+        switch (wnd->m_index)
+        {
+            case wxSTEditorFileOpenPanel::encoding_default:
+                break;
+            case wxSTEditorFileOpenPanel::encoding_utf8:
+                m_encoding = wxBOM_UTF8;
+                break;
+            case wxSTEditorFileOpenPanel::encoding_unicode:
+                m_encoding = wxBOM_UTF16LE;
+                break;
+        }
+    }
+#endif
+    return n;
 }

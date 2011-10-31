@@ -196,6 +196,9 @@ const int ID_STEDLG_SAVE_WHITESPACE_CHECKBOX = 20117;
 const int ID_STEDLG_SAVE_LINEENDINGS_CHECKBOX = 20118;
 wxSizer *wxSTEditorLoadSavePrefsSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
 
+const int ID_CHOICE = 20119;
+wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
+
 // Declare menubar functions
 
 // Declare toolbar functions

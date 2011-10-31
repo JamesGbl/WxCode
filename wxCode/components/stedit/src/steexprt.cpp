@@ -1965,6 +1965,12 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
 
     wxSTEditorExportSizer(this, true, true);
 
+    wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
+    buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
+    buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
+    buttons->Realize();
+    GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+
     m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
     m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
     m_fileNameCombo->Clear();
@@ -1974,6 +1980,8 @@ wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
 
     wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
     bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
+    Fit();
+    SetMinSize(GetSize());
     Centre();
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 }

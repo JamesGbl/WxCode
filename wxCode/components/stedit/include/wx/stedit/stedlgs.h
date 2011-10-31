@@ -532,4 +532,19 @@ private:
     DECLARE_ABSTRACT_CLASS(wxSTEditorColumnizeDialog);
 };
 
+class WXDLLIMPEXP_STEDIT wxSTEditorFileDialog : public wxFileDialog
+{
+    DECLARE_CLASS(wxSTEditorFileDialog)
+public:
+    STE_Encoding m_encoding;
+
+    wxSTEditorFileDialog(wxWindow* parent,
+                         const wxString& message = wxFileSelectorPromptStr,
+                         const wxString& defaultDir = wxEmptyString,
+                         const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+                         bool multiple = false);
+
+    virtual int ShowModal();
+};
+
 #endif // _STEDLGS_H_
