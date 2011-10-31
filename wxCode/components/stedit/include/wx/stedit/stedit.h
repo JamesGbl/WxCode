@@ -690,6 +690,12 @@ public :
     //   different languages may use the same lexer. (Java uses CPP lexer)
     int  GetLanguageId() const;
 
+    void SetEncoding(STE_Encoding );
+    STE_Encoding GetEncoding() const;
+
+    void SetFileBOM(STE_Encoding );
+    STE_Encoding GetFileBOM() const;
+
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages
     //

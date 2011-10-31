@@ -585,8 +585,12 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     //splitter->GetEditor()->RegisterPrefs(editor->GetEditorPrefs());
                     //splitter->GetEditor()->RegisterStyles(editor->GetEditorStyles());
                     //splitter->GetEditor()->RegisterLangs(editor->GetEditorLangs());
+                    
                     newEditor->SetLanguage(editor->GetLanguageId());
                     newEditor->SetFileName(editor->GetFileName());
+                    newEditor->SetEncoding(editor->GetEncoding());
+                    newEditor->SetFileBOM(editor->GetFileBOM());
+
                     newEditor->SetText(editor->GetText());
                     newEditor->Colourise(0, -1);
 

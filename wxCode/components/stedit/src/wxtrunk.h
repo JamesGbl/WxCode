@@ -52,3 +52,12 @@ inline size_t wxWX2MBbuf_length(const wxWX2MBbuf& buf)
     return strlen(buf);
 #endif
 }
+
+inline size_t wxWritableWCharBuffer_length(const wxWritableWCharBuffer& buf)
+{
+#if (wxVERSION_NUMBER >= 2900)
+    return buf.length(); // wxWritableWCharBuffer.length() not available in wx28
+#else
+    return wcslen(buf.data());
+#endif
+}

@@ -2149,12 +2149,20 @@ static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len,
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     *file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
 
-    #if (wxVERSION_NUMBER >= 2900) || !defined(wxUSE_UNICODE)
-        // fails for ISO8859_1 files, in wx 2.8 ansi
+    #if (wxVERSION_NUMBER >= 2900)
+        // fails for ISO8859_1-encoded files (with national chars in), in wx 2.8 ansi,
+        // because the ctor conv argument is unused
         *str = wxString(buf.data(), conv_auto, buf_len);
     #else // wx 2.8 ansi
-        wxMBConv* conv = (*file_bom == wxBOM_None) ? wxConvCurrent : &conv_auto;
-        *str = wxString(buf.data(), *conv, buf_len);
+        switch (*file_bom)
+        {
+            case wxBOM_UTF16LE:
+                *str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
+                break;
+            default:
+                *str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
+                break;
+        }
     #endif
 #endif // 2.9
 }
@@ -2196,7 +2204,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 case wxBOM_Unknown:
                 case wxBOM_None:
                     DetectBomAndLoad(charBuf, stream_len, &str, &file_bom);
-                //#if !(defined(wxUSE_UNICODE) || defined(wxUSE_UNICODE_UTF8))
+                #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
                     switch (file_bom)
                     {
                         case wxBOM_UTF16LE:
@@ -2221,7 +2229,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                         default:
                             break;
                     }
-                //#endif
+                #endif
                     if (ok)
                     {
                         encoding = file_bom;
@@ -2255,11 +2263,8 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
 
                 SetText(str);
 
-                GetSTERefData()->m_encoding = encoding;
-                GetSTERefData()->m_file_bom = file_bom;
-                // TODO:
-                // - use encoding, and write out file bom in SaveFile()
-                // - deprecate STE_LOAD_QUERY_UNICODE flag
+                SetEncoding(encoding);
+                SetFileBOM(file_bom);
             }
         }
         if (ok)
@@ -2354,16 +2359,101 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     return ok;
 }
 
+    //  00 00 FE FF     UTF-32, big-endian
+    //  FF FE 00 00     UTF-32, little-endian
+    //  FE FF           UTF-16, big-endian
+    //  FF FE           UTF-16, little-endian
+    //  EF BB BF        UTF-8
+
 bool wxSTEditor::SaveFile( wxOutputStream& stream )
 {
-    const wxMBConv& conv = *wxConvCurrent; // TODO: apply m_encoding
+    bool ok = true;
     const wxString s = GetText();
-    const wxWX2MBbuf buf = s.mb_str(conv);
 
-    if (!buf)
-      return false;
-    const size_t size = ::wxWX2MBbuf_length(buf);
-    return size == stream.Write(buf, size).LastWrite();
+    STE_Encoding encoding = GetEncoding();
+    STE_Encoding file_bom = GetFileBOM();
+
+    if (ok) switch (file_bom)
+    {
+        case wxBOM_UTF16LE:
+        {
+            const wxUint8 buf[] = { 0xFF, 0xFE };
+            const size_t size = WXSIZEOF(buf);
+            
+            ok = (size == stream.Write(buf, size).LastWrite());
+            break;
+        }
+        case wxBOM_UTF8:
+        {
+            const wxUint8 buf[] = { 0xEF, 0xBB, 0xBF };
+            const size_t size = WXSIZEOF(buf);
+            
+            ok = (size == stream.Write(buf, size).LastWrite());
+            break;
+        }
+        case wxBOM_Unknown:
+        case wxBOM_None:
+            break;
+        case wxBOM_UTF32BE:
+        case wxBOM_UTF32LE:
+        case wxBOM_UTF16BE:
+            // TODO
+            ok = false;
+            break;
+        default:
+            ok = false;
+            break;
+    }
+
+    if (ok) switch (encoding)
+    {
+        case wxBOM_Unknown:
+        case wxBOM_None:
+        {
+            const wxMBConv& conv = *wxConvCurrent;
+            const wxWX2MBbuf buf = s.mb_str(conv);
+
+            ok = !(!buf);
+            
+            if (ok)
+            {
+                const size_t size = ::wxWX2MBbuf_length(buf);
+                
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+        case wxBOM_UTF32BE:
+        case wxBOM_UTF32LE:
+        case wxBOM_UTF16BE:
+            ok = false;
+            break;
+        case wxBOM_UTF16LE:
+        {
+            wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
+            const size_t size = ::wxWritableWCharBuffer_length(buf)*sizeof(wchar_t);
+
+            ok = (size == stream.Write(buf.data(), size).LastWrite());
+            break;
+        }
+        case wxBOM_UTF8:
+        {
+            const wxWX2MBbuf buf = s.mb_str(wxConvUTF8);
+
+            ok = !(!buf);
+            if (ok)
+            {
+                const size_t size = ::wxWX2MBbuf_length(buf);
+
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+        default:
+            ok = false;
+            break;
+    }
+    return ok;
 }
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
@@ -3856,6 +3946,26 @@ int wxSTEditor::GetLanguageId() const
     return GetSTERefData()->m_steLang_id;
 }
 
+void wxSTEditor::SetEncoding(STE_Encoding encoding)
+{
+    GetSTERefData()->m_encoding = encoding;
+}
+
+STE_Encoding wxSTEditor::GetEncoding() const
+{
+    return GetSTERefData()->m_encoding;
+}
+
+void wxSTEditor::SetFileBOM(STE_Encoding file_bom)
+{
+    GetSTERefData()->m_file_bom = file_bom;
+}
+
+STE_Encoding wxSTEditor::GetFileBOM() const
+{
+    return GetSTERefData()->m_file_bom;
+}
+
 const wxSTEditorPrefs& wxSTEditor::GetEditorPrefs() const
 {
     return GetSTERefData()->m_stePrefs;
@@ -3970,7 +4080,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2801")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2802")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

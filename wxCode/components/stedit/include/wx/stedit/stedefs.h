@@ -617,8 +617,8 @@ enum STE_LoadFileType
     STE_LOAD_DEFAULT       = 0,      // load as unicode if it has the header,
                                      //   else load as ascii
 
-    STE_LOAD_QUERY_UNICODE = 0x0001, // popup dialog to ask if to load in unicode
-                                     //   if the file starts w/ unicode signature
+    STE_LOAD_QUERY_UNICODE = 0x0001, // popup dialog to ask (or rather warn) if to load in unicode
+                                     //   if the file starts w/ unicode signature. Flag ignored in Unicode build.
     STE_LOAD_ASCII         = 0x0002, // load as ascii in all cases
     STE_LOAD_UNICODE       = 0x0004, // load as unicode in all cases
 
