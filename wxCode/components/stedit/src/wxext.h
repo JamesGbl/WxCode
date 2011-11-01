@@ -127,4 +127,8 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
+#ifdef __WXTRUNK_H__
+WXDLLIMPEXP_STEDIT wxBOM wxStringFromCharBuffer(const wxCharBuffer& buf, size_t buf_len, wxString* str);
+#endif
+
 #endif // __WXEXT_H__

@@ -532,7 +532,7 @@ private:
     DECLARE_ABSTRACT_CLASS(wxSTEditorColumnizeDialog);
 };
 
-#if (wxVERSION_NUMBER >= 2900)
+#if (wxVERSION_NUMBER >= 2903)
   //#define STE_FILEOPENEXTRA 1 // trac.wxwidgets.org/ticket/13611
     #define STE_FILEOPENEXTRA 0
 #else

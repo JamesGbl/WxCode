@@ -145,7 +145,7 @@ public:
     int m_last_autoindent_len;      // the length of the line before auto indenting
 
     int m_steLang_id;               // index into the wxSTEditorLangs used
-    STE_Encoding m_encoding;        // encoding specified by LoadInputStream parameter, or else, found inside file
+    STE_Encoding m_encoding;        // encoding specified by LoadFile parameter, or else, found inside file
     bool m_file_bom;                // bom found inside file
 
     wxSTEditorOptions m_options;    // options, always created

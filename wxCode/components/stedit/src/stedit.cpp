@@ -54,8 +54,8 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/stedit/steexprt.h>
 #include <wx/stedit/steart.h>
 
-#include "wxext.h"
 #include "wxtrunk.h"
+#include "wxext.h"
 
 //-----------------------------------------------------------------------------
 // Global data
@@ -2136,38 +2136,6 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
-static void DetectBomAndLoad(wxCharBuffer& buf, size_t buf_len,
-                             wxString* str, wxBOM* file_bom)
-{
-    wxCHECK_RET((str != NULL) && (file_bom != NULL), wxT("Invalid string or bom"));
-
-    wxConvAuto conv_auto;
-
-#if (wxVERSION_NUMBER >= 2903)
-    *str = wxString(buf.data(), conv_auto, buf_len);
-    *file_bom = conv_auto.GetBOM();
-#else // wx 2.8
-    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
-    *file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
-
-    #if (wxVERSION_NUMBER >= 2900)
-        // fails for ISO8859_1-encoded files (with national chars in), in wx 2.8 ansi,
-        // because the ctor conv argument is unused
-        *str = wxString(buf.data(), conv_auto, buf_len);
-    #else // wx 2.8 ansi
-        switch (*file_bom)
-        {
-            case wxBOM_UTF16LE:
-                *str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
-                break;
-            default:
-                *str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
-                break;
-        }
-    #endif
-#endif // 2.9
-}
-
 bool wxSTEditor::LoadFile( wxInputStream& stream,
                            const wxFileName& fileName,
                            int flags,
@@ -2200,7 +2168,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             found_lang = SetLanguage(fileName);
         }
 
-        ok = (stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
+        ok = ((size_t)stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
 
         if (ok)
         {
@@ -2211,7 +2179,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             {
                 case wxBOM_Unknown:
                 case wxBOM_None:
-                    DetectBomAndLoad(charBuf, stream_len, &str, &file_bom);
+                    file_bom = ::wxStringFromCharBuffer(charBuf, stream_len, &str);
                 #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
                     switch (file_bom)
                     {
@@ -4097,7 +4065,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2806")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2807")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

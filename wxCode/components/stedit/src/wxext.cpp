@@ -17,8 +17,8 @@
 #include <wx/clipbrd.h>
 #include <wx/convauto.h>
 
-#include "wxext.h"
 #include "wxtrunk.h"
+#include "wxext.h"
 
 #ifndef WXPRECOMP
     #include <wx/settings.h>
@@ -768,3 +768,36 @@ wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
    return temp;
 }
 #endif
+
+wxBOM wxStringFromCharBuffer(const wxCharBuffer& buf, size_t buf_len, wxString* str)
+{
+    wxCHECK_MSG((str != NULL), wxBOM_Unknown, wxT("Invalid string or bom"));
+
+    wxConvAuto conv_auto;
+    wxBOM file_bom;
+
+#if (wxVERSION_NUMBER >= 2903)
+    *str = wxString(buf.data(), conv_auto, buf_len);
+    file_bom = conv_auto.GetBOM();
+#else // wx 2.8
+    // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
+    file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
+
+    #if (wxVERSION_NUMBER >= 2900)
+        // fails for ISO8859_1-encoded files (with national chars in), in wx 2.8 ansi,
+        // because the ctor conv argument is unused
+        *str = wxString(buf.data(), conv_auto, buf_len);
+    #else // wx 2.8 ansi
+        switch (file_bom)
+        {
+            case wxBOM_UTF16LE:
+                *str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
+                break;
+            default:
+                *str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
+                break;
+        }
+    #endif
+#endif // 2.9
+    return file_bom;
+}

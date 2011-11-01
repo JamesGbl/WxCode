@@ -608,7 +608,7 @@ enum STE_PrefFlagType
 
 //-----------------------------------------------------------------------------
 // STE_LoadFileType - options when loading a file
-//   See wxSTEditor::LoadInputStream
+//   See wxSTEditor::LoadFile
 //   and wxSTEditorPrefs and STE_PREF_LOAD_UNICODE
 //-----------------------------------------------------------------------------
 

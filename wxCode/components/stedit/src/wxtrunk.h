@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+#ifndef __WXTRUNK_H__
+#define __WXTRUNK_H__
+
 #if (wxVERSION_NUMBER < 2812)
    #define wxT_2 wxT
 #endif
@@ -61,3 +64,5 @@ inline size_t wxWritableWCharBuffer_length(const wxWritableWCharBuffer& buf)
     return wcslen(buf.data());
 #endif
 }
+
+#endif // __WXTRUNK_H__
