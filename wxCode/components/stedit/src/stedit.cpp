@@ -2178,7 +2178,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
 
     const wxFileOffset stream_len = stream.GetLength();
-    bool ok = (stream_len <= 40000000);
+    bool ok = (stream_len <= STE_MaxFileSize);
 
     if (ok)
     {
@@ -2255,6 +2255,15 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 default:
                     ok = false;
                     break;
+            }
+            if (ok)
+            {
+                ok = !(stream_len && str.IsEmpty());
+                if (!ok)
+                {
+                    wxMessageBox(_("Bad encoding."),
+                        _("Error loading file"), wxOK|wxICON_ERROR, parent);
+                }
             }
             if (ok)
             {
@@ -2339,10 +2348,10 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     wxStructStat statstr;
     wxStat( fileName.GetFullPath(), &statstr );
 
-    if (statstr.st_size > 40000000)
+    if (statstr.st_size > STE_MaxFileSize)
     {
         wxMessageBox(_("This file is too large for this editor, sorry."),
-                     _("Error loading file"), wxOK|wxICON_EXCLAMATION, GetModalParent());
+                     _("Error loading file"), wxOK|wxICON_ERROR, GetModalParent());
 
         return false;
     }
@@ -4088,7 +4097,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2804")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2805")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

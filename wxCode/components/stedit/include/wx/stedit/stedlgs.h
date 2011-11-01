@@ -532,17 +532,24 @@ private:
     DECLARE_ABSTRACT_CLASS(wxSTEditorColumnizeDialog);
 };
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFileDialog : public wxFileDialog
-{
-    DECLARE_CLASS(wxSTEditorFileDialog)
-public:
-    STE_Encoding m_encoding;
+#if (wxVERSION_NUMBER >= 2900)
+  //#define STE_FILEOPENEXTRA 1 // trac.wxwidgets.org/ticket/13611
+    #define STE_FILEOPENEXTRA 0
+#else
+    #define STE_FILEOPENEXTRA 0
+#endif
 
-    wxSTEditorFileDialog(wxWindow* parent,
+class WXDLLIMPEXP_STEDIT wxSTEditorFileOpenDialog : public wxFileDialog
+{
+    DECLARE_CLASS(wxSTEditorFileOpenDialog)
+public:
+    static STE_Encoding m_encoding;
+
+    wxSTEditorFileOpenDialog(wxWindow* parent,
                          const wxString& message = wxFileSelectorPromptStr,
                          const wxString& defaultDir = wxEmptyString,
                          const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-                         bool multiple = false);
+                         long style = wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     virtual int ShowModal();
 };

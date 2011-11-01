@@ -89,6 +89,8 @@
 typedef int STE_Encoding; // = wxBOM (utf8 is the default in several wx classes, wxStringInputStream wxFile)
 #define STE_Encoding_Default 0 // = wxBOM_None
 
+#define STE_MaxFileSize 40000000
+
 //-----------------------------------------------------------------------------
 // Use wxHtmlEasyPrinting instead of normal printing
 //   eg. in your build files use compiler flag -D STE_USE_HTML_PRINT=1

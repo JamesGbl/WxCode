@@ -2227,7 +2227,7 @@ void wxSTEditorColumnizeDialog::OnText(wxCommandEvent& event)
         FormatText();
 }
 
-#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+#if STE_FILEOPENEXTRA
 // panel with custom controls for file dialog
 class wxSTEditorFileOpenPanel : public wxPanel
 {
@@ -2285,11 +2285,11 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
     {
         wxSTEditorFileOpenSizer(this);
         
-        if (parent->IsKindOf(CLASSINFO(wxSTEditorFileDialog)))
+        if (parent->IsKindOf(CLASSINFO(wxSTEditorFileOpenDialog)))
         {
-            wxSTEditorFileDialog* dlg = (wxSTEditorFileDialog*)parent;
+            //wxSTEditorFileOpenDialog* dlg = (wxSTEditorFileOpenDialog*)parent;
 
-            switch (dlg->m_encoding)
+            switch (wxSTEditorFileOpenDialog::m_encoding)
             {
                 case wxBOM_UTF8:
                     m_index = wxSTEditorFileOpenPanel::encoding_utf8;
@@ -2300,35 +2300,54 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
             }
 
             GetChoice()->SetValidator(wxGenericValidator(&m_index));
-            TransferDataToWindow();
+            //TransferDataToWindow();
+            //trac.wxwidgets.org/ticket/13611
         }
     }
     return ok;
 }
+#else // !STE_FILEOPENEXTRA
+enum filterindex
+{
+    filterindex_allfiles = 0,
+    filterindex_utf8,
+    filterindex_unicode,
+};
+#endif // STE_FILEOPENEXTRA
 
-#endif
+IMPLEMENT_CLASS(wxSTEditorFileOpenDialog, wxFileDialog)
 
-IMPLEMENT_CLASS(wxSTEditorFileDialog, wxFileDialog)
+/*static*/ STE_Encoding wxSTEditorFileOpenDialog::m_encoding = STE_Encoding_Default;
 
-wxSTEditorFileDialog::wxSTEditorFileDialog(wxWindow* parent,
+wxSTEditorFileOpenDialog::wxSTEditorFileOpenDialog(wxWindow* parent,
                                            const wxString& message,
                                            const wxString& defaultDir,
                                            const wxString& extensions,
-                                           bool multiple) : 
-    wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, wxFD_DEFAULT_STYLE_OPEN | (multiple ? wxFD_MULTIPLE : 0))
+                                           long style) : 
+    wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, style)
 {
-    m_encoding = STE_Encoding_Default;
-    SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
-#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+    //m_encoding = wxBOM_UTF8;
+    //SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
+#if STE_FILEOPENEXTRA
     SetExtraControlCreator(&wxSTEditorFileOpenPanel::ControlCreator);
+#else
+    switch (wxSTEditorFileOpenDialog::m_encoding)
+    {
+        case wxBOM_UTF8:
+            SetFilterIndex(filterindex_utf8);
+            break;
+        case wxBOM_UTF16LE:
+            SetFilterIndex(filterindex_unicode);
+            break;
+    }
 #endif
 }
 
-int wxSTEditorFileDialog::ShowModal()
+int wxSTEditorFileOpenDialog::ShowModal()
 {
     int n = wxFileDialog::ShowModal();
 
-#if (wxVERSION_NUMBER >= 2900) && defined(__WXDEBUG__)
+#if STE_FILEOPENEXTRA
     if (n == wxID_OK)
     {
         wxSTEditorFileOpenPanel* wnd = wxStaticCast(GetExtraControl(), wxSTEditorFileOpenPanel);
@@ -2348,6 +2367,16 @@ int wxSTEditorFileDialog::ShowModal()
                 break;
         }
     }
-#endif
+#else // !STE_FILEOPENEXTRA
+    if (n == wxID_OK) switch (GetFilterIndex())
+    {
+        case filterindex_utf8:
+            m_encoding = wxBOM_UTF8;
+            break;
+        case filterindex_unicode:
+            m_encoding = wxBOM_UTF16LE;
+            break;
+    }
+#endif // STE_FILEOPENEXTRA
     return n;
 }

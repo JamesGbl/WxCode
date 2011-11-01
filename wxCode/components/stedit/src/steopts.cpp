@@ -11,19 +11,22 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/steopts.h>
 #include <wx/stedit/stedit.h>
 
 wxString STE_DefaultFileName( wxT("untitled.txt") );
 wxString STE_DefaultFileExtensions(
-                                    wxT("Text Files (txt text)|*.txt;*.text|")
-                                    wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx|")
-                                    wxT("H Files (h)|*.h|")
-                                    wxT("Html Files (htm html)|*.htm;*.html|")
-                                    wxT("XML Files (xml)|*.xml|")
-                                    wxT("Lua Files (lua)|*.lua|")
-                                    wxT("Python Files (py)|*.py|")
-                                    wxT("All Files|")wxALL_FILES_PATTERN
+                                    wxT("All Files|")wxALL_FILES_PATTERN wxT("|")
+                                #if !STE_FILEOPENEXTRA
+                                    wxT("UTF8 Files|")wxALL_FILES_PATTERN wxT("|")
+                                    wxT("Unicode Files|")wxALL_FILES_PATTERN wxT("|")
+                                #endif
+                                    wxT("Text Files (txt text)|*.txt;*.text")wxT("|")
+                                    wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx")wxT("|")
+                                    wxT("H Files (h)|*.h")wxT("|")
+                                    wxT("Html Files (htm html)|*.htm;*.html")wxT("|")
+                                    wxT("XML Files (xml)|*.xml")wxT("|")
+                                    wxT("Lua Files (lua)|*.lua")wxT("|")
+                                    wxT("Python Files (py)|*.py")//wxT("|")
                                     );
 
 //-----------------------------------------------------------------------------

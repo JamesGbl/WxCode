@@ -14,7 +14,6 @@
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/stenoteb.h>
 #include <wx/stedit/stedlgs.h>
-
 #include <wx/progdlg.h>   // wxProgressDialog
 #include "wxext.h"   // FileNameArray
 
@@ -726,10 +725,10 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
 
     if (fileName.GetFullPath().IsEmpty())
     {
-        wxSTEditorFileDialog fileDialog( this, _("Open file into new notebook page"),
+        wxSTEditorFileOpenDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
-                                 false);
+                                 wxFD_DEFAULT_STYLE_OPEN);
 
         if (fileDialog.ShowModal() == wxID_OK)
         {
@@ -783,10 +782,10 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
 
     if (filePaths.GetCount() < 1u)
     {
-        wxSTEditorFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
+        wxSTEditorFileOpenDialog fileDialog( this, _("Open file(s) into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
-                                 true);
+                                 wxFD_DEFAULT_STYLE_OPEN | wxFD_MULTIPLE);
         if (fileDialog.ShowModal() == wxID_OK)
         {
             fileDialog.GetPaths(filePaths);
