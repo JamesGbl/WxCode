@@ -86,8 +86,16 @@
 #define STE_TextPos wxTextPos
 //#define STE_TextCoord wxTextCoord // row/col
 
-typedef int STE_Encoding; // = wxBOM (utf8 is the default in several wx classes, wxStringInputStream wxFile)
-#define STE_Encoding_Default 0 // = wxBOM_None
+enum STE_Encoding
+{
+    STE_Encoding_UTF8,
+    STE_Encoding_Unicode,
+#ifdef __WXMSW__
+    STE_Encoding_OEM,
+#endif
+    STE_Encoding_None = -1,
+    STE_Encoding_Default = STE_Encoding_None
+};
 
 #define STE_MaxFileSize 40000000
 

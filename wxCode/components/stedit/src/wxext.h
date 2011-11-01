@@ -127,8 +127,13 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
-#ifdef __WXTRUNK_H__
-WXDLLIMPEXP_STEDIT wxBOM wxStringFromCharBuffer(const wxCharBuffer& buf, size_t buf_len, wxString* str);
+#if defined(__WXTRUNK_H__) && defined(_WX_CONVAUTO_H_)
+WXDLLIMPEXP_STEDIT wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom = NULL);
+#endif
+
+#ifdef __WXMSW__
+WXDLLIMPEXP_STEDIT wxString     wxConvertOEM2WX(const char* src, size_t buf_len);
+WXDLLIMPEXP_STEDIT wxCharBuffer wxConvertWX2OEM(const wxString&);
 #endif
 
 #endif // __WXEXT_H__

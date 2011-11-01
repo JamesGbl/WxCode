@@ -769,15 +769,14 @@ wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
 }
 #endif
 
-wxBOM wxStringFromCharBuffer(const wxCharBuffer& buf, size_t buf_len, wxString* str)
+wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
 {
-    wxCHECK_MSG((str != NULL), wxBOM_Unknown, wxT("Invalid string or bom"));
-
     wxConvAuto conv_auto;
     wxBOM file_bom;
+    wxString str;
 
 #if (wxVERSION_NUMBER >= 2903)
-    *str = wxString(buf.data(), conv_auto, buf_len);
+    str = wxString(buf.data(), conv_auto, buf_len);
     file_bom = conv_auto.GetBOM();
 #else // wx 2.8
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
@@ -786,18 +785,54 @@ wxBOM wxStringFromCharBuffer(const wxCharBuffer& buf, size_t buf_len, wxString* 
     #if (wxVERSION_NUMBER >= 2900)
         // fails for ISO8859_1-encoded files (with national chars in), in wx 2.8 ansi,
         // because the ctor conv argument is unused
-        *str = wxString(buf.data(), conv_auto, buf_len);
+        str = wxString(buf.data(), conv_auto, buf_len);
     #else // wx 2.8 ansi
         switch (file_bom)
         {
             case wxBOM_UTF16LE:
-                *str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
+                str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
                 break;
             default:
-                *str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
+                str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
                 break;
         }
     #endif
 #endif // 2.9
-    return file_bom;
+    if (file_bom_ptr) *file_bom_ptr = file_bom;
+    return str;
 }
+
+#ifdef __WXMSW__
+wxString wxConvertOEM2WX(const char* src, size_t buf_len)
+{
+    wxString str;
+
+#if wxUSE_UNICODE
+    char* p = new char[buf_len];
+    
+    ::OemToCharBuffA(src, p, buf_len);
+    mbstowcs(wxStringBuffer(str, buf_len), p, buf_len);
+    free(p);
+#else
+    ::OemToCharBuff(src, wxStringBuffer(str, buf_len), buf_len);
+#endif
+    return str;
+}
+
+wxCharBuffer wxConvertWX2OEM(const wxString& str)
+{
+    size_t buf_len = str.Length() * 2;
+    wxCharBuffer buf(buf_len);
+
+#if wxUSE_UNICODE
+    char* p = new char[buf_len];
+    
+    wcstombs(p, str, buf_len);
+    ::CharToOemBuffA(p, buf.data(), buf_len);
+    free(p);
+#else
+    ::CharToOemBuffA(str, buf.data(), buf_len);
+#endif
+    return buf;
+}
+#endif

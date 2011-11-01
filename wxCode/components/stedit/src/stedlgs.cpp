@@ -1637,13 +1637,13 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
     STE_Encoding enc = edit->GetEncoding();
     wxString encStr;
 
-    if (enc == wxBOM_Unknown)
+    if (enc == STE_Encoding_None)
     {
-        encStr = _("Unknown");
+        encStr = _("None");
     }
     else
     {
-        const wxArrayString as = wxSplit(_("None|UTF32BE|UTF32LE|UTF16BE|UTF16LE|UTF8"), '|');
+        const wxArrayString as = wxSplit(wxT("UTF8|UTF16LE|OEM"), '|');
 
         if (enc < (STE_Encoding)as.GetCount())
         {
@@ -1868,6 +1868,7 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
     wxSTEditorInsertTextSizer(this, true, true);
 
     wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
+
     buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
     buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
     buttons->Realize();
@@ -2247,7 +2248,10 @@ public:
     {
         encoding_default,
         encoding_utf8,
-        encoding_unicode
+        encoding_unicode,
+    #ifdef __WXMSW__
+        encoding_oem
+    #endif
     };
     int m_index; // enum encoding
 
@@ -2290,19 +2294,24 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
     if (ok)
     {
         wxSTEditorFileOpenSizer(this);
-        
+
         if (parent->IsKindOf(CLASSINFO(wxSTEditorFileOpenDialog)))
         {
             //wxSTEditorFileOpenDialog* dlg = (wxSTEditorFileOpenDialog*)parent;
 
             switch (wxSTEditorFileOpenDialog::m_encoding)
             {
-                case wxBOM_UTF8:
+                case STE_Encoding_UTF8:
                     m_index = wxSTEditorFileOpenPanel::encoding_utf8;
                     break;
-                case wxBOM_UTF16LE:
+                case STE_Encoding_Unicode:
                     m_index = wxSTEditorFileOpenPanel::encoding_unicode;
                     break;
+            #ifdef __WXMSW__
+                case STE_Encoding_OEM:
+                    m_index = wxSTEditorFileOpenPanel::encoding_oem;
+                    break;
+            #endif
             }
 
             GetChoice()->SetValidator(wxGenericValidator(&m_index));
@@ -2318,6 +2327,9 @@ enum filterindex
     filterindex_allfiles = 0,
     filterindex_utf8,
     filterindex_unicode,
+#ifdef __WXMSW__
+    filterindex_oem,
+#endif
 };
 #endif // STE_FILEOPENEXTRA
 
@@ -2329,7 +2341,7 @@ wxSTEditorFileOpenDialog::wxSTEditorFileOpenDialog(wxWindow* parent,
                                            const wxString& message,
                                            const wxString& defaultDir,
                                            const wxString& extensions,
-                                           long style) : 
+                                           long style) :
     wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, style)
 {
     //m_encoding = wxBOM_UTF8;
@@ -2339,11 +2351,18 @@ wxSTEditorFileOpenDialog::wxSTEditorFileOpenDialog(wxWindow* parent,
 #else
     switch (wxSTEditorFileOpenDialog::m_encoding)
     {
-        case wxBOM_UTF8:
+        case STE_Encoding_UTF8:
             SetFilterIndex(filterindex_utf8);
             break;
-        case wxBOM_UTF16LE:
+        case STE_Encoding_Unicode:
             SetFilterIndex(filterindex_unicode);
+            break;
+    #ifdef __WXMSW__
+        case STE_Encoding_OEM:
+            SetFilterIndex(filterindex_oem);
+            break;
+    #endif
+        default:
             break;
     }
 #endif
@@ -2366,22 +2385,32 @@ int wxSTEditorFileOpenDialog::ShowModal()
             case wxSTEditorFileOpenPanel::encoding_default:
                 break;
             case wxSTEditorFileOpenPanel::encoding_utf8:
-                m_encoding = wxBOM_UTF8;
+                m_encoding = STE_Encoding_UTF8;
                 break;
             case wxSTEditorFileOpenPanel::encoding_unicode:
-                m_encoding = wxBOM_UTF16LE;
+                m_encoding = STE_Encoding_Unicode;
                 break;
+        #ifdef __WXMSW__
+            case wxSTEditorFileOpenPanel::encoding_oem:
+                m_encoding = STE_Encoding_OEM;
+                break;
+        #endif
         }
     }
 #else // !STE_FILEOPENEXTRA
     if (n == wxID_OK) switch (GetFilterIndex())
     {
         case filterindex_utf8:
-            m_encoding = wxBOM_UTF8;
+            m_encoding = STE_Encoding_UTF8;
             break;
         case filterindex_unicode:
-            m_encoding = wxBOM_UTF16LE;
+            m_encoding = STE_Encoding_Unicode;
             break;
+    #ifdef __WXMSW__
+        case filterindex_oem:
+            m_encoding = STE_Encoding_OEM;
+            break;
+    #endif
     }
 #endif // STE_FILEOPENEXTRA
     return n;

@@ -1479,9 +1479,10 @@ wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit, bool set_size
     {
         _("Default"), 
         _("UTF8"), 
-        _("Unicode")
+        _("Unicode"), 
+        _("OEM")
     };
-    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 3, strs3, 0 );
+    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 4, strs3, 0 );
     item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );

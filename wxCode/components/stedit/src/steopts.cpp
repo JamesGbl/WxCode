@@ -17,8 +17,11 @@ wxString STE_DefaultFileName( wxT("untitled.txt") );
 wxString STE_DefaultFileExtensions(
                                     wxT("All Files|")wxALL_FILES_PATTERN wxT("|")
                                 #if !STE_FILEOPENEXTRA
-                                    wxT("UTF8 Files|")wxALL_FILES_PATTERN wxT("|")
-                                    wxT("Unicode Files|")wxALL_FILES_PATTERN wxT("|")
+                                    wxT("UTF8 Text Files|")wxALL_FILES_PATTERN wxT("|")
+                                    wxT("Unicode Text Files|")wxALL_FILES_PATTERN wxT("|")
+                                #ifdef __WXMSW__
+                                    wxT("OEM Text Files|")wxALL_FILES_PATTERN wxT("|")
+                                #endif
                                 #endif
                                     wxT("Text Files (txt text)|*.txt;*.text")wxT("|")
                                     wxT("C/C++ Files (c cpp cxx)|*.c;*.cpp;*.cxx")wxT("|")
