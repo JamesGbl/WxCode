@@ -146,7 +146,7 @@ public:
 
     int m_steLang_id;               // index into the wxSTEditorLangs used
     STE_Encoding m_encoding;        // encoding specified by LoadInputStream parameter, or else, found inside file
-    STE_Encoding m_file_bom;        // bom found inside file
+    bool m_file_bom;                // bom found inside file
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -691,11 +691,11 @@ public :
     //   different languages may use the same lexer. (Java uses CPP lexer)
     int  GetLanguageId() const;
 
-    void SetEncoding(STE_Encoding );
+    void SetEncoding(STE_Encoding);
     STE_Encoding GetEncoding() const;
 
-    void SetFileBOM(STE_Encoding );
-    STE_Encoding GetFileBOM() const;
+    void SetFileBOM(bool);
+    bool GetFileBOM() const;
 
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages

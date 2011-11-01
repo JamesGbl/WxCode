@@ -1634,8 +1634,7 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
 #endif
     SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
 
-    const wxString strEncoding = _("None|UTF32BE|UTF32LE|UTF16BE|UTF16LE|UTF8");
-    STE_Encoding enc = edit->GetSTERefData()->m_encoding;
+    STE_Encoding enc = edit->GetEncoding();
     wxString encStr;
 
     if (enc == wxBOM_Unknown)
@@ -1644,11 +1643,18 @@ wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEdi
     }
     else
     {
-        wxArrayString as = wxSplit(strEncoding, '|');
+        const wxArrayString as = wxSplit(_("None|UTF32BE|UTF32LE|UTF16BE|UTF16LE|UTF8"), '|');
 
-        if (enc < (int)as.GetCount())
+        if (enc < (STE_Encoding)as.GetCount())
         {
-            encStr = as.Item(enc);
+            if (edit->GetFileBOM())
+            {
+                encStr.Printf(_("%s with BOM"), as.Item(enc).wx_str());
+            }
+            else
+            {
+                encStr = as.Item(enc);
+            }
         }
     }
     SET_STATTEXT(ID_STEPROP_ENCODING_TEXT, encStr);
