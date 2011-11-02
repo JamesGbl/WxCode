@@ -88,12 +88,12 @@
 
 enum STE_Encoding
 {
+    STE_Encoding_None,
     STE_Encoding_UTF8,
     STE_Encoding_Unicode,
 #ifdef __WXMSW__
     STE_Encoding_OEM,
 #endif
-    STE_Encoding_None = -1,
     STE_Encoding_Default = STE_Encoding_None
 };
 

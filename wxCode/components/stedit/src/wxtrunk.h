@@ -65,4 +65,13 @@ inline size_t wxWritableWCharBuffer_length(const wxWritableWCharBuffer& buf)
 #endif
 }
 
+inline size_t wxCharBuffer_length(const wxCharBuffer& buf)
+{
+#if (wxVERSION_NUMBER >= 2900)
+    return buf.length(); // wxCharBuffer.length() not available in wx28
+#else
+    return strlen(buf.data());
+#endif
+}
+
 #endif // __WXTRUNK_H__

@@ -2353,33 +2353,27 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     //  FF FE           UTF-16, little-endian
     //  EF BB BF        UTF-8
 
-bool wxSTEditor::SaveFile( wxOutputStream& stream )
+bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool file_bom)
 {
     bool ok = true;
     const wxString s = GetText();
-
-    STE_Encoding encoding = GetEncoding();
-    bool file_bom = GetFileBOM();
+    const char* bom_chars;
+    size_t size;
 
     if (ok && file_bom) switch (encoding)
     {
         case STE_Encoding_Unicode:
-        {
-            const wxUint8 buf[] = { 0xFF, 0xFE };
-            const size_t size = WXSIZEOF(buf);
-            
-            ok = (size == stream.Write(buf, size).LastWrite());
+            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
+            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
             break;
-        }
         case STE_Encoding_UTF8:
-        {
-            const wxUint8 buf[] = { 0xEF, 0xBB, 0xBF };
-            const size_t size = WXSIZEOF(buf);
-            
-            ok = (size == stream.Write(buf, size).LastWrite());
+            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
+            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
             break;
-        }
         case STE_Encoding_None:
+    #ifdef __WXMSW__
+        case STE_Encoding_OEM:
+    #endif
             break;
         default:
             ok = false;
@@ -2394,11 +2388,10 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream )
             const wxWX2MBbuf buf = s.mb_str(conv);
 
             ok = !(!buf);
-            
             if (ok)
             {
-                const size_t size = ::wxWX2MBbuf_length(buf);
-                
+                size = wxWX2MBbuf_length(buf);
+
                 ok = (size == stream.Write(buf, size).LastWrite());
             }
             break;
@@ -2406,7 +2399,7 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream )
         case STE_Encoding_Unicode:
         {
             wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
-            const size_t size = ::wxWritableWCharBuffer_length(buf)*sizeof(wchar_t);
+            size = ::wxWritableWCharBuffer_length(buf)*sizeof(wchar_t);
 
             ok = (size == stream.Write(buf.data(), size).LastWrite());
             break;
@@ -2418,7 +2411,7 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream )
             ok = !(!buf);
             if (ok)
             {
-                const size_t size = ::wxWX2MBbuf_length(buf);
+                size = wxWX2MBbuf_length(buf);
 
                 ok = (size == stream.Write(buf, size).LastWrite());
             }
@@ -2428,7 +2421,7 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream )
         case STE_Encoding_OEM:
         {
             const wxCharBuffer buf = wxConvertWX2OEM(s);
-            const size_t size = strlen(buf.data());
+            size = wxCharBuffer_length(buf);
 
             ok = (size == stream.Write(buf, size).LastWrite());
             break;
@@ -2445,6 +2438,8 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
     wxFileName fileName = GetFileName();
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    STE_Encoding encoding = GetEncoding();
+    bool file_bom = GetFileBOM();
 
     // if not a valid filename or it wasn't loaded from disk - force dialog
     if (fileName.GetFullPath().Length())
@@ -2467,10 +2462,25 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
                 path = fileNamePath;
         }
 
+        wxSTEditorFileDialog fileDialog( this, _("Save file"),
+                                 GetOptions().GetDefaultFilePath(),
+                                 extensions,
+                                 wxFD_DEFAULT_STYLE_SAVE);
+
+        fileDialog.m_file_bom = file_bom;
+        fileDialog.m_encoding = encoding;
+        if (fileDialog.ShowModal() == wxID_OK)
+        {
+            fileName = fileDialog.GetPath();
+            encoding = fileDialog.m_encoding;
+            file_bom = fileDialog.m_file_bom;
+        }
+
+        /*
         fileName = wxFileName(wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
                                    wxEmptyString, extensions,
                                    wxFD_DEFAULT_STYLE_SAVE, GetModalParent() ));
-
+        */
         if (fileName.GetFullPath().IsEmpty())
         {
             return false;
@@ -2496,7 +2506,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     }
 
     wxFileOutputStream out(file);
-    if (SaveFile(out))
+    if (SaveFile(out, encoding, file_bom))
     {
         file.Close();
 
@@ -2507,6 +2517,8 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         SetSavePoint();
         SetFileName(fileName, true);
         UpdateCanDo(true);
+        SetEncoding(encoding);
+        SetFileBOM(file_bom);
         return true;
     }
 
@@ -2680,7 +2692,12 @@ void wxSTEditor::SetFileModificationTime(const wxDateTime &dt)
 
 void wxSTEditor::ShowPropertiesDialog()
 {
-    wxSTEditorPropertiesDialog(GetModalParent(), this, wxGetStockLabelEx(wxID_PROPERTIES, wxSTOCK_PLAINTEXT)).ShowModal();
+    wxSTEditorPropertiesDialog dlg(this);
+
+    if (dlg.Create(GetModalParent(), wxGetStockLabelEx(wxID_PROPERTIES, wxSTOCK_PLAINTEXT)))
+    {
+        dlg.ShowModal();
+    }
 }
 
 void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
@@ -4065,7 +4082,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2808")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2811")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

@@ -376,11 +376,21 @@ private:
 class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 {
 public:
-    wxSTEditorPropertiesDialog(wxWindow* parent, wxSTEditor *editor,
-                               const wxString& title,
-                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+    wxSTEditorPropertiesDialog(wxSTEditor*);
 
+    bool Create(wxWindow* parent, 
+                const wxString& title,
+                long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+
+    virtual bool TransferDataFromWindow();
+    
 private:
+    wxSTEditor* m_editor;
+    int m_encoding;
+    bool m_bom;
+
+    void OnUpdateNeedEditable(wxUpdateUIEvent&);
+    DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorPropertiesDialog);
 };
 
@@ -539,13 +549,14 @@ private:
     #define STE_FILEOPENEXTRA 0
 #endif
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFileOpenDialog : public wxFileDialog
+class WXDLLIMPEXP_STEDIT wxSTEditorFileDialog : public wxFileDialog
 {
-    DECLARE_CLASS(wxSTEditorFileOpenDialog)
+    DECLARE_CLASS(wxSTEditorFileDialog)
 public:
     static STE_Encoding m_encoding;
+    static bool m_file_bom; // wxFD_SAVE only
 
-    wxSTEditorFileOpenDialog(wxWindow* parent,
+    wxSTEditorFileDialog(wxWindow* parent,
                          const wxString& message = wxFileSelectorPromptStr,
                          const wxString& defaultDir = wxEmptyString,
                          const wxString& wildCard = wxFileSelectorDefaultWildcardStr,

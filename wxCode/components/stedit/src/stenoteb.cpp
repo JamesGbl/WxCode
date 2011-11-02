@@ -725,11 +725,12 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
 
     if (fileName.GetFullPath().IsEmpty())
     {
-        wxSTEditorFileOpenDialog fileDialog( this, _("Open file into new notebook page"),
+        wxSTEditorFileDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
                                  wxFD_DEFAULT_STYLE_OPEN);
 
+        fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)
         {
             fileName = fileDialog.GetPath();
@@ -782,10 +783,12 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
 
     if (filePaths.GetCount() < 1u)
     {
-        wxSTEditorFileOpenDialog fileDialog( this, _("Open file(s) into new notebook page"),
+        wxSTEditorFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
                                  wxFD_DEFAULT_STYLE_OPEN | wxFD_MULTIPLE);
+
+        fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)
         {
             fileDialog.GetPaths(filePaths);

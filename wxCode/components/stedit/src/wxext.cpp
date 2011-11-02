@@ -600,7 +600,7 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     wxClipboard* clipboard = wxTheClipboard;
     bool was_open = clipboard->IsOpened();
     bool ok = was_open || clipboard->Open();
-    
+
     if (ok)
     {
         if (def)
@@ -641,7 +641,7 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 /*static*/ bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
 {
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    return Set(HASBIT(clip_type, Default) ? new wxTextDataObject(str) : NULL, 
+    return Set(HASBIT(clip_type, Default) ? new wxTextDataObject(str) : NULL,
                HASBIT(clip_type, Primary) ? new wxTextDataObject(str) : NULL);
 #else
     return false;
@@ -666,6 +666,28 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 #endif
     return ok;
 }
+
+static const char BOM_UTF32BE[] = { '\x00', '\x00', '\xFE', '\xFF' };
+static const char BOM_UTF32LE[] = { '\xFF', '\xFE', '\x00', '\x00' };
+static const char BOM_UTF16BE[] = { '\xFE', '\xFF'                 };
+static const char BOM_UTF16LE[] = { '\xFF', '\xFE'                 };
+static const char BOM_UTF8[]    = { '\xEF', '\xBB', '\xBF'         };
+
+const char* wxConvAuto_GetBOMChars(wxBOM bom, size_t* count)
+{
+    wxCHECK_MSG(count != NULL, NULL, wxT("GetBOMChars: count pointer must be provided"));
+    switch (bom)
+    {
+        case wxBOM_UTF32BE: *count = WXSIZEOF(BOM_UTF32BE); return BOM_UTF32BE;
+        case wxBOM_UTF32LE: *count = WXSIZEOF(BOM_UTF32LE); return BOM_UTF32LE;
+        case wxBOM_UTF16BE: *count = WXSIZEOF(BOM_UTF16BE); return BOM_UTF16BE;
+        case wxBOM_UTF16LE: *count = WXSIZEOF(BOM_UTF16LE); return BOM_UTF16LE;
+        case wxBOM_UTF8   : *count = WXSIZEOF(BOM_UTF8   ); return BOM_UTF8;
+        default: return NULL;
+    }
+}
+
+#define BOM_EQUAL(src,array) ( 0 == memcmp((src), array, sizeof(array) ) )
 
 #if (wxVERSION_NUMBER < 2903)
 wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
@@ -709,10 +731,10 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
                 return wxBOM_Unknown;
             }
 
-            if ( src[0] == '\xFE' && src[1] == '\xFF' )
+            if ( BOM_EQUAL(src, BOM_UTF16BE) )
                 return wxBOM_UTF16BE;
 
-            if ( src[0] == '\xFF' && src[1] == '\xFE' )
+            if ( BOM_EQUAL(src, BOM_UTF16LE) )
             {
                 // if the next byte is 0, it could be an UTF-32LE BOM but if it
                 // isn't we can be sure it's UTF-16LE
@@ -736,21 +758,19 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
         default:
             // we have at least 4 characters so we may finally decide whether
             // we have a BOM or not
-            if ( src[0] == '\xEF' && src[1] == '\xBB' && src[2] == '\xBF' )
+            if ( BOM_EQUAL(src, BOM_UTF8) )
                 return wxBOM_UTF8;
 
-            if ( src[0] == '\x00' && src[1] == '\x00' &&
-                 src[2] == '\xFE' && src[3] == '\xFF' )
+            if ( BOM_EQUAL(src, BOM_UTF32BE) )
                 return wxBOM_UTF32BE;
 
-            if ( src[0] == '\xFF' && src[1] == '\xFE' &&
-                 src[2] == '\x00' && src[3] == '\x00' )
+            if ( BOM_EQUAL(src, BOM_UTF32LE) )
                 return wxBOM_UTF32LE;
 
-            if ( src[0] == '\xFE' && src[1] == '\xFF' )
+            if ( BOM_EQUAL(src, BOM_UTF16BE) )
                 return wxBOM_UTF16BE;
 
-            if ( src[0] == '\xFF' && src[1] == '\xFE' )
+            if ( BOM_EQUAL(src, BOM_UTF16LE) )
                 return wxBOM_UTF16LE;
     }
 
@@ -806,15 +826,13 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
 wxString wxConvertOEM2WX(const char* src, size_t buf_len)
 {
     wxString str;
-
 #if wxUSE_UNICODE
-    char* p = new char[buf_len];
-    
-    ::OemToCharBuffA(src, p, buf_len);
-    mbstowcs(wxStringBuffer(str, buf_len), p, buf_len);
-    free(p);
+    wxCharBuffer buf(buf_len);
+
+    OemToCharBuffA(src, buf.data(), buf_len);
+    mbstowcs(wxStringBuffer(str, buf_len), buf.data(), buf_len);
 #else
-    ::OemToCharBuff(src, wxStringBuffer(str, buf_len), buf_len);
+    OemToCharBuff(src, wxStringBuffer(str, buf_len), buf_len);
 #endif
     return str;
 }
@@ -823,15 +841,13 @@ wxCharBuffer wxConvertWX2OEM(const wxString& str)
 {
     size_t buf_len = str.Length() * 2;
     wxCharBuffer buf(buf_len);
-
 #if wxUSE_UNICODE
-    char* p = new char[buf_len];
-    
-    wcstombs(p, str, buf_len);
-    ::CharToOemBuffA(p, buf.data(), buf_len);
-    free(p);
+    wxCharBuffer temp(buf_len);
+
+    wcstombs(temp.data(), str, buf_len);
+    CharToOemBuffA(temp.data(), buf.data(), buf_len);
 #else
-    ::CharToOemBuffA(str, buf.data(), buf_len);
+    CharToOemBuffA(str, buf.data(), buf_len);
 #endif
     return buf;
 }

@@ -510,7 +510,7 @@ public :
                    STE_Encoding encoding = STE_Encoding_Default );
 
     // Save the file to wxOutputStream
-    bool SaveFile( wxOutputStream& stream );
+    bool SaveFile( wxOutputStream& stream, STE_Encoding encoding = STE_Encoding_Default, bool file_bom = false);
 #endif
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
