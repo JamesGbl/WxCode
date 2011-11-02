@@ -1950,40 +1950,43 @@ BEGIN_EVENT_TABLE(wxSTEditorExportDialog, wxDialog)
     EVT_BUTTON     (wxID_ANY, wxSTEditorExportDialog::OnButton)
 END_EVENT_TABLE()
 
-void wxSTEditorExportDialog::Init()
+wxSTEditorExportDialog::wxSTEditorExportDialog() :wxDialog()
 {
     m_fileFormatChoice = NULL;
     m_fileNameCombo    = NULL;
 }
 
-wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent,
-                                               long style)
-                       :wxDialog()
+bool wxSTEditorExportDialog::Create(wxWindow* parent,
+                                    long style)
 {
-    Init();
-    wxDialog::Create(parent, wxID_ANY, _("Export file"), wxDefaultPosition, wxDefaultSize, style);
+    bool ok = wxDialog::Create(parent, wxID_ANY, _("Export file"), wxDefaultPosition, wxDefaultSize, style);
 
-    wxSTEditorExportSizer(this, true, true);
+    if (ok)
+    {
+        SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+        wxSTEditorExportSizer(this, true, true);
 
-    wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
-    buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
-    buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
-    buttons->Realize();
-    GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+        wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
+        buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
+        buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
+        buttons->GetAffirmativeButton()->SetDefault();
+        buttons->Realize();
+        GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
 
-    m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
-    m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
-    m_fileNameCombo->Clear();
-    wxSTEInitComboBoxStrings(sm_fileNames, m_fileNameCombo);
+        m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
+        m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
+        m_fileNameCombo->Clear();
+        wxSTEInitComboBoxStrings(sm_fileNames, m_fileNameCombo);
 
-    m_fileFormatChoice->SetSelection(sm_file_format);
+        m_fileFormatChoice->SetSelection(sm_file_format);
 
-    wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
-    bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
-    Fit();
-    SetMinSize(GetSize());
-    Centre();
-    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+        wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
+        bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
+        Fit();
+        SetMinSize(GetSize());
+        Centre();
+    }
+    return ok;
 }
 
 wxFileName wxSTEditorExportDialog::GetFileName() const
@@ -1995,8 +1998,7 @@ void wxSTEditorExportDialog::SetFileName(const wxFileName& fileName)
 {
     wxSTEPrependComboBoxString(fileName.GetFullPath(), 10, m_fileNameCombo);
     m_fileNameCombo->SetValue(fileName.GetFullPath());
-    m_fileNameCombo->SetInsertionPointEnd();
-    m_fileNameCombo->SetSelection(-1, -1);   // select all
+    m_fileNameCombo->SetFocus();
 }
 int wxSTEditorExportDialog::GetFileFormat() const
 {
@@ -2010,6 +2012,7 @@ void wxSTEditorExportDialog::SetFileFormat(int file_format)
 wxFileName wxSTEditorExportDialog::FileNameExtChange(const wxFileName& fileName, int file_format) const
 {
     wxFileName fName(fileName);
+
     fName.SetExt(wxSTEditorExporter::GetExtension(file_format));
     return fName;
 }

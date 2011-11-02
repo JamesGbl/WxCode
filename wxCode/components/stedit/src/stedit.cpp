@@ -2580,9 +2580,12 @@ bool wxSTEditor::Revert()
 
 bool wxSTEditor::ShowExportDialog()
 {
-    wxSTEditorExportDialog dialog(GetModalParent());
+    wxSTEditorExportDialog dialog;
     wxFileName fileName = GetFileName();
-    int file_format   = dialog.GetFileFormat();
+    int file_format;
+
+    dialog.Create(GetModalParent());
+    file_format = dialog.GetFileFormat();
     fileName = dialog.FileNameExtChange(fileName, file_format);
     dialog.SetFileName(fileName);
     if ( dialog.ShowModal() != wxID_OK )
@@ -4082,7 +4085,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2811")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2812")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

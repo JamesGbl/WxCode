@@ -79,8 +79,10 @@ protected:
 class WXDLLIMPEXP_STEDIT wxSTEditorExportDialog : public wxDialog
 {
 public:
-    wxSTEditorExportDialog(wxWindow* parent,
-                           long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+    wxSTEditorExportDialog();
+
+    bool Create(wxWindow* parent,
+                long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     wxFileName GetFileName() const;
     void SetFileName(const wxFileName&);
