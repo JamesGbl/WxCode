@@ -2207,7 +2207,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 #endif
                     if (ok) switch (file_bom)
                     {
-                        case wxBOM_UTF8:    encoding = STE_Encoding_OEM    ; break;
+                        case wxBOM_UTF8:    encoding = STE_Encoding_UTF8   ; break;
                         case wxBOM_UTF16LE: encoding = STE_Encoding_Unicode; break;
                         default:            encoding = STE_Encoding_Default; break;
                     }
@@ -4085,7 +4085,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2812")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2814")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

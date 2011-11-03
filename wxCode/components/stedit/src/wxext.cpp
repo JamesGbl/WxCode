@@ -812,8 +812,11 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
             case wxBOM_UTF16LE:
                 str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
                 break;
+            case wxBOM_UTF8:
+                str = wxString(buf.data(), wxConvUTF8, buf_len); // ctor conv arg used only in unicode build
+                break;
             default:
-                str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg not used
+                str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg used only in unicode build
                 break;
         }
     #endif
