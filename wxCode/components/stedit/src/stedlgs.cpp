@@ -1645,12 +1645,16 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
 
         wxString mimeStr;
     #if wxUSE_MIMETYPE
-        wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(fileName.GetExt());
-
-        if (ft)
+        wxString ext = fileName.GetExt();
+        if (!ext.IsEmpty())
         {
-            ft->GetMimeType(&mimeStr);
-            delete ft;
+            wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
+
+            if (ft)
+            {
+                ft->GetMimeType(&mimeStr);
+                delete ft;
+            }
         }
     #endif
         SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
