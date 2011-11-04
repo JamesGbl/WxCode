@@ -2487,7 +2487,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         }
 
         wxSTEditorFileDialog fileDialog( this, _("Save file"),
-                                 fileName.GetPath(), //GetOptions().GetDefaultFilePath(),
+                                 fileName.GetPath().IsEmpty() ? GetOptions().GetDefaultFilePath() : fileName.GetPath(),
                                  extensions,
                                  wxFD_DEFAULT_STYLE_SAVE);
 
@@ -4120,7 +4120,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2821")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2822")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
