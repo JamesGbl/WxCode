@@ -2152,7 +2152,6 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
     if (ok)
     {
         bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
-        bool found_lang = false;
         wxCharBuffer charBuf(stream_len);
 
         if (  (encoding == STE_Encoding_Default)
@@ -2164,17 +2163,46 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
 
         ClearAll();
 
-        if (want_lang && !found_lang)
-        {
-            found_lang = SetLanguage(fileName);
-        }
-
         ok = ((size_t)stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
 
         if (ok)
         {
             wxString str;
             wxBOM file_bom = wxBOM_None;
+            bool found_lang = false;
+            bool html = false;
+
+            if (want_lang && !found_lang)
+            {
+                found_lang = SetLanguage(fileName);
+
+                if (found_lang)
+                {
+                    html = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("html")));
+                }
+            }
+            if ((want_lang && !found_lang) || html)
+            {
+                // sample just one line; feeble attempt to detect xml (in files w/o the .xml extension), and/or utf8 encoding in html files (w html extension)
+                const char* newline = strpbrk(charBuf.data(), "\n\r");
+                size_t len = newline ? (newline - charBuf.data()) : stream_len;
+                wxCharBuffer firstline(len);
+
+                strncpy(firstline.data(), charBuf.data(), len);
+
+                if ( (encoding == STE_Encoding_None) && strstr(firstline.data(), "charset=utf-8"))
+                {
+                    encoding = STE_Encoding_UTF8;
+                }
+                const char xml_header[] = "<?xml version=\"";
+
+                if (   (len >= WXSIZEOF(xml_header))
+                    && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
+                   )
+                {
+                    found_lang = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
+                }
+            }
 
             switch (encoding)
             {
@@ -2239,19 +2267,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             }
             if (ok)
             {
-                const wxString xml_header = wxT("<?xml version=\"");
-
-                if (    (str.Length() >= xml_header.Length())
-                     && want_lang
-                     && (!found_lang)
-                     && (0 == xml_header.CmpNoCase(str.Left(xml_header.Length())))
-                   )
-                {
-                    found_lang = SetLanguage(wxFileName(fileName.GetPath(), fileName.GetName(), wxT("xml")));
-                }
-
                 SetText(str);
-
                 SetEncoding(encoding);
                 SetFileBOM(file_bom != wxBOM_None);
             }
@@ -4104,7 +4120,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2818")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2821")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
