@@ -1706,17 +1706,24 @@ void wxSTEditorPropertiesDialog::OnUpdateNeedEditable(wxUpdateUIEvent& event)
     event.Enable(m_editor->IsEditable());
 }
 
-void wxSTEditorPropertiesDialog::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
+static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)
 {
-    int enc = wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->GetSelection();
-    bool bom_current = wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->IsChecked();
+    int enc = list->GetSelection();
+    bool bom_current = checkbox->IsChecked();
     size_t count;
     bool bom = (NULL != wxSTEditor::GetBOMChars((STE_Encoding)enc, &count));
 
     if (bom_current && !bom)
     {
-        wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->SetValue(false);
+        checkbox->SetValue(false);
     }
+    return bom;
+}
+
+void wxSTEditorPropertiesDialog::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
+{
+    bool bom = ::EnableBomCheckBox(wxStaticCast(FindWindow(ID_CHOICE), wxChoice), wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox));
+
     event.Enable(m_editor->IsEditable() && bom);
 }
 
@@ -2273,7 +2280,7 @@ public:
     int m_index; // STE_Encoding
     bool m_bom;
 
-    wxChoice* GetChoice()
+    wxChoice* GetList()
     {
         return wxStaticCast(FindWindow(ID_CHOICE), wxChoice);
     }
@@ -2297,6 +2304,7 @@ public:
     {
     }
 protected:
+    void OnUpdateBomCheckBox(wxUpdateUIEvent&);
     DECLARE_EVENT_TABLE()
 };
 
@@ -2307,7 +2315,16 @@ wxSTEditorFileOpenPanel::wxSTEditorFileOpenPanel() : wxPanel(), m_index(STE_Enco
 }
 
 BEGIN_EVENT_TABLE(wxSTEditorFileOpenPanel, wxPanel)
+    EVT_UPDATE_UI(ID_CHECKBOX, wxSTEditorFileOpenPanel::OnUpdateBomCheckBox)
 END_EVENT_TABLE()
+
+// nevet gets called :-(
+void wxSTEditorFileOpenPanel::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
+{
+    bool bom = ::EnableBomCheckBox(GetList(), GetCheckBox());
+
+    event.Enable(bom);
+}
 
 bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
 {
@@ -2325,9 +2342,9 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
             m_bom   = wxSTEditorFileDialog::m_file_bom;
 
         #ifndef __WXMSW__
-            wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Delete(STE_Encoding_Unicode+1);
+            GetList()->Delete(STE_Encoding_Unicode+1);
         #endif
-            GetChoice()->SetValidator(wxGenericValidator(&m_index));
+            GetList()->SetValidator(wxGenericValidator(&m_index));
             if (dlg->HasFdFlag(wxFD_SAVE))
             {
                 GetCheckBox()->SetValidator(wxGenericValidator(&m_bom));
