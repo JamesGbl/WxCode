@@ -751,7 +751,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
         {
             SetSelection(page);
         }
-        else if (GetEditor()->IsModified() || GetEditor()->GetDocumentSaved()) // non-empty editor?
+        else if ( (GetEditor() == NULL) || GetEditor()->IsModified() || GetEditor()->GetDocumentSaved()) // non-empty editor?
         {
             // new splitter+editor
             wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
