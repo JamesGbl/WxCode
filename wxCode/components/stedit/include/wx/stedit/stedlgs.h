@@ -11,9 +11,6 @@
 #ifndef _STEDLGS_H_
 #define _STEDLGS_H_
 
-#include <wx/stedit/stedefs.h>
-#include <wx/stedit/stedit.h>
-
 class WXDLLIMPEXP_FWD_CORE wxComboBox;
 class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
 class WXDLLIMPEXP_FWD_CORE wxSpinEvent;
@@ -441,8 +438,10 @@ enum STE_InsertText_Type
 class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog: public wxDialog
 {
 public:
-    wxSTEditorInsertTextDialog(wxWindow* parent,
-                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+    wxSTEditorInsertTextDialog();
+
+    bool Create(wxWindow* parent,
+                long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     virtual ~wxSTEditorInsertTextDialog();
 
@@ -493,7 +492,6 @@ public:
     static wxArrayString sm_appendValues;
 
 private:
-    void Init();
     DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorInsertTextDialog);
 };
@@ -564,5 +562,7 @@ public:
 
     virtual int ShowModal();
 };
+
+WXDLLIMPEXP_STEDIT wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long flags);
 
 #endif // _STEDLGS_H_

@@ -1536,7 +1536,8 @@ bool wxSTEditor::ShowInsertTextDialog()
 
     wxString initText = GetSelectedText();
 
-    wxSTEditorInsertTextDialog dialog(GetModalParent());
+    wxSTEditorInsertTextDialog dialog;
+    dialog.Create(GetModalParent());
     dialog.SetText(initText);
 
     if ( dialog.ShowModal() != wxID_OK )
@@ -2213,14 +2214,15 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     }
                     break;
                 case STE_Encoding_Unicode:
-                    str = wxString(charBuf.data(), wxConvAuto(), stream_len);
+                    str = wxString_From(charBuf.data(), wxConvAuto(), stream_len);
                     break;
                 case STE_Encoding_UTF8:
-                    str = wxString(charBuf.data(), wxConvUTF8, stream_len);
+                    str = wxString_From(charBuf.data(), wxConvUTF8, stream_len);
                     break;
             #ifdef __WXMSW__
                 case STE_Encoding_OEM:
-                    str = wxConvertOEM2WX(charBuf.data(), stream_len);
+                    //str = wxConvertOEM2WX(charBuf.data(), stream_len);
+                    str = wxString_From(charBuf.data(), wxMBConvOEM(), stream_len);
                     break;
             #endif
                 default:
@@ -2420,10 +2422,23 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool f
     #ifdef __WXMSW__
         case STE_Encoding_OEM:
         {
+        #ifdef x__WXDEBUG__
+            const wxCharBuffer buf = wxString_To(s, wxMBConvOEM());
+            //wxCharBuffer buf(wxMBConvOEM().cWX2MB(s));
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxCharBuffer_length(buf);
+
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+        #else
             const wxCharBuffer buf = wxConvertWX2OEM(s);
             size = wxCharBuffer_length(buf);
 
             ok = (size == stream.Write(buf, size).LastWrite());
+        #endif
             break;
         }
     #endif
@@ -2467,6 +2482,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
                                  extensions,
                                  wxFD_DEFAULT_STYLE_SAVE);
 
+        fileDialog.SetFilename(fileName.GetFullPath());
         fileDialog.m_file_bom = file_bom;
         fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)
@@ -2475,13 +2491,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
             encoding = fileDialog.m_encoding;
             file_bom = fileDialog.m_file_bom;
         }
-
-        /*
-        fileName = wxFileName(wxFileSelector( _("Save file"), path, fileName.GetFullPath(),
-                                   wxEmptyString, extensions,
-                                   wxFD_DEFAULT_STYLE_SAVE, GetModalParent() ));
-        */
-        if (fileName.GetFullPath().IsEmpty())
+        else
         {
             return false;
         }
@@ -2521,7 +2531,11 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         SetFileBOM(file_bom);
         return true;
     }
-
+    else
+    {
+        wxMessageBox(wxString::Format(_("Error saving file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+                     _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
+    }
     return false;
 }
 
@@ -4085,7 +4099,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2814")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2815")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

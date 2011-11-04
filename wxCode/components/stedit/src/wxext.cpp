@@ -825,6 +825,60 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
     return str;
 }
 
+wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
+{
+    wxString str;
+
+    if (len)
+    {
+        size_t wlen;
+        wxWCharBuffer buf(conv.cMB2WC(src, len, &wlen));
+
+        str = wxString(buf.data(), wxConvLibc, wlen);
+    }
+    return str;
+}
+
+wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
+{
+    wxWCharBuffer wbuf(src.wc_str(conv));
+    wxCharBuffer buf(conv.cWC2MB(wbuf));
+
+    return buf;
+}
+
+#ifdef __WXMSW__
+size_t wxMBConvOEM::ToWChar(wchar_t*    dst, size_t dstLen,
+                            const char* src, size_t srcLen) const
+{
+    if (srcLen == wxNO_LEN) srcLen = strlen(src);
+    wxCharBuffer buf(srcLen);
+    
+    OemToCharBuffA(src, buf.data(), srcLen);
+    return dst ? mbstowcs(dst, buf.data(), dstLen) : wxCharBuffer_length(buf);
+}
+
+size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
+                              const wchar_t* src, size_t srcLen) const
+{
+    size_t len;
+    if (srcLen == wxNO_LEN) srcLen = wcslen(src);
+    wxCharBuffer temp(srcLen);
+    
+    wcstombs(temp.data(), src, srcLen);
+    if (dst)
+    {
+        CharToOemBuffA(temp.data(), dst, dstLen);
+        len = strlen(dst);
+    }
+    else
+    {
+        len = wxCharBuffer_length(temp);
+    }
+    return len;
+}
+#endif
+
 #ifdef __WXMSW__
 wxString wxConvertOEM2WX(const char* src, size_t buf_len)
 {

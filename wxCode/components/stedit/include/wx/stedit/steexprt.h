@@ -105,7 +105,6 @@ public:
     static int           sm_file_format;
 
 private:
-    void Init();
     DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorExportDialog);
 };

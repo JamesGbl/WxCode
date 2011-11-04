@@ -132,7 +132,23 @@ WXDLLIMPEXP_STEDIT const char* wxConvAuto_GetBOMChars(wxBOM, size_t* count);
 WXDLLIMPEXP_STEDIT wxString    wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom = NULL);
 #endif
 
+WXDLLIMPEXP_STEDIT wxString     wxString_From(const char*     src, const wxMBConv&, size_t len = wxNO_LEN);
+WXDLLIMPEXP_STEDIT wxCharBuffer wxString_To  (const wxString& src, const wxMBConv&);
+
 #ifdef __WXMSW__
+class WXDLLIMPEXP_STEDIT wxMBConvOEM : public wxMBConv
+{
+public:
+    wxMBConvOEM() : wxMBConv() { }
+
+    virtual size_t ToWChar  (wchar_t*    dst, size_t dstLen,
+                             const char* src, size_t srcLen = wxNO_LEN) const;
+    virtual size_t FromWChar(char*          dst, size_t dstLen,
+                             const wchar_t* src, size_t srcLen = wxNO_LEN) const;
+
+    virtual wxMBConv* Clone() const { return new wxMBConvOEM(); }
+};
+
 WXDLLIMPEXP_STEDIT wxString     wxConvertOEM2WX(const char* src, size_t buf_len);
 WXDLLIMPEXP_STEDIT wxCharBuffer wxConvertWX2OEM(const wxString&);
 #endif

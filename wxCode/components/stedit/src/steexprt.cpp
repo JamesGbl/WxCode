@@ -1965,13 +1965,7 @@ bool wxSTEditorExportDialog::Create(wxWindow* parent,
     {
         SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
         wxSTEditorExportSizer(this, true, true);
-
-        wxStdDialogButtonSizer* buttons = new wxStdDialogButtonSizer();
-        buttons->SetAffirmativeButton(new wxButton(this, wxID_OK));
-        buttons->SetCancelButton(new wxButton(this, wxID_CANCEL));
-        buttons->GetAffirmativeButton()->SetDefault();
-        buttons->Realize();
-        GetSizer()->Add(buttons, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+        wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
 
         m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
         m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);

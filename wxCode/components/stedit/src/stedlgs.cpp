@@ -10,15 +10,13 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedlgs.h>
-#include <wx/stedit/steexprt.h>
+#include <wx/stedit/stedit.h>
 #include <wx/stedit/steart.h>
 
 #include <wx/fontenum.h>   // font support
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
 #include <wx/listbook.h>
-#include <wx/imaglist.h>
 #include <wx/mimetype.h>
 #include <wx/valgen.h>
 
@@ -1589,21 +1587,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
         SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
         wxSTEditorPropertiesSizer(this, true, true);
 
-        wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
-
-        if (m_editor->IsEditable())
-        {
-            buttonpane->SetAffirmativeButton(new wxButton(this, wxID_OK));
-            buttonpane->SetCancelButton(new wxButton(this, wxID_CANCEL));
-        }
-        else
-        {
-            buttonpane->SetCancelButton(new wxButton(this, wxID_CANCEL, _("Cl&ose")));
-        }
-        buttonpane->GetCancelButton()->SetDefault();
-        buttonpane->Realize();
-
-        GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+        wxSTEditorStdDialogButtonSizer(this, wxCANCEL | (m_editor->IsEditable() ? wxOK : 0));
 
         const wxFileName fileName = m_editor->GetFileName();
 
@@ -1874,7 +1858,7 @@ BEGIN_EVENT_TABLE(wxSTEditorInsertTextDialog, wxDialog)
     EVT_IDLE       (wxSTEditorInsertTextDialog::OnIdle)
 END_EVENT_TABLE()
 
-void wxSTEditorInsertTextDialog::Init()
+wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog()
 {
     m_prependCombo       = NULL;
     m_appendCombo        = NULL;
@@ -1887,50 +1871,45 @@ void wxSTEditorInsertTextDialog::Init()
     m_append_insert_pos  = 0;
 }
 
-wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxWindow* parent,
-                                                       long style)
-                           :wxDialog()
+bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
+                                        long style)
 {
-    Init();
-    wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style);
+    bool ok = wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style);
+    
+    if (ok)
+    {
+        SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+        m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
+                                            wxDefaultPosition, wxSize(400, 200));
 
-    m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
-                                        wxDefaultPosition, wxSize(400, 200));
+        wxSTEditorInsertTextSizer(this, true, true);
+        wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
 
-    wxSTEditorInsertTextSizer(this, true, true);
+        m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
+        m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
+        m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
+        m_prependCombo->Clear();
+        m_appendCombo->Clear();
 
-    wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
+        m_insertMenu = wxSTEditorMenuManager::CreateInsertCharsMenu(NULL,
+                                                      STE_MENU_INSERTCHARS_CHARS);
 
-    buttonpane->SetAffirmativeButton(new wxButton(this, wxID_OK));
-    buttonpane->SetCancelButton(new wxButton(this, wxID_CANCEL));
-    buttonpane->GetCancelButton()->SetDefault();
-    buttonpane->Realize();
-    GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+        wxSTEInitComboBoxStrings(sm_prependValues, m_prependCombo);
+        wxSTEInitComboBoxStrings(sm_appendValues,  m_appendCombo);
 
-    m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
-    m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
-    m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
-    m_prependCombo->Clear();
-    m_appendCombo->Clear();
+        m_prependString = m_prependCombo->GetValue();
+        m_appendString  = m_appendCombo->GetValue();
 
-    m_insertMenu = wxSTEditorMenuManager::CreateInsertCharsMenu(NULL,
-                                                  STE_MENU_INSERTCHARS_CHARS);
+        wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
+        wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
 
-    wxSTEInitComboBoxStrings(sm_prependValues, m_prependCombo);
-    wxSTEInitComboBoxStrings(sm_appendValues,  m_appendCombo);
+        UpdateControls();
 
-    m_prependString = m_prependCombo->GetValue();
-    m_appendString  = m_appendCombo->GetValue();
-
-    wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
-    wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
-
-    UpdateControls();
-
-    Fit();
-    SetMinSize(GetSize());
-    Centre();
-    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+        Fit();
+        SetMinSize(GetSize());
+        Centre();
+    }
+    return ok;
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
@@ -2429,4 +2408,27 @@ int wxSTEditorFileDialog::ShowModal()
     }
 #endif // STE_FILEOPENEXTRA
     return n;
+}
+
+wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long flags)
+{
+    wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
+
+    if ((flags & wxOK) && (flags & wxCANCEL))
+    {
+        buttonpane->SetAffirmativeButton(new wxButton(parent, wxID_OK));
+        buttonpane->SetCancelButton(new wxButton(parent, wxID_CANCEL));
+        buttonpane->GetAffirmativeButton()->SetDefault();
+    }
+    else if (flags & wxCANCEL)
+    {
+        buttonpane->SetCancelButton(new wxButton(parent, wxID_CANCEL, _("Cl&ose")));
+        buttonpane->GetCancelButton()->SetDefault();
+    }
+    buttonpane->Realize();
+
+    //parent->GetSizer()->Add(new wxStaticLine(parent), 0, wxEXPAND | wxALL, 5);
+    parent->GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+
+    return buttonpane;
 }
