@@ -47,7 +47,7 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
 }
 #endif
 
-inline size_t wxWX2MBbuf_length(const wxWX2MBbuf& buf)
+inline size_t wxBuffer_length(const wxWX2MBbuf& buf)
 {
 #if (wxVERSION_NUMBER >= 2900)
     return buf.length(); // wxWX2MBbuf.length() not available in wx28
@@ -56,7 +56,7 @@ inline size_t wxWX2MBbuf_length(const wxWX2MBbuf& buf)
 #endif
 }
 
-inline size_t wxWritableWCharBuffer_length(const wxWritableWCharBuffer& buf)
+inline size_t wxBuffer_length(const wxWritableWCharBuffer& buf)
 {
 #if (wxVERSION_NUMBER >= 2900)
     return buf.length(); // wxWritableWCharBuffer.length() not available in wx28
@@ -65,7 +65,8 @@ inline size_t wxWritableWCharBuffer_length(const wxWritableWCharBuffer& buf)
 #endif
 }
 
-inline size_t wxCharBuffer_length(const wxCharBuffer& buf)
+#if !wxUSE_UNICODE
+inline size_t wxBuffer_length(const wxCharBuffer& buf)
 {
 #if (wxVERSION_NUMBER >= 2900)
     return buf.length(); // wxCharBuffer.length() not available in wx28
@@ -73,5 +74,6 @@ inline size_t wxCharBuffer_length(const wxCharBuffer& buf)
     return strlen(buf.data());
 #endif
 }
+#endif
 
 #endif // __WXTRUNK_H__

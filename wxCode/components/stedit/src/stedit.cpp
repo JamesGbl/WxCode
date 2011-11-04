@@ -2221,7 +2221,6 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     break;
             #ifdef __WXMSW__
                 case STE_Encoding_OEM:
-                    //str = wxConvertOEM2WX(charBuf.data(), stream_len);
                     str = wxString_From(charBuf.data(), wxMBConvOEM(), stream_len);
                     break;
             #endif
@@ -2386,35 +2385,36 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool f
     {
         case STE_Encoding_None:
         {
-            const wxMBConv& conv = *wxConvCurrent;
-            const wxWX2MBbuf buf = s.mb_str(conv);
+            const wxWX2MBbuf buf = s.mb_str(*wxConvCurrent);
 
             ok = !(!buf);
             if (ok)
             {
-                size = wxWX2MBbuf_length(buf);
-
+                size = wxBuffer_length(buf);
                 ok = (size == stream.Write(buf, size).LastWrite());
             }
             break;
         }
         case STE_Encoding_Unicode:
         {
-            wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
-            size = ::wxWritableWCharBuffer_length(buf)*sizeof(wchar_t);
-
-            ok = (size == stream.Write(buf.data(), size).LastWrite());
+            const wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
+            
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf)*sizeof(wchar_t);
+                ok = (size == stream.Write(buf.data(), size).LastWrite());
+            }
             break;
         }
         case STE_Encoding_UTF8:
         {
-            const wxWX2MBbuf buf = s.mb_str(wxConvUTF8);
+            const wxCharBuffer buf = wxString_To(s, wxConvUTF8);
 
             ok = !(!buf);
             if (ok)
             {
-                size = wxWX2MBbuf_length(buf);
-
+                size = wxBuffer_length(buf);
                 ok = (size == stream.Write(buf, size).LastWrite());
             }
             break;
@@ -2422,23 +2422,14 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool f
     #ifdef __WXMSW__
         case STE_Encoding_OEM:
         {
-        #ifdef x__WXDEBUG__
             const wxCharBuffer buf = wxString_To(s, wxMBConvOEM());
-            //wxCharBuffer buf(wxMBConvOEM().cWX2MB(s));
 
             ok = !(!buf);
             if (ok)
             {
-                size = wxCharBuffer_length(buf);
-
+                size = wxBuffer_length(buf);
                 ok = (size == stream.Write(buf, size).LastWrite());
             }
-        #else
-            const wxCharBuffer buf = wxConvertWX2OEM(s);
-            size = wxCharBuffer_length(buf);
-
-            ok = (size == stream.Write(buf, size).LastWrite());
-        #endif
             break;
         }
     #endif
@@ -2452,12 +2443,13 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool f
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
     wxFileName fileName = GetFileName();
-    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions = extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_;
     STE_Encoding encoding = GetEncoding();
     bool file_bom = GetFileBOM();
+    wxFile file;
 
     // if not a valid filename or it wasn't loaded from disk - force dialog
-    if (fileName.GetFullPath().Length())
+    if (!fileName.GetFullPath().IsEmpty())
     {
         if (!fileName.IsOk())
             use_dialog = true;
@@ -2470,19 +2462,20 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     {
         wxString path = GetOptions().GetDefaultFilePath();
 
-        if (fileName.GetFullPath().Length())
+        if (!fileName.GetFullPath().IsEmpty())
         {
             wxString fileNamePath = fileName.GetPath();
-            if (fileNamePath.Length())
+
+            if (!fileNamePath.IsEmpty())
                 path = fileNamePath;
         }
 
         wxSTEditorFileDialog fileDialog( this, _("Save file"),
-                                 GetOptions().GetDefaultFilePath(),
+                                 fileName.GetPath(), //GetOptions().GetDefaultFilePath(),
                                  extensions,
                                  wxFD_DEFAULT_STYLE_SAVE);
 
-        fileDialog.SetFilename(fileName.GetFullPath());
+        fileDialog.SetFilename(fileName.GetFullName());
         fileDialog.m_file_bom = file_bom;
         fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)
@@ -2498,9 +2491,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     }
 
     // FIXME check for write permission wxAccess - access
-
-    wxFile file(fileName.GetFullPath(), wxFile::write);
-    if (!file.IsOpened())
+    if (!file.Open(fileName.GetFullPath(), wxFile::write))
     {
         wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
@@ -3985,6 +3976,20 @@ bool wxSTEditor::GetFileBOM() const
     return GetSTERefData()->m_file_bom;
 }
 
+/*static*/
+const char* wxSTEditor::GetBOMChars(STE_Encoding encoding, size_t* count)
+{
+    switch (encoding)
+    {
+        case STE_Encoding_UTF8:    return wxConvAuto_GetBOMChars(wxBOM_UTF8   , count);
+        case STE_Encoding_Unicode: return wxConvAuto_GetBOMChars(wxBOM_UTF16LE, count);
+    #ifdef __WXMSW__
+        case STE_Encoding_OEM:     return NULL;
+    #endif
+        default:                   return NULL;
+    }
+}
+
 const wxSTEditorPrefs& wxSTEditor::GetEditorPrefs() const
 {
     return GetSTERefData()->m_stePrefs;
@@ -4099,7 +4104,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2815")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2818")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

@@ -697,6 +697,8 @@ public :
     void SetFileBOM(bool);
     bool GetFileBOM() const;
 
+    static const char* GetBOMChars(STE_Encoding, size_t* count);
+
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages
     //

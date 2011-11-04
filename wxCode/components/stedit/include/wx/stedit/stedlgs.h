@@ -387,6 +387,7 @@ private:
     bool m_bom;
 
     void OnUpdateNeedEditable(wxUpdateUIEvent&);
+    void OnUpdateBomCheckBox(wxUpdateUIEvent&);
     DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorPropertiesDialog);
 };

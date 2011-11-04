@@ -64,8 +64,13 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 
     ::wxFrame_SetInitialPosition(this, pos, size);
-#ifdef x__WXDEBUG__
-    ::wxPostMenuCommand(this, ID_STE_PROPERTIES);
+#ifdef __WXDEBUG__
+    //::wxPostMenuCommand(this, ID_STE_EXPORT);
+    //::wxPostMenuCommand(this, ID_STE_PROPERTIES);
+    //::wxPostMenuCommand(this, wxID_OPEN);
+    //::wxPostMenuCommand(this, wxID_SAVEAS);
+    //::wxPostMenuCommand(this, ID_STE_PREFERENCES);
+    //::wxPostMenuCommand(this, ID_STE_EXPORT);
 #endif
     return true;
 }

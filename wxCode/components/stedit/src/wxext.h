@@ -128,14 +128,16 @@ public:
 };
 
 #if (defined(__WXTRUNK_H__) || ((wxVERSION_NUMBER >= 2903)) ) && defined(_WX_CONVAUTO_H_)
-WXDLLIMPEXP_STEDIT const char* wxConvAuto_GetBOMChars(wxBOM, size_t* count);
-WXDLLIMPEXP_STEDIT wxString    wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom = NULL);
+WXDLLIMPEXP_STEDIT const char* wxConvAuto_GetBOMChars(wxBOM, size_t* count); // trac.wxwidgets.org/ticket/13620
+WXDLLIMPEXP_STEDIT wxString    wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
 #endif
 
 WXDLLIMPEXP_STEDIT wxString     wxString_From(const char*     src, const wxMBConv&, size_t len = wxNO_LEN);
 WXDLLIMPEXP_STEDIT wxCharBuffer wxString_To  (const wxString& src, const wxMBConv&);
 
 #ifdef __WXMSW__
+// Strange that wxMBConv classes work with char and wchar_t only, not with wxChar;
+// this surely makes for unnecessary extra conversions
 class WXDLLIMPEXP_STEDIT wxMBConvOEM : public wxMBConv
 {
 public:
@@ -148,9 +150,6 @@ public:
 
     virtual wxMBConv* Clone() const { return new wxMBConvOEM(); }
 };
-
-WXDLLIMPEXP_STEDIT wxString     wxConvertOEM2WX(const char* src, size_t buf_len);
-WXDLLIMPEXP_STEDIT wxCharBuffer wxConvertWX2OEM(const wxString&);
 #endif
 
 #endif // __WXEXT_H__

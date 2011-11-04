@@ -673,6 +673,7 @@ static const char BOM_UTF16BE[] = { '\xFE', '\xFF'                 };
 static const char BOM_UTF16LE[] = { '\xFF', '\xFE'                 };
 static const char BOM_UTF8[]    = { '\xEF', '\xBB', '\xBF'         };
 
+// trac.wxwidgets.org/ticket/13620
 const char* wxConvAuto_GetBOMChars(wxBOM bom, size_t* count)
 {
     wxCHECK_MSG(count != NULL, NULL, wxT("GetBOMChars: count pointer must be provided"));
@@ -795,36 +796,41 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
     wxBOM file_bom;
     wxString str;
 
-#if (wxVERSION_NUMBER >= 2903)
-    str = wxString(buf.data(), conv_auto, buf_len);
+    if (buf_len == wxNO_LEN) buf_len = wxBuffer_length(buf);
+
+#if (wxVERSION_NUMBER >= 2903) && wxUSE_UNICODE
+    str = wxString(buf.data(), conv_auto, buf_len); // ctor conv arg WXUNUSED() in ansi builds in wx28 (in wx293 ansi builds ??)
     file_bom = conv_auto.GetBOM();
-#else // wx 2.8
+#else
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
+    size_t bom_charcount;
+    
+    wxConvAuto_GetBOMChars(file_bom, &bom_charcount);
 
-    #if (wxVERSION_NUMBER >= 2900)
-        // fails for ISO8859_1-encoded files (with national chars in), in wx 2.8 ansi,
-        // because the ctor conv argument is unused
-        str = wxString(buf.data(), conv_auto, buf_len);
-    #else // wx 2.8 ansi
-        switch (file_bom)
-        {
-            case wxBOM_UTF16LE:
-                str = wxString(((wchar_t*)buf.data()) + 1, *wxConvCurrent, (buf_len / sizeof(wchar_t)) - 1);  // ctor conv arg ok
-                break;
-            case wxBOM_UTF8:
-                str = wxString(buf.data(), wxConvUTF8, buf_len); // ctor conv arg used only in unicode build
-                break;
-            default:
-                str = wxString(buf.data(), *wxConvCurrent, buf_len); // ctor conv arg used only in unicode build
-                break;
-        }
-    #endif
+    switch (file_bom)
+    {
+        case wxBOM_UTF32BE:
+        case wxBOM_UTF32LE:
+        case wxBOM_UTF16BE:
+            // not supported
+            break;
+        case wxBOM_UTF16LE:
+            str = wxString((wchar_t*)(buf.data() + bom_charcount), *wxConvCurrent, (buf_len - bom_charcount) / sizeof(wchar_t));
+            break;
+        case wxBOM_UTF8:
+            str = wxString_From(buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
+            break;
+        default:
+            str = wxString(buf.data(), wxConvLibc, buf_len);
+            break;
+    }
 #endif // 2.9
     if (file_bom_ptr) *file_bom_ptr = file_bom;
     return str;
 }
 
+// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
 wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
 {
     wxString str;
@@ -834,14 +840,15 @@ wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
         size_t wlen;
         wxWCharBuffer buf(conv.cMB2WC(src, len, &wlen));
 
-        str = wxString(buf.data(), wxConvLibc, wlen);
+        str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, wlen);
     }
     return str;
 }
 
+// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
 wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
 {
-    wxWCharBuffer wbuf(src.wc_str(conv));
+    wxWCharBuffer wbuf(src.wc_str(wxConvLibc /*WXUNUSED*/));
     wxCharBuffer buf(conv.cWC2MB(wbuf));
 
     return buf;
@@ -855,7 +862,7 @@ size_t wxMBConvOEM::ToWChar(wchar_t*    dst, size_t dstLen,
     wxCharBuffer buf(srcLen);
     
     OemToCharBuffA(src, buf.data(), srcLen);
-    return dst ? mbstowcs(dst, buf.data(), dstLen) : wxCharBuffer_length(buf);
+    return dst ? mbstowcs(dst, buf.data(), dstLen) : wxBuffer_length(buf);
 }
 
 size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
@@ -873,39 +880,8 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
     }
     else
     {
-        len = wxCharBuffer_length(temp);
+        len = wxBuffer_length(temp);
     }
     return len;
-}
-#endif
-
-#ifdef __WXMSW__
-wxString wxConvertOEM2WX(const char* src, size_t buf_len)
-{
-    wxString str;
-#if wxUSE_UNICODE
-    wxCharBuffer buf(buf_len);
-
-    OemToCharBuffA(src, buf.data(), buf_len);
-    mbstowcs(wxStringBuffer(str, buf_len), buf.data(), buf_len);
-#else
-    OemToCharBuff(src, wxStringBuffer(str, buf_len), buf_len);
-#endif
-    return str;
-}
-
-wxCharBuffer wxConvertWX2OEM(const wxString& str)
-{
-    size_t buf_len = str.Length() * 2;
-    wxCharBuffer buf(buf_len);
-#if wxUSE_UNICODE
-    wxCharBuffer temp(buf_len);
-
-    wcstombs(temp.data(), str, buf_len);
-    CharToOemBuffA(temp.data(), buf.data(), buf_len);
-#else
-    CharToOemBuffA(str, buf.data(), buf_len);
-#endif
-    return buf;
 }
 #endif

@@ -1684,7 +1684,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
 
 BEGIN_EVENT_TABLE(wxSTEditorPropertiesDialog, wxDialog)
     EVT_UPDATE_UI(ID_CHOICE, wxSTEditorPropertiesDialog::OnUpdateNeedEditable)
-    EVT_UPDATE_UI(ID_CHECKBOX, wxSTEditorPropertiesDialog::OnUpdateNeedEditable)
+    EVT_UPDATE_UI(ID_CHECKBOX, wxSTEditorPropertiesDialog::OnUpdateBomCheckBox)
 END_EVENT_TABLE()
 
 bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
@@ -1694,7 +1694,7 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
     if (ok)
     {
         // do not actually store the values until certain that
-        // all went right - it did if we got here
+        // all went right - it did if we get here
         m_editor->SetEncoding((STE_Encoding)m_encoding);
         m_editor->SetFileBOM(m_bom);
     }
@@ -1704,6 +1704,20 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
 void wxSTEditorPropertiesDialog::OnUpdateNeedEditable(wxUpdateUIEvent& event)
 {
     event.Enable(m_editor->IsEditable());
+}
+
+void wxSTEditorPropertiesDialog::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
+{
+    int enc = wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->GetSelection();
+    bool bom_current = wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->IsChecked();
+    size_t count;
+    bool bom = (NULL != wxSTEditor::GetBOMChars((STE_Encoding)enc, &count));
+
+    if (bom_current && !bom)
+    {
+        wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->SetValue(false);
+    }
+    event.Enable(m_editor->IsEditable() && bom);
 }
 
 //-----------------------------------------------------------------------------
