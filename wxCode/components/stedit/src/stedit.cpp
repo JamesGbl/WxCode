@@ -2171,6 +2171,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             wxBOM file_bom = wxBOM_None;
             bool found_lang = false;
             bool html = false;
+            bool xml = false;
 
             if (want_lang && !found_lang)
             {
@@ -2179,9 +2180,10 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 if (found_lang)
                 {
                     html = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("html")));
+                    xml  = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
                 }
             }
-            if ((want_lang && !found_lang) || html)
+            if ((want_lang && !found_lang) || ( (html || xml) && (encoding == STE_Encoding_None)) )
             {
                 // sample just one line; feeble attempt to detect xml (in files w/o the .xml extension), and/or utf8 encoding in html files (w html extension)
                 const char* newline = strpbrk(charBuf.data(), "\n\r");
@@ -2190,20 +2192,29 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
 
                 strncpy(firstline.data(), charBuf.data(), len);
 
-                if ( (encoding == STE_Encoding_None) && strstr(firstline.data(), "charset=utf-8"))
+                if (want_lang && !found_lang)
                 {
-                    encoding = STE_Encoding_UTF8;
-                }
-                const char xml_header[] = "<?xml version=\"";
+                    const char xml_header[] = "<?xml version=\"";
 
-                if (   (len >= WXSIZEOF(xml_header))
-                    && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
-                   )
+                    if (   (len >= WXSIZEOF(xml_header))
+                        && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
+                       )
+                    {
+                        found_lang = xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
+                    }
+                }
+                if (encoding == STE_Encoding_None)
                 {
-                    found_lang = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
+                    if (html && strstr(firstline.data(), "charset=utf-8"))
+                    {
+                        encoding = STE_Encoding_UTF8;
+                    }
+                    if (xml && strstr(firstline.data(), "encoding=\"utf-8\""))
+                    {
+                        encoding = STE_Encoding_UTF8;
+                    }
                 }
             }
-
             switch (encoding)
             {
                 case STE_Encoding_None:
@@ -4120,7 +4131,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2822")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2823")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
