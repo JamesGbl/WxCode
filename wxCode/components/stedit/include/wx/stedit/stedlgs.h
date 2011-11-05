@@ -381,6 +381,10 @@ public:
 
     virtual bool TransferDataFromWindow();
     
+    bool IsEditable() const
+    {
+        return m_editor->IsEditable();
+    }
 private:
     wxSTEditor* m_editor;
     int m_encoding;

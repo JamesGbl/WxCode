@@ -265,14 +265,15 @@ public :
     bool PositionToXY(STE_TextPos, long *x, long *y) const;
     bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
     void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
-    void DiscardEdits()                   { SetSavePoint(); }
     void ShowPosition(STE_TextPos pos)    { GotoPos(pos); }
     void SetValue(const wxString& text)   { SetText(text); }
     void ChangeValue(const wxString& text){ SetText(text); }
     wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
 #endif
 
-    virtual void SetEditable(bool editable); // -> SendEvent(wxEVT_STE_STATE_CHANGED)
+    virtual void SetEditable(bool editable); // -> SendFileNameEvent()
+    void SetModified(bool modified); // -> SendFileNameEvent()
+
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
 
@@ -322,12 +323,29 @@ public :
     STE_TextPos GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
 
     virtual bool IsEditable() const { return !wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
-    virtual bool IsModified() const { return wxConstCast(this, wxSTEditor)->GetModify(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
 
     int LineFromPosition(STE_TextPos pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
     STE_TextPos PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
 
 #endif // (wxVERSION_NUMBER >= 2900)
+    virtual bool IsModified() const // not in wx2.8; overridable in wx trunk so make it virtual here too
+    {
+    #if (wxVERSION_NUMBER >= 2900)
+        return m_dirty_flag || wxStyledTextCtrl::IsModified();
+    #else
+        return m_dirty_flag || wxConstCast(this, wxSTEditor)->GetModify();
+    #endif
+    }
+
+    virtual void DiscardEdits() // not in wx2.8; overridable in wx trunk so make it virtual here too
+    {
+    #if (wxVERSION_NUMBER >= 2900)
+        wxStyledTextCtrl::DiscardEdits();
+    #else
+        SetSavePoint();
+    #endif
+        m_dirty_flag = false;
+    }
 
     // ------------------------------------------------------------------------
     // Convenience functions - other useful functions
@@ -836,6 +854,9 @@ public :
     bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
                    const wxString &evtStr = wxEmptyString, bool do_post = false );
 
+    // Sent if the captions needs to change (asterisk)
+    bool SendFileNameEvent();
+
     // ------------------------------------------------------------------------
     // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl
     //   used by the wxSTEditorFrame
@@ -856,6 +877,7 @@ protected:
     bool m_sendEvents; // block sending events if false
     bool m_activating; // are we in EVT_ACTIVATE already
     long m_state;      // what state does this editor have, enum STE_StateType
+    bool m_dirty_flag; // set if file format is changed by the user, in the properties dialog
 
     wxLongLong m_marginDClickTime;   // last time margin was clicked
     int        m_marginDClickLine;   // last line margin was clicked on

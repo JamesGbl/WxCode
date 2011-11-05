@@ -1587,7 +1587,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
         SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
         wxSTEditorPropertiesSizer(this, true, true);
 
-        wxSTEditorStdDialogButtonSizer(this, wxCANCEL | (m_editor->IsEditable() ? wxOK : 0));
+        wxSTEditorStdDialogButtonSizer(this, wxCANCEL | (IsEditable() ? wxOK : 0));
 
         const wxFileName fileName = m_editor->GetFileName();
 
@@ -1693,17 +1693,19 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
 
     if (ok)
     {
+        wxASSERT(IsEditable());
         // do not actually store the values until certain that
         // all went right - it did if we get here
         m_editor->SetEncoding((STE_Encoding)m_encoding);
         m_editor->SetFileBOM(m_bom);
+        m_editor->SetModified(true); // Our own SetModified() implementation as wxStyledTextCtrl::SetModified() asserts in wx29
     }
     return ok;
 }
 
 void wxSTEditorPropertiesDialog::OnUpdateNeedEditable(wxUpdateUIEvent& event)
 {
-    event.Enable(m_editor->IsEditable());
+    event.Enable(IsEditable());
 }
 
 static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)

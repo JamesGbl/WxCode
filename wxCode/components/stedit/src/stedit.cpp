@@ -147,6 +147,7 @@ void wxSTEditor::Init()
 
     m_sendEvents = false;
     m_activating = false;
+    m_dirty_flag = false;
     m_state = 0;
 
     m_marginDClickTime   =  0;
@@ -759,15 +760,38 @@ bool wxSTEditor::PositionToXY(STE_TextPos pos, long *col, long *row) const
 
 void wxSTEditor::SetEditable(bool editable)
 {
-    if (IsEditable() != editable)
+    if (IsEditable() == editable)
+    {
+        return;
+    }
+#if (wxVERSION_NUMBER >= 2900)
+    wxStyledTextCtrl::SetEditable(editable);
+#else
+    wxStyledTextCtrl::SetReadOnly(!editable); // SetEditable() doesn't exist in wx28
+#endif
+    SendFileNameEvent();
+}
+
+void wxSTEditor::SetModified(bool modified)
+{
+    if (IsModified() == modified)
+    {
+        return;
+    }
+    if (modified)
+    {
+        // wxStyledTextCtrl::SetModified(modified); // asserts in wx29, rely instead on m_dirty_flag below
+    }
+    else
     {
     #if (wxVERSION_NUMBER >= 2900)
-        wxStyledTextCtrl::SetEditable(editable);
+        wxStyledTextCtrl::SetModified(modified); // -> DiscardEdits();
     #else
-        wxStyledTextCtrl::SetReadOnly(!editable); // SetEditable() doesn't exist in wx28
+        DiscardEdits(); // -> m_dirty_flag = false
     #endif
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
     }
+    m_dirty_flag = modified;
+    SendFileNameEvent();
 }
 
 bool wxSTEditor::TranslatePos(STE_TextPos start_pos, STE_TextPos end_pos,
@@ -2128,7 +2152,7 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
     {
         GetSTERefData()->SetFilename(fileName);
         if (send_event)
-            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+            SendFileNameEvent();
     }
 }
 
@@ -2205,11 +2229,18 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 }
                 if (encoding == STE_Encoding_None)
                 {
-                    if (html && strstr(firstline.data(), "charset=utf-8"))
+                    // easier to use _strlwr() here but the function is not portable
+                    if (   html
+                        && (   strstr(firstline.data(), "charset=utf-8")
+                            || strstr(firstline.data(), "charset=UTF-8"))
+                       )
                     {
                         encoding = STE_Encoding_UTF8;
                     }
-                    if (xml && strstr(firstline.data(), "encoding=\"utf-8\""))
+                    if (   xml
+                        && (   strstr(firstline.data(), "encoding=\"utf-8\"")
+                            || strstr(firstline.data(), "encoding=\"UTF-8\""))
+                       )
                     {
                         encoding = STE_Encoding_UTF8;
                     }
@@ -2498,7 +2529,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         }
 
         wxSTEditorFileDialog fileDialog( this, _("Save file"),
-                                 fileName.GetPath().IsEmpty() ? GetOptions().GetDefaultFilePath() : fileName.GetPath(),
+                                 GetOptions().GetDefaultFilePath().IsEmpty() ? fileName.GetPath() : GetOptions().GetDefaultFilePath(),
                                  extensions,
                                  wxFD_DEFAULT_STYLE_SAVE);
 
@@ -4121,6 +4152,11 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
    return GetEventHandler()->ProcessEvent(event);
 }
 
+bool wxSTEditor::SendFileNameEvent()
+{
+    return SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+}
+
 wxTreeItemId wxSTEditor::GetTreeItemId() const
 {
     return GetSTERefData()->m_treeItemId;
@@ -4131,7 +4167,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2823")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2825")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
