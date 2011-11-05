@@ -25,6 +25,10 @@ inline wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 {
     return wxConvAuto::DetectBOM(src, srcLen);
 }
+inline const char* wxConvAuto_GetBOMChars(wxBOM bomType, size_t* count)
+{
+    return wxConvAuto::GetBOMChars(bomType, count);
+}
 #else
 enum wxBOM
 {
@@ -37,6 +41,7 @@ enum wxBOM
     wxBOM_UTF8
 };
 WXDLLIMPEXP_STEDIT wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen);
+WXDLLIMPEXP_STEDIT const char* wxConvAuto_GetBOMChars(wxBOM, size_t* count);
 #endif
 #endif
 

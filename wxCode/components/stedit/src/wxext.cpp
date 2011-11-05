@@ -667,30 +667,36 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok;
 }
 
+#if (wxVERSION_NUMBER < 2903)
 static const char BOM_UTF32BE[] = { '\x00', '\x00', '\xFE', '\xFF' };
 static const char BOM_UTF32LE[] = { '\xFF', '\xFE', '\x00', '\x00' };
 static const char BOM_UTF16BE[] = { '\xFE', '\xFF'                 };
 static const char BOM_UTF16LE[] = { '\xFF', '\xFE'                 };
 static const char BOM_UTF8[]    = { '\xEF', '\xBB', '\xBF'         };
 
-// trac.wxwidgets.org/ticket/13620
 const char* wxConvAuto_GetBOMChars(wxBOM bom, size_t* count)
 {
-    wxCHECK_MSG(count != NULL, NULL, wxT("GetBOMChars: count pointer must be provided"));
-    switch (bom)
+    wxCHECK_MSG( count , NULL, wxS("count pointer must be provided") );
+
+    switch ( bom )
     {
         case wxBOM_UTF32BE: *count = WXSIZEOF(BOM_UTF32BE); return BOM_UTF32BE;
         case wxBOM_UTF32LE: *count = WXSIZEOF(BOM_UTF32LE); return BOM_UTF32LE;
         case wxBOM_UTF16BE: *count = WXSIZEOF(BOM_UTF16BE); return BOM_UTF16BE;
         case wxBOM_UTF16LE: *count = WXSIZEOF(BOM_UTF16LE); return BOM_UTF16LE;
         case wxBOM_UTF8   : *count = WXSIZEOF(BOM_UTF8   ); return BOM_UTF8;
-        default: return NULL;
+        case wxBOM_Unknown:
+        case wxBOM_None:
+            wxFAIL_MSG( wxS("Invalid BOM type") );
+            return NULL;
     }
+
+    wxFAIL_MSG( wxS("Unknown BOM type") );
+    return NULL;
 }
 
 #define BOM_EQUAL(src,array) ( 0 == memcmp((src), array, sizeof(array) ) )
 
-#if (wxVERSION_NUMBER < 2903)
 wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 {
     // examine the buffer for BOM presence
@@ -804,9 +810,18 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
 #else
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
-    size_t bom_charcount;
+    size_t bom_charcount = 0;
     
-    wxConvAuto_GetBOMChars(file_bom, &bom_charcount);
+    switch (file_bom)
+    {
+        case wxBOM_Unknown:
+        case wxBOM_None:
+            // wxConvAuto.GetBOMChars() barks if passed these
+            break;
+        default:
+            wxConvAuto_GetBOMChars(file_bom, &bom_charcount);
+            break;
+    }
 
     switch (file_bom)
     {

@@ -128,7 +128,6 @@ public:
 };
 
 #if (defined(__WXTRUNK_H__) || ((wxVERSION_NUMBER >= 2903)) ) && defined(_WX_CONVAUTO_H_)
-WXDLLIMPEXP_STEDIT const char* wxConvAuto_GetBOMChars(wxBOM, size_t* count); // trac.wxwidgets.org/ticket/13620
 WXDLLIMPEXP_STEDIT wxString    wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
 #endif
 
