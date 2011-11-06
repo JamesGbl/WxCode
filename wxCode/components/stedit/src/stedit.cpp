@@ -317,7 +317,7 @@ void wxSTEditor::UpdateCanDo(bool send_event)
 
     long state_change = 0;
 
-    if (HasState(STE_MODIFIED) != GetModify())
+    if (HasState(STE_MODIFIED) != IsModified())
     {
         SetStateSingle(STE_MODIFIED, !HasState(STE_MODIFIED));
         state_change |= STE_MODIFIED;
@@ -2792,7 +2792,7 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
 
     if (event.HasStateChange(STE_MODIFIED))
     {
-        GetSTERefData()->Modify(GetModify());
+        GetSTERefData()->Modify(IsModified());
     }
 
     if (!menu && !menuBar && !toolBar)
@@ -4167,7 +4167,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2825")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2826")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

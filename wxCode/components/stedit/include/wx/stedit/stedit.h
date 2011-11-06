@@ -889,6 +889,13 @@ protected:
 
 private:
     void Init();
+
+    // Please use IsModified() instead
+    bool GetModify()
+    {
+        return wxStyledTextCtrl::GetModify();
+    }
+
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxSTEditor)
 };
