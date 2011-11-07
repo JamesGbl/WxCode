@@ -2161,28 +2161,26 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
-static bool FindEncoding(const char* str, const char* identifier, const char* ctrl, STE_Encoding* encoding)
+static bool FindEncoding(const char* str, const char* identifier, const char* ctrl, STE_Encoding* ste_encoding)
 {
-    const char* p = strstr(str, identifier);
-    
-    if (p)
-    {
-        const char* begin = p + strlen(identifier);
-        const char* end   = strpbrk(begin, ctrl);
+    wxTextEncoding encoding;
+    bool ok = wxTextEncodingFromString(str, identifier, ctrl, &encoding);
 
-        if (begin && end) switch (wxTextEncodingFromString(wxString::From8BitData(begin, end - begin)))
-        {
-            case wxTextEncoding_UTF8:
-                *encoding = STE_Encoding_UTF8;
-                return true;
-            case wxTextEncoding_ISO8859_1:
-                *encoding = STE_Encoding_ISO8859_1;
-                return true;
-            default:
-                return false;
-        }
+    if (ok) switch (encoding)
+    {
+        case wxTextEncoding_UTF8:
+            *ste_encoding = STE_Encoding_UTF8;
+            ok = true;
+            break;
+        case wxTextEncoding_ISO8859_1:
+            *ste_encoding = STE_Encoding_ISO8859_1;
+            ok = true;
+            break;
+        default:
+            ok = false;
+            break;
     }
-    return false;
+    return ok;
 }
 
 bool wxSTEditor::LoadFile( wxInputStream& stream,
@@ -2305,6 +2303,9 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     break;
                 case STE_Encoding_UTF8:
                     str = wxString_From(charBuf.data(), wxConvUTF8, stream_len);
+                    break;
+                case STE_Encoding_ISO8859_1:
+                    str = wxString_From(charBuf.data(), wxConvISO8859_1, stream_len);
                     break;
             #ifdef __WXMSW__
                 case STE_Encoding_OEM:
@@ -2485,6 +2486,18 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool f
         case STE_Encoding_UTF8:
         {
             const wxCharBuffer buf = wxString_To(s, wxConvUTF8);
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf);
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+        case STE_Encoding_ISO8859_1:
+        {
+            const wxCharBuffer buf = wxString_To(s, wxConvISO8859_1);
 
             ok = !(!buf);
             if (ok)
@@ -4184,7 +4197,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2827")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2828")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

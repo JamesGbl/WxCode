@@ -916,3 +916,21 @@ wxTextEncoding wxTextEncodingFromString(const wxString& rstr)
    }
    return wxTextEncoding_None;
 }
+
+bool wxTextEncodingFromString(const char* str, const char* identifier, const char* ctrl, wxTextEncoding* encoding)
+{
+    const char* p = strstr(str, identifier);
+    
+    if (p)
+    {
+        const char* begin = p + strlen(identifier);
+        const char* end   = strpbrk(begin, ctrl);
+
+        if (begin && end)
+        {
+            *encoding = wxTextEncodingFromString(wxString::From8BitData(begin, end - begin));
+            return true;
+        }
+    }
+    return false;
+}

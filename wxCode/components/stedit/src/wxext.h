@@ -163,6 +163,7 @@ enum wxTextEncoding
 };
 
 WXDLLIMPEXP_STEDIT wxTextEncoding wxTextEncodingFromString(const wxString&);
+WXDLLIMPEXP_STEDIT bool           wxTextEncodingFromString(const char* str, const char* identifier, const char* ctrl, wxTextEncoding*);
 #ifdef _WX_XML_H_
 inline wxTextEncoding wxTextEncodingFromString(const wxXmlDocument& xml)
 {
