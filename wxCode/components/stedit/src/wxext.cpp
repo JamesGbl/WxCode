@@ -900,3 +900,19 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
     return len;
 }
 #endif
+
+wxTextEncoding wxTextEncodingFromString(const wxString& rstr)
+{
+   wxString str = rstr;
+   str.MakeLower();
+
+   if (str == wxT("utf-8"))
+   {
+       return wxTextEncoding_UTF8;
+   }
+   else if (0 == str.Find(wxT("iso-8859-1")))
+   {
+       return wxTextEncoding_ISO8859_1;
+   }
+   return wxTextEncoding_None;
+}

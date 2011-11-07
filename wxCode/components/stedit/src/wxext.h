@@ -151,4 +151,23 @@ public:
 };
 #endif
 
+enum wxTextEncoding
+{
+    wxTextEncoding_UTF8,
+    wxTextEncoding_Unicode_LE,
+    wxTextEncoding_ISO8859_1,
+#ifdef __WXMSW__
+    wxTextEncoding_OEM,
+#endif
+    wxTextEncoding_None = wxNOT_FOUND
+};
+
+WXDLLIMPEXP_STEDIT wxTextEncoding wxTextEncodingFromString(const wxString&);
+#ifdef _WX_XML_H_
+inline wxTextEncoding wxTextEncodingFromString(const wxXmlDocument& xml)
+{
+    return wxTextEncodingFromString(xml.GetFileEncoding());
+}
+#endif
+
 #endif // __WXEXT_H__

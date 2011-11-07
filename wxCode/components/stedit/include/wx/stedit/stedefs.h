@@ -90,7 +90,8 @@ enum STE_Encoding
 {
     STE_Encoding_None,
     STE_Encoding_UTF8,
-    STE_Encoding_Unicode,
+    STE_Encoding_Unicode, // LE
+    STE_Encoding_ISO8859_1,
 #ifdef __WXMSW__
     STE_Encoding_OEM,
 #endif

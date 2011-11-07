@@ -2161,6 +2161,30 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
+static bool FindEncoding(const char* str, const char* identifier, const char* ctrl, STE_Encoding* encoding)
+{
+    const char* p = strstr(str, identifier);
+    
+    if (p)
+    {
+        const char* begin = p + strlen(identifier);
+        const char* end   = strpbrk(begin, ctrl);
+
+        if (begin && end) switch (wxTextEncodingFromString(wxString::From8BitData(begin, end - begin)))
+        {
+            case wxTextEncoding_UTF8:
+                *encoding = STE_Encoding_UTF8;
+                return true;
+            case wxTextEncoding_ISO8859_1:
+                *encoding = STE_Encoding_ISO8859_1;
+                return true;
+            default:
+                return false;
+        }
+    }
+    return false;
+}
+
 bool wxSTEditor::LoadFile( wxInputStream& stream,
                            const wxFileName& fileName,
                            int flags,
@@ -2229,20 +2253,13 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 }
                 if (encoding == STE_Encoding_None)
                 {
-                    // easier to use _strlwr() here but the function is not portable
-                    if (   html
-                        && (   strstr(firstline.data(), "charset=utf-8")
-                            || strstr(firstline.data(), "charset=UTF-8"))
-                       )
+                    if (html)
                     {
-                        encoding = STE_Encoding_UTF8;
+                        FindEncoding(firstline.data(), "charset=", "; \"", &encoding);
                     }
-                    if (   xml
-                        && (   strstr(firstline.data(), "encoding=\"utf-8\"")
-                            || strstr(firstline.data(), "encoding=\"UTF-8\""))
-                       )
+                    if (xml)
                     {
-                        encoding = STE_Encoding_UTF8;
+                        FindEncoding(firstline.data(), "encoding=\"", "\"", &encoding);
                     }
                 }
             }
@@ -4167,7 +4184,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2826")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2827")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
