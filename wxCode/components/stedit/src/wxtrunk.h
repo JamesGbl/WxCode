@@ -52,25 +52,6 @@ inline void wxAboutBox(const wxAboutDialogInfo& info, wxWindow* WXUNUSED(parent)
 }
 #endif
 
-inline size_t wxBuffer_length(const wxWX2MBbuf& buf)
-{
-#if (wxVERSION_NUMBER >= 2900)
-    return buf.length(); // wxWX2MBbuf.length() not available in wx28
-#else
-    return buf ? strlen(buf) : 0;
-#endif
-}
-
-inline size_t wxBuffer_length(const wxWritableWCharBuffer& buf)
-{
-#if (wxVERSION_NUMBER >= 2900)
-    return buf.length(); // wxWritableWCharBuffer.length() not available in wx28
-#else
-    return buf.data() ? wcslen(buf.data()) : 0;
-#endif
-}
-
-#if !wxUSE_UNICODE
 inline size_t wxBuffer_length(const wxCharBuffer& buf)
 {
 #if (wxVERSION_NUMBER >= 2900)
@@ -79,7 +60,15 @@ inline size_t wxBuffer_length(const wxCharBuffer& buf)
     return buf.data() ? strlen(buf.data()) : 0;
 #endif
 }
+
+inline size_t wxBuffer_length(const wxWCharBuffer& buf)
+{
+#if (wxVERSION_NUMBER >= 2900)
+    return buf.length(); // wxWCharBuffer.length() not available in wx28
+#else
+    return buf.data() ? wcslen(buf.data()) : 0;
 #endif
+}
 
 #if (wxVERSION_NUMBER >= 2900)
 inline bool wxStyledTextCtrl_PositionToXY(const wxStyledTextCtrl& wnd, wxTextPos pos, long* col, long* row)

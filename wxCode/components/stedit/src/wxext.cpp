@@ -1069,7 +1069,7 @@ bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding
     {
         case wxTextEncoding_None:
         {
-            const wxWX2MBbuf buf = s.mb_str(*wxConvCurrent);
+            const wxCharBuffer buf = s.mb_str(*wxConvCurrent);
 
             ok = !(!buf);
             if (ok)
@@ -1081,7 +1081,7 @@ bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding
         }
         case wxTextEncoding_Unicode_LE:
         {
-            const wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
+            const wxWCharBuffer buf = s.wc_str(*wxConvCurrent);
             
             ok = !(!buf);
             if (ok)
