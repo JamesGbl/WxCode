@@ -1671,9 +1671,11 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
 
         wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->SetValidator(wxGenericValidator(&m_encoding));
         wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->SetValidator(wxGenericValidator(&m_bom));
-    #ifndef __WXMSW__
-        wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Delete(STE_Encoding_Unicode+1);
-    #endif
+
+        for (size_t i = 0; i < STE_Encoding_EnumCount; i++)
+        {
+            wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Append(wxSTEditor::GetEncodingText((STE_Encoding)i));
+        }
         TransferDataToWindow();
         Fit();
         SetMinSize(GetSize());
@@ -2343,9 +2345,10 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
             m_index = wxSTEditorFileDialog::m_encoding;
             m_bom   = wxSTEditorFileDialog::m_file_bom;
 
-        #ifndef __WXMSW__
-            GetList()->Delete(STE_Encoding_Unicode+1);
-        #endif
+            for (size_t i = 0; i < STE_Encoding_EnumCount; i++)
+            {
+                GetList()->Append(wxSTEditor::GetEncodingText((STE_Encoding)i));
+            }
             GetList()->SetValidator(wxGenericValidator(&m_index));
             if (dlg->HasFdFlag(wxFD_SAVE))
             {

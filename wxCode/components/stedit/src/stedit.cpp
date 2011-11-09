@@ -386,7 +386,7 @@ void wxSTEditor::OnMouseWheel(wxMouseEvent& event)
 // "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB",
 // "CAN", "EM", "SUB", "ESC", "FS", "GS", "RS", "US"
 
-static int ste_ctrlCharLengths[32] = { 3, 3, 3, 3, 3, 3, 3, 3,
+static const int ste_ctrlCharLengths[32] = { 3, 3, 3, 3, 3, 3, 3, 3,
                                        2, 2, 2, 2, 2, 2, 2, 2,
                                        3, 3, 3, 3, 3, 3, 3, 3,
                                        3, 2, 3, 3, 2, 2, 2, 2 };
@@ -518,7 +518,8 @@ void wxSTEditor::OnKeyUp(wxKeyEvent& event)
     event.Skip();
 }
 
-void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
+#ifdef skip
+static void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
 {
     int line_len = editor->LineLength(line_n);
     int edge_col = editor->GetEdgeColumn();
@@ -569,6 +570,7 @@ void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n)
         }
     }
 }
+#endif
 
 void wxSTEditor::OnSTCCharAdded(wxStyledTextEvent &event)
 {
@@ -596,6 +598,7 @@ void wxSTEditor::OnSTCCharAdded(wxStyledTextEvent &event)
             GotoPos(GetLineIndentPosition(line));
         }
     }
+#ifdef skip
     else if (0)
     {
         STE_TextPos pos = GetCurrentPos();
@@ -603,6 +606,7 @@ void wxSTEditor::OnSTCCharAdded(wxStyledTextEvent &event)
         wxSTEditor_SplitLines(this, pos, line_n);
         GotoPos(pos);
     }
+#endif
 }
 
 bool wxSTEditor::ResetLastAutoIndentLine()
@@ -744,17 +748,7 @@ void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
 #if (wxVERSION_NUMBER < 2900)
 bool wxSTEditor::PositionToXY(STE_TextPos pos, long *col, long *row) const
 {
-    if ((pos < 0) || (pos > GetLength()))
-    {
-        if (col) *col = 0;
-        if (row) *row = 0;
-        return false;
-    }
-
-    int r = LineFromPosition(pos);
-    if (row) *row = r;
-    if (col) *col = pos - PositionFromLine(r);
-    return true;
+    return ::wxStyledTextCtrl_PositionToXY(*this, pos, col, row);
 }
 #endif
 
@@ -882,6 +876,47 @@ wxString wxSTEditor::GetTargetText() const
     if (target_start == target_end) return wxEmptyString;
     return GetTextRange(wxMin(target_start, target_end), wxMax(target_start, target_end));
 }
+
+static const struct _MAP
+{
+    wxTextEncoding wx_encoding;
+    STE_Encoding   ste_encoding;
+} s_enc_array[] = 
+{
+    { wxTextEncoding_UTF8      , STE_Encoding_UTF8      },
+    { wxTextEncoding_Unicode_LE, STE_Encoding_Unicode   },
+    { wxTextEncoding_ISO8859_1 , STE_Encoding_ISO8859_1 },
+#ifdef __WXMSW__
+    { wxTextEncoding_OEM       , STE_Encoding_OEM       },
+#endif
+    { wxTextEncoding_None      , STE_Encoding_None      }
+};
+
+static wxTextEncoding EncodingConv(STE_Encoding ste_encoding)
+{
+    for (size_t i = 0; i < WXSIZEOF(s_enc_array); i++)
+    {
+        if (s_enc_array[i].ste_encoding == ste_encoding)
+        {
+            return s_enc_array[i].wx_encoding;
+        }
+    }
+    return wxTextEncoding_None;
+}
+
+/*
+static STE_Encoding EncodingConv(wxTextEncoding encoding)
+{
+    for (size_t i = 0; i < WXSIZEOF(s_enc_array); i++)
+    {
+        if (s_enc_array[i].wx_encoding == encoding)
+        {
+            return s_enc_array[i].ste_encoding;
+        }
+    }
+    return STE_Encoding_None;
+}
+*/
 
 static wxClipboardHelper::Type ClipboardTypeConv(STE_ClipboardType clip_type)
 {
@@ -1013,7 +1048,6 @@ void wxSTEditor::AppendTextGotoEnd(const wxString &text, bool goto_end)
         GotoPos(GetLength());
 }
 
-#if (wxVERSION_NUMBER < 2900)
 int wxSTEditor::GetLineLength(int line) const
 {
     return (int)GetLineText(line).Length();
@@ -1021,25 +1055,8 @@ int wxSTEditor::GetLineLength(int line) const
 
 wxString wxSTEditor::GetLineText(int line) const
 {
-    wxString lineText = GetLine(line);
-    size_t len = lineText.Length();
-
-    if (len > 0)
-    {
-        if (lineText[len-1] == wxT('\n'))
-        {
-            if ((len > 1) && (lineText[len-2] == wxT('\r'))) // remove \r\n for DOS
-                return lineText.Mid(0, len-2);
-            else
-                return lineText.Mid(0, len-1);               // remove \n for Unix
-        }
-        else if (lineText[len-1] == wxT('\r'))               // remove \r for mac
-            return lineText.Mid(0, len-1);
-    }
-
-    return lineText; // shouldn't happen, but maybe?
+    return ::wxStyledTextCtrl_GetLineText(*this, line);
 }
-#endif
 
 void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
 {
@@ -1351,30 +1368,6 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
 
     SetSelection(sel_start, sel_end);
     return done;
-}
-
-static int wxString_FindFromPos(const wxString& str, const wxString& chars, size_t start_pos)
-{
-    const wxString temp = str.Mid(start_pos);
-    wxChar chPrev = 0;
-    size_t n = start_pos;
-
-    for (wxString::const_iterator it = temp.begin();
-         it != temp.end();
-         it++, n++)
-    {
-        wxChar ch = *it;
-        int idx = chars.Find(ch);
-
-        // char in str is in chars and is not a " preceeded by a \, eg. \"
-        if ((idx != wxNOT_FOUND) &&
-            ( (n == 0) || (ch != wxT('\"')) || (chPrev != wxT('\\')) ) )
-        {
-            return (int)n;
-        }
-        chPrev = ch;
-    }
-    return wxNOT_FOUND;
 }
 
 bool wxSTEditor::Columnize(int top_line, int bottom_line,
@@ -2299,19 +2292,13 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     }
                     break;
                 case STE_Encoding_Unicode:
-                    str = wxString_From(charBuf.data(), wxConvAuto(), stream_len);
-                    break;
                 case STE_Encoding_UTF8:
-                    str = wxString_From(charBuf.data(), wxConvUTF8, stream_len);
-                    break;
                 case STE_Encoding_ISO8859_1:
-                    str = wxString_From(charBuf.data(), wxConvISO8859_1, stream_len);
-                    break;
             #ifdef __WXMSW__
                 case STE_Encoding_OEM:
-                    str = wxString_From(charBuf.data(), wxMBConvOEM(), stream_len);
-                    break;
             #endif
+                    str = wxString_LoadFile(charBuf, stream_len, EncodingConv(encoding));
+                    break;
                 default:
                     ok = false;
                     break;
@@ -2424,108 +2411,9 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     return ok;
 }
 
-    //  00 00 FE FF     UTF-32, big-endian
-    //  FF FE 00 00     UTF-32, little-endian
-    //  FE FF           UTF-16, big-endian
-    //  FF FE           UTF-16, little-endian
-    //  EF BB BF        UTF-8
-
 bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool file_bom)
 {
-    bool ok = true;
-    const wxString s = GetText();
-    const char* bom_chars;
-    size_t size;
-
-    if (ok && file_bom) switch (encoding)
-    {
-        case STE_Encoding_Unicode:
-            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
-            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
-            break;
-        case STE_Encoding_UTF8:
-            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
-            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
-            break;
-        case STE_Encoding_None:
-    #ifdef __WXMSW__
-        case STE_Encoding_OEM:
-    #endif
-            break;
-        default:
-            ok = false;
-            break;
-    }
-
-    if (ok) switch (encoding)
-    {
-        case STE_Encoding_None:
-        {
-            const wxWX2MBbuf buf = s.mb_str(*wxConvCurrent);
-
-            ok = !(!buf);
-            if (ok)
-            {
-                size = wxBuffer_length(buf);
-                ok = (size == stream.Write(buf, size).LastWrite());
-            }
-            break;
-        }
-        case STE_Encoding_Unicode:
-        {
-            const wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
-            
-            ok = !(!buf);
-            if (ok)
-            {
-                size = wxBuffer_length(buf)*sizeof(wchar_t);
-                ok = (size == stream.Write(buf.data(), size).LastWrite());
-            }
-            break;
-        }
-        case STE_Encoding_UTF8:
-        {
-            const wxCharBuffer buf = wxString_To(s, wxConvUTF8);
-
-            ok = !(!buf);
-            if (ok)
-            {
-                size = wxBuffer_length(buf);
-                ok = (size == stream.Write(buf, size).LastWrite());
-            }
-            break;
-        }
-        case STE_Encoding_ISO8859_1:
-        {
-            const wxCharBuffer buf = wxString_To(s, wxConvISO8859_1);
-
-            ok = !(!buf);
-            if (ok)
-            {
-                size = wxBuffer_length(buf);
-                ok = (size == stream.Write(buf, size).LastWrite());
-            }
-            break;
-        }
-    #ifdef __WXMSW__
-        case STE_Encoding_OEM:
-        {
-            const wxCharBuffer buf = wxString_To(s, wxMBConvOEM());
-
-            ok = !(!buf);
-            if (ok)
-            {
-                size = wxBuffer_length(buf);
-                ok = (size == stream.Write(buf, size).LastWrite());
-            }
-            break;
-        }
-    #endif
-        default:
-            ok = false;
-            break;
-    }
-    return ok;
+    return wxString_SaveFile(GetText(), stream, EncodingConv(encoding), file_bom);
 }
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
@@ -4072,10 +3960,19 @@ const char* wxSTEditor::GetBOMChars(STE_Encoding encoding, size_t* count)
         case STE_Encoding_UTF8:    return wxConvAuto_GetBOMChars(wxBOM_UTF8   , count);
         case STE_Encoding_Unicode: return wxConvAuto_GetBOMChars(wxBOM_UTF16LE, count);
     #ifdef __WXMSW__
-        case STE_Encoding_OEM:     return NULL;
+        case STE_Encoding_OEM:
     #endif
-        default:                   return NULL;
+        case STE_Encoding_ISO8859_1:
+        default:
+            return NULL;
     }
+}
+
+/*static*/
+wxString wxSTEditor::GetEncodingText(STE_Encoding encoding)
+{
+    static wxArrayString array = wxSplit(wxT("None|UTF8|Unicode|ISO8859-1|OEM"), '|');
+    return array.Item(encoding);
 }
 
 const wxSTEditorPrefs& wxSTEditor::GetEditorPrefs() const
@@ -4197,7 +4094,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2828")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2830")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

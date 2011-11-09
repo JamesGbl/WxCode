@@ -95,6 +95,7 @@ enum STE_Encoding
 #ifdef __WXMSW__
     STE_Encoding_OEM,
 #endif
+    STE_Encoding_EnumCount,
     STE_Encoding_Default = STE_Encoding_None
 };
 

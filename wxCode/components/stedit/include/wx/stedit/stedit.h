@@ -253,8 +253,6 @@ public :
 #if (wxVERSION_NUMBER < 2900)
     bool CanCopy() const { return HasSelection(); }
     bool CanCut()  const { return CanCopy() && IsEditable(); }
-    int GetLineLength(int iLine) const;   // excluding any cr/lf at end
-    wxString GetLineText(int line) const; // excluding any cr/lf at end
     void SetInsertionPoint(STE_TextPos pos)       { GotoPos(pos); }
     void SetInsertionPointEnd()           { GotoPos(GetLength()); }
     void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + (STE_TextPos)text.Len()); }
@@ -270,6 +268,8 @@ public :
     void ChangeValue(const wxString& text){ SetText(text); }
     wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
 #endif
+    wxString GetLineText(int line) const; // excluding any cr/lf at end
+    int GetLineLength(int iLine) const;   // excluding any cr/lf at end
 
     virtual void SetEditable(bool editable); // -> SendFileNameEvent()
     void SetModified(bool modified); // -> SendFileNameEvent()
@@ -716,6 +716,7 @@ public :
     bool GetFileBOM() const;
 
     static const char* GetBOMChars(STE_Encoding, size_t* count);
+    static wxString GetEncodingText(STE_Encoding);
 
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages

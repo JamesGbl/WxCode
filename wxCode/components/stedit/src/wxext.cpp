@@ -796,6 +796,30 @@ wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
 }
 #endif
 
+// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
+static wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
+{
+    wxString str;
+
+    if (len)
+    {
+        size_t wlen;
+        wxWCharBuffer buf(conv.cMB2WC(src, len, &wlen));
+
+        str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, wlen);
+    }
+    return str;
+}
+
+// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
+static wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
+{
+    wxWCharBuffer wbuf(src.wc_str(wxConvLibc /*WXUNUSED*/));
+    wxCharBuffer buf(conv.cWC2MB(wbuf));
+
+    return buf;
+}
+
 wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
 {
     wxConvAuto conv_auto;
@@ -845,31 +869,16 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
     return str;
 }
 
-// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
-wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
-{
-    wxString str;
-
-    if (len)
-    {
-        size_t wlen;
-        wxWCharBuffer buf(conv.cMB2WC(src, len, &wlen));
-
-        str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, wlen);
-    }
-    return str;
-}
-
-// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
-wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
-{
-    wxWCharBuffer wbuf(src.wc_str(wxConvLibc /*WXUNUSED*/));
-    wxCharBuffer buf(conv.cWC2MB(wbuf));
-
-    return buf;
-}
-
 #ifdef __WXMSW__
+
+wxMBConvOEM::wxMBConvOEM() : wxMBConv()
+{
+}
+
+wxMBConvOEM::~wxMBConvOEM()
+{
+}
+
 size_t wxMBConvOEM::ToWChar(wchar_t*    dst, size_t dstLen,
                             const char* src, size_t srcLen) const
 {
@@ -933,4 +942,196 @@ bool wxTextEncodingFromString(const char* str, const char* identifier, const cha
         }
     }
     return false;
+}
+
+int wxString_FindFromPos(const wxString& str, const wxString& chars, size_t start_pos)
+{
+    const wxString temp = str.Mid(start_pos);
+    wxChar chPrev = 0;
+    size_t n = start_pos;
+
+    for (wxString::const_iterator it = temp.begin();
+         it != temp.end();
+         it++, n++)
+    {
+        wxChar ch = *it;
+        int idx = chars.Find(ch);
+
+        // char in str is in chars and is not a " preceeded by a \, eg. \"
+        if ((idx != wxNOT_FOUND) &&
+            ( (n == 0) || (ch != wxT('\"')) || (chPrev != wxT('\\')) ) )
+        {
+            return (int)n;
+        }
+        chPrev = ch;
+    }
+    return wxNOT_FOUND;
+}
+
+#if (wxVERSION_NUMBER < 2900)
+bool wxStyledTextCtrl_PositionToXY(const wxStyledTextCtrl& wnd, wxTextPos pos, long* col, long* row)
+{
+    wxStyledTextCtrl* pThis = wxConstCast(&wnd, wxStyledTextCtrl);
+
+    if ((pos < 0) || (pos > pThis->GetLength()))
+    {
+        if (col) *col = 0;
+        if (row) *row = 0;
+        return false;
+    }
+
+    int r = pThis->LineFromPosition(pos);
+    if (row) *row = r;
+    if (col) *col = pos - pThis->PositionFromLine(r);
+    return true;
+}
+#endif
+
+// trac.wxwidgets.org/ticket/13646
+wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl& wnd, int line)
+{
+    wxString lineText = wxConstCast(&wnd, wxStyledTextCtrl)->GetLine(line);
+    size_t len = lineText.Length();
+
+    if (len > 0)
+    {
+        if (lineText[len-1] == wxT('\n'))
+        {
+            if ((len > 1) && (lineText[len-2] == wxT('\r'))) // remove \r\n for DOS
+                return lineText.Mid(0, len-2);
+            else
+                return lineText.Mid(0, len-1);               // remove \n for Unix
+        }
+        else if (lineText[len-1] == wxT('\r'))               // remove \r for mac
+            return lineText.Mid(0, len-1);
+    }
+
+    return lineText; // shouldn't happen, but maybe?
+}
+
+wxString wxString_LoadFile(const wxCharBuffer& charBuf, size_t buf_len, wxTextEncoding encoding)
+{
+    wxString str;
+
+    switch (encoding)
+    {
+        case wxTextEncoding_Unicode_LE:
+            str = wxString_From(charBuf.data(), wxConvAuto(), buf_len);
+            break;
+        case wxTextEncoding_UTF8:
+            str = wxString_From(charBuf.data(), wxConvUTF8, buf_len);
+            break;
+        case wxTextEncoding_ISO8859_1:
+            str = wxString_From(charBuf.data(), wxConvISO8859_1, buf_len);
+            break;
+    #ifdef __WXMSW__
+        case wxTextEncoding_OEM:
+            str = wxString_From(charBuf.data(), wxMBConvOEM(), buf_len);
+            break;
+    #endif
+        case wxTextEncoding_None:
+        default:
+            str = wxConvertMB2WX(charBuf.data());
+            break;
+    }
+    return str;
+}
+
+bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding encoding, bool file_bom)
+{
+    bool ok = true;
+    const char* bom_chars;
+    size_t size;
+
+    // write bom
+    if (ok && file_bom) switch (encoding)
+    {
+        case wxTextEncoding_Unicode_LE:
+            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
+            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
+            break;
+        case wxTextEncoding_UTF8:
+            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
+            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
+            break;
+        case wxTextEncoding_None:
+    #ifdef __WXMSW__
+        case wxTextEncoding_OEM:
+    #endif
+            break;
+        default:
+            ok = false;
+            break;
+    }
+
+    // write text
+    if (ok) switch (encoding)
+    {
+        case wxTextEncoding_None:
+        {
+            const wxWX2MBbuf buf = s.mb_str(*wxConvCurrent);
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf);
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+        case wxTextEncoding_Unicode_LE:
+        {
+            const wxWritableWCharBuffer buf = s.wc_str(*wxConvCurrent);
+            
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf)*sizeof(wchar_t);
+                ok = (size == stream.Write(buf.data(), size).LastWrite());
+            }
+            break;
+        }
+        case wxTextEncoding_UTF8:
+        {
+            const wxCharBuffer buf = wxString_To(s, wxConvUTF8);
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf);
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+        case wxTextEncoding_ISO8859_1:
+        {
+            const wxCharBuffer buf = wxString_To(s, wxConvISO8859_1);
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf);
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+    #ifdef __WXMSW__
+        case wxTextEncoding_OEM:
+        {
+            const wxCharBuffer buf = wxString_To(s, wxMBConvOEM());
+
+            ok = !(!buf);
+            if (ok)
+            {
+                size = wxBuffer_length(buf);
+                ok = (size == stream.Write(buf, size).LastWrite());
+            }
+            break;
+        }
+    #endif
+        default:
+            ok = false;
+            break;
+    }
+    return ok;
 }

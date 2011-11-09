@@ -127,12 +127,9 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
-#if (defined(__WXTRUNK_H__) || ((wxVERSION_NUMBER >= 2903)) ) && defined(_WX_CONVAUTO_H_)
-WXDLLIMPEXP_STEDIT wxString    wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
+#if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_)
+WXDLLIMPEXP_STEDIT wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
 #endif
-
-WXDLLIMPEXP_STEDIT wxString     wxString_From(const char*     src, const wxMBConv&, size_t len = wxNO_LEN);
-WXDLLIMPEXP_STEDIT wxCharBuffer wxString_To  (const wxString& src, const wxMBConv&);
 
 #ifdef __WXMSW__
 // Strange that wxMBConv classes work with char and wchar_t only, not with wxChar;
@@ -140,7 +137,8 @@ WXDLLIMPEXP_STEDIT wxCharBuffer wxString_To  (const wxString& src, const wxMBCon
 class WXDLLIMPEXP_STEDIT wxMBConvOEM : public wxMBConv
 {
 public:
-    wxMBConvOEM() : wxMBConv() { }
+    wxMBConvOEM();
+    virtual ~wxMBConvOEM();
 
     virtual size_t ToWChar  (wchar_t*    dst, size_t dstLen,
                              const char* src, size_t srcLen = wxNO_LEN) const;
@@ -170,5 +168,11 @@ inline wxTextEncoding wxTextEncodingFromString(const wxXmlDocument& xml)
     return wxTextEncodingFromString(xml.GetFileEncoding());
 }
 #endif
+
+// trac.wxwidgets.org/ticket/13646
+WXDLLIMPEXP_STEDIT wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl&, int line);
+WXDLLIMPEXP_STEDIT int      wxString_FindFromPos(const wxString&, const wxString& chars, size_t start_pos);
+WXDLLIMPEXP_STEDIT wxString wxString_LoadFile(const wxCharBuffer& buf, size_t buf_len, wxTextEncoding);
+WXDLLIMPEXP_STEDIT bool     wxString_SaveFile(const wxString&, wxOutputStream&, wxTextEncoding, bool file_bom);
 
 #endif // __WXEXT_H__

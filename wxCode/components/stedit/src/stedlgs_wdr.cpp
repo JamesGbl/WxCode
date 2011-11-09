@@ -337,15 +337,8 @@ wxSizer *wxSTEditorPropertiesSizer( wxWindow *parent, bool call_fit, bool set_si
 
     wxBoxSizer *item33 = new wxBoxSizer( wxHORIZONTAL );
 
-    wxString strs34[] = 
-    {
-        _("None"), 
-        _("UTF8"), 
-        _("Unicode"), 
-        _("ISO8859-1"), 
-        _("OEM")
-    };
-    wxChoice *item34 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 5, strs34, 0 );
+    wxString *strs34 = (wxString*) NULL;
+    wxChoice *item34 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs34, 0 );
     item33->Add( item34, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     wxCheckBox *item35 = new wxCheckBox( parent, ID_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1490,15 +1483,8 @@ wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit, bool set_size
     wxStaticBox *item2 = new wxStaticBox( parent, -1, _("Encoding") );
     wxStaticBoxSizer *item1 = new wxStaticBoxSizer( item2, wxHORIZONTAL );
 
-    wxString strs3[] = 
-    {
-        _("None"), 
-        _("UTF8"), 
-        _("Unicode"), 
-        _("ISO8859-1"), 
-        _("OEM")
-    };
-    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 5, strs3, 0 );
+    wxString *strs3 = (wxString*) NULL;
+    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs3, 0 );
     item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     wxCheckBox *item4 = new wxCheckBox( parent, ID_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
