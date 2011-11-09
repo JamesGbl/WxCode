@@ -486,7 +486,7 @@ function( ADD_LIBRARY_FULL target_name )
 
     # Set the install includes to use same dir structure as the source directories
     #STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
-    #INSTALL(FILES 
+    #INSTALL(FILES
     #    ${HEADER_FILES} DESTINATION "include/${PROJ_DIR_TEMP}")
 
     INSTALL(TARGETS ${target_name}
@@ -810,14 +810,6 @@ endfunction()
 # ---------------------------------------------------------------------------
 
 function( TARGET_PRECOMPILED_HEADER target_name )
-
-    # There is some problem that makes MSVC6 recompile the precomp header 
-    # and therefore every source file every build. 
-    if (MSVC60)
-        MESSAGE(STATUS "* WARNING: Disabling precomplied headers for MSVC6 for ${target_name}, sorry...")
-        return()
-    endif()
-
 
     # Allow people to en/disable precomp headers to test if it actually works or not.
     # GCC is a little tricky to get right since you have to compile it exactly the same flags
