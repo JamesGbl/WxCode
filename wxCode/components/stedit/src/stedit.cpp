@@ -2310,6 +2310,12 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 {
                     wxMessageBox(_("Bad encoding."),
                         _("Error loading file"), wxOK|wxICON_ERROR, parent);
+                    // give it one more shot
+                    if (STE_Encoding_None != encoding)
+                    {
+                        str = wxString_LoadFile(charBuf, stream_len, wxTextEncoding_None);
+                        ok = !str.IsEmpty();
+                    }
                 }
             }
             if (ok)
@@ -4094,7 +4100,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2830")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2832")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
