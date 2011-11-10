@@ -121,7 +121,7 @@ endif()
 
 find_package(Doxygen)
 
-if (DOXYGEN_FOUND)
+if (DOXYGEN_FOUND_fixme)
     configure_file( ${CMAKE_SOURCE_DIR}/build/Doxyfile.in
                     ${CMAKE_BINARY_DIR}/Doxyfile @ONLY )
     add_custom_target( doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
@@ -131,7 +131,7 @@ if (DOXYGEN_FOUND)
     message( STATUS "* Doxygen found, run $make doc to generate documentation in doc/ folder" )
 else()
     message( STATUS "* WARNING: Doxygen NOT found, 'doc' target will not be generated" )
-endif (DOXYGEN_FOUND)
+endif (DOXYGEN_FOUND_fixme)
 
 # ===========================================================================
 # Build Settings
@@ -461,27 +461,29 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     # search through the list of components to see what we were able to find
 
     foreach( wx_comp ${wxWidgets_COMPONENTS} )
-        set(wx_comp_found "-1")
+        set(wx_comp_found FALSE)
 
         foreach( wx_comp_lib ${wxWidgets_LIBRARIES} )
             if ("${wx_comp}" STREQUAL "mono")
                 if (WX_mono OR WX_monod)
-                    set(wx_comp_found "1")
+                    set(wx_comp_found TRUE)
                     break()
                 endif()
             endif()
 
             get_filename_component(wx_comp_lib_name ${wx_comp_lib} NAME_WE)
-            string(FIND ${wx_comp_lib_name} ${wx_comp} wx_comp_found)
-            if ("${wx_comp_found}" GREATER "-1")
-                string(FIND ${wx_comp_lib_name} "wx" wx_comp_found)
-                if ("${wx_comp_found}" GREATER "-1")
+            string(REGEX MATCH ${wx_comp} wx_comp_found ${wx_comp_lib_name})
+
+            if ("${wx_comp_found}" STREQUAL "${wx_comp}")
+                string(REGEX MATCH "wx" wx_comp_found ${wx_comp_lib_name})
+                if ("${wx_comp_found}" STREQUAL "wx")
+                    set(wx_comp_found TRUE)
                     break()
                 endif()
             endif()
         endforeach()
 
-        if ("${wx_comp_found}" LESS "0")
+        if (NOT ${wx_comp_found})
             message(" WARNING: Unable to find requested wxWidgets component : ${wx_comp}")
         endif()
     endforeach()
