@@ -1114,7 +1114,6 @@ bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding
         ok = !(!buf);
         if (ok)
         {
-            size = wxBuffer_length(buf);
             ok = (size == stream.Write(buf, size).LastWrite());
         }
     }
