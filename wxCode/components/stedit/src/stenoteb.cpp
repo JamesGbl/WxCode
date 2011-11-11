@@ -756,7 +756,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
             // new splitter+editor
             wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
             wxCHECK_MSG(splitter, false, wxT("Invalid splitter"));
-            ok = splitter->GetEditor()->LoadFile(fileName);
+            ok = splitter->GetEditor()->LoadFile(fileName, wxEmptyString, true, encoding);
             if (ok)
             {
                 ok = InsertEditorSplitter(-1, splitter, true);

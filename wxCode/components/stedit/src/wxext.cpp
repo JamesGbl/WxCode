@@ -954,18 +954,27 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
 
 wxTextEncoding wxTextEncodingFromString(const wxString& rstr)
 {
-   wxString str = rstr;
-   str.MakeLower();
+    const struct _MAP
+    {
+        const wxChar* name;
+        wxTextEncoding encoding;
+    } map[] =
+    {
+        { wxT("utf-8"     ), wxTextEncoding_UTF8      },
+        { wxT("iso-8859-1"), wxTextEncoding_ISO8859_1 }
+    };
+    wxString str = rstr;
+    str.MakeLower();
 
-   if (str == wxT("utf-8"))
-   {
-       return wxTextEncoding_UTF8;
-   }
-   else if (0 == str.Find(wxT("iso-8859-1")))
-   {
-       return wxTextEncoding_ISO8859_1;
-   }
-   return wxTextEncoding_None;
+    for (size_t i = 0; i < WXSIZEOF(map); i++)
+    {
+        if (str == map[i].name)
+        {
+            return map[i].encoding;
+        }
+    }
+
+    return wxTextEncoding_None;
 }
 
 bool wxTextEncodingFromString(const char* str, const char* identifier, const char* ctrl, wxTextEncoding* encoding)
