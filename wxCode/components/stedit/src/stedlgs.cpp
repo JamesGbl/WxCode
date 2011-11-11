@@ -19,6 +19,7 @@
 #include <wx/listbook.h>
 #include <wx/mimetype.h>
 #include <wx/valgen.h>
+#include <wx/imaglist.h>
 
 #include "wxext.h"
 #include "wxtrunk.h"
