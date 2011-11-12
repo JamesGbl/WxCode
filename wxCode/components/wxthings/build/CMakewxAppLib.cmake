@@ -460,6 +460,43 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
 
     # search through the list of components to see what we were able to find
 
+    set(wxWidgets_ALL_COMPONENTS gizmos ogl stc webview gl qa svg xrc media propgrid richtext aui html adv core xml net base)
+    # In Linux using wx-config the WX_{base/core/etc} vars are not set.
+    # Mark all libs as not found
+    foreach( wx_comp ${wxWidgets_ALL_COMPONENTS} )
+        set(WX_HASLIB_${wx_comp} FALSE CACHE INTERNAL "")
+    endforeach()
+
+    foreach( wx_comp ${wxWidgets_ALL_COMPONENTS} )
+        set(wx_comp_found FALSE)
+
+        foreach( wx_comp_lib ${wxWidgets_LIBRARIES} )
+            if ("${wx_comp}" STREQUAL "mono")
+                if (WX_mono OR WX_monod)
+                    set(wx_comp_found TRUE)
+                    break()
+                endif()
+            endif()
+
+            get_filename_component(wx_comp_lib_name ${wx_comp_lib} NAME_WE)
+            string(REGEX MATCH ${wx_comp} wx_comp_found ${wx_comp_lib_name})
+
+            if ("${wx_comp_found}" STREQUAL "${wx_comp}")
+                # Also check that "wx" is in the filename as a sanity check
+                string(REGEX MATCH "wx" wx_comp_found ${wx_comp_lib_name})
+                if ("${wx_comp_found}" STREQUAL "wx")
+                    set(wx_comp_found TRUE)
+                    break()
+                endif()
+            endif()
+        endforeach()
+
+        if (${wx_comp_found})
+            set(WX_HASLIB_${wx_comp} TRUE)
+            #message("found ${wx_comp}")
+        endif()
+    endforeach()
+
     foreach( wx_comp ${wxWidgets_COMPONENTS} )
         set(wx_comp_found FALSE)
 
@@ -475,6 +512,7 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
             string(REGEX MATCH ${wx_comp} wx_comp_found ${wx_comp_lib_name})
 
             if ("${wx_comp_found}" STREQUAL "${wx_comp}")
+                # Also check that "wx" is in the filename as a sanity check
                 string(REGEX MATCH "wx" wx_comp_found ${wx_comp_lib_name})
                 if ("${wx_comp_found}" STREQUAL "wx")
                     set(wx_comp_found TRUE)
