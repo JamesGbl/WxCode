@@ -276,7 +276,6 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
-    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EXIT, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator

@@ -397,7 +397,7 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     if (HasToolbarToolType(STE_TOOLBAR_EXIT))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        tb->AddTool(wxID_EXIT, wxEmptyString, STE_ARTTOOL(wxART_STEDIT_QUIT), wxNullBitmap, wxITEM_NORMAL, ::wxToolBarTool_MakeShortHelp(*m_accelerator_array, wxID_EXIT), wxGetStockHelpString(wxID_EXIT));//, wxSTOCK_PLAINTEXT));
+        tb->AddTool(wxID_EXIT, wxEmptyString, STE_ARTTOOL(wxART_STEDIT_QUIT), wxNullBitmap, wxITEM_NORMAL, ::wxToolBarTool_MakeShortHelp(*m_accelerator_array, wxID_EXIT), wxGetStockHelpString(wxID_EXIT));
     }
     tb->Realize();
 
