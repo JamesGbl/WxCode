@@ -34,6 +34,8 @@ set( wxSheet_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wx
 
 if (NOT TARGET wxSheetLib)
 
+ADD_CPPCHECK_TEST(wxSheet_CppCheck)
+
 include_directories(${wxSheet_ROOT_DIR}/include/)
 
 ADD_LIBRARY_FULL(wxSheetLib

@@ -34,6 +34,8 @@ set( wxThings_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of w
 
 if (NOT TARGET wxThingsLib)
 
+ADD_CPPCHECK_TEST(wxThings_CppCheck)
+
 include_directories( ${wxThings_ROOT_DIR}/include/ )
 
 # We use some functions from GTK directly

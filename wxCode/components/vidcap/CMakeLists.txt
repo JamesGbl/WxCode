@@ -34,6 +34,8 @@ set( wxVidCap_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of w
 
 if (NOT TARGET wxVidCapLib)
 
+ADD_CPPCHECK_TEST(wxVidCap_CppCheck)
+
 include_directories( ${wxVidCap_ROOT_DIR}/include/ )
 
 if (WIN32)

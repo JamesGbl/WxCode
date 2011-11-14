@@ -63,6 +63,8 @@ set( wxPlotCtrl_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of
 
 if (NOT TARGET wxPlotCtrlLib)
 
+ADD_CPPCHECK_TEST(wxPlotCtrl_CppCheck)
+
 # wxThings_ROOT_DIR is set when add_subdirectory( wxThings/build ) has been called
 include_directories( ${wxThings_ROOT_DIR}/include/ )
 include_directories( ${wxPlotCtrl_ROOT_DIR}/include/ )
