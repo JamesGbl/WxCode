@@ -61,7 +61,7 @@ void wxSTEditorNotebook::Init()
 {
     m_stn_page_count     = 0;
     m_stn_selection      = -1;
-    m_stn_max_page_count = STN_NOTEBOOK_PAGES_DEFAULT_MAX;
+    m_stn_max_page_count = STN_NOTEBOOK_PAGES_ALLOWED;
 }
 
 bool wxSTEditorNotebook::Create( wxWindow *parent, wxWindowID id,

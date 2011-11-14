@@ -14,7 +14,9 @@
 #define WXK_HELP       WXK_F1
 #define WXK_FULLSCREEN WXK_F11
 
-#include <wx/stedit/stedefs.h>
+#include <wx/app.h>
+#include "wx/stedit/stedefs.h"
+
 
 #if defined(_WX_EVENT_H_) || defined(_WX_EVENT_H__)
 inline void wxPostCommandEvent(wxEvtHandler* dest, wxEventType commandType, int id)

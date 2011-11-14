@@ -18,7 +18,7 @@
 # ADD_EXECUTABLE()   - overrides CMake's ADD_EXECUTABLE(), remembers what was added
 # ADD_TEST()         - overrides CMake's ADD_TEST(), remembers what was added
 # ADD_GTEST()        - Add a test using Google's GTest, tests for failure.
-# ADD_STATIC_ANALYSIS_TEST() - Add test using cppcheck (if available)
+# ADD_CPPCHECK_TEST() - Add a static analysis test using cppcheck (if available)
 #
 # ADD_LIBRARY_FULL() - Complete wrapper for ADD_LIBRARY() with many conveniences.
 # ADD_EXECUTABLE_FULL() - Complete wrapper for ADD_EXECUTABLE() with many conveniences.
@@ -38,16 +38,18 @@
 # This file should only be called once during configuration, but the values
 # are not cached so it needs to be be run for each configuration.
 # Using properties does the trick of storing a variable per configuration run,
-# accessible at all scopes, but having it cleared for the next run.
+# accessible at all scopes like a cache var, but it is cleared each run.
 # ===========================================================================
 
-get_property(PROP_CMAKEFUNCTIONS_RUN_ONCE GLOBAL PROPERTY CMAKEFUNCTIONS_RUN_ONCE SET)
+get_property(CMAKEFUNCTIONS_RUN_ONCE_CALLED DIRECTORY ${CMAKE_HOME_DIRECTORY} 
+             PROPERTY CMAKEFUNCTIONS_RUN_ONCE SET)
 
-if (PROP_CMAKEFUNCTIONS_RUN_ONCE)
+if (CMAKEFUNCTIONS_RUN_ONCE_CALLED)
     return()
 endif()
 
-set_property(GLOBAL PROPERTY CMAKEFUNCTIONS_RUN_ONCE TRUE)
+set_property(DIRECTORY ${CMAKE_HOME_DIRECTORY} 
+             PROPERTY CMAKEFUNCTIONS_RUN_ONCE TRUE)
 
 # ===========================================================================
 # Helper functions
@@ -121,7 +123,6 @@ FUNCTION( ADD_FILE_TO_LIST file_list filename )
             set(${file_list} ${${file_list}} ${f} PARENT_SCOPE)
         endif()
     endforeach()
-
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
@@ -135,7 +136,6 @@ ENDFUNCTION()
 # ---------------------------------------------------------------------------
 
 FUNCTION( GET_OBJECT_FILES target_name object_file_list source_files )
-
     if (MSVC)
         foreach(f ${source_files})
             GET_FILENAME_COMPONENT(fname ${f} NAME)
@@ -148,7 +148,6 @@ FUNCTION( GET_OBJECT_FILES target_name object_file_list source_files )
             endif()
         endforeach()
     else()
-
         # Backwards compat to CMake <= 2.8.4
         if ("${CMAKE_CURRENT_LIST_DIR}" STREQUAL "")
             get_filename_component(CMAKE_CURRENT_LIST_DIR 
@@ -181,18 +180,19 @@ UNSET(ADD_EXECUTABLE_DIR_NAME_LIST CACHE)
 UNSET(ADD_TEST_LIST CACHE)
 UNSET(ADD_TEST_DIR_LIST CACHE)
 UNSET(ADD_TEST_DIR_NAME_LIST CACHE)
-UNSET(ADD_STATIC_ANALYSIS_TEST_LIST CACHE)
-UNSET(ADD_STATIC_ANALYSIS_TEST_DIR_LIST CACHE)
-UNSET(ADD_STATIC_ANALYSIS_TEST_DIR_NAME_LIST CACHE)
+UNSET(ADD_CPPCHECK_TEST_LIST CACHE)
+UNSET(ADD_CPPCHECK_TEST_DIR_LIST CACHE)
+UNSET(ADD_CPPCHECK_TEST_DIR_NAME_LIST CACHE)
 
 # ---------------------------------------------------------------------------
 # PRINT_ADD_SUBDIRECTORY() - Print all the ADD_SUBDIRECTORY() projects to the console.
 # ---------------------------------------------------------------------------
 FUNCTION( PRINT_ADD_SUBDIRECTORY )
-	MESSAGE( STATUS "* Subdirectories that contain generated build files from ADD_SUBDIRECTORY():" )
+	MESSAGE( STATUS "* Subdirectories that contain projects from ADD_SUBDIRECTORY():" )
 
-	LIST(SORT ADD_SUBDIRECTORY_LIST) # ok to sort this list inplace
-	STRING(REGEX REPLACE ";" "\n* - " ADD_SUBDIRECTORY_LIST_STR "${ADD_SUBDIRECTORY_LIST}")
+    SET(ADD_SUBDIRECTORY_LIST_SORTED ${ADD_SUBDIRECTORY_LIST})
+	LIST(SORT ADD_SUBDIRECTORY_LIST_SORTED)
+	STRING(REGEX REPLACE ";" "\n* - " ADD_SUBDIRECTORY_LIST_STR "${ADD_SUBDIRECTORY_LIST_SORTED}")
 	MESSAGE( STATUS "* - ${ADD_SUBDIRECTORY_LIST_STR}")
 ENDFUNCTION()
 
@@ -221,7 +221,7 @@ FUNCTION( PRINT_ADD_EXECUTABLE )
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
-# Replace the ADD_SUBDIRECTORY() function to remember what
+# Replace the ADD_SUBDIRECTORY(source_dir) function to remember what
 # subdirectories were added so we can do things with them.
 # ---------------------------------------------------------------------------
 FUNCTION( ADD_SUBDIRECTORY source_dir )
@@ -241,7 +241,7 @@ FUNCTION( ADD_SUBDIRECTORY source_dir )
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
-# Replace the ADD_LIBRARY() function to remember what
+# Replace the ADD_LIBRARY(name ...) function to remember what
 # library targets were added so we can do things with them.
 # ---------------------------------------------------------------------------
 FUNCTION( ADD_LIBRARY name)
@@ -256,7 +256,7 @@ FUNCTION( ADD_LIBRARY name)
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
-# Replace the ADD_EXECUTABLE() function to remember what
+# Replace the ADD_EXECUTABLE(name ...) function to remember what
 # executable targets were added so we can do things with them.
 # ---------------------------------------------------------------------------
 FUNCTION( ADD_EXECUTABLE name)
@@ -271,7 +271,7 @@ FUNCTION( ADD_EXECUTABLE name)
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
-# Replace the ADD_TEST() function to remember what
+# Replace the ADD_TEST(name ...) function to remember what
 # test targets were added so we can do things with them.
 # ---------------------------------------------------------------------------
 FUNCTION( ADD_TEST name)
@@ -286,6 +286,7 @@ FUNCTION( ADD_TEST name)
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
+# ADD_GTEST(exe_target_name)
 # Add a function to create an ADD_TEST() that properly checks the output
 # of Google GTests. Use this function instead of ADD_TEST for running GTests in your exe.
 # Usage: ADD_GTEST( existing_exe_target_name [optional args to exe] )
@@ -297,21 +298,22 @@ FUNCTION( ADD_GTEST exe_target_name )
 ENDFUNCTION()
 
 # ---------------------------------------------------------------------------
+# ADD_CPPCHECK_TEST( name )
 # Add a function to call cppcheck to do a static analysis test on the project
 # source dir and its children dirs using the cppcheck program.
 # This is probably a Linux only test and the target will not be generated if
 # you don't have cppcheck installed.
 # ---------------------------------------------------------------------------
 
-FUNCTION( ADD_STATIC_ANALYSIS_TEST name )
+FUNCTION( ADD_CPPCHECK_TEST name )
     IF ( "${cppcheck}" STREQUAL "")
         # Find the program cppcheck; ${cppcheck} will be either the exe path or "cppcheck-NOTFOUND"
         FIND_PROGRAM( cppcheck "cppcheck" )
 
         IF ( "${cppcheck}" STREQUAL "cppcheck-NOTFOUND" )
-            MESSAGE( STATUS "* WARNING: cppcheck NOT found, NOT generating ADD_STATIC_ANALYSIS_TEST() tests" )
+            MESSAGE( STATUS "* WARNING: cppcheck NOT found, NOT generating ADD_CPPCHECK_TEST() tests" )
         ELSE()
-            MESSAGE( STATUS "* cppcheck found, generating ADD_STATIC_ANALYSIS_TEST() tests" )
+            MESSAGE( STATUS "* cppcheck found, generating ADD_CPPCHECK_TEST() tests" )
         ENDIF()
     ENDIF()
 
@@ -320,17 +322,17 @@ FUNCTION( ADD_STATIC_ANALYSIS_TEST name )
         # Get the last part of the directory we're currently in
         STRING(REPLACE "${CMAKE_HOME_DIRECTORY}/" "" PROJ_DIR_TEMP ${CMAKE_CURRENT_SOURCE_DIR})
 
-        LIST(FIND ADD_STATIC_ANALYSIS_TEST_DIR_LIST ${PROJ_DIR_TEMP} PROJ_DIR_IDX_TEMP)
+        LIST(FIND ADD_CPPCHECK_TEST_DIR_LIST ${PROJ_DIR_TEMP} PROJ_DIR_IDX_TEMP)
 
         IF ("${PROJ_DIR_IDX_TEMP}" GREATER "-1")
-            MESSAGE(STATUS "* WARNING: Duplicate static_analysis tests for dir ${CMAKE_CURRENT_SOURCE_DIR} with names ${name}, you need only one ADD_STATIC_ANALYSIS_TEST per directory.")
+            MESSAGE(STATUS "* WARNING: Duplicate cppcheck tests for dir ${CMAKE_CURRENT_SOURCE_DIR} with names ${name}, you need only one ADD_CPPCHECK_TEST per directory.")
         ELSE()
             ADD_TEST( ${name} ${cppcheck} "--verbose" "--quiet" ${CMAKE_CURRENT_SOURCE_DIR} )
             SET_TESTS_PROPERTIES( ${name} PROPERTIES FAIL_REGULAR_EXPRESSION "(error)")
 
-            SET(ADD_STATIC_ANALYSIS_TEST_LIST          ${ADD_STATIC_ANALYSIS_TEST_LIST}          "${name}" CACHE INTERNAL "")
-            SET(ADD_STATIC_ANALYSIS_TEST_DIR_LIST      ${ADD_STATIC_ANALYSIS_TEST_DIR_LIST}      "${PROJ_DIR_TEMP}" CACHE INTERNAL "")
-            SET(ADD_STATIC_ANALYSIS_TEST_DIR_NAME_LIST ${ADD_STATIC_ANALYSIS_TEST_DIR_NAME_LIST} "${PROJ_DIR_TEMP}/${name}" CACHE INTERNAL "")
+            SET(ADD_CPPCHECK_TEST_LIST          ${ADD_CPPCHECK_TEST_LIST}          "${name}" CACHE INTERNAL "")
+            SET(ADD_CPPCHECK_TEST_DIR_LIST      ${ADD_CPPCHECK_TEST_DIR_LIST}      "${PROJ_DIR_TEMP}" CACHE INTERNAL "")
+            SET(ADD_CPPCHECK_TEST_DIR_NAME_LIST ${ADD_CPPCHECK_TEST_DIR_NAME_LIST} "${PROJ_DIR_TEMP}/${name}" CACHE INTERNAL "")
         ENDIF()
     ENDIF()
 ENDFUNCTION()
@@ -718,9 +720,7 @@ function(APPEND_TARGET_PROPERTIES)
     set(PROP_NAME "")                   # last prop name
 
     FOREACH(arg ${ARGN})
-
         if (PROPERTIES)
-
             # We get the old prop value, append the new and apply it to each target
 
             if ("${PROP_NAME}" STREQUAL "")
@@ -738,7 +738,6 @@ function(APPEND_TARGET_PROPERTIES)
 
                 set(PROP_NAME "")
             endif()
-
         elseif ("${arg}" STREQUAL "PROPERTIES")
             set(PROPERTIES TRUE)
         else()
@@ -768,9 +767,7 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
     set(PROP_NAME "")                   # name of last prop
 
     FOREACH(arg ${ARGN})
-
         if (PROPERTIES)
-
             # We get the old prop value, append the new and apply it to each target
 
             if ("${PROP_NAME}" STREQUAL "")
@@ -788,7 +785,6 @@ function(APPEND_SOURCE_FILES_PROPERTIES)
 
                 set(PROP_NAME "")
             endif()
-
         elseif ("${arg}" STREQUAL "PROPERTIES")
             set(PROPERTIES TRUE)
         else()
@@ -809,7 +805,10 @@ endfunction()
 #
 # Note that MSVC will error for SOURCES that do not have the line
 #   #include "PCH_INCLUDE" (where PCH_INCLUDE is identical to what's passed to this function)
-#   See FORCE_INCLUDE flag for a workaround.
+#   See FORCE_INCLUDE flag for a workaround that uses the compiler's
+#     directive to #include a file before compilation.
+#     This also works well for GCC and allows you to use precomp headers w/o
+#     modifying any code at all.
 #
 # FORCE_INCLUDE flag may be used to tell the compiler to include the precomp header
 #               in cases where it is not explicitly included in the code.
@@ -1010,7 +1009,10 @@ function( TARGET_PRECOMPILED_HEADER target_name )
 endfunction()
 
 # ---------------------------------------------------------------------------
-# ADD_DOXYGEN() function to make adding a doxygen target easy.
+# ADD_DOXYGEN(target_name doxyfile_in doxyfile_out doxygen_working_dir)
+# A function to make adding a doxygen target easy, the doxyfile_in will have
+# @vars@ replaced by configure and copied to doxyfile_out and a target_name will
+# made to call "doxygen ${doxyfile_out}" from the doxygen_working_dir.
 # Usage : ADD_DOXYGEN( doc
 #                      ${CMAKE_SOURCE_DIR}/build/Doxyfile.in
 #                      ${CMAKE_BINARY_DIR}/Doxyfile
@@ -1045,34 +1047,32 @@ endfunction()
 
 macro(GET_ALL_CMAKE_VARIABLES all_vars cache_vars)
 
-    get_cmake_property(props VARIABLES)
-    foreach(var ${props})
-        #message( STATUS "@ VARIABLES: ${var} = \"${${var}}\"" )
-        set(${all_vars} ${${all_vars}} "${var}")
+    get_cmake_property(_props VARIABLES)
+    foreach(_var ${_props})
+        #message( STATUS "@ VARIABLES: ${_var} = \"${${_var}}\"" )
+        set(${all_vars} ${${all_vars}} "${_var}")
     endforeach()
 
-    unset(var)
-    unset(props)
+    unset(_var)
+    unset(_props)
 
-    get_cmake_property(props CACHE_VARIABLES)
-    foreach(var ${props})
-        #message( STATUS "@ CACHE_VARIABLES: ${var} = \"${${var}}\"" )
-        set(${all_vars}   ${${all_vars}}       "${var}")
-        set(${cache_vars} ${${cache_vars}} "${var}")
+    get_cmake_property(_props CACHE_VARIABLES)
+    foreach(_var ${_props})
+        #message( STATUS "@ CACHE_VARIABLES: ${_var} = \"${${_var}}\"" )
+        set(${all_vars}   ${${all_vars}}       "${_var}")
+        set(${cache_vars} ${${cache_vars}} "${_var}")
     endforeach()
 
-    unset(var)
-    unset(props)
+    unset(_var)
+    unset(_props)
 
     # merge the VARIABLES and CACHE_VARIABLES since they're mostly the same
     list(SORT ${all_vars})
     list(REMOVE_DUPLICATES ${all_vars})
-
 endmacro()
 
 
 macro(PRINT_ALL_CMAKE_VARIABLES)
-
     set(CMAKE_ALL_VARIABLES_LIST)
     set(CMAKE_ALL_CACHE_VARIABLES_LIST)
 
@@ -1083,41 +1083,40 @@ macro(PRINT_ALL_CMAKE_VARIABLES)
     message( STATUS "@- Begin printing internal CMake variables")
     message( STATUS "@----------------------------------------------------------------------------")
 
-    foreach(var ${CMAKE_ALL_VARIABLES_LIST})
-        list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} _IS_CACHED)
-        if (_IS_CACHED GREATER "-1")
-            message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
+    foreach(_var ${CMAKE_ALL_VARIABLES_LIST})
+        list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${_var} _is_cached)
+        if (_is_cached GREATER "-1")
+            message( STATUS "@ CACHE VAR: ${_var} = \"${${_var}}\"" )
         else()
-            message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
+            message( STATUS "@ VARIABLE : ${_var} = \"${${_var}}\"" )
         endif()
     endforeach()
 
-    get_cmake_property(props COMMANDS)
-    foreach(var ${props})
-        message( STATUS "@ COMMANDS: ${var} = \"${${var}}\"" )
+    get_cmake_property(_props COMMANDS)
+    foreach(_var ${_props})
+        message( STATUS "@ COMMANDS: ${_var} = \"${${_var}}\"" )
     endforeach()
 
-    get_cmake_property(props MACROS)
-    foreach(var ${props})
-        message( STATUS "@ MACROS: ${var} = \"${${var}}\"" )
+    get_cmake_property(_props MACROS)
+    foreach(_var ${_props})
+        message( STATUS "@ MACROS: ${_var} = \"${${_var}}\"" )
     endforeach()
 
-    get_cmake_property(props COMPONENTS)
-    foreach(var ${props})
-        message( STATUS "@ COMPONENTS: ${var} = \"${${var}}\"" )
+    get_cmake_property(_props COMPONENTS)
+    foreach(_var ${_props})
+        message( STATUS "@ COMPONENTS: ${_var} = \"${${_var}}\"" )
     endforeach()
 
 
     # Unset the variables for the PRINT_NEW_CMAKE_VARIABLES() macro
-    unset(var)
-    unset(props)
-    unset(_IS_CACHED)
+    unset(_var)
+    unset(_props)
+    unset(_is_cached)
 
     message( STATUS "@----------------------------------------------------------------------------")
     message( STATUS "@- End printing internal CMake variables")
     message( STATUS "@----------------------------------------------------------------------------")
     message( STATUS " ")
-
 endmacro()
 
 # ---------------------------------------------------------------------------
@@ -1125,7 +1124,6 @@ endmacro()
 # and this call, saving the newly founds vars for the next call to this.
 
 macro( PRINT_NEW_CMAKE_VARIABLES )
-
     message( STATUS " ")
     message( STATUS "@----------------------------------------------------------------------------")
     message( STATUS "@- Begin printing NEW internal CMake variables")
@@ -1137,14 +1135,14 @@ macro( PRINT_NEW_CMAKE_VARIABLES )
     GET_ALL_CMAKE_VARIABLES(CMAKE_ALL_VARIABLES_LIST2 CMAKE_ALL_CACHE_VARIABLES_LIST2)
 
     # merge the VARIABLES and CACHE_VARIABLES since they're mostly the same
-    foreach(var ${CMAKE_ALL_VARIABLES_LIST2})
-        list(FIND CMAKE_ALL_VARIABLES_LIST ${var} _IS_NEW)
-        if (_IS_NEW EQUAL "-1")
-            list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${var} _IS_CACHED)
-            if (_IS_CACHED GREATER "-1")
-                message( STATUS "@ CACHE VAR: ${var} = \"${${var}}\"" )
+    foreach(_var ${CMAKE_ALL_VARIABLES_LIST2})
+        list(FIND CMAKE_ALL_VARIABLES_LIST ${_var} _is_new)
+        if (_is_new EQUAL "-1")
+            list(FIND CMAKE_ALL_CACHE_VARIABLES_LIST ${_var} _is_cached)
+            if (_is_cached GREATER "-1")
+                message( STATUS "@ CACHE VAR: ${_var} = \"${${_var}}\"" )
             else()
-                message( STATUS "@ VARIABLE : ${var} = \"${${var}}\"" )
+                message( STATUS "@ VARIABLE : ${_var} = \"${${_var}}\"" )
             endif()
         endif()
     endforeach()
@@ -1154,13 +1152,12 @@ macro( PRINT_NEW_CMAKE_VARIABLES )
     message( STATUS "@----------------------------------------------------------------------------")
     message( STATUS " ")
 
-    unset(var)
-    unset(_IS_NEW)
-    unset(_IS_CACHED)
+    unset(_var)
+    unset(_is_new)
+    unset(_is_cached)
 
     set(CMAKE_ALL_VARIABLES_LIST       ${CMAKE_ALL_VARIABLES_LIST2})
     set(CMAKE_ALL_CACHE_VARIABLES_LIST ${CMAKE_ALL_CACHE_VARIABLES_LIST2})
-
 endmacro()
 
 # ---------------------------------------------------------------------------
@@ -1176,10 +1173,4 @@ set( CMAKE_DEBUG_VARIABLES ${CMAKE_DEBUG_VARIABLES} CACHE BOOL "Print all CMake 
 
 if ( CMAKE_DEBUG_VARIABLES )
     PRINT_ALL_CMAKE_VARIABLES()
-
-    #set(aaa "5")
-    #PRINT_NEW_CMAKE_VARIABLES()
-    #set(bbb "5")
-    #PRINT_NEW_CMAKE_VARIABLES()
 endif()
-

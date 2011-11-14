@@ -11,11 +11,12 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedefs.h>
-#include <wx/stedit/steart.h>
+#include "wx/stedit/stedefs.h"
+#include "wx/stedit/steart.h"
 #include "wxext.h"
 
 #include <wx/image.h>
+#include <wx/settings.h> // for wxSystemSettings
 
 // Bitmaps used for the toolbar in the wxSTEditorFrame
 #include "../art/pencil16.xpm"
@@ -64,9 +65,10 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
     }
 }
 
-/*static*/ wxBitmap wxSTEditorArtProvider::DoGetBitmap(const wxArtID& id,
-                                                       const wxArtClient& client,
-                                                       const wxSize& size_)
+// static
+wxBitmap wxSTEditorArtProvider::DoGetBitmap(const wxArtID& id,
+                                            const wxArtClient& client,
+                                            const wxSize& size_)
 {
     static const struct art_item
     {
@@ -152,16 +154,17 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
     return Resize(bmp, size); // does nothing if already correct size
 }
 
-/*static*/ wxBitmap wxSTEditorArtProvider::Resize(const wxBitmap& bmp_, const wxSize& size)
+// static
+wxBitmap wxSTEditorArtProvider::Resize(const wxBitmap& bmp_, const wxSize& size)
 {
     wxBitmap bmp(bmp_);
 
-    if (!bmp.IsOk() || (size == wxDefaultSize))
+    if (!bmp.IsOk() || (size.GetWidth() < 1) || (size.GetHeight() < 1))
         return bmp;
 
     int bmp_w = bmp.GetWidth();
     int bmp_h = bmp.GetHeight();
-    // paste into transparent image to
+
     if ((bmp_w != size.GetWidth()) || (bmp_h != size.GetHeight()))
     {
         wxPoint offset((size.GetWidth() - bmp_w)/2, (size.GetHeight() - bmp_h)/2);
@@ -173,7 +176,8 @@ wxSTEditorArtProvider::wxSTEditorArtProvider() : wxArtProvider()
     return bmp;
 }
 
-/*static*/ wxIconBundle wxSTEditorArtProvider::GetDialogIconBundle()
+// static
+wxIconBundle wxSTEditorArtProvider::GetDialogIconBundle()
 {
     wxIcon icon1, icon2;
     icon1.CopyFromBitmap(wxArtProvider::GetBitmap(wxART_STEDIT_APP, wxART_OTHER, wxSTESmallIconSize));

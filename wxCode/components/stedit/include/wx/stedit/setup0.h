@@ -9,11 +9,84 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // This file is distributed as setup0.h and should be copied to setup.h
-// You may modify the setup.h to control the behavior of the wxSTEditor.
+// You may modify the copied setup.h file to control the behavior of the 
+// wxSTEditor or override the default values of the #defines, where allowed,
+// using the compiler flag -D STE_USE_HTML_PRINT=1 (for example).
 
 #ifndef _STESETUP_H_
 #define _STESETUP_H_
 
+// --------------------------------------------------------------------------
+// Track the version of this file to alert people when changes have been made
+// so they can update their copy to wx/stedit/setup0.h.
+// The STE_SETUP_VERSION is simply an integer that is incremented whenever
+// wx/stedit/setup0.h is modified in a way that breaks compatibility.
+// --------------------------------------------------------------------------
+
+#include "wx/stedit/stedefs.h" // Get the current version this should be updated to.
+
+#if STE_SETUP_VERSION != 1
+#   error "Your wx/stedit/setup.h file is out of date, please update to wx/stedit/setup0.h."
+#endif 
+
+// --------------------------------------------------------------------------
+// Set the maximum file size that the editor can load in bytes.
+// --------------------------------------------------------------------------
+
+#ifndef STE_MaxFileSize 
+    #define STE_MaxFileSize 40000000
+#endif
+
+//-----------------------------------------------------------------------------
+// Starting wxWindowID for the wxStEdit menu items
+//-----------------------------------------------------------------------------
+
+#ifndef ID_STE__FIRST
+    #define ID_STE__FIRST 100 // first menu/window ID value
+#endif
+
+//-----------------------------------------------------------------------------
+// Number of notebook pages allowed before showing dialog saying max # pages reached. 
+// Use wxSTEditorNotebook::SetMaxPageCount() to change it dynamically, but
+// there can never be more pages than STN_NOTEBOOK_PAGES_MAX
+//-----------------------------------------------------------------------------
+
+#ifndef STN_NOTEBOOK_PAGES_ALLOWED
+    #define STN_NOTEBOOK_PAGES_ALLOWED 200  // default max number of pages
+#endif 
+
+//-----------------------------------------------------------------------------
+// Use wxHtmlEasyPrinting instead of normal printing.
+//-----------------------------------------------------------------------------
+
+#ifndef STE_USE_HTML_PRINT
+    #define STE_USE_HTML_PRINT 0
+#endif
+
+//-----------------------------------------------------------------------------
+// Some default initial values for the font
+//-----------------------------------------------------------------------------
+
+// A smallish font size that is nicely readable (your mileage may vary)
+#ifndef STE_DEF_FONTSIZE
+    #ifdef __WXGTK__
+        #define STE_DEF_FONTSIZE 12
+    #else
+        #define STE_DEF_FONTSIZE 10
+    #endif
+#endif // #ifndef STE_DEF_FONTSIZE
+
+// A fixed width font - courier is not great, but a reasonable start
+#ifndef STE_DEF_FACENAME
+    #ifdef __WXMSW__
+        // Use a TrueType/ClearType font on Windows
+        #define STE_DEF_FACENAME wxT("Courier New")
+    #else
+        #define STE_DEF_FACENAME wxT("Courier")
+    #endif
+#endif // #ifndef STE_DEF_FACENAME
+
+// --------------------------------------------------------------------------
 // STE_USE_LANG_XXX determines whether or not the language information will be
 // compiled in or not. Note that the wxSTEditorLangs always has the
 // languages in the order given by enum STE_LangTypes STE_LANG_XXX
@@ -23,6 +96,7 @@
 // and a simplier interface by stripping out esoteric languages.
 // In order to make it easy to exclude languages be sure to use
 // wxSTEditorLangs::HasLanguage(lang_n) before accessing any values.
+// --------------------------------------------------------------------------
 
 #define STE_USE_LANG_CONTAINER   0 // 0  probably never want this shown
 #define STE_USE_LANG_NULL        1 // 1

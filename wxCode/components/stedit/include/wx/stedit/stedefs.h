@@ -24,32 +24,43 @@
     #define stc2wx(char_str) wxString(char_str)
 #endif
 
+//-----------------------------------------------------------------------------
 // Include our setup file that includes/excludes the different language
 //   information for the wxSTEditorLangs.
-// If you get an error on this line, maybe you forgot to copy
-//   include/wx/stedit/setup0.h to include/wx/stedit/setup.h ?
+//-----------------------------------------------------------------------------
+
+// The STE_SETUP_VERSION is simply an integer that is incremented whenever
+// wx/stedit/setup0.h is modified in a way that breaks compatibility.
+#define STE_SETUP_VERSION 1 
+
+// If you get an error on this line, you probably forgot to copy
+//   include/wx/stedit/setup0.h to include/wx/stedit/setup.h 
 #if !defined(_STESETUP_H_)
-    #include <wx/stedit/setup.h>
+    #include "wx/stedit/setup.h"
 #endif // !defined(_STESETUP_H_)
+
+#ifndef ID_STE__FIRST
+#   error "Your wx/stedit/setup.h file is out of date, please update to wx/stedit/setup0.h."    
+#endif
 
 //-----------------------------------------------------------------------------
 // The version of wxStEdit
 //-----------------------------------------------------------------------------
 
 #define STE_MAJOR_VERSION      1
-#define STE_MINOR_VERSION      2
-#define STE_RELEASE_VERSION    6
+#define STE_MINOR_VERSION      4
+#define STE_RELEASE_VERSION    0
 #define STE_SUBRELEASE_VERSION 0
 #define STE_APPNAME           wxT("wxstedit")
 #define STE_APPDISPLAYNAME    wxT("wxStEdit")
-#define STE_VERSION_STRING    STE_APPDISPLAYNAME wxT(" 1.2.6")
+#define STE_VERSION_STRING    STE_APPDISPLAYNAME wxT(" 1.4.0")
 #define STE_WEBSITE           "http://wxcode.sourceforge.net/showcomp.php?name=wxStEdit"
 
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
 // current version is at least major.minor.release
-#define wxCHECK_STE_VERSION(major,minor,release) \
+#define wxCHECK_STE_VERSION(major, minor, release) \
     (STE_MAJOR_VERSION > (major) || \
     (STE_MAJOR_VERSION == (major) && STE_MINOR_VERSION > (minor)) || \
     (STE_MAJOR_VERSION == (major) && STE_MINOR_VERSION == (minor) && STE_RELEASE_VERSION >= (release)))
@@ -68,6 +79,7 @@
     #define WXDLLIMPEXP_STEDIT
     #define WXDLLIMPEXP_DATA_STEDIT(type) type
 #endif
+
 #if defined(__WINDOWS__) && defined(__GNUC__)
     #define WXDLLIMPEXP_FWD_STEDIT
 #else
@@ -98,17 +110,6 @@ enum STE_Encoding
     STE_Encoding_EnumCount,
     STE_Encoding_Default = STE_Encoding_None
 };
-
-#define STE_MaxFileSize 40000000
-
-//-----------------------------------------------------------------------------
-// Use wxHtmlEasyPrinting instead of normal printing
-//   eg. in your build files use compiler flag -D STE_USE_HTML_PRINT=1
-//-----------------------------------------------------------------------------
-
-#ifndef STE_USE_HTML_PRINT
-    #define STE_USE_HTML_PRINT 0
-#endif
 
 //-----------------------------------------------------------------------------
 // Forward declaration of the wxSTEditor classes
@@ -142,14 +143,6 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPrefDialog;
 
 class WXDLLIMPEXP_STEDIT wxSTEditorPrintout;            // steprint.h
 class WXDLLIMPEXP_STEDIT wxSTEditorPrintOptionsDialog;
-
-//-----------------------------------------------------------------------------
-// Maximum number of notebook pages, should be enough? You can readjust it
-//  in the wxSTEditorNotebook.
-
-#define STN_NOTEBOOK_PAGES_DEFAULT_MAX 200  // default max number of pages
-#define STN_NOTEBOOK_PAGES_MAX         1000 // max number of pages before menu
-                                            // IDs start to conflict
 
 //-----------------------------------------------------------------------------
 // STE_StateType - State of the wxSTEditor
@@ -212,9 +205,8 @@ enum STE_MarkerType
 // IDs of all the menus, toolbar tools, windows
 //-----------------------------------------------------------------------------
 
-#ifndef ID_STE__FIRST
-    #define ID_STE__FIRST 100 // first menu/window ID value
-#endif
+#define STN_NOTEBOOK_PAGES_MAX 1000 // max number of pages before menu
+                                    // IDs start to conflict, see usage below
 
 enum
 {
@@ -707,6 +699,7 @@ enum STE_FoldMarginStyleType
 //
 //  Indicators and markers are also stored here.
 //-----------------------------------------------------------------------------
+
 enum STE_StyleType
 {
     STE_STYLE_DEFAULT = 0,    // 0  This style is always mapped to Scintilla's #32 default text
@@ -804,32 +797,10 @@ enum STE_StyleType
     STE_STYLE_MARKER__LAST         = STE_STYLE_MARKER__FIRST + wxSTC_MARKER_MAX
 };
 
-//-----------------------------------------------------------------------------
-// Some default initial values for the font
-//-----------------------------------------------------------------------------
-
-// A smallish font size that is nicely readable (your mileage may vary)
-#ifndef STE_DEF_FONTSIZE
-    #ifdef __WXGTK__
-        #define STE_DEF_FONTSIZE 12
-    #else
-        #define STE_DEF_FONTSIZE 10
-    #endif
-#endif // #ifndef STE_DEF_FONTSIZE
-
-// A fixed width font - courier is not great, but a reasonable start
-#ifndef STE_DEF_FACENAME
-    #ifdef __WXMSW__
-        // Use a TrueType/ClearType font on Windows
-        #define STE_DEF_FACENAME wxT("Courier New")
-    #else
-        #define STE_DEF_FACENAME wxT("Courier")
-    #endif
-#endif // #ifndef STE_DEF_FACENAME
-
 // ----------------------------------------------------------------------------
 // STE_FontAttrType - Font attributes for a style
 // see wxSTEditorStyle::Get/SetFontAttr(style_n, STE_STYLE_FONT_BOLD|...)
+
 enum STE_FontAttrType
 {
     STE_STYLE_FONT_NONE       = 0x0000,
@@ -852,6 +823,7 @@ enum STE_FontAttrType
 // see wxSTEditorStyle::Get/SetUseDefault(style_n, STE_STYLE_USEDEFAULT_FORECOLOUR|...)
 // The styles always contain values, even if the defaults are used to make it
 //   easy for a user to revert to default and then back to what they set.
+
 enum STE_StyleUseDefaultType
 {
     STE_STYLE_USEDEFAULT_NONE         = 0x0000,
@@ -873,6 +845,7 @@ enum STE_StyleUseDefaultType
 // ----------------------------------------------------------------------------
 // STE_StyleUsesType - what parts of the style are actually used
 // see wxSTEditorStyle::GetStyleUsage(style_n)
+
 enum STE_StyleUsesType
 {
     STE_STYLE_USES_FORECOLOUR = 0x0001,

@@ -34,6 +34,8 @@ set( wxStEdit_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of w
 
 if (NOT TARGET wxStEditLib)
 
+ADD_CPPCHECK_TEST(wxStEdit_CppCheck)
+
 # The user can provide their own "wx/stedit/setup.h" by changing this path
 if (NOT DEFINED wxStEdit_SETUP_INCLUDE_PATH)
     set(wxStEdit_SETUP_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include CACHE INTERNAL "Path to the configured wxStEdit setup.h" FORCE)
