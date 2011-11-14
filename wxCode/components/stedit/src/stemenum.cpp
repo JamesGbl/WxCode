@@ -464,7 +464,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_PRINT,              wxEmptyString, _("Print current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINT)));
+        menu->Append(MenuItem(menu, wxID_PRINT,              wxGetStockLabel(wxID_PRINT  ), _("Print current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINT)));
         menu->Append(MenuItem(menu, wxID_PREVIEW,            wxGetStockLabel(wxID_PREVIEW), _("Print preview of the current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINTPREVIEW)));
    #ifdef __WXMSW__
         // The wxID_PRINT_SETUP dialog is the same as the wxID_PRINT one, at least on Windows; confusing to the user
