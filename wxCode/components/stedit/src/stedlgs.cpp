@@ -1572,7 +1572,7 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
 wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor) : wxDialog(), 
     m_editor(editor), 
-    m_encoding(editor->GetEncoding()),
+    m_encoding(editor->GetFileEncoding()),
     m_bom(editor->GetFileBOM())
 {
 }
@@ -1699,7 +1699,7 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
         wxASSERT(IsEditable());
         // do not actually store the values until certain that
         // all went right - it did if we get here
-        m_editor->SetEncoding((STE_Encoding)m_encoding);
+        m_editor->SetFileEncoding((STE_Encoding)m_encoding);
         m_editor->SetFileBOM(m_bom);
         m_editor->SetModified(true); // Our own SetModified() implementation as wxStyledTextCtrl::SetModified() asserts in wx29
     }

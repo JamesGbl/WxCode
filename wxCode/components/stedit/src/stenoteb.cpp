@@ -587,7 +587,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     
                     newEditor->SetLanguage(editor->GetLanguageId());
                     newEditor->SetFileName(editor->GetFileName());
-                    newEditor->SetEncoding(editor->GetEncoding());
+                    newEditor->SetFileEncoding(editor->GetFileEncoding());
                     newEditor->SetFileBOM(editor->GetFileBOM());
 
                     newEditor->SetText(editor->GetText());

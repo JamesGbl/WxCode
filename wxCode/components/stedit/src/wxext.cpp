@@ -33,9 +33,18 @@ WX_DEFINE_OBJARRAY(FileNameArray);
 
 bool wxGetExeFolder(wxFileName* filename)
 {
-   filename->Assign(wxStandardPaths::Get().GetExecutablePath());
-   filename->SetFullName(wxEmptyString);
-   return filename->IsOk();
+    wxFileName temp;
+
+    temp.Assign(wxStandardPaths::Get().GetExecutablePath());
+    temp.SetFullName(wxEmptyString);
+    
+    bool ok = temp.IsOk();
+
+    if (ok && filename)
+    {
+        *filename = temp;
+    }
+    return ok;
 }
 
 bool wxLocale_Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
@@ -799,7 +808,8 @@ wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
 #endif
 
 // annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
-static wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
+/*static*/
+wxString wxTextEncoding::CharToString(const char* src, const wxMBConv& conv, size_t len)
 {
     wxString str;
 
@@ -814,7 +824,8 @@ static wxString wxString_From(const char* src, const wxMBConv& conv, size_t len)
 }
 
 // annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
-static wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
+/*static*/
+wxCharBuffer wxTextEncoding::StringToChar(const wxString& src, const wxMBConv& conv)
 {
     wxWCharBuffer wbuf(src.wc_str(wxConvLibc /*WXUNUSED*/));
     wxCharBuffer buf(conv.cWC2MB(wbuf));
@@ -822,18 +833,19 @@ static wxCharBuffer wxString_To(const wxString& src, const wxMBConv& conv)
     return buf;
 }
 
-static wxCharBuffer wxString_To(const wxString& s, wxTextEncoding encoding, size_t* size_ptr)
+/*static*/
+wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, Type encoding, size_t* size_ptr)
 {
     wxCharBuffer buf;
     size_t size;
 
     switch (encoding)
     {
-        case wxTextEncoding_None:
+        case None:
             buf = s.mb_str(*wxConvCurrent);
             size = wxBuffer_length(buf);
             break;
-        case wxTextEncoding_Unicode_LE:
+        case Unicode_LE:
         {
             const wxWCharBuffer temp = s.wc_str(*wxConvCurrent);
             size = wxBuffer_length(temp) * sizeof(wchar_t);
@@ -842,17 +854,17 @@ static wxCharBuffer wxString_To(const wxString& s, wxTextEncoding encoding, size
             memcpy(buf.data(), temp.data(), size);
             break;
         }
-        case wxTextEncoding_UTF8:
-            buf = wxString_To(s, wxConvUTF8);
+        case UTF8:
+            buf = StringToChar(s, wxConvUTF8);
             size = wxBuffer_length(buf);
             break;
-        case wxTextEncoding_ISO8859_1:
-            buf = wxString_To(s, wxConvISO8859_1);
+        case ISO8859_1:
+            buf = StringToChar(s, wxConvISO8859_1);
             size = wxBuffer_length(buf);
             break;
     #ifdef __WXMSW__
-        case wxTextEncoding_OEM:
-            buf = wxString_To(s, wxMBConvOEM());
+        case OEM:
+            buf = StringToChar(s, wxMBConvOEM());
             size = wxBuffer_length(buf);
             break;
     #endif
@@ -860,11 +872,15 @@ static wxCharBuffer wxString_To(const wxString& s, wxTextEncoding encoding, size
             size = 0;
             break;
     }
-    if (size_ptr) *size_ptr = size;
+    if (size_ptr)
+    {
+        *size_ptr = size;
+    }
     return buf;
 }
 
-wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
+/*static */
+wxString wxTextEncoding::CharToString(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
 {
     wxConvAuto conv_auto;
     wxBOM file_bom;
@@ -902,7 +918,7 @@ wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_b
             str = wxString((wchar_t*)(buf.data() + bom_charcount), *wxConvCurrent, (buf_len - bom_charcount) / sizeof(wchar_t));
             break;
         case wxBOM_UTF8:
-            str = wxString_From(buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
+            str = CharToString(buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
             break;
         default:
             str = wxString(buf.data(), wxConvLibc, buf_len);
@@ -954,20 +970,21 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
 }
 #endif
 
-wxTextEncoding wxTextEncodingFromString(const wxString& rstr)
+/*static*/
+wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& rstr)
 {
     const struct _MAP
     {
         const wxChar* name;
-        wxTextEncoding encoding;
+        wxTextEncoding::Type encoding;
     } map[] =
     {
-        { wxT("utf-8"     ), wxTextEncoding_UTF8      },
-        { wxT("iso-8859-1"), wxTextEncoding_ISO8859_1 }
+        { wxT("utf-8"     ), UTF8      },
+        { wxT("iso-8859-1"), ISO8859_1 }
     };
     wxString str = rstr;
-    str.MakeLower();
 
+    str.MakeLower();
     for (size_t i = 0; i < WXSIZEOF(map); i++)
     {
         if (str == map[i].name)
@@ -976,10 +993,10 @@ wxTextEncoding wxTextEncodingFromString(const wxString& rstr)
         }
     }
 
-    return wxTextEncoding_None;
+    return None;
 }
 
-bool wxTextEncodingFromString(const char* str, const char* identifier, const char* ctrl, wxTextEncoding* encoding)
+bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, const char* ctrl, Type* encoding)
 {
     const char* p = strstr(str, identifier);
     
@@ -990,7 +1007,7 @@ bool wxTextEncodingFromString(const char* str, const char* identifier, const cha
 
         if (begin && end)
         {
-            *encoding = wxTextEncodingFromString(wxString::From8BitData(begin, end - begin));
+            *encoding = TypeFromString(wxString::From8BitData(begin, end - begin));
             return true;
         }
     }
@@ -1062,27 +1079,27 @@ wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl& wnd, int line)
     return lineText; // shouldn't happen, but maybe?
 }
 
-wxString wxString_LoadFile(const wxCharBuffer& charBuf, size_t buf_len, wxTextEncoding encoding)
+wxString wxTextEncoding::LoadFile(const wxCharBuffer& charBuf, size_t buf_len, Type encoding)
 {
     wxString str;
 
     switch (encoding)
     {
-        case wxTextEncoding_Unicode_LE:
-            str = wxString_From(charBuf.data(), wxConvAuto(), buf_len);
+        case Unicode_LE:
+            str = CharToString(charBuf.data(), wxConvAuto(), buf_len);
             break;
-        case wxTextEncoding_UTF8:
-            str = wxString_From(charBuf.data(), wxConvUTF8, buf_len);
+        case UTF8:
+            str = CharToString(charBuf.data(), wxConvUTF8, buf_len);
             break;
-        case wxTextEncoding_ISO8859_1:
-            str = wxString_From(charBuf.data(), wxConvISO8859_1, buf_len);
+        case ISO8859_1:
+            str = CharToString(charBuf.data(), wxConvISO8859_1, buf_len);
             break;
     #ifdef __WXMSW__
-        case wxTextEncoding_OEM:
-            str = wxString_From(charBuf.data(), wxMBConvOEM(), buf_len);
+        case OEM:
+            str = CharToString(charBuf.data(), wxMBConvOEM(), buf_len);
             break;
     #endif
-        case wxTextEncoding_None:
+        case None:
         default:
             str = wxConvertMB2WX(charBuf.data());
             break;
@@ -1090,7 +1107,7 @@ wxString wxString_LoadFile(const wxCharBuffer& charBuf, size_t buf_len, wxTextEn
     return str;
 }
 
-bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding encoding, bool file_bom)
+bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, Type encoding, bool file_bom)
 {
     bool ok = true;
     const char* bom_chars;
@@ -1099,17 +1116,17 @@ bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding
     // write bom
     if (ok && file_bom) switch (encoding)
     {
-        case wxTextEncoding_Unicode_LE:
+        case Unicode_LE:
             bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
             ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
             break;
-        case wxTextEncoding_UTF8:
+        case UTF8:
             bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
             ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
             break;
-        case wxTextEncoding_None:
+        case None:
     #ifdef __WXMSW__
-        case wxTextEncoding_OEM:
+        case OEM:
     #endif
             break;
         default:
@@ -1120,7 +1137,7 @@ bool wxString_SaveFile(const wxString& s, wxOutputStream& stream, wxTextEncoding
     // write text
     if (ok)
     {
-        const wxCharBuffer buf = wxString_To(s, encoding, &size);
+        const wxCharBuffer buf = StringToChar(s, encoding, &size);
         
         ok = !(!buf);
         if (ok)

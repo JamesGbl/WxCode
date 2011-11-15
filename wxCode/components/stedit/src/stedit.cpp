@@ -879,20 +879,20 @@ wxString wxSTEditor::GetTargetText() const
 
 static const struct _MAP
 {
-    wxTextEncoding wx_encoding;
+    wxTextEncoding::Type wx_encoding;
     STE_Encoding   ste_encoding;
 } s_enc_array[] = 
 {
-    { wxTextEncoding_UTF8      , STE_Encoding_UTF8      },
-    { wxTextEncoding_Unicode_LE, STE_Encoding_Unicode   },
-    { wxTextEncoding_ISO8859_1 , STE_Encoding_ISO8859_1 },
+    { wxTextEncoding::UTF8      , STE_Encoding_UTF8      },
+    { wxTextEncoding::Unicode_LE, STE_Encoding_Unicode   },
+    { wxTextEncoding::ISO8859_1 , STE_Encoding_ISO8859_1 },
 #ifdef __WXMSW__
-    { wxTextEncoding_OEM       , STE_Encoding_OEM       },
+    { wxTextEncoding::OEM       , STE_Encoding_OEM       },
 #endif
-    { wxTextEncoding_None      , STE_Encoding_None      }
+    { wxTextEncoding::None      , STE_Encoding_None      }
 };
 
-static wxTextEncoding EncodingConv(STE_Encoding ste_encoding)
+static wxTextEncoding::Type EncodingConv(STE_Encoding ste_encoding)
 {
     for (size_t i = 0; i < WXSIZEOF(s_enc_array); i++)
     {
@@ -901,11 +901,11 @@ static wxTextEncoding EncodingConv(STE_Encoding ste_encoding)
             return s_enc_array[i].wx_encoding;
         }
     }
-    return wxTextEncoding_None;
+    return wxTextEncoding::None;
 }
 
 /*
-static STE_Encoding EncodingConv(wxTextEncoding encoding)
+static STE_Encoding EncodingConv(wxTextEncoding::Type encoding)
 {
     for (size_t i = 0; i < WXSIZEOF(s_enc_array); i++)
     {
@@ -2156,16 +2156,16 @@ bool wxSTEditor::CopyFilePathToClipboard()
 
 static bool FindEncoding(const char* str, const char* identifier, const char* ctrl, STE_Encoding* ste_encoding)
 {
-    wxTextEncoding encoding;
-    bool ok = wxTextEncodingFromString(str, identifier, ctrl, &encoding);
+    wxTextEncoding::Type encoding;
+    bool ok = wxTextEncoding::TypeFromString(str, identifier, ctrl, &encoding);
 
     if (ok) switch (encoding)
     {
-        case wxTextEncoding_UTF8:
+        case wxTextEncoding::UTF8:
             *ste_encoding = STE_Encoding_UTF8;
             ok = true;
             break;
-        case wxTextEncoding_ISO8859_1:
+        case wxTextEncoding::ISO8859_1:
             *ste_encoding = STE_Encoding_ISO8859_1;
             ok = true;
             break;
@@ -2257,7 +2257,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             switch (encoding)
             {
                 case STE_Encoding_None:
-                    str = ::wxConvertChar2WX(charBuf, stream_len, &file_bom);
+                    str = wxTextEncoding::CharToString(charBuf, stream_len, &file_bom);
                 #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
                     switch (file_bom)
                     {
@@ -2297,7 +2297,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             #ifdef __WXMSW__
                 case STE_Encoding_OEM:
             #endif
-                    str = wxString_LoadFile(charBuf, stream_len, EncodingConv(encoding));
+                    str = wxTextEncoding::LoadFile(charBuf, stream_len, EncodingConv(encoding));
                     break;
                 default:
                     ok = false;
@@ -2313,7 +2313,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     // give it one more shot
                     if (STE_Encoding_None != encoding)
                     {
-                        str = wxString_LoadFile(charBuf, stream_len, wxTextEncoding_None);
+                        str = wxTextEncoding::LoadFile(charBuf, stream_len, wxTextEncoding::None);
                         ok = !str.IsEmpty();
                     }
                 }
@@ -2321,7 +2321,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             if (ok)
             {
                 SetText(str);
-                SetEncoding(encoding);
+                SetFileEncoding(encoding);
                 SetFileBOM(file_bom != wxBOM_None);
             }
         }
@@ -2419,14 +2419,14 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
 
 bool wxSTEditor::SaveFile( wxOutputStream& stream, STE_Encoding encoding, bool file_bom)
 {
-    return wxString_SaveFile(GetText(), stream, EncodingConv(encoding), file_bom);
+    return wxTextEncoding::SaveFile(GetText(), stream, EncodingConv(encoding), file_bom);
 }
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
     wxFileName fileName = GetFileName();
     wxString extensions = extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_;
-    STE_Encoding encoding = GetEncoding();
+    STE_Encoding encoding = GetFileEncoding();
     bool file_bom = GetFileBOM();
     wxFile file;
 
@@ -2500,7 +2500,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         SetSavePoint();
         SetFileName(fileName, true);
         UpdateCanDo(true);
-        SetEncoding(encoding);
+        SetFileEncoding(encoding);
         SetFileBOM(file_bom);
         return true;
     }
@@ -3938,12 +3938,12 @@ int wxSTEditor::GetLanguageId() const
     return GetSTERefData()->m_steLang_id;
 }
 
-void wxSTEditor::SetEncoding(STE_Encoding encoding)
+void wxSTEditor::SetFileEncoding(STE_Encoding encoding)
 {
     GetSTERefData()->m_encoding = encoding;
 }
 
-STE_Encoding wxSTEditor::GetEncoding() const
+STE_Encoding wxSTEditor::GetFileEncoding() const
 {
     return GetSTERefData()->m_encoding;
 }
@@ -4100,7 +4100,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2838")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2842")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

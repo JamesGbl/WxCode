@@ -15,8 +15,7 @@
 #define WXK_FULLSCREEN WXK_F11
 
 #include <wx/app.h>
-#include "wx/stedit/stedefs.h"
-
+#include "wx/stedit/stedefs.h" // what is this for?
 
 #if defined(_WX_EVENT_H_) || defined(_WX_EVENT_H__)
 inline void wxPostCommandEvent(wxEvtHandler* dest, wxEventType commandType, int id)
@@ -129,10 +128,6 @@ public:
     static bool Set(wxDataObject* def, wxDataObject* primary = NULL);
 };
 
-#if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_)
-WXDLLIMPEXP_STEDIT wxString wxConvertChar2WX(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
-#endif
-
 #ifdef __WXMSW__
 // Strange that wxMBConv classes work with char and wchar_t only, not with wxChar;
 // this surely makes for unnecessary extra conversions
@@ -151,30 +146,44 @@ public:
 };
 #endif
 
-enum wxTextEncoding
+class WXDLLIMPEXP_STEDIT wxTextEncoding
 {
-    wxTextEncoding_UTF8,
-    wxTextEncoding_Unicode_LE,
-    wxTextEncoding_ISO8859_1,
-#ifdef __WXMSW__
-    wxTextEncoding_OEM,
-#endif
-    wxTextEncoding_None = wxNOT_FOUND
-};
+public:
+    enum Type
+    {
+        UTF8,
+        Unicode_LE,
+        ISO8859_1,
+    #ifdef __WXMSW__
+        OEM,
+    #endif
+        None = wxNOT_FOUND
+    };
 
-WXDLLIMPEXP_STEDIT wxTextEncoding wxTextEncodingFromString(const wxString&);
-WXDLLIMPEXP_STEDIT bool           wxTextEncodingFromString(const char* str, const char* identifier, const char* ctrl, wxTextEncoding*);
-#ifdef _WX_XML_H_
-inline wxTextEncoding wxTextEncodingFromString(const wxXmlDocument& xml)
-{
-    return wxTextEncodingFromString(xml.GetFileEncoding());
-}
+    static wxString LoadFile(const wxCharBuffer& buf, size_t buf_len, Type);
+    static bool     SaveFile(const wxString&, wxOutputStream&, Type, bool file_bom);
+
+#if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
+    static wxString CharToString(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
 #endif
+    static wxString CharToString(const char*, const wxMBConv&, size_t len);
+
+    static wxCharBuffer StringToChar(const wxString&, const wxMBConv&);
+    static wxCharBuffer StringToChar(const wxString&, Type, size_t* size_ptr);
+
+    static Type TypeFromString(const wxString&);
+    static bool TypeFromString(const char* str, const char* identifier, const char* ctrl, Type*);
+#ifdef _WX_XML_H_
+    inline static Type TypeFromString(const wxXmlDocument& xml)
+    {
+        return TypeFromString(xml.GetFileEncoding());
+    }
+#endif
+};
 
 // trac.wxwidgets.org/ticket/13646
 WXDLLIMPEXP_STEDIT wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl&, int line);
-WXDLLIMPEXP_STEDIT int      wxString_FindFromPos(const wxString&, const wxString& chars, size_t start_pos);
-WXDLLIMPEXP_STEDIT wxString wxString_LoadFile(const wxCharBuffer& buf, size_t buf_len, wxTextEncoding);
-WXDLLIMPEXP_STEDIT bool     wxString_SaveFile(const wxString&, wxOutputStream&, wxTextEncoding, bool file_bom);
+
+WXDLLIMPEXP_STEDIT int wxString_FindFromPos(const wxString&, const wxString& chars, size_t start_pos);
 
 #endif // __WXEXT_H__

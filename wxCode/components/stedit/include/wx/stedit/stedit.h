@@ -709,8 +709,8 @@ public :
     //   different languages may use the same lexer. (Java uses CPP lexer)
     int  GetLanguageId() const;
 
-    void SetEncoding(STE_Encoding);
-    STE_Encoding GetEncoding() const;
+    void SetFileEncoding(STE_Encoding);
+    STE_Encoding GetFileEncoding() const;
 
     void SetFileBOM(bool);
     bool GetFileBOM() const;
