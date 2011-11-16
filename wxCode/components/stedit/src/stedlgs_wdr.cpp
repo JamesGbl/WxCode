@@ -3,8 +3,6 @@
 // Do not modify this file, all changes will be lost!
 //------------------------------------------------------------------------------
 
-#include "precomp.h"
-
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
     #pragma implementation "stedlgs_wdr.h"
 #endif
@@ -20,6 +18,9 @@
 #include "stedlgs_wdr.h"
 
 #include <wx/intl.h>
+
+// Custom source
+#include "precomp.h"
 
 // Implement window functions
 
@@ -586,8 +587,6 @@ wxSizer *wxSTEditorFindReplaceSizer( wxWindow *parent, bool call_fit, bool set_s
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
     item0->AddGrowableCol( 0 );
-
-    item0->AddGrowableRow( 1 );
 
     if (set_sizer)
     {
@@ -1529,20 +1528,20 @@ wxBitmap wxSTEBitmapsFunc( size_t index )
         "j c #1A1A1A",
         "k c #4F4F4F",
         "l c #8B8B8B",
-        "n c #949600",
-        "o c #9B9B9B",
+        "m c #949600",
+        "n c #9B9B9B",
         /* pixels */
         "               ",
-        "      oeee     ",
+        "      neee     ",
         "    ldfcccge   ",
         "    ghbbbbhg   ",
-        "   knbbhhbbnk  ",
-        "   abbbaibbnd  ",
+        "   kmbbhhbbmk  ",
+        "   abbbaibbmd  ",
         "   kifafhbbil  ",
         "      jhbbck   ",
-        "      abbnk    ",
+        "      abbmk    ",
         "      kifdl    ",
-        "      gnhnd    ",
+        "      gmhmd    ",
         "      abbhj    ",
         "      abbba    ",
         "      kfgak    ",

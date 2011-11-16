@@ -48,6 +48,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
 #include <wx/sstream.h>
+#include <wx/log.h>
 
 #include <wx/stedit/stedit.h>
 #include <wx/stedit/steexprt.h>

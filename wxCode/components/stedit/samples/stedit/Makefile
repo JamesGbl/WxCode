@@ -85,7 +85,7 @@ stedit_lib :
 
 # wxstedit program using shared stedit.so library
 wxstedit: $(OBJECTS) stedit_lib
-	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
+	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXLIBDIR) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
 
 # wxstedit program using static stedit.a library
 wxstedit-static: $(OBJECTS) stedit_lib
