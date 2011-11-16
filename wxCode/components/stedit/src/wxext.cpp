@@ -51,6 +51,7 @@ bool wxGetExeFolder(wxFileName* filename)
 bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
 {
    wxFileName filename;
+
    wxGetExeFolder(&filename);
    filename.AppendDir(wxT("locale"));
    wxLocale::AddCatalogLookupPathPrefix(filename.GetFullPath());
@@ -67,9 +68,11 @@ bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLan
 bool wxLocaleHelper::Find(const wxString& str, enum wxLanguage* lang)
 {
    const size_t len = str.Length();
+   
    for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
    {
       const wxLanguageInfo* info = wxLocale::GetLanguageInfo(i);
+      
       if (   info
           && (   (0 == str.CmpNoCase(info->CanonicalName))
               || (0 == str.CmpNoCase(info->CanonicalName.Left(len)))
@@ -191,6 +194,7 @@ void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const AcceleratorAr
 {
    const size_t count = array.GetCount();
    wxAcceleratorEntry* temp = new wxAcceleratorEntry[count];
+
    for (size_t i = 0; i < count; i++)
    {
       temp[i] = array.Item(i);
@@ -205,13 +209,16 @@ void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const AcceleratorAr
 static wxString wxMenuItem_GetText(const wxMenuItem* item)
 {
    wxString str = item->GetItemLabel();
+
 #ifdef __WXGTK__
    str.Replace(wxString(wxT('_')), wxString(wxT('&')));
 #endif
    return str;
 }
 
-#define ACCELSTR_SEP "   "
+#ifdef __WXMSW__
+    #define ACCELSTR_SEP "   "
+#endif
 
 static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, bool append = true)
 {
@@ -224,7 +231,13 @@ static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, boo
    }
    else if (append)
    {
-      ch_sep = wxT(ACCELSTR_SEP);
+#ifdef __WXMSW__
+    ch_sep = wxT(ACCELSTR_SEP);
+#else
+    // Having multiple accelerators per menu item in GTK yields these warnings in the console window,
+    // "Unknown accel modifier: 'w   ctrl'...No accel key found, accel string ignored."
+    return false;
+#endif
    }
    else
    {
@@ -250,22 +263,23 @@ static wxString wxGetAccelText(int flags, int keyCode)
    wxAcceleratorEntry entry(flags, keyCode);
    str = entry.ToString(); // doesn't work (wxIsalnum(WXK_F2)), silly text (WXK_NUMPAD_ADD)
 #else
+
    if (flags & wxACCEL_CTRL)
    {
-      if (str.Length()) str+=sep;
+      if (!str.IsEmpty()) str+=sep;
       str+=_("Ctrl");
    }
    if (flags & wxACCEL_ALT)
    {
-      if (str.Length()) str+=sep;
+      if (!str.IsEmpty()) str+=sep;
       str+=_("Alt");
    }
    if (flags & wxACCEL_SHIFT)
    {
-      if (str.Length()) str+=sep;
+      if (!str.IsEmpty()) str+=sep;
       str+=_("Shift");
    }
-   if (str.Length()) str+=sep;
+   if (!str.IsEmpty()) str+=sep;
    switch (keyCode)
    {
       case WXK_INSERT         : str+=_("Insert" ); break;
@@ -301,6 +315,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
          break;
 
    wxString stockLabel;
+
    switch (id)
    {
       STOCKITEM(wxID_ABOUT,     _("&About..."))   // + ellipsis
@@ -314,7 +329,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
          break;
    }
 #undef STOCKITEM
-   if (stockLabel.Length())
+   if (!stockLabel.IsEmpty())
    {
        if ( !(flags & wxSTOCK_WITH_MNEMONIC) )
        {
@@ -355,6 +370,7 @@ static wxString wxGetAccelText(const wxAcceleratorEntry& accel)
 void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
 {
    size_t count = menubar->GetMenuCount();
+
    for (size_t j = 0; j < count; j++)
    {
       wxMenu* menu = menubar->GetMenu(j);
@@ -366,20 +382,22 @@ void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const AcceleratorArra
 wxString wxToolBarTool_MakeShortHelp(const wxString& rstr, const AcceleratorArray& accel, int id)
 {
    wxString str = rstr;
-   if (accel.GetCount() && str.Length())
+
+   if (accel.GetCount() && !str.IsEmpty())
    {
       wxString strAccel;
 
       for (size_t i = 0; i < accel.GetCount(); i++)
       {
          const wxAcceleratorEntry& element = accel.Item(i);
+
          if (element.GetCommand() == id)
          {
-            if (strAccel.Length()) strAccel+=wxT(ACCELSTR_SEP);
+            if (!strAccel.IsEmpty()) strAccel+=wxT(ACCELSTR_SEP);
             strAccel+=wxGetAccelText(element);
          }
       }
-      if (strAccel.Length())
+      if (!strAccel.IsEmpty())
       {
          str+=wxString::Format(wxT(" (%s)"), strAccel.wx_str());
       }
@@ -508,6 +526,7 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 {
    otherwindow = otherwindow ? wxGetTopLevelParent(otherwindow) : wxTheApp->GetTopWindow();
    wxFrame* topframe = wxStaticCast(otherwindow, wxFrame);
+
    if (topframe->IsMaximized())
    {
       wnd->Maximize();
@@ -519,6 +538,7 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
    else
    {
       wxRect rect = topframe->GetScreenRect();
+
       wnd->SetSize(rect);
    }
 }
