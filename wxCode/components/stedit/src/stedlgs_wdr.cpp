@@ -3,6 +3,9 @@
 // Do not modify this file, all changes will be lost!
 //------------------------------------------------------------------------------
 
+// Custom source
+#include "precomp.h"
+
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
     #pragma implementation "stedlgs_wdr.h"
 #endif
@@ -18,9 +21,6 @@
 #include "stedlgs_wdr.h"
 
 #include <wx/intl.h>
-
-// Custom source
-#include "precomp.h"
 
 // Implement window functions
 

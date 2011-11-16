@@ -271,8 +271,8 @@ public :
     wxString GetLineText(int line) const; // excluding any cr/lf at end
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
 
-    virtual void SetEditable(bool editable); // -> SendFileNameEvent()
-    void SetModified(bool modified); // -> SendFileNameEvent()
+    virtual void SetEditable(bool editable); // -> OnChangeFilename()
+    void SetModified(bool modified); // -> OnChangeFilename()
 
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
@@ -856,7 +856,7 @@ public :
                    const wxString &evtStr = wxEmptyString, bool do_post = false );
 
     // Sent if the captions needs to change (asterisk)
-    bool SendFileNameEvent();
+    virtual void OnChangeFilename();
 
     // ------------------------------------------------------------------------
     // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl

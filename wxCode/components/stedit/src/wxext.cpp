@@ -413,6 +413,7 @@ static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
    }
 }
 
+/*static*/
 void wxAcceleratorHelper::SetAccelText(wxMenu* menu, const AcceleratorArray& array)
 {
    for (size_t i = 0; i < array.GetCount(); i++)
@@ -524,7 +525,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 
 #define HASBIT(value, bit)      (((value) & (bit)) != 0)
 
-/*static*/ bool wxClipboardHelper::IsTextAvailable(Type clip_type)
+/*static*/
+bool wxClipboardHelper::IsTextAvailable(Type clip_type)
 {
     wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
 
@@ -547,7 +549,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok;
 }
 
-/*static*/ bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
+/*static*/
+bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
                                                      size_t array_count,
                                                      Type clip_type)
 {
@@ -593,7 +596,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok;
 }
 
-/*static*/ bool wxClipboardHelper::GetText(wxString* str, Type clip_type)
+/*static*/
+bool wxClipboardHelper::GetText(wxString* str, Type clip_type)
 {
     wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
 
@@ -622,7 +626,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
     return ok && !str->empty();
 }
 
-/*static*/ bool wxClipboardHelper::Set(wxDataObject* def, wxDataObject* primary)
+/*static*/
+bool wxClipboardHelper::Set(wxDataObject* def, wxDataObject* primary)
 {
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
     wxClipboard* clipboard = wxTheClipboard;
@@ -666,7 +671,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 #endif
 }
 
-/*static*/ bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
+/*static*/
+bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
 {
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
     return Set(HASBIT(clip_type, Default) ? new wxTextDataObject(str) : NULL,
@@ -676,7 +682,8 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 #endif
 }
 
-/*static*/ bool wxClipboardHelper::SetHtmlText(const wxString& htmldata)
+/*static*/
+bool wxClipboardHelper::SetHtmlText(const wxString& htmldata)
 {
     bool ok;
 #ifdef __WXMSW__
@@ -993,7 +1000,7 @@ wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& rstr)
     const struct _MAP
     {
         const wxChar* name;
-        wxTextEncoding::Type encoding;
+        Type encoding;
     } map[] =
     {
         { wxT("utf-8"     ), UTF8      },
@@ -1013,6 +1020,7 @@ wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& rstr)
     return None;
 }
 
+/*static*/
 bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, const char* ctrl, Type* encoding)
 {
     const char* p = strstr(str, identifier);
@@ -1031,6 +1039,7 @@ bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, con
     return false;
 }
 
+/*static*/
 wxString wxTextEncoding::LoadFile(const wxCharBuffer& charBuf, size_t buf_len, Type encoding)
 {
     wxString str;
@@ -1059,6 +1068,7 @@ wxString wxTextEncoding::LoadFile(const wxCharBuffer& charBuf, size_t buf_len, T
     return str;
 }
 
+/*static*/
 bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, Type encoding, bool file_bom)
 {
     bool ok = true;
@@ -1091,10 +1101,10 @@ bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, Type en
     {
         const wxCharBuffer buf = StringToChar(s, encoding, &size);
         
-        ok = !(!buf);
+        ok = (buf.data() != NULL);
         if (ok)
         {
-            ok = (size == stream.Write(buf, size).LastWrite());
+            ok = (size == stream.Write(buf.data(), size).LastWrite());
         }
     }
     return ok;

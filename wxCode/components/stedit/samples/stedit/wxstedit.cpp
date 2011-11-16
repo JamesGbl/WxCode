@@ -274,7 +274,9 @@ bool wxStEditApp::OnInit()
     // create with the readonly menuitem, not set by default since I don't think
     //  it's generally useful, but good for debugging.
     m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
-    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true);
+#ifdef __WXDEBUG__
+    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO, true); // not working
+#endif
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator

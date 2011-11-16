@@ -773,7 +773,7 @@ void wxSTEditor::SetEditable(bool editable)
 #else
     wxStyledTextCtrl::SetReadOnly(!editable); // SetEditable() doesn't exist in wx28
 #endif
-    SendFileNameEvent();
+    OnChangeFilename();
 }
 
 void wxSTEditor::SetModified(bool modified)
@@ -795,7 +795,7 @@ void wxSTEditor::SetModified(bool modified)
     #endif
     }
     m_dirty_flag = modified;
-    SendFileNameEvent();
+    OnChangeFilename();
 }
 
 bool wxSTEditor::TranslatePos(STE_TextPos start_pos, STE_TextPos end_pos,
@@ -2198,7 +2198,9 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
     {
         GetSTERefData()->SetFilename(fileName);
         if (send_event)
-            SendFileNameEvent();
+        {
+            OnChangeFilename();
+        }
     }
 }
 
@@ -4139,9 +4141,9 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
    return GetEventHandler()->ProcessEvent(event);
 }
 
-bool wxSTEditor::SendFileNameEvent()
+void wxSTEditor::OnChangeFilename()
 {
-    return SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+    SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
 }
 
 wxTreeItemId wxSTEditor::GetTreeItemId() const
@@ -4154,7 +4156,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2845")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2847")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()

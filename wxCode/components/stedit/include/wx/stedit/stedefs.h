@@ -315,6 +315,8 @@ enum
     ID_STE_PRINT_OPTIONS,
     //wxID_EXIT                   STE_MENU_FRAME
     // Edit menu items --------------------------------------------------------
+    //wxID_UNDO,
+    //wxID_REDO,
     //wxID_CUT,
     //wxID_COPY,
     ID_STE_COPY_HTML,
@@ -324,22 +326,21 @@ enum
     ID_STE_PASTE_RECT,
     //ID_STE_PREF_SELECTION_MODE, // rect sel check only
     //wxID_SELECTALL,
+    ID_STE_READONLY,
+    ID_STE_COMPLETEWORD,
+    ID_STE_COPYPATH,
     ID_STE_LINE_CUT,
     ID_STE_LINE_COPY,
     ID_STE_LINE_DELETE,
     ID_STE_LINE_TRANSPOSE,
     ID_STE_LINE_DUPLICATE,
+    // Search menu items -------------------------------------------------------
     //wxID_FIND,
     ID_STE_FIND_NEXT,
     ID_STE_FIND_PREV,
     ID_STE_FIND_DOWN,
     //wxID_REPLACE
     ID_STE_GOTO_LINE,
-    //wxID_UNDO,
-    //wxID_REDO,
-    ID_STE_READONLY,
-    ID_STE_COMPLETEWORD,
-    ID_STE_COPYPATH,
     // Tools menu items -------------------------------------------------------
     ID_STE_UPPERCASE,
     ID_STE_LOWERCASE,
@@ -353,10 +354,10 @@ enum
     ID_STE_TRAILING_WHITESPACE,
     ID_STE_REMOVE_CHARSAROUND,
     ID_STE_COLUMNIZE,
-    // Insert Menu items  -------------------------------------------------------
+    // Insert menu items  -------------------------------------------------------
     ID_STE_INSERT_TEXT,
     ID_STE_INSERT_DATETIME,
-    // View Menu items  -------------------------------------------------------
+    // View menu items  -------------------------------------------------------
     ID_STE_VIEW_NONPRINT,
     //ID_STE_PREF_WRAPLINES
     //ID_STE_PREF_VIEWEOL

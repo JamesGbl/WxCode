@@ -237,6 +237,9 @@ public:
     //   to set up the flags    and before use
     void CreateForSinglePage();
     void CreateForNotebook();
+
+    // ------------------------------------------------------------------------
+    void InitAcceleratorArray();
     AcceleratorArray* GetAcceleratorArray() { return m_accelerator_array; }
 
     // ------------------------------------------------------------------------
@@ -389,7 +392,6 @@ protected:
 
 private:
     void Init();
-    void InitAcceleratorArray();
 };
 
 #endif  // _STEMENUM_H_

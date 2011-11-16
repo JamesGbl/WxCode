@@ -126,6 +126,11 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     wxConfigBase *config = GetConfigBase();
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
 
+    if (steMM)
+    {
+        steMM->InitAcceleratorArray();
+    }
+
     if (steMM && GetOptions().HasFrameOption(STF_CREATE_MENUBAR))
     {
         wxMenuBar *menuBar = GetMenuBar() ? GetMenuBar() : new wxMenuBar(wxMB_DOCKABLE);
