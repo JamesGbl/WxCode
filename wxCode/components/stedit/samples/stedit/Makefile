@@ -21,6 +21,8 @@ WXRELEASE  := $(shell $(WXCONFIG) --release)
 WXCXX      := $(shell $(WXCONFIG) --cxx)
 WXCXXFLAGS := $(shell $(WXCONFIG) --cxxflags)
 WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,adv,core,base)
+
+# Try to get the lib path, "/usr/local/lib64" from wx-config --libs = "-L/usr/local/lib64 -pthread ..."
 WXLIBDIR   := $(shell $(WXCONFIG) --libs | awk '{for(i=1;i<=NF;i++) if ($$i~/\-L/){ print substr($$i,3) } }')
 
 WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
