@@ -44,7 +44,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/clipbrd.h>         // wxClipboard
 #include <wx/wfstream.h>        // wxFileInputStream
 #include <wx/numdlg.h>
-#include <wx/aboutdlg.h>
 #include <wx/scrolbar.h>
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
@@ -748,7 +747,17 @@ void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
 #if (wxVERSION_NUMBER < 2900)
 bool wxSTEditor::PositionToXY(STE_TextPos pos, long *col, long *row) const
 {
-    return ::wxStyledTextCtrl_PositionToXY(*this, pos, col, row);
+    if ((pos < 0) || (pos > GetLength()))
+    {
+        if (col) *col = 0;
+        if (row) *row = 0;
+        return false;
+    }
+
+    int r = LineFromPosition(pos);
+    if (row) *row = r;
+    if (col) *col = pos - PositionFromLine(r);
+    return true;
 }
 #endif
 
@@ -1053,9 +1062,28 @@ int wxSTEditor::GetLineLength(int line) const
     return (int)GetLineText(line).Length();
 }
 
+// GetLineText() is not implemented in wx28;
+// it is implemented in wx trunk, but is wrong
+// trac.wxwidgets.org/ticket/13646
 wxString wxSTEditor::GetLineText(int line) const
 {
-    return ::wxStyledTextCtrl_GetLineText(*this, line);
+    wxString lineText = GetLine(line);
+    size_t len = lineText.Length();
+
+    if (len > 0)
+    {
+        if (lineText[len-1] == wxT('\n'))
+        {
+            if ((len > 1) && (lineText[len-2] == wxT('\r'))) // remove \r\n for DOS
+                return lineText.Mid(0, len-2);
+            else
+                return lineText.Mid(0, len-1);               // remove \n for Unix
+        }
+        else if (lineText[len-1] == wxT('\r'))               // remove \r for mac
+            return lineText.Mid(0, len-1);
+    }
+
+    return lineText; // shouldn't happen, but maybe?
 }
 
 void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
@@ -1368,6 +1396,30 @@ bool wxSTEditor::InsertTextAtCol(int col, const wxString& text,
 
     SetSelection(sel_start, sel_end);
     return done;
+}
+
+static int wxString_FindFromPos(const wxString& str, const wxString& chars, size_t start_pos)
+{
+    const wxString temp = str.Mid(start_pos);
+    wxChar chPrev = 0;
+    size_t n = start_pos;
+
+    for (wxString::const_iterator it = temp.begin();
+         it != temp.end();
+         it++, n++)
+    {
+        wxChar ch = *it;
+        int idx = chars.Find(ch);
+
+        // char in str is in chars and is not a " preceeded by a \, eg. \"
+        if ((idx != wxNOT_FOUND) &&
+            ( (n == 0) || (ch != wxT('\"')) || (chPrev != wxT('\\')) ) )
+        {
+            return (int)n;
+        }
+        chPrev = ch;
+    }
+    return wxNOT_FOUND;
 }
 
 bool wxSTEditor::Columnize(int top_line, int bottom_line,
@@ -3977,6 +4029,7 @@ const char* wxSTEditor::GetBOMChars(STE_Encoding encoding, size_t* count)
 /*static*/
 wxString wxSTEditor::GetEncodingText(STE_Encoding encoding)
 {
+// TODO: remove this method *and* wxSplit()
     static wxArrayString array = wxSplit(wxT("None|UTF8|Unicode|ISO8859-1|OEM"), '|');
     return array.Item(encoding);
 }
@@ -4100,7 +4153,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2842")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2845")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -4116,35 +4169,8 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
 
 /*static*/ void wxSTEditor::ShowAboutDialog(wxWindow* parent)
 {
-    wxString msg;
-    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
-                wxT("Using %s, http://www.scintilla.org\n")
-                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
-                wxT("\n")
-                wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
-            #if (wxVERSION_NUMBER >= 2902)
-                wxStyledTextCtrl::GetLibraryVersionInfo().ToString().wx_str()
-            #else
-                wxT("Scintilla 1.70")
-            #endif
-                );
-
-    // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
-    //if ((wxFileConfig*)wxConfigBase::Get(false))
-    //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
-
-   wxAboutDialogInfo info;
-   info.SetName(STE_APPDISPLAYNAME);
-   info.SetDescription(msg);
-   info.SetWebSite(wxT(STE_WEBSITE));
-   info.SetLicense(wxT("wxWindows"));
-   info.AddDeveloper(wxT("John Labenski"));
-   info.AddDeveloper(wxT("Troels K"));
-   info.AddDeveloper(wxT("Otto Wyss"));
-   info.SetIcon(wxArtProvider::GetIcon(wxART_STEDIT_APP, wxART_MESSAGE_BOX));
-   ::wxAboutBox(info, parent);
+    ::wxSTEditorAboutDialog(parent);
 }
-
 
 //-----------------------------------------------------------------------------
 // wxSTEditorEvent

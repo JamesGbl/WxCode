@@ -64,13 +64,15 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 
     ::wxFrame_SetInitialPosition(this, pos, size);
-#ifdef __WXDEBUG__
-    //::wxPostMenuCommand(this, ID_STE_EXPORT);
-    //::wxPostMenuCommand(this, ID_STE_PROPERTIES);
-    //::wxPostMenuCommand(this, wxID_OPEN);
-    //::wxPostMenuCommand(this, wxID_SAVEAS);
-    //::wxPostMenuCommand(this, ID_STE_PREFERENCES);
-    //::wxPostMenuCommand(this, ID_STE_EXPORT);
+#ifdef x__WXDEBUG__
+    wxCommandEvent menu(wxEVT_COMMAND_MENU_SELECTED);    
+    menu.SetId(ID_STE_PROPERTIES);
+    //menu.SetId(ID_STE_EXPORT);
+    //menu.SetId(wxID_OPEN);
+    //menu.SetId(wxID_SAVEAS);
+    //menu.SetId(ID_STE_PREFERENCES);
+    //menu.SetId(ID_STE_EXPORT);
+    ::wxPostEvent(this, menu);
 #endif
     return true;
 }
@@ -132,8 +134,8 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         if (menuBar)
         {
             SetMenuBar(menuBar);
-            ::wxSetAcceleratorTable(this, *steMM->GetAcceleratorArray());
-            ::wxMenu_SetAccelText(menuBar, *steMM->GetAcceleratorArray());
+            wxAcceleratorHelper::SetAcceleratorTable(this, *steMM->GetAcceleratorArray());
+            wxAcceleratorHelper::SetAccelText(menuBar, *steMM->GetAcceleratorArray());
 
             if (GetOptions().HasFrameOption(STF_CREATE_FILEHISTORY) && !GetOptions().GetFileHistory())
             {
@@ -179,7 +181,8 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         if (GetOptions().HasEditorOption(STE_CREATE_POPUPMENU))
         {
             wxMenu* menu = steMM->CreateEditorPopupMenu();
-            ::wxMenu_SetAccelText(menu, *steMM->GetAcceleratorArray());
+
+            wxAcceleratorHelper::SetAccelText(menu, *steMM->GetAcceleratorArray());
             GetOptions().SetEditorPopupMenu(menu, false);
         }
         if (GetOptions().HasSplitterOption(STS_CREATE_POPUPMENU))

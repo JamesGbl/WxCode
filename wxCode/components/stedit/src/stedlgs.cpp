@@ -20,6 +20,7 @@
 #include <wx/mimetype.h>
 #include <wx/valgen.h>
 #include <wx/imaglist.h>
+#include <wx/aboutdlg.h>
 
 #include "wxext.h"
 #include "wxtrunk.h"
@@ -2468,4 +2469,35 @@ wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long fl
     parent->GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
 
     return buttonpane;
+}
+
+void wxSTEditorAboutDialog(wxWindow* parent)
+{
+    wxString msg;
+    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
+                wxT("Using %s, http://www.scintilla.org\n")
+                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
+                wxT("\n")
+                wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
+            #if (wxVERSION_NUMBER >= 2902)
+                wxStyledTextCtrl::GetLibraryVersionInfo().ToString().wx_str()
+            #else
+                wxT("Scintilla 1.70")
+            #endif
+                );
+
+    // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
+    //if ((wxFileConfig*)wxConfigBase::Get(false))
+    //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
+
+   wxAboutDialogInfo info;
+   info.SetName(STE_APPDISPLAYNAME);
+   info.SetDescription(msg);
+   info.SetWebSite(wxT(STE_WEBSITE));
+   info.SetLicense(wxT("wxWindows"));
+   info.AddDeveloper(wxT("John Labenski"));
+   info.AddDeveloper(wxT("Troels K"));
+   info.AddDeveloper(wxT("Otto Wyss"));
+   info.SetIcon(wxArtProvider::GetIcon(wxART_STEDIT_APP, wxART_MESSAGE_BOX));
+   ::wxAboutBox(info, parent);
 }

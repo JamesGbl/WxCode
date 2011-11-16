@@ -571,5 +571,6 @@ public:
 };
 
 WXDLLIMPEXP_STEDIT wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long flags);
+WXDLLIMPEXP_STEDIT void wxSTEditorAboutDialog(wxWindow* parent);
 
 #endif // _STEDLGS_H_

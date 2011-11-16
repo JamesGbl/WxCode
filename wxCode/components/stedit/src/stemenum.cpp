@@ -39,20 +39,20 @@ void wxSTEditorMenuManager::InitAcceleratorArray()
 {
     // TODO: filter accelerators
 
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_NEW));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_OPEN));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_CUT));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_COPY));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PASTE));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SAVE));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_EXIT));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_FIND));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PRINT));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_PREVIEW));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SELECTALL));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_UNDO));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_REDO));
-    m_accelerator_array->Add(wxGetStockAcceleratorEx(wxID_SAVEAS));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_NEW));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_OPEN));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_CUT));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_COPY));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_PASTE));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_SAVE));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_EXIT));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_FIND));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_PRINT));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_PREVIEW));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_SELECTALL));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_UNDO));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_REDO));
+    m_accelerator_array->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_SAVEAS));
 
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_FULLSCREEN, ID_STE_SHOW_FULLSCREEN));
     m_accelerator_array->Add(wxAcceleratorEntry(wxACCEL_ALT, WXK_RETURN, ID_STE_PROPERTIES));

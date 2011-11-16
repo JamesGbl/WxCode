@@ -14,33 +14,21 @@
 #define WXK_HELP       WXK_F1
 #define WXK_FULLSCREEN WXK_F11
 
-#include <wx/app.h>
-#include "wx/stedit/stedefs.h" // what is this for?
+#include "wx/stedit/stedefs.h" // WXDLLIMPEXP_STEDIT
 
-#if defined(_WX_EVENT_H_) || defined(_WX_EVENT_H__)
-inline void wxPostCommandEvent(wxEvtHandler* dest, wxEventType commandType, int id)
-{
-   wxCommandEvent event(commandType, id);
-   if (dest == NULL) dest = wxTheApp->GetTopWindow();
-   wxPostEvent(dest, event);
-}
-
-inline void wxPostMenuCommand(wxEvtHandler* dest, int id)
-{
-   wxPostCommandEvent(dest, wxEVT_COMMAND_MENU_SELECTED, id);
-}
-#endif
-
-class WXDLLIMPEXP_FWD_CORE wxMenuBar;
-
-WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
-WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, AcceleratorArray, class WXDLLIMPEXP_STEDIT);
 WX_DECLARE_OBJARRAY_WITH_DECL(wxFileName, FileNameArray, class WXDLLIMPEXP_STEDIT);
 
-WXDLLIMPEXP_STEDIT bool wxLocale_Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
-WXDLLIMPEXP_STEDIT bool wxLocale_GetSupportedLanguages(LanguageArray*);
-WXDLLIMPEXP_STEDIT bool wxLocale_SingleChoice(const LanguageArray&, enum wxLanguage*);
-WXDLLIMPEXP_STEDIT bool wxLocale_Find(const wxString&, enum wxLanguage*);
+#ifdef _WX_INTL_H_
+WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
+class WXDLLIMPEXP_STEDIT wxLocaleHelper
+{
+public:
+    static bool Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
+    static bool GetSupportedLanguages(LanguageArray*);
+    static bool SingleChoice(const LanguageArray&, enum wxLanguage*);
+    static bool Find(const wxString&, enum wxLanguage*);
+};
+#endif
 
 WXDLLIMPEXP_STEDIT void wxFrame_SetInitialPosition(wxFrame*,
                     const wxPoint& pos = wxDefaultPosition,
@@ -49,12 +37,19 @@ WXDLLIMPEXP_STEDIT void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* other = NU
 
 WXDLLIMPEXP_STEDIT void wxCommandLineUsage(wxWindow* parent);
 
-WXDLLIMPEXP_STEDIT wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID);
-
-WXDLLIMPEXP_STEDIT void wxSetAcceleratorTable(wxWindow*, const AcceleratorArray&);
-WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenuBar*, const AcceleratorArray&);
-WXDLLIMPEXP_STEDIT void wxMenu_SetAccelText(wxMenu*   , const AcceleratorArray&);
-WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray& accel, int id);
+#if wxUSE_ACCEL
+class WXDLLIMPEXP_FWD_CORE wxMenuBar;
+WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, AcceleratorArray, class WXDLLIMPEXP_STEDIT);
+class WXDLLIMPEXP_STEDIT wxAcceleratorHelper
+{
+public:
+    static wxAcceleratorEntry GetStockAccelerator(wxWindowID);
+    static void SetAcceleratorTable(wxWindow*, const AcceleratorArray&);
+    static void SetAccelText(wxMenuBar*, const AcceleratorArray&);
+    static void SetAccelText(wxMenu*   , const AcceleratorArray&);
+};
+WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray&, int id);
+#endif
 
 #if (wxVERSION_NUMBER >= 2900)
 #define wxMessageBoxCaption wxTheApp->GetAppDisplayName()
@@ -180,10 +175,5 @@ public:
     }
 #endif
 };
-
-// trac.wxwidgets.org/ticket/13646
-WXDLLIMPEXP_STEDIT wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl&, int line);
-
-WXDLLIMPEXP_STEDIT int wxString_FindFromPos(const wxString&, const wxString& chars, size_t start_pos);
 
 #endif // __WXEXT_H__

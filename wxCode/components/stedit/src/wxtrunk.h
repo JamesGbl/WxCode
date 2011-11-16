@@ -70,13 +70,4 @@ inline size_t wxBuffer_length(const wxWCharBuffer& buf)
 #endif
 }
 
-#if (wxVERSION_NUMBER >= 2900)
-inline bool wxStyledTextCtrl_PositionToXY(const wxStyledTextCtrl& wnd, wxTextPos pos, long* col, long* row)
-{
-    return wnd.PositionToXY(pos, col, row);
-}
-#else
-WXDLLIMPEXP_STEDIT bool wxStyledTextCtrl_PositionToXY(const wxStyledTextCtrl&, wxTextPos, long* col, long* row);
-#endif
-
 #endif // __WXTRUNK_H__

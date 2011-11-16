@@ -10,12 +10,13 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedefs.h>
 #include <wx/dir.h>
 #include <wx/stdpaths.h>
 #include <wx/cmdline.h>
 #include <wx/clipbrd.h>
 #include <wx/convauto.h>
+
+#include <wx/stedit/stedefs.h>
 
 #include "wxtrunk.h"
 #include "wxext.h"
@@ -29,7 +30,6 @@
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(AcceleratorArray);
 WX_DEFINE_OBJARRAY(FileNameArray);
-
 
 bool wxGetExeFolder(wxFileName* filename)
 {
@@ -47,7 +47,8 @@ bool wxGetExeFolder(wxFileName* filename)
     return ok;
 }
 
-bool wxLocale_Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
+/*static*/
+bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
 {
    wxFileName filename;
    wxGetExeFolder(&filename);
@@ -62,7 +63,8 @@ bool wxLocale_Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage l
    return ok;
 }
 
-bool wxLocale_Find(const wxString& str, enum wxLanguage* lang)
+/*static*/
+bool wxLocaleHelper::Find(const wxString& str, enum wxLanguage* lang)
 {
    const size_t len = str.Length();
    for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
@@ -81,24 +83,30 @@ bool wxLocale_Find(const wxString& str, enum wxLanguage* lang)
    return false;
 }
 
-bool wxLocale_GetSupportedLanguages(LanguageArray* array)
+/*static*/
+bool wxLocaleHelper::GetSupportedLanguages(LanguageArray* array)
 {
    wxFileName filename;
+   wxDir dir;
+
    wxGetExeFolder(&filename);
    filename.AppendDir(wxT("locale"));
-   wxDir dir;
+
    bool ok = dir.Open(filename.GetFullPath());
+
    if (ok)
    {
       const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
       wxString str;
+      
       array->Add(default_lang);
       for (bool cont = dir.GetFirst(&str, wxEmptyString, wxDIR_DIRS);
            cont;
            cont = dir.GetNext(&str))
       {
          enum wxLanguage lang;
-         if (   wxLocale_Find(str, &lang)
+
+         if (   wxLocaleHelper::Find(str, &lang)
              && (lang != default_lang))
          {
             array->Add(lang);
@@ -108,9 +116,11 @@ bool wxLocale_GetSupportedLanguages(LanguageArray* array)
    return ok;
 }
 
-bool wxLocale_SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
+/*static*/
+bool wxLocaleHelper::SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
 {
    wxArrayString as;
+
    for (size_t i = 0; i < array.GetCount(); i++)
    {
       enum wxLanguage temp = (enum wxLanguage)array.Item(i);
@@ -118,6 +128,7 @@ bool wxLocale_SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
    }
    int index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
    bool ok = (index != wxNOT_FOUND);
+   
    if (ok)
    {
       *lang = (enum wxLanguage)array.Item(index);
@@ -127,7 +138,8 @@ bool wxLocale_SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
 
 #if wxUSE_ACCEL
 
-wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
+/*static*/
+wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
 {
     wxAcceleratorEntry ret;
 
@@ -174,7 +186,8 @@ wxAcceleratorEntry wxGetStockAcceleratorEx(wxWindowID id)
     return ret;
 }
 
-void wxSetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
+/*static*/
+void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
 {
    const size_t count = array.GetCount();
    wxAcceleratorEntry* temp = new wxAcceleratorEntry[count];
@@ -189,7 +202,7 @@ void wxSetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
 
 #endif // wxUSE_ACCEL
 
-wxString wxMenuItem_GetText(const wxMenuItem* item)
+static wxString wxMenuItem_GetText(const wxMenuItem* item)
 {
    wxString str = item->GetItemLabel();
 #ifdef __WXGTK__
@@ -338,13 +351,15 @@ static wxString wxGetAccelText(const wxAcceleratorEntry& accel)
    return wxGetAccelText(accel.GetFlags(), (enum wxKeyCode)accel.GetKeyCode());
 }
 
-void wxMenu_SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
+/*static*/
+void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
 {
    size_t count = menubar->GetMenuCount();
    for (size_t j = 0; j < count; j++)
    {
       wxMenu* menu = menubar->GetMenu(j);
-      wxMenu_SetAccelText(menu, accel);
+
+      wxAcceleratorHelper::SetAccelText(menu, accel);
    }
 }
 
@@ -386,6 +401,7 @@ static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
         it++)
    {
       wxMenuItem* item = *it;
+
       if (item->IsSubMenu())
       {
          wxMenu_SetAccelText(item->GetSubMenu(), accel);
@@ -397,11 +413,12 @@ static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
    }
 }
 
-void wxMenu_SetAccelText(wxMenu* menu, const AcceleratorArray& array)
+void wxAcceleratorHelper::SetAccelText(wxMenu* menu, const AcceleratorArray& array)
 {
    for (size_t i = 0; i < array.GetCount(); i++)
    {
       const wxAcceleratorEntry& accel = array.Item(i);
+
       wxMenu_SetAccelText(menu, accel);
    }
 }
@@ -1012,71 +1029,6 @@ bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, con
         }
     }
     return false;
-}
-
-int wxString_FindFromPos(const wxString& str, const wxString& chars, size_t start_pos)
-{
-    const wxString temp = str.Mid(start_pos);
-    wxChar chPrev = 0;
-    size_t n = start_pos;
-
-    for (wxString::const_iterator it = temp.begin();
-         it != temp.end();
-         it++, n++)
-    {
-        wxChar ch = *it;
-        int idx = chars.Find(ch);
-
-        // char in str is in chars and is not a " preceeded by a \, eg. \"
-        if ((idx != wxNOT_FOUND) &&
-            ( (n == 0) || (ch != wxT('\"')) || (chPrev != wxT('\\')) ) )
-        {
-            return (int)n;
-        }
-        chPrev = ch;
-    }
-    return wxNOT_FOUND;
-}
-
-#if (wxVERSION_NUMBER < 2900)
-bool wxStyledTextCtrl_PositionToXY(const wxStyledTextCtrl& wnd, wxTextPos pos, long* col, long* row)
-{
-    wxStyledTextCtrl* pThis = wxConstCast(&wnd, wxStyledTextCtrl);
-
-    if ((pos < 0) || (pos > pThis->GetLength()))
-    {
-        if (col) *col = 0;
-        if (row) *row = 0;
-        return false;
-    }
-
-    int r = pThis->LineFromPosition(pos);
-    if (row) *row = r;
-    if (col) *col = pos - pThis->PositionFromLine(r);
-    return true;
-}
-#endif
-
-// trac.wxwidgets.org/ticket/13646
-wxString wxStyledTextCtrl_GetLineText(const wxStyledTextCtrl& wnd, int line)
-{
-    wxString lineText = wxConstCast(&wnd, wxStyledTextCtrl)->GetLine(line);
-    size_t len = lineText.Length();
-
-    if (len > 0)
-    {
-        if (lineText[len-1] == wxT('\n'))
-        {
-            if ((len > 1) && (lineText[len-2] == wxT('\r'))) // remove \r\n for DOS
-                return lineText.Mid(0, len-2);
-            else
-                return lineText.Mid(0, len-1);               // remove \n for Unix
-        }
-        else if (lineText[len-1] == wxT('\r'))               // remove \r for mac
-            return lineText.Mid(0, len-1);
-    }
-
-    return lineText; // shouldn't happen, but maybe?
 }
 
 wxString wxTextEncoding::LoadFile(const wxCharBuffer& charBuf, size_t buf_len, Type encoding)

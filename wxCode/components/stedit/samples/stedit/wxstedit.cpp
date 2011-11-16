@@ -169,7 +169,7 @@ wxSTEditorFrame* wxStEditApp::CreateMainFrame()
         item->SetBitmap(wxBitmap(pencil16_xpm)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
         menu->Append(item);
 
-        ::wxMenu_SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
+        wxAcceleratorHelper::SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
 
         wxMenuBar* menubar = frame->GetMenuBar();
         menubar->Append(menu, wxGetStockLabelEx(wxID_HELP));
@@ -204,7 +204,7 @@ bool wxStEditApp::OnInit()
 #if (wxVERSION_NUMBER >= 2900)
     SetAppDisplayName(STE_APPDISPLAYNAME);
 #endif
-    ::wxLocale_Init(&m_locale, STE_APPNAME, m_lang);
+    wxLocaleHelper::Init(&m_locale, STE_APPNAME, m_lang);
     wxSTEditorOptions::SetGlobalDefaultFileName(wxString(_("unnamed")) + wxT(".txt")); // translated
 
     // Create a set of options for your editing "system."
@@ -278,7 +278,7 @@ bool wxStEditApp::OnInit()
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator
-    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxGetStockAcceleratorEx(wxID_ABOUT)); // adding 'custom' accelerator
+    m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_ABOUT)); // adding 'custom' accelerator
 
     // ------------------------------------------------------------------------
     m_frame = CreateMainFrame();
@@ -465,18 +465,19 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_fileNames.Add(wxFileName(parser.GetParam(n)));
 
     wxString str;
+
     if (parser.Found(cmdLineDesc[CMDLINE_PARAM_LANG].longName, &str))
     {
-        if (str.Length()) wxLocale_Find(str, &m_lang);
+        if (!str.IsEmpty()) wxLocaleHelper::Find(str, &m_lang);
     }
 
     if (parser.Found(cmdLineDesc[CMDLINE_PARAM_LANGDIALOG].longName))
     {
         LanguageArray array;
-        wxLocale_GetSupportedLanguages(&array);
-        wxLocale_SingleChoice(array, &m_lang);
-    }
 
+        wxLocaleHelper::GetSupportedLanguages(&array);
+        wxLocaleHelper::SingleChoice(array, &m_lang);
+    }
     return wxApp::OnCmdLineParsed(parser);
 }
 
