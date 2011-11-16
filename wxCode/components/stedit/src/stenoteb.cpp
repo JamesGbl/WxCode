@@ -929,7 +929,7 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     // change labels of existing items
     for (n = 0; n < item_count; n++)
     {
-        label = wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str());
+        label = wxString::Format(wxT("%2d : %s"), (int)n+1, GetPageText(n).wx_str());
         if (menu->GetLabel(int(startID+n)) != label)
             menu->SetLabel(int(startID+n), label);
 
@@ -937,7 +937,7 @@ void wxSTEditorNotebook::UpdateGotoCloseMenu(wxMenu *menu, int startID)
     }
     // append new pages
     for (n = item_count; n < page_count; n++)
-        menu->AppendCheckItem(int(startID+n), wxString::Format(wxT("%2d : %s"), n+1, GetPageText(n).wx_str()));
+        menu->AppendCheckItem(int(startID+n), wxString::Format(wxT("%2d : %s"), (int)n+1, GetPageText(n).wx_str()));
 
 /*
     // use check items

@@ -21,6 +21,7 @@ WXRELEASE  := $(shell $(WXCONFIG) --release)
 WXCXX      := $(shell $(WXCONFIG) --cxx)
 WXCXXFLAGS := $(shell $(WXCONFIG) --cxxflags)
 WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,adv,core,base)
+WXLIBDIR   := $(shell $(WXCONFIG) --libs | awk '{for(i=1;i<=NF;i++) if ($$i~/\-L/){ print substr($$i,3) } }')
 
 WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
 
@@ -34,8 +35,8 @@ WXSTEDIT_LIBNAME = $(WXBASENAME)_stedit-$(WXRELEASE)
 WXSTEDIT_LIBNAME := $(patsubst wx_%,wxcode_%,$(WXSTEDIT_LIBNAME))
 
 LIBVERSION_CURRENT  = 1
-LIBVERSION_REVISION = 2
-LIBVERSION_AGE      = 6
+LIBVERSION_REVISION = 4
+LIBVERSION_AGE      = 0
 
 TARGET_LIBNAME = lib$(WXSTEDIT_LIBNAME)
 TARGET_LIBNAME_STATIC = $(TARGET_LIBNAME).a
@@ -86,7 +87,7 @@ wxstedit: $(OBJECTS) stedit_lib
 
 # wxstedit program using static stedit.a library
 wxstedit-static: $(OBJECTS) stedit_lib
-	$(CXX) $(LDFLAGS_EXE) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
+	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXLIBDIR) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
 
 docs:
 	# requires wxLua's bin2c.lua program where $(WXLUA) is environment var

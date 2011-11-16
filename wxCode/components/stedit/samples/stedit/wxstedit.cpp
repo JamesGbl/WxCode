@@ -303,7 +303,7 @@ bool wxStEditApp::OnInit()
             wxDir::GetAllFiles(fN.GetPath(), &recurseFileNames, fN.GetFullName());
 
             // if they did wxstedit /r c:\*.* stop the insanity...
-            if ((int)recurseFileNames.GetCount() >= max_page_count)
+            if (recurseFileNames.GetCount() >= max_page_count)
             {
                 wxString msg = wxString::Format(_("Opening %d files, unable to open any more."), max_page_count);
                 wxMessageBox(msg, _("Maximum number of files"), wxOK|wxICON_ERROR, m_frame);

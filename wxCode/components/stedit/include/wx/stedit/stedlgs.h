@@ -11,6 +11,8 @@
 #ifndef _STEDLGS_H_
 #define _STEDLGS_H_
 
+#include <wx/filedlg.h>
+
 class WXDLLIMPEXP_FWD_CORE wxComboBox;
 class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
 class WXDLLIMPEXP_FWD_CORE wxSpinEvent;
