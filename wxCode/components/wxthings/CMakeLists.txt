@@ -63,6 +63,23 @@ if (BUILDING_DLLS)
 
     file(READ ${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h WXFILEDLGG_H_STRING)
 
+
+    # wxWidgets 2.9
+
+    string(REPLACE "class WXDLLIMPEXP_CORE wxGenericFileDialog"
+                   "class WXDLLIMPEXP_THINGS wxGenericFileDialog"
+                   WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
+
+    string(REPLACE "class WXDLLIMPEXP_CORE wxFileData"
+                   "class WXDLLIMPEXP_THINGS wxFileData"
+                   WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
+
+    string(REPLACE "class WXDLLIMPEXP_CORE wxFileCtrl"
+                   "class WXDLLIMPEXP_THINGS wxFileCtrl"
+                   WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
+
+    # wxWidgets 2.8
+
     string(REPLACE "class WXDLLEXPORT wxGenericFileDialog"
                    "class WXDLLIMPEXP_THINGS wxGenericFileDialog"
                    WXFILEDLGG_H_STRING "${WXFILEDLGG_H_STRING}")
