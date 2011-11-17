@@ -558,7 +558,7 @@ class WXDLLIMPEXP_STEDIT wxSTEditorFileDialog : public wxFileDialog
 {
     DECLARE_CLASS(wxSTEditorFileDialog)
 public:
-    static STE_Encoding m_encoding;
+    static wxString m_encoding;
     static bool m_file_bom; // wxFD_SAVE only
 
     wxSTEditorFileDialog(wxWindow* parent,

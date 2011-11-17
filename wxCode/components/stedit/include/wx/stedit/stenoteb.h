@@ -102,7 +102,7 @@ public:
     // Load a single file into a new page, if fileName is empty use wxFileSelector
     virtual bool LoadFile( const wxFileName&,
                            const wxString &extensions = wxEmptyString,
-                           STE_Encoding encoding = STE_Encoding_Default);
+                           const wxString& encoding = wxEmptyString);
     // Load file(s) into new page(s), if filenames is NULL, use wxFileDialog
     virtual bool LoadFiles( wxArrayString *fileNames = NULL,
                             const wxString &extensions = wxEmptyString  );

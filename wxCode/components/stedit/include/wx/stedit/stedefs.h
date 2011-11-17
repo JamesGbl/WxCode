@@ -98,19 +98,6 @@
 #define STE_TextPos wxTextPos
 //#define STE_TextCoord wxTextCoord // row/col
 
-enum STE_Encoding
-{
-    STE_Encoding_None,
-    STE_Encoding_UTF8,
-    STE_Encoding_Unicode, // LE
-    STE_Encoding_ISO8859_1,
-#ifdef __WXMSW__
-    STE_Encoding_OEM,
-#endif
-    STE_Encoding_EnumCount,
-    STE_Encoding_Default = STE_Encoding_None
-};
-
 //-----------------------------------------------------------------------------
 // Forward declaration of the wxSTEditor classes
 //-----------------------------------------------------------------------------

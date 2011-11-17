@@ -15,10 +15,6 @@
    #define wxT_2 wxT
 #endif
 
-#if (wxVERSION_NUMBER < 2900)
-WXDLLIMPEXP_STEDIT wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape = wxT('\\'));
-#endif
-
 #ifdef _WX_CONVAUTO_H_
 #if (wxVERSION_NUMBER >= 2903)
 inline wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)

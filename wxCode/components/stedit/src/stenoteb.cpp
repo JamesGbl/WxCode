@@ -718,8 +718,9 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
     return false;
 }
 
-bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_, STE_Encoding encoding)
+bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_, const wxString& encoding_ref)
 {
+    wxString encoding = encoding_ref;
     wxFileName fileName = fileName_;
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
 
@@ -776,7 +777,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
 {
     wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
     wxArrayString filePaths;
-    STE_Encoding encoding = STE_Encoding_Default;
+    wxString encoding;
 
     if (filePaths_)
         filePaths = *filePaths_;

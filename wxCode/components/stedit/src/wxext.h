@@ -23,9 +23,13 @@ WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 class WXDLLIMPEXP_STEDIT wxLocaleHelper
 {
 public:
+
     static bool Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
+
     static bool GetSupportedLanguages(LanguageArray*);
+
     static bool SingleChoice(const LanguageArray&, enum wxLanguage*);
+
     static bool Find(const wxString&, enum wxLanguage*);
 };
 #endif
@@ -43,10 +47,14 @@ WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, AcceleratorArray, class WXDLLI
 class WXDLLIMPEXP_STEDIT wxAcceleratorHelper
 {
 public:
+
     static wxAcceleratorEntry GetStockAccelerator(wxWindowID);
+
     static void SetAcceleratorTable(wxWindow*, const AcceleratorArray&);
+
     static void SetAccelText(wxMenuBar*, const AcceleratorArray&);
-    static void SetAccelText(wxMenu*   , const AcceleratorArray&);
+
+    static void SetAccelText(wxMenu*, const AcceleratorArray&);
 };
 WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray&, int id);
 #endif
@@ -152,11 +160,13 @@ public:
     #ifdef __WXMSW__
         OEM,
     #endif
+        EnumCount,
         None = wxNOT_FOUND
     };
 
-    static wxString LoadFile(const wxCharBuffer& buf, size_t buf_len, Type);
-    static bool     SaveFile(const wxString&, wxOutputStream&, Type, bool file_bom);
+    static bool LoadFile(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None);
+
+    static bool SaveFile(const wxString&, wxOutputStream&, Type encoding = None, bool file_bom = false);
 
 #if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
     static wxString CharToString(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
@@ -164,16 +174,23 @@ public:
     static wxString CharToString(const char*, const wxMBConv&, size_t len);
 
     static wxCharBuffer StringToChar(const wxString&, const wxMBConv&);
+
     static wxCharBuffer StringToChar(const wxString&, Type, size_t* size_ptr);
 
+    static wxString TypeToString(Type);
+
     static Type TypeFromString(const wxString&);
+
     static bool TypeFromString(const char* str, const char* identifier, const char* ctrl, Type*);
+
 #ifdef _WX_XML_H_
     inline static Type TypeFromString(const wxXmlDocument& xml)
     {
         return TypeFromString(xml.GetFileEncoding());
     }
 #endif
+
+    static const char* GetBOMChars(Type, size_t* count);
 };
 
 #endif // __WXEXT_H__

@@ -50,13 +50,13 @@ bool wxGetExeFolder(wxFileName* filename)
 /*static*/
 bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
 {
+   bool ok;
    wxFileName filename;
 
    wxGetExeFolder(&filename);
    filename.AppendDir(wxT("locale"));
    wxLocale::AddCatalogLookupPathPrefix(filename.GetFullPath());
-
-   bool ok = locale->Init(lang);
+   ok = locale->Init(lang);
    if (ok)
    {
       locale->AddCatalog(exetitle, (enum wxLanguage)locale->GetLanguage(), wxEmptyString);
@@ -89,14 +89,13 @@ bool wxLocaleHelper::Find(const wxString& str, enum wxLanguage* lang)
 /*static*/
 bool wxLocaleHelper::GetSupportedLanguages(LanguageArray* array)
 {
+   bool ok;
    wxFileName filename;
    wxDir dir;
 
    wxGetExeFolder(&filename);
    filename.AppendDir(wxT("locale"));
-
-   bool ok = dir.Open(filename.GetFullPath());
-
+   ok = dir.Open(filename.GetFullPath());
    if (ok)
    {
       const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
@@ -122,17 +121,19 @@ bool wxLocaleHelper::GetSupportedLanguages(LanguageArray* array)
 /*static*/
 bool wxLocaleHelper::SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
 {
+   bool ok;
+   int index;
    wxArrayString as;
 
    for (size_t i = 0; i < array.GetCount(); i++)
    {
       enum wxLanguage temp = (enum wxLanguage)array.Item(i);
+
       as.Add(wxLocale::GetLanguageName(temp));
    }
-   int index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
-   bool ok = (index != wxNOT_FOUND);
-   
-   if (ok)
+   index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
+   ok = (index != wxNOT_FOUND);   
+   if (ok && lang)
    {
       *lang = (enum wxLanguage)array.Item(index);
    }
@@ -200,6 +201,7 @@ void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const AcceleratorAr
       temp[i] = array.Item(i);
    }
    wxAcceleratorTable accel((int)count, temp);
+
    wnd->SetAcceleratorTable(accel);
    delete [] temp;
 }
@@ -236,6 +238,7 @@ static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, boo
 #else
     // Having multiple accelerators per menu item in GTK yields these warnings in the console window,
     // "Unknown accel modifier: 'w   ctrl'...No accel key found, accel string ignored."
+    // see also trac.wxwidgets.org/ticket/9363#comment:5
     return false;
 #endif
    }
@@ -465,6 +468,7 @@ END_EVENT_TABLE()
 bool wxPreviewFrameEx::Destroy()
 {
    bool ok = base::Destroy();
+
    if (ok && GetParent())
    {
       GetParent()->Raise();
@@ -491,6 +495,7 @@ void wxPreviewFrameEx::OnKeyDown(wxKeyEvent& event)
 void wxCommandLineUsage(wxWindow* parent)
 {
     wxCmdLineParser parser;
+
     wxTheApp->OnInitCmdLine(parser);
 #if (wxVERSION_NUMBER >= 2900)
     // GetUsageString() is public
@@ -840,18 +845,7 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 }
 #endif
 
-#if (wxVERSION_NUMBER < 2900)
-wxArrayString wxSplit(const wxString& str, const wxChar sep, wxChar escape)
-{
-   wxUnusedVar(escape);
-   wxStringTokenizerMode mode = wxTOKEN_RET_EMPTY;
-   wxArrayString temp = wxStringTokenize(str, wxString(sep), mode);
-
-   return temp;
-}
-#endif
-
-// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
+// annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
 /*static*/
 wxString wxTextEncoding::CharToString(const char* src, const wxMBConv& conv, size_t len)
 {
@@ -867,7 +861,7 @@ wxString wxTextEncoding::CharToString(const char* src, const wxMBConv& conv, siz
     return str;
 }
 
-// annoying function only here because the wxString ctor conv argument is WXUNUSED in some build types
+// annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
 /*static*/
 wxCharBuffer wxTextEncoding::StringToChar(const wxString& src, const wxMBConv& conv)
 {
@@ -965,12 +959,28 @@ wxString wxTextEncoding::CharToString(const wxCharBuffer& buf, size_t buf_len, w
             str = CharToString(buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
             break;
         default:
-            str = wxString(buf.data(), wxConvLibc, buf_len);
+            str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, buf_len);
             break;
     }
 #endif // 2.9
     if (file_bom_ptr) *file_bom_ptr = file_bom;
     return str;
+}
+
+/*static*/
+const char* wxTextEncoding::GetBOMChars(Type encoding, size_t* count)
+{
+    switch (encoding)
+    {
+        case UTF8:       return wxConvAuto_GetBOMChars(wxBOM_UTF8   , count);
+        case Unicode_LE: return wxConvAuto_GetBOMChars(wxBOM_UTF16LE, count);
+    #ifdef __WXMSW__
+        case OEM:
+    #endif
+        case ISO8859_1:
+        default:
+            return NULL;
+    }
 }
 
 #ifdef __WXMSW__
@@ -1014,30 +1024,38 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
 }
 #endif
 
-/*static*/
-wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& rstr)
+static const wxChar* const s_textencoding_text[] =
 {
-    const struct _MAP
-    {
-        const wxChar* name;
-        Type encoding;
-    } map[] =
-    {
-        { wxT("utf-8"     ), UTF8      },
-        { wxT("iso-8859-1"), ISO8859_1 }
-    };
-    wxString str = rstr;
+    wxT("UTF-8"     ),
+    wxT("Unicode"   ),
+    wxT("ISO-8859-1"),
+#ifdef __WXMSW__
+    wxT("OEM"       ),
+#endif
+};
+#ifdef C_ASSERT
+C_ASSERT(WXSIZEOF(s_textencoding_text) == wxTextEncoding::EnumCount);
+#endif
 
-    str.MakeLower();
-    for (size_t i = 0; i < WXSIZEOF(map); i++)
+/*static*/
+wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& str)
+{
+    for (size_t i = 0; i < WXSIZEOF(s_textencoding_text); i++)
     {
-        if (str == map[i].name)
+        if (0 == str.CmpNoCase(s_textencoding_text[i]))
         {
-            return map[i].encoding;
+            return (wxTextEncoding::Type)i;
         }
     }
+    return wxTextEncoding::None;
+}
 
-    return None;
+/*static*/
+wxString wxTextEncoding::TypeToString(Type encoding)
+{
+    return ((encoding != wxTextEncoding::None) && (encoding < wxTextEncoding::EnumCount))
+                ? s_textencoding_text[encoding]
+                : wxEmptyString;
 }
 
 /*static*/
@@ -1052,7 +1070,10 @@ bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, con
 
         if (begin && end)
         {
-            *encoding = TypeFromString(wxString::From8BitData(begin, end - begin));
+            if (encoding)
+            {
+                *encoding = TypeFromString(wxString::From8BitData(begin, end - begin));
+            }
             return true;
         }
     }
@@ -1060,32 +1081,34 @@ bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, con
 }
 
 /*static*/
-wxString wxTextEncoding::LoadFile(const wxCharBuffer& charBuf, size_t buf_len, Type encoding)
+bool wxTextEncoding::LoadFile(wxString* str, const wxCharBuffer& buf, size_t buf_len, Type encoding)
 {
-    wxString str;
+    wxCHECK_MSG(str, false, wxS("string pointer must be provided") );
+
+    if (wxNO_LEN == buf_len) buf_len = wxBuffer_length(buf);
 
     switch (encoding)
     {
         case Unicode_LE:
-            str = CharToString(charBuf.data(), wxConvAuto(), buf_len);
+            *str = CharToString(buf.data(), wxConvAuto(), buf_len);
             break;
         case UTF8:
-            str = CharToString(charBuf.data(), wxConvUTF8, buf_len);
+            *str = CharToString(buf.data(), wxConvUTF8, buf_len);
             break;
         case ISO8859_1:
-            str = CharToString(charBuf.data(), wxConvISO8859_1, buf_len);
+            *str = CharToString(buf.data(), wxConvISO8859_1, buf_len);
             break;
     #ifdef __WXMSW__
         case OEM:
-            str = CharToString(charBuf.data(), wxMBConvOEM(), buf_len);
+            *str = CharToString(buf.data(), wxMBConvOEM(), buf_len);
             break;
     #endif
         case None:
         default:
-            str = wxConvertMB2WX(charBuf.data());
+            *str = wxConvertMB2WX(buf.data());
             break;
     }
-    return str;
+    return !(buf_len && str->IsEmpty());
 }
 
 /*static*/

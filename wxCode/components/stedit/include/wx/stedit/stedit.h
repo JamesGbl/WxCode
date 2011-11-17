@@ -145,7 +145,7 @@ public:
     int m_last_autoindent_len;      // the length of the line before auto indenting
 
     int m_steLang_id;               // index into the wxSTEditorLangs used
-    STE_Encoding m_encoding;        // encoding specified by LoadFile parameter, or else, found inside file
+    wxString m_encoding;            // encoding specified by LoadFile parameter, or else, found inside file
     bool m_file_bom;                // bom found inside file
 
     wxSTEditorOptions m_options;    // options, always created
@@ -525,10 +525,10 @@ public :
                    const wxFileName& filename,
                    int flags = STE_LOAD_QUERY_UNICODE,
                    wxWindow* parent = NULL,
-                   STE_Encoding encoding = STE_Encoding_Default );
+                   const wxString& encoding = wxEmptyString);
 
     // Save the file to wxOutputStream
-    bool SaveFile( wxOutputStream& stream, STE_Encoding encoding = STE_Encoding_Default, bool file_bom = false);
+    bool SaveFile( wxOutputStream& stream, const wxString& encoding = wxEmptyString, bool file_bom = false);
 #endif
 
     // Load a file, if filename is wxEmptyString then use wxFileSelector
@@ -537,7 +537,7 @@ public :
     virtual bool LoadFile( const wxFileName& fileName = wxFileName(), // #define wxNullFileName wxFileName()
                            const wxString &extensions = wxEmptyString,
                            bool query_if_changed = true,
-                           STE_Encoding encoding = STE_Encoding_Default);
+                           const wxString& encoding = wxEmptyString);
     // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector
     virtual bool SaveFile( bool use_dialog = true,
                            const wxString &extensions = wxEmptyString );
@@ -709,14 +709,11 @@ public :
     //   different languages may use the same lexer. (Java uses CPP lexer)
     int  GetLanguageId() const;
 
-    void SetFileEncoding(STE_Encoding);
-    STE_Encoding GetFileEncoding() const;
+    void SetFileEncoding(const wxString&);
+    wxString GetFileEncoding() const;
 
     void SetFileBOM(bool);
     bool GetFileBOM() const;
-
-    static const char* GetBOMChars(STE_Encoding, size_t* count);
-    static wxString GetEncodingText(STE_Encoding);
 
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages
