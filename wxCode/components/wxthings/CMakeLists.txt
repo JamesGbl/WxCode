@@ -92,11 +92,41 @@ if (BUILDING_DLLS)
 
     file(READ ${wxWidgets_ROOT_DIR}/src/generic/dirctrlg.cpp WXDIRCTRLG_CPP_STRING)
 
-    string(FIND "${WXDIRCTRLG_CPP_STRING}" "// wxGetAvailableDrives, for WINDOWS, DOS, OS2, MAC" WXDIRCTRLG_CPP_STRING_START)
-    string(FIND "${WXDIRCTRLG_CPP_STRING}" "// wxIsDriveAvailable"                               WXDIRCTRLG_CPP_STRING_END)
+    if (${CMAKE_VERSION} VERSION_GREATER "2.8.4")
+        string(FIND "${WXDIRCTRLG_CPP_STRING}" "// wxGetAvailableDrives, for WINDOWS, DOS, OS2, MAC" WXDIRCTRLG_CPP_STRING_START)
+        string(FIND "${WXDIRCTRLG_CPP_STRING}" "// wxIsDriveAvailable"                               WXDIRCTRLG_CPP_STRING_END)
+    else()
+        # string(FIND ...) is not in CMake < 2.8.5, really ugly hack to duplicate it
+
+        string(LENGTH "${WXDIRCTRLG_CPP_STRING}" WXDIRCTRLG_CPP_STRING_LEN)
+        set(pos_ 1)
+
+        message("Thinking... please wait...")
+
+        while (${pos_} LESS ${WXDIRCTRLG_CPP_STRING_LEN})
+            math(EXPR pos_ "${pos_} + 1")
+
+            string(SUBSTRING "${WXDIRCTRLG_CPP_STRING}" "${pos_}" "21" sub_str)
+
+            if ("${sub_str}" STREQUAL "// wxGetAvailableDriv")
+                set(WXDIRCTRLG_CPP_STRING_START ${pos_})
+                break()
+            endif()
+        endwhile()
+
+        while (${pos_} LESS ${WXDIRCTRLG_CPP_STRING_LEN})
+            math(EXPR pos_ "${pos_} + 1")
+
+            string(SUBSTRING "${WXDIRCTRLG_CPP_STRING}" "${pos_}" "21" sub_str)
+
+            if ("${sub_str}" STREQUAL "// wxIsDriveAvailable")
+                set(WXDIRCTRLG_CPP_STRING_END ${pos_})
+                break()
+            endif()
+        endwhile()
+    endif()
 
     math(EXPR WXDIRCTRLG_CPP_STRING_LEN "${WXDIRCTRLG_CPP_STRING_END} - ${WXDIRCTRLG_CPP_STRING_START}")
-
     string(SUBSTRING "${WXDIRCTRLG_CPP_STRING}" "${WXDIRCTRLG_CPP_STRING_START}" "${WXDIRCTRLG_CPP_STRING_LEN}" CMAKE_CONFIGURE_WXTHINGS_FILEDLGG)
 
 else()
