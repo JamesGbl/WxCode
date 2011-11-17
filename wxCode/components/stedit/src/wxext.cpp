@@ -37,7 +37,7 @@ bool wxGetExeFolder(wxFileName* filename)
 
     temp.Assign(wxStandardPaths::Get().GetExecutablePath());
     temp.SetFullName(wxEmptyString);
-    
+
     bool ok = temp.IsOk();
 
     if (ok && filename)
@@ -68,11 +68,11 @@ bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLan
 bool wxLocaleHelper::Find(const wxString& str, enum wxLanguage* lang)
 {
    const size_t len = str.Length();
-   
+
    for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
    {
       const wxLanguageInfo* info = wxLocale::GetLanguageInfo(i);
-      
+
       if (   info
           && (   (0 == str.CmpNoCase(info->CanonicalName))
               || (0 == str.CmpNoCase(info->CanonicalName.Left(len)))
@@ -100,7 +100,7 @@ bool wxLocaleHelper::GetSupportedLanguages(LanguageArray* array)
    {
       const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
       wxString str;
-      
+
       array->Add(default_lang);
       for (bool cont = dir.GetFirst(&str, wxEmptyString, wxDIR_DIRS);
            cont;
@@ -132,7 +132,7 @@ bool wxLocaleHelper::SingleChoice(const LanguageArray& array, enum wxLanguage* l
       as.Add(wxLocale::GetLanguageName(temp));
    }
    index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
-   ok = (index != wxNOT_FOUND);   
+   ok = (index != wxNOT_FOUND);
    if (ok && lang)
    {
       *lang = (enum wxLanguage)array.Item(index);
@@ -155,25 +155,25 @@ wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
     switch (id)
     {
     #if (wxVERSION_NUMBER < 2903)
-        STOCKITEM(wxID_PRINT,                wxACCEL_CTRL,'P')
-        STOCKITEM(wxID_UNDO,                 wxACCEL_CTRL,'Z')
+        STOCKITEM(wxID_PRINT,         wxACCEL_CTRL,                 'P')
+        STOCKITEM(wxID_UNDO,          wxACCEL_CTRL,                 'Z')
     #endif
-        STOCKITEM(wxID_PREVIEW,              wxACCEL_CTRL | wxACCEL_SHIFT,'P')
-        STOCKITEM(wxID_SAVEAS,               wxACCEL_CTRL | wxACCEL_SHIFT,'S')
-        STOCKITEM(wxID_SELECTALL,            wxACCEL_CTRL,'A')
-        STOCKITEM(wxID_REDO,                 wxACCEL_CTRL,'Y')
-        //STOCKITEM(wxID_PREFERENCES,          wxACCEL_CTRL,'T')
-        STOCKITEM(wxID_ICONIZE_FRAME,        wxACCEL_ALT,WXK_FULLSCREEN)
-        STOCKITEM(wxID_REFRESH,              wxACCEL_NORMAL, WXK_F5)
-        STOCKITEM(wxID_PROPERTIES,           wxACCEL_ALT,WXK_RETURN)
-        STOCKITEM(wxID_BACKWARD,             wxACCEL_ALT , WXK_LEFT)
-        STOCKITEM(wxID_FORWARD,              wxACCEL_ALT , WXK_RIGHT)
-        STOCKITEM(wxID_HELP,                 wxACCEL_NORMAL, WXK_HELP)
-        STOCKITEM(wxID_REPLACE,              wxACCEL_CTRL,'H')
-        STOCKITEM(wxID_EXIT,                 wxACCEL_CTRL, 'Q')
-        STOCKITEM(wxID_CLOSE,                wxACCEL_CTRL, 'W')
-        STOCKITEM(wxID_CLEAR,                wxACCEL_NORMAL, WXK_DELETE)
-        STOCKITEM(wxID_ABOUT,                wxACCEL_SHIFT, WXK_HELP)
+        STOCKITEM(wxID_PREVIEW,       wxACCEL_CTRL | wxACCEL_SHIFT, 'P')
+        STOCKITEM(wxID_SAVEAS,        wxACCEL_CTRL | wxACCEL_SHIFT, 'S')
+        STOCKITEM(wxID_SELECTALL,     wxACCEL_CTRL,                 'A')
+        STOCKITEM(wxID_REDO,          wxACCEL_CTRL,                 'Y')
+        //STOCKITEM(wxID_PREFERENCES,   wxACCEL_CTRL,               'T')
+        STOCKITEM(wxID_ICONIZE_FRAME, wxACCEL_ALT,       WXK_FULLSCREEN)
+        STOCKITEM(wxID_REFRESH,       wxACCEL_NORMAL,            WXK_F5)
+        STOCKITEM(wxID_PROPERTIES,    wxACCEL_ALT,           WXK_RETURN)
+        STOCKITEM(wxID_BACKWARD,      wxACCEL_ALT,             WXK_LEFT)
+        STOCKITEM(wxID_FORWARD,       wxACCEL_ALT,            WXK_RIGHT)
+        STOCKITEM(wxID_HELP,          wxACCEL_NORMAL,          WXK_HELP)
+        STOCKITEM(wxID_REPLACE,       wxACCEL_CTRL,                 'H')
+        STOCKITEM(wxID_EXIT,          wxACCEL_CTRL,                 'Q')
+        STOCKITEM(wxID_CLOSE,         wxACCEL_CTRL,                 'W')
+        STOCKITEM(wxID_CLEAR,         wxACCEL_NORMAL,        WXK_DELETE)
+        STOCKITEM(wxID_ABOUT,         wxACCEL_SHIFT,           WXK_HELP)
         default:
             ret = wxGetStockAccelerator(id);
             break;
@@ -218,9 +218,7 @@ static wxString wxMenuItem_GetText(const wxMenuItem* item)
    return str;
 }
 
-#ifdef __WXMSW__
-    #define ACCELSTR_SEP "   "
-#endif
+#define ACCELSTR_SEP "   "
 
 static bool wxMenuItem_SetAccelText(wxMenuItem* item, const wxString& accel, bool append = true)
 {
@@ -285,28 +283,32 @@ static wxString wxGetAccelText(int flags, int keyCode)
    if (!str.IsEmpty()) str+=sep;
    switch (keyCode)
    {
-      case WXK_INSERT         : str+=_("Insert" ); break;
-      case WXK_PAGEUP         : str+=_("PgUp"   ); break;
-      case WXK_PAGEDOWN       : str+=_("PgDn"   ); break;
-      case WXK_HOME           : str+=_("Home"   ); break;
-      case WXK_END            : str+=_("End"    ); break;
-      case WXK_RETURN         : str+=_("Return" ); break;
-      case WXK_DELETE         : str+=_("Del" ); break;
-      case WXK_NUMPAD_ADD     : str+=_("Num+"   ); break;
-      case WXK_NUMPAD_SUBTRACT: str+=_("Num-"   ); break;
+      case WXK_INSERT          : str += _("Insert" ); break;
+      case WXK_PAGEUP          : str += _("PgUp"   ); break;
+      case WXK_PAGEDOWN        : str += _("PgDn"   ); break;
+      case WXK_HOME            : str += _("Home"   ); break;
+      case WXK_END             : str += _("End"    ); break;
+      case WXK_RETURN          : str += _("Return" ); break;
+      case WXK_DELETE          : str += _("Del"    ); break;
+      case WXK_SPACE           : str += _("Space"  ); break;
+      case WXK_NUMPAD_ADD      : str += _("Num+"   ); break;
+      case WXK_NUMPAD_SUBTRACT : str += _("Num-"   ); break;
       default:
+      {
          if ( (keyCode >= WXK_F1) && (keyCode <= WXK_F24) )
          {
-            str+=wxString::Format(wxT("F%d"), keyCode - WXK_F1 + 1);
+            str += wxString::Format(wxT("F%d"), keyCode - WXK_F1 + 1);
          }
          else
          {
             wxASSERT(keyCode >= ' ');
-            str+=(wxChar)keyCode;
+            str += (wxChar)keyCode;
          }
          break;
+      }
    }
 #endif
+
    return str;
 }
 
@@ -321,17 +323,18 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
 
    switch (id)
    {
-      STOCKITEM(wxID_ABOUT,     _("&About..."))   // + ellipsis
-      STOCKITEM(wxID_OPEN,      _("&Open..."))    // + ellipsis
-      STOCKITEM(wxID_SELECTALL, _("Select &All")) // + ampersand
-      STOCKITEM(wxID_FIND,      _("&Find..."))    // + ellipsis
-      STOCKITEM(wxID_REPLACE,   _("Rep&lace...")) // + ellipsis
-      STOCKITEM(wxID_REVERT,    _("Re&vert..."))
+      STOCKITEM(wxID_ABOUT,      _("&About..."))   // + ellipsis
+      STOCKITEM(wxID_OPEN,       _("&Open..."))    // + ellipsis
+      STOCKITEM(wxID_SELECTALL,  _("Select &All")) // + ampersand
+      STOCKITEM(wxID_FIND,       _("&Find..."))    // + ellipsis
+      STOCKITEM(wxID_REPLACE,    _("Rep&lace...")) // + ellipsis
+      STOCKITEM(wxID_REVERT,     _("Re&vert..."))
       STOCKITEM(wxID_PROPERTIES, _("Proper&ties...")) // + ellipsis
       default:
          break;
    }
 #undef STOCKITEM
+
    if (!stockLabel.IsEmpty())
    {
        if ( !(flags & wxSTOCK_WITH_MNEMONIC) )
@@ -361,6 +364,7 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
          stockLabel = baseLabel;
    }
 #endif
+
    return stockLabel;
 }
 
@@ -389,8 +393,9 @@ wxString wxToolBarTool_MakeShortHelp(const wxString& rstr, const AcceleratorArra
    if (accel.GetCount() && !str.IsEmpty())
    {
       wxString strAccel;
+      size_t i, count = accel.GetCount();
 
-      for (size_t i = 0; i < accel.GetCount(); i++)
+      for (i = 0; i < count; i++)
       {
          const wxAcceleratorEntry& element = accel.Item(i);
 
@@ -402,7 +407,7 @@ wxString wxToolBarTool_MakeShortHelp(const wxString& rstr, const AcceleratorArra
       }
       if (!strAccel.IsEmpty())
       {
-         str+=wxString::Format(wxT(" (%s)"), strAccel.wx_str());
+         str += wxString::Format(wxT(" (%s)"), strAccel.wx_str());
       }
    }
    return str;
@@ -437,12 +442,14 @@ static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
 /*static*/
 void wxAcceleratorHelper::SetAccelText(wxMenu* menu, const AcceleratorArray& array)
 {
-   for (size_t i = 0; i < array.GetCount(); i++)
-   {
-      const wxAcceleratorEntry& accel = array.Item(i);
+    size_t i, count = array.GetCount();
 
-      wxMenu_SetAccelText(menu, accel);
-   }
+    for (i = 0; i < count; i++)
+    {
+        const wxAcceleratorEntry& accel = array.Item(i);
+
+        wxMenu_SetAccelText(menu, accel);
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -933,7 +940,7 @@ wxString wxTextEncoding::CharToString(const wxCharBuffer& buf, size_t buf_len, w
     // The method wxAutoConv.GetBOM() is not in wx 2.8, so roll our own
     file_bom = wxConvAuto_DetectBOM(buf.data(), buf_len);
     size_t bom_charcount = 0;
-    
+
     switch (file_bom)
     {
         case wxBOM_Unknown:
@@ -998,7 +1005,7 @@ size_t wxMBConvOEM::ToWChar(wchar_t*    dst, size_t dstLen,
 {
     if (srcLen == wxNO_LEN) srcLen = strlen(src);
     wxCharBuffer buf(srcLen);
-    
+
     OemToCharBuffA(src, buf.data(), srcLen);
     return dst ? mbstowcs(dst, buf.data(), dstLen) : wxBuffer_length(buf);
 }
@@ -1009,7 +1016,7 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
     size_t len;
     if (srcLen == wxNO_LEN) srcLen = wcslen(src);
     wxCharBuffer temp(srcLen);
-    
+
     wcstombs(temp.data(), src, srcLen);
     if (dst)
     {
@@ -1062,7 +1069,7 @@ wxString wxTextEncoding::TypeToString(Type encoding)
 bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, const char* ctrl, Type* encoding)
 {
     const char* p = strstr(str, identifier);
-    
+
     if (p)
     {
         const char* begin = p + strlen(identifier);
@@ -1143,7 +1150,7 @@ bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, Type en
     if (ok)
     {
         const wxCharBuffer buf = StringToChar(s, encoding, &size);
-        
+
         ok = (buf.data() != NULL);
         if (ok)
         {

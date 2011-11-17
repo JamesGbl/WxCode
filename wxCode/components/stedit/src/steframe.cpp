@@ -65,7 +65,7 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
 
     ::wxFrame_SetInitialPosition(this, pos, size);
 #ifdef x__WXDEBUG__
-    wxCommandEvent menu(wxEVT_COMMAND_MENU_SELECTED);    
+    wxCommandEvent menu(wxEVT_COMMAND_MENU_SELECTED);
     menu.SetId(ID_STE_PROPERTIES);
     //menu.SetId(ID_STE_EXPORT);
     //menu.SetId(wxID_OPEN);
