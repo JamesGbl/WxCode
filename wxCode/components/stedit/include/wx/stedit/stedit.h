@@ -888,10 +888,16 @@ protected:
 private:
     void Init();
 
-    // Please use IsModified() instead
+    // Please use the virtual method IsModified() instead
     bool GetModify()
     {
         return wxStyledTextCtrl::GetModify();
+    }
+
+    // Please use one of the virtual methods instead, SetModified(false) or DiscardEdits()
+    void SetSavePoint()
+    {
+        wxStyledTextCtrl::SetSavePoint();
     }
 
     DECLARE_EVENT_TABLE()

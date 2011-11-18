@@ -1721,7 +1721,7 @@ static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)
     int enc = list->GetSelection();
     bool bom_current = checkbox->IsChecked();
     size_t count;
-    bool bom = (NULL != wxTextEncoding::GetBOMChars((wxTextEncoding::Type)enc, &count));
+    bool bom = (enc >= ENC_OFFSET) && wxTextEncoding::GetBOMChars((wxTextEncoding::Type)(enc - ENC_OFFSET), &count);
 
     if (bom_current && !bom)
     {

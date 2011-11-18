@@ -650,7 +650,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                 if (editor)
                 {
                     editor->SetText(text);
-                    editor->DiscardEdits(); // IsModified = false
+                    editor->SetModified(false);
                 }
             }
             return true;

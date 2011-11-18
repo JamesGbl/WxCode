@@ -791,7 +791,7 @@ void wxSTEditor::SetModified(bool modified)
     #if (wxVERSION_NUMBER >= 2900)
         wxStyledTextCtrl::SetModified(modified); // -> DiscardEdits();
     #else
-        DiscardEdits(); // -> m_dirty_flag = false
+        DiscardEdits(); // clears m_dirty_flag
     #endif
     }
     m_dirty_flag = modified;
@@ -2204,7 +2204,6 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             bool found_lang = false;
             bool html = false;
             bool xml = false;
-            bool messagebox = false;
 
             if (want_lang && !found_lang)
             {
@@ -2298,21 +2297,18 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             }
             if (ok)
             {
+                // sanity check
                 ok = !(stream_len && str.IsEmpty());
-                if (!ok)
-                {
-                    messagebox = true;
-                    // give it one more shot
-                    if (wxTextEncoding::None != encoding)
-                    {
-                        ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, wxTextEncoding::None);
-                    }
-                }
             }
-            if (messagebox || !ok)
+            if (!ok)
             {
                 wxMessageBox(_("Bad encoding."),
                     _("Error loading file"), wxOK|wxICON_ERROR, parent);
+                // give it one more shot
+                if (wxTextEncoding::None != encoding)
+                {
+                    ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, wxTextEncoding::None);
+                }
             }
             if (ok)
             {
@@ -2325,7 +2321,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
         {
             UpdateCanDo(true);
             EmptyUndoBuffer();
-            SetSavePoint();
+            SetModified(false);
             GotoPos(0);
             ScrollToColumn(0); // extra help to ensure scrolled to 0
                                // otherwise scrolled halfway thru 1st char
@@ -2493,7 +2489,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         if (use_dialog)
             GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
 
-        SetSavePoint();
+        SetModified(false);
         SetFileName(fileName, true);
         UpdateCanDo(true);
         SetFileEncoding(encoding);
@@ -4073,7 +4069,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2850")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2854")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
