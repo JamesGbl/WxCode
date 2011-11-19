@@ -1066,7 +1066,7 @@ void wxPlotCtrl::CreateKeyString()
         else if (GetFunctionCurve(n) != NULL)
             key = GetFunctionCurve(n)->GetFunctionString();
         else
-            key.Printf(wxT("Curve %d"), n);
+            key.Printf(wxT("Curve %d"), (int)n);
 
         m_keyString += (key + wxT("\n"));
     }

@@ -2,7 +2,7 @@
 
 #include <wx/wxprec.h>
 #include <wx/docview.h>
-#include <wx/stedit/stedit.h>
+#include "wx/stedit/stedit.h"
 
 #include "stedoc.h"
 

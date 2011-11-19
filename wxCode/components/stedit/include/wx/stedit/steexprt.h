@@ -11,7 +11,7 @@
 #ifndef _STEEXPORT_H_
 #define _STEEXPORT_H_
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorExporter - simple class to export the contents of a

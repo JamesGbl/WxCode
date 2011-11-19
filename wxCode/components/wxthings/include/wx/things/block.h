@@ -10,7 +10,7 @@
 #ifndef __wxBLOCK_H__
 #define __wxBLOCK_H__
 
-#include "wx/geometry.h"
+#include <wx/geometry.h>
 #include "wx/things/thingdef.h"
 
 //#define USE_wxRANGE
@@ -28,7 +28,7 @@ class WXDLLIMPEXP_THINGS wxBlockDouble;
 class WXDLLIMPEXP_THINGS wxBlockIntSelection;
 class WXDLLIMPEXP_THINGS wxBlockDoubleSelection;
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY_WITH_DECL(wxBlockInt, wxArrayBlockInt, class WXDLLIMPEXP_THINGS);
 WX_DECLARE_OBJARRAY_WITH_DECL(wxBlockDouble, wxArrayBlockDouble, class WXDLLIMPEXP_THINGS);
 WX_DECLARE_OBJARRAY_WITH_DECL(wxBlockIntSelection, wxArrayBlockIntSelection, class WXDLLIMPEXP_THINGS);

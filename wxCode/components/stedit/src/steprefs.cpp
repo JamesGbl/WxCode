@@ -10,8 +10,8 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/steprefs.h>
-#include <wx/stedit/stedit.h>
+#include "wx/stedit/steprefs.h"
+#include "wx/stedit/stedit.h"
 
 extern wxSTEditorPrefs  s_wxSTEditorPrefs;
 

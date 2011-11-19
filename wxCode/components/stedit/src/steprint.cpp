@@ -11,10 +11,10 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/steprint.h>
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steart.h>
-#include <wx/stedit/stemenum.h>
+#include "wx/stedit/steprint.h"
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steart.h"
+#include "wx/stedit/stemenum.h"
 #include "stedlgs_wdr.h"
 
 #include <wx/progdlg.h>   // wxProgressDialog

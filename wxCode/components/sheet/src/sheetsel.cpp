@@ -16,16 +16,16 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/defs.h"
-    #include "wx/utils.h"         // for wxMin and wxMax
-    #include "wx/gdicmn.h"        // for wxRect
+    #include <wx/defs.h>
+    #include <wx/utils.h>         // for wxMin and wxMax
+    #include <wx/gdicmn.h>        // for wxRect
 #endif // WX_PRECOMP
 
 #include "wx/sheet/sheet.h"
@@ -37,7 +37,7 @@
 
 #define PRINT_BLOCK(s, b) wxPrintf(wxT("%s %d %d %d %d - w%d h%d\n"), s, b.GetTop(), b.GetLeft(), b.GetBottom(), b.GetRight(), b.GetWidth(), b.GetHeight());
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArraySheetCoords)
 WX_DEFINE_OBJARRAY(wxArraySheetBlock)
 
@@ -1224,7 +1224,7 @@ public:
     long m_value;
 };
 
-#include "wx/variant.h"
+#include <wx/variant.h>
 
 class WXDLLIMPEXP_SHEET wxSheetVariant
 {
@@ -1296,7 +1296,7 @@ void wxSheetVariant::Copy(const wxVariantData* other)
 
 
 WX_DECLARE_OBJARRAY_WITH_DECL(wxSheetVariant, wxArraySheetVariant, class WXDLLIMPEXP_SHEET);
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArraySheetVariant)
 
 class WXDLLIMPEXP_SHEET wxSheetRowColVariantContainer
@@ -1407,7 +1407,7 @@ DEFINE_SORTED_OBJARRAY_INTUPDATEPOS(IntInt, SortedArrayIntInt, m_key, SortedObjA
 
 // Create some pair arrays for testing
 DECLARE_PAIRED_INT_DATA_ARRAYS( int, wxArrayInt, PairArrayIntInt, class WXDLLIMPEXP_SHEET )
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 DEFINE_PAIRED_INT_DATA_ARRAYS(int, PairArrayIntInt)
 
 // ---------------------------------------------------------------------------

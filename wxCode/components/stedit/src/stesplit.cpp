@@ -11,10 +11,10 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/stesplit.h>
-#include <wx/stedit/steprefs.h>
-#include <wx/stedit/stedlgs.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/stesplit.h"
+#include "wx/stedit/steprefs.h"
+#include "wx/stedit/stedlgs.h"
 
 #ifndef WXPRECOMP
     #include <wx/scrolbar.h>

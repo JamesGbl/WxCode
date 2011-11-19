@@ -13,12 +13,12 @@
 
 #include <wx/print.h>
 
-#include <wx/stedit/stedefs.h>
-#include <wx/stedit/stestyls.h>
+#include "wx/stedit/stedefs.h"
+#include "wx/stedit/stestyls.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorPrintout : A subclassed wxPrintout for printing the current
-// document of a wxSTEditor. See usage in the print functions in stedit.cpp. 
+// document of a wxSTEditor. See usage in the print functions in stedit.cpp.
 //-----------------------------------------------------------------------------
 #if wxUSE_PRINTING_ARCHITECTURE
 

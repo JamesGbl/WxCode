@@ -15,28 +15,28 @@
 
 #include "precomp.h"
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/defs.h"
-    #include "wx/utils.h"
-    #include "wx/dc.h"
-    #include "wx/dcclient.h"
-    #include "wx/log.h"
-    #include "wx/valtext.h"
-    #include "wx/settings.h"
-    #include "wx/checkbox.h"
-    #include "wx/intl.h"
+    #include <wx/defs.h>
+    #include <wx/utils.h>
+    #include <wx/dc.h>
+    #include <wx/dcclient.h>
+    #include <wx/log.h>
+    #include <wx/valtext.h>
+    #include <wx/settings.h>
+    #include <wx/checkbox.h>
+    #include <wx/intl.h>
 #endif // WX_PRECOMP
 
 #include "wx/sheet/sheet.h"
 #include "wx/sheet/sheetren.h"
-#include "wx/tokenzr.h"
-#include "wx/renderer.h"
+#include <wx/tokenzr.h>
+#include <wx/renderer.h>
 // Required for wxIs... functions
 #include <ctype.h>
 
@@ -134,7 +134,7 @@ bool wxSheetCellRenderer::Copy(const wxSheetCellRenderer& other)
 
 #ifdef TEST_SELECTION_BLOCKS
     #include "wx/sheet/sheetsel.h"
-    #include "math.h"
+    #include <math.h>
     #define UNUSE(a) a
     wxColour GetRainbow(double v)
     {

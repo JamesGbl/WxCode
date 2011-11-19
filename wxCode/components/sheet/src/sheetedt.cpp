@@ -15,31 +15,31 @@
 
 #include "precomp.h"
 
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/defs.h"
-    #include "wx/utils.h"
-    #include "wx/textctrl.h"
-    #include "wx/dc.h"
-    #include "wx/dcclient.h"
-    #include "wx/textctrl.h"
-    #include "wx/checkbox.h"
-    #include "wx/combobox.h"
-    #include "wx/log.h"
-    #include "wx/valtext.h"
-    #include "wx/settings.h"
-    #include "wx/intl.h"
+    #include <wx/defs.h>
+    #include <wx/utils.h>
+    #include <wx/textctrl.h>
+    #include <wx/dc.h>
+    #include <wx/dcclient.h>
+    #include <wx/textctrl.h>
+    #include <wx/checkbox.h>
+    #include <wx/combobox.h>
+    #include <wx/log.h>
+    #include <wx/valtext.h>
+    #include <wx/settings.h>
+    #include <wx/intl.h>
 #endif // WX_PRECOMP
 
 #include "wx/sheet/sheet.h"
 #include "wx/sheet/sheetedt.h"
-#include "wx/tokenzr.h"
-#include "wx/spinctrl.h"
+#include <wx/tokenzr.h>
+#include <wx/spinctrl.h>
 // Required for wxIs... functions
 #include <ctype.h>
 

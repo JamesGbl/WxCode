@@ -16,7 +16,7 @@
 #include <wx/clipbrd.h>
 #include <wx/convauto.h>
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 #include "wxtrunk.h"
 #include "wxext.h"

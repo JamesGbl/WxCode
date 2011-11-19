@@ -8,13 +8,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
-#include "wx/numdlg.h" // for wxGetNumberFromUser
+#include <wx/numdlg.h> // for wxGetNumberFromUser
 #include "wxvidcap.h"
 
 IMPLEMENT_APP(MyApp)

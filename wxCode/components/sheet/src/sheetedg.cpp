@@ -16,20 +16,20 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/defs.h"
+    #include <wx/defs.h>
 #endif // WX_PRECOMP
 
 #include "wx/sheet/sheet.h"
 #include "wx/sheet/sheetedg.h"
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 DEFINE_PAIRARRAY_INTKEY(int, wxPairArrayIntInt)
 
 // ----------------------------------------------------------------------------

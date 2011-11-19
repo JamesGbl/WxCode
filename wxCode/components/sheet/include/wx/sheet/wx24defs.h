@@ -13,10 +13,10 @@
 #define __WX_WX24DEFS_H__
 
 // Include any headers that we need to redefine macros for
-#include "wx/defs.h"
-#include "wx/object.h"
-#include "wx/event.h"
-#include "wx/dynarray.h"
+#include <wx/defs.h>
+#include <wx/object.h>
+#include <wx/event.h>
+#include <wx/dynarray.h>
 
 //-----------------------------------------------------------------------------
 // wxWidgets 2.4 compatibility with code from >= 2.5

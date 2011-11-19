@@ -12,7 +12,7 @@
 #define _STEART_H_
 
 #include <wx/artprov.h>
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 // --------------------------------------------------------------------------
 // wxArtIDs used by the wxStEditor classes to get bitmaps

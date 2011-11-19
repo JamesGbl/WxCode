@@ -9,23 +9,23 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/valtext.h"     // for wxTextValidator
-    #include "wx/textctrl.h"
+    #include <wx/valtext.h>     // for wxTextValidator
+    #include <wx/textctrl.h>
 #endif // WX_PRECOMP
 
-#include "wx/tooltip.h"
+#include <wx/tooltip.h>
 #include "wx/things/spinctld.h"
 #include <math.h>
 
 #if wxCHECK_VERSION(2,5,0)
-    #include "wx/math.h"
+    #include <wx/math.h>
 #else
     #if defined(__VISUALC__) || defined(__BORLANDC__) || defined(__WATCOMC__)
         #include <float.h>

@@ -19,7 +19,7 @@
 #include <wx/stc/stc.h>
 
 #if (wxVERSION_NUMBER >= 2900)
-    // #include <wx/stc/private.h" // wx2stc() has been moved here, but isn't exported
+    // #include <wx/stc/private.h> // wx2stc() has been moved here, but isn't exported
     #define wx2stc(wxstr)    (wxstr).mb_str()
     #define stc2wx(char_str) wxString(char_str)
 #endif
@@ -31,16 +31,16 @@
 
 // The STE_SETUP_VERSION is simply an integer that is incremented whenever
 // wx/stedit/setup0.h is modified in a way that breaks compatibility.
-#define STE_SETUP_VERSION 1 
+#define STE_SETUP_VERSION 1
 
 // If you get an error on this line, you probably forgot to copy
-//   include/wx/stedit/setup0.h to include/wx/stedit/setup.h 
+//   include/wx/stedit/setup0.h to include/wx/stedit/setup.h
 #if !defined(_STESETUP_H_)
     #include "wx/stedit/setup.h"
 #endif // !defined(_STESETUP_H_)
 
 #ifndef ID_STE__FIRST
-#   error "Your wx/stedit/setup.h file is out of date, please update to wx/stedit/setup0.h."    
+#   error "Your wx/stedit/setup.h file is out of date, please update to wx/stedit/setup0.h."
 #endif
 
 //-----------------------------------------------------------------------------

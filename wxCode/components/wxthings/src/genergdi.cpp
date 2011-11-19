@@ -11,20 +11,20 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #include "wx/things/genergdi.h"
-#include "wx/tokenzr.h"
-#include "wx/bitmap.h"
+#include <wx/tokenzr.h>
+#include <wx/bitmap.h>
 
 const wxGenericColour wxNullGenericColour;
 const wxGenericPen    wxNullGenericPen;
 const wxGenericBrush  wxNullGenericBrush;
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayGenericColour)
 WX_DEFINE_OBJARRAY(wxArrayGenericPen)
 WX_DEFINE_OBJARRAY(wxArrayGenericBrush)

@@ -14,16 +14,16 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 // Include wxWidgets' headers
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
 #include "wx/vidcap/vcapwin.h"
 #include "vcapdlgs.h"
-#include "wx/spinctrl.h"
+#include <wx/spinctrl.h>
 
 #ifdef WXVIDCAP_AVI_SUPPORT
 // --------------------------------------------------------------------------

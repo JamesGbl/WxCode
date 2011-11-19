@@ -7,7 +7,7 @@
 // License:     wxWidgets V2.0
 /////////////////////////////////////////////////////////////////////////////
 //
-// Usage notes: 
+// Usage notes:
 // Link against vfw.lib
 // Read the header and the cpp file to figure out what something does
 // Test "problems" against MSW vidcap.exe to see if the same problem occurs
@@ -15,10 +15,10 @@
 #ifndef __WX_VCAPWIN_H__
 #define __WX_VCAPWIN_H__
 
-#include "wx/defs.h"
-#include "wx/event.h"
-#include "wx/scrolwin.h"
-#include "wx/image.h"
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/scrolwin.h>
+#include <wx/image.h>
 
 // These are our DLL macros (see the contrib libs like wxPlot)
 #ifdef WXMAKINGDLL_VIDCAP
@@ -36,7 +36,7 @@
     #define WXVIDCAP_MSW_VFW
     #define WXVIDCAP_AVI_SUPPORT
     #define WXVIDCAP_AUDIO_SUPPORT
-#elif defined(__LINUX__) 
+#elif defined(__LINUX__)
     #define WXVIDCAP_LINUX_V4L
 #endif
 
@@ -95,7 +95,7 @@ extern const char* FOURCCToString(FOURCC fourcc);
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureFormat
 {
 public :
-    wxVideoCaptureFormat() { m_fourcc = wxNullFOURCC; m_bpp = 0; m_v4l1_palette = -1; } 
+    wxVideoCaptureFormat() { m_fourcc = wxNullFOURCC; m_bpp = 0; m_v4l1_palette = -1; }
 
     wxVideoCaptureFormat(const wxString &description, FOURCC fourcc, int bpp, int v4l1_palette)
     {
@@ -107,11 +107,11 @@ public :
 
     wxString m_description;// common name of the format
     FOURCC m_fourcc;       // MMIO data type for BITMAPINFOHEADER->biCompression
-    int m_bpp;             // bits per pixel for BITMAPINFOHEADER->biBitCount 
+    int m_bpp;             // bits per pixel for BITMAPINFOHEADER->biBitCount
     int m_v4l1_palette;    // the type the v4l1 thinks it is (v4l2 uses fourcc ?)
 };
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY(wxVideoCaptureFormat, wxArrayVideoCaptureFormat);
 
 
@@ -128,7 +128,7 @@ typedef struct wxvidcap_video_format_struct
 extern const wxvidcap_video_format_typedef wxVIDCAP_VIDEO_FORMATS[wxVIDCAP_VIDEO_FORMATS_COUNT];
 
 // constants to specify video formats from wxVIDCAP_VIDEO_FORMATS[one below]
-// used in wxVideoCaptureWindow::[Get/Set]VideoFormat( width, height, format.. 
+// used in wxVideoCaptureWindow::[Get/Set]VideoFormat( width, height, format..
 enum wxVIDCAP_VIDEO_FORMAT_Type
 {
     wxVIDCAP_VIDEO_FORMAT_UNKNOWN = -1, // some weird format, there are MANY
@@ -199,7 +199,7 @@ extern const long int wxVIDCAP_AUDIO_SAMPLESPERSEC[wxVIDCAP_AUDIO_SAMPLESPERSEC_
 //    to get any of these events, this should be faster.
 //    If you want the parent to get events change to wxCommandEvent
 
-BEGIN_DECLARE_EVENT_TYPES()   
+BEGIN_DECLARE_EVENT_TYPES()
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_VIDCAP, wxEVT_VIDEO,        wxEVT_USER_FIRST + 3001)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_VIDCAP, wxEVT_VIDEO_STATUS, wxEVT_USER_FIRST + 3002)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_VIDCAP, wxEVT_VIDEO_FRAME,  wxEVT_USER_FIRST + 3003)
@@ -211,8 +211,8 @@ END_DECLARE_EVENT_TYPES()
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureEvent : public wxEvent
 {
 public:
-    wxVideoCaptureEvent( wxEventType commandType = wxEVT_NULL, 
-                         wxVideoCaptureWindowBase *vidCapWin = NULL, 
+    wxVideoCaptureEvent( wxEventType commandType = wxEVT_NULL,
+                         wxVideoCaptureWindowBase *vidCapWin = NULL,
                          int Id = -1 );
 
     virtual ~wxVideoCaptureEvent() {}
@@ -247,7 +247,7 @@ private:
 };
 
 typedef void (wxEvtHandler::*wxVideoCaptureEventFunction)(wxVideoCaptureEvent&);
- 
+
 // whenever the status of the capture device changes
 // for MSW capSetCallbackOnStatus(m_hWndC, VFW_VideoStatusCallbackProc);
 #define EVT_VIDEO_STATUS(id, func) DECLARE_EVENT_TABLE_ENTRY( wxEVT_VIDEO_STATUS, id, wxID_ANY, (wxObjectEventFunction)(wxEventFunction)(wxVideoCaptureEventFunction)&func, (wxObject *)NULL),
@@ -275,26 +275,26 @@ class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowBase: public wxScrolledWindow
 public:
     wxVideoCaptureWindowBase() : wxScrolledWindow() { Reset(true); }
     wxVideoCaptureWindowBase( wxWindow *parent, wxWindowID id = -1,
-                              const wxPoint &pos = wxDefaultPosition, 
+                              const wxPoint &pos = wxDefaultPosition,
                               const wxSize &size = wxDefaultSize,
                               long style = wxSIMPLE_BORDER,
                               const wxString &name = wxT("wxVideoCaptureWindow"));
 
     virtual ~wxVideoCaptureWindowBase();
-    
+
     bool Create( wxWindow *parent, wxWindowID id = -1,
-                 const wxPoint &pos = wxDefaultPosition, 
+                 const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize,
                  long style = wxSIMPLE_BORDER,
                  const wxString &name = wxT("wxVideoCaptureWindow"));
-        
+
     // ----------------------------------------------------------------------
-    // Device descriptions & versions, get and enumerate 
+    // Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
-        
+
     // Enumerate all available device names & versions
     //   This is called at creation and shouldn't need to be called again
-    // void EnumerateDevices() = 0; 
+    // void EnumerateDevices() = 0;
 
     // Get a single description of a device, -1 is current device
     //   VFW - supports only [0..9]
@@ -312,12 +312,12 @@ public:
     // are we connected to a device now?
     virtual bool IsDeviceConnected() const { return m_deviceIndex > -1; }
 
-    // true if successfully initialized/connected/ready to capture 
+    // true if successfully initialized/connected/ready to capture
     // DON'T TRUST w/ VFW always seems to return true, so that's why we have IsDeviceConnected()
     // FIXME : maybe there's some use to this? probably should just delete it
     virtual bool IsDeviceInitialized() { return IsDeviceConnected(); }
 
-    // index of this cap device 
+    // index of this cap device
     // returns -1 if not connected, so be sure to check IsDeviceConnected()
     //   VFW - the devices [0..9] are listed in system.ini
     virtual int GetDeviceIndex() { return m_deviceIndex; }
@@ -327,7 +327,7 @@ public:
     virtual bool DeviceConnect(int index) = 0;
     // disconnect from the device, returns sucess
     virtual bool DeviceDisconnect() = 0;
-    
+
     // ----------------------------------------------------------------------
     // Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
@@ -339,7 +339,7 @@ public:
     // Show the dialog
     virtual void VideoSourceDialog() {}
 
-    // Dialog to display the format (size) 
+    // Dialog to display the format (size)
     //  VFW - driver supplies the dialog
     //  V4L - use the VideoCustomFormatDialog
     virtual bool HasVideoFormatDialog() { return false; }
@@ -374,12 +374,12 @@ public:
     virtual int GetImageWidth() { return m_imageSize.x; }
     // the height of the capture image
     virtual int GetImageHeight() { return m_imageSize.y; }
-    
+
     // Get the Max/Min allowed video sizes
     //   VFW max size is 1024X768, min ???, no way to find these parameters
-    //   V4L supports a method to get the Max/Min size 
-    virtual wxSize GetMinImageSize() { return m_minImageSize; } 
-    virtual wxSize GetMaxImageSize() { return m_maxImageSize; } 
+    //   V4L supports a method to get the Max/Min size
+    virtual wxSize GetMinImageSize() { return m_minImageSize; }
+    virtual wxSize GetMaxImageSize() { return m_maxImageSize; }
 
     // get the video format characteristics, returns sucess
     //   format is a 4 character string, "UYVY" or whatever comes out
@@ -394,9 +394,9 @@ public:
     //***********************************************************************
     // attempt to set the video format the device puts out, returns sucess
     //  -1 for width/height/bpp and format=-1 uses current value
-    //  FOURCC is the 4 chararacter code "UYUV" or whatever 
+    //  FOURCC is the 4 chararacter code "UYUV" or whatever
     virtual bool SetVideoFormat( int width, int height, int bpp, FOURCC fourcc ) = 0;
-    
+
     // default driver palette being used, then true
     //   VFW - supported, but not sure what you would do with this
     //   V4L - unsupported
@@ -406,7 +406,7 @@ public:
     //   VFW - supported, not sure what you'd do with itself
     //   V4L - unsupported
     virtual bool DriverSuppliesPalettes() { return false; }
-    
+
     // ----------------------------------------------------------------------
     // Capture Preview and Overlay
     // ----------------------------------------------------------------------
@@ -414,28 +414,28 @@ public:
     // turn software previewing on/off, returns sucess, on = false turns both off
     //   VFW - wxpreview = false uses the VFW preview capabilities
     //         wxpreview = true, uses the callback to decompress frames to m_wximage
-    //   V4L - wxpreview is ignored as it always uses wxImages 
+    //   V4L - wxpreview is ignored as it always uses wxImages
     virtual bool Preview(bool on, bool wxpreview = false) = 0;
 
     // true if displaying using software preview method
     virtual bool IsPreviewing() { return m_previewing || m_preview_wximage; }
-    
+
     // true if previewing using wxImages & OnPaint
     virtual bool IsPreviewingwxImage() const { return m_preview_wximage; }
-    
+
     // scale preview window to window's size (no scrollbars), returns sucess
     // if overlaying then just center the window
     virtual bool PreviewScaled(bool fit_window) { m_previewscaled = fit_window; return true; }
-    
+
     // video is scaled to the capture window size Preview, or centered Overlay
     virtual bool IsPreviewScaled() { return m_previewscaled; }
-    
+
     // set the number of milliseconds per frames to *try* to capture at, returns sucess
     // this has NOTHING to do with how many you'll actually get
     // if > than hardware capability, default = 66ms or 15fps
     // bool SetPreviewRateMS( unsigned int msperframe = 66 );
     bool DoSetPreviewRateMS( unsigned int msperframe = 66 ) { m_previewmsperframe = msperframe; return true; }
-    
+
     // currently set PreviewRate, not necessarily correct if set too fast
     virtual unsigned int GetPreviewRateMS() const { return m_previewmsperframe; }
     // actual measured PreviewRate when previewing
@@ -444,10 +444,10 @@ public:
     // function stub YOU override to do image processing of the preview frames
     // when Previewing with wxImages, OnIdle/PreviewwxImageTimer grabs a frame
     // which calls the MSW callback which calls CallbackOnFrame which fills the
-    // m_wximage and then calls this and if it returns true it calls Refresh() 
+    // m_wximage and then calls this and if it returns true it calls Refresh()
     // to show the frame
     virtual bool ProcesswxImageFrame() { return true; }
-    
+
     // device supports hardware video overlay
     virtual bool HasOverlay() { return m_has_overlay; }
     // use video card hardware overlay, ie. pci framegrabbers, returns sucess
@@ -455,11 +455,11 @@ public:
     virtual bool Overlay(bool on) = 0;
     // true if displaying using hardware video overlay method
     virtual bool IsOverlaying() { return m_overlaying; }
-    
+
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video
     // ----------------------------------------------------------------------
-    
+
     // single stop action snapshot to window, stops previewing, returns sucess
     virtual bool SnapshotToWindow() = 0;
     // capture a single frame to the clipboard, returns sucess
@@ -473,19 +473,19 @@ public:
     // get the m_wximage, can use in conjunction with SnapshotTowxImage()
     //  or previewing w/ wxImages methods
     virtual wxImage GetwxImage();
-    
+
     // ----------------------------------------------------------------------
     // Capture (append) single video frames to an AVI file
     // ----------------------------------------------------------------------
 
     // NOTE : None of this is implemeted for V4L
-    
+
     // ----------------------------------------------------------------------
     // Capture streaming video to an AVI file
     // ----------------------------------------------------------------------
 
     // NOTE : None of this is implemeted for V4L
-        
+
     // ----------------------------------------------------------------------
     // Capture file settings, filename to capture video to
     // ----------------------------------------------------------------------
@@ -498,15 +498,15 @@ public:
 
     // NOTE : None of this is implemeted for V4L
 
-        
+
     long int GetFileSizeInKB( const wxString &filename );
 
     //-------------------------------------------------------------------------
     // wxVideoCaptureFormat manipulation - predefined list of FOURCCs and descriptions
-    //   The lists are different for VFW and V4L 
+    //   The lists are different for VFW and V4L
     //   VFW - any format that the device wants to put out is possible
     //         so a generic list of come common types is provided
-    //   V4L - seems like only a fixed number of formats are supported and that 
+    //   V4L - seems like only a fixed number of formats are supported and that
     //         the FOURCC codes are "made up" so only those are provided
     //-------------------------------------------------------------------------
     int GetVideoCaptureFormatCount();
@@ -515,14 +515,14 @@ public:
     int FindVideoCaptureFormatFOURCC(FOURCC fourcc);
     int FindVideoCaptureFormatV4Lpalette(int v4lpalette);
     void RegisterVideoCaptureFormat(wxVideoCaptureFormat *new_VideoFormat);
-    
+
 protected :
 
     // resets the member vars to a disconnected state
     //   if !full then user settings are left alone
     //   call when disconnecting
     virtual void Reset(bool full = false);
-    
+
 
     void CreateVideoCaptureFormatArray(); // don't need to call, used internally
 
@@ -533,10 +533,10 @@ protected :
 
     wxArrayString m_deviceNames;    // device names from EnumerateDevices
     wxArrayString m_deviceVersions; // device versions from EnumerateDevices
-    
+
     int m_deviceIndex;              // current index of the device in use or -1
 
-    bool m_previewing;              // currently previewing 
+    bool m_previewing;              // currently previewing
     bool m_preview_wximage;         // m_previewing is true, but displaying using OnDraw w/ m_wximage
     bool m_previewscaled;           // scale the preview window fullsize
     unsigned int m_previewmsperframe;       // # milliseconds between preview frames

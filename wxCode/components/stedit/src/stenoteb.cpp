@@ -11,9 +11,9 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/stenoteb.h>
-#include <wx/stedit/stedlgs.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/stenoteb.h"
+#include "wx/stedit/stedlgs.h"
 #include <wx/progdlg.h>   // wxProgressDialog
 #include "wxext.h"   // FileNameArray
 
@@ -584,7 +584,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     //splitter->GetEditor()->RegisterPrefs(editor->GetEditorPrefs());
                     //splitter->GetEditor()->RegisterStyles(editor->GetEditorStyles());
                     //splitter->GetEditor()->RegisterLangs(editor->GetEditorLangs());
-                    
+
                     newEditor->SetLanguage(editor->GetLanguageId());
                     newEditor->SetFileName(editor->GetFileName());
                     newEditor->SetFileEncoding(editor->GetFileEncoding());

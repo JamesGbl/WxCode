@@ -1,12 +1,12 @@
 //TODO:
-// 
+//
 // What should the MSW capture window's ID be? it's 125 now...
 // What the heck is an MCI device? vcr/videodisc? do/did they really exist?
 // Audio volume and maybe device? mine's on the mic input :(
 // Allow for centering of hWnd, when no scrollbars on the window, maybe
 // RegisterHotKey to use SetAbortKey
 // Pinnacle Studio PCTV flashes GUI when device is disconnected and reconnected
-//      and then preview is set on, all video programs do it, if Overlay 
+//      and then preview is set on, all video programs do it, if Overlay
 //      first then preview it's OK, hummm... see DeviceConnect
 // Deal with status callback in a more sensible way
 // Deal with the Yield callback, NOT TESTED
@@ -30,18 +30,18 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 // Include wxWidgets' headers
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
 #if defined(__WXMSW__)
 
-#include "wx/clipbrd.h"
-#include "wx/file.h"
-#include "wx/numdlg.h"
+#include <wx/clipbrd.h>
+#include <wx/file.h>
+#include <wx/numdlg.h>
 
 #include "wx/vidcap/vcapwin.h"
 #include "vcapdlgs.h"
@@ -55,7 +55,7 @@
 #define IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER 511
 
 // id's for the dialogs, only one at a time please
-enum 
+enum
 {
     IDD_wxVIDCAP_CAPSNGFRAMESDLG = 10,
     IDD_wxVIDCAP_CAPPREFDLG,
@@ -79,14 +79,14 @@ wxVideoCaptureWindowHandles gs_vidCapWinHandles;
 wxVideoCaptureWindowVFW *wxFindVidCapWinFromHandle( WXHWND hWnd )
 {
     wxVideoCaptureWindowHandles::const_iterator iter = gs_vidCapWinHandles.find(hWnd);
-    
+
     if ( iter == gs_vidCapWinHandles.end() )
         return (wxVideoCaptureWindowVFW*)NULL;
 
     return (wxVideoCaptureWindowVFW*)iter->second;
 }
 
-// call in constructor, when a wxVideoCaptureWindow is created 
+// call in constructor, when a wxVideoCaptureWindow is created
 // associate the m_hWndC w/ wxVideoCaptureWindow
 void wxAssociateVidCapWinWithHandle(HWND hWnd, wxWindow *win)
 {
@@ -99,7 +99,7 @@ void wxAssociateVidCapWinWithHandle(HWND hWnd, wxWindow *win)
     if ( oldWin && (oldWin != win) )
     {
         wxString str(win->GetClassInfo()->GetClassName());
-        wxLogError(wxT("Bug! Found existing HWND %p for new window of class %s"), 
+        wxLogError(wxT("Bug! Found existing HWND %p for new window of class %s"),
                     hWnd, str.c_str());
     }
     else if (!oldWin)
@@ -181,7 +181,7 @@ bool wxVideoCaptureWindowVFW::Create( wxWindow *parent, wxWindowID id,
                                       long style, const wxString &name )
 {
     wxCHECK_MSG(!m_hWndC, false, wxT("Called wxVideoCaptureWindowVFW::Create twice, DO NOT CONTINUE!"));
-    
+
     if (!wxVideoCaptureWindowBase::Create(parent, id, pos, size, style, name))
         return false;
 
@@ -190,16 +190,16 @@ bool wxVideoCaptureWindowVFW::Create( wxWindow *parent, wxWindowID id,
     // this is the MSW VFW vidcap window
     m_hWndC = capCreateCaptureWindow(wxString(wxT("Capture Window")).fn_str(),
                                     WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS,
-                                    pos.x, pos.y, 
+                                    pos.x, pos.y,
                                     m_clientSize.GetWidth(),
-                                    m_clientSize.GetHeight(), 
+                                    m_clientSize.GetHeight(),
                                     (HWND)GetHWND(),      // parent
                                     id);                  // capwindow ID?
 
     wxCHECK_MSG(m_hWndC, false, wxT("Failed to create the capture window, DO NOT CONTINUE!"));
 
     // causes segfault when used in conjunction with VFW callbacks
-    //SubclassWin( (WXHWND)m_hWndC );  
+    //SubclassWin( (WXHWND)m_hWndC );
 
     // add to private list of video windows
     wxAssociateVidCapWinWithHandle( (HWND)m_hWndC, this );
@@ -233,10 +233,10 @@ wxVideoCaptureWindowVFW::~wxVideoCaptureWindowVFW()
 
     DeviceDisconnect();
     SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)NULL);
-    
+
     // delete from list of wxVideoCaptureWindows
     wxRemoveVidCapWinHandleAssociation(this);
-    
+
     if (m_hWndC) DestroyWindow(m_hWndC);
 
     // "delete" any other data structures
@@ -256,10 +256,10 @@ void wxVideoCaptureWindowVFW::OnCloseWindow(wxCloseEvent &)
 
     DeviceDisconnect();
     SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)NULL);
-    
+
     // delete from list of wxVideoCaptureWindows
     wxRemoveVidCapWinHandleAssociation(this);
-    
+
     if (m_hWndC)
     {
         DestroyWindow(m_hWndC);
@@ -273,7 +273,7 @@ void wxVideoCaptureWindowVFW::OnCloseWindow(wxCloseEvent &)
         m_bmpdata = NULL;
     }
     if (m_wximage.Ok()) m_wximage.Destroy();
-    if (m_hic_compressor) 
+    if (m_hic_compressor)
     {
         ICClose(m_hic_compressor);
         m_hic_compressor = NULL;
@@ -309,7 +309,7 @@ void wxVideoCaptureWindowVFW::OnIdle( wxIdleEvent &event )
         if (!m_getting_wximage && (last_frame != m_framenumber) && IsDeviceConnected())
         {
             last_frame = m_framenumber; // at least wait for the frame to process
-            
+
             timenow = wxGetLocalTimeMillis();
             delaytime = (unsigned int)(timenow.GetLo() - lasttime.GetLo());
             lasttime = timenow;
@@ -334,7 +334,7 @@ void wxVideoCaptureWindowVFW::DoSetSize(int x, int y, int width, int height,
 
 void wxVideoCaptureWindowVFW::DoSizeWindow()
 {
-    m_clientSize = GetClientSize(); 
+    m_clientSize = GetClientSize();
 
     int virtual_width, virtual_height;
     GetVirtualSize( &virtual_width, &virtual_height );
@@ -371,17 +371,17 @@ void wxVideoCaptureWindowVFW::OnMove( wxMoveEvent &event )
 }
 
 bool wxVideoCaptureWindowVFW::VFW_ScrollHWND(int x, int y)
-{ 
-    POINT orig; 
-    orig.x = x; 
-    orig.y = y; 
-    return 0!=capSetScrollPos(m_hWndC, &orig); 
+{
+    POINT orig;
+    orig.x = x;
+    orig.y = y;
+    return 0!=capSetScrollPos(m_hWndC, &orig);
 }
 
 wxPoint wxVideoCaptureWindowVFW::VFW_GetHWNDViewStart()
-{ 
-    VFW_GetCAPSTATUS(); 
-    return wxPoint(m_CAPSTATUS.ptScroll.x, m_CAPSTATUS.ptScroll.y); 
+{
+    VFW_GetCAPSTATUS();
+    return wxPoint(m_CAPSTATUS.ptScroll.x, m_CAPSTATUS.ptScroll.y);
 }
 
 void wxVideoCaptureWindowVFW::OnScrollWin( wxScrollWinEvent &event )
@@ -411,10 +411,10 @@ void wxVideoCaptureWindowVFW::OnDraw( wxPaintEvent &event )
     }
 
     event.Skip();
-}   
+}
 
 // ----------------------------------------------------------------------
-// Device Descriptions, get and enumerate 
+// Device Descriptions, get and enumerate
 // ----------------------------------------------------------------------
 void wxVideoCaptureWindowVFW::EnumerateDevices()
 {
@@ -428,17 +428,17 @@ void wxVideoCaptureWindowVFW::EnumerateDevices()
 
     for (index=0; index<10; index++) // MAX allowed in VFW is 10
     {
-        bool ok = 0!=capGetDriverDescription( index, 
-                                            devicename, 
+        bool ok = 0!=capGetDriverDescription( index,
+                                            devicename,
                                             sizeof(devicename),
-                                            deviceversion, 
+                                            deviceversion,
                                             sizeof(deviceversion));
-        if (ok) 
+        if (ok)
         {
             m_deviceNames.Add(wxString(devicename));
             m_deviceVersions.Add(wxString(deviceversion));
         }
-        else 
+        else
             break; // no more devices
     }
 }
@@ -448,22 +448,22 @@ void wxVideoCaptureWindowVFW::EnumerateDevices()
 // ----------------------------------------------------------------------
 bool wxVideoCaptureWindowVFW::IsDeviceInitialized()
 {
-    VFW_GetCAPDRIVERCAPS(); 
+    VFW_GetCAPDRIVERCAPS();
     return 0!=m_CAPDRIVERCAPS.fCaptureInitialized;
 }
 
 bool wxVideoCaptureWindowVFW::DeviceConnect(int index)
-{   
+{
     wxCHECK_MSG((index>=0) && (index < GetDeviceCount()), false, wxT("invalid device index"));
 
     if (IsDeviceConnected()) DeviceDisconnect();
 
     VFW_SetCallbackOnError(true);    // set error handling callback function
     VFW_SetCallbackOnStatus(true);   // set status callback function
-    
+
     // TODO??
     // "Debug Assertion Failed! dbgdel.cpp line 47, _BLOCK_TYPE_IS_VALID(pHead, nBlockUse)"
-    // if device doesn't initialize correctly on boot-up 
+    // if device doesn't initialize correctly on boot-up
     // eg. Kensington device (others?) and Compaq w/ VIA USB chipset (culprit?)
     // device appears in "Device Manager" as OK, but nothing can use it
     // solution: CLOSE capture program and unplug device, plug it back in
@@ -477,19 +477,19 @@ bool wxVideoCaptureWindowVFW::DeviceConnect(int index)
 
     // NASTY HACK, Pinnacle TV cards flash GUI once/second if connected w/ preview
     // run Overlay first and all is good
-    if (IsDeviceConnected()) 
+    if (IsDeviceConnected())
     {
-        if (HasOverlay() && !IsOverlaying()) 
+        if (HasOverlay() && !IsOverlaying())
         {
-            Overlay(true); 
+            Overlay(true);
             Overlay(false);
         }
     }
     else
     {
-        wxMessageBox(wxString::Format(wxT("Can't Connect to Device %d\n%s"), 
+        wxMessageBox(wxString::Format(wxT("Can't Connect to Device %d\n%s"),
                                         index, GetDeviceName(index).c_str()),
-                                        wxT("wxVideoCaptureWindowVFW Error"), 
+                                        wxT("wxVideoCaptureWindowVFW Error"),
                                         wxOK|wxICON_EXCLAMATION|wxCENTRE);
     }
 
@@ -497,9 +497,9 @@ bool wxVideoCaptureWindowVFW::DeviceConnect(int index)
 }
 
 bool wxVideoCaptureWindowVFW::DeviceDisconnect()
-{   
+{
     if (m_capsingleframecount != -1) CaptureSingleFramesToFileClose();
-    
+
     // turn OFF all callbacks first
     VFW_SetCallbackOnError(false);
     VFW_SetCallbackOnStatus(false);
@@ -513,7 +513,7 @@ bool wxVideoCaptureWindowVFW::DeviceDisconnect()
     VFW_GetCAPSTATUS();
 
     Reset();
-    
+
     return ok;
 }
 
@@ -522,7 +522,7 @@ bool wxVideoCaptureWindowVFW::DeviceDisconnect()
 // ----------------------------------------------------------------------
 
 bool wxVideoCaptureWindowVFW::HasVideoSourceDialog()
-{ 
+{
     if (IsDeviceConnected())
     {
         return 0!=m_CAPDRIVERCAPS.fHasDlgVideoSource;
@@ -536,18 +536,18 @@ void wxVideoCaptureWindowVFW::VideoSourceDialog()
     {
         capDlgVideoSource(m_hWndC);
         // you can change the device w/ this dialog so update everything
-        VFW_GetCAPSTATUS();      
+        VFW_GetCAPSTATUS();
         VFW_GetCAPDRIVERCAPS();
         VFW_GetCAPTUREPARMS();
         DoSizeWindow();
     }
 }
 
-bool wxVideoCaptureWindowVFW::HasVideoFormatDialog() 
-{ 
+bool wxVideoCaptureWindowVFW::HasVideoFormatDialog()
+{
     if (IsDeviceConnected())
     {
-        return 0!=m_CAPDRIVERCAPS.fHasDlgVideoFormat; 
+        return 0!=m_CAPDRIVERCAPS.fHasDlgVideoFormat;
     }
     return false;
 }
@@ -576,11 +576,11 @@ void wxVideoCaptureWindowVFW::VideoCustomFormatDialog()
     }
 }
 
-bool wxVideoCaptureWindowVFW::HasVideoDisplayDialog() 
-{ 
+bool wxVideoCaptureWindowVFW::HasVideoDisplayDialog()
+{
     if (IsDeviceConnected())
     {
-        return 0!=m_CAPDRIVERCAPS.fHasDlgVideoDisplay; 
+        return 0!=m_CAPDRIVERCAPS.fHasDlgVideoDisplay;
     }
     return false;
 }
@@ -614,7 +614,7 @@ void wxVideoCaptureWindowVFW::CapturePreferencesDialog()
 
 void wxVideoCaptureWindowVFW::AudioFormatDialog()
 {
-    if (HasAudioHardware()) 
+    if (HasAudioHardware())
     {
         if (!FindWindow(IDD_wxVIDCAP_AUDIOFORMATDLG))
         {
@@ -623,22 +623,22 @@ void wxVideoCaptureWindowVFW::AudioFormatDialog()
         }
     }
     else if (!HasAudioHardware())
-        wxMessageBox(wxT("No audio hardware detected"), wxT("wxVideoCaptureWindow Error"), 
+        wxMessageBox(wxT("No audio hardware detected"), wxT("wxVideoCaptureWindow Error"),
                         wxOK|wxICON_EXCLAMATION|wxCENTRE);
 }
 
 void wxVideoCaptureWindowVFW::PropertiesDialog()
 {
-    wxDialog *dialog = new wxDialog(this, -1, wxT("wxVideoCaptureWindow Properties"), 
-                                    wxPoint(0,0), wxDefaultSize, 
+    wxDialog *dialog = new wxDialog(this, -1, wxT("wxVideoCaptureWindow Properties"),
+                                    wxPoint(0,0), wxDefaultSize,
                                     wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
-    
+
     wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
-    wxTextCtrl *textctrl = new wxTextCtrl( dialog, -1, wxT(""), 
+    wxTextCtrl *textctrl = new wxTextCtrl( dialog, -1, wxT(""),
                                            wxDefaultPosition, wxSize(400,400),
                                            wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL);
     textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL));
-    
+
     dialogsizer->Add( textctrl, 1, wxEXPAND);
 
     dialog->SetAutoLayout(true);
@@ -651,11 +651,11 @@ void wxVideoCaptureWindowVFW::PropertiesDialog()
     dialog->Show(true);
 }
 
-wxString wxVideoCaptureWindowVFW::GetPropertiesString() 
+wxString wxVideoCaptureWindowVFW::GetPropertiesString()
 {
     wxString s;
     int i;
-    
+
     s += wxT("Detected Devices:\n");
     s += wxString::Format(wxT("GetDeviceCount() : %d\n\n"), GetDeviceCount());
     for (i=0; i<GetDeviceCount(); i++)
@@ -673,7 +673,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
 
     s += wxString::Format(wxT("IsDeviceConnected()   : %d\n"), IsDeviceConnected());
     s += wxString::Format(wxT("IsDeviceInitialized() : %d\n\n"), IsDeviceInitialized());
-    
+
     s += wxString::Format(wxT("HasVideoSourceDialog()  : %d\n"), HasVideoSourceDialog());
     s += wxString::Format(wxT("HasVideoFormatDialog()  : %d\n"), HasVideoFormatDialog());
     s += wxString::Format(wxT("HasVideoDisplayDialog() : %d\n\n"), HasVideoDisplayDialog());
@@ -692,7 +692,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
     s += wxString::Format(wxT("GetVideoFormat() -> compression    : %s \n\n"), fourccStr.c_str());
 
     s += wxT("=============================================\n");
-    
+
     s += wxString::Format(wxT("Video preview properties:\n\n"));
 
     s += wxString::Format(wxT("IsPreviewing()     : %d\n"), IsPreviewing());
@@ -714,7 +714,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
     s += wxString::Format(wxT("GetCaptureTimeLimit()        : %d\n"), GetCaptureTimeLimit());
     s += wxString::Format(wxT("GetDialogInitiatedCapture()  : %d\n"), GetDialogInitiatedCapture());
     s += wxString::Format(wxT("GetMaxAllowedFramesDropped() : %d\n\n"), GetMaxAllowedFramesDropped());
-    
+
     s += wxString::Format(wxT("GetNumVideoBuffersAllocated()   : %d\n"), GetNumVideoBuffersAllocated());
     s += wxString::Format(wxT("GetNumVideoBuffers()            : %d\n"), GetNumVideoBuffers());
     s += wxString::Format(wxT("GetUseThreadToCapture()         : %d\n"), GetUseThreadToCapture());
@@ -814,7 +814,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
     s += wxString::Format(wxT("CAPTUREPARMS.dwAudioBufferSize         : %ld\n"), (long)m_CAPTUREPARMS.dwAudioBufferSize);
     s += wxString::Format(wxT("CAPTUREPARMS.fDisableWriteCache !Win32 : %d\n"), (int)m_CAPTUREPARMS.fDisableWriteCache);
     s += wxString::Format(wxT("CAPTUREPARMS.AVStreamMaster            : %d\n"), (unsigned int)m_CAPTUREPARMS.AVStreamMaster);
-    
+
     return s;
 }
 
@@ -827,22 +827,22 @@ bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height, int *bpp, 
     if (IsDeviceConnected())
     {
         int bmpformatsize = capGetVideoFormatSize(m_hWndC);
-        if (bmpformatsize) 
+        if (bmpformatsize)
         {
             BITMAPINFO *lpbmpinfo = (BITMAPINFO*)(new char[bmpformatsize]);
             bmpformatsize = capGetVideoFormat(m_hWndC, lpbmpinfo, (WORD)bmpformatsize);
-    
+
             if (width)  *width = lpbmpinfo->bmiHeader.biWidth;
             if (height) *height = lpbmpinfo->bmiHeader.biHeight;
             if (bpp)    *bpp = lpbmpinfo->bmiHeader.biBitCount;
             if (fourcc) *fourcc = lpbmpinfo->bmiHeader.biCompression;
-            
+
             delete []lpbmpinfo;
-    
+
             return true;
-        }   
+        }
     }
-    
+
     if (width)  *width = 0;
     if (height) *height = 0;
     if (bpp)    *bpp = 0;
@@ -850,10 +850,10 @@ bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height, int *bpp, 
     return false;
 }
 
-bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height, 
+bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
                                               int bpp, FOURCC format )
 {
-    // check for valid input, some heights can be negative, MS is 
+    // check for valid input, some heights can be negative, MS is
     //    wishy-washy on it, lets just say they're invalid
     if ((width < -1) || (height < -1) || (bpp < -1)) return false;
 
@@ -866,15 +866,15 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     Overlay(false);
 
     // get the current setting, also serves as a sanity check
-    int c_bmpformatsize = capGetVideoFormatSize(m_hWndC); 
+    int c_bmpformatsize = capGetVideoFormatSize(m_hWndC);
     if (c_bmpformatsize == 0) return false;
 
     // info and values for current BITMAPINFO structure
     int c_width, c_height, c_bpp;   // current values
     FOURCC c_fourcc = 0;
     GetVideoFormat( &c_width, &c_height, &c_bpp, &c_fourcc );
-    wxString c_fourcc_str(FOURCCTowxString(c_fourcc));          
-        
+    wxString c_fourcc_str(FOURCCTowxString(c_fourcc));
+
     BITMAPINFO *c_bmpinfo = (BITMAPINFO*)malloc(c_bmpformatsize);
     c_bmpformatsize = capGetVideoFormat(m_hWndC, c_bmpinfo, c_bmpformatsize);
 
@@ -896,18 +896,18 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     }
     else
     {
-        new_bmpinfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFOHEADER) + 
-                        new_rgbquad*sizeof(RGBQUAD)); 
+        new_bmpinfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFOHEADER) +
+                        new_rgbquad*sizeof(RGBQUAD));
         lpbmpinfo = new_bmpinfo;
         lpbmpinfosize = sizeof(BITMAPINFOHEADER) + new_rgbquad*sizeof(RGBQUAD);
         usecurrent_bmpheader = false;
     }
 
     lpbmpinfo->bmiHeader.biSize = lpbmpinfosize;
-    
+
     if (width == -1) width = c_width;
     lpbmpinfo->bmiHeader.biWidth = width;
-    
+
     if (height == -1) height = c_height;
     lpbmpinfo->bmiHeader.biHeight = height;
 
@@ -916,16 +916,16 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     // these might as well be set in case junk comes back
     lpbmpinfo->bmiHeader.biClrUsed = 0; // all colors used
     lpbmpinfo->bmiHeader.biClrImportant = 0; // all colors
-    lpbmpinfo->bmiHeader.biXPelsPerMeter = 72; 
-    lpbmpinfo->bmiHeader.biYPelsPerMeter = 72; 
+    lpbmpinfo->bmiHeader.biXPelsPerMeter = 72;
+    lpbmpinfo->bmiHeader.biYPelsPerMeter = 72;
 
     if (!usecurrent_bmpheader)
     {
-        lpbmpinfo->bmiHeader.biBitCount = bpp; 
+        lpbmpinfo->bmiHeader.biBitCount = bpp;
         lpbmpinfo->bmiHeader.biCompression = format;
     }
 
-    lpbmpinfo->bmiHeader.biSizeImage = lpbmpinfo->bmiHeader.biHeight * 
+    lpbmpinfo->bmiHeader.biSizeImage = lpbmpinfo->bmiHeader.biHeight *
         ((lpbmpinfo->bmiHeader.biWidth * lpbmpinfo->bmiHeader.biBitCount + 31) / 32) *
         4 * lpbmpinfo->bmiHeader.biPlanes;
 
@@ -933,7 +933,7 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
 /*  if (!usecurrent_bmpheader && new_rgbquad)
     {
         int i;
-        for (i=0; i<new_rgbquad; i++) 
+        for (i=0; i<new_rgbquad; i++)
         {
             lpbmpinfo->bmiColors[i].rgbRed = i;
             lpbmpinfo->bmiColors[i].rgbGreen = i;
@@ -946,7 +946,7 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
 
     if (c_bmpinfo) free(c_bmpinfo);
     if (new_bmpinfo) free(new_bmpinfo);
-        
+
     if (formatset) DoSizeWindow();
 
     // return to previous state
@@ -958,24 +958,24 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
 }
 
 // true if driver can create palettes
-bool wxVideoCaptureWindowVFW::DriverSuppliesPalettes() 
-{ 
-    return 0!=m_CAPDRIVERCAPS.fDriverSuppliesPalettes; 
+bool wxVideoCaptureWindowVFW::DriverSuppliesPalettes()
+{
+    return 0!=m_CAPDRIVERCAPS.fDriverSuppliesPalettes;
 }
 
 
 // convert the DDB "bitmap" to a 24bpp bitmap that we can deal with
-// stick it into the m_wximage 
+// stick it into the m_wximage
 bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
 {
     // a video device can pump out whatever it feels like
-    // YUVxyz, JBYR, ABYR, etc etc... 20 bit formats... :( 
+    // YUVxyz, JBYR, ABYR, etc etc... 20 bit formats... :(
 
     // the absolute last resort to get the data in a useable form
     // copy the pixels from the screen: HDC hdc; hdc = GetDC(m_hWndC);
     // for x to width for y to height; array[x][y] = GetPixel(hdc,x,y);
 
-    // an equally lame way to get video, copy it to the clipboard 
+    // an equally lame way to get video, copy it to the clipboard
     //  if (capEditCopy(m_hWndC))
     //      if (wxTheClipboard->Open()) {
     //          if (wxTheClipboard->IsSupported(wxDF_BITMAP)) {
@@ -993,12 +993,12 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
     static int bmppadding24bpp;         // # bytes to pad to 4byte boundary
 
     // I don't know is this is necessary, but without it I get crashes when
-    // the format dialog is pulled up and wximage previewing is active, 
+    // the format dialog is pulled up and wximage previewing is active,
     // it could merely be driver problems :) is this multithreaded? just dunno
     m_getting_wximage = true; // don't draw wximage when filling it
 
     // Start by checking to see if the format has changed
-    // note: some drivers will correctly call the status callback, 
+    // note: some drivers will correctly call the status callback,
     // at least one (mine) doesn't in win95, so always compare, else crash
     bmpformatsize = capGetVideoFormatSize(m_hWndC);
 
@@ -1039,18 +1039,18 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         m_lpBmpInfo24bpp->bmiHeader.biBitCount = 24;        // we like 24 bpp
         m_lpBmpInfo24bpp->bmiHeader.biClrImportant = 0;     // all important
         m_lpBmpInfo24bpp->bmiHeader.biClrUsed = 0;          // no colormap
-        m_lpBmpInfo24bpp->bmiHeader.biCompression = BI_RGB; // = 0 
+        m_lpBmpInfo24bpp->bmiHeader.biCompression = BI_RGB; // = 0
         m_lpBmpInfo24bpp->bmiHeader.biPlanes = 1;           // always 1
-        m_lpBmpInfo24bpp->bmiHeader.biSizeImage = bmpwidth*bmpheight*3 + 
+        m_lpBmpInfo24bpp->bmiHeader.biSizeImage = bmpwidth*bmpheight*3 +
                                                   bmppadding24bpp*bmpheight;
 
         // recreate the temp storage variable, tack on extra? sure...
         if (m_bmpdata) delete []m_bmpdata;
-        m_bmpdata = new unsigned char[bmpwidth*bmpheight*3 + 
+        m_bmpdata = new unsigned char[bmpwidth*bmpheight*3 +
                                       bmppadding24bpp*bmpheight + 1024];
-        
+
         // setup the output structure
-        if (!m_wximage.Ok() || (m_wximage.GetWidth() != bmpwidth) || 
+        if (!m_wximage.Ok() || (m_wximage.GetWidth() != bmpwidth) ||
                                (m_wximage.GetHeight() != bmpheight))
         {
             m_wximage.Create(bmpwidth, bmpheight);
@@ -1059,8 +1059,8 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         // get a handle to an appropriate video (de)compressor
         if (m_hic_compressor) ICClose(m_hic_compressor);
         // first param of ICLocate is ICTYPE_VIDEO or ('VIDC' in docs)
-        m_hic_compressor = ICLocate(ICTYPE_VIDEO, NULL, 
-                                    (LPBITMAPINFOHEADER)m_lpBmpInfo, 
+        m_hic_compressor = ICLocate(ICTYPE_VIDEO, NULL,
+                                    (LPBITMAPINFOHEADER)m_lpBmpInfo,
                                     (LPBITMAPINFOHEADER)m_lpBmpInfo24bpp,
                                     ICMODE_DECOMPRESS );
 
@@ -1071,17 +1071,17 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
     static LRESULT icdresult;
 
     // uncompress the video image and fill a temp buffer w/ 24bpp bitmap data
-    if (m_hic_compressor && m_lpBmpInfo24bpp && m_bmpdata ) 
+    if (m_hic_compressor && m_lpBmpInfo24bpp && m_bmpdata )
     {
         // apparently this is necessary, but the docs don't say much about it
-        icdresult = ICDecompressBegin( m_hic_compressor, 
-                                      (LPBITMAPINFOHEADER)m_lpBmpInfo, 
+        icdresult = ICDecompressBegin( m_hic_compressor,
+                                      (LPBITMAPINFOHEADER)m_lpBmpInfo,
                                       (LPBITMAPINFOHEADER)m_lpBmpInfo24bpp);
         if (icdresult == ICERR_OK)
-            icdecomp = ICDecompress( m_hic_compressor, 
-                                    //ICDECOMPRESS_HURRYUP, 
+            icdecomp = ICDecompress( m_hic_compressor,
+                                    //ICDECOMPRESS_HURRYUP,
                                     (lpVHdr->dwFlags & VHDR_KEYFRAME ? AVIIF_KEYFRAME : 0),
-                                    (LPBITMAPINFOHEADER)m_lpBmpInfo, lpVHdr->lpData, 
+                                    (LPBITMAPINFOHEADER)m_lpBmpInfo, lpVHdr->lpData,
                                     (LPBITMAPINFOHEADER)m_lpBmpInfo24bpp, m_bmpdata);
 
         icdresult = ICDecompressEnd( m_hic_compressor );
@@ -1093,7 +1093,7 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         int rowpos, rowsize = 3*bmpwidth+bmppadding24bpp;
         register int i, j;
         unsigned char *imgptr = m_wximage.GetData();
-        
+
         // this format is not upside down
         if (m_lpBmpInfo->bmiHeader.biCompression == FOURCC(STRING_TO_FOURCC("Y41P")))
         {
@@ -1132,16 +1132,16 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
 // Capture Preview and Overlay
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview) 
+bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview)
 {
     bool previewingOK = false;
 
     VFW_GetCAPSTATUS();
-    
+
     // note: VFW automatically turns off Overlaying, do it anyway
     if (on && IsOverlaying()) Overlay(false);
 
-    // turn any type of previewing off 
+    // turn any type of previewing off
     if (!on)
     {
         m_preview_wximage_timer.Stop();
@@ -1163,7 +1163,7 @@ bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview)
         ShowWindow(m_hWndC, SW_SHOW);
         DoSizeWindow();
         previewingOK = (0 != capPreview(m_hWndC, (BOOL)on)); // true if set correctly
-        if (!previewingOK)  
+        if (!previewingOK)
         {
             VFW_SetCallbackFrame(false);
             wxMessageBox(wxT("Can't Set Preview"), wxT("wxVideoCaptureWindow Error"), wxOK|wxICON_EXCLAMATION|wxCENTRE);
@@ -1182,8 +1182,8 @@ bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview)
     }
 
     VFW_GetCAPSTATUS();
-    
-    return previewingOK; 
+
+    return previewingOK;
 }
 
 void wxVideoCaptureWindowVFW::OnPreviewwxImageTimer(wxTimerEvent& event)
@@ -1202,7 +1202,7 @@ void wxVideoCaptureWindowVFW::OnPreviewwxImageTimer(wxTimerEvent& event)
     event.Skip();
 }
 
-bool wxVideoCaptureWindowVFW::PreviewScaled(bool scale) 
+bool wxVideoCaptureWindowVFW::PreviewScaled(bool scale)
 {
     bool scalingOK;
     VFW_GetCAPSTATUS();
@@ -1219,12 +1219,12 @@ bool wxVideoCaptureWindowVFW::PreviewScaled(bool scale)
     m_previewscaled = scale;
 
     VFW_GetCAPSTATUS();
-    DoSizeWindow();     // clean it up, readjust the scollbars 
+    DoSizeWindow();     // clean it up, readjust the scollbars
 
     return scalingOK;
 }
 
-bool wxVideoCaptureWindowVFW::SetPreviewRateMS( unsigned int msperframe ) 
+bool wxVideoCaptureWindowVFW::SetPreviewRateMS( unsigned int msperframe )
 {
     wxVideoCaptureWindowBase::DoSetPreviewRateMS(msperframe);
 
@@ -1243,11 +1243,11 @@ bool wxVideoCaptureWindowVFW::SetPreviewRateMS( unsigned int msperframe )
     return setrateOK;
 }
 
-bool wxVideoCaptureWindowVFW::Overlay(bool on) 
+bool wxVideoCaptureWindowVFW::Overlay(bool on)
 {
     VFW_GetCAPDRIVERCAPS();
     if (!HasOverlay()) return false;
-    
+
     // note: VFW automatically turns off it's software preview, but...
     if (on && IsPreviewing()) Preview(false); // turn off software preview
 
@@ -1267,16 +1267,16 @@ bool wxVideoCaptureWindowVFW::SnapshotToWindow()
     bool grabbedOK = (0 != capGrabFrame(m_hWndC));
     return (grabbedOK);
 }
-    
+
 bool wxVideoCaptureWindowVFW::SnapshotToClipboard()
-{   
+{
     bool previewing = IsPreviewing();
     bool overlaying = IsOverlaying();
 
     bool grabbedOK;
-    if (previewing || overlaying) 
+    if (previewing || overlaying)
         grabbedOK = (0 != capGrabFrameNoStop(m_hWndC));
-    else 
+    else
         grabbedOK = (0 != capGrabFrame(m_hWndC));
 
     bool editcopyOK = (0 != capEditCopy(m_hWndC));
@@ -1297,17 +1297,17 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage( wxImage &image )
     {
         // maybe just ref it ?
         image = m_wximage;
-        
-/*      
+
+/*
         int width = m_wximage.GetWidth();
         int height = m_wximage.GetHeight();
 
-        if (!image.Ok() || (image.GetWidth() != width) || 
+        if (!image.Ok() || (image.GetWidth() != width) ||
                            (image.GetHeight() != height))
         {
             image.Create( width, height );
         }
-                
+
         unsigned char *m_wximgptr = m_wximage.GetData();
         unsigned char *imgptr = image.GetData();
 
@@ -1325,29 +1325,29 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
     bool grabbedOK = false;
 
     m_grab_wximage = true; // fill the m_wximage in callback
-    
+
     // don't want to mess up callback for preview
-    if (previewing) 
+    if (previewing)
     {
         //grabbedOK = (bool)capGrabFrameNoStop(m_hWndC);
         // wait for message to be processed first, max 4000 milliseconds
         // I think this is necessary, but could just be driver problems
-        grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME_NOSTOP, 
+        grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME_NOSTOP,
                                         (WPARAM)0, (LPARAM)0L,
-                                        SMTO_BLOCK, 4000, 
+                                        SMTO_BLOCK, 4000,
 #if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
                                         (PDWORD_PTR)0 ); // (LPDWORD)0 );
 #else
                                         (LPDWORD)0 );
 #endif
     }
-    else 
+    else
     {
         VFW_SetCallbackFrame(true);
         //grabbedOK = (bool)capGrabFrame(m_hWndC);
-        grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME, 
+        grabbedOK = 0!=SendMessageTimeoutA(m_hWndC, WM_CAP_GRAB_FRAME,
                                         (WPARAM)0, (LPARAM)0L,
-                                        SMTO_BLOCK, 4000, 
+                                        SMTO_BLOCK, 4000,
 #if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
                                         (PDWORD_PTR)0 ); // (LPDWORD)0 );
 #else
@@ -1356,7 +1356,7 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
 
         VFW_SetCallbackFrame(false);
     }
-    
+
     return grabbedOK;
 }
 
@@ -1390,7 +1390,7 @@ bool wxVideoCaptureWindowVFW::CaptureSingleFramesToFileClose()
     m_capsingleframecount = -1;
     return false;
 }
- 
+
 void wxVideoCaptureWindowVFW::CaptureSingleFramesToFileDialog()
 {
     if (IsDeviceConnected() && !FindWindow(IDD_wxVIDCAP_CAPSNGFRAMESDLG))
@@ -1404,184 +1404,184 @@ void wxVideoCaptureWindowVFW::CaptureSingleFramesToFileDialog()
 // ----------------------------------------------------------------------
 
 unsigned long int wxVideoCaptureWindowVFW::GetMicroSecPerFrameRequested()
-{   
-    VFW_GetCAPTUREPARMS(); 
+{
+    VFW_GetCAPTUREPARMS();
     return (unsigned long)(m_CAPTUREPARMS.dwRequestMicroSecPerFrame);
 }
 void wxVideoCaptureWindowVFW::SetMicroSecPerFrameRequested( unsigned long int framespersec)
-{   
+{
     m_CAPTUREPARMS.dwRequestMicroSecPerFrame = (DWORD)(framespersec);
-    VFW_SetCAPTUREPARMS(); 
+    VFW_SetCAPTUREPARMS();
 }
-    
+
 // keycode to terminate streaming video, default = VK_ESCAPE
 // NOTE use RegisterHotKey() for system wide key, NOT IMPLEMENTED, NOT TESTED
 unsigned int wxVideoCaptureWindowVFW::GetAbortKey()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.vKeyAbort; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.vKeyAbort;
 }
 void wxVideoCaptureWindowVFW::SetAbortKey( unsigned int key )
-{ 
+{
     m_CAPTUREPARMS.vKeyAbort = (UINT)key; VFW_SetCAPTUREPARMS();
-    // TODO RegisterHotKey(m_hWndC, 
+    // TODO RegisterHotKey(m_hWndC,
 }
 // abort video capture on left mouse button, default = true
 bool wxVideoCaptureWindowVFW::GetAbortLeftMouse()
-{ 
-    VFW_GetCAPTUREPARMS(); 
-    return (0 != m_CAPTUREPARMS.fAbortLeftMouse); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fAbortLeftMouse);
 }
 void wxVideoCaptureWindowVFW::SetAbortLeftMouse( bool leftmouse )
-{ 
-    m_CAPTUREPARMS.fAbortLeftMouse = (BOOL)leftmouse; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fAbortLeftMouse = (BOOL)leftmouse;
+    VFW_SetCAPTUREPARMS();
 }
 // abort video capture on right mouse button, default = true
 bool wxVideoCaptureWindowVFW::GetAbortRightMouse()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return (0 != m_CAPTUREPARMS.fAbortRightMouse); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fAbortRightMouse);
 }
 void wxVideoCaptureWindowVFW::SetAbortRightMouse( bool rightmouse )
-{   
-    m_CAPTUREPARMS.fAbortRightMouse = (BOOL)rightmouse; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fAbortRightMouse = (BOOL)rightmouse;
+    VFW_SetCAPTUREPARMS();
 }
 
 // only capture for a fixed number of seconds
 bool wxVideoCaptureWindowVFW::GetTimeLimitedCapture()
-{   
-    VFW_GetCAPTUREPARMS();   
-    return (0 != m_CAPTUREPARMS.fLimitEnabled); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fLimitEnabled);
 }
 void wxVideoCaptureWindowVFW::SetTimeLimitedCapture( bool usetimelimit )
-{   
-    m_CAPTUREPARMS.fLimitEnabled = (BOOL)usetimelimit; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fLimitEnabled = (BOOL)usetimelimit;
+    VFW_SetCAPTUREPARMS();
 }
 // number of seconds to capture video for
 unsigned int wxVideoCaptureWindowVFW::GetCaptureTimeLimit()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wTimeLimit; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wTimeLimit;
 }
 void wxVideoCaptureWindowVFW::SetCaptureTimeLimit( unsigned int timelimit )
-{   
-    m_CAPTUREPARMS.wTimeLimit = (UINT)timelimit; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wTimeLimit = (UINT)timelimit;
+    VFW_SetCAPTUREPARMS();
 }
 
 // popup "OK" dialog to initiate capture, default = false
 bool wxVideoCaptureWindowVFW::GetDialogInitiatedCapture()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return (0 != m_CAPTUREPARMS.fMakeUserHitOKToCapture); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fMakeUserHitOKToCapture);
 }
-void wxVideoCaptureWindowVFW::SetDialogInitiatedCapture( bool usedialog ) 
-{   
-    m_CAPTUREPARMS.fMakeUserHitOKToCapture = (BOOL)usedialog; 
-    VFW_SetCAPTUREPARMS(); 
+void wxVideoCaptureWindowVFW::SetDialogInitiatedCapture( bool usedialog )
+{
+    m_CAPTUREPARMS.fMakeUserHitOKToCapture = (BOOL)usedialog;
+    VFW_SetCAPTUREPARMS();
 }
 
 // max allowed % of frames dropped, default=10 [0..100], popup error dialog
 // note: dropped frames are replaced by the last grabbed frame in AVI file
 unsigned int wxVideoCaptureWindowVFW::GetMaxAllowedFramesDropped()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wPercentDropForError; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wPercentDropForError;
 }
 void wxVideoCaptureWindowVFW::SetMaxAllowedFramesDropped(unsigned int maxdrop )
-{   
-    m_CAPTUREPARMS.wPercentDropForError = (UINT)maxdrop; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wPercentDropForError = (UINT)maxdrop;
+    VFW_SetCAPTUREPARMS();
 }
 
 // The default values are probably fine, but who knows?
 // actual number of video buffers allocated in the memory heap
-unsigned int wxVideoCaptureWindowVFW::GetNumVideoBuffersAllocated() 
-{   
-    VFW_GetCAPSTATUS(); 
-    return m_CAPSTATUS.wNumVideoAllocated; 
+unsigned int wxVideoCaptureWindowVFW::GetNumVideoBuffersAllocated()
+{
+    VFW_GetCAPSTATUS();
+    return m_CAPSTATUS.wNumVideoAllocated;
 }
 // max number of video buffers to allocate, if 0 then autocalc, dunno?
 unsigned int wxVideoCaptureWindowVFW::GetNumVideoBuffers()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wNumVideoRequested; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wNumVideoRequested;
 }
 void wxVideoCaptureWindowVFW::SetNumVideoBuffers( unsigned int vidbufs )
-{   
-    m_CAPTUREPARMS.wNumVideoRequested = (UINT)vidbufs; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wNumVideoRequested = (UINT)vidbufs;
+    VFW_SetCAPTUREPARMS();
 }
 
 // use background thread to capture, controls NOT disabled, default=false
 // see VFW_CallbackOnCaptureYield also VFW's capSetCallbackOnYield...
 // NOT TESTED
 bool wxVideoCaptureWindowVFW::GetUseThreadToCapture()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return (0 != m_CAPTUREPARMS.fYield); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fYield);
 }
 void wxVideoCaptureWindowVFW::SetUseThreadToCapture( bool usethread )
-{   
-    m_CAPTUREPARMS.fYield = (BOOL)usethread; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fYield = (BOOL)usethread;
+    VFW_SetCAPTUREPARMS();
 }
 
 // ??? does this work? and for what device?
 // double resolution capture, (height&width*2)
 //      "enable if hardware doesn't support decimation & using RGB" huh?
 bool wxVideoCaptureWindowVFW::GetStepCaptureAt2x()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return (0 != m_CAPTUREPARMS.fStepCaptureAt2x); 
+{
+    VFW_GetCAPTUREPARMS();
+    return (0 != m_CAPTUREPARMS.fStepCaptureAt2x);
 }
 void wxVideoCaptureWindowVFW::SetStepCaptureAt2x( bool cap2x)
-{   
-    m_CAPTUREPARMS.fStepCaptureAt2x = (BOOL)cap2x; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fStepCaptureAt2x = (BOOL)cap2x;
+    VFW_SetCAPTUREPARMS();
 }
 // ??? does this work? and for what device?
 // number of times a frame is sampled for average frame, typically 5
 unsigned int wxVideoCaptureWindowVFW::GetStepCaptureAverageFrames()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wStepCaptureAverageFrames; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wStepCaptureAverageFrames;
 }
 void wxVideoCaptureWindowVFW::SetStepCaptureAverageFrames( unsigned int aveframes )
-{   
-    m_CAPTUREPARMS.wStepCaptureAverageFrames = (UINT)aveframes; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wStepCaptureAverageFrames = (UINT)aveframes;
+    VFW_SetCAPTUREPARMS();
 }
 
 // max number of index entries in AVI file [1800..324,000]
 //      each frame or audio buffer uses 1 index, sets max num of frames
 //      default = 34,952 (32K frames + proportional num of audio buffers)
 unsigned long int wxVideoCaptureWindowVFW::GetAviMaxIndexEntries()
-{   
+{
     VFW_GetCAPTUREPARMS();
-    return m_CAPTUREPARMS.dwIndexSize; 
+    return m_CAPTUREPARMS.dwIndexSize;
 }
 void wxVideoCaptureWindowVFW::SetAviMaxIndexEntries( unsigned long int maxindex)
-{   
-    m_CAPTUREPARMS.dwIndexSize = (DWORD)maxindex; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.dwIndexSize = (DWORD)maxindex;
+    VFW_SetCAPTUREPARMS();
 }
 // Logical block size in an AVI file in bytes
 //  0 = current sector size, recommended default=2K
 //  if larger than the data structure, the rest is filled w/ RIFF "JUNK"
 //  64,128,256,512,1K,2K,4K,8K,16K,32K are valid... I think?
 unsigned int wxVideoCaptureWindowVFW::GetChunkGranularity()
-{   
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wChunkGranularity; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wChunkGranularity;
 }
 void wxVideoCaptureWindowVFW::SetChunkGranularity( unsigned int chunkbytes )
-{   
-    m_CAPTUREPARMS.wChunkGranularity = (UINT)chunkbytes; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wChunkGranularity = (UINT)chunkbytes;
+    VFW_SetCAPTUREPARMS();
 }
 
 
@@ -1611,47 +1611,47 @@ bool wxVideoCaptureWindowVFW::CaptureVideoToFileAbort()
 
 // time elapsed since the start of current/recent capture
 unsigned long int wxVideoCaptureWindowVFW::GetCaptureTimeElapsedMS()
-{   
-    VFW_GetCAPSTATUS(); 
-    return (unsigned int)m_CAPSTATUS.dwCurrentTimeElapsedMS; 
+{
+    VFW_GetCAPSTATUS();
+    return (unsigned int)m_CAPSTATUS.dwCurrentTimeElapsedMS;
 }
 // capture in progress? then true
 bool wxVideoCaptureWindowVFW::IsCapturingNow()
-{   
-    VFW_GetCAPSTATUS(); 
-    return (0 != m_CAPSTATUS.fCapturingNow); 
+{
+    VFW_GetCAPSTATUS();
+    return (0 != m_CAPSTATUS.fCapturingNow);
 }
 
 // number of frames processed during current/recent capture
 //   includes dropped frames
 unsigned long int wxVideoCaptureWindowVFW::GetCapturedVideoFramesCount()
-{   
-    VFW_GetCAPSTATUS(); 
-    return (unsigned int)m_CAPSTATUS.dwCurrentVideoFrame; 
+{
+    VFW_GetCAPSTATUS();
+    return (unsigned int)m_CAPSTATUS.dwCurrentVideoFrame;
 }
 // number of frames dropped during current/recent capture
 //      when frame is dropped the previous frame is put into the AVI file
 //      therefore does not affect syncronization, w/ audio & timing
 unsigned long int wxVideoCaptureWindowVFW::GetCapturedVideoFramesDropped()
-{   
-    VFW_GetCAPSTATUS(); 
-    return (unsigned int)m_CAPSTATUS.dwCurrentVideoFramesDropped; 
+{
+    VFW_GetCAPSTATUS();
+    return (unsigned int)m_CAPSTATUS.dwCurrentVideoFramesDropped;
 }
 
 // ----------------------------------------------------------------------
 // Capture file settings, filename to capture video to
 // ----------------------------------------------------------------------
 // valid capture file exists, then true
-bool wxVideoCaptureWindowVFW::CaptureFileExists() 
-{ 
-    VFW_GetCAPSTATUS(); 
-    return (0 != m_CAPSTATUS.fCapFileExists); 
+bool wxVideoCaptureWindowVFW::CaptureFileExists()
+{
+    VFW_GetCAPSTATUS();
+    return (0 != m_CAPSTATUS.fCapFileExists);
 }
 // returns the name of the file to capture to AVI file
-wxString wxVideoCaptureWindowVFW::GetCaptureFilename() 
+wxString wxVideoCaptureWindowVFW::GetCaptureFilename()
 {
-    VFW_GetCaptureFilename(); 
-    return m_capturefilename; 
+    VFW_GetCaptureFilename();
+    return m_capturefilename;
 }
 
 // set name of the file to capture AVI file to, doesn't create/open/allocate
@@ -1688,7 +1688,7 @@ bool wxVideoCaptureWindowVFW::SetCaptureFilenameDialog()
     }
     return false;
 }
-    
+
 // preallocate space for the capture file
 bool wxVideoCaptureWindowVFW::SetCaptureFilesizeMB(unsigned int filesizeMB )
 {
@@ -1704,7 +1704,7 @@ bool wxVideoCaptureWindowVFW::SetCaptureFilesizeMB(unsigned int filesizeMB )
     }
     return false;
 }
-    
+
 // dialog to preallocate space for video capture
 bool wxVideoCaptureWindowVFW::SetCaptureFileSizeDialog()
 {
@@ -1716,7 +1716,7 @@ bool wxVideoCaptureWindowVFW::SetCaptureFileSizeDialog()
     // if the capture file already exists, this is more "free space"
     int capfilesizeMB = GetFileSizeInKB(m_capturefilename)/1024L;
     if (capfilesizeMB < 0) capfilesizeMB = 0; // if -1, it doesn't exist so it's really 0
-        
+
     // 2GB limit or the available free space, whatever is less
     unsigned long int maxsize = wxMin(freediskspaceMB+capfilesizeMB, 2047L);
 
@@ -1727,7 +1727,7 @@ bool wxVideoCaptureWindowVFW::SetCaptureFileSizeDialog()
     long filesize = wxGetNumberFromUser(dialogtext,
                                         wxT("MB"),
                                         wxT("Allocate space for capture file"),
-                                        1, 0, maxsize); 
+                                        1, 0, maxsize);
     return SetCaptureFilesizeMB((unsigned int)filesize);
 }
 
@@ -1744,41 +1744,41 @@ long int wxVideoCaptureWindowVFW::GetFreeDiskSpaceInKB( const wxString &filepath
 {
     DWORD freeclusters, bytespersector, sectorspercluster, clusters;
     TCHAR rootdir[MAX_PATH+1];
-    TCHAR* tmp_str = 0;    //required arg, a temp variable 
+    TCHAR* tmp_str = 0;    //required arg, a temp variable
 
     // need to find path for root directory on drive containing this file.
 
     GetFullPathName(filepath.fn_str(), sizeof(rootdir)/sizeof(rootdir[0]), rootdir, NULL);
 
     // truncate this to the name of the root directory
-    if ((rootdir[0] == '\\') && (rootdir[1] == '\\')) 
+    if ((rootdir[0] == '\\') && (rootdir[1] == '\\'))
     {
         // path begins with  \\server\share\path so skip the first
         // three backslashes
         tmp_str = &rootdir[2];
-        while (*tmp_str && (*tmp_str != '\\')) 
+        while (*tmp_str && (*tmp_str != '\\'))
         {
            tmp_str++;
         }
-        if (*tmp_str) 
+        if (*tmp_str)
         {
             // advance past the third backslash
             tmp_str++;
         }
-    } 
-    else 
+    }
+    else
     {
         // path must be drv:\path
         tmp_str = rootdir;
     }
 
     // find next backslash and put a null after it
-    while (*tmp_str && (*tmp_str != '\\')) 
+    while (*tmp_str && (*tmp_str != '\\'))
     {
         tmp_str++;
     }
     // found a backslash ?
-    if (*tmp_str) 
+    if (*tmp_str)
     {
         // skip it and insert null
         tmp_str++;
@@ -1789,10 +1789,10 @@ long int wxVideoCaptureWindowVFW::GetFreeDiskSpaceInKB( const wxString &filepath
                             &sectorspercluster,
                             &bytespersector,
                             &freeclusters,
-                            &clusters)) 
+                            &clusters))
     {
-            wxMessageBox(wxT("Error determining free disk space"), 
-                            wxT("wxVideoCaptureWindow Error"), 
+            wxMessageBox(wxT("Error determining free disk space"),
+                            wxT("wxVideoCaptureWindow Error"),
                             wxOK|wxICON_EXCLAMATION|wxCENTRE);
             return (-1);
     }
@@ -1803,8 +1803,8 @@ long int wxVideoCaptureWindowVFW::GetFreeDiskSpaceInKB( const wxString &filepath
 // Audio Setup
 // ----------------------------------------------------------------------
 bool wxVideoCaptureWindowVFW::HasAudioHardware()
-{ 
-    return (0 != m_CAPSTATUS.fAudioHardware); 
+{
+    return (0 != m_CAPSTATUS.fAudioHardware);
 }
 
 // set the audio recording properties, see #defines in header
@@ -1819,11 +1819,11 @@ bool wxVideoCaptureWindowVFW::SetAudioFormat( int channels, int bitspersample, l
     if (audioformatsize == 0) return false;
     LPWAVEFORMATEX lpwfex = (LPWAVEFORMATEX) GlobalAllocPtr(GHND, audioformatsize);
     if (lpwfex == NULL) return false;
-        
+
     // set channels 1=mono, 2=stereo
     if (channels == 2)
         lpwfex->nChannels = 2;
-    else 
+    else
         lpwfex->nChannels = 1;
 
     if (bitspersample == 16)
@@ -1835,7 +1835,7 @@ bool wxVideoCaptureWindowVFW::SetAudioFormat( int channels, int bitspersample, l
     bool samplespersecondOk = false;
 
     for (i = 0; i < wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; i++ )
-        if (samplespersecond == wxVIDCAP_AUDIO_SAMPLESPERSEC[i]) 
+        if (samplespersecond == wxVIDCAP_AUDIO_SAMPLESPERSEC[i])
             samplespersecondOk = true;
 
     if (samplespersecondOk == true)
@@ -1864,15 +1864,15 @@ bool wxVideoCaptureWindowVFW::SetAudioFormat( int channels, int bitspersample, l
 bool wxVideoCaptureWindowVFW::GetAudioFormat( int *channels, int *bitspersample, long int *samplespersecond )
 {
     if (!HasAudioHardware()) return false;
-        
+
     DWORD audioformatsize = capGetAudioFormatSize(m_hWndC);
     if (audioformatsize == 0) return false;
     LPWAVEFORMATEX lpwfex = (LPWAVEFORMATEX) GlobalAllocPtr(GHND, audioformatsize);
     if (lpwfex == NULL) return false;
 
     if (!capGetAudioFormat(m_hWndC, lpwfex, (WORD)audioformatsize)) return false;
-      
-    if (channels)    
+
+    if (channels)
         *channels = lpwfex->nChannels;
     if (bitspersample)
         *bitspersample = lpwfex->wBitsPerSample;
@@ -1892,69 +1892,69 @@ bool wxVideoCaptureWindowVFW::GetAudioFormat( int *channels, int *bitspersample,
 // capture audio too, default = true if device has audio capability
 // actually the device is your sound card, I guess?
 bool wxVideoCaptureWindowVFW::GetCaptureAudio()
-{ 
-    VFW_GetCAPTUREPARMS(); 
-    return 0!=m_CAPTUREPARMS.fCaptureAudio; 
+{
+    VFW_GetCAPTUREPARMS();
+    return 0!=m_CAPTUREPARMS.fCaptureAudio;
 }
 void wxVideoCaptureWindowVFW::SetCaptureAudio( bool capaudio )
-{ 
-    m_CAPTUREPARMS.fCaptureAudio = (BOOL)capaudio; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.fCaptureAudio = (BOOL)capaudio;
+    VFW_SetCAPTUREPARMS();
 }
 
 // max number of audio buffers, (max = 10), if 0 then autocalc, default = 4
 unsigned int wxVideoCaptureWindowVFW::GetNumAudioBuffers()
-{ 
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.wNumAudioRequested; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.wNumAudioRequested;
 }
 void wxVideoCaptureWindowVFW::SetNumAudioBuffers( unsigned int audiobufs )
-{ 
-    m_CAPTUREPARMS.wNumAudioRequested = (UINT)audiobufs; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.wNumAudioRequested = (UINT)audiobufs;
+    VFW_SetCAPTUREPARMS();
 }
 
 // Number of audio buffers allocated
-unsigned int wxVideoCaptureWindowVFW::GetNumAudioBuffersAllocated() 
-{ 
-    VFW_GetCAPSTATUS(); 
-    return m_CAPSTATUS.wNumAudioAllocated; 
+unsigned int wxVideoCaptureWindowVFW::GetNumAudioBuffersAllocated()
+{
+    VFW_GetCAPSTATUS();
+    return m_CAPSTATUS.wNumAudioAllocated;
 }
 // audio buffer size, default = 0 = max of either .5sec or 10Kb
 unsigned long int wxVideoCaptureWindowVFW::GetAudioBufferSize()
-{ 
-    VFW_GetCAPTUREPARMS(); 
-    return m_CAPTUREPARMS.dwAudioBufferSize; 
+{
+    VFW_GetCAPTUREPARMS();
+    return m_CAPTUREPARMS.dwAudioBufferSize;
 }
 void wxVideoCaptureWindowVFW::SetAudioBufferSize( unsigned long int audiobufsize )
-{ 
-    m_CAPTUREPARMS.dwAudioBufferSize = (DWORD)audiobufsize; 
-    VFW_SetCAPTUREPARMS(); 
+{
+    m_CAPTUREPARMS.dwAudioBufferSize = (DWORD)audiobufsize;
+    VFW_SetCAPTUREPARMS();
 }
 
 // audio stream controls clock for AVI file
 //      video duration is forced to match audio duration
 //      if false they can differ in length
 bool wxVideoCaptureWindowVFW::GetAudioStreamMaster()
-{ 
-    VFW_GetCAPTUREPARMS(); 
-    return AVSTREAMMASTER_AUDIO & m_CAPTUREPARMS.AVStreamMaster; 
+{
+    VFW_GetCAPTUREPARMS();
+    return AVSTREAMMASTER_AUDIO & m_CAPTUREPARMS.AVStreamMaster;
 }
 void wxVideoCaptureWindowVFW::SetAudioStreamMaster( bool audiomaster)
-{ 
-    if (audiomaster) 
+{
+    if (audiomaster)
         m_CAPTUREPARMS.AVStreamMaster = AVSTREAMMASTER_AUDIO;
-    else 
-        m_CAPTUREPARMS.AVStreamMaster = AVSTREAMMASTER_NONE; 
+    else
+        m_CAPTUREPARMS.AVStreamMaster = AVSTREAMMASTER_NONE;
 
-    VFW_SetCAPTUREPARMS(); 
+    VFW_SetCAPTUREPARMS();
 }
 
 // number of waveform-audio samples processed during current/recent capture
 unsigned long int wxVideoCaptureWindowVFW::GetCapturedWaveSamplesCount()
-{ 
-    VFW_GetCAPSTATUS(); 
-    return (unsigned long int)m_CAPSTATUS.dwCurrentWaveSamples; 
+{
+    VFW_GetCAPSTATUS();
+    return (unsigned long int)m_CAPSTATUS.dwCurrentWaveSamples;
 }
 
 // --------------------------------------------------------------------------
@@ -1970,7 +1970,7 @@ bool wxVideoCaptureWindowVFW::VFW_SetCallbackOnError(bool on)
     return (0 != capSetCallbackOnError(m_hWndC, NULL));
 }
 // deal with non-fatal errors from the capture hWnd
-// reports: no disk space, read-only file, can't access hardware, 
+// reports: no disk space, read-only file, can't access hardware,
 //          too many frames dropped, and others?
 bool wxVideoCaptureWindowVFW::VFW_CallbackOnError(const wxString &errortext, int errorId)
 {
@@ -1993,7 +1993,7 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnError(const wxString &errortext, int
 
 bool wxVideoCaptureWindowVFW::VFW_SetCallbackOnStatus(bool on)
 {
-    if (on) 
+    if (on)
         return (0 != capSetCallbackOnStatus(m_hWndC, VFW_VideoStatusCallbackProc));
 
     return (0 != capSetCallbackOnStatus(m_hWndC, NULL));
@@ -2029,7 +2029,7 @@ bool wxVideoCaptureWindowVFW::VFW_SetCallbackFrame(bool on)
 {
     if (on)
         return (0 != capSetCallbackOnFrame(m_hWndC, VFW_VideoFrameCallbackProc));
-    
+
     return (0 != capSetCallbackOnFrame(m_hWndC, NULL));
 }
 // frame callback, during software previewing
@@ -2088,7 +2088,7 @@ bool wxVideoCaptureWindowVFW::VFW_SetCallbackOnCaptureControl(bool on)
 
     return (0 != capSetCallbackOnCapControl(m_hWndC, NULL));
 }
-// capture start/stop control, one message when ready to begin 
+// capture start/stop control, one message when ready to begin
 //  and then between frames to end
 // if (nState == CONTROLCALLBACK_PREROLL) buffers allocated ready to start capture
 // if (nState == CONTROLCALLBACK_CAPTURING) now capturing, end capture by returning false
@@ -2118,7 +2118,7 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnVideoStream(LPVIDEOHDR WXUNUSED(lpVH
 
 bool wxVideoCaptureWindowVFW::VFW_SetCallbackOnWaveStream(bool on)
 {
-    if (on) 
+    if (on)
         return (0 != capSetCallbackOnWaveStream(m_hWndC, VFW_WaveStreamCallbackProc));
 
     return (0 != capSetCallbackOnWaveStream(m_hWndC, NULL));
@@ -2136,20 +2136,20 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnWaveStream(LPWAVEHDR WXUNUSED(lpWHdr
 bool wxVideoCaptureWindowVFW::VFW_GetCAPDRIVERCAPS()
 {
     bool ok = (0 != capDriverGetCaps(m_hWndC, &m_CAPDRIVERCAPS, sizeof(CAPDRIVERCAPS)));
-    
+
     // or SendMessage(m_hWndC,WM_CAP_DRIVER_GET_CAPS,sizeof(CAPDRIVERCAPS),
     //                  (LONG)(LPVOID)&m_CAPDRIVERCAPS);
-    
+
     if (ok)
     {
         m_has_overlay = (0 != m_CAPDRIVERCAPS.fHasOverlay);
-        
+
     }
     else
     {
         Reset(false);
     }
-    
+
     return ok;
 }
 
@@ -2160,7 +2160,7 @@ bool wxVideoCaptureWindowVFW::VFW_GetCAPDRIVERCAPS()
 bool wxVideoCaptureWindowVFW::VFW_GetCAPSTATUS()
 {
     bool ok = (0 != capGetStatus(m_hWndC, &m_CAPSTATUS, sizeof(CAPSTATUS)));
-    
+
     if (ok)
     {
         m_deviceIndex = (int)m_CAPDRIVERCAPS.wDeviceIndex;
@@ -2179,19 +2179,19 @@ bool wxVideoCaptureWindowVFW::VFW_GetCAPSTATUS()
     {
         Reset(false);
     }
-    
+
     return ok;
 }
 
 // default driver palette being used, then true
 bool wxVideoCaptureWindowVFW::IsUsingDefaultPalette()
-{ 
-    VFW_GetCAPSTATUS(); 
-    return (0 != m_CAPSTATUS.fUsingDefaultPalette); 
+{
+    VFW_GetCAPSTATUS();
+    return (0 != m_CAPSTATUS.fUsingDefaultPalette);
 }
 
 // ----------------------------------------------------------------------
-// MSW VFW Capture Parameters 
+// MSW VFW Capture Parameters
 // you do not need to call this, unless explicitly changing m_CAPTUREPARMS
 // ----------------------------------------------------------------------
 bool wxVideoCaptureWindowVFW::VFW_GetCAPTUREPARMS()
@@ -2205,14 +2205,14 @@ bool wxVideoCaptureWindowVFW::VFW_GetCAPTUREPARMS()
     {
         Reset(false);
     }
-    
+
     return ok;
 }
 
 bool wxVideoCaptureWindowVFW::VFW_SetCAPTUREPARMS()
 {
     bool ok = (0 != capCaptureSetSetup(m_hWndC, &m_CAPTUREPARMS, sizeof(CAPTUREPARMS)));
-    
+
     if (ok)
     {
         // load local vars here
@@ -2221,7 +2221,7 @@ bool wxVideoCaptureWindowVFW::VFW_SetCAPTUREPARMS()
     {
         Reset(false);
     }
-    
+
     return ok;
 }
 
@@ -2237,13 +2237,13 @@ bool wxVideoCaptureWindowVFW::VFW_SetCAPTUREPARMS()
 LONG VFW_VideoExceptionHandler( LPEXCEPTION_POINTERS WXUNUSED(arg) )
 {
     wxVideoCaptureWindowHandles::const_iterator iter = gs_vidCapWinHandles.begin();
-    
+
     for( ; iter != gs_vidCapWinHandles.end(); iter++)
     {
         wxVideoCaptureWindowVFW *win = (wxVideoCaptureWindowVFW*)iter->second;
 
         // seems to avoid recursion this way
-        if ((win != NULL) && win->IsDeviceConnected()) 
+        if ((win != NULL) && win->IsDeviceConnected())
             win->DeviceDisconnect();
     }
 
@@ -2252,7 +2252,7 @@ LONG VFW_VideoExceptionHandler( LPEXCEPTION_POINTERS WXUNUSED(arg) )
 
 // deal with non-fatal errors from the capture hWnd
 // implemented by capSetCallbackOnError(m_hWndC, VFW_VideoErrorCallbackProc);
-// reports: no disk space, read-only file, can't access hardware, 
+// reports: no disk space, read-only file, can't access hardware,
 //          too many frames dropped, and others?
 #if UNICODE
     static LRESULT CALLBACK VFW_VideoErrorCallbackProc(HWND hWnd, int nErrID, LPCWSTR lpErrorText)
@@ -2296,7 +2296,7 @@ static LRESULT CALLBACK VFW_VideoFrameCallbackProc(HWND hWnd, LPVIDEOHDR lpVHdr)
 
     vidCapWin = wxFindVidCapWinFromHandle( (WXHWND)hWnd );
     if (vidCapWin) vidCapWin->VFW_CallbackOnFrame(lpVHdr);
-    
+
     return (LRESULT)true;
 }
 
@@ -2309,7 +2309,7 @@ static LRESULT CALLBACK VFW_CaptureYieldCallbackProc(HWND WXUNUSED(hWnd))
 
     MSG msg;
 
-    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
@@ -2317,7 +2317,7 @@ static LRESULT CALLBACK VFW_CaptureYieldCallbackProc(HWND WXUNUSED(hWnd))
     return (LRESULT)true; // true to continue capturing, false to stop
 }
 
-// capture start/stop control, one message when ready to begin 
+// capture start/stop control, one message when ready to begin
 //  and then between frames to end
 // if (nState == CONTROLCALLBACK_PREROLL) buffers allocated ready to start capture
 // if (nState == CONTROLCALLBACK_CAPTURING) now capturing, end capture by returning false
@@ -2346,7 +2346,7 @@ static LRESULT CALLBACK VFW_VideoStreamCallbackProc(HWND hWnd, LPVIDEOHDR lpVHdr
 // implemented with capSetCallbackOnWaveStream(hWndCapture, VFW_WaveStreamCallbackProc);
 static LRESULT CALLBACK VFW_WaveStreamCallbackProc(HWND WXUNUSED(hWnd), LPWAVEHDR WXUNUSED(lpWHdr))
 {
-    // humm ?? 
+    // humm ??
     return (LRESULT)true;
 }
 
@@ -2359,20 +2359,20 @@ static LRESULT CALLBACK VFW_WaveStreamCallbackProc(HWND WXUNUSED(hWnd), LPWAVEHD
 //=============================================================================
 //=============================================================================
 /*
-typedef struct { 
-    UINT   wDeviceIndex; 
-!    BOOL   fHasOverlay; 
-    BOOL   fHasDlgVideoSource; 
-    BOOL   fHasDlgVideoFormat; 
-    BOOL   fHasDlgVideoDisplay; 
-    BOOL   fCaptureInitialized; 
-    BOOL   fDriverSuppliesPalettes; 
-    HANDLE hVideoIn; 
-    HANDLE hVideoOut; 
-    HANDLE hVideoExtIn; 
-    HANDLE hVideoExtOut; 
-} CAPDRIVERCAPS; 
- 
+typedef struct {
+    UINT   wDeviceIndex;
+!    BOOL   fHasOverlay;
+    BOOL   fHasDlgVideoSource;
+    BOOL   fHasDlgVideoFormat;
+    BOOL   fHasDlgVideoDisplay;
+    BOOL   fCaptureInitialized;
+    BOOL   fDriverSuppliesPalettes;
+    HANDLE hVideoIn;
+    HANDLE hVideoOut;
+    HANDLE hVideoExtIn;
+    HANDLE hVideoExtOut;
+} CAPDRIVERCAPS;
+
 Members
 
 wDeviceIndex
@@ -2380,16 +2380,16 @@ wDeviceIndex
 fHasOverlay
     Video-overlay flag. The value of this member is true if the device supports video overlay.
 fHasDlgVideoSource
-    Video source dialog flag. The value of this member is true if the device 
-    supports a dialog box for selecting and controlling the video source. 
+    Video source dialog flag. The value of this member is true if the device
+    supports a dialog box for selecting and controlling the video source.
 fHasDlgVideoFormat
-    Video format dialog flag. The value of this member is true if the device 
-    supports a dialog box for selecting the video format. 
+    Video format dialog flag. The value of this member is true if the device
+    supports a dialog box for selecting the video format.
 fHasDlgVideoDisplay
-    Video display dialog flag. The value of this member is true if the device 
-    supports a dialog box for controlling the redisplay of video from the capture frame buffer. 
+    Video display dialog flag. The value of this member is true if the device
+    supports a dialog box for controlling the redisplay of video from the capture frame buffer.
 fCaptureInitialized
-    Capture initialization flag. The value of this member is true if a capture 
+    Capture initialization flag. The value of this member is true if a capture
     device has been successfully connected.
 fDriverSuppliesPalettes
     Driver palette flag. The value of this member is true if the driver can create palettes.
@@ -2400,206 +2400,206 @@ hVideoOut
 hVideoExtIn
     Not used in Win32 applications.
 hVideoExtOut
-    Not used in Win32 applications. 
+    Not used in Win32 applications.
 
 */
 
 
 /*
-typedef struct { 
-!    UINT     uiImageWidth; 
-!    UINT     uiImageHeight; 
-!    BOOL     fLiveWindow; 
-!    BOOL     fOverlayWindow; 
-!    BOOL     fScale; 
-    POINT    ptScroll; 
-    BOOL     fUsingDefaultPalette; 
-    BOOL     fAudioHardware; 
-    BOOL     fCapFileExists; 
-    DWORD    dwCurrentVideoFrame; 
-    DWORD    dwCurrentVideoFramesDropped; 
-    DWORD    dwCurrentWaveSamples; 
-    DWORD    dwCurrentTimeElapsedMS; 
-    HPALETTE hPalCurrent; 
-    BOOL     fCapturingNow; 
-    DWORD    dwReturn; 
-    UINT     wNumVideoAllocated; 
-    UINT     wNumAudioAllocated; 
-} CAPSTATUS; 
+typedef struct {
+!    UINT     uiImageWidth;
+!    UINT     uiImageHeight;
+!    BOOL     fLiveWindow;
+!    BOOL     fOverlayWindow;
+!    BOOL     fScale;
+    POINT    ptScroll;
+    BOOL     fUsingDefaultPalette;
+    BOOL     fAudioHardware;
+    BOOL     fCapFileExists;
+    DWORD    dwCurrentVideoFrame;
+    DWORD    dwCurrentVideoFramesDropped;
+    DWORD    dwCurrentWaveSamples;
+    DWORD    dwCurrentTimeElapsedMS;
+    HPALETTE hPalCurrent;
+    BOOL     fCapturingNow;
+    DWORD    dwReturn;
+    UINT     wNumVideoAllocated;
+    UINT     wNumAudioAllocated;
+} CAPSTATUS;
 
 Members
 
-uiImageWidth    
+uiImageWidth
     Image width, in pixels.
-uiImageHeight   
+uiImageHeight
     Image height, in pixels
-fLiveWindow     
-    Live window flag. The value of this member is true if the window is 
+fLiveWindow
+    Live window flag. The value of this member is true if the window is
     displaying video using the preview method.
-fOverlayWindow  
-    Overlay window flag. The value of this member is true if the window is 
+fOverlayWindow
+    Overlay window flag. The value of this member is true if the window is
     displaying video using hardware overlay.
-fScale                
-    Input scaling flag. The value of this member is true if the window is 
-    scaling the input video to the client area when displaying video using 
+fScale
+    Input scaling flag. The value of this member is true if the window is
+    scaling the input video to the client area when displaying video using
     preview. This parameter has no effect when displaying video using overlay.
-ptScroll              
-    The x- and y-offset of the pixel displayed in the upper left corner of the 
+ptScroll
+    The x- and y-offset of the pixel displayed in the upper left corner of the
     client area of the window.
-fUsingDefaultPalette  
+fUsingDefaultPalette
     Default palette flag. The value of this member is true if the capture driver
     is using its default palette.
-fAudioHardware        
-    Audio hardware flag. The value of this member is true if the system has 
+fAudioHardware
+    Audio hardware flag. The value of this member is true if the system has
     waveform-audio hardware installed.
-fCapFileExists        
-    Capture file flag. The value of this member is true if a valid capture file 
+fCapFileExists
+    Capture file flag. The value of this member is true if a valid capture file
     has been generated.
-dwCurrentVideoFrame   
-    Number of frames processed during the current (or most recent) streaming 
+dwCurrentVideoFrame
+    Number of frames processed during the current (or most recent) streaming
     capture. This count includes dropped frames.
-dwCurrentVideoFramesDropped     
-    Number of frames dropped during the current (or most recent) streaming 
-    capture. Dropped frames occur when the capture rate exceeds the rate at 
-    which frames can be saved to file. In this case, the capture driver has no 
-    buffers available for storing data. Dropping frames does not affect 
+dwCurrentVideoFramesDropped
+    Number of frames dropped during the current (or most recent) streaming
+    capture. Dropped frames occur when the capture rate exceeds the rate at
+    which frames can be saved to file. In this case, the capture driver has no
+    buffers available for storing data. Dropping frames does not affect
     synchronization because the previous frame is displayed in place of the dropped frame.
-dwCurrentWaveSamples    
+dwCurrentWaveSamples
     Number of waveform-audio samples processed during the current (or most recent) streaming capture.
-dwCurrentTimeElapsedMS  
+dwCurrentTimeElapsedMS
     Time, in milliseconds, since the start of the current (or most recent) streaming capture.
-hPalCurrent         
+hPalCurrent
     Handle to current palette.
-fCapturingNow       
+fCapturingNow
     Capturing flag. The value of this member is true when capturing is in progress.
-dwReturn            
+dwReturn
     Error return values. Use this member if your application does not support an error callback function.
-wNumVideoAllocated  
-    Number of video buffers allocated. This value might be less than the number 
+wNumVideoAllocated
+    Number of video buffers allocated. This value might be less than the number
     specified in the wNumVideoRequested member of the CAPTUREPARMS structure.
-wNumAudioAllocated  
-    Number of audio buffers allocated. This value might be less than the number 
+wNumAudioAllocated
+    Number of audio buffers allocated. This value might be less than the number
     specified in the wNumAudioRequested member of the CAPTUREPARMS structure.
 
 */
 
 /*
 
-typedef struct { 
-    DWORD dwRequestMicroSecPerFrame; 
-    BOOL  fMakeUserHitOKToCapture; 
-    UINT  wPercentDropForError; 
-    BOOL  fYield; 
-    DWORD dwIndexSize; 
-    UINT  wChunkGranularity; 
-    BOOL  fUsingDOSMemory; 
-    UINT  wNumVideoRequested; 
-    BOOL  fCaptureAudio; 
-    UINT  wNumAudioRequested; 
-    UINT  vKeyAbort; 
-    BOOL  fAbortLeftMouse; 
-    BOOL  fAbortRightMouse; 
-    BOOL  fLimitEnabled; 
-    UINT  wTimeLimit; 
-    BOOL  fMCIControl; 
-    BOOL  fStepMCIDevice; 
-    DWORD dwMCIStartTime; 
-    DWORD dwMCIStopTime; 
-    BOOL  fStepCaptureAt2x; 
-    UINT  wStepCaptureAverageFrames; 
-    DWORD dwAudioBufferSize; 
-    BOOL  fDisableWriteCache; 
-    UINT  AVStreamMaster; 
-} CAPTUREPARMS; 
- 
+typedef struct {
+    DWORD dwRequestMicroSecPerFrame;
+    BOOL  fMakeUserHitOKToCapture;
+    UINT  wPercentDropForError;
+    BOOL  fYield;
+    DWORD dwIndexSize;
+    UINT  wChunkGranularity;
+    BOOL  fUsingDOSMemory;
+    UINT  wNumVideoRequested;
+    BOOL  fCaptureAudio;
+    UINT  wNumAudioRequested;
+    UINT  vKeyAbort;
+    BOOL  fAbortLeftMouse;
+    BOOL  fAbortRightMouse;
+    BOOL  fLimitEnabled;
+    UINT  wTimeLimit;
+    BOOL  fMCIControl;
+    BOOL  fStepMCIDevice;
+    DWORD dwMCIStartTime;
+    DWORD dwMCIStopTime;
+    BOOL  fStepCaptureAt2x;
+    UINT  wStepCaptureAverageFrames;
+    DWORD dwAudioBufferSize;
+    BOOL  fDisableWriteCache;
+    UINT  AVStreamMaster;
+} CAPTUREPARMS;
+
 
 Members
 
 dwRequestMicroSecPerFrame
-    Requested frame rate, in microseconds. The default value is 66667, which 
+    Requested frame rate, in microseconds. The default value is 66667, which
     corresponds to 15 frames per second.
 fMakeUserHitOKToCapture
-    User-initiated capture flag. If this member is true, AVICap displays a 
+    User-initiated capture flag. If this member is true, AVICap displays a
     dialog box prompting the user to initiate capture. The default value is false.
 wPercentDropForError
-    Maximum allowable percentage of dropped frames during capture. Values range 
+    Maximum allowable percentage of dropped frames during capture. Values range
     from 0 to 100. The default value is 10.
 fYield
-    Yield flag. If this member is true, the capture window spawns a separate 
+    Yield flag. If this member is true, the capture window spawns a separate
     background thread to perform step and streaming capture. The default value is false.
     Applications that set this flag must handle potential reentry issues because
-    the controls in the application are not disabled while capture is in progress. 
+    the controls in the application are not disabled while capture is in progress.
 dwIndexSize
-    Maximum number of index entries in an AVI file. Values range from 1800 to 
-    324,000. If set to 0, a default value of 34,952 (32K frames plus a 
+    Maximum number of index entries in an AVI file. Values range from 1800 to
+    324,000. If set to 0, a default value of 34,952 (32K frames plus a
     proportional number of audio buffers) is used.
-    Each video frame or buffer of waveform-audio data uses one index entry. The value of this entry establishes a limit for the number of frames or audio buffers that can be captured. 
+    Each video frame or buffer of waveform-audio data uses one index entry. The value of this entry establishes a limit for the number of frames or audio buffers that can be captured.
 wChunkGranularity
-    Logical block size, in bytes, of an AVI file. The value 0 indicates the 
+    Logical block size, in bytes, of an AVI file. The value 0 indicates the
     current sector size is used as the granularity.
 fUsingDOSMemory
     Not used in Win32 applications.
 wNumVideoRequested
-    Maximum number of video buffers to allocate. The memory area to place the 
-    buffers is specified with fUsingDOSMemory. The actual number of buffers 
+    Maximum number of video buffers to allocate. The memory area to place the
+    buffers is specified with fUsingDOSMemory. The actual number of buffers
     allocated might be lower if memory is unavailable.
 fCaptureAudio
-    Capture audio flag. If this member is true, audio is captured during 
+    Capture audio flag. If this member is true, audio is captured during
     streaming capture. This is the default value if audio hardware is installed.
 wNumAudioRequested
     Maximum number of audio buffers to allocate. The maximum number of buffers is 10.
 vKeyAbort
-    Virtual keycode used to terminate streaming capture. The default value is 
-    VK_ESCAPE. You must call the RegisterHotKey function before specifying a 
+    Virtual keycode used to terminate streaming capture. The default value is
+    VK_ESCAPE. You must call the RegisterHotKey function before specifying a
     keystroke that can abort a capture session.
 
-    You can combine keycodes that include CTRL and SHIFT keystrokes by using 
-    the logical OR operator with the keycodes for CTRL (0x8000) and SHIFT (0x4000). 
+    You can combine keycodes that include CTRL and SHIFT keystrokes by using
+    the logical OR operator with the keycodes for CTRL (0x8000) and SHIFT (0x4000).
 fAbortLeftMouse
-    Abort flag for left mouse button. If this member is true, streaming capture 
+    Abort flag for left mouse button. If this member is true, streaming capture
     stops if the left mouse button is pressed. The default value is true.
 fAbortRightMouse
-    Abort flag for right mouse button. If this member is true, streaming capture 
+    Abort flag for right mouse button. If this member is true, streaming capture
     stops if the right mouse button is pressed. The default value is true.
 fLimitEnabled
-    Time limit enabled flag. If this member is true, streaming capture stops 
+    Time limit enabled flag. If this member is true, streaming capture stops
     after the number of seconds in wTimeLimit has elapsed. The default value is false.
 wTimeLimit
     Time limit for capture, in seconds. This parameter is used only if fLimitEnabled is true.
 fMCIControl
     MCI device capture flag. If this member is true, AVICap controls an
-    MCI-compatible video source during streaming capture. MCI-compatible video 
+    MCI-compatible video source during streaming capture. MCI-compatible video
     sources include VCRs and laserdiscs.
 fStepMCIDevice
-    MCI device step capture flag. If this member is true, step capture using an 
-    MCI device as a video source is enabled. If it is false, real-time capture 
+    MCI device step capture flag. If this member is true, step capture using an
+    MCI device as a video source is enabled. If it is false, real-time capture
     using an MCI device is enabled. (If fMCIControl is false, this member is ignored.)
 dwMCIStartTime
-    Starting position, in milliseconds, of the MCI device for the capture sequence. 
+    Starting position, in milliseconds, of the MCI device for the capture sequence.
     (If fMCIControl is false, this member is ignored.)
 dwMCIStopTime
-    Stopping position, in milliseconds, of the MCI device for the capture 
+    Stopping position, in milliseconds, of the MCI device for the capture
     sequence. When this position in the content is reached, capture ends and the
     MCI device stops. (If fMCIControl is false, this member is ignored.)
 fStepCaptureAt2x
-    Double-resolution step capture flag. If this member is true, the capture 
+    Double-resolution step capture flag. If this member is true, the capture
     hardware captures at twice the specified resolution. (The resolution for the
     height and width is doubled.)
 
-    Enable this option if the hardware does not support hardware-based decimation and you are capturing in the RGB format. 
+    Enable this option if the hardware does not support hardware-based decimation and you are capturing in the RGB format.
 wStepCaptureAverageFrames
     Number of times a frame is sampled when creating a frame based on the average
     sample. A typical value for the number of averages is 5.
 dwAudioBufferSize
-    Audio buffer size. If the default value of zero is used, the size of each 
+    Audio buffer size. If the default value of zero is used, the size of each
     buffer will be the maximum of 0.5 seconds of audio or 10K bytes.
 fDisableWriteCache
     Not used in Win32 applications.
 AVStreamMaster
-    Indicates whether the audio stream controls the clock when writing an AVI 
-    file. If this member is set to AVSTREAMMASTER_AUDIO, the audio stream is 
-    considered the master stream and the video stream duration is forced to 
-    match the audio duration. If this member is set to AVSTREAMMASTER_NONE, the 
-    durations of audio and video streams can differ. 
+    Indicates whether the audio stream controls the clock when writing an AVI
+    file. If this member is set to AVSTREAMMASTER_AUDIO, the audio stream is
+    considered the master stream and the video stream duration is forced to
+    match the audio duration. If this member is set to AVSTREAMMASTER_NONE, the
+    durations of audio and video streams can differ.
 
 */

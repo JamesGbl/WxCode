@@ -23,10 +23,10 @@
 #include "wx/sheet/sheetren.h"
 #include "wx/sheet/sheettbl.h"
 #include "wx/sheet/sheetedg.h"
-#include "wx/pen.h"
-#include "wx/window.h"
-#include "wx/scrolbar.h"
-#include "wx/clntdata.h"
+#include <wx/pen.h>
+#include <wx/window.h>
+#include <wx/scrolbar.h>
+#include <wx/clntdata.h>
 
 class WXDLLIMPEXP_FWD_BASE wxTimer;
 class WXDLLIMPEXP_FWD_BASE wxTimerEvent;

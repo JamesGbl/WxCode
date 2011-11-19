@@ -17,10 +17,10 @@
 #endif
 
 #include "wx/sheet/sheetdef.h"
-#include "wx/datetime.h"
-#include "wx/bitmap.h"
-#include "wx/textctrl.h"
-#include "wx/spinctrl.h"
+#include <wx/datetime.h>
+#include <wx/bitmap.h>
+#include <wx/textctrl.h>
+#include <wx/spinctrl.h>
 
 class WXDLLIMPEXP_SHEET wxSheetCellEditorRefData;
 

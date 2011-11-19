@@ -10,8 +10,8 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steart.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steart.h"
 
 #include <wx/fontenum.h>   // font support
 #include <wx/colordlg.h>
@@ -1573,8 +1573,8 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
 #define ENC_OFFSET 1
 
-wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor) : wxDialog(), 
-    m_editor(editor), 
+wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor) : wxDialog(),
+    m_editor(editor),
     m_encoding(wxTextEncoding::TypeFromString(editor->GetFileEncoding()) + ENC_OFFSET),
     m_bom(editor->GetFileBOM())
 {
@@ -1906,7 +1906,7 @@ bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
                                         long style)
 {
     bool ok = wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style);
-    
+
     if (ok)
     {
         SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());

@@ -11,35 +11,35 @@
 #include "wx/things/thingdef.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif // WX_PRECOMP
 
-#include "wx/mimetype.h"
-#include "wx/tglbtn.h"     // for EVT_TOGGLE_BUTTON
-#include "wx/splitter.h"
-#include "wx/imaglist.h"
-#include "wx/confbase.h"
-#include "wx/filename.h"
-#include "wx/dir.h"
-#include "wx/artprov.h"
-#include "wx/image.h"      // wxInitAllImageHandlers
-#include "wx/renderer.h"
-#include "wx/file.h"
-#include "wx/txtstrm.h"
-#include "wx/wfstream.h"
+#include <wx/mimetype.h>
+#include <wx/tglbtn.h>     // for EVT_TOGGLE_BUTTON
+#include <wx/splitter.h>
+#include <wx/imaglist.h>
+#include <wx/confbase.h>
+#include <wx/filename.h>
+#include <wx/dir.h>
+#include <wx/artprov.h>
+#include <wx/image.h>      // wxInitAllImageHandlers
+#include <wx/renderer.h>
+#include <wx/file.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 
-#include "wx/filefn.h"     // wxStat
+#include <wx/filefn.h>     // wxStat
 
 #include "wx/things/filebrws.h"
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayFileData);
 
 // #include "wx/stedit/stedit.h"
@@ -2222,7 +2222,7 @@ void wxFileBrowser::OnListMenu(wxCommandEvent &event)
 
                 wxFrame* frame = new wxFrame(this, wxID_ANY, wxT("Text Viewer"));
                 wxTextCtrl* textCtrl = new wxTextCtrl(frame, wxID_ANY, wxT(""),
-                                             wxDefaultPosition, wxDefaultSize, 
+                                             wxDefaultPosition, wxDefaultSize,
                                              wxTE_MULTILINE|wxTE_RICH|wxTE_READONLY|wxTE_DONTWRAP);
 
                 wxString s;
@@ -2381,7 +2381,7 @@ bool wxFileBrowser::OpenFilePath(const wxString &filePath)
 
     wxFileName filename(path);
 
-    // Use static DirExists() since member functions doesn't use GetFullPath(), 
+    // Use static DirExists() since member functions doesn't use GetFullPath(),
     // but only the GetPath() part of the filename.
     if (wxFileName::DirExists(filename.GetFullPath()))
     {

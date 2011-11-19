@@ -11,7 +11,7 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedit.h>
+#include "wx/stedit/stedit.h"
 
 wxString STE_DefaultFileName( wxT("untitled.txt") );
 wxString STE_DefaultFileExtensions(
@@ -328,14 +328,14 @@ void *wxSTEditorOptions::GetClientData() const
     return STEO_REFDATA->GetClientData();
 }
 
-// static 
+// static
 wxString wxSTEditorOptions::GetGlobalDefaultFileName() { return STE_DefaultFileName; }
-// static 
+// static
 void wxSTEditorOptions::SetGlobalDefaultFileName(const wxString& fileName) { STE_DefaultFileName = fileName; }
 
-// static 
+// static
 wxString wxSTEditorOptions::GetGlobalDefaultExtensions() { return STE_DefaultFileExtensions; }
-// static 
+// static
 void wxSTEditorOptions::SetGlobalDefaultFileExtensions(const wxString& fileExt) { STE_DefaultFileExtensions = fileExt; }
 
 wxString wxSTEditorOptions::GetConfigPath(size_t path_option_n) const

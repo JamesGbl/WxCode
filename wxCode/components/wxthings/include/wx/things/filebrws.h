@@ -12,11 +12,11 @@
 
 #include "wx/things/thingdef.h"
 
-#include "wx/listctrl.h"
-#include "wx/dirctrl.h"
-#include "wx/filedlg.h"
-#include "wx/textdlg.h"
-#include "wx/generic/filedlgg.h"
+#include <wx/listctrl.h>
+#include <wx/dirctrl.h>
+#include <wx/filedlg.h>
+#include <wx/textdlg.h>
+#include <wx/generic/filedlgg.h>
 
 class WXDLLEXPORT wxCheckBox;
 class WXDLLEXPORT wxComboBox;
@@ -33,7 +33,7 @@ class WXDLLEXPORT wxFileName;
 
 class WXDLLIMPEXP_THINGS wxFileBrowser;
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY_WITH_DECL(wxFileData, wxArrayFileData, class WXDLLIMPEXP_THINGS);
 
 //----------------------------------------------------------------------------

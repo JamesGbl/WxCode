@@ -11,7 +11,7 @@
 #ifndef _STESHELL_H_
 #define _STESHELL_H_
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorShell - A basic console type interactive shell widget,

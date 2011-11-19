@@ -14,7 +14,7 @@
 
 // Note: there is no cpp file as all the code is contained in these macros.
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 
 // NOTE! This 2x faster than the pairarr for a class with int, int members, but
 //       over 2X slower for a class that has a different one of these as an array

@@ -38,8 +38,8 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "precomp.h"
 
-#include <wx/stedit/stestyls.h>
-#include <wx/stedit/stedit.h>
+#include "wx/stedit/stestyls.h"
+#include "wx/stedit/stedit.h"
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArraySTEditorStyle);
@@ -717,7 +717,7 @@ wxString wxSTEditorStyles::LoadConfig( wxConfigBase &config,
 
     if (config.GetFirstEntry(key, index))
     {
-        do 
+        do
         {
             if (config.Read(key, &value))
             {

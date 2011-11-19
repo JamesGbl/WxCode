@@ -38,8 +38,8 @@ Differences to wxSpinCtrl:
 #ifndef __wxSPINCTRLDBL_H__
 #define __wxSPINCTRLDBL_H__
 
-#include "wx/spinbutt.h"
-#include "wx/spinctrl.h" // for EVT_SPINCTRL
+#include <wx/spinbutt.h>
+#include <wx/spinctrl.h> // for EVT_SPINCTRL
 #include "wx/things/thingdef.h"
 
 class WXDLLEXPORT wxTextCtrl;

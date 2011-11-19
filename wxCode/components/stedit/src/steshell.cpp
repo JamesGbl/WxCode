@@ -11,8 +11,8 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steshell.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steshell.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorShell

@@ -61,6 +61,23 @@
 extern "C" {
     #include <gdk/gdk.h>
 }
+
+#if wxVERSION_NUMBER >= 2900
+    #include "wx/gtk/dcclient.h"
+
+    #define INITIALIZE_FAST_GRAPHICS \
+        double dc_scale_x = 1, dc_scale_y = 1; \
+        dc->GetUserScale( &dc_scale_x, &dc_scale_y ); \
+        wxPoint dc_origin = dc->GetDeviceOrigin(); \
+        wxWindowDCImpl *winDCImpl = wxDynamicCast(dc->GetImpl(), wxWindowDCImpl); \
+        GdkWindow *window = NULL; \
+        GdkGC     *pen = NULL; \
+        if (winDCImpl && (dc_scale_x == 1.0) && (dc_scale_y == 1.0) && (dc_origin == wxPoint(0,0))) \
+        { \
+            window = winDCImpl->m_gdkwindow; \
+            pen = winDCImpl->m_penGC; \
+        }
+#else
     #define INITIALIZE_FAST_GRAPHICS \
         double dc_scale_x = 1, dc_scale_y = 1; \
         dc->GetUserScale( &dc_scale_x, &dc_scale_y ); \
@@ -73,6 +90,7 @@ extern "C" {
             window = winDC->m_window; \
             pen = winDC->m_penGC; \
         }
+#endif
 
     // inline void wxPLOTCTRL_DRAW_LINE(wxDC *dc, GdkWindow *win, GdkGC *pen, int x0, int y0, int x1, int y1)
     #define wxPLOTCTRL_DRAW_LINE(dc, win, pen, x0, y0, x1, y1) \

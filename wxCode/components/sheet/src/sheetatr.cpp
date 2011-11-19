@@ -16,7 +16,7 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -37,7 +37,7 @@
 
 const wxSheetCellAttr wxNullSheetCellAttr(false);
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArraySheetCellAttr)
 DEFINE_PAIRARRAY_SHEETCOORDKEY(wxSheetCellAttr, wxPairArraySheetCoordsCellAttr)
 DEFINE_PAIRARRAY_INTKEY(wxSheetCellAttr, wxPairArrayIntSheetCellAttr)

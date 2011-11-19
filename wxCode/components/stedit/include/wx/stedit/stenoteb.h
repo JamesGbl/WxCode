@@ -12,7 +12,7 @@
 #define _STENOTEB_H_
 
 #include <wx/notebook.h>
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 class WXDLLIMPEXP_STEDIT FileNameArray;
 

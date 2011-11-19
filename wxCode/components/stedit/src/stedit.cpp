@@ -50,9 +50,9 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/sstream.h>
 #include <wx/log.h>
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steexprt.h>
-#include <wx/stedit/steart.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steexprt.h"
+#include "wx/stedit/steart.h"
 
 #include "wxtrunk.h"
 #include "wxext.h"

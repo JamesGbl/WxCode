@@ -10,8 +10,8 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stelangs.h>
-#include <wx/stedit/stedit.h>
+#include "wx/stedit/stelangs.h"
+#include "wx/stedit/stedit.h"
 
 DEFINE_PAIRARRAY_INTKEY(wxString, wxSTEPairArrayIntString)
 
@@ -5515,7 +5515,7 @@ void LangConfig()
 
         //config->Write(keyName + wxT("Keyword_Count"),  langs.GetKeyWordsCount(n));
         for (i = 0; i < langs.GetKeyWordsCount(n); i++)
-            config->Write(keyName + wxString::Format(wxT("Keyword%d"), i), langs.GetKeyWords(n, i));
+            config->Write(keyName + wxString::Format(wxT("Keyword%d"), (int)i), langs.GetKeyWords(n, i));
 
         if (langs.GetBlockStart(n).Length())
             config->Write(keyName + wxT("BlockStart"),         langs.GetBlockStart(n));

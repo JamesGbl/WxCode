@@ -11,12 +11,12 @@
 #define __wxvidcap_H__
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
 #include "wx/vidcap/vcapwin.h"
-#include "wx/splitter.h"
-#include "wx/image.h"
+#include <wx/splitter.h>
+#include <wx/image.h>
 
 #include "wxvidcap_wdr.h"
 

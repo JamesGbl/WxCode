@@ -1,5 +1,5 @@
 //TODO:
-// 
+//
 // What is the MSW capture window's ID? it's 125 now...
 // EVT_USER + 101? set to a real value...
 // What the heck is an MCI device? vcr/videodisc? do/did they really exist?
@@ -7,7 +7,7 @@
 // Allow for centering of hWnd, when no scrollbars on the window, maybe
 // RegisterHotKey to use SetAbortKey
 // Pinnacle Studio PCTV flashes GUI when device is disconnected and reconnected
-//      and then preview is set on, all video programs do it, if Overlay 
+//      and then preview is set on, all video programs do it, if Overlay
 //      first then preview it's OK, hummm... see DeviceConnect
 // Deal with status callback in a more sensible way
 // Deal with the Yield callback, NOT TESTED
@@ -15,7 +15,7 @@
 // Need to set Preview(false) in program's OnClose or wait for a while?
 
 /////////////////////////////////////////////////////////////////////////////
-// Name:        vcapwin.cpp - wxVideoCaptureWindowBase 
+// Name:        vcapwin.cpp - wxVideoCaptureWindowBase
 // Author:      John Labenski
 // Created:     07/06/01
 // Modified:    01/14/03
@@ -30,28 +30,28 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
 #include "wx/vidcap/vcapwin.h"
-#include "wx/file.h"
+#include <wx/file.h>
 
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
 //----------------------------------------------------------------------------
 
 // array of some predefined "standard" video widths
-const unsigned int wxVIDCAP_VIDEO_WIDTHS[wxVIDCAP_VIDEO_WIDTHS_COUNT] = 
+const unsigned int wxVIDCAP_VIDEO_WIDTHS[wxVIDCAP_VIDEO_WIDTHS_COUNT] =
     {80,128,160,176,180,192,240,320,352,360,384,400,480,640,704,720,768,800,1024};
 // array of some predefined "standard" video heights
-const unsigned int wxVIDCAP_VIDEO_HEIGHTS[wxVIDCAP_VIDEO_HEIGHTS_COUNT] = 
+const unsigned int wxVIDCAP_VIDEO_HEIGHTS[wxVIDCAP_VIDEO_HEIGHTS_COUNT] =
     {60, 96, 120, 144, 180, 240, 288, 300, 360, 480, 576, 600, 768 };
 
 // notes: in MSW can use these if you really want
-// FOURCC mmioStringToFOURCC("CYUV",0) converts strings 
+// FOURCC mmioStringToFOURCC("CYUV",0) converts strings
 // MAKEFOURCC('C','Y','U','V') converts 4 chars
 // some checks: "Y8"="Y8  "=0x20203859 & Y41P=0x50313459
 
@@ -86,7 +86,7 @@ FOURCC StringToFOURCC( const char *s )
     return FOURCC((s4[0])|(s4[1]<<8)|(s4[2]<<16)|(s4[3]<<24));
 }
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayVideoCaptureFormat);
 
 static wxArrayVideoCaptureFormat s_wxVideoCaptureFormats;
@@ -138,8 +138,8 @@ DEFINE_EVENT_TYPE(wxEVT_VIDEO_ERROR)
 
 IMPLEMENT_DYNAMIC_CLASS(wxVideoCaptureEvent, wxEvent)
 
-wxVideoCaptureEvent::wxVideoCaptureEvent(wxEventType commandType, 
-                                         wxVideoCaptureWindowBase *vidCapWin, 
+wxVideoCaptureEvent::wxVideoCaptureEvent(wxEventType commandType,
+                                         wxVideoCaptureWindowBase *vidCapWin,
                                          int Id)
                     :wxEvent(Id, commandType)
 {
@@ -177,20 +177,20 @@ void wxVideoCaptureWindowBase::Reset(bool full)
 
     if (full) m_deviceNames.Clear();
     if (full) m_deviceVersions.Clear();
-    
+
     m_deviceIndex = -1;
 
     m_previewing = false;
     m_preview_wximage = false;
     if (full) m_previewscaled = false;
     if (full) m_previewmsperframe = 66;             // 15fps
-    m_actualpreviewmsperframe = 0; 
-    
+    m_actualpreviewmsperframe = 0;
+
     m_has_overlay = false;
     m_overlaying = false;
 
     if (full) m_framenumber = 0;
-    
+
     m_imageSize = wxSize(0, 0);
     m_minImageSize = wxSize(32, 32);    // just a guess, VFW doesn't support this so...
     m_maxImageSize = wxSize(1024, 768); // just a guess, VFW doesn't support this so...
@@ -201,8 +201,8 @@ wxString wxVideoCaptureWindowBase::GetDeviceName(int index) const
 {
     if (((unsigned int)index < m_deviceNames.GetCount()) && (index >= 0))
         return wxString(m_deviceNames.Item(index));
-    
-    return wxEmptyString; 
+
+    return wxEmptyString;
 }
 
 // get the device version for a particular device
@@ -210,8 +210,8 @@ wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
 {
     if ((index>=0) && (index < (int)m_deviceVersions.GetCount()))
         return wxString(m_deviceVersions.Item(index));
-    
-    return wxEmptyString; 
+
+    return wxEmptyString;
 }
 
 // ----------------------------------------------------------------------
@@ -237,13 +237,13 @@ long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename )
 wxImage wxVideoCaptureWindowBase::GetwxImage()
 {
     return m_wximage;
-/*  
+/*
     if (m_wximage.Ok() && !m_getting_wximage)
     {
         int width = m_wximage.GetWidth();
         int height = m_wximage.GetHeight();
         wxImage outimage( width, height);
-                
+
         unsigned char *m_wximgptr = m_wximage.GetData();
         unsigned char *outimgptr = outimage.GetData();
 
@@ -256,7 +256,7 @@ wxImage wxVideoCaptureWindowBase::GetwxImage()
 
 //-------------------------------------------------------------------------
 // wxVideoCaptureFormat manipulation
-int wxVideoCaptureWindowBase::GetVideoCaptureFormatCount() 
+int wxVideoCaptureWindowBase::GetVideoCaptureFormatCount()
 {
     CreateVideoCaptureFormatArray();
     return s_wxVideoCaptureFormats.GetCount();
@@ -307,13 +307,13 @@ int wxVideoCaptureWindowBase::FindVideoCaptureFormatV4Lpalette(int v4lpalette)
 // define the video 4 linux 1 palette mapping onto the fourcc
 // see /usr/src/linux-2.4.19-16mdk/drivers/media/video/v4l1-compat.c
 // for palette_to_pixelformat(int palette) WHY CAN'T THESE BE PUBLIC! &^#$&*
-// these are set to -1 on other platforms since they don't matter 
+// these are set to -1 on other platforms since they don't matter
 #ifndef WXVIDCAP_LINUX_V4L
 #define VIDEO_PALETTE_GREY     -1 // 1       /* Linear greyscale */
 #define VIDEO_PALETTE_HI240    -1 // 2       /* High 240 cube (BT848) */
 #define VIDEO_PALETTE_RGB565   -1 // 3       /* 565 16 bit RGB */
 #define VIDEO_PALETTE_RGB24    -1 // 4       /* 24bit RGB */
-#define VIDEO_PALETTE_RGB32    -1 // 5       /* 32bit RGB */ 
+#define VIDEO_PALETTE_RGB32    -1 // 5       /* 32bit RGB */
 #define VIDEO_PALETTE_RGB555   -1 // 6       /* 555 15bit RGB */
 #define VIDEO_PALETTE_YUV422   -1 // 7       /* YUV422 capture */
 #define VIDEO_PALETTE_YUYV     -1 // 8
@@ -338,7 +338,7 @@ void wxVideoCaptureWindowBase::CreateVideoCaptureFormatArray()
 #ifdef WXVIDCAP_LINUX_V4L_thisdoesntexistsoitsnotrun
     // These are for v4l, sooo much duplicated work... sigh...
     // see videodev.h videodev2.h bttv-driver.c v4l1-compat.c
-    
+
     _vcf_(wxT("GREY = Y8 Single Y plane, greyscale"), STRING_TO_FOURCC("GREY"),  8, VIDEO_PALETTE_GREY)
     _vcf_(wxT("HI24   8 bpp, dithered color"), STRING_TO_FOURCC("HI24"),     8, VIDEO_PALETTE_HI240)
 
@@ -379,7 +379,7 @@ void wxVideoCaptureWindowBase::CreateVideoCaptureFormatArray()
 //"4:1:1, planar, Y-Cb-Cr", VIDEO_PALETTE_YUV411P, V4L2_PIX_FMT_YUV411P, BT848_COLOR_FMT_YCrCb411, 12, FORMAT_FLAGS_PLANAR, 2, 0,
 //"4:1:0, planar, Y-Cb-Cr", VIDEO_PALETTE_YUV410P, V4L2_PIX_FMT_YUV410, BT848_COLOR_FMT_YCrCb411, 9, FORMAT_FLAGS_PLANAR, 2, 2,
 //"4:1:0, planar, Y-Cr-Cb", -1, V4L2_PIX_FMT_YVU410, BT848_COLOR_FMT_YCrCb411, 9, FORMAT_FLAGS_PLANAR | FORMAT_FLAGS_CrCb, 2, 2,
-//"raw scanlines", VIDEO_PALETTE_RAW, -1, BT848_COLOR_FMT_RAW, 8, FORMAT_FLAGS_RAW, 
+//"raw scanlines", VIDEO_PALETTE_RAW, -1, BT848_COLOR_FMT_RAW, 8, FORMAT_FLAGS_RAW,
 
 #endif // WXVIDCAP_LINUX_V4L
 

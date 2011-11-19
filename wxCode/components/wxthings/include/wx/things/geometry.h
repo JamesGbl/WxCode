@@ -10,7 +10,7 @@
 #ifndef __WXIMAGER_GEOMETRY_H__
 #define __WXIMAGER_GEOMETRY_H__
 
-#include "wx/geometry.h"
+#include <wx/geometry.h>
 #include "wx/things/thingdef.h"
 
 #define wxGEOMETRY_INF 1E100

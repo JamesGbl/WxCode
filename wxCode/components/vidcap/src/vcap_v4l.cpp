@@ -1,5 +1,5 @@
 //TODO:
-// 
+//
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        vcap_v4l.cpp - wxVideoCaptureWindow using Linux V4L2 API
@@ -33,17 +33,17 @@ VIDEO_PALETTE_YUV410P
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
 #if !defined(__WXMSW__)
 
-#include "wx/clipbrd.h"
-#include "wx/file.h"
-#include "wx/dir.h"
+#include <wx/clipbrd.h>
+#include <wx/file.h>
+#include <wx/dir.h>
 
 #include "wx/vidcap/vcapwin.h"
 #include "vcapdlgs.h"
@@ -65,13 +65,13 @@ VIDEO_PALETTE_YUV410P
 //----------------------------------------------------------------------------
 
 // id's for the dialogs, only one at a time please
-enum 
+enum
 {
     IDD_wxVIDCAP_CAPSNGFRAMESDLG = 10,
     IDD_wxVIDCAP_CAPPREFDLG,
     IDD_wxVIDCAP_VIDEOFORMATDLG,
     IDD_wxVIDCAP_AUDIOFORMATDLG,
-    
+
     IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER = 511
 };
 
@@ -98,7 +98,7 @@ wxVideoCaptureWindowV4L::wxVideoCaptureWindowV4L( wxWindow *parent, wxWindowID i
     m_map = MAP_FAILED;
     m_map_size = 0;
     m_preview_wximage = false;
-    
+
     if (!Create( parent, id, pos, size, style, name ))
         wxMessageBox(wxT("Can't create capture window"), wxT("wxVideoCaptureWindow Error"));
 }
@@ -128,9 +128,9 @@ bool wxVideoCaptureWindowV4L::Create( wxWindow *parent, wxWindowID id,
 
     //m_fd_device=open("/dev/video",O_RDONLY);  // open video device
     //if(m_fd_device<0) perror("/dev/video");
-  
+
     mmap_mem();
-  
+
     {
         int xmin, xmax, ymin, ymax;
         unsigned long freq;
@@ -152,7 +152,7 @@ bool wxVideoCaptureWindowV4L::Create( wxWindow *parent, wxWindowID id,
            "whiteness:%d, depth:%d, palette[%d]\n",
         m_video_picture.brightness, m_video_picture.hue, m_video_picture.colour, m_video_picture.contrast,
         m_video_picture.whiteness, m_video_picture.depth, m_video_picture.palette);
-    
+
         printf("#======================== Video Capability\n");
         print_video_capability();
         printf("#======================== Video Window\n");
@@ -204,19 +204,19 @@ void wxVideoCaptureWindowV4L::OnIdle( wxIdleEvent &event )
     if (m_preview_wximage && (m_map != MAP_FAILED))
     {
         event.RequestMore();
-        
+
   if(ioctl(m_fd_device, VIDIOCMCAPTURE, &m_video_mmap)<0)        // start capturing a frame
     perror("VIDIOCMCAPTURE");
 
   if(ioctl(m_fd_device, VIDIOCSYNC, &m_video_mmap.frame)<0)      // wait for end of frame
     perror("VIDIOCSYNC");
-        
+
         m_wximage.Create(m_video_mmap.width, m_video_mmap.height);
         //Y8_to_RGB24((void*)m_map, (void*)m_wximage.GetData(), m_video_mmap.width, m_video_mmap.height);
         memcpy( m_wximage.GetData(), m_map, m_map_size);
         Refresh(false);
     }
-    
+
     event.Skip();
 }
 
@@ -230,7 +230,7 @@ void wxVideoCaptureWindowV4L::DoSetSize(int x, int y, int width, int height,
 // do the window resizing, call whenever video format changes
 void wxVideoCaptureWindowV4L::DoSizeWindow()
 {
-    m_clientSize = GetClientSize(); 
+    m_clientSize = GetClientSize();
 
     int virtual_width, virtual_height;
     GetVirtualSize( &virtual_width, &virtual_height );
@@ -268,10 +268,10 @@ void wxVideoCaptureWindowV4L::OnDraw( wxPaintEvent &event )
     }
 
     event.Skip();
-}   
+}
 
 // ----------------------------------------------------------------------
-// Device Descriptions, get and enumerate 
+// Device Descriptions, get and enumerate
 // ----------------------------------------------------------------------
 // get all the device versions and names, used internally
 void wxVideoCaptureWindowV4L::EnumerateDevices()
@@ -279,12 +279,12 @@ void wxVideoCaptureWindowV4L::EnumerateDevices()
     m_deviceNames.Clear();
     m_deviceVersions.Clear();
     m_deviceFilenames.Clear();
-    
+
     wxString rootDir(wxT("/dev/v4l/"));
     wxString filename;
-    
+
     wxDir dir(rootDir);
-    if (!dir.IsOpened()) 
+    if (!dir.IsOpened())
     {
         wxMessageBox(wxT("Unable to open video devices in /dev/v4l/"),
                      wxT("Error opening video devices"),
@@ -305,7 +305,7 @@ void wxVideoCaptureWindowV4L::EnumerateDevices()
             m_deviceFilenames.Add(rootDir+filename);
             close_device();
         }
-        
+
         has_files = dir.GetNext(&filename);
     }
 }
@@ -315,28 +315,28 @@ void wxVideoCaptureWindowV4L::EnumerateDevices()
 // ----------------------------------------------------------------------
 
 bool wxVideoCaptureWindowV4L::DeviceConnect(int index)
-{   
+{
     wxCHECK_MSG((index >= 0) && (index < GetDeviceCount()), false, wxT("invalid device index"));
-    
-    //if (m_fd_device > -1) 
-    
+
+    //if (m_fd_device > -1)
+
     if (open_device(m_deviceFilenames[index]))
     {
         m_deviceIndex = index;
         V4L_Get_video_capability();
     }
-    
+
     return true;
 }
 
 bool wxVideoCaptureWindowV4L::DeviceDisconnect()
-{   
+{
     m_preview_wximage = false;
     m_deviceIndex = -1;
-    
+
     munmap_mem();
     close_device();
-    
+
     return true;
 }
 
@@ -358,22 +358,22 @@ void wxVideoCaptureWindowV4L::VideoCustomFormatDialog()
 
 void wxVideoCaptureWindowV4L::PropertiesDialog()
 {
-    wxDialog *dialog = new wxDialog(this, -1, wxT("wxVideoCaptureWindow Properties"), 
-                                    wxDefaultPosition, wxDefaultSize, 
-                                    wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODELESS|wxRESIZE_BORDER);
-    
+    wxDialog *dialog = new wxDialog(this, -1, wxT("wxVideoCaptureWindow Properties"),
+                                    wxDefaultPosition, wxDefaultSize,
+                                    wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+
     wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
-    wxTextCtrl *textctrl = new wxTextCtrl( dialog, -1, wxT(""), 
+    wxTextCtrl *textctrl = new wxTextCtrl( dialog, -1, wxT(""),
                                            wxDefaultPosition, wxSize(300,400),
                                            wxTE_MULTILINE|wxTE_READONLY);
-    
+
     dialogsizer->Add( textctrl, 1, wxEXPAND);
 
     dialog->SetAutoLayout(true);
     dialog->SetSizer(dialogsizer);
     dialogsizer->Fit(dialog);
     dialogsizer->SetSizeHints(dialog);
-    
+
     wxString wxstr;
     int i;
     textctrl->AppendText(wxT("Detected Devices:\n"));
@@ -393,7 +393,7 @@ void wxVideoCaptureWindowV4L::PropertiesDialog()
 
     textctrl->AppendText(wxString::Format(wxT("IsDeviceConnected() : %d\n"), IsDeviceConnected()));
     textctrl->AppendText(wxString::Format(wxT("IsDeviceInitialized() : %d\n\n"), IsDeviceInitialized()));
-    
+
     textctrl->AppendText(wxString::Format(wxT("HasVideoSourceDialog() : %d\n"), HasVideoSourceDialog()));
     textctrl->AppendText(wxString::Format(wxT("HasVideoFormatDialog() : %d\n"), HasVideoFormatDialog()));
     textctrl->AppendText(wxString::Format(wxT("HasVideoDisplayDialog() : %d\n\n"), HasVideoDisplayDialog()));
@@ -425,7 +425,7 @@ void wxVideoCaptureWindowV4L::PropertiesDialog()
     textctrl->AppendText(wxString::Format(wxT("DriverSuppliesPalettes() : %d\n"), DriverSuppliesPalettes()));
     textctrl->AppendText(wxString::Format(wxT("IsUsingDefaultPalette() : %d\n"), IsUsingDefaultPalette()));
 
-    dialog->Show(true);
+    dialog->ShowModal();
 }
 
 wxString wxVideoCaptureWindowV4L::GetPropertiesString()
@@ -437,7 +437,7 @@ wxString wxVideoCaptureWindowV4L::GetPropertiesString()
 // Video characteristics and manipulation
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowV4L::GetVideoFormat(int *width, int *height, 
+bool wxVideoCaptureWindowV4L::GetVideoFormat(int *width, int *height,
                                              int *bpp, FOURCC *fourcc)
 {
     if (IsDeviceConnected())
@@ -448,7 +448,7 @@ bool wxVideoCaptureWindowV4L::GetVideoFormat(int *width, int *height,
         //if (fourcc) *fourcc = v4l2_format.v4l2_pix_format.pixelformat;
         return true;
     }
-    
+
     if (width)  *width = 0;
     if (height) *width = 0;
     if (bpp)    *bpp = 0;
@@ -456,10 +456,10 @@ bool wxVideoCaptureWindowV4L::GetVideoFormat(int *width, int *height,
     return false;
 }
 
-bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height, 
+bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height,
                                               int bpp, FOURCC format )
 {
-/*  
+/*
     vd->picture.palette = palette;
     vd->mmap.format = palette;
     if(ioctl(vd->fd, VIDIOCSPICT, &(vd->picture)) < 0) {
@@ -475,16 +475,16 @@ bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height,
 // Capture Preview and Overlay
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview) 
+bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview)
 {
     if (!IsDeviceConnected())
     {
         m_preview_wximage = false;
         return false;
     }
-    
+
     m_preview_wximage = onoff;
-    
+
     if (onoff && (m_map == MAP_FAILED))
     {
         m_map_size = m_video_mmap.width*m_video_mmap.height*1;
@@ -492,7 +492,7 @@ bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview)
       if(m_map==MAP_FAILED) perror("mmap");
       }
 
-    
+
     return false;
 }
 
@@ -509,9 +509,9 @@ bool wxVideoCaptureWindowV4L::SnapshotToWindow()
 {
     return false;
 }
-    
+
 bool wxVideoCaptureWindowV4L::SnapshotToClipboard()
-{   
+{
     return false;
 }
 
@@ -560,33 +560,33 @@ bool wxVideoCaptureWindowV4L::SnapshotTowxImage()
 bool wxVideoCaptureWindowV4L::open_device(const wxString &filename)
 {
     close_device();
-    
+
     wxCharBuffer dev_buffer(filename.ToAscii()); //wxConvUTF8.cWX2MB(filename.c_str()));
     const char* dev_name = dev_buffer.data();
     wxStructStat st;
-    
-    if (-1 == wxStat(filename.c_str(), &st)) 
+
+    if (-1 == wxStat(filename.c_str(), &st))
     {
         fprintf(stderr, "Cannot identify '%s': %d, %s\n",
                 dev_name, errno, strerror (errno));
         return false;
     }
 
-    if (!S_ISCHR(st.st_mode)) 
+    if (!S_ISCHR(st.st_mode))
     {
         fprintf(stderr, "%s is no device\n", dev_name);
         return false;
     }
 
     m_fd_device = open(dev_name, O_RDWR | O_NONBLOCK, 0);
-    if (m_fd_device == -1) 
-    { 
+    if (m_fd_device == -1)
+    {
         fprintf (stderr, "Cannot open '%s': %d, %s\n",
                  dev_name, errno, strerror (errno));
-        //printf("Error opening device : [%s]\n", filename.c_str()); fflush(stdout); 
+        //printf("Error opening device : [%s]\n", filename.c_str()); fflush(stdout);
         return false;
     }
-    
+
     return true;
 }
 bool wxVideoCaptureWindowV4L::close_device()
@@ -604,7 +604,7 @@ bool wxVideoCaptureWindowV4L::mmap_mem()
     if (m_map != MAP_FAILED) munmap_mem();
     if (m_map_size < 1) return false;
     if (m_fd_device == -1) return false;
-    
+
     m_map=mmap(0, m_map_size, PROT_READ, MAP_SHARED, m_fd_device, 0);   // select memory-map
     if(m_map==MAP_FAILED) perror("mmap");
     return m_map != MAP_FAILED;
@@ -636,8 +636,8 @@ int wxVideoCaptureWindowV4L::xioctl(int fd, int request, void *arg) const
 // Get v4l structs
 
 int wxVideoCaptureWindowV4L::V4L_Get_video_capability()
-{ 
-    bool ok = 0==ioctl(m_fd_device, VIDIOCGCAP, &m_video_capability); 
+{
+    bool ok = 0==ioctl(m_fd_device, VIDIOCGCAP, &m_video_capability);
     if (ok)
     {
         m_minImageSize.x = m_video_capability.minwidth;
@@ -647,18 +647,18 @@ int wxVideoCaptureWindowV4L::V4L_Get_video_capability()
     }
     else
     {
-        
-        
+
+
     }
     return ok;
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_buffer()
-{ 
-    return ioctl(m_fd_device, VIDIOCGFBUF, &m_video_buffer); 
+{
+    return ioctl(m_fd_device, VIDIOCGFBUF, &m_video_buffer);
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_window()
-{ 
-    bool ok = 0==ioctl(m_fd_device, VIDIOCGWIN, &m_video_window); 
+{
+    bool ok = 0==ioctl(m_fd_device, VIDIOCGWIN, &m_video_window);
     if (ok)
     {
         m_imageSize.x = m_video_window.width;
@@ -671,47 +671,47 @@ int wxVideoCaptureWindowV4L::V4L_Get_video_window()
     return ok;
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_channel()
-{ 
-    return ioctl(m_fd_device, VIDIOCGCHAN, &m_video_channel); 
+{
+    return ioctl(m_fd_device, VIDIOCGCHAN, &m_video_channel);
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_picture()
-{ 
-    return ioctl(m_fd_device, VIDIOCGPICT, &m_video_picture); 
+{
+    return ioctl(m_fd_device, VIDIOCGPICT, &m_video_picture);
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_tuner()
-{ 
-    return ioctl(m_fd_device, VIDIOCGTUNER, &m_video_tuner); 
+{
+    return ioctl(m_fd_device, VIDIOCGTUNER, &m_video_tuner);
 }
 int wxVideoCaptureWindowV4L::V4L_Get_video_mbuf()
-{ 
-    return ioctl(m_fd_device, VIDIOCGMBUF, &m_video_mbuf); 
+{
+    return ioctl(m_fd_device, VIDIOCGMBUF, &m_video_mbuf);
 }
 
 // Set v4l structs
 
 int wxVideoCaptureWindowV4L::V4L_Set_video_buffer()
-{ 
-    return ioctl(m_fd_device, VIDIOCSFBUF, &m_video_buffer); 
+{
+    return ioctl(m_fd_device, VIDIOCSFBUF, &m_video_buffer);
 }
 int wxVideoCaptureWindowV4L::V4L_Set_video_window()
-{ 
-    return ioctl(m_fd_device, VIDIOCSWIN, &m_video_window); 
+{
+    return ioctl(m_fd_device, VIDIOCSWIN, &m_video_window);
 }
 int wxVideoCaptureWindowV4L::V4L_Set_videoSource(int chan)
-{ 
-    return ioctl(m_fd_device, VIDIOCSCHAN, chan); 
+{
+    return ioctl(m_fd_device, VIDIOCSCHAN, chan);
 }
 int wxVideoCaptureWindowV4L::V4L_Set_video_picture()
-{ 
-    return ioctl(m_fd_device, VIDIOCSPICT, &m_video_picture); 
+{
+    return ioctl(m_fd_device, VIDIOCSPICT, &m_video_picture);
 }
 int wxVideoCaptureWindowV4L::V4L_Set_video_tuner()
-{ 
-    return ioctl(m_fd_device, VIDIOCSTUNER, &m_video_tuner); 
+{
+    return ioctl(m_fd_device, VIDIOCSTUNER, &m_video_tuner);
 }
 
-// print methods for ioctl structs 
-#include <iostream> 
+// print methods for ioctl structs
+#include <iostream>
 #include <fstream>
 #include <iomanip>
 using namespace std;
@@ -721,26 +721,26 @@ void wxVideoCaptureWindowV4L::print_video_capability()
     cerr << "Video Capability: m_video_capability" << endl;
 
     cout << "name: " << m_video_capability.name << endl;
-        
-    cerr << " [ can capture to memory:\t\t\t| " 
+
+    cerr << " [ can capture to memory:\t\t\t| "
          << ((m_video_capability.type & VID_TYPE_CAPTURE)?    "X" : " ") << " ]" << endl;
-    cerr << " [ has a tuner of some form:\t\t\t| " 
+    cerr << " [ has a tuner of some form:\t\t\t| "
          << ((m_video_capability.type & VID_TYPE_TUNER)?      "X" : " ") << " ]" << endl;
-    cerr << " [ has teletext capability:\t\t\t| " 
+    cerr << " [ has teletext capability:\t\t\t| "
          << ((m_video_capability.type & VID_TYPE_TELETEXT)?   "X" : " ") << " ]" << endl;
-    cerr << " [ can overlay images onto frame buffer:\t| " 
+    cerr << " [ can overlay images onto frame buffer:\t| "
          << ((m_video_capability.type & VID_TYPE_OVERLAY)?    "X" : " ") << " ]" << endl;
-    cerr << " [ overlay is chromakeyed:\t\t\t| " 
+    cerr << " [ overlay is chromakeyed:\t\t\t| "
          << ((m_video_capability.type & VID_TYPE_CHROMAKEY)?  "X" : " ") << " ]" << endl;
-    cerr << " [ overlay clipping is supported:\t\t| " 
+    cerr << " [ overlay clipping is supported:\t\t| "
          << ((m_video_capability.type & VID_TYPE_CLIPPING)?   "X" : " ") << " ]" << endl;
-    cerr << " [ overlay overwrites frame buffer memory:\t| " 
+    cerr << " [ overlay overwrites frame buffer memory:\t| "
          << ((m_video_capability.type & VID_TYPE_FRAMERAM)?   "X" : " ") << " ]" << endl;
-    cerr << " [ hardware supports image scaling:\t\t| " 
+    cerr << " [ hardware supports image scaling:\t\t| "
          << ((m_video_capability.type & VID_TYPE_SCALES)?     "X" : " ") << " ]" << endl;
-    cerr << " [ image capture is greyscale only:\t\t| " 
+    cerr << " [ image capture is greyscale only:\t\t| "
          << ((m_video_capability.type & VID_TYPE_MONOCHROME)? "X" : " ") << " ]" << endl;
-    cerr << " [ capture can be of only part of the image:\t| " 
+    cerr << " [ capture can be of only part of the image:\t| "
          << ((m_video_capability.type & VID_TYPE_SUBCAPTURE)? "X" : " ") << " ]" << endl;
 
     cerr << "channels: "  << m_video_capability.channels  << endl;
@@ -760,7 +760,7 @@ void wxVideoCaptureWindowV4L::print_video_window()
     cerr << "width: "     << m_video_window.width     << endl;
     cerr << "height: "    << m_video_window.height    << endl;
     cerr << "chromakey: " << m_video_window.chromakey << endl;
-    __u32 mask = 0x1 << sizeof(mask)*8 - 1;
+    __u32 mask = (0x1 << (sizeof(mask)*8 - 1));
     cerr << "flags: ";
             for (unsigned int b = 0; b < sizeof(mask)*8; b++, mask >>= 1)
                     cerr << (m_video_window.flags & mask ? "1" : "0");
@@ -770,22 +770,22 @@ void wxVideoCaptureWindowV4L::print_video_window()
 void wxVideoCaptureWindowV4L::print_video_channel()
 {
     cerr << "Video Channel: m_video_channel" << endl;
-    
+
     cerr << "number: " << m_video_channel.channel << endl;
     cerr << "name: "   << m_video_channel.name    << endl;
     cerr << "tuners: " << m_video_channel.tuners  << endl;
     cerr << "flags: "  << endl;
-    cerr << " [ channel has tuners:\t\t\t| " 
+    cerr << " [ channel has tuners:\t\t\t| "
          << ((m_video_channel.flags & VIDEO_VC_TUNER)? "X" : " ") << " ]" << endl;
-    cerr << " [ channel has audio:\t\t\t| " 
+    cerr << " [ channel has audio:\t\t\t| "
          << ((m_video_channel.flags & VIDEO_VC_AUDIO)? "X" : " ") << " ]" << endl;
 // XXX not in header
-//      cerr << " [ channel has norm setting:\t\t| " 
+//      cerr << " [ channel has norm setting:\t\t| "
 //           << ((chan.flags & VIDEO_VC_NORM)? "X" : " ") << " ]" << endl;
     cerr << "type: "   << endl;
-    cerr << " [ input is a tv input:\t\t\t| " 
+    cerr << " [ input is a tv input:\t\t\t| "
          << ((m_video_channel.flags & VIDEO_TYPE_TV)? "X" : " ") << " ]" << endl;
-    cerr << " [ input is a camera:\t\t\t| " 
+    cerr << " [ input is a camera:\t\t\t| "
          << ((m_video_channel.flags & VIDEO_TYPE_CAMERA)? "X" : " ") << " ]" << endl;
     cerr << "norm: "   << m_video_channel.norm << endl;
 }

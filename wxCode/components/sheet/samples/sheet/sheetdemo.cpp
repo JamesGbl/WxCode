@@ -22,23 +22,23 @@
 #endif
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
 #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif
 
-#include "wx/colordlg.h"
-#include "wx/fontdlg.h"
-#include "wx/artprov.h"
-#include "wx/stopwatch.h"
+#include <wx/colordlg.h>
+#include <wx/fontdlg.h>
+#include <wx/artprov.h>
+#include <wx/stopwatch.h>
 
 #if wxCHECK_VERSION(2,7,0)
-    #include "wx/numdlg.h"
+    #include <wx/numdlg.h>
 #endif //wxCHECK_VERSION(2,7,0)
 
 #include "wx/sheet/sheet.h"

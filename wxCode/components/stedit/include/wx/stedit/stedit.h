@@ -23,11 +23,11 @@ class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
 class WXDLLIMPEXP_FWD_CORE wxFindDialogEvent;
 class WXDLLIMPEXP_FWD_CORE wxToolBar;
 
-#include <wx/stedit/stedefs.h>
-#include <wx/stedit/steprefs.h>
-#include <wx/stedit/stestyls.h>
-#include <wx/stedit/stelangs.h>
-#include <wx/stedit/steopts.h>
+#include "wx/stedit/stedefs.h"
+#include "wx/stedit/steprefs.h"
+#include "wx/stedit/stestyls.h"
+#include "wx/stedit/stelangs.h"
+#include "wx/stedit/steopts.h"
 
 class WXDLLIMPEXP_STEDIT wxSTEditorFindReplaceDialog;
 
@@ -1038,12 +1038,12 @@ typedef void (wxEvtHandler::*wxSTEditorEventFunction)(wxSTEditorEvent&);
 
 
 // include the others so that only this file needs to be included for everything
-#include <wx/stedit/stenoteb.h>
-#include <wx/stedit/steframe.h>
-#include <wx/stedit/stesplit.h>
-#include <wx/stedit/steprint.h>
-#include <wx/stedit/stemenum.h>
-#include <wx/stedit/stedlgs.h>
-#include <wx/stedit/stefindr.h>
+#include "wx/stedit/stenoteb.h"
+#include "wx/stedit/steframe.h"
+#include "wx/stedit/stesplit.h"
+#include "wx/stedit/steprint.h"
+#include "wx/stedit/stemenum.h"
+#include "wx/stedit/stedlgs.h"
+#include "wx/stedit/stefindr.h"
 
 #endif  // _STEDIT_H_

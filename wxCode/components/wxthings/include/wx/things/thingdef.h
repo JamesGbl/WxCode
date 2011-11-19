@@ -12,7 +12,7 @@
 #ifndef __WX_THINGDEF_H__
 #define __WX_THINGDEF_H__
 
-#include "wx/defs.h"
+#include <wx/defs.h>
 
 //-----------------------------------------------------------------------------
 // The version of wxThings
@@ -52,7 +52,7 @@
 // wxWidgets backwards compatibility macros
 // ----------------------------------------------------------------------------
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 #ifndef WX_DECLARE_OBJARRAY_WITH_DECL // for wx2.4 backwards compatibility
     #define WX_DECLARE_OBJARRAY_WITH_DECL(T, name, expmode) WX_DECLARE_USER_EXPORTED_OBJARRAY(T, name, WXDLLIMPEXP_THINGS)
 #endif

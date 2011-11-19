@@ -7,13 +7,13 @@
 // License:     wxWidgets V2.0
 /////////////////////////////////////////////////////////////////////////////
 //
-// Usage notes: 
+// Usage notes:
 
 #ifndef __WX_VCAP_V4L_H__
 #define __WX_VCAP_V4L_H__
 
-#include "wx/defs.h"
-#include "wx/timer.h"
+#include <wx/defs.h>
+#include <wx/timer.h>
 
 #if !defined(__WXMSW__)
 
@@ -33,13 +33,13 @@ class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowV4L: public wxVideoCaptureWindowBas
 public:
     wxVideoCaptureWindowV4L() : wxVideoCaptureWindowBase() {}
     wxVideoCaptureWindowV4L( wxWindow *parent, wxWindowID id = -1,
-                             const wxPoint &pos = wxDefaultPosition, 
+                             const wxPoint &pos = wxDefaultPosition,
                              const wxSize &size = wxDefaultSize,
                              long style = wxSIMPLE_BORDER,
                              const wxString &name = wxT("wxVideoCaptureWindow"));
 
     bool Create( wxWindow *parent, wxWindowID id = -1,
-                 const wxPoint &pos = wxDefaultPosition, 
+                 const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize,
                  long style = wxSIMPLE_BORDER,
                  const wxString &name = wxT("wxVideoCaptureWindow"));
@@ -47,10 +47,10 @@ public:
     virtual ~wxVideoCaptureWindowV4L();
 
     // ----------------------------------------------------------------------
-    // Device descriptions & versions, get and enumerate 
+    // Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
 
-    void EnumerateDevices(); 
+    void EnumerateDevices();
 
     // ----------------------------------------------------------------------
     // Connect or Disconnect to device
@@ -79,11 +79,11 @@ public:
     // ----------------------------------------------------------------------
 
     void OnPreviewwxImageTimer(wxTimerEvent& event); // get frames
-    
+
     bool Preview(bool onoff, bool wxpreview = false);
     bool Overlay(bool WXUNUSED(on)) { return false; }
 
-    bool SetPreviewRateMS( unsigned int msperframe = 66 ) 
+    bool SetPreviewRateMS( unsigned int msperframe = 66 )
 	{ return DoSetPreviewRateMS( msperframe ); }
 
     // ----------------------------------------------------------------------
@@ -101,7 +101,7 @@ public:
     // ----------------------------------------------------------------------
 
     // NOT IMPLEMENTED
-    
+
     // ----------------------------------------------------------------------
     // Capture streaming video to an AVI file
     // ----------------------------------------------------------------------
@@ -120,7 +120,7 @@ public:
 
     // NOT IMPLEMENTED
 
-protected:  
+protected:
     // ----------------------------------------------------------------------
     // Implementation
     // ----------------------------------------------------------------------
@@ -130,10 +130,10 @@ protected:
     void OnIdle( wxIdleEvent &event );
 
     // ----------------------------------------------------------------------
-    // Size & Position functions 
+    // Size & Position functions
     // ----------------------------------------------------------------------
 
-    virtual void DoSetSize(int x, int y, int width, int height, 
+    virtual void DoSetSize(int x, int y, int width, int height,
                            int sizeFlags = wxSIZE_AUTO);
     // adjust the scrollbars, use to generally refresh too
     void DoSizeWindow();
@@ -152,11 +152,11 @@ protected:
     // ----------------------------------------------------------------------
 
     // FIXME add conversion here!
-    
+
     // ----------------------------------------------------------------------
     // Member Variables
     // ----------------------------------------------------------------------
-    
+
     // Generic variables
     wxArrayString m_deviceFilenames; // all device files from EnumerateDevices
 
@@ -171,27 +171,27 @@ protected:
 
     wxString m_statustext;          // MSW status messages
     wxString m_errortext;           // MSW error messages
-    
+
     // V4L specific variables
-    
+
     // safe - open and close a device (can call w/o checks)
     int m_fd_device;      // the device m_fd_device = open("/dev/video",O_RDWR)
     bool open_device(const wxString &filename);
     bool close_device();
-    
+
     // safe - map and unmap the shared video memory (can call w/o checks)
-    void *m_map;            // memory map of the 
+    void *m_map;            // memory map of the
     int m_map_size;         // size of memory map
     bool mmap_mem();        // mmap the memory to m_map
     bool munmap_mem();      // mumap the memory from m_map
-    
+
     // safe - ioctl function
     int xioctl(int fd, int request, void *arg) const;
-    
+
     // v4l structs
-    struct video_mbuf       m_video_mbuf; // 
-    struct video_mmap       m_video_mmap; 
-    struct video_capability m_video_capability;  
+    struct video_mbuf       m_video_mbuf; //
+    struct video_mmap       m_video_mmap;
+    struct video_capability m_video_capability;
     struct video_window     m_video_window;
     struct video_picture    m_video_picture;
     struct video_buffer     m_video_buffer;
@@ -222,7 +222,7 @@ protected:
     void print_video_window();
     void print_video_channel();
     void print_video_mbuf();
-    
+
 private:
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxVideoCaptureWindowV4L)

@@ -11,7 +11,7 @@
 #ifndef _STEOPTS_H_
 #define _STEOPTS_H_
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 class WXDLLIMPEXP_FWD_CORE wxFileHistory;
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;

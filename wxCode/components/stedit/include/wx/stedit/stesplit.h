@@ -13,7 +13,7 @@
 
 #include <wx/splitter.h>
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorSplitter - allows for two different views of the same doc

@@ -11,9 +11,9 @@
 
 #include "precomp.h"
 
-#include <wx/stedit/stefindr.h>
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steart.h>
+#include "wx/stedit/stefindr.h"
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steart.h"
 #include "stedlgs_wdr.h"
 #include "wxext.h"
 

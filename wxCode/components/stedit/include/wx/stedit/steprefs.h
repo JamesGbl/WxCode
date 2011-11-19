@@ -11,7 +11,7 @@
 #ifndef _STEPREFS_H_
 #define _STEPREFS_H_
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;

@@ -12,12 +12,12 @@
 #ifndef __WX_SHEETDEF_H__
 #define __WX_SHEETDEF_H__
 
-#include "wx/defs.h"
-#include "wx/datetime.h"
+#include <wx/defs.h>
+#include <wx/datetime.h>
 #include "wx/sheet/wx24defs.h"   // wx2.4 backwards compatibility
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 #if wxCHECK_VERSION(2,5,0)
-    #include "wx/arrstr.h"
+    #include <wx/arrstr.h>
 #endif // wxCHECK_VERSION(2,5,0)
 #include "wx/sheet/pairarr.h"
 
@@ -63,12 +63,12 @@
 #define wxSHEET_CHECKUPDATE_RET(pos, count, origcount) \
     wxCHECK_RET((int(count) == 0) || ((int(count) > 0) && (int(pos) <= int(origcount))) || \
                                      ((int(count) < 0) && (int(pos) - int(count) <= int(origcount))), \
-          wxString::Format(wxT("Updating past end of array, pos %d count %d, orig count %d"), pos, count, origcount));
+          wxString::Format(wxT("Updating past end of array, pos %d count %d, orig count %d"), int(pos), int(count), int(origcount)));
 
 #define wxSHEET_CHECKUPDATE_MSG(pos, count, origcount, ret) \
     wxCHECK_MSG((int(count) == 0) || ((int(count) > 0) && (int(pos) <= int(origcount))) || \
                                      ((int(count) < 0) && (int(pos) - int(count) <= int(origcount))), ret, \
-          wxString::Format(wxT("Updating past end of array, pos %d count %d, orig count %d"), pos, count, origcount));
+          wxString::Format(wxT("Updating past end of array, pos %d count %d, orig count %d"), int(pos), int(count), int(origcount)));
 
 // ----------------------------------------------------------------------------
 // Complete list of classes implemented by wxSheet

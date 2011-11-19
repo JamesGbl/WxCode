@@ -11,7 +11,7 @@
 #ifndef _STEMENUM_H_
 #define _STEMENUM_H_
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 class WXDLLIMPEXP_FWD_CORE wxMenu;
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;

@@ -17,7 +17,7 @@ class WXDLLIMPEXP_THINGS wxRangeDouble;
 class WXDLLIMPEXP_THINGS wxRangeIntSelection;
 class WXDLLIMPEXP_THINGS wxRangeDoubleSelection;
 
-#include "wx/dynarray.h"
+#include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY_WITH_DECL(wxRangeInt, wxArrayRangeInt, class WXDLLIMPEXP_THINGS);
 WX_DECLARE_OBJARRAY_WITH_DECL(wxRangeDouble, wxArrayRangeDouble, class WXDLLIMPEXP_THINGS);
 WX_DECLARE_OBJARRAY_WITH_DECL(wxRangeIntSelection, wxArrayRangeIntSelection, class WXDLLIMPEXP_THINGS);

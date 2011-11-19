@@ -26,29 +26,29 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/defs.h"
-    #include "wx/utils.h"
-    #include "wx/dcclient.h"
-    #include "wx/dcscreen.h"
-    #include "wx/settings.h"
-    #include "wx/log.h"
-    #include "wx/combobox.h"
+    #include <wx/defs.h>
+    #include <wx/utils.h>
+    #include <wx/dcclient.h>
+    #include <wx/dcscreen.h>
+    #include <wx/settings.h>
+    #include <wx/log.h>
+    #include <wx/combobox.h>
 #endif // WX_PRECOMP
 
 #include "wx/sheet/sheet.h"
 #include "wx/sheet/sheetspt.h" // for wxSheetSplitterEvent, wxEVT_SHEET_SPLIT_BEGIN
 
-#include "wx/event.h"
-#include "wx/timer.h"
-#include "wx/clipbrd.h"
-#include "wx/renderer.h"
+#include <wx/event.h>
+#include <wx/timer.h>
+#include <wx/clipbrd.h>
+#include <wx/renderer.h>
 
 // Required for wxIs... functions
 #include <ctype.h>
@@ -553,7 +553,7 @@ void wxSheet::Init()
 #define _USE_VISATTR 0
 
 #if _USE_VISATTR
-#include "wx/listbox.h"
+#include <wx/listbox.h>
 #endif
 
 bool wxSheet::Create( wxWindow *parent, wxWindowID id,
@@ -2507,7 +2507,7 @@ bool wxSheet::ToggleColSelection( int col, bool addToSelected, bool sendEvt )
 // ----------------------------------------------------------------------------
 // Copy/Paste
 
-#include "wx/dataobj.h"
+#include <wx/dataobj.h>
 
 //#define wxDF_wxSHEET (wxDF_MAX+1001)  // works w/ GTK 1.2 non unicode
 const wxChar* wxDF_wxSHEET = wxT("wxDF_wxSHEET");
@@ -7314,7 +7314,7 @@ Friend Function ParseCSV02(sExpr$, arVals$()) As Long
 End Function
 */
 
-#include "wx/regex.h"
+#include <wx/regex.h>
 
 
 
@@ -7391,7 +7391,7 @@ void CSV_TEST(const wxString& instr, const wxArrayString& ans, const wxArrayStri
         wxPrintf(wxT("COUNT MISMATCH ERROR! \n"));
 
     for (size_t n = 0; n < wxMin(ans.GetCount(), res.GetCount()); n++)
-        if (ans[n] != res[n]) wxPrintf(wxT("Error in item %u\n"), n);
+        if (ans[n] != res[n]) wxPrintf(wxT("Error in item %d\n"), (int)n);
 
     wxPrintf(msg + wxT("\n"));
 }

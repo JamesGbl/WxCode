@@ -10,14 +10,14 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/utils.h"
+    #include <wx/utils.h>
 #endif // WX_PRECOMP
 
 #include "wx/things/range.h"
@@ -26,7 +26,7 @@
 const wxRangeInt wxEmptyRangeInt(0, -1);
 const wxRangeDouble wxEmptyRangeDouble(0, -1);
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayRangeInt);
 WX_DEFINE_OBJARRAY(wxArrayRangeDouble);
 WX_DEFINE_OBJARRAY(wxArrayRangeIntSelection);

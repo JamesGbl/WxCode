@@ -17,8 +17,8 @@
 #endif
 
 #include "wx/sheet/sheetdef.h"
-#include "wx/font.h"
-#include "wx/colour.h"
+#include <wx/font.h>
+#include <wx/colour.h>
 
 class WXDLLIMPEXP_SHEET wxSheetCellAttr;
 

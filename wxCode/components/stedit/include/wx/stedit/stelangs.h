@@ -11,12 +11,12 @@
 #ifndef _STELANGS_H_
 #define _STELANGS_H_
 
-#include <wx/stedit/stedefs.h>
-#include <wx/stedit/steprefs.h>
+#include "wx/stedit/stedefs.h"
+#include "wx/stedit/steprefs.h"
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
-#include <wx/stedit/pairarr.h>
+#include "wx/stedit/pairarr.h"
 DECLARE_PAIRARRAY_INTKEY(wxString, wxArrayString, wxSTEPairArrayIntString, class WXDLLIMPEXP_STEDIT)
 
 //----------------------------------------------------------------------------

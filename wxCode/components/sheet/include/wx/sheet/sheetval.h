@@ -34,7 +34,7 @@ bool wxArrayStringUpdatePos(wxArrayString& arr, size_t pos, int num, bool no_err
 // ----------------------------------------------------------------------------
 
 #if wxUSE_GRID
-    #include "wx/grid.h"           // get wxGridStringArray from grid
+    #include <wx/grid.h>           // get wxGridStringArray from grid
     typedef wxGridStringArray wxSheetStringArray;
 #else // !wxUSE_GRID
     WX_DECLARE_OBJARRAY_WITH_DECL(wxArrayString, wxSheetStringArray,

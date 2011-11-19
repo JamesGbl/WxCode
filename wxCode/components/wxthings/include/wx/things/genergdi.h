@@ -11,9 +11,9 @@
 #ifndef _WX_GENERGDI_H_
 #define _WX_GENERGDI_H_
 
-#include "wx/colour.h"
-#include "wx/pen.h"
-#include "wx/brush.h"
+#include <wx/colour.h>
+#include <wx/pen.h>
+#include <wx/brush.h>
 #include "wx/things/thingdef.h"
 
 class WXDLLIMPEXP_THINGS wxGenericColour;

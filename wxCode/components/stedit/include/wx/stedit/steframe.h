@@ -27,7 +27,7 @@ class WXDLLIMPEXP_FWD_CORE wxFileHistory;
 class WXDLLIMPEXP_FWD_CORE wxTreeCtrl;
 class WXDLLIMPEXP_FWD_CORE wxTreeEvent;
 
-#include <wx/stedit/stedefs.h>
+#include "wx/stedit/stedefs.h"
 
 //-----------------------------------------------------------------------------
 // wxSTEditorFrame - a generic frame to contain either a single editor

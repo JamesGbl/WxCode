@@ -17,7 +17,7 @@
 #endif
 
 #include "wx/sheet/sheet.h"
-#include "wx/splitter.h"
+#include <wx/splitter.h>
 
 // ----------------------------------------------------------------------------
 // wxSheetSplitter - a 4 way splitter class for the wxSheet

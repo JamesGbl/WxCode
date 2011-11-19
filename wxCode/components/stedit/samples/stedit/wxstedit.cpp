@@ -37,9 +37,9 @@
 #include <wx/filename.h>
 #include <wx/stockitem.h>
 
-#include <wx/stedit/stedit.h>
-#include <wx/stedit/steshell.h>
-#include <wx/stedit/steart.h>
+#include "wx/stedit/stedit.h"
+#include "wx/stedit/steshell.h"
+#include "wx/stedit/steart.h"
 #include "../../art/pencil16.xpm"
 
 #include <wx/cmdline.h>

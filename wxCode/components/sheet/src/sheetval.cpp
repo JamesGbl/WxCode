@@ -16,7 +16,7 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -31,7 +31,7 @@
 
 // ----------------------------------------------------------------------------
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayPairArrayIntSheetString)
 DEFINE_PAIRARRAY_INTKEY(wxString, wxPairArrayIntSheetString)
 DEFINE_PAIRARRAY_INTKEY(wxPairArrayIntSheetString, wxPairArrayIntPairArraySheetString)

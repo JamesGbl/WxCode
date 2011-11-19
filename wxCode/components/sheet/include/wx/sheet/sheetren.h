@@ -17,8 +17,8 @@
 #endif
 
 #include "wx/sheet/sheetdef.h"
-#include "wx/datetime.h"
-#include "wx/bitmap.h"
+#include <wx/datetime.h>
+#include <wx/bitmap.h>
 
 class WXDLLIMPEXP_SHEET wxSheetCellRendererRefData;
 
