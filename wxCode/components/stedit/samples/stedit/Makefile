@@ -22,10 +22,20 @@ WXCXX      := $(shell $(WXCONFIG) --cxx)
 WXCXXFLAGS := $(shell $(WXCONFIG) --cxxflags)
 WXLIBS     := $(shell $(WXCONFIG) --libs stc,html,adv,core,base)
 
+WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
+
 # Try to get the lib path, "/usr/local/lib64" from wx-config --libs = "-L/usr/local/lib64 -pthread ..."
 WXLIBDIR   := $(shell $(WXCONFIG) --libs | awk '{for(i=1;i<=NF;i++) if ($$i~/\-L/){ print substr($$i,3) } }')
 
-WXSTC_LIB  := $(WXBASENAME)_stc-$(WXRELEASE)
+ifeq (x$(WXLIBDIR),x)
+    WXLIBDIR_RPATH := 
+else
+    WXLIBDIR_RPATH := -Xlinker -rpath $(WXLIBDIR)
+endif
+
+
+
+
 
 # ----------------------------------------------------------------------------
 # Settings for the stedit library
@@ -85,11 +95,11 @@ stedit_lib :
 
 # wxstedit program using shared stedit.so library
 wxstedit: $(OBJECTS) stedit_lib
-	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXLIBDIR) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
+	$(CXX) $(LDFLAGS_EXE) $(WXLIBDIR_RPATH) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
 
 # wxstedit program using static stedit.a library
 wxstedit-static: $(OBJECTS) stedit_lib
-	$(CXX) $(LDFLAGS_EXE) -Xlinker -rpath $(WXLIBDIR) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
+	$(CXX) $(LDFLAGS_EXE) $(WXLIBDIR_RPATH) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
 
 docs:
 	# requires wxLua's bin2c.lua program where $(WXLUA) is environment var
