@@ -1706,7 +1706,7 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
         // all went right - it did if we get here
         m_editor->SetFileEncoding(wxTextEncoding::TypeToString((wxTextEncoding::Type)(m_encoding - ENC_OFFSET)));
         m_editor->SetFileBOM(m_bom);
-        m_editor->SetModified(true); // Our own SetModified() implementation as wxStyledTextCtrl::SetModified() asserts in wx29
+        m_editor->SetModified(true);
     }
     return ok;
 }

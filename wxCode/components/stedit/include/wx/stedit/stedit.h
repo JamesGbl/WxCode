@@ -267,12 +267,20 @@ public :
     void SetValue(const wxString& text)   { SetText(text); }
     void ChangeValue(const wxString& text){ SetText(text); }
     wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
+
+    // verbatim copy of wx trunk wxTextAreaBase::SetModified()
+    void SetModified(bool modified) 
+    {
+        if ( modified )
+            MarkDirty();
+        else
+            DiscardEdits();
+    }
 #endif
     wxString GetLineText(int line) const; // excluding any cr/lf at end
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
 
     virtual void SetEditable(bool editable); // -> OnChangeFilename()
-    void SetModified(bool modified); // -> OnChangeFilename()
 
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
@@ -322,13 +330,12 @@ public :
     STE_TextPos GetTargetStart() const   { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetStart(); }
     STE_TextPos GetTargetEnd() const     { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetTargetEnd(); }
 
-    virtual bool IsEditable() const { return !wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); } // not in wx2.8; overridable in wx trunk so make it virtual here too
+    virtual bool IsEditable() const { return !wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetReadOnly(); } // not in wx2.8; virtual in wx trunk so make it virtual here too
 
     int LineFromPosition(STE_TextPos pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
     STE_TextPos PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
-
 #endif // (wxVERSION_NUMBER >= 2900)
-    virtual bool IsModified() const // not in wx2.8; overridable in wx trunk so make it virtual here too
+    virtual bool IsModified() const // not in wx2.8; virtual in wx trunk so make it virtual here too
     {
     #if (wxVERSION_NUMBER >= 2900)
         return m_dirty_flag || wxStyledTextCtrl::IsModified();
@@ -336,16 +343,8 @@ public :
         return m_dirty_flag || wxConstCast(this, wxSTEditor)->GetModify();
     #endif
     }
-
-    virtual void DiscardEdits() // not in wx2.8; overridable in wx trunk so make it virtual here too
-    {
-    #if (wxVERSION_NUMBER >= 2900)
-        wxStyledTextCtrl::DiscardEdits();
-    #else
-        SetSavePoint();
-    #endif
-        m_dirty_flag = false;
-    }
+    virtual void MarkDirty(); // not in wx2.8; virtual in wx trunk so make it virtual here too
+    virtual void DiscardEdits(); // not in wx2.8; virtual in wx trunk so make it virtual here too
 
     // ------------------------------------------------------------------------
     // Convenience functions - other useful functions

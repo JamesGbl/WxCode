@@ -776,25 +776,21 @@ void wxSTEditor::SetEditable(bool editable)
     OnChangeFilename();
 }
 
-void wxSTEditor::SetModified(bool modified)
+void wxSTEditor::DiscardEdits()
 {
-    if (IsModified() == modified)
-    {
-        return;
-    }
-    if (modified)
-    {
-        // wxStyledTextCtrl::SetModified(modified); // asserts in wx29, rely instead on m_dirty_flag below
-    }
-    else
-    {
-    #if (wxVERSION_NUMBER >= 2900)
-        wxStyledTextCtrl::SetModified(modified); // -> DiscardEdits();
-    #else
-        DiscardEdits(); // clears m_dirty_flag
-    #endif
-    }
-    m_dirty_flag = modified;
+#if (wxVERSION_NUMBER >= 2900)
+    wxStyledTextCtrl::DiscardEdits();
+#else
+    SetSavePoint();
+#endif
+    m_dirty_flag = false;
+    OnChangeFilename();
+}
+
+void wxSTEditor::MarkDirty()
+{
+    //wxStyledTextCtrl::MarkDirty(); // not implemented, asserts
+    m_dirty_flag = true;
     OnChangeFilename();
 }
 
@@ -4047,7 +4043,7 @@ void wxSTEditor::SetTreeItemId(const wxTreeItemId& id)
     GetSTERefData()->m_treeItemId = id;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2854")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2860")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
