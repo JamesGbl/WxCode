@@ -2181,10 +2181,14 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
     const wxFileOffset stream_len = stream.GetLength();
     bool ok = (stream_len <= STE_MaxFileSize);
 
+    ClearAll();
+
     if (ok)
     {
         bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         wxCharBuffer charBuf(stream_len);
+        wxString str;
+        wxBOM file_bom = wxBOM_None;
 
         if (  (encoding == wxTextEncoding::None)
             && dynamic_cast<wxStringInputStream*>(&stream))
@@ -2199,8 +2203,6 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
 
         if (ok)
         {
-            wxString str;
-            wxBOM file_bom = wxBOM_None;
             bool found_lang = false;
             bool html = false;
             bool xml = false;
@@ -2310,15 +2312,13 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, wxTextEncoding::None);
                 }
             }
-            if (ok)
-            {
-                SetText(str);
-                SetFileEncoding(wxTextEncoding::TypeToString(encoding));
-                SetFileBOM(file_bom != wxBOM_None);
-            }
         }
         if (ok)
         {
+            SetText(str);
+            SetFileEncoding(wxTextEncoding::TypeToString(encoding));
+            SetFileBOM(file_bom != wxBOM_None);
+
             UpdateCanDo(true);
             EmptyUndoBuffer();
             SetModified(false);
@@ -2326,6 +2326,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             ScrollToColumn(0); // extra help to ensure scrolled to 0
                                // otherwise scrolled halfway thru 1st char
             SetFileName(fileName, true);
+            SetFileModificationTime(fileName.GetModificationTime());
         }
     }
     else if (!noerrdlg)
@@ -2378,35 +2379,12 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
 
     GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
 
-    wxStructStat statstr;
-    wxStat( fileName.GetFullPath(), &statstr );
-
-    if (statstr.st_size > STE_MaxFileSize)
-    {
-        wxMessageBox(_("This file is too large for this editor, sorry."),
-                     _("Error loading file"), wxOK|wxICON_ERROR, GetModalParent());
-
-        return false;
-    }
-
-    ClearAll();
-
     int load_flags = GetEditorPrefs().IsOk() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
 
     // use streams method to allow loading unicode files
     wxFileInputStream stream(fileName.GetFullPath());
-    bool ok = stream.IsOk();
-    if (ok)
-        ok = LoadFile(stream, fileName, load_flags, NULL, encoding);
-
-    if (!ok)
-        return false;
-
-    SetFileModificationTime(fileName.GetModificationTime());
-    SetFileName(fileName, true);
-    UpdateCanDo(true);
-
-    return ok;
+    
+    return stream.IsOk() && LoadFile(stream, fileName, load_flags, NULL, encoding);
 }
 
 bool wxSTEditor::SaveFile( wxOutputStream& stream, const wxString& encoding, bool file_bom)
