@@ -57,10 +57,10 @@ enum wxBlockSort_Type
 };
 
 // functions to sort an array of blocks from any corner
-extern void wxArrayBlockIntSort(wxArrayBlockInt &blocks,
+WXDLLIMPEXP_THINGS void wxArrayBlockIntSort(wxArrayBlockInt &blocks,
                                 wxBlockSort_Type type = wxBLOCKSORT_TOPLEFT_BOTTOMRIGHT);
 
-extern void wxArrayBlockDoubleSort(wxArrayBlockDouble &blocks,
+WXDLLIMPEXP_THINGS void wxArrayBlockDoubleSort(wxArrayBlockDouble &blocks,
                                    wxBlockSort_Type type = wxBLOCKSORT_TOPLEFT_BOTTOMRIGHT);
 
 //=============================================================================

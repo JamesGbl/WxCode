@@ -107,11 +107,11 @@ private :
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 
 // Try to get a wxPlotFunction from the wxClipboard, return !Ok plotfunction on failure
-wxPlotFunction wxClipboardGetPlotFunction();
+WXDLLIMPEXP_PLOTCTRL wxPlotFunction wxClipboardGetPlotFunction();
 // Set the plot function curve into the clipboard. Copies function and vars string
 // separated by a ';' as a text object, use wxString::Before/AfterLast(wxT(';')).
 // returns sucess
-bool wxClipboardSetPlotFunction(const wxPlotFunction& plotFunction);
+WXDLLIMPEXP_PLOTCTRL bool wxClipboardSetPlotFunction(const wxPlotFunction& plotFunction);
 
 #endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 

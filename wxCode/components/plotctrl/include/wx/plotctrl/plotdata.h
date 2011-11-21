@@ -433,12 +433,12 @@ private:
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 
 // Try to get a wxPlotData from the wxClipboard, returns !Ok plotdata on failure
-wxPlotData wxClipboardGetPlotData();
+WXDLLIMPEXP_PLOTCTRL wxPlotData wxClipboardGetPlotData();
 // Set the plotdata curve into the wxClipboard, actually just sets a
 // wxPlotDataObject which is a string containing wxNow. The plotdata is not
 // actually copied to the clipboard since no other program could use it anyway.
 // returns sucess
-bool wxClipboardSetPlotData(const wxPlotData& plotData);
+WXDLLIMPEXP_PLOTCTRL bool wxClipboardSetPlotData(const wxPlotData& plotData);
 
 // ----------------------------------------------------------------------------
 // wxPlotDataObject - a wxClipboard object
@@ -446,7 +446,7 @@ bool wxClipboardSetPlotData(const wxPlotData& plotData);
 #include "wx/dataobj.h"
 
 //#define wxDF_wxPlotData (wxDF_MAX+1010)  // works w/ GTK 1.2 non unicode
-extern const wxChar* wxDF_wxPlotData;      // wxT("wxDF_wxPlotData");
+extern WXDLLIMPEXP_DATA_PLOTCTRL(const wxChar*) wxDF_wxPlotData;      // wxT("wxDF_wxPlotData");
 
 class WXDLLIMPEXP_PLOTCTRL wxPlotDataObject : public wxTextDataObject
 {

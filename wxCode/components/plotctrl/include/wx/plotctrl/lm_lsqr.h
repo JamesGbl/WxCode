@@ -53,8 +53,9 @@ extern "C" {
 typedef bool (*LM_LeastSquareProgressHandler_)(const wxString &WXUNUSED(text),
                                                int WXUNUSED(current),
                                                int WXUNUSED(max));
-extern void SetLM_LeastSquareProgressHandler( LM_LeastSquareProgressHandler_ handler );
-extern void SetLM_LeastSquareProgressHandlerTicks( int iterations );
+
+WXDLLIMPEXP_PLOTCTRL void SetLM_LeastSquareProgressHandler( LM_LeastSquareProgressHandler_ handler );
+WXDLLIMPEXP_PLOTCTRL void SetLM_LeastSquareProgressHandlerTicks( int iterations );
 }
 
 //=============================================================================

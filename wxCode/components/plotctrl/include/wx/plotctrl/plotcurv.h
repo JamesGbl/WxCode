@@ -30,13 +30,13 @@ class WXDLLIMPEXP_PLOTCTRL wxPlotCurve;
 //-----------------------------------------------------------------------------
 
 // Find y at point x along the line from (x0,y0)-(x1,y1), x0 must != x1
-extern double LinearInterpolateY( double x0, double y0,
-                                  double x1, double y1,
-                                  double x );
+WXDLLIMPEXP_PLOTCTRL double LinearInterpolateY( double x0, double y0,
+                                                double x1, double y1,
+                                                double x );
 // Find x at point y along the line from (x0,y0)-(x1,y1), y0 must != y1
-extern double LinearInterpolateX( double x0, double y0,
-                                  double x1, double y1,
-                                  double y );
+WXDLLIMPEXP_PLOTCTRL double LinearInterpolateX( double x0, double y0,
+                                                double x1, double y1,
+                                                double y );
 
 //----------------------------------------------------------------------------
 // Constants
@@ -50,9 +50,9 @@ extern double LinearInterpolateX( double x0, double y0,
 // wxNullPlotBounds = wxRect2DDouble(0,0,0,0)
 WXDLLIMPEXP_DATA_PLOTCTRL(extern const wxRect2DDouble) wxNullPlotBounds;
 
-extern wxBitmap wxPlotSymbolNormal;
-extern wxBitmap wxPlotSymbolActive;
-extern wxBitmap wxPlotSymbolSelected;
+extern WXDLLIMPEXP_DATA_PLOTCTRL(wxBitmap) wxPlotSymbolNormal;
+extern WXDLLIMPEXP_DATA_PLOTCTRL(wxBitmap) wxPlotSymbolActive;
+extern WXDLLIMPEXP_DATA_PLOTCTRL(wxBitmap) wxPlotSymbolSelected;
 
 enum wxPlotSymbol_Type
 {

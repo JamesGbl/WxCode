@@ -70,11 +70,12 @@ class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerMarker;
 #endif // __VISUALC__
 
 #include <limits>
-extern std::numeric_limits<wxDouble> wxDouble_limits;
 
-extern const wxDouble wxPlotCtrl_MIN_DBL;   // = wxDouble_limits.min()*10
-extern const wxDouble wxPlotCtrl_MAX_DBL;   // = wxDouble_limits.max()/10
-extern const wxDouble wxPlotCtrl_MAX_RANGE; // = wxPlotCtrl_MAX_DBL*2
+extern WXDLLIMPEXP_DATA_PLOTCTRL(std::numeric_limits<wxDouble>) wxDouble_limits;
+
+extern WXDLLIMPEXP_DATA_PLOTCTRL(const wxDouble) wxPlotCtrl_MIN_DBL;   // = wxDouble_limits.min()*10
+extern WXDLLIMPEXP_DATA_PLOTCTRL(const wxDouble) wxPlotCtrl_MAX_DBL;   // = wxDouble_limits.max()/10
+extern WXDLLIMPEXP_DATA_PLOTCTRL(const wxDouble) wxPlotCtrl_MAX_RANGE; // = wxPlotCtrl_MAX_DBL*2
 
 #define wxPLOTCTRL_CURSOR_GRAB (wxCURSOR_MAX+100)  // A hand cursor with fingers closed
 
