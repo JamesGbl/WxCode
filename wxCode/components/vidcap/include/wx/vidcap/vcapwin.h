@@ -32,6 +32,14 @@
     #define WXDLLIMPEXP_DATA_VIDCAP(type) type
 #endif
 
+// Forward declare all wxVidcap classes with this macro
+#if defined(HAVE_VISIBILITY) || (defined(__WINDOWS__) && defined(__GNUC__))
+    #define WXDLLIMPEXP_FWD_VIDCAP
+#else
+    #define WXDLLIMPEXP_FWD_VIDCAP WXDLLIMPEXP_VIDCAP
+#endif
+
+
 #if defined(__WXMSW__)
     #define WXVIDCAP_MSW_VFW
     #define WXVIDCAP_AVI_SUPPORT
@@ -46,12 +54,12 @@
 #endif
 
 // classes used by the wxVideoCaptureWindow system
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowBase;
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureEvent;
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCaptureSingleFramesDialog;
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowAudioFormatDialog;
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCapturePreferencesDialog;
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCustomVideoFormatDialog;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowBase;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureEvent;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCaptureSingleFramesDialog;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowAudioFormatDialog;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCapturePreferencesDialog;
+class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCustomVideoFormatDialog;
 
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals

@@ -20,7 +20,7 @@
 #include <wx/datetime.h>
 #include <wx/bitmap.h>
 
-class WXDLLIMPEXP_SHEET wxSheetCellRendererRefData;
+class WXDLLIMPEXP_FWD_SHEET wxSheetCellRendererRefData;
 
 // ----------------------------------------------------------------------------
 // wxSheetCellRenderer:

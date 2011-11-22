@@ -49,7 +49,8 @@
     #define WXDLLIMPEXP_DATA_PLOTCTRL(type) type
 #endif
 
-#if defined(__WINDOWS__) && defined(__GNUC__)
+// Forward declare all wxPlotCtrl classes with this macro
+#if defined(HAVE_VISIBILITY) || (defined(__WINDOWS__) && defined(__GNUC__))
     #define WXDLLIMPEXP_FWD_PLOTCTRL
 #else
     #define WXDLLIMPEXP_FWD_PLOTCTRL WXDLLIMPEXP_PLOTCTRL

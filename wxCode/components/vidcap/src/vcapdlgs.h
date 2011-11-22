@@ -15,8 +15,8 @@
 #ifndef __WX_VCAPDLGS_H__
 #define __WX_VCAPDLGS_H__
 
-class WXDLLEXPORT wxSpinCtrl;
-class WXDLLEXPORT wxSpinEvent;
+class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
+class WXDLLIMPEXP_FWD_CORE wxSpinEvent;
 
 
 #ifdef WXVIDCAP_AVI_SUPPORT

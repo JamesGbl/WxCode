@@ -22,7 +22,7 @@
 #include <wx/textctrl.h>
 #include <wx/spinctrl.h>
 
-class WXDLLIMPEXP_SHEET wxSheetCellEditorRefData;
+class WXDLLIMPEXP_FWD_SHEET wxSheetCellEditorRefData;
 
 class WXDLLIMPEXP_FWD_CORE wxWindow;
 class WXDLLIMPEXP_FWD_CORE wxCheckBox;

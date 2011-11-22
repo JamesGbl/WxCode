@@ -48,7 +48,8 @@
     #define WXDLLIMPEXP_DATA_THINGS(type) type
 #endif
 
-#if defined(__WINDOWS__) && defined(__GNUC__)
+// Forward declare all wxThings classes with this macro
+#if defined(HAVE_VISIBILITY) || (defined(__WINDOWS__) && defined(__GNUC__))
     #define WXDLLIMPEXP_FWD_THINGS
 #else
     #define WXDLLIMPEXP_FWD_THINGS WXDLLIMPEXP_THINGS

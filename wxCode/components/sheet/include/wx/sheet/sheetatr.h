@@ -20,7 +20,7 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 
-class WXDLLIMPEXP_SHEET wxSheetCellAttr;
+class WXDLLIMPEXP_FWD_SHEET wxSheetCellAttr;
 
 // ----------------------------------------------------------------------------
 // wxNullSheetCellAttr - an uncreated wxSheetCellAttr for use when there's no attribute

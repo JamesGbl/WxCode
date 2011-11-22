@@ -80,7 +80,8 @@
     #define WXDLLIMPEXP_DATA_STEDIT(type) type
 #endif
 
-#if defined(__WINDOWS__) && defined(__GNUC__)
+// Forward declare all wxStEdit classes with this macro
+#if defined(HAVE_VISIBILITY) || (defined(__WINDOWS__) && defined(__GNUC__))
     #define WXDLLIMPEXP_FWD_STEDIT
 #else
     #define WXDLLIMPEXP_FWD_STEDIT WXDLLIMPEXP_STEDIT
@@ -102,34 +103,34 @@
 // Forward declaration of the wxSTEditor classes
 //-----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_STEDIT wxSTEditor;                    // stedit.h
-class WXDLLIMPEXP_STEDIT wxSTEditorEvent;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditor;                    // stedit.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorEvent;
 
-class WXDLLIMPEXP_STEDIT wxSTEditorSplitter;            // stesplit.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorSplitter;            // stesplit.h
 
-class WXDLLIMPEXP_STEDIT wxSTEditorNotebook;            // stenoteb.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorNotebook;            // stenoteb.h
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFrame;               // steframe.h
-class WXDLLIMPEXP_STEDIT wxSTEditorFrameFileDropTarget;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFrame;               // steframe.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFrameFileDropTarget;
 
-class WXDLLIMPEXP_STEDIT wxSTEditorOptions;             // steopts.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorOptions;             // steopts.h
 
-class WXDLLIMPEXP_STEDIT wxSTEditorMenuManager;         // stemenum.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorMenuManager;         // stemenum.h
 
-class WXDLLIMPEXP_STEDIT wxSTEditorPrefs;               // steprefs.h
-class WXDLLIMPEXP_STEDIT wxSTEditorStyles;              // stestyls.h
-class WXDLLIMPEXP_STEDIT wxSTEditorLangs;               // stelangs.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefs;               // steprefs.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorStyles;              // stestyls.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorLangs;               // stelangs.h
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFindReplacePanel;    // stefindr.h
-class WXDLLIMPEXP_STEDIT wxSTEditorFindReplaceDialog;
-class WXDLLIMPEXP_STEDIT wxSTEditorFindReplaceData;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplacePanel;    // stefindr.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceData;
 
-class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog;    // stedlgs.h
-class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog;
-class WXDLLIMPEXP_STEDIT wxSTEditorPrefDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPropertiesDialog;    // stedlgs.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorInsertTextDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefDialog;
 
-class WXDLLIMPEXP_STEDIT wxSTEditorPrintout;            // steprint.h
-class WXDLLIMPEXP_STEDIT wxSTEditorPrintOptionsDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrintout;            // steprint.h
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrintOptionsDialog;
 
 //-----------------------------------------------------------------------------
 // STE_StateType - State of the wxSTEditor
