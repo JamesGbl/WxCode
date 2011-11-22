@@ -48,6 +48,12 @@
     #define WXDLLIMPEXP_DATA_THINGS(type) type
 #endif
 
+#if defined(__WINDOWS__) && defined(__GNUC__)
+    #define WXDLLIMPEXP_FWD_THINGS
+#else
+    #define WXDLLIMPEXP_FWD_THINGS WXDLLIMPEXP_THINGS
+#endif
+
 // ----------------------------------------------------------------------------
 // wxWidgets backwards compatibility macros
 // ----------------------------------------------------------------------------

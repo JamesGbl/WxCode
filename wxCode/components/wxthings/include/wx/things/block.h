@@ -23,10 +23,10 @@
 //       because the double blocks need to match up at the edges and x+width
 //       does not always exactly equal the edge of an adjoining block
 
-class WXDLLIMPEXP_THINGS wxBlockInt;
-class WXDLLIMPEXP_THINGS wxBlockDouble;
-class WXDLLIMPEXP_THINGS wxBlockIntSelection;
-class WXDLLIMPEXP_THINGS wxBlockDoubleSelection;
+class WXDLLIMPEXP_FWD_THINGS wxBlockInt;
+class WXDLLIMPEXP_FWD_THINGS wxBlockDouble;
+class WXDLLIMPEXP_FWD_THINGS wxBlockIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxBlockDoubleSelection;
 
 #include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY_WITH_DECL(wxBlockInt, wxArrayBlockInt, class WXDLLIMPEXP_THINGS);

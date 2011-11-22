@@ -29,7 +29,7 @@ class WXDLLIMPEXP_FWD_CORE wxToolBar;
 #include "wx/stedit/stelangs.h"
 #include "wx/stedit/steopts.h"
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFindReplaceDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceDialog;
 
 //-----------------------------------------------------------------------------
 // wxSTERecursionGuard - a simple recursion guard to block reentrant functions
@@ -269,7 +269,7 @@ public :
     wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
 
     // verbatim copy of wx trunk wxTextAreaBase::SetModified()
-    void SetModified(bool modified) 
+    void SetModified(bool modified)
     {
         if ( modified )
             MarkDirty();

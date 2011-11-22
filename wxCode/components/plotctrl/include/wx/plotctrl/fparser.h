@@ -28,7 +28,6 @@
 
 #include "wx/plotctrl/plotdefs.h"
 
-class WXDLLEXPORT wxString;
 class FunctionParser;
 
 //-----------------------------------------------------------------------------

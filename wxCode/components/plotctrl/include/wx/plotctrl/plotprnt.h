@@ -18,7 +18,7 @@
 #include "wx/print.h"
 #include "wx/plotctrl/plotdefs.h"
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrl;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrl;
 
 //-----------------------------------------------------------------------------
 // wxPlotPrintout - simple mechanism to print the contents of the wxPlotCtrl

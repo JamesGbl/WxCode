@@ -12,10 +12,10 @@
 
 #include "wx/things/thingdef.h"
 
-class WXDLLIMPEXP_THINGS wxRangeInt;
-class WXDLLIMPEXP_THINGS wxRangeDouble;
-class WXDLLIMPEXP_THINGS wxRangeIntSelection;
-class WXDLLIMPEXP_THINGS wxRangeDoubleSelection;
+class WXDLLIMPEXP_FWD_THINGS wxRangeInt;
+class WXDLLIMPEXP_FWD_THINGS wxRangeDouble;
+class WXDLLIMPEXP_FWD_THINGS wxRangeIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxRangeDoubleSelection;
 
 #include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY_WITH_DECL(wxRangeInt, wxArrayRangeInt, class WXDLLIMPEXP_THINGS);

@@ -31,8 +31,8 @@
 #endif
 
 #include "wx/plotctrl/plotdefs.h"
-class WXDLLIMPEXP_PLOTCTRL wxPlotData;
-class WXDLLIMPEXP_PLOTCTRL wxPlotFunction;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotData;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotFunction;
 
 // When SetLM_LeastSquareProgressHandler is called with a non NULL handler it will be
 //   called when fitting a curve every SetLM_LeastSquareProgressHandlerTicks

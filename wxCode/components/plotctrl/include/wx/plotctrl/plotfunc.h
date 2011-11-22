@@ -17,7 +17,7 @@
 
 #include "wx/plotctrl/plotcurv.h"
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotFunction;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotFunction;
 
 //-----------------------------------------------------------------------------
 // wxPlotFunction - a compiled string function parsing PlotCurve

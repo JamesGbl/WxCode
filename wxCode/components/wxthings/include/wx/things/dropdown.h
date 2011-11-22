@@ -38,10 +38,10 @@ DoShowPopup() - this is called from ShowPopup after creating the m_popupWin.
 
 #if wxUSE_POPUPWIN
 
-class WXDLLEXPORT wxTimer;
-class WXDLLEXPORT wxTimerEvent;
-class WXDLLIMPEXP_THINGS wxCustomButton;
-class WXDLLIMPEXP_THINGS DropDownPopup;
+class WXDLLIMPEXP_FWD_BASE wxTimer;
+class WXDLLIMPEXP_FWD_BASE wxTimerEvent;
+class WXDLLIMPEXP_FWD_THINGS wxCustomButton;
+class WXDLLIMPEXP_FWD_THINGS DropDownPopup;
 
 #define DROPDOWN_DROP_WIDTH  14  // these are the default sizes
 #define DROPDOWN_DROP_HEIGHT 22

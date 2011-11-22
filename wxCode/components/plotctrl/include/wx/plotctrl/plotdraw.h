@@ -20,18 +20,18 @@
 #include "wx/things/genergdi.h"
 #include "wx/things/range.h"
 
-class WXDLLEXPORT wxDC;
+class WXDLLIMPEXP_FWD_CORE wxDC;
 
-class WXDLLIMPEXP_THINGS wxRangeIntSelection;
-class WXDLLIMPEXP_THINGS wxRangeDoubleSelection;
-class WXDLLIMPEXP_THINGS wxArrayRangeIntSelection;
-class WXDLLIMPEXP_THINGS wxArrayRangeDoubleSelection;
+class WXDLLIMPEXP_FWD_THINGS wxRangeIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxRangeDoubleSelection;
+class WXDLLIMPEXP_FWD_THINGS wxArrayRangeIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxArrayRangeDoubleSelection;
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrl;
-class WXDLLIMPEXP_PLOTCTRL wxPlotCurve;
-class WXDLLIMPEXP_PLOTCTRL wxPlotData;
-class WXDLLIMPEXP_PLOTCTRL wxPlotFunction;
-class WXDLLIMPEXP_PLOTCTRL wxPlotMarker;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrl;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCurve;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotData;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotFunction;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotMarker;
 
 //-----------------------------------------------------------------------------
 // wxPlotDrawerBase

@@ -24,40 +24,41 @@
 #include "wx/plotctrl/plotfunc.h"
 #include "wx/things/range.h"
 
-class WXDLLEXPORT wxDC;
-class WXDLLEXPORT wxNotifyEvent;
-class WXDLLEXPORT wxPaintEvent;
-class WXDLLEXPORT wxMouseEvent;
-class WXDLLEXPORT wxKeyEvent;
-class WXDLLEXPORT wxTimer;
-class WXDLLEXPORT wxTimerEvent;
-class WXDLLEXPORT wxEraseEvent;
-class WXDLLEXPORT wxScrollBar;
-class WXDLLEXPORT wxBitmap;
-class WXDLLEXPORT wxTextCtrl;
-class WXDLLEXPORT wxPaintDC;
+class WXDLLIMPEXP_FWD_BASE wxTimer;
+class WXDLLIMPEXP_FWD_BASE wxTimerEvent;
 
-class WXDLLIMPEXP_THINGS wxRangeIntSelection;
-class WXDLLIMPEXP_THINGS wxRangeDoubleSelection;
-class WXDLLIMPEXP_THINGS wxArrayRangeIntSelection;
-class WXDLLIMPEXP_THINGS wxArrayRangeDoubleSelection;
+class WXDLLIMPEXP_FWD_CORE wxDC;
+class WXDLLIMPEXP_FWD_CORE wxNotifyEvent;
+class WXDLLIMPEXP_FWD_CORE wxPaintEvent;
+class WXDLLIMPEXP_FWD_CORE wxMouseEvent;
+class WXDLLIMPEXP_FWD_CORE wxKeyEvent;
+class WXDLLIMPEXP_FWD_CORE wxEraseEvent;
+class WXDLLIMPEXP_FWD_CORE wxScrollBar;
+class WXDLLIMPEXP_FWD_CORE wxBitmap;
+class WXDLLIMPEXP_FWD_CORE wxTextCtrl;
+class WXDLLIMPEXP_FWD_CORE wxPaintDC;
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrlArea;
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrlAxis;
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrl;
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrlEvent;
+class WXDLLIMPEXP_FWD_THINGS wxRangeIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxRangeDoubleSelection;
+class WXDLLIMPEXP_FWD_THINGS wxArrayRangeIntSelection;
+class WXDLLIMPEXP_FWD_THINGS wxArrayRangeDoubleSelection;
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCurve;
-class WXDLLIMPEXP_PLOTCTRL wxPlotData;
-class WXDLLIMPEXP_PLOTCTRL wxPlotFunction;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrlArea;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrlAxis;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrl;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrlEvent;
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerArea;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerXAxis;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerYAxis;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerKey;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerCurve;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerDataCurve;
-class WXDLLIMPEXP_PLOTCTRL wxPlotDrawerMarker;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCurve;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotData;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotFunction;
+
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerArea;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerXAxis;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerYAxis;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerKey;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerCurve;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerDataCurve;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotDrawerMarker;
 
 //-----------------------------------------------------------------------------
 // wxPlot Constants

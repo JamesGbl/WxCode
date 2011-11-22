@@ -16,9 +16,9 @@
 #include <wx/brush.h>
 #include "wx/things/thingdef.h"
 
-class WXDLLIMPEXP_THINGS wxGenericColour;
-class WXDLLIMPEXP_THINGS wxGenericPen;
-class WXDLLIMPEXP_THINGS wxGenericBrush;
+class WXDLLIMPEXP_FWD_THINGS wxGenericColour;
+class WXDLLIMPEXP_FWD_THINGS wxGenericPen;
+class WXDLLIMPEXP_FWD_THINGS wxGenericBrush;
 
 // Uncreated and invalid versions of the generic colour, pen, and brush
 WXDLLIMPEXP_DATA_THINGS(extern const wxGenericColour) wxNullGenericColour;

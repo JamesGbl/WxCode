@@ -49,6 +49,12 @@
     #define WXDLLIMPEXP_DATA_PLOTCTRL(type) type
 #endif
 
+#if defined(__WINDOWS__) && defined(__GNUC__)
+    #define WXDLLIMPEXP_FWD_PLOTCTRL
+#else
+    #define WXDLLIMPEXP_FWD_PLOTCTRL WXDLLIMPEXP_PLOTCTRL
+#endif
+
 // ----------------------------------------------------------------------------
 // Convenience macros
 // ----------------------------------------------------------------------------

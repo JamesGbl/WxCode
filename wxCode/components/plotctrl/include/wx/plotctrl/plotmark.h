@@ -20,8 +20,8 @@
 #include "wx/plotctrl/plotdefs.h"
 #include "wx/things/genergdi.h"
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCtrl;
-class WXDLLIMPEXP_PLOTCTRL wxPlotMarker;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrl;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotMarker;
 
 WX_DECLARE_OBJARRAY_WITH_DECL(wxPlotMarker, wxArrayPlotMarker, class WXDLLIMPEXP_PLOTCTRL);
 

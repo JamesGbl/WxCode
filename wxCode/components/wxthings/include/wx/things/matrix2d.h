@@ -14,7 +14,7 @@
 #include <wx/arrstr.h>
 #include <wx/gdicmn.h> // for wxSize
 
-class WXDLLEXPORT wxArrayInt;
+class WXDLLIMPEXP_FWD_BASE wxArrayInt;
 
 namespace wxthings {
 

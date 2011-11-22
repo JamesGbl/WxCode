@@ -19,7 +19,7 @@
 #include "wx/things/genergdi.h"
 #include "wx/plotctrl/plotdefs.h"
 
-class WXDLLIMPEXP_PLOTCTRL wxPlotCurve;
+class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCurve;
 
 #ifdef GetYValue   // Visual Studio 7 defines this
     #undef GetYValue
