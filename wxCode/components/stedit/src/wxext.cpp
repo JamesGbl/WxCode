@@ -152,6 +152,7 @@ wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
             ret.Set(flags, keycode, stockid);       \
             break;
 
+    // subjective list of accelerators considered "stock" (standard)
     switch (id)
     {
     #if (wxVERSION_NUMBER < 2903)
@@ -162,17 +163,7 @@ wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
         STOCKITEM(wxID_SAVEAS,        wxACCEL_CTRL | wxACCEL_SHIFT, 'S')
         STOCKITEM(wxID_SELECTALL,     wxACCEL_CTRL,                 'A')
         STOCKITEM(wxID_REDO,          wxACCEL_CTRL,                 'Y')
-        //STOCKITEM(wxID_PREFERENCES,   wxACCEL_CTRL,               'T')
-        STOCKITEM(wxID_ICONIZE_FRAME, wxACCEL_ALT,       WXK_FULLSCREEN)
-        STOCKITEM(wxID_REFRESH,       wxACCEL_NORMAL,            WXK_F5)
-        STOCKITEM(wxID_PROPERTIES,    wxACCEL_ALT,           WXK_RETURN)
-        STOCKITEM(wxID_BACKWARD,      wxACCEL_ALT,             WXK_LEFT)
-        STOCKITEM(wxID_FORWARD,       wxACCEL_ALT,            WXK_RIGHT)
-        STOCKITEM(wxID_HELP,          wxACCEL_NORMAL,          WXK_HELP)
-        STOCKITEM(wxID_REPLACE,       wxACCEL_CTRL,                 'H')
         STOCKITEM(wxID_EXIT,          wxACCEL_CTRL,                 'Q')
-        STOCKITEM(wxID_CLOSE,         wxACCEL_CTRL,                 'W')
-        STOCKITEM(wxID_CLEAR,         wxACCEL_NORMAL,        WXK_DELETE)
         STOCKITEM(wxID_ABOUT,         wxACCEL_SHIFT,           WXK_HELP)
         default:
             ret = wxGetStockAccelerator(id);
