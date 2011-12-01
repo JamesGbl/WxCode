@@ -11,7 +11,7 @@
 //                  Initialization of strings added to wxMidiDatabaseGM constructor.
 //=====================================================================================
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-//#pragma implementation "wxMidiDatabaseGM.h"
+#pragma implementation "wxMidi.cpp"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
@@ -634,6 +634,5 @@ The GS system also includes adjustable reverberation and chorus effects. The eff
 depth for both reverb and chorus may be adjusted on an individual MIDI channel basis
 using Control Change messages. The type of reverb and chorus sounds employed may also
 be selected using System Exclusive messages.
-
 
 */

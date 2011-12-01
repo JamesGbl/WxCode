@@ -124,8 +124,10 @@ const wxString wxMidiDevice::DeviceName()
 		return m_pInfo->name;
 #endif
 	}
-	else
-		return _("Error: Device not properly created");
+	else {
+		wxString sMsg = _("Error: Device not properly created");
+		return sMsg;
+	}
 }
 
 const wxString wxMidiDevice::InterfaceUsed()
@@ -137,8 +139,10 @@ const wxString wxMidiDevice::InterfaceUsed()
 		return m_pInfo->interf;
 #endif
 	}
-	else
-		return _("Error: Device not properly created");
+	else {
+		wxString sMsg = _("Error: Device not properly created");
+		return sMsg;
+	}
 }
 
 bool wxMidiDevice::IsInputPort()
@@ -610,46 +614,64 @@ wxMidiError wxMidiSystem::Terminate()
 
 const wxString wxMidiSystem::GetErrorText( wxMidiError errnum )
 {
+    wxString sError;
     switch(errnum)
     {
     case wxMIDI_NO_ERROR:
-		return _T("wxMidi: 'No error'");
+		sError = _T("wxMidi: 'No error'");
+		return sError;
     case wxMIDI_ERROR_HostError:
-        return _("PortMidi: `Host error'");
+        sError = _("PortMidi: `Host error'");
+		return sError;
     case wxMIDI_ERROR_InvalidDeviceId:
-		return _("PortMidi: `Invalid device ID'");
+		sError = _("PortMidi: `Invalid device ID'");
+		return sError;
     case wxMIDI_ERROR_InsufficientMemory:
-        return _("PortMidi: `Insufficient memory'");
+        sError = _("PortMidi: `Insufficient memory'");
+		return sError;
     case wxMIDI_ERROR_BufferTooSmall:
-        return _("PortMidi: 'Buffer too small'");
+        sError = _("PortMidi: 'Buffer too small'");
+		return sError;
     case wxMIDI_ERROR_BadPtr:
-        return _("PortMidi: `Bad pointer'");
+        sError = _("PortMidi: `Bad pointer'");
+		return sError;
     case wxMIDI_ERROR_InternalError:
-        return _("PortMidi: 'Internal PortMidi Error'");
+        sError = _("PortMidi: 'Internal PortMidi Error'");
+		return sError;
     case wxMIDI_ERROR_BufferOverflow:
-        return _("PortMidi: 'Buffer overflow'");
+        sError = _("PortMidi: 'Buffer overflow'");
+		return sError;
     case wxMIDI_ERROR_BadData:
-		return _("PortMidi: 'Invalid MIDI message Data'");
+		sError = _("PortMidi: 'Invalid MIDI message Data'");
+		return sError;
 	case wxMIDI_ERROR_BufferMaxSize:
-		return _("PortMidi: 'Buffer is already as large as it can be'");
+		sError = _("PortMidi: 'Buffer is already as large as it can be'");
+		return sError;
 
 	// Additional error messages for wxMidi
 	case wxMIDI_ERROR_AlreadyListening:
-        return _("wxMidi: 'Already lisening!'");
+        sError = _("wxMidi: 'Already lisening!'");
+		return sError;
 	case wxMIDI_ERROR_CreateThread:
-        return _("wxMidi: 'Error while creating the thread object'");
+        sError = _("wxMidi: 'Error while creating the thread object'");
+		return sError;
 	case wxMIDI_ERROR_StartThread:
-        return _("wxMidi: 'Error while starting the thread execution'");
+        sError = _("wxMidi: 'Error while starting the thread execution'");
+		return sError;
 	case wxMIDI_ERROR_BadSysExMsg_Start:
-		return _("wxMidi. 'Bad sysex msg: It does not start with 0xF0'");
+		sError = _("wxMidi. 'Bad sysex msg: It does not start with 0xF0'");
+		return sError;
 	case wxMIDI_ERROR_BadSysExMsg_Length:
-		return _("wxMidi. 'Bad sysex msg: Length greater than 10000 or no final byte 0xF7'");
+		sError = _("wxMidi. 'Bad sysex msg: Length greater than 10000 or no final byte 0xF7'");
+		return sError;
 	case wxMIDI_ERROR_NoDataAvailable:
-		return _("wxMidi. 'There are no MIDI messages pending to be read'");
+		sError = _("wxMidi. 'There are no MIDI messages pending to be read'");
+		return sError;
 
 	default:
-        return _("wxMidi: 'Illegal error number'");
-    }
+        sError = _("wxMidi: 'Illegal error number'");
+ 		return sError;
+   }
 }
 
 
@@ -658,7 +680,7 @@ wxString wxMidiSystem::GetHostErrorText()
 	//TODO: review this
 	char msg[1000];
 	Pm_GetHostErrorText(&msg[0], 1000);
-	return wxString( (const wxChar *)&msg[0], wxSTRING_MAXLEN );
+	return wxString( (const wxChar *)&msg[0] );
 }
 
 wxMidiSystem* wxMidiSystem::GetInstance()
@@ -669,5 +691,4 @@ wxMidiSystem* wxMidiSystem::GetInstance()
 	}
 	return m_pInstance;
 }
-
 

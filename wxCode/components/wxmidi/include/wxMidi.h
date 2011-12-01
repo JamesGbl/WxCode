@@ -18,7 +18,7 @@
 //		Initialization of strings added to wxMidiDatabaseGM constructor.
 //=====================================================================================
 #ifdef __GNUG__
-// #pragma interface
+#pragma interface "wxMidi.cpp"
 #endif
 
 #ifndef __WXMIDI_H__		//to avoid nested includes
@@ -42,8 +42,8 @@
 */
 
 // MIDI support throgh Portmidi lib
-#include "../src/portmidi/pm_common/portmidi.h"
-#include "../src/portmidi/porttime/porttime.h"
+#include "portmidi.h"
+#include "porttime.h"
 
 
 //Constants
@@ -132,13 +132,19 @@ enum wxMidiMsgType
 	wxMIDI_SYSEX_MSG
 };
 
+
+//forward declarations
+class wxMidiThread;
+class wxControlWithItems;
+
+
 class wxMidiMessage
 {
 public:
 	wxMidiMessage() { m_type = wxMIDI_UNDEFINED_MSG; }
 	virtual ~wxMidiMessage() {}
 
-	virtual void SetTimestamp(long timestamp) = 0;
+	virtual void SetTimestamp(wxMidiTimestamp timestamp) = 0;
 	virtual wxMidiTimestamp GetTimestamp() = 0;
 
 	wxMidiMsgType GetType() { return m_type; }
@@ -158,15 +164,15 @@ public:
 		: wxMidiMessage()
 		{
 			m_type = wxMIDI_SHORT_MSG;
-			m_buffer.message = (((data2) << 16) & 0xFF0000) | 
-						(((data1) << 8) & 0xFF00) | 
+			m_buffer.message = (((data2) << 16) & 0xFF0000) |
+						(((data1) << 8) & 0xFF00) |
 						((status) & 0xFF);
 			m_buffer.timestamp = 0;
 		}
 	~wxMidiShortMessage() {}
 
 	//timestamp
-	void SetTimestamp(long timestamp) { m_buffer.timestamp = timestamp; }
+	void SetTimestamp(wxMidiTimestamp timestamp) { m_buffer.timestamp = timestamp; }
 	wxMidiTimestamp GetTimestamp() { return m_buffer.timestamp; }
 
 	// message data
@@ -280,8 +286,6 @@ public:
 private:
 
 };
-
-class wxMidiThread;		//forward declaration
 
 class wxMidiInDevice : public wxMidiDevice
 {
@@ -399,10 +403,9 @@ public:
 public:
 	wxMidiInDevice*	m_pDev;				//owner Midi device
 	wxWindow*		m_pWindow;			//the window tha will receive the events
-	unsigned long	m_nMilliseconds;	//Midi in polling interval, in milliseconds	
+	unsigned long	m_nMilliseconds;	//Midi in polling interval, in milliseconds
 
 };
-
 
 
 #endif  // __WXMIDI_H__

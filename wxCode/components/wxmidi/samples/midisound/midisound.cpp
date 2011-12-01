@@ -1,9 +1,14 @@
+//=====================================================================================
+// wxMidi: A MIDI interface based on PortMidi, the Portable Real-Time MIDI Library
+// --------------------------------------------------------------------------------
+//
+// Author:      Cecilio Salmeron
+// Copyright:   (c) 2005-2007 Cecilio Salmeron
+// Licence:     wxWidgets licence
+//=====================================================================================
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
 
 // for all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWindows headers)
@@ -11,7 +16,13 @@
     #include "wx/wx.h"
 #endif
 
-#include "wx/bookctrl.h"
+
+#ifdef __BORLANDC__
+    #pragma hdrstop
+#endif
+
+#include <wx/bookctrl.h>
+#include <wx/panel.h>
 
 #include "wxMidi.h"
 
@@ -114,7 +125,7 @@ private:
 	wxButton*		m_btStopLis;
 
 	//data
-	wxFrame*			m_pFrame;		//ptr to parent frame			
+	wxFrame*			m_pFrame;		//ptr to parent frame
 	wxMidiSystem*		m_pMidi;		//ptr to MIDI package
     wxMidiOutDevice*	m_pOutDev;		//ptr to current MIDI output device
     wxMidiInDevice*		m_pInDev;		//ptr to current MIDI input device
@@ -367,7 +378,7 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 	m_pOutCombo = new wxComboBox( panel, ID_COMBO_OUTDEV, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
-                              wxCB_DROPDOWN | wxCB_READONLY | wxPROCESS_ENTER);
+                              wxCB_DROPDOWN | wxCB_READONLY);
 	pMainSizer->Add(m_pOutCombo, 0, wxALL, 10 );
 
 	pMainSizer->Add(new wxStaticText(panel, -1, _T("Input devices available:")),
@@ -376,10 +387,10 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 	m_pInCombo = new wxComboBox( panel, ID_COMBO_INDEV, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
-                              wxCB_DROPDOWN | wxCB_READONLY | wxPROCESS_ENTER);
+                              wxCB_DROPDOWN | wxCB_READONLY);
 	pMainSizer->Add(m_pInCombo, 0, wxALL, 10 );
 
-    m_btOpenDevice = new wxButton(panel, ID_OPEN_DEVICE, _T("Open devices"), 
+    m_btOpenDevice = new wxButton(panel, ID_OPEN_DEVICE, _T("Open devices"),
 								  wxDefaultPosition, wxSize(140,25) );
     pMainSizer->Add(m_btOpenDevice,0, wxALL, 10 );
 
@@ -403,17 +414,17 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 	m_pSectCombo = new wxComboBox( panel, ID_COMBO_SECTIONS, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
-                              wxCB_DROPDOWN | wxCB_READONLY | wxPROCESS_ENTER);
+                              wxCB_DROPDOWN | wxCB_READONLY);
 	pInstrSizer->Add(m_pSectCombo, 0, wxALL, 10 );
 
 	wxMidiDatabaseGM* pMidiGM = wxMidiDatabaseGM::GetInstance();
-	pMidiGM->PopulateWithSections(m_pSectCombo);
+	pMidiGM->PopulateWithSections((wxControlWithItems*)m_pSectCombo);
 	m_pInstrCombo = new wxComboBox( panel, ID_COMBO_INSTRUMENTS, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
-                              wxCB_DROPDOWN | wxCB_READONLY | wxPROCESS_ENTER);
+                              wxCB_DROPDOWN | wxCB_READONLY);
 	pInstrSizer->Add(m_pInstrCombo, 0, wxALL, 10 );
-	pMidiGM->PopulateWithInstruments(m_pInstrCombo, 0, 0);
+	pMidiGM->PopulateWithInstruments((wxControlWithItems*)m_pInstrCombo, 0, 0);
 
 
 	//sizer for the buttons
@@ -474,7 +485,7 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 	//m_btLoopBack = new wxButton(panel, ID_LOOP_BACK, _T("Loop back test"),
 	//								wxPoint(30,180), wxSize(140,25) );
  //   pPanel3Sizer->Add(m_btLoopBack, 0, wxALL, 10 );
-	
+
     m_book->AddPage(panel, _("MIDI SysEx"), false);
 
 
@@ -539,9 +550,9 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 
 
 	// populate combo box with available Midi devices
-	
+
 	int nNumDevices = m_pMidi->CountDevices();
-    wxString sMsg;                                                             
+    wxString sMsg;
 	sMsg.Printf(_T("There are %d MIDI devices available\n"), nNumDevices);
 	m_text->SetValue(sMsg);
 
@@ -552,16 +563,16 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
         if (pMidiDev->IsOutputPort()) {
 			nOutput++;
 			sMsg.Printf(_T("%s [%s]"),
-						pMidiDev->DeviceName(),
-						pMidiDev->InterfaceUsed() );
+						pMidiDev->DeviceName().c_str(),
+						pMidiDev->InterfaceUsed().c_str() );
 			nItem = m_pOutCombo->Append(sMsg);
 			m_pOutCombo->SetClientData(nItem, (void *)i);
         }
 		if (pMidiDev->IsInputPort()) {
 			nInput++;
 			sMsg.Printf(_T("%s [%s]"),
-						pMidiDev->DeviceName(),
-						pMidiDev->InterfaceUsed() );
+						pMidiDev->DeviceName().c_str(),
+						pMidiDev->InterfaceUsed().c_str() );
 			nItem = m_pInCombo->Append(sMsg);
 			m_pInCombo->SetClientData(nItem, (void *)i);
         }
@@ -631,11 +642,11 @@ void MyPanel::OnButtonOpenDevice( wxCommandEvent &event )
 	wxMidiError nErr = m_pOutDev->Open(m_lantency);
 	if (nErr) {
 		sMsg.Printf(_T("Error %d in Open: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr));
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
 	else {
 	    sMsg.Printf(_T("Output device '%s' sucessfully opened.\n"),
-			m_pOutDev->DeviceName());
+			m_pOutDev->DeviceName().c_str());
 	}
 	m_text->AppendText(sMsg);
 
@@ -647,10 +658,10 @@ void MyPanel::OnButtonOpenDevice( wxCommandEvent &event )
 		nErr = m_pInDev->Open();
 		if (nErr)
 				sMsg.Printf(_T("Error %d in Open: %s \n"),
-							nErr, m_pMidi->GetErrorText(nErr));
+							nErr, m_pMidi->GetErrorText(nErr).c_str());
 		else {
 			sMsg.Printf(_T("Input device %s sucessfully opened.\n"),
-				m_pInDev->DeviceName());
+				m_pInDev->DeviceName().c_str());
 		}
 	}
 	else {
@@ -685,7 +696,7 @@ void MyPanel::DoProgramChange()
 	}
 	else {
 		sMsg = wxString::Format(
-			_T("ProgramChange OK: %s\n"), pMidiGM->GetInstrumentName(nProgram) );
+			_T("ProgramChange OK: %s\n"), pMidiGM->GetInstrumentName(nProgram).c_str() );
 	}
 	m_text->AppendText(sMsg);
 
@@ -699,7 +710,7 @@ void MyPanel::OnButtonNoteOn(wxCommandEvent &event)
     // wxMidiError nErr = m_pOutDev->NoteOn(0, 60, 127);
 	if (nErr) {
 		sMsg.Printf(_T("Error %d in NoteOn: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr));
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
 	else {
 	    sMsg = _T("NoteOn OK\n");
@@ -719,7 +730,7 @@ void MyPanel::OnButtonNoteOff(wxCommandEvent &event)
     wxMidiError nErr = m_pOutDev->NoteOff(0, 60, 127);
 	if (nErr) {
 		sMsg.Printf(_T("Error %d in NoteOff: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr));
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
 	else {
 	    sMsg = _T("NoteOff OK\n");
@@ -750,13 +761,13 @@ void MyPanel::OnButtonChord(wxCommandEvent &event)
 	//Stop the chord after 1 second.
 	//Use AllSoundsOff to test it instead of stopping note by note
 	::wxMilliSleep(1000);
-    m_pOutDev->AllSoundsOff();    
+    m_pOutDev->AllSoundsOff();
 
 }
 
 void MyPanel::OnButtonPlayScale(wxCommandEvent &event)
 {
-	//Play a scale 
+	//Play a scale
 
 	int scale[] = { 60, 62, 64, 65, 67, 69, 71, 72, 72, 71, 69, 67, 65, 64, 62, 60 };
 	#define SCALE_SIZE 16
@@ -765,7 +776,7 @@ void MyPanel::OnButtonPlayScale(wxCommandEvent &event)
 	for (int i = 0; i < SCALE_SIZE; i++) {
 		m_pOutDev->NoteOn(channel, scale[i], volume);
 		::wxMilliSleep(200);	// wait 200ms
-    	m_pOutDev->NoteOff(channel, scale[i], volume);    
+    	m_pOutDev->NoteOff(channel, scale[i], volume);
 	}
 
 }
@@ -792,7 +803,7 @@ void MyPanel::OnButtonSysEx(wxCommandEvent &event)
 	wxString sMsg;
 	if (nErr) {
 		sMsg.Printf(_T("Error %d in WriteSysEx: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr));
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
 	else {
 	    sMsg = _T("WriteSysEx OK\n");
@@ -810,7 +821,7 @@ void MyPanel::OnComboSections(wxCommandEvent &event)
 
 	wxMidiDatabaseGM* pMidiGM = wxMidiDatabaseGM::GetInstance();
 	int nSect = m_pSectCombo->GetSelection();
-	pMidiGM->PopulateWithInstruments(m_pInstrCombo, nSect);
+	pMidiGM->PopulateWithInstruments((wxControlWithItems*)m_pInstrCombo, nSect);
 	DoProgramChange();
 
 }
@@ -855,7 +866,7 @@ void MyPanel::OnButtonStartListening(wxCommandEvent &event)
 	if (nErr) {
 		m_text->AppendText( wxString::Format(
 					_T("Error %d in StartListening: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr) ));
+					nErr, m_pMidi->GetErrorText(nErr).c_str() ));
 	}
 
 }
@@ -900,7 +911,7 @@ void MyPanel::OnMidiReceive(wxCommandEvent &event)
 
 void MyPanel::CreatePollingEvent()
 {
-	// if reception enabled create new polling Midi input event 
+	// if reception enabled create new polling Midi input event
 
 	if (m_fReceiveEnabled) {
 		wxCommandEvent new_event( wxEVT_POLLING_EVENT, GetId() );
@@ -953,7 +964,7 @@ void MyPanel::DoReceiveMessage()
 	wxMidiMessage* pMidiMsg = m_pInDev->Read(&nErr);
 	if (nErr) {
 		sMsg.Printf(_T("Error %d in Read: %s \n"),
-					nErr, m_pMidi->GetErrorText(nErr));
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
 	else {
 		if (pMidiMsg->GetType() == wxMIDI_SHORT_MSG) {
