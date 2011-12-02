@@ -3,8 +3,8 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// Copyright:   (c) 2005-2007 Cecilio Salmeron
-// Licence:     wxWidgets licence
+// Copyright:   (c) 2005-20011 Cecilio Salmeron
+// Licence:     wxWidgets licence, version 3.1 or later at your choice.
 //=====================================================================================
 
 // For compilers that support precompilation, includes "wx/wx.h".

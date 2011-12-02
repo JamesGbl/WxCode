@@ -1,0 +1,53 @@
+Cangelog for wxMidi package
+==============================
+
+wxMidi:     A MIDI interface based on PortMidi, the Portable Real-Time MIDI Library
+Author:     Cecilio Salmeron
+Copyright:  (c) 2005-2011 Cecilio Salmeron
+Licence:    wxWidgets licence
+
+
+
+Changes between versions
+
+wxMidi 1.5  (2011/Dec/02)
+    * Portmidi latest version (217) has changed the definition of PmTimestamp
+      from 'long' to 'int'. This causes some compilation problems in wxMidi 
+      that has been fixed. Code reviewed to ensure compatibility.
+    * Fixed a couple of compilation errors due to changes introduced by
+      wxWidgets 2.8.12
+    * Added optional parameter to method wxMidiDatabaseGM::PopulateWithInstruments
+      for optionally adding a sequence number to the listed items.
+    * Added three new translations: Italian (Mauro Giubileo), Basque (Karlos 
+      del Olmo Serna) and Galician (Emilio Mesías and Xema Sanxurxo 
+      Rodríguez)
+
+wxMidi 1.4 (19-May-2007)
+    * No changes in source code.
+    * Added translation to Dutch (Jack Van Handenhove).
+    * Distributed and tested with latest portmidi version (17/Jan/07) 
+    * Distributed wxMidi libraries precompiled with wxWidgets 2.8.0
+
+wxMidi 1.3 (18-Nov-2006)
+    * No changes in source code.
+    * Added translations to French (Carlos Alarcia) and Turkish (Elif Ozturk).
+    * Distributed wxMidi libraries precompiled with wxWidgets 2.8.0rc1
+
+wxMidi 1.2 (18-Aug-2006)
+    * Static string initializations removed. This caused problems for internationalization.
+    * Added 'locale' folder with .po and .mo language files. Spanish translation added.
+    * Distributed wxMidi libraries precompiled with wxWidgets 2.6.3
+    * lib names changed. No longer include version number
+
+wxMidi 1.1 (3-Jan-2006)
+    * Added patch to PortMidi (contributed by Andreas Micheler) to fix memory 
+      leaks problem in PortMidi.
+    * Distributed wxMidi libraries precompiled with wxWidgets 2.6.2
+
+
+wxMidi 1.0 (3-Sep-2005)
+    * Initial release. Distribution precompiled with wxWidgets 2.6.0
+
+
+
+

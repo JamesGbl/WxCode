@@ -3,15 +3,11 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// Copyright:   (c) 2005-2007 Cecilio Salmeron
-// Licence:     wxWidgets licence
-//
-// Changes:
-// 1.2  2006/Aug/18 For internationalization, strings can not be statically initialized.
-//                  Initialization of strings added to wxMidiDatabaseGM constructor.
+// Copyright:   (c) 2005-2011 Cecilio Salmeron
+// Licence:     wxWidgets licence, version 3.1 or later at your choice.
 //=====================================================================================
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma implementation "wxMidi.cpp"
+#pragma implementation "wxMidiDatabase.h"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
@@ -263,13 +259,13 @@ int wxMidiDatabaseGM::GetInstrFromSection(int nSect, int i)
 	return m_nSectInstr[nSect][i];
 }
 
-void wxMidiDatabaseGM::PopulateWithInstruments(wxControlWithItems* pCtrol, int nSection, int nInstr)
+void wxMidiDatabaseGM::PopulateWithInstruments(wxControlWithItems* pCtrol, int nSection,
+                                               int nInstr, bool fAddNumber)
 {
-	/*
-	Populate a wxControlWithItems (wxListBox, wxCheckListBox, wxChoice, wxComboBox, ...)
-	with the list of intruments in a section.
-	Leave selected instrument number nInstr (default: the first one of the section)
-	*/
+	//Populate a wxControlWithItems (wxListBox, wxCheckListBox, wxChoice, wxComboBox, ...)
+	//with the list of intruments in a section.
+	//Leave selected instrument number nInstr (default: the first one of the section)
+    //If fAddNumber is true, added name is preceeded by instrument number
 
 	pCtrol->Clear();
 	int iSel=0;
@@ -279,9 +275,12 @@ void wxMidiDatabaseGM::PopulateWithInstruments(wxControlWithItems* pCtrol, int n
     } else {
 		//populate control
 		int nCurInstr;
-		for (int i=0; i < m_nNumInstrInSection[nSection]; i++ ) {
+		for (int i=0; i < m_nNumInstrInSection[nSection]; i++ )
+        {
 			nCurInstr = m_nSectInstr[nSection][i];
-            pCtrol->Append( m_sInstrName[nCurInstr] );
+            wxString sName = (fAddNumber ? wxString::Format(_T("%d - "), nCurInstr) : _T(""));
+            sName += m_sInstrName[nCurInstr];
+            pCtrol->Append(sName);
 			if (nCurInstr == nInstr) iSel = i;
         }
     }

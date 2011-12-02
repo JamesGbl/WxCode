@@ -3,8 +3,8 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// Copyright:   (c) 2005-2007 Cecilio Salmeron
-// Licence:     wxWidgets licence
+// Copyright:   (c) 2005-20011 Cecilio Salmeron
+// Licence:     wxWidgets licence, version 3.1 or later at your choice.
 //=====================================================================================
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "wxMidi.h"
@@ -101,6 +101,8 @@ wxMidiSysExMessage::~wxMidiSysExMessage()
 wxMidiDevice::wxMidiDevice(wxMidiDeviceID nDevice)
 {
 	m_nDevice = nDevice;
+	int devices = Pm_CountDevices();
+	if (m_nDevice > devices-1) m_nDevice = 0;
 	m_pInfo = Pm_GetDeviceInfo(m_nDevice);
 	m_stream = (PortMidiStream*)NULL;
 }

@@ -3,19 +3,8 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// Copyright:   (c) 2005-2007 Cecilio Salmeron
-// Licence:     wxWidgets licence
-//
-// Changes:
-// 1.4  2007/May/19
-//		No changes in source code.
-//
-// 1.3  2006/Nov/18
-//		No changes in source code.
-//
-// 1.2  2006/Aug/18
-//		For internationalization, strings can not be statically initialized.
-//		Initialization of strings added to wxMidiDatabaseGM constructor.
+// Copyright:   (c) 2005-2011 Cecilio Salmeron
+// Licence:     wxWidgets licence, version 3.1 or later at your choice.
 //=====================================================================================
 #ifdef __GNUG__
 #pragma interface "wxMidi.cpp"
@@ -47,7 +36,7 @@
 
 
 //Constants
-#define wxMIDI_VERSION		_T("1.4")
+#define wxMIDI_VERSION		_T("1.5")
 #define wxMidiDeviceID		PmDeviceID
 #define wxMidiTimestamp		PmTimestamp
 #define wxMidiPmMessage		PmMessage
@@ -337,7 +326,8 @@ public:
 
 	static wxMidiDatabaseGM* GetInstance();
 
-	void	 PopulateWithInstruments(wxControlWithItems* pCtrol, int nSection, int nInstr=0);
+	void	 PopulateWithInstruments(wxControlWithItems* pCtrol, int nSection, int nInstr=0,
+                                     bool fAddNumber=false);
 	void	 PopulateWithPercusionInstr(wxControlWithItems* pCtrol, int iSel=0);
 	int		 PopulateWithSections(wxControlWithItems* pCtrol, int nSelInstr=-1);
 	void	 PopulateWithAllInstruments(wxControlWithItems* pCtrol, int nInstr=0);

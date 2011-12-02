@@ -138,7 +138,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\mswud;..\..\include"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\lib\vc_lib\mswud&quot;;..\..\include;..\..\portmidi"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH;_UNICODE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -152,14 +152,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="FALSE"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib wxmsw28ud_core.lib wxbase28ud.lib porttime.lib portmidi.lib pm_dll.lib wxmidiud.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib wxmsw28ud_core.lib wxbase28ud.lib porttime.lib portmidi.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/midisound.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\..\lib\pmd;..\..\lib"
+				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_lib&quot;;..\..\portmidi\Debug"
 				IgnoreAllDefaultLibraries="FALSE"
-				IgnoreDefaultLibraryNames="libcd.lib"
+				IgnoreDefaultLibraryNames="libcmtd.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/midisound.pdb"
 				SubSystem="2"
@@ -271,10 +271,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\include\portmidi.h">
+				RelativePath="..\..\portmidi\portmidi.h">
 			</File>
 			<File
-				RelativePath="..\..\include\porttime.h">
+				RelativePath="..\..\portmidi\porttime.h">
 			</File>
 			<File
 				RelativePath="..\..\include\wxMidi.h">

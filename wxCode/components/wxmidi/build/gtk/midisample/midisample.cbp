@@ -15,17 +15,12 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="`wx-config --debug=yes --cflags`" />
-					<Add option="-include wx_pch.h" />
-					<Add option="-Winvalid-pch" />
-					<Add option="-DWX_PRECOMP" />
-					<Add option="-D_DEBUG" />
+					<Add option="`wx2812-config --debug=yes --cflags`" />
 					<Add option="-D__WXGTK__" />
 					<Add option="-D__WXDEBUG__" />
-					<Add option="-D_UNICODE" />
 				</Compiler>
 				<Linker>
-					<Add option="`wx-config --debug=yes --libs`" />
+					<Add option="`wx2812-config --debug=yes --libs`" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -35,40 +30,27 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add option="`wx-config --debug=no --cflags`" />
-					<Add option="-include wx_pch.h" />
-					<Add option="-Winvalid-pch" />
-					<Add option="-DWX_PRECOMP" />
+					<Add option="`wx2812-config --debug=no --cflags`" />
 					<Add option="-D__WXGTK__" />
-					<Add option="-D_UNICODE" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="`wx-config --debug=no --libs`" />
+					<Add option="`wx2812-config --debug=no --libs`" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="../../../include" />
-			<Add directory="/usr/include/wx-2.8" />
 		</Compiler>
 		<Linker>
 			<Add library="/usr/lib/libportmidi.so" />
 			<Add library="/usr/lib/libporttime.so" />
-			<Add library="../bin/Debug/libwxmidi.so" />
 			<Add directory="../../../lib" />
 			<Add directory="/usr/lib/libportmidi.so" />
 			<Add directory="/usr/lib/libporttime.so" />
 		</Linker>
-		<Unit filename="../../../include/wxMidi.h" />
 		<Unit filename="../../../samples/midisound/midisound.cpp" />
-		<Unit filename="../../../src/wxMidi/wxMidi.cpp" />
-		<Unit filename="../../../src/wxMidi/wxMidiDatabase.cpp" />
-		<Unit filename="wx_pch.h">
-			<Option compile="1" />
-			<Option weight="0" />
-		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
