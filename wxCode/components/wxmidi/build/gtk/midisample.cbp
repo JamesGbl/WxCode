@@ -41,7 +41,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="../../../include" />
+			<Add directory="../../src" />
 		</Compiler>
 		<Linker>
 			<Add library="/usr/lib/libportmidi.so" />
@@ -50,7 +50,10 @@
 			<Add directory="/usr/lib/libportmidi.so" />
 			<Add directory="/usr/lib/libporttime.so" />
 		</Linker>
-		<Unit filename="../../../samples/midisound/midisound.cpp" />
+		<Unit filename="../../samples/midisound/midisound.cpp" />
+		<Unit filename="../../src/wxMidi.cpp" />
+		<Unit filename="../../src/wxMidi.h" />
+		<Unit filename="../../src/wxMidiDatabase.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
