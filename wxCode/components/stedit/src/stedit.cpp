@@ -3292,7 +3292,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
             ((!find) &&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
         {
             create = false;
-            dialog->SetFocus();
+            dialog->Raise();
         }
         else
         {
