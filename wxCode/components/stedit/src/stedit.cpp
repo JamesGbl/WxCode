@@ -1683,7 +1683,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2860")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2869")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2179,7 +2179,7 @@ bool wxSTEditor::StartAutoCompleteWord(bool onlyOneWord, bool add_keywords) {
                 int wordEnd = posFind + static_cast<int>(root.length());
                 //wxPrintf(wxT("AutoComp '%s' pos %d/%d - %d\n"), root.c_str(), (int)wordEnd, (int)doclen, (int)wordsNear.GetCount());
                 if (posFind != posCurrentWord) {
-                        while (wordCharacters.Find(wordEnd < doclen ? GetCharAt(wordEnd) : '\0') != wxNOT_FOUND)
+                        while (wordCharacters.Find(wordEnd < doclen ? (wxChar)GetCharAt(wordEnd) : wxT('\0')) != wxNOT_FOUND)
                                 wordEnd++;
                         unsigned int wordLength = wordEnd - posFind;
                         if (wordLength > root.length()) {
