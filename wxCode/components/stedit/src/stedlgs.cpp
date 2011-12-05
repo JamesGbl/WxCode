@@ -2495,7 +2495,12 @@ void wxSTEditorAboutDialog(wxWindow* parent)
     //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
 
    wxAboutDialogInfo info;
+
+#ifdef __WXDEBUG__
+   info.SetName(STE_APPDISPLAYNAME wxT(" (Debug)"));
+#else
    info.SetName(STE_APPDISPLAYNAME);
+#endif
    info.SetDescription(msg);
    info.SetWebSite(wxT(STE_WEBSITE));
    info.SetLicense(wxT("wxWindows"));
