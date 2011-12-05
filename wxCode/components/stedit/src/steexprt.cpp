@@ -337,7 +337,7 @@ int IntFromHexByte(const char *hexByte) {
 
 // extract the next RTF control word from *style
 void GetRTFNextControl(char **style, char *control) {
-    int len;
+    ptrdiff_t len;
     char *pos = *style;
     *control = '\0';
     if ('\0' == *pos) return;
@@ -382,15 +382,15 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
     // Read the default settings
     //char key[200];
     //sprintf(key, "style.*.%0d", STYLE_DEFAULT);
-    //char *valdef = StringDup(props.GetExpanded(key).c_str());
+    //char *valdefDefault = StringDup(props.GetExpanded(key).c_str());
     //sprintf(key, "style.%s.%0d", language.c_str(), STYLE_DEFAULT);
-    //char *val = StringDup(props.GetExpanded(key).c_str());
+    //char *valDefault = StringDup(props.GetExpanded(key).c_str());
 
     StyleDefinition defaultStyle(m_steStyles, STE_STYLE_DEFAULT);
     //defaultStyle.ParseStyleDefinition(val);
 
-    //if (val) delete []val;
-    //if (valdef) delete []valdef;
+    //if (val) delete []valDefault;
+    //if (valdef) delete []valdefDefault;
 
     int tabSize = m_editor->GetTabWidth(); //props.GetInt("export.rtf.tabsize", props.GetInt("tabsize"));
     int wysiwyg = 1;                       //props.GetInt("export.rtf.wysiwyg", 1);

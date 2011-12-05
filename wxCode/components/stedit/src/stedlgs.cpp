@@ -1889,7 +1889,7 @@ BEGIN_EVENT_TABLE(wxSTEditorInsertTextDialog, wxDialog)
     EVT_IDLE       (wxSTEditorInsertTextDialog::OnIdle)
 END_EVENT_TABLE()
 
-wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog()
+void wxSTEditorInsertTextDialog::Init()
 {
     m_prependCombo       = NULL;
     m_appendCombo        = NULL;
@@ -1905,42 +1905,40 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog()
 bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
                                         long style)
 {
-    bool ok = wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style);
+    if (!wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style))
+        return false;
 
-    if (ok)
-    {
-        SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
-        m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
-                                            wxDefaultPosition, wxSize(400, 200));
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+    m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
+                                  wxDefaultPosition, wxSize(400, 200));
 
-        wxSTEditorInsertTextSizer(this, true, true);
-        wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
+    wxSTEditorInsertTextSizer(this, true, true);
+    wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
 
-        m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
-        m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
-        m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
-        m_prependCombo->Clear();
-        m_appendCombo->Clear();
+    m_prependText  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_TEXT), wxStaticText);
+    m_prependCombo = wxStaticCast(FindWindow(ID_STEDLG_INSERT_PREPEND_COMBO), wxComboBox);
+    m_appendCombo  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_APPEND_COMBO), wxComboBox);
+    m_prependCombo->Clear();
+    m_appendCombo->Clear();
 
-        m_insertMenu = wxSTEditorMenuManager::CreateInsertCharsMenu(NULL,
-                                                      STE_MENU_INSERTCHARS_CHARS);
+    m_insertMenu = wxSTEditorMenuManager::CreateInsertCharsMenu(NULL, STE_MENU_INSERTCHARS_CHARS);
 
-        wxSTEInitComboBoxStrings(sm_prependValues, m_prependCombo);
-        wxSTEInitComboBoxStrings(sm_appendValues,  m_appendCombo);
+    wxSTEInitComboBoxStrings(sm_prependValues, m_prependCombo);
+    wxSTEInitComboBoxStrings(sm_appendValues,  m_appendCombo);
 
-        m_prependString = m_prependCombo->GetValue();
-        m_appendString  = m_appendCombo->GetValue();
+    m_prependString = m_prependCombo->GetValue();
+    m_appendString  = m_appendCombo->GetValue();
 
-        wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
-        wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
+    wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
+    wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
 
-        UpdateControls();
+    UpdateControls();
 
-        Fit();
-        SetMinSize(GetSize());
-        Centre();
-    }
-    return ok;
+    Fit();
+    SetMinSize(GetSize());
+    Centre();
+
+    return true;
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
@@ -2191,12 +2189,10 @@ void wxSTEditorColumnizeDialog::Init()
     m_testEditor       = NULL;
 }
 
-wxSTEditorColumnizeDialog::wxSTEditorColumnizeDialog(wxWindow* parent,
-                                                     long style)
-                          :wxDialog()
+bool wxSTEditorColumnizeDialog::Create(wxWindow* parent, long style)
 {
-    Init();
-    wxDialog::Create(parent, wxID_ANY, _("Columnize Text"), wxDefaultPosition, wxDefaultSize, style);
+    if (!wxDialog::Create(parent, wxID_ANY, _("Columnize Text"), wxDefaultPosition, wxDefaultSize, style))
+        return false;
 
     m_testEditor = new wxSTEditor(this, ID_STEDLG_COLUMNIZE_EDITOR,
                                         wxDefaultPosition, wxSize(400, 200));
@@ -2212,6 +2208,8 @@ wxSTEditorColumnizeDialog::wxSTEditorColumnizeDialog(wxWindow* parent,
     wxSTEInitComboBoxStrings(sm_splitAfterArray,  m_splitAfterCombo);
     wxSTEInitComboBoxStrings(sm_preserveArray,    m_preserveCombo);
     wxSTEInitComboBoxStrings(sm_ignoreArray,      m_ignoreCombo);
+
+    return true;
 }
 
 void wxSTEditorColumnizeDialog::SetText(const wxString& text)

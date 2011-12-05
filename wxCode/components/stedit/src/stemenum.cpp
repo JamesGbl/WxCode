@@ -593,7 +593,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->AppendCheckItem(ID_STE_COMPLETEWORD, _("Complete w&ord"), _("Complete word at cursor"));
+        menu->Append(ID_STE_COMPLETEWORD, _("Complete w&ord"), _("Complete word at cursor"));
         add_sep = true;
     }
 
@@ -759,7 +759,7 @@ wxMenu *wxSTEditorMenuManager::CreateViewMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->AppendCheckItem(ID_STE_VIEW_NONPRINT,   _("&Nonprinting Characters"), _("Show end of line symbols and whitespace"));
+        menu->AppendCheckItem(ID_STE_VIEW_NONPRINT,        _("&Nonprinting Characters"), _("Show end of line symbols and whitespace"));
         menu->AppendCheckItem(ID_STE_PREF_VIEW_EOL,        _("&EOL"), _("Show end of line symbols"));
         menu->AppendCheckItem(ID_STE_PREF_VIEW_WHITESPACE, _("Whi&tespace"), _("Show whitespace using symbols"));
 

@@ -148,8 +148,9 @@ enum STE_StateType
     STE_CANREDO    = 0x0020, // possible to redo
     STE_CANSAVE    = 0x0040, // is modified and has valid filename
     STE_CANFIND    = 0x0080, // possible to find, false if previous find failed
+    STE_EDITABLE   = 0x0100, // the control is not readonly
 
-    STE_FILENAME   = 0x0100  // not a state, flag for wxSTEditorEvent
+    STE_FILENAME   = 0x0200  // not a state, flag for wxSTEditorEvent
                              // saying that the editor's filename has changed
 };
 
@@ -346,8 +347,8 @@ enum
     ID_STE_INSERT_TEXT,
     ID_STE_INSERT_DATETIME,
     // View menu items  -------------------------------------------------------
-    ID_STE_VIEW_NONPRINT,
     //ID_STE_PREF_WRAPLINES
+    ID_STE_VIEW_NONPRINT,
     //ID_STE_PREF_VIEWEOL
     //ID_STE_PREF_VIEWWHITESPACE
     //ID_STE_PREF_INDENTGUIDES

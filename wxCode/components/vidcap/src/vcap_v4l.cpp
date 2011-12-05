@@ -113,7 +113,8 @@ bool wxVideoCaptureWindowV4L::Create( wxWindow *parent, wxWindowID id,
     EnumerateDevices();
 
     // open the device
-    DeviceConnect(0);
+    if (GetDeviceCount() > 0)
+        DeviceConnect(0);
 
 //  short targaheader[9]={ 0,2,0,0,0,0,444,555,8216 }; /* 444 and 555 are fake */
 

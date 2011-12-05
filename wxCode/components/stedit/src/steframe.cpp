@@ -544,7 +544,7 @@ void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
     event.Skip();
     wxSTEditor *editor = event.GetEditor();
 
-    if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED) )
+    if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED | STE_EDITABLE) )
     {
         SetTitle(MakeTitle(editor));
 
@@ -705,7 +705,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             return true;
         }
         case wxID_ABOUT :
-            wxSTEditor::ShowAboutDialog(this);
+            wxSTEditorAboutDialog(this);
             return true;
         default : break;
     }

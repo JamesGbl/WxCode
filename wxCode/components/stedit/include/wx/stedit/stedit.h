@@ -212,6 +212,8 @@ public :
                               long style = 0, // wxStyledTextCtrl ors this with defaults
                               const wxString& name = wxT("wxSTEditor")) const;
 
+    wxWindow* GetModalParent() { return this; }
+
     // Create any elements desired in the wxSTEditorOptions.
     //   This function is always called after creation by the parent splitter
     //     with its options and would be a good function to override to setup
@@ -280,7 +282,7 @@ public :
     wxString GetLineText(int line) const; // excluding any cr/lf at end
     int GetLineLength(int iLine) const;   // excluding any cr/lf at end
 
-    virtual void SetEditable(bool editable); // -> OnChangeFilename()
+    virtual void SetEditable(bool editable);
 
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
@@ -335,6 +337,7 @@ public :
     int LineFromPosition(STE_TextPos pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
     STE_TextPos PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
 #endif // (wxVERSION_NUMBER >= 2900)
+
     virtual bool IsModified() const // not in wx2.8; virtual in wx trunk so make it virtual here too
     {
     #if (wxVERSION_NUMBER >= 2900)
@@ -487,31 +490,27 @@ public :
     // Simple dialog to goto a particular line in the text
     bool ShowGotoLineDialog();
 
-    // Show the about dialog, called for wxID_ABOUT
-    static void ShowAboutDialog(wxWindow* parent);
-
 #if (wxVERSION_NUMBER >= 2902)
     static wxVersionInfo GetLibraryVersionInfo();
 #else
     static wxString GetLibraryVersionString();
 #endif
 
-    bool GetViewNonPrint()
-    {
-       return GetViewEOL() && (wxSTC_WS_INVISIBLE != GetViewWhiteSpace());
-    }
-
-    void ToggleNonPrint();
+    // Returns true if both whitespace and EOL are shown, else false.
+    bool GetViewNonPrint();
+    // Show or hide both whitespace and EOL markers.
+    void SetViewNonPrint(bool show_non_print);
 
     // ------------------------------------------------------------------------
     // Load/Save methods
 
-    bool GetDocumentSaved() const { return GetFileModificationTime().IsValid(); }
+    // Returns true if the document was ever loaded from or saved to disk.
+    bool IsFileFromDisk() const { return GetFileModificationTime().IsValid(); }
 
     // return true if the document hasn't been modified since the last time it
     // was saved (implying that it returns false if it was never saved, even if
     // the document is not modified)
-    bool AlreadySaved() const { return !IsModified() && GetDocumentSaved(); }
+    bool AlreadySaved() const { return !IsModified() && IsFileFromDisk(); }
 
     // Can/Should this document be saved (has valid filename and is modified)
     bool CanSave() const { return !AlreadySaved(); }
@@ -544,11 +543,14 @@ public :
     //   if title is empty then pop up a dialog to ask the user what name to use
     virtual bool NewFile(const wxString &title = wxEmptyString);
 
+    // Revert the document to the version on disk if it was ever loaded.
+    // Returns success on reloading the file, false if it was never saved or
+    // couldn't be read for some reason.
+    bool Revert();
+
     // Show a dialog to allow users to export the document
     //   See wxSTEditorExporter
     bool ShowExportDialog();
-
-    bool Revert();
 
     // If IsModified show a message box asking if the user wants to save the file
     //   returns wxYES, wxNO, wxCANCEL, if the user does wxYES then file is
@@ -759,8 +761,6 @@ public :
     const wxSTEditorLangs& GetEditorLangs() const;
     wxSTEditorLangs& GetEditorLangs();
 
-    wxWindow* GetModalParent() { return this; }
-
     // -----------------------------------------------------------------------
     // implementation
     void OnKeyDown(wxKeyEvent& event);
@@ -800,8 +800,9 @@ public :
     //   and send appropriate events as to what has changed for updating UI
     //   this is called in OnSTCUpdateUI, but Saving doesn't generate an event
     //   but CanSave becomes false. Make sure to call this in odd cases like this.
-    //   if send_event is false don't send events just update internal values
-    void UpdateCanDo(bool send_event);
+    //   if send_event is false don't send events just update internal values.
+    // Returns the changes in GetState() since the last call to this function.
+    long UpdateCanDo(bool send_event);
 
     // Get/Set combinations enum STE_StateType
     long GetState() const     { return m_state; }
@@ -829,6 +830,10 @@ public :
     // ------------------------------------------------------------------------
     // Autocomplete functions
 
+    // Remove duplicates and sort a space separated list of words.
+    // Returns true if the word list was modified.
+    wxString EliminateDuplicateWords(const wxString& words) const;
+
     // Get keywords as a space separated list from the langs that begin with root
     virtual wxString GetAutoCompleteKeyWords(const wxString& root);
     // Add the matching keywords from the langs to the array string
@@ -842,7 +847,7 @@ public :
     //   of the current word
     //   if onlyOneWord then if more than one word then don't show box
     //   if add_keywords then also add the keywords from the langs
-    bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
+    virtual bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
 
     // ------------------------------------------------------------------------
     // Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
@@ -850,9 +855,6 @@ public :
     //   Otherwise the int/long values are those in the wxCommandEvent
     bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
                    const wxString &evtStr = wxEmptyString, bool do_post = false );
-
-    // Sent if the captions needs to change (asterisk)
-    virtual void OnChangeFilename();
 
     // ------------------------------------------------------------------------
     // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl

@@ -567,7 +567,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
             wxSTEditor *editor = GetEditor();
             if (editor)
             {
-                if (!editor->GetDocumentSaved())
+                if (!editor->IsFileFromDisk())
                 {
                     editor->SaveFile(true);
                 }
@@ -752,7 +752,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
         {
             SetSelection(page);
         }
-        else if ( (GetEditor() == NULL) || GetEditor()->IsModified() || GetEditor()->GetDocumentSaved()) // non-empty editor?
+        else if ( (GetEditor() == NULL) || GetEditor()->IsModified() || GetEditor()->IsFileFromDisk()) // non-empty editor?
         {
             // new splitter+editor
             wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);

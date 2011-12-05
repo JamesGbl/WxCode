@@ -377,12 +377,12 @@ class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 public:
     wxSTEditorPropertiesDialog(wxSTEditor*);
 
-    bool Create(wxWindow* parent, 
+    bool Create(wxWindow* parent,
                 const wxString& title,
                 long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     virtual bool TransferDataFromWindow();
-    
+
     bool IsEditable() const
     {
         return m_editor->IsEditable();
@@ -445,7 +445,13 @@ enum STE_InsertText_Type
 class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog: public wxDialog
 {
 public:
-    wxSTEditorInsertTextDialog();
+    wxSTEditorInsertTextDialog() : wxDialog() { Init(); }
+    wxSTEditorInsertTextDialog(wxWindow* parent,
+                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE) : wxDialog()
+    {
+        Init();
+        Create(parent, style);
+    }
 
     bool Create(wxWindow* parent,
                 long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
@@ -466,6 +472,8 @@ public:
     wxString GetText();
     // format the text that you sent in with SetText using values in the gui
     void FormatText();
+
+    wxSTEditor* GetTestEditor() { return m_testEditor; }
 
     // -----------------------------------------------------------------------
     // implementation
@@ -499,6 +507,7 @@ public:
     static wxArrayString sm_appendValues;
 
 private:
+    void Init();
     DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorInsertTextDialog);
 };
@@ -510,8 +519,16 @@ private:
 class WXDLLIMPEXP_STEDIT wxSTEditorColumnizeDialog : public wxDialog
 {
 public:
+    wxSTEditorColumnizeDialog() : wxDialog() { Init(); }
     wxSTEditorColumnizeDialog(wxWindow* parent,
-                              long style = wxDEFAULT_DIALOG_STYLE_RESIZE|wxMAXIMIZE_BOX);
+                              long style = wxDEFAULT_DIALOG_STYLE_RESIZE|wxMAXIMIZE_BOX) : wxDialog()
+    {
+        Init();
+        Create(parent, style);
+    }
+
+    bool Create(wxWindow* parent,
+                long style = wxDEFAULT_DIALOG_STYLE_RESIZE|wxMAXIMIZE_BOX);
 
     // Set the text to display to the user to be formatted
     void SetText(const wxString& text);
