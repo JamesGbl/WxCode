@@ -2607,11 +2607,10 @@ bool wxSTEditor::Revert()
 
 bool wxSTEditor::ShowExportDialog()
 {
-    wxSTEditorExportDialog dialog;
     wxFileName fileName = GetFileName();
     int file_format;
 
-    dialog.Create(GetModalParent());
+    wxSTEditorExportDialog dialog(GetModalParent());
     file_format = dialog.GetFileFormat();
     fileName = dialog.FileNameExtChange(fileName, file_format);
     dialog.SetFileName(fileName);

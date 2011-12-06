@@ -10,14 +10,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
-Updated to SciTE 1.73, 2/08/06 - see scite/src/Exporters.cxx
+Updated to SciTE 3.0.1, 12/3/2011 - see scite/src/Exporters.cxx
 
 Code below marked with this copyright is under this license.
 "Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>"
 
 License for Scintilla and SciTE
 
-Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
+Copyright 1998-2011 by Neil Hodgson <neilh@scintilla.org>
 
 All Rights Reserved
 
@@ -216,7 +216,7 @@ int wxSTEditorExporter::SciToSTEStyle(int sci_style) const
 /** @file Exporters.cxx
  ** Export the current document to various markup languages.
  **/
-// Copyright 1998-2006 by Neil Hodgson <neilh@scintilla.org>
+// Copyright 1998-2011 by Neil Hodgson <neilh@scintilla.org>
 // The License.txt file describes the conditions under which this software may be distributed.
 
 #include <stdlib.h>
@@ -377,7 +377,7 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
         end = lengthDoc;
 
     //RemoveFindMarks();
-    m_editor->Colourise(0, -1); // SendEditor(SCI_COLOURISE, 0, -1);
+    m_editor->Colourise(0, -1); // wEditor.Call(SCI_COLOURISE, 0, -1);
 
     // Read the default settings
     //char key[200];
@@ -414,8 +414,7 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
         tabSize = 4;
 
     FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
-    if (fp)
-    {
+    if (fp) {
         char styles[STYLE_DEFAULT + 1][MAX_STYLEDEF];
         char fonts[STYLE_DEFAULT + 1][MAX_FONTDEF];
         char colors[STYLE_DEFAULT + 1][MAX_COLORDEF];
@@ -494,10 +493,8 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
                         RTF_SETCOLOR "0" RTF_SETBACKGROUND "1"
                         RTF_BOLD_OFF RTF_ITALIC_OFF, defaultStyle.size);
             }
-            //if (val)
-            //  delete []val;
-            //if (valdef)
-            //  delete []valdef;
+            // delete []val;
+            // delete []valdef;
         }
         fputs(RTF_FONTDEFCLOSE RTF_COLORDEFOPEN, fp);
         for (i = 0; i < colorCount; i++) {
@@ -548,8 +545,7 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
             } else if (ch == '\r') {
                 fputs(RTF_EOLN, fp);
                 column = -1;
-            }
-            else
+            } else
                 fputc(ch, fp);
             column++;
             prevCR = ch == '\r';
@@ -663,25 +659,27 @@ bool wxSTEditorExporter::SaveToHTMLCSS(const wxFileName& saveName)
 		if (sddef.back.length()) {
 			bgColour = sddef.back;
 		}
-		if (val) {
-			delete []val;
-		}
-		if (valdef) {
-			delete []valdef;
-		}
+		delete []val;
+		delete []valdef;
 */
         for (int istyle = 0; istyle <= STYLE_MAX; istyle++) {
             if ((istyle > STYLE_DEFAULT) && (istyle <= STYLE_LASTPREDEFINED))
                 continue;
             if (styleIsUsed[istyle]) {
-                //char key[200];
-                //sprintf(key, "style.*.%0d", istyle);
-                //char *valdef = StringDup(props.GetExpanded(key).c_str());
-                //sprintf(key, "style.%s.%0d", language.c_str(), istyle);
-                //char *val = StringDup(props.GetExpanded(key).c_str());
+				//sprintf(key, "style.*.%0d", istyle);
+				//valdef = StringDup(props.GetExpanded(key).c_str());
+				//sprintf(key, "style.%s.%0d", language.c_str(), istyle);
+				//val = StringDup(props.GetExpanded(key).c_str());
 
                 StyleDefinition sd(m_steStyles, SciToSTEStyle(istyle));
                 //sd.ParseStyleDefinition(val);
+
+				//if (CurrentBuffer()->useMonoFont && sd.font.length() && sdmono.font.length()) {
+				//	sd.font = sdmono.font;
+				//	sd.size = sdmono.size;
+				//	sd.italics = sdmono.italics;
+				//	sd.weight = sdmono.weight;
+				//}
 
                 if (sd.specified != StyleDefinition::sdNone) {
                     if (istyle == STYLE_DEFAULT) {
@@ -717,12 +715,8 @@ bool wxSTEditorExporter::SaveToHTMLCSS(const wxFileName& saveName)
                     styleIsUsed[istyle] = false;    // No definition, it uses default style (32)
                 }
 
-                //if (val) {
-                //  delete []val;
-                //}
-                //if (valdef) {
-                //  delete []valdef;
-                //}
+                // delete []val;
+                // delete []valdef;
             }
         }
         fputs("</style>\n", fp);
@@ -987,13 +981,13 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
     class PDFObjectTracker {
     private:
         FILE *fp;
-        int *offsetList, tableSize;
+        long *offsetList, tableSize;
     public:
         int index;
         PDFObjectTracker(FILE *fp_) {
             fp = fp_;
             tableSize = 100;
-            offsetList = new int[tableSize];
+            offsetList = new long[tableSize];
             index = 1;
         }
         ~PDFObjectTracker() {
@@ -1013,8 +1007,8 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
         int add(const char *objectData) {
             // resize xref offset table if too small
             if (index > tableSize) {
-                int newSize = tableSize * 2;
-                int *newList = new int[newSize];
+                long newSize = tableSize * 2;
+                long *newList = new long[newSize];
                 for (int i = 0; i < tableSize; i++) {
                     newList[i] = offsetList[i];
                 }
@@ -1031,17 +1025,17 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
             return index++;
         }
         // builds xref table, returns file offset of xref table
-        int xref() {
+        long xref() {
             char val[32];
             // xref start index and number of entries
-            int xrefStart = ftell(fp);
+            long xrefStart = ftell(fp);
             write("xref\n0 ");
             write(index);
             // a xref entry *must* be 20 bytes long (PDF1.4Ref(p64))
             // so extra space added; also the first entry is special
             write("\n0000000000 65535 f \n");
             for (int i = 0; i < index - 1; i++) {
-                sprintf(val, "%010d 00000 n \n", offsetList[i]);
+                sprintf(val, "%010ld 00000 n \n", offsetList[i]);
                 write(val);
             }
             return xrefStart;
@@ -1070,7 +1064,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
         PDFStyle *style;
         int fontSize;       // properties supplied by user
         int fontSet;
-        int pageWidth, pageHeight;
+        long pageWidth, pageHeight;
         PRRectangle pageMargin;  // see PRRectangle above for compatibility w/ Scintilla's PRectangle
         //
         PDFRender() {
@@ -1081,7 +1075,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
             segStyle = new char[100];
         }
         ~PDFRender() {
-            if (style) { delete []style; }
+            delete []style;
             delete []buffer;
             delete []segStyle;
         }
@@ -1155,7 +1149,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
             int pagesRef = pageObjectStart + pageCount;
             for (int i = 0; i < pageCount; i++) {
                 sprintf(buffer, "<</Type/Page/Parent %d 0 R\n"
-                        "/MediaBox[ 0 0 %d %d"
+                        "/MediaBox[ 0 0 %ld %ld"
                         "]\n/Contents %d 0 R\n"
                         "/Resources %d 0 R\n>>\n",
                         pagesRef, pageWidth, pageHeight,
@@ -1175,10 +1169,10 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
             sprintf(buffer, "<</Type/Catalog/Pages %d 0 R >>\n", pagesRef);
             int catalogRef = oT->add(buffer);
             // append the cross reference table (PDF1.4Ref(p64))
-            int xref = oT->xref();
+            long xref = oT->xref();
             // end the file with the trailer (PDF1.4Ref(p67))
             sprintf(buffer, "trailer\n<< /Size %d /Root %d 0 R\n>>"
-                    "\nstartxref\n%d\n%%%%EOF\n",
+                    "\nstartxref\n%ld\n%%%%EOF\n",
                     oT->index, catalogRef, xref);
             oT->write(buffer);
         }
@@ -1292,7 +1286,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
     // read magnification value to add to default screen font size
     pr.fontSize = 0; // FIXME props.GetInt("export.pdf.magnification");
     // set font family according to face name
-    SString propItem = ""; // FIXME props.GetExpanded("export.pdf.font");
+    SString propItem = "Helvetica"; // FIXME props.GetExpanded("export.pdf.font");
     pr.fontSet = PDF_FONT_DEFAULT;
     if (propItem.length()) {
         if (propItem == "Courier")
@@ -1367,8 +1361,8 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
                     pr.fontSize = PDF_FONTSIZE_DEFAULT;
             }
         }
-        //if (val) delete []val;
-        //if (valdef) delete []valdef;
+        //delete []val;
+        //delete []valdef;
     }
     // patch in default foregrounds
     for (int j = 0; j <= STYLE_MAX; j++) {
@@ -1393,12 +1387,12 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
 
     // do here all the writing
     int lengthDoc = m_editor->GetLength(); //LengthDocument();
-    //WindowAccessor acc(wEditor.GetID(), props);
-    int lineIndex = 0;
+    //TextReader acc(wEditor);
 
     if (!lengthDoc) {   // enable zero length docs
         pr.nextLine();
     } else {
+		int lineIndex = 0;
         for (int i = 0; i < lengthDoc; i++) {
             char ch = (char)m_editor->GetCharAt(i); //acc[i];
             int style = m_editor->GetStyleAt(i);
@@ -1435,9 +1429,9 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
 
 static char* getTexRGB(char* texcolor, const char* stylecolor) {
 	//texcolor[rgb]{0,0.5,0}{....}
-	float rf = IntFromHexByte(stylecolor + 1) / 256.0;
-	float gf = IntFromHexByte(stylecolor + 3) / 256.0;
-	float bf = IntFromHexByte(stylecolor + 5) / 256.0;
+	double rf = IntFromHexByte(stylecolor + 1) / 256.0;
+	double gf = IntFromHexByte(stylecolor + 3) / 256.0;
+	double bf = IntFromHexByte(stylecolor + 5) / 256.0;
 	// avoid breakage due to locale setting
 	int r = (int)(rf * 10 + 0.5);
 	int g = (int)(gf * 10 + 0.5);
@@ -1498,7 +1492,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
 
     //char key[200];
     int lengthDoc = m_editor->GetLength();  //LengthDocument();
-    //WindowAccessor acc(wEditor.GetID(), props);
+    //TextReader acc(wEditor);
     bool styleIsUsed[STYLE_MAX + 1];
 
     //int titleFullPath = 0;                  //props.GetInt("export.tex.title.fullpath", 0);
@@ -1513,14 +1507,14 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
     styleIsUsed[STYLE_DEFAULT] = true;
 
     FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
-    if (fp)
-    {
+    if (fp) {
         fputs("\\documentclass[a4paper]{article}\n"
               "\\usepackage[a4paper,margin=2cm]{geometry}\n"
               "\\usepackage[T1]{fontenc}\n"
               "\\usepackage{color}\n"
               "\\usepackage{alltt}\n"
-              "\\usepackage{times}\n", fp);
+ 		      "\\usepackage{times}\n"
+ 		      "\\setlength{\\fboxsep}{0pt}\n", fp);
 
         for (i = 0; i < STYLE_MAX; i++) {      // get keys
             if (styleIsUsed[i]) {
@@ -1532,18 +1526,14 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
                 StyleDefinition sd(m_steStyles, SciToSTEStyle(i)); //check default properties
                 //sd.ParseStyleDefinition(val); //check language properties
 
-                if (sd.specified != StyleDefinition::sdNone) {
-                    defineTexStyle(sd, fp, i); // writeout style macroses
-                } // Else we should use STYLE_DEFAULT
-                //if (val)
-                //  delete []val;
-                //if (valdef)
-                //  delete []valdef;
+                defineTexStyle(sd, fp, i); // writeout style macroses
+                //delete []val;
+                //delete []valdef;
             }
         }
 
         fputs("\\begin{document}\n\n", fp);
-        fprintf(fp, "Source File: %s\n\n\\noindent\n\\tiny{\n",
+        fprintf(fp, "Source File: %s\n\n\\noindent\n\\small{\n",
             (const char*)saveName.GetFullPath().mb_str()); //FIXME titleFullPath ? filePath.AsFileSystem() : filePath.Name().AsFileSystem()));
 
         int styleCurrent = m_editor->GetStyleAt(0);
@@ -1557,7 +1547,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
             int style = m_editor->GetStyleAt(i);
 
             if (style != styleCurrent) { //new style?
-                fprintf(fp, "}\n\\scite%s{", texStyle(style) );
+				fprintf(fp, "}\\scite%s{", texStyle(style) );
                 styleCurrent = style;
             }
 
@@ -1607,7 +1597,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
             }
             lineIdx++;
         }
-        fputs("}\n} %end tiny\n\n\\end{document}\n", fp); //close last empty style macros and document too
+        fputs("}\n} %end small\n\n\\end{document}\n", fp); //close last empty style macros and document too
         fclose(fp);
     } else {
         return false;
@@ -1664,19 +1654,20 @@ bool wxSTEditorExporter::SaveToXML(const wxFileName& saveName)
 
     int lengthDoc = m_editor->GetLength();  //LengthDocument() ;
 
-    //WindowAccessor acc(wEditor.GetID(), props) ;
+    //TextReader acc(wEditor);
 
     FILE *fp = wxFopen(saveName.GetFullPath(), wxT("wt"));
 
-    if (fp)
-    {
+    if (fp) {
+
         bool collapseSpaces = 1; //(props.GetInt("export.xml.collapse.spaces", 1) == 1) ;
         bool collapseLines  = 1; //(props.GetInt("export.xml.collapse.lines", 1) == 1) ;
 
-        fputs("<?xml version='1.0' encoding='ascii'?>\n", fp) ;
+		fprintf(fp, "<?xml version='1.0' encoding='%s'?>\n", (m_editor->GetCodePage() == wxSTC_CP_UTF8) ? "utf-8" : "ascii");
 
         fputs("<document xmlns='http://www.scintila.org/scite.rng'", fp) ;
         fprintf(fp, " filename='%s'",
+
             (const char*)saveName.GetFullPath().mb_str()); //FIXME filePath.Name().AsFileSystem())) ;
         fprintf(fp, " type='%s'", "unknown") ;
         fprintf(fp, " version='%s'", "1.0") ;
@@ -1950,37 +1941,44 @@ BEGIN_EVENT_TABLE(wxSTEditorExportDialog, wxDialog)
     EVT_BUTTON     (wxID_ANY, wxSTEditorExportDialog::OnButton)
 END_EVENT_TABLE()
 
-wxSTEditorExportDialog::wxSTEditorExportDialog() :wxDialog()
+wxSTEditorExportDialog::wxSTEditorExportDialog() : wxDialog()
 {
     m_fileFormatChoice = NULL;
     m_fileNameCombo    = NULL;
 }
 
+wxSTEditorExportDialog::wxSTEditorExportDialog(wxWindow* parent, long style) : wxDialog()
+{
+    m_fileFormatChoice = NULL;
+    m_fileNameCombo    = NULL;
+
+    Create(parent, style);
+}
+
 bool wxSTEditorExportDialog::Create(wxWindow* parent,
                                     long style)
 {
-    bool ok = wxDialog::Create(parent, wxID_ANY, _("Export file"), wxDefaultPosition, wxDefaultSize, style);
+    if (!wxDialog::Create(parent, wxID_ANY, _("Export file"), wxDefaultPosition, wxDefaultSize, style))
+        return false;
 
-    if (ok)
-    {
-        SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
-        wxSTEditorExportSizer(this, true, true);
-        wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+    wxSTEditorExportSizer(this, true, true);
+    wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL);
 
-        m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
-        m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
-        m_fileNameCombo->Clear();
-        wxSTEInitComboBoxStrings(sm_fileNames, m_fileNameCombo);
+    m_fileFormatChoice = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FORMAT_CHOICE ), wxChoice);
+    m_fileNameCombo    = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_COMBO), wxComboBox);
+    m_fileNameCombo->Clear();
+    wxSTEInitComboBoxStrings(sm_fileNames, m_fileNameCombo);
 
-        m_fileFormatChoice->SetSelection(sm_file_format);
+    m_fileFormatChoice->SetSelection(sm_file_format);
 
-        wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
-        bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
-        Fit();
-        SetMinSize(GetSize());
-        Centre();
-    }
-    return ok;
+    wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
+    bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
+    Fit();
+    SetMinSize(GetSize());
+    Centre();
+
+    return true;
 }
 
 wxFileName wxSTEditorExportDialog::GetFileName() const

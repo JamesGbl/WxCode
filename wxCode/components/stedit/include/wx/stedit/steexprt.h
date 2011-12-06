@@ -80,6 +80,8 @@ class WXDLLIMPEXP_STEDIT wxSTEditorExportDialog : public wxDialog
 {
 public:
     wxSTEditorExportDialog();
+    wxSTEditorExportDialog(wxWindow* parent,
+                           long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     bool Create(wxWindow* parent,
                 long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
