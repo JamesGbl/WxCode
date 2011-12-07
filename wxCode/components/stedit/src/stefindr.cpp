@@ -150,6 +150,7 @@ wxSTEditorFindReplacePanel::~wxSTEditorFindReplacePanel()
 void wxSTEditorFindReplacePanel::Init()
 {
     m_created = false;
+    m_ignore_activation = false;
 
     m_targetWin = NULL;
 
@@ -274,7 +275,7 @@ bool wxSTEditorFindReplacePanel::Create(wxWindow *parent, wxWindowID winid,
         return false;
     }
 
-    // Set the data and update the button state based on it's values
+    // Set the data and update the button state based on its values
     SetData(data);
 
     if (HasFlag(STE_FR_NOUPDOWN))
@@ -625,7 +626,12 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
     {
         wxComboBox* cBox = wxStaticCast(m_insertMenu->GetClientData(), wxComboBox);
         wxCHECK_RET(cBox, wxT("Unexpected missing control"));
+#ifdef __WXMSW__
+        // See comment in OnIdle(), MSW forgets insertion point after losing focus
         wxTextPos pos = (cBox == m_findCombo) ? m_find_insert_pos : m_replace_insert_pos;
+#else
+        wxTextPos pos = cBox->GetInsertionPoint();
+#endif
 
         wxString s = cBox->GetValue();
 
@@ -639,6 +645,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
         cBox->SetValue(s);
         cBox->SetFocus();
         cBox->SetInsertionPoint(pos + (int)c.Length() + ipos);
+        m_ignore_activation = true;
     }
 }
 
@@ -648,16 +655,20 @@ void wxSTEditorFindReplacePanel::OnActivate(wxActivateEvent &event)
 
     if (event.GetActive())
     {
-        SelectFindString();
+        if (!m_ignore_activation)
+            SelectFindString();
+
         UpdateButtons();
     }
+
+    m_ignore_activation = false;
 }
 
 void wxSTEditorFindReplacePanel::OnIdle(wxIdleEvent &event)
 {
     if (IsShown())
     {
-        // This is a really ugly hack because the combo forgets it's insertion
+        // This is a really ugly hack because the combo forgets its insertion
         //   point in MSW whenever it loses focus
         wxWindow* focus = FindFocus();
         if (m_findCombo && (focus == m_findCombo))

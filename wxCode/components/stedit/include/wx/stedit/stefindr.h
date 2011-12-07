@@ -214,6 +214,7 @@ public:
     wxSTEditorFindReplaceData *m_findReplaceData;
 
     bool m_created;
+    bool m_ignore_activation;
 
     wxWindow *m_targetWin;
 
