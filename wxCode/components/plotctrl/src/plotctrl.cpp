@@ -3682,7 +3682,7 @@ void wxPlotCtrl::OnChar(wxKeyEvent &event)
             if (m_activeCurve) DeleteCurve(m_activeCurve, true);
             return;
         }
-        // delete current selection or go to next curve and delete it's selection
+        // delete current selection or go to next curve and delete its selection
         //   finally invalidate cursor
         case WXK_ESCAPE :
         {

@@ -1087,7 +1087,7 @@ BEGIN_DECLARE_EVENT_TYPES()
 // ----------------------------------------------------------------------------
 // wxPlotCtrlEvent
 
-// a curve has been added, event's curve is new curve with it's index
+// a curve has been added, event's curve is new curve with its index
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_PLOTCTRL, wxEVT_PLOTCTRL_ADD_CURVE,          0)
 // a curve is about to be deleted, event.Skip(false) to prevent
 //   the curve_index is valid and may be -1 for all curves
@@ -1097,11 +1097,11 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_PLOTCTRL, wxEVT_PLOTCTRL_DELETING_CURVE,
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_PLOTCTRL, wxEVT_PLOTCTRL_DELETED_CURVE,      0)
 
 // curve selection changing, event.Skip(false) to prevent
-//   the curve and it's index are the curve to be switched to, the current
+//   the curve and its index are the curve to be switched to, the current
 //   values can be found from the plotctrl itself.
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_PLOTCTRL, wxEVT_PLOTCTRL_CURVE_SEL_CHANGING, 0)
 // curve selection has changed
-//   the curve and it's index are for the newly selected curve
+//   the curve and its index are for the newly selected curve
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_PLOTCTRL, wxEVT_PLOTCTRL_CURVE_SEL_CHANGED,  0)
 
 // mouse moved

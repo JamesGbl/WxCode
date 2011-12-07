@@ -21,7 +21,7 @@
 //   whenever the cursor is not on the last line. When the user presses enter
 //   a wxEVT_STESHELL_ENTER event is generated, where the event.GetString()
 //   containins the text of the last line.
-// Since the control updates it's readonly state internally you should
+// Since the control updates its readonly state internally you should
 //   surround modifications with BeginWriteable() and EndWriteable() so that
 //   while you're in the middle of changing things it won't set set readonly on you.
 //-----------------------------------------------------------------------------

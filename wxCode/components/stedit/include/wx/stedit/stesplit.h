@@ -21,7 +21,7 @@
 //                      or horizontally.
 //
 //                      Do not call wxSplitterWindow::Unsplit/Split methods
-//                      as this control has it's own customized methods.
+//                      as this control has its own customized methods.
 //                      If the function isn't below, use at your own risk.
 //
 // note: having the STC in another window seems to solve this problem when switching notebook pages

@@ -51,7 +51,7 @@ class FunctionParser;
 // wxFunctionParser - a thin wrapper around FunctionParser
 //
 // It converts wxString to std::string (for unicode) and isolates the std::
-// warnings that MSVC 6 generates from it's own headers.
+// warnings that MSVC 6 generates from its own headers.
 // Additionally, the original fparser.hh and fparser.cpp files do not require
 // any modification other than adding some code.
 // ----------------------------------------------------------------------------

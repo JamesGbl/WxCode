@@ -269,9 +269,9 @@ public:
     void SetBitmap(const wxBitmap& bitmap) { m_bitmap = bitmap; }
     // Get/Set the bitmap alignment, wxALIGN_XXX | wxSHEET_BMPREN_Type | wxGROW
     //   The wxSHEET_BMPREN_Type determines the relative positions of bmp and text
-    //   The wxALIGN_XXX sets the alignment of the bitmap in it's area of the cell
+    //   The wxALIGN_XXX sets the alignment of the bitmap in its area of the cell
     //   wxGROW will expand or shrink bitmap instead of clipping it
-    //   The cell attribute's alignment sets the alignment of the text in it's area of the cell
+    //   The cell attribute's alignment sets the alignment of the text in its area of the cell
     int GetAlignment() const { return m_align; }
     void SetAlignment(int align) { m_align = align; }
 

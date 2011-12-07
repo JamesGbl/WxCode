@@ -229,11 +229,11 @@ typedef struct WXDLLIMPEXP_STEDIT STE_LexerStyles
 {
     int         ste_style;   // STE style to use
     int         sci_style;   // Scintilla style to map to
-    const char* description; // readable description of it's use in scintilla
+    const char* description; // readable description of its use in scintilla
 } STE_LexerStyles;
 
 // ---------------------------------------------------------------------------
-// Word list and it's Scintilla style for the lexer
+// Word list and its Scintilla style for the lexer
 typedef struct WXDLLIMPEXP_STEDIT STE_LexerWords
 {
     int         sci_style; // Scintilla style used for the words

@@ -40,7 +40,7 @@
 #endif // wxCHECK_VERSION(2,5,0)
 
 // NOTES : if the textctrl is focused and the program is ending, a killfocus
-//         event is sent in MSW, this is why m_textCtrl is set to NULL in it's
+//         event is sent in MSW, this is why m_textCtrl is set to NULL in its
 //         destructor and there's so many checks for it not being NULL
 
 //----------------------------------------------------------------------------

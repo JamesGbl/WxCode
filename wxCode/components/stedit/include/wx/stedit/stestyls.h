@@ -219,7 +219,7 @@ public:
     // ------------------------------------------------------------------------
     // Indicators - Get/Set the style and foreground colour of the 3 indicators
     //    supported by Scintilla.
-    //  note: uses only foreground colour and puts it's style in the FontStyle
+    //  note: uses only foreground colour and puts its style in the FontStyle
     //  indic_n = 0,1,2  (not STE_STYLE_INDIC_[0,1,2] which is used internally)
     //  style = wxSTC_INDIC_PLAIN...wxSTC_INDIC_MAX
 

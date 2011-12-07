@@ -376,7 +376,7 @@ void wxSheetCellEditorRefData::PaintBackground(wxSheet& , const wxSheetCellAttr&
     dc.SetBrush(wxBrush(attr.GetBackgroundColour(), wxSOLID));
 
     // only draw exactly what's needed
-/*  FIXME - the checkbox in GTK doesn't draw it's full background
+/*  FIXME - the checkbox in GTK doesn't draw its full background
     wxRect ctrlRect(GetControl()->GetRect());
 
     // top

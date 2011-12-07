@@ -70,7 +70,7 @@ public:
 
     // -----------------------------------------------------------------------
     // (re)Create this colour, unrefing this colour first.
-    //    Use these to detach this colour from it's refed copies.
+    //    Use these to detach this colour from its refed copies.
     void Create( const wxGenericColour& c );
     void Create( const wxColour& c);
     void Create( unsigned char red = 0, unsigned char green = 0,
@@ -172,7 +172,7 @@ public:
 
     // -----------------------------------------------------------------------
     // (re)Create this pen, unrefing this pen first.
-    //    Use these to detach this pen from it's refed copies.
+    //    Use these to detach this pen from its refed copies.
     void Create( const wxGenericPen &pen );
     void Create( const wxPen &pen );
     void Create( const wxGenericColour &colour, int width = 1, int style = wxSOLID,
@@ -260,7 +260,7 @@ public:
 
     // -----------------------------------------------------------------------
     // (re)Create this brush, unrefing this pen first.
-    //    Use these to detach this pen from it's refed copies.
+    //    Use these to detach this pen from its refed copies.
     void Create( const wxGenericBrush &brush );
     void Create( const wxBrush &brush );
     void Create( const wxGenericColour &colour, int style = wxSOLID );

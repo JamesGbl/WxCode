@@ -119,7 +119,7 @@ enum STE_ConfigOptionsType
 {
                                      // use wxConfigBase::Get(false) to save prefs
                                      // if config isn't created this is ignored
-    STF_CONFIG             = 0x0002, // wxSTEditorFrame will save it's prefs if any
+    STF_CONFIG             = 0x0002, // wxSTEditorFrame will save its prefs if any
                                      // prefs saved only for menu item ID_STE_SAVE_PREFERENCES
 
     STE_CONFIG_FILEHISTORY = 0x0004, // wxSTEditorOption's wxFileHistory should be saved

@@ -2094,7 +2094,7 @@ void wxSTEditorInsertTextDialog::OnIdle(wxIdleEvent &event)
 {
     if (IsShown())
     {
-        // This is a really ugly hack because the combo forgets it's insertion
+        // This is a really ugly hack because the combo forgets its insertion
         //   point in MSW whenever it loses focus
         wxWindow* focus = FindFocus();
         if (m_prependCombo && (focus == m_prependCombo))

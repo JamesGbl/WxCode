@@ -48,7 +48,7 @@ wxVideoCaptureWindowCaptureSingleFramesDialog::wxVideoCaptureWindowCaptureSingle
     wxASSERT(parent);
     m_parent = parent;
 
-    // this shouldn't be run on it's own, create wxVideoCaptureWindow
+    // this shouldn't be run on its own, create wxVideoCaptureWindow
     //  only called using wxVideoCaptureWindow::AudioFormatDialog
 /*
     if (!m_parent->m_hWndC)
@@ -151,7 +151,7 @@ wxVideoCaptureWindowCapturePreferencesDialog::wxVideoCaptureWindowCapturePrefere
 {
     m_parent = parent;
 
-    // this shouldn't be run on it's own, create wxVideoCaptureWindow
+    // this shouldn't be run on its own, create wxVideoCaptureWindow
     //  only called using wxVideoCaptureWindow::CapturePreferencesDialog
     if (!m_parent->IsDeviceConnected()) //!m_parent->m_hWndC ||
     {
@@ -448,7 +448,7 @@ wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoForm
 {
     m_parent = parent;
 
-    // this shouldn't be run on it's own, create wxVideoCaptureWindow
+    // this shouldn't be run on its own, create wxVideoCaptureWindow
     //  only called using wxVideoCaptureWindow::VideoFormatDialog
 /*
     if (!m_parent->m_hWndC)
@@ -663,7 +663,7 @@ wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
     int i;
     m_parent = parent;
 
-    // this shouldn't be run on it's own, create wxVideoCaptureWindow
+    // this shouldn't be run on its own, create wxVideoCaptureWindow
     //  only called using wxVideoCaptureWindow::AudioFormatDialog
     if (!m_parent->HasAudioHardware()) //!m_parent->m_hWndC ||
     {

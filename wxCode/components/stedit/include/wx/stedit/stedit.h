@@ -568,7 +568,7 @@ public :
     // Copy the current filename and path to the clipboard
     bool CopyFilePathToClipboard();
 
-    // If there's a valid filename, return false if it's modification time is
+    // If there's a valid filename, return false if its modification time is
     //   before the current doc's times if the time is valid.
     //   if show_reload_dialog then ask user if they want to reload
     //   if yes then the file is reloaded else modified time is set to an
