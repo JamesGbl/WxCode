@@ -1683,7 +1683,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2869")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2876")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2320,6 +2320,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             switch (encoding)
             {
                 case wxTextEncoding::None:
+                    // load file and get BOM
                     str = wxTextEncoding::CharToString(charBuf, stream_len, &file_bom);
                 #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
                     switch (file_bom)
@@ -2360,7 +2361,12 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             #ifdef __WXMSW__
                 case wxTextEncoding::OEM:
             #endif
-                    ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, encoding);
+                    // get BOM
+                    file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
+
+                    // load file
+                    ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, encoding, file_bom);
+
                     break;
                 default:
                     ok = false;
@@ -2446,7 +2452,7 @@ bool wxSTEditor::LoadFile(const wxFileName &fileName_, const wxString &extension
     if (!fileName.IsAbsolute())
         fileName.MakeAbsolute();
 
-    GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
+    GetOptions().SetDefaultFilePath(fileName.GetPath());
 
     int load_flags = GetEditorPrefs().IsOk() ? GetEditorPrefs().GetPrefInt(STE_PREF_LOAD_UNICODE) : STE_LOAD_DEFAULT;
 
@@ -2492,7 +2498,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         }
 
         wxSTEditorFileDialog fileDialog( this, _("Save file"),
-                                 GetOptions().GetDefaultFilePath().IsEmpty() ? fileName.GetPath() : GetOptions().GetDefaultFilePath(),
+                                 path,
                                  extensions,
                                  wxFD_DEFAULT_STYLE_SAVE);
 
@@ -2534,7 +2540,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 
         SetFileModificationTime(fileName.GetModificationTime());
         if (use_dialog)
-            GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
+            GetOptions().SetDefaultFilePath(fileName.GetPath());
 
         SetModified(false);
         SetFileName(fileName, true);

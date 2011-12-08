@@ -745,7 +745,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &
     if (ok)
     {
         // load the file from disk and only load it once
-        GetOptions().SetDefaultFilePath(fileName.GetPath(wxPATH_GET_VOLUME));
+        GetOptions().SetDefaultFilePath(fileName.GetPath());
 
         int page = FindEditorPageByFileName(fileName);
         if (page != wxNOT_FOUND)

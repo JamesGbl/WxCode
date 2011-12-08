@@ -164,8 +164,9 @@ public:
         None = wxNOT_FOUND
     };
 
-    static bool LoadFile(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None);
-
+#if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
+    static bool LoadFile(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None, wxBOM bom = wxBOM_None);
+#endif
     static bool SaveFile(const wxString&, wxOutputStream&, Type encoding = None, bool file_bom = false);
 
 #if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
