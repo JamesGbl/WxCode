@@ -2822,7 +2822,6 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,  CanSave());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT, IsModified() && IsFileFromDisk());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML,  CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
@@ -2922,18 +2921,6 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         // Edit menu items ----------------------------------------------------
         case wxID_CUT            : Cut();   return true;
         case wxID_COPY           : Copy();  return true;
-        case wxID_CLEAR          :
-        {
-            if (!HasSelection())
-            {
-               // simulate default Del key behaviour
-               STE_TextPos pos = GetCurrentPos();
-               CharRight(); // move right, jumping to next line if at cr+lf
-               SetSelection(pos, GetCurrentPos());
-            }
-            Clear();
-            return true;
-        }
         case ID_STE_COPY_HTML:
         {
             wxSTEditorExporter steExport(this);

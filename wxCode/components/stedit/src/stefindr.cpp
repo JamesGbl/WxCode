@@ -615,7 +615,7 @@ void wxSTEditorFindReplacePanel::OnMenu(wxCommandEvent& event)
         case ID_STEDLG_INSERTMENURE_1MATCHES  : c = wxT("+"); break;
         case ID_STEDLG_INSERTMENURE_01MATCHES : c = wxT("?"); break;
 
-        case ID_STEDLG_INSERTMENURE_ALPHANUM  : c = wxT("[a-zA-Z][0-9]"); break;
+        case ID_STEDLG_INSERTMENURE_ALPHANUM  : c = wxT("[a-zA-Z0-9]"); break;
         case ID_STEDLG_INSERTMENURE_ALPHA     : c = wxT("[a-zA-Z]"); break;
         case ID_STEDLG_INSERTMENURE_NUMERIC   : c = wxT("[0-9]"); break;
         case ID_STEDLG_INSERTMENURE_TAB       : c = wxT("\\t"); break;
