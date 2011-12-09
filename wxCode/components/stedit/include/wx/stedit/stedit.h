@@ -307,13 +307,6 @@ public :
 
 #else // (wxVERSION_NUMBER < 2900)
 
-    // FIXME gtk runs evt loop during CanPaste check causing a crash in
-    //   scintilla's drawing code, for now let's just assume you can always paste
-#ifdef __WXGTK__
-    bool CanPaste()       { return IsEditable(); }
-    bool CanPaste() const { return IsEditable(); }
-#endif // __WXGTK__
-
     int GetEOLMode() const           { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode(); }
     STE_TextPos GetInsertionPoint() const    { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
 
@@ -337,6 +330,15 @@ public :
     int LineFromPosition(STE_TextPos pos) const  { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::LineFromPosition(pos); }
     STE_TextPos PositionFromLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::PositionFromLine(line); }
 #endif // (wxVERSION_NUMBER >= 2900)
+
+#ifdef __WXGTK__
+    // NOTE: GTK runs the evt loop during the wxSTC::CanPaste() check which can cause a crash in scintilla's
+    // drawing code in certain circumstances, for now let's just assume you can always paste.
+    // The worst that can happen is that empty text is retrieved from the clipboard and
+    // nothing is pasted which is harmless. In any case, we want this check to be fast.
+    bool CanPaste()       { return IsEditable(); }
+    bool CanPaste() const { return IsEditable(); }
+#endif // __WXGTK__
 
     virtual bool IsModified() const // not in wx2.8; virtual in wx trunk so make it virtual here too
     {

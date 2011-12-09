@@ -333,12 +333,15 @@ long wxSTEditor::UpdateCanDo(bool send_event)
         SetStateSingle(STE_CANCOPY, !HasState(STE_CANCOPY));
         state_change |= STE_CANCOPY;
     }
-    if (HasState(STE_CANPASTE) != (IsEditable() || CanPaste())) // FIXME CanPaste()
+    if (HasState(STE_CANPASTE) != CanPaste())
     {
-        // You get 2 UpdateUI events per key press, the first CanPaste
-        // returns false since SelectionContainsProtected->RangeContainsProtected
-        // returns true which is a bug in scintilla I think
-        //printf("m_canpaste %d %d %d\n", m_canpaste, CanPaste(), GetReadOnly());
+        // In GTK you get 2 UpdateUI events per key press, the first CanPaste()
+        // returns false since Editor::SelectionContainsProtected->RangeContainsProtected()
+        // returns true which is a bug in scintilla I think.
+        // This is why we override CanPaste() to simply return IsEditable() for GTK.
+        // wxWidgets/src/stc/ScintillaWX.cpp - CanPaste() calls Editor::CanPaste() and checks for empty clipboard.
+        // wxWidgets/src/stc/scintilla/src/Editor.cxx - bool Editor::CanPaste() does the SelectionContainsProtected code.
+        //printf("Paste %d %d %d\n", (int)HasState(STE_CANPASTE), (int)CanPaste(), (int)GetReadOnly());
 
         SetStateSingle(STE_CANPASTE, !HasState(STE_CANPASTE));
         state_change |= STE_CANPASTE;
@@ -2819,15 +2822,16 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
                                           (LineFromPosition(GetSelectionEnd())));
 
     // Edit menu items
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,  CanSave());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT, IsModified() && IsFileFromDisk());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,   CanCut());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,  CanCopy());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_SAVE,         CanSave());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REVERT,       IsModified() && IsFileFromDisk());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT,          CanCut());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,         CanCopy());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML,  CanCopy());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY,  CanCopy());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, CanPaste());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsClipboardTextAvailable());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY, CanCopy());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE,        CanPaste());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW,  IsClipboardTextAvailable());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, CanPaste());
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR,        !readonly);
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_CUT,       !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_DELETE,    !readonly);
@@ -2837,7 +2841,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_NEXT, CanFind());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_FIND_PREV, CanFind());
     STE_MM::DoCheckItem( menu, menuBar, toolBar, ID_STE_FIND_DOWN, GetFindDown());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REPLACE,   !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REPLACE,     !readonly);
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_UNDO, CanUndo());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_REDO, CanRedo());
@@ -2939,6 +2943,15 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         }
         case wxID_PASTE            : Paste(); return true;
         case ID_STE_PASTE_RECT     : PasteRectangular(); return true;
+        case wxID_CLEAR            :
+        {
+            // Let scintilla handle the WXK_DELETE so it can be used in the macro recorder
+            // and we guarantee the same behavior for the menu item and the delete key.
+            wxKeyEvent keyEvent(wxEVT_KEY_DOWN);
+            keyEvent.m_keyCode = WXK_DELETE;
+            wxStyledTextCtrl::OnKeyDown(keyEvent);
+            return true;
+        }
         case ID_STE_PREF_SELECTION_MODE    :
         {
             if (GetEditorPrefs().IsOk())
