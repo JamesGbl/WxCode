@@ -313,6 +313,7 @@ enum
     //wxID_PASTE,
     ID_STE_PASTE_NEW,
     ID_STE_PASTE_RECT,
+    //wxID_CLEAR
     //ID_STE_PREF_SELECTION_MODE, // rect sel check only
     //wxID_SELECTALL,
     ID_STE_READONLY,
@@ -366,6 +367,7 @@ enum
     //ID_STE_PREF_ZOOM
     ID_STE_SHOW_FULLSCREEN,
     // Bookmark menu items  ---------------------------------------------------
+    ID_STE_BOOKMARKS,
     ID_STE_BOOKMARK_TOGGLE,
     ID_STE_BOOKMARK_FIRST,
     ID_STE_BOOKMARK_PREVIOUS,

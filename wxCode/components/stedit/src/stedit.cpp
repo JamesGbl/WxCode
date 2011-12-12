@@ -397,7 +397,9 @@ void wxSTEditor::OnMouseWheel(wxMouseEvent& event)
 // "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB",
 // "CAN", "EM", "SUB", "ESC", "FS", "GS", "RS", "US"
 
-static const int ste_ctrlCharLengths[32] = { 3, 3, 3, 3, 3, 3, 3, 3,
+static const int ste_ctrlCharLenghts_size = 32;
+static const int ste_ctrlCharLengths[ste_ctrlCharLenghts_size] =
+                                           { 3, 3, 3, 3, 3, 3, 3, 3,
                                              2, 2, 2, 2, 2, 2, 2, 2,
                                              3, 3, 3, 3, 3, 3, 3, 3,
                                              3, 2, 3, 3, 2, 2, 2, 2 };
@@ -433,7 +435,8 @@ int wxSTEditor::GetLongestLinePixelWidth(int top_line, int bottom_line)
             {
                 if (*c == '\t')
                     tabs += tab_width - ((i + tabs) % tab_width);
-                else if ((ctrl_char_symbol >= 32) && (size_t(*c) < 32))
+                else if ((ctrl_char_symbol >= ste_ctrlCharLenghts_size) &&
+                         (int(*c) < ste_ctrlCharLenghts_size))
                 {
                     // scintilla writes name of char
                     tabs += ste_ctrlCharLengths[size_t(*c)] - 1;
@@ -3078,6 +3081,44 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_FOLDS_EXPAND_ALL   : ExpandAllFolds();    return true;
         case ID_STE_PREF_ZOOM          : ShowSetZoomDialog(); return true;
         // Bookmark menu items ------------------------------------------------
+        case ID_STE_BOOKMARKS :
+        {
+            // TODO : make a full dialog to add and delete markers and work with notebook
+            wxArrayString bookmarks;
+            int current_line = (int)GetCurrentLine();
+            int best_marker = 0;
+            int best_marker_distance = 100000;
+
+            int line = MarkerNext(0, 1<<STE_MARKER_BOOKMARK);
+            while (line >= 0)
+            {
+                if (labs(current_line - line) < best_marker_distance)
+                    best_marker = (int)bookmarks.GetCount();
+
+                wxString s(wxString::Format(wxT("%-5d : "), line+1) + GetLine(line));
+                if (s.Length() > 100) s = s.Mid(0, 100) + wxT("...");
+                bookmarks.Add(s);
+                line = MarkerNext(line+1, 1<<STE_MARKER_BOOKMARK);
+            }
+
+            if (bookmarks.empty())
+                bookmarks.Add(_("No bookmarks in document"));
+
+#if (wxVERSION_NUMBER > 2900)
+            wxString choice = wxGetSingleChoice(_("Choose a bookmark to go to"), _("Bookmarks"),
+                                                bookmarks, best_marker, this);
+#else
+            wxString choice = wxGetSingleChoice(_("Choose a bookmark to go to"), _("Bookmarks"),
+                                                bookmarks, this);
+#endif
+            if (!choice.IsEmpty())
+            {
+                long l = 0;
+                if (choice.BeforeFirst(wxT(' ')).Trim(false).ToLong(&l))
+                    GotoLine(l-1);
+            }
+            return true;
+        }
         case ID_STE_BOOKMARK_TOGGLE :
         {
             if ((MarkerGet(GetCurrentLine()) & (1<<STE_MARKER_BOOKMARK)) != 0)

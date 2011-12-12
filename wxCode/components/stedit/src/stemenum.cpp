@@ -554,6 +554,7 @@ wxMenu *wxSTEditorMenuManager::CreateEditMenu(wxMenu *menu_) const
         // FIXME - ID_STE_PREF_SELECTION_MODE remmed out since I can't make it work in GTK
         //menu->AppendCheckItem(ID_STE_PREF_SELECTION_MODE, _("Rectan&gular Selection"), _("Rectangular selections for cut/copy/paste"));
 
+        // WXK_DELETE - no accelerator to allow scintilla to handle it appropriately
         menu->Append(MenuItem(menu, wxID_CLEAR, wxGetStockLabel(wxID_DELETE), _("Delete selection"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_CLEAR)));
 
         add_sep = true;
@@ -830,6 +831,8 @@ wxMenu *wxSTEditorMenuManager::CreateBookmarkMenu(wxMenu *menu_) const
     if (HasMenuItemType(STE_MENU_BOOKMARK_MENU, STE_MENU_BOOKMARK_DEFAULT))
     {
         if (menu == NULL) menu = new wxMenu;
+        menu->Append(MenuItem(menu, ID_STE_BOOKMARKS, _("&Bookmarks..."), _("View all bookmarks"), wxITEM_NORMAL, STE_ARTMENU(wxART_HELP_BOOK)));
+        menu->AppendSeparator();
         menu->Append(MenuItem(menu, ID_STE_BOOKMARK_TOGGLE, _("&Toggle bookmark"), _("Toggle a bookmark on cursor line"), wxITEM_NORMAL, STE_ARTMENU(wxART_ADD_BOOKMARK)));
         menu->AppendSeparator();
         menu->Append(MenuItem(menu, ID_STE_BOOKMARK_FIRST,    _("&First bookmark"),    _("Goto first bookmark"), wxITEM_NORMAL, STE_ARTMENU(wxART_GO_UP)));

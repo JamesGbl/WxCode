@@ -1900,6 +1900,7 @@ void wxSTEditorInsertTextDialog::Init()
     m_col                = sm_spinValue;
     m_prepend_insert_pos = 0;
     m_append_insert_pos  = 0;
+    m_created            = false;
 }
 
 bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
@@ -1938,14 +1939,12 @@ bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
     SetMinSize(GetSize());
     Centre();
 
+    m_created = true;  // now we can handle events
     return true;
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
 {
-    m_prependCombo = NULL;
-    m_appendCombo  = NULL;
-
     delete m_insertMenu;
 }
 
@@ -1955,6 +1954,7 @@ void wxSTEditorInsertTextDialog::SetText(const wxString& text)
     m_testEditor->SetReadOnly(false);
     m_testEditor->SetText(m_initText);
     m_testEditor->SetReadOnly(true);
+    FormatText();
 }
 
 wxString wxSTEditorInsertTextDialog::GetText()
@@ -2013,6 +2013,8 @@ void wxSTEditorInsertTextDialog::FormatText()
 
 void wxSTEditorInsertTextDialog::OnButton(wxCommandEvent& event)
 {
+    if (!m_created) return;
+
     switch (event.GetId())
     {
         case ID_STEDLG_INSERT_PREPEND_BITMAPBUTTON :
@@ -2052,6 +2054,7 @@ void wxSTEditorInsertTextDialog::OnButton(wxCommandEvent& event)
 
 void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
 {
+    if (!m_created) return;
     wxString c;
 
     switch (event.GetId())
@@ -2087,11 +2090,13 @@ void wxSTEditorInsertTextDialog::OnMenu(wxCommandEvent& event)
 
 void wxSTEditorInsertTextDialog::OnRadioButton(wxCommandEvent& )
 {
+    if (!m_created) return;
     FormatText();
 }
 
 void wxSTEditorInsertTextDialog::OnIdle(wxIdleEvent &event)
 {
+    if (!m_created) return;
     if (IsShown())
     {
         // This is a really ugly hack because the combo forgets its insertion
@@ -2108,17 +2113,14 @@ void wxSTEditorInsertTextDialog::OnIdle(wxIdleEvent &event)
 
 void wxSTEditorInsertTextDialog::OnText(wxCommandEvent& event)
 {
+    if (!m_created) return;
     event.Skip();
-#if (wxVERSION_NUMBER >= 2900)
-    if (m_prependCombo)
-#endif
-    {
-        FormatText();
-    }
+    FormatText();
 }
 
 void wxSTEditorInsertTextDialog::UpdateControls()
 {
+    if (!m_created) return;
     m_prependString = m_prependCombo->GetValue();
     m_appendString  = m_appendCombo->GetValue();
     m_col  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->GetValue();

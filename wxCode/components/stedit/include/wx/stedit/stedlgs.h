@@ -494,12 +494,13 @@ public:
     wxSTEditor*   m_testEditor;
 
     STE_InsertText_Type m_type;
-    int      m_col;
-    wxString m_prependString;
-    wxString m_appendString;
+    int       m_col;
+    wxString  m_prependString;
+    wxString  m_appendString;
     wxTextPos m_prepend_insert_pos;
     wxTextPos m_append_insert_pos;
-    wxString m_initText;
+    wxString  m_initText;
+    bool      m_created;
 
     static int sm_radioID;                  // last set radio button Window ID
     static int sm_spinValue;                // last set column for spinctrl
