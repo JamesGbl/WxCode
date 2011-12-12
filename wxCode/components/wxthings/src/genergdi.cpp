@@ -260,7 +260,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxGenericPen, wxObject)
 class wxGenericPenRefData : public wxObjectRefData
 {
 public:
-    wxGenericPenRefData(int width = 1, int style = wxSOLID,
+    wxGenericPenRefData(int width = 1, wxPenStyle style = wxPENSTYLE_SOLID,
                         wxPenCap cap = wxCAP_ROUND, wxPenJoin join = wxJOIN_ROUND)
           : wxObjectRefData(), m_width(width), m_style(style),
                                m_cap(cap), m_join(join),
@@ -282,7 +282,7 @@ public:
 
     wxGenericColour m_colour;
     int m_width;
-    int m_style;
+    wxPenStyle m_style;
     wxPenCap m_cap;
     wxPenJoin m_join;
 
@@ -312,14 +312,14 @@ void wxGenericPen::Create( const wxPen &pen )
     m_refData = new wxGenericPenRefData;
     Set(pen);
 }
-void wxGenericPen::Create(const wxGenericColour &colour, int width, int style,
+void wxGenericPen::Create(const wxGenericColour &colour, int width, wxPenStyle style,
                           wxPenCap cap, wxPenJoin join )
 {
     UnRef();
     m_refData = new wxGenericPenRefData(width, style, cap, join);
     M_GPENDATA->m_colour = colour;
 }
-void wxGenericPen::Create(const wxColour &colour, int width, int style,
+void wxGenericPen::Create(const wxColour &colour, int width, wxPenStyle style,
                           wxPenCap cap, wxPenJoin join )
 {
     Create(wxGenericColour(colour), width, style, cap, join);
@@ -376,7 +376,7 @@ void wxGenericPen::SetJoin( wxPenJoin joinStyle )
     wxCHECK_RET(Ok(), wxT("Invalid generic pen"));
     M_GPENDATA->m_join = joinStyle;
 }
-void wxGenericPen::SetStyle( int style )
+void wxGenericPen::SetStyle( wxPenStyle style )
 {
     wxCHECK_RET(Ok(), wxT("Invalid generic pen"));
     M_GPENDATA->m_style = style;
@@ -438,9 +438,9 @@ int wxGenericPen::GetWidth() const
     wxCHECK_MSG(Ok(), 1, wxT("Invalid generic pen"));
     return M_GPENDATA->m_width;
 }
-int wxGenericPen::GetStyle() const
+wxPenStyle wxGenericPen::GetStyle() const
 {
-    wxCHECK_MSG(Ok(), wxSOLID, wxT("Invalid generic pen"));
+    wxCHECK_MSG(Ok(), wxPENSTYLE_SOLID, wxT("Invalid generic pen"));
     return M_GPENDATA->m_style;
 }
 wxPenCap wxGenericPen::GetCap() const
