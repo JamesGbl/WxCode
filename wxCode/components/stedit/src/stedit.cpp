@@ -49,6 +49,9 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/textdlg.h>
 #include <wx/sstream.h>
 #include <wx/log.h>
+#if (wxVERSION_NUMBER >= 2900)
+#include <wx/uiaction.h>
+#endif
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steexprt.h"
@@ -1689,7 +1692,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2876")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2881")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2950,9 +2953,13 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         {
             // Let scintilla handle the WXK_DELETE so it can be used in the macro recorder
             // and we guarantee the same behavior for the menu item and the delete key.
+        #if (wxVERSION_NUMBER >= 2900)
+            wxUIActionSimulator().Char(WXK_DELETE);
+        #else
             wxKeyEvent keyEvent(wxEVT_KEY_DOWN);
             keyEvent.m_keyCode = WXK_DELETE;
             wxStyledTextCtrl::OnKeyDown(keyEvent);
+        #endif
             return true;
         }
         case ID_STE_PREF_SELECTION_MODE    :
