@@ -2479,17 +2479,31 @@ wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long fl
 
 void wxSTEditorAboutDialog(wxWindow* parent)
 {
-    wxString msg;
-    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n")
+    wxString msg, buildStr;
+
+#ifdef wxUSE_UNICODE
+    buildStr = wxT("Unicode");
+#else
+    buildStr = wxT("Ansi");
+#endif
+#ifdef __WXDEBUG__
+    if (!buildStr.IsEmpty()) buildStr += wxT(", ");
+    buildStr += wxT("Debug"); // don't show release, that's assumed
+#endif
+    buildStr = wxT(" (") + buildStr + wxT(")");
+
+    msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n\n")
                 wxT("Using %s, http://www.scintilla.org\n")
-                wxT("and the wxWidgets library, http://www.wxwidgets.org.\n")
+                wxT("and ") wxVERSION_STRING wxT(", http://www.wxwidgets.org.\n")
                 wxT("\n")
-                wxT("Compiled with ") wxVERSION_STRING wxT(".\n"),
+                wxT("Compiled on %s%s."),
             #if (wxVERSION_NUMBER >= 2902)
-                wxStyledTextCtrl::GetLibraryVersionInfo().ToString().wx_str()
+                wxStyledTextCtrl::GetLibraryVersionInfo().ToString().wx_str(),
             #else
-                wxT("Scintilla 1.70")
+                wxT("Scintilla 1.70"),
             #endif
+                wxString(__DATE__).wx_str(), // no need to show time
+                buildStr.wx_str()
                 );
 
     // FIXME - or test wxFileConfig doesn't have ClassInfo is this safe?
@@ -2497,15 +2511,10 @@ void wxSTEditorAboutDialog(wxWindow* parent)
     //    msg += wxT("\nConfig file: ")+((wxFileConfig*)wxConfigBase::Get(false))->m_strLocalFile;
 
    wxAboutDialogInfo info;
-
-#ifdef __WXDEBUG__
-   info.SetName(STE_APPDISPLAYNAME wxT(" (Debug)"));
-#else
    info.SetName(STE_APPDISPLAYNAME);
-#endif
    info.SetDescription(msg);
    info.SetWebSite(wxT(STE_WEBSITE));
-   info.SetLicense(wxT("wxWindows"));
+   info.SetLicense(wxT("wxWindows Licence\nhttp://www.wxwidgets.org/about/licence3.txt"));
    info.AddDeveloper(wxT("John Labenski"));
    info.AddDeveloper(wxT("Troels K"));
    info.AddDeveloper(wxT("Otto Wyss"));
