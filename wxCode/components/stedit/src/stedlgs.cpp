@@ -2502,7 +2502,7 @@ void wxSTEditorAboutDialog(wxWindow* parent)
             #else
                 wxT("Scintilla 1.70"),
             #endif
-                wxString(__DATE__).wx_str(), // no need to show time
+                wxString::FromAscii(__DATE__).wx_str(), // no need to show time
                 buildStr.wx_str()
                 );
 
