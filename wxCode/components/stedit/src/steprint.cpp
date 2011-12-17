@@ -373,12 +373,9 @@ wxSTEditorPrintOptionsDialog::wxSTEditorPrintOptionsDialog(wxWindow *parent)
                                        wxDEFAULT_DIALOG_STYLE_RESIZE)
 {
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
-    wxSizer *sizer = wxSTEditorPrintPrefsSizer(this, true, true);
-
-    wxSizer* stdButtonSizer = CreateStdDialogButtonSizer(wxOK|wxCANCEL);
-    sizer->Add( stdButtonSizer, 0, wxALIGN_CENTER|wxALL, 5 );
-    sizer->Layout();
-    sizer->SetSizeHints( this );
+    wxSTEditorPrintPrefsSizer(this, false, true);
+    wxSTEditorStdDialogButtonSizer(this, wxOK|wxCANCEL);
+    GetSizer()->SetSizeHints( this );
 
     if (wxDynamicCast(parent, wxSTEditor))
     {
