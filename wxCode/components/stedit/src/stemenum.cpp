@@ -464,7 +464,7 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
 
         menu->Append(MenuItem(menu, wxID_SAVE, wxGetStockLabel(wxID_SAVE), _("Save current file"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_SAVE)));
         menu->Enable(wxID_SAVE, false);
-        menu->Append(MenuItem(menu, wxID_SAVEAS, wxEmptyString, _("Save as file"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_SAVEAS)));
+        menu->Append(MenuItem(menu, wxID_SAVEAS, wxGetStockLabelEx(wxID_SAVEAS), _("Save as file"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_SAVEAS)));
         if (HasMenuOptionType(STE_MENU_NOTEBOOK))
         {
             menu->Append(MenuItem(menu, ID_STN_SAVE_ALL, _("Save A&ll"), _("Save all files"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_SAVEALL)));
@@ -491,8 +491,8 @@ wxMenu *wxSTEditorMenuManager::CreateFileMenu(wxMenu *menu_) const
     {
         if (add_sep) menu->AppendSeparator();
 
-        menu->Append(MenuItem(menu, wxID_PRINT,              wxGetStockLabel(wxID_PRINT  ), _("Print current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINT)));
-        menu->Append(MenuItem(menu, wxID_PREVIEW,            wxGetStockLabel(wxID_PREVIEW), _("Print preview of the current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINTPREVIEW)));
+        menu->Append(MenuItem(menu, wxID_PRINT,              wxGetStockLabelEx(wxID_PRINT  ), _("Print current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINT)));
+        menu->Append(MenuItem(menu, wxID_PREVIEW,            wxGetStockLabelEx(wxID_PREVIEW), _("Print preview of the current document"), wxITEM_NORMAL, STE_ARTMENU(wxART_STEDIT_PRINTPREVIEW)));
    #ifdef __WXMSW__
         // The wxID_PRINT_SETUP dialog is the same as the wxID_PRINT one, at least on Windows; confusing to the user
    #else

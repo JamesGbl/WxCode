@@ -316,10 +316,12 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
    {
       STOCKITEM(wxID_ABOUT,      _("&About..."))   // + ellipsis
       STOCKITEM(wxID_OPEN,       _("&Open..."))    // + ellipsis
+      STOCKITEM(wxID_SAVEAS,     _("Save &As...")) // + ellipsis
       STOCKITEM(wxID_SELECTALL,  _("Select &All")) // + ampersand
       STOCKITEM(wxID_FIND,       _("&Find..."))    // + ellipsis
       STOCKITEM(wxID_REPLACE,    _("Rep&lace...")) // + ellipsis
       STOCKITEM(wxID_REVERT,     _("Re&vert..."))
+      STOCKITEM(wxID_PREVIEW,    _("Print Previe&w")) // + ampersand
       STOCKITEM(wxID_PROPERTIES, _("Proper&ties...")) // + ellipsis
       default:
          break;
