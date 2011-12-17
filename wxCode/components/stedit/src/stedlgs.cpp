@@ -1600,7 +1600,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
 
         wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
         wxString strSize;
-        if (fileName.FileExists())
+        if (m_editor->IsFileFromDisk())
         {
             fileName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
             wxULongLong size = fileName.GetSize();
@@ -2471,7 +2471,7 @@ wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long fl
     }
     buttonpane->Realize();
 
-    //parent->GetSizer()->Add(new wxStaticLine(parent), 0, wxEXPAND | wxALL, 5);
+    //parent->GetSizer()->Add(new wxStaticLine(parent), 0, wxEXPAND | wxALL, 5); // separator
     parent->GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
 
     return buttonpane;
@@ -2482,7 +2482,11 @@ void wxSTEditorAboutDialog(wxWindow* parent)
     wxString msg, buildStr;
 
 #ifdef wxUSE_UNICODE
-    buildStr = wxT("Unicode");
+    #if wxUSE_UNICODE_UTF8 // wx 2.9+
+        buildStr = wxT("UTF8");
+    #else
+        buildStr = wxT("Unicode");
+    #endif
 #else
     buildStr = wxT("Ansi");
 #endif
