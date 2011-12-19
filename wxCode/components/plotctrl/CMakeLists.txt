@@ -22,6 +22,16 @@ cmake_minimum_required( VERSION 2.8 )
 include( build/CMakewxAppLib.cmake )
 include( build/CMakeFunctions.txt )
 
+# Specify what wxWidgets libs we need to link to. Note: 'core' must be before 'base'.
+# If you call this CMakeLists.txt from another one you may have already called FIND_WXWIDGETS()
+if (NOT wxWidgets_COMPONENTS)
+    set(wxWidgets_COMPONENTS adv core base) # minimal set for static lib/dll
+    #set(wxWidgets_COMPONENTS gl xrc xml net media propgrid richtext aui stc html adv core base) # for multilib/dll
+    #set(wxWidgets_COMPONENTS stc mono) # for monolithic
+endif()
+
+FIND_WXWIDGETS(wxWidgets_COMPONENTS) # Ok to call multiple times
+
 # ===========================================================================
 # Add subdirectories containing CMakeLists.txt files or specify projects
 # ===========================================================================
@@ -55,7 +65,7 @@ endif()
 
 # ---------------------------------------------------------------------------
 
-set( wxPlotCtrl_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "Root dir of wxPlotCtrl" FORCE)
+set( wxPlotCtrl_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxPlotCtrl" FORCE)
 
 # ---------------------------------------------------------------------------
 # CMake build file for wxPlotCtrl Library
@@ -124,7 +134,7 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxPlotCtrl_ROOT_DIR}/src/plotdraw.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotfunc.cpp
         ${wxPlotCtrl_ROOT_DIR}/src/plotmark.cpp
-        ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp        
+        ${wxPlotCtrl_ROOT_DIR}/src/plotprnt.cpp
     LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}
