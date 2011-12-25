@@ -1,5 +1,0 @@
-wxWindow
-wxWindowID
-wxPoint
-wxSize
-wxFrame
