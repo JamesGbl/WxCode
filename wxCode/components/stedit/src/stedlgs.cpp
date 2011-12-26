@@ -1359,9 +1359,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_STYLES,    wxART_TOOLBAR, wxSTEIconSize));
     m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_LANGS,     wxART_TOOLBAR, wxSTEIconSize));
 
-    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                 wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_BORDER);
-    m_noteBook = new wxListbook(panel, ID_STEDLG_PREF_NOTEBOOK,
+    m_noteBook = new wxListbook(this, ID_STEDLG_PREF_NOTEBOOK,
                                 wxDefaultPosition, wxDefaultSize,
                                 0); //wxNB_MULTILINE);
     m_noteBook->SetImageList(m_imageList);
@@ -1435,47 +1433,19 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     m_noteBook->GetListView()->EnsureVisible(ms_currentpage);
 #endif
 
-    // layout the buttons
-    wxButton *resetButton = new wxButton(panel, wxID_RESET, _("Default"));
+    wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(m_noteBook, 0, wxEXPAND | wxALL, 5);
+    SetSizer(sizer);
+
+    wxStdDialogButtonSizer* buttonpane = wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL | wxAPPLY);
+    wxButton *resetButton = new wxButton(this, wxID_RESET, _("Default"));
 #if wxUSE_TOOLTIPS
     resetButton->SetToolTip(_("Reset this page's values to their default"));
 #endif //wxUSE_TOOLTIPS
+    buttonpane->Insert(0, resetButton, 0, wxEXPAND);
 
-    wxButton *okButton = new wxButton(panel, wxID_OK);
-    wxButton *cancelButton = new wxButton(panel, wxID_CANCEL);
-    wxButton *applyButton = new wxButton(panel, wxID_APPLY);
-    cancelButton->SetDefault();
-#ifndef skip
-    wxFlexGridSizer *buttonpane = new wxFlexGridSizer(5, 10, 10);
-    buttonpane->AddGrowableCol( 1 );
-    buttonpane->Add(resetButton,  0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
-    buttonpane->Add(1, 1, 1);
-    buttonpane->Add(okButton,     0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
-    buttonpane->Add(cancelButton, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
-    buttonpane->Add(applyButton,  0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
-#else
-    wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
-    buttonpane->AddButton(resetButton);
-    buttonpane->SetAffirmativeButton(okButton);
-    buttonpane->SetCancelButton(cancelButton);
-    buttonpane->AddButton(applyButton);
-    buttonpane->GetCancelButton()->SetDefault();
-    buttonpane->Realize();
-#endif
-
-    // set sizer
-    wxFlexGridSizer *panelSizer = new wxFlexGridSizer(1);
-    panelSizer->AddGrowableCol(0);
-    panelSizer->AddGrowableRow(0);
-    panelSizer->Add(m_noteBook, 0, wxEXPAND, 0);  // don't need notesizer for 2.5
-
-    panelSizer->Add(buttonpane, 0, wxEXPAND|wxTOP|wxLEFT|wxRIGHT|wxBOTTOM, 10);
-
-    panel->SetSizer(panelSizer);
-    panelSizer->Fit(this);
-
+    sizer->SetSizeHints(this);
     Centre();
-    SetMinSize(GetSize());
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
     return true;
 }
@@ -2460,19 +2430,23 @@ wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long fl
 
     if ((flags & wxOK) && (flags & wxCANCEL))
     {
-        buttonpane->SetAffirmativeButton(new wxButton(parent, wxID_OK));
-        buttonpane->SetCancelButton(new wxButton(parent, wxID_CANCEL));
+        buttonpane->AddButton(new wxButton(parent, wxID_OK));
+        buttonpane->AddButton(new wxButton(parent, wxID_CANCEL));
         buttonpane->GetAffirmativeButton()->SetDefault();
     }
     else if (flags & wxCANCEL)
     {
-        buttonpane->SetCancelButton(new wxButton(parent, wxID_CANCEL, _("Cl&ose")));
+        buttonpane->AddButton(new wxButton(parent, wxID_CANCEL, _("Cl&ose")));
         buttonpane->GetCancelButton()->SetDefault();
+    }
+    if (flags & wxAPPLY)
+    {
+        buttonpane->AddButton(new wxButton(parent, wxID_APPLY, _("&Apply")));
     }
     buttonpane->Realize();
 
     //parent->GetSizer()->Add(new wxStaticLine(parent), 0, wxEXPAND | wxALL, 5); // separator
-    parent->GetSizer()->Add(buttonpane, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
+    parent->GetSizer()->Add(buttonpane, 0, wxEXPAND | wxLEFT | wxTOP | wxBOTTOM, 5);
 
     return buttonpane;
 }

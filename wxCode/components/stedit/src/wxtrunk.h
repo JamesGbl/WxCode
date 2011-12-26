@@ -12,7 +12,11 @@
 #define __WXTRUNK_H__
 
 #if (wxVERSION_NUMBER < 2812)
-   #define wxT_2 wxT
+    #define wxT_2 wxT
+#endif
+
+#ifndef wxAPPLY
+    #define wxAPPLY 0x00000020
 #endif
 
 #ifdef _WX_CONVAUTO_H_
