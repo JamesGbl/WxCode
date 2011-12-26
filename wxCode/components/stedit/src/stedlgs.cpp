@@ -1654,7 +1654,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
 
         TransferDataToWindow();
         Fit();
-        SetMinSize(GetSize());
+        GetSizer()->SetSizeHints(this);
         Centre();
     }
     return ok;
@@ -1906,7 +1906,7 @@ bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
     UpdateControls();
 
     Fit();
-    SetMinSize(GetSize());
+    GetSizer()->SetSizeHints(this);
     Centre();
 
     m_created = true;  // now we can handle events
