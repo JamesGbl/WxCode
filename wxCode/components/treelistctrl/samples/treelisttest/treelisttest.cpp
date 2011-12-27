@@ -300,6 +300,7 @@ private:
     wxLog *m_logOld;
 #endif // wxUSE_LOG
     int m_currentCol;
+    wxTreeItemId m_item_drag;
 
     //! creates the application menu bar
     void CreateMenu ();
@@ -947,15 +948,20 @@ void AppFrame::OnGetPrev (wxCommandEvent &event) {
 void AppFrame::OnTreeGeneric (wxTreeEvent &event) {
 const wxChar *name;
 
-// log event name
+// log event name, possibly custom action
     if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_DRAG) {
         name = _("wxEVT_COMMAND_TREE_BEGIN_DRAG");
+        m_item_drag = event.GetItem();
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_RDRAG) {
         name = _("wxEVT_COMMAND_TREE_BEGIN_RDRAG");
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_END_DRAG) {
         name = _("wxEVT_COMMAND_TREE_END_DRAG");
+        // drag item to new parent
+        if (m_item_drag && event.GetItem()) {
+            m_treelist->SetItemParent(event.GetItem(), m_item_drag);
+        }
     } else
     if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT) {
         name = _("wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT");

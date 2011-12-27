@@ -455,6 +455,9 @@ public:
     // delete the root and all its children from the tree
     void DeleteRoot();
 
+    //  change item's parent (return previous parent)
+    void SetItemParent(const wxTreeItemId& parent, const wxTreeItemId& item);
+
     // expand this item
     void Expand (const wxTreeItemId& item);
     // expand this item and all subitems recursively

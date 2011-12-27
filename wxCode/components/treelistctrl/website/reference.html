@@ -96,7 +96,7 @@ wxTreeCtrl<br>
     <td>Use this style to draw a contrasting border between displayed rows.</td>
     </tr>
     <tr>
-    <td><tt><b>xTR_HAS_VARIABLE_ROW_HEIGHT</b></tt></td>
+    <td><tt><b>wxTR_HAS_VARIABLE_ROW_HEIGHT</b></tt></td>
     <td>Use this style to cause row heights to be just big enough to fit the content. If not set, all rows use the largest row height. The default is that this flag is unset.</td>
     </tr>
     <tr><td><tt><b>wxTR_SINGLE</b></tt></td>
@@ -351,6 +351,7 @@ wxImageList
 <a href="#wxtreelistctrlsetitemfont">wxTreeListCtrl::SetItemFont</a><br>
 <a href="#wxtreelistctrlsetitemhaschildren">wxTreeListCtrl::SetItemHasChildren</a><br>
 <a href="#wxtreelistctrlsetitemimage">wxTreeListCtrl::SetItemImage</a><br>
+<a href="#wxtreelistctrlsetitemparent">wxTreeListCtrl::SetItemParent</a><br>
 <a href="#wxtreelistctrlsetitemtext">wxTreeListCtrl::SetItemText</a><br>
 <a href="#wxtreelistctrlsetitemtextcolour">wxTreeListCtrl::SetItemTextColour</a><br>
 <a href="#wxtreelistctrlsetitemtooltip">wxTreeListCtrl::SetItemToolTip</a><br>
@@ -1633,6 +1634,16 @@ Sets the specified item image of the main/any column. See <a href="#wxtreelistct
 <br><strong>note:</strong> the <i>which</i> parameter is ignored for any other column than the main column.
 </p>
 
+
+<hr>
+<a name="wxtreelistctrlsetitemparent"></a>
+<h3>wxTreeListCtrl::SetItemParent</h3>
+<p>
+    <b>void</b> <b>SetItemParent</b>(<b>const wxTreeItemId&amp;</b><i> parent</i>, <b>const wxTreeItemId&amp;</b><i> item</i>)
+</p>
+<p>
+Change the parent of an item.
+</p>
 
 <hr>
 <a name="wxtreelistctrlsetitemtext"></a>

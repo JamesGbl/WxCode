@@ -523,6 +523,8 @@ public:
     // NB: this won't send wxEVT_COMMAND_TREE_ITEM_DELETED events
     void DeleteRoot();
 
+    void SetItemParent(const wxTreeItemId& parent, const wxTreeItemId& item);
+
     // expand this item
     void Expand(const wxTreeItemId& item);
     // expand this item and all subitems recursively
@@ -972,6 +974,7 @@ public:
     void SetTextX (int text_x) { m_text_x = text_x; }
 
     wxTreeListItem *GetItemParent() const { return m_parent; }
+    void SetItemParent(wxTreeListItem *parent) { m_parent = parent; }
 
     // get count of all children (and grand children if 'recursively')
     size_t GetChildrenCount(bool recursively = true) const;
@@ -2777,6 +2780,26 @@ void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
     // delete item itself
     SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, item);
     delete item;
+}
+
+
+// ----------------------------------------------------------------------------
+
+void wxTreeListMainWindow::SetItemParent(const wxTreeItemId& parentId, const wxTreeItemId& itemId) {
+wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
+wxTreeListItem *parent_new = (wxTreeListItem*) parentId.m_pItem;
+wxCHECK_RET (item, _T("invalid item in wxTreeListMainWindow::SetItemParent") );
+wxCHECK_RET (parent_new, _T("invalid parent in wxTreeListMainWindow::SetItemParent") );
+wxCHECK_RET (item != m_rootItem, _T("invalid root as item in wxTreeListMainWindow::SetItemParent!") );
+wxTreeListItem *parent_old = item->GetItemParent();
+
+    m_dirty = true; // do this first so stuff below doesn't cause flicker
+
+    parent_old->GetChildren().Remove (item);
+    parent_new->Insert(item, parent_new->GetChildren().Count());
+    item->SetItemParent(parent_new);
+    // new parent was a leaf, show its new child
+    if (parent_new->GetChildren().Count() == 1) parent_new->Expand();
 }
 
 
@@ -5316,6 +5339,10 @@ void wxTreeListCtrl::SetItemToolTip(const wxTreeItemId& item, const wxString &ti
 
 void wxTreeListCtrl::SetCurrentItem(const wxTreeItemId& itemId) {
     m_main_win->SetCurrentItem(itemId);
+}
+
+void wxTreeListCtrl::SetItemParent(const wxTreeItemId& parent, const wxTreeItemId& item) {
+    m_main_win->SetItemParent(parent, item);
 }
 
 //-----------------------------------------------------------------------------
