@@ -1692,7 +1692,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2881")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2897")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2410,7 +2410,10 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             ScrollToColumn(0); // extra help to ensure scrolled to 0
                                // otherwise scrolled halfway thru 1st char
             SetFileName(fileName, true);
-            SetFileModificationTime(fileName.GetModificationTime());
+            if (fileName.FileExists())
+            {
+                SetFileModificationTime(fileName.GetModificationTime());
+            }
         }
     }
     else if (!noerrdlg)
