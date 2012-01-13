@@ -1692,7 +1692,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2897")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2899")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2318,11 +2318,11 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 {
                     if (html)
                     {
-                        wxTextEncoding::TypeFromString(firstline.data(), "charset=", "; \"", &encoding);
+                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "charset=", "; \"");
                     }
                     if (xml)
                     {
-                        wxTextEncoding::TypeFromString(firstline.data(), "encoding=\"", "\"", &encoding);
+                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "encoding=\"", "\"");
                     }
                 }
             }
@@ -2330,9 +2330,9 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
             {
                 case wxTextEncoding::None:
                     // load file and get BOM
-                    str = wxTextEncoding::CharToString(charBuf, stream_len, &file_bom);
+                    ok = wxTextEncoding::CharToStringDetectBOM(&str, charBuf, stream_len, &file_bom);
                 #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
-                    switch (file_bom)
+                    if (ok) switch (file_bom)
                     {
                         case wxBOM_UTF16LE:
                             if (flags == STE_LOAD_QUERY_UNICODE)
@@ -2374,7 +2374,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                     file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
 
                     // load file
-                    ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, encoding, file_bom);
+                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, encoding, file_bom);
 
                     break;
                 default:
@@ -2393,7 +2393,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                 // give it one more shot
                 if (wxTextEncoding::None != encoding)
                 {
-                    ok = wxTextEncoding::LoadFile(&str, charBuf, stream_len, wxTextEncoding::None);
+                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, wxTextEncoding::None);
                 }
             }
         }

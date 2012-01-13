@@ -165,24 +165,30 @@ public:
     };
 
 #if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
-    static bool LoadFile(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None, wxBOM bom = wxBOM_None);
-#endif
-    static bool SaveFile(const wxString&, wxOutputStream&, Type encoding = None, bool file_bom = false);
+    // char -> wxString method. Specify encoding.
+    static bool CharToString(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None, wxBOM bom = wxBOM_None);
 
-#if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
-    static wxString CharToString(const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
+    // char -> wxString method. Utilizing wxConvAuto::DetectBOM.
+    static bool CharToStringDetectBOM(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
 #endif
-    static wxString CharToString(const char*, const wxMBConv&, size_t len);
 
+    // char -> wxString method. Specify wxMBConv conversion class
+    static bool CharToString(wxString*, const char*, const wxMBConv&, size_t len);
+
+    // wxString -> char method. Specify wxMBConv conversion class
     static wxCharBuffer StringToChar(const wxString&, const wxMBConv&);
 
+    // wxString -> char method. Specify Type conversion; creates wxMBConv instance and calls StringToChar(wxMBConv) above
     static wxCharBuffer StringToChar(const wxString&, Type, size_t* size_ptr);
 
+    // enum -> string representation (eg Type::UTF8 -> "utf-8")
     static wxString TypeToString(Type);
 
+    // String representation -> enum (eg "utf-8" -> Type::UTF8)
     static Type TypeFromString(const wxString&);
 
-    static bool TypeFromString(const char* str, const char* identifier, const char* ctrl, Type*);
+    // Search the provided string for encoding specification (eg "utf-8")
+    static bool TypeFromString(Type*, const char* str, const char* identifier, const char* strpbrk_ctrl);
 
 #ifdef _WX_XML_H_
     inline static Type TypeFromString(const wxXmlDocument& xml)
@@ -192,6 +198,8 @@ public:
 #endif
 
     static const char* GetBOMChars(Type, size_t* count);
+
+    static bool SaveFile(const wxString&, wxOutputStream&, Type encoding = None, bool file_bom = false);
 };
 
 #endif // __WXEXT_H__

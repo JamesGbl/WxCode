@@ -847,7 +847,7 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 
 // annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
 /*static*/
-wxString wxTextEncoding::CharToString(const char* src, const wxMBConv& conv, size_t len)
+bool wxTextEncoding::CharToString(wxString* str_ptr, const char* src, const wxMBConv& conv, size_t len)
 {
     wxString str;
 
@@ -857,8 +857,13 @@ wxString wxTextEncoding::CharToString(const char* src, const wxMBConv& conv, siz
         wxWCharBuffer buf(conv.cMB2WC(src, len, &wlen));
 
         str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, wlen);
+
+        if (str.IsEmpty())
+            return false;
     }
-    return str;
+    
+    if (str_ptr) *str_ptr = str;
+    return true;
 }
 
 // annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
@@ -918,11 +923,12 @@ wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, Type encoding, size
 }
 
 /*static */
-wxString wxTextEncoding::CharToString(const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
+bool wxTextEncoding::CharToStringDetectBOM(wxString* str_ptr, const wxCharBuffer& buf, size_t buf_len, wxBOM* file_bom_ptr)
 {
     wxConvAuto conv_auto;
     wxBOM file_bom;
     wxString str;
+    bool ok = true;
 
     if (buf_len == wxNO_LEN) buf_len = wxBuffer_length(buf);
 
@@ -956,15 +962,19 @@ wxString wxTextEncoding::CharToString(const wxCharBuffer& buf, size_t buf_len, w
             str = wxString((wchar_t*)(buf.data() + bom_charcount), *wxConvCurrent, (buf_len - bom_charcount) / sizeof(wchar_t));
             break;
         case wxBOM_UTF8:
-            str = CharToString(buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
+            ok = CharToString(&str, buf.data() + bom_charcount, wxConvUTF8, buf_len - bom_charcount);
             break;
         default:
             str = wxString(buf.data(), wxConvLibc /*WXUNUSED*/, buf_len);
             break;
     }
 #endif // 2.9
-    if (file_bom_ptr) *file_bom_ptr = file_bom;
-    return str;
+    if (ok)
+    {
+        if (str_ptr     ) *str_ptr      = str;
+        if (file_bom_ptr) *file_bom_ptr = file_bom;
+    }
+    return ok;
 }
 
 /*static*/
@@ -1059,14 +1069,14 @@ wxString wxTextEncoding::TypeToString(Type encoding)
 }
 
 /*static*/
-bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, const char* ctrl, Type* encoding)
+bool wxTextEncoding::TypeFromString(Type* encoding, const char* str, const char* identifier, const char* strpbrk_ctrl)
 {
     const char* p = strstr(str, identifier);
 
     if (p)
     {
         const char* begin = p + strlen(identifier);
-        const char* end   = strpbrk(begin, ctrl);
+        const char* end   = strpbrk(begin, strpbrk_ctrl);
 
         if (begin && end)
         {
@@ -1081,11 +1091,11 @@ bool wxTextEncoding::TypeFromString(const char* str, const char* identifier, con
 }
 
 /*static*/
-bool wxTextEncoding::LoadFile(wxString* str, const wxCharBuffer& buf, size_t buf_len, Type encoding, wxBOM bom)
+bool wxTextEncoding::CharToString(wxString* str_ptr, const wxCharBuffer& buf, size_t buf_len, Type encoding, wxBOM bom)
 {
     size_t bom_count = 0;
-
-    wxCHECK_MSG(str, false, wxS("string pointer must be provided") );
+    wxString str;
+    bool ok = true;
 
     if (wxNO_LEN == buf_len) buf_len = wxBuffer_length(buf);
 
@@ -1104,25 +1114,26 @@ bool wxTextEncoding::LoadFile(wxString* str, const wxCharBuffer& buf, size_t buf
     switch (encoding)
     {
         case Unicode_LE:
-            *str = CharToString(buf.data() + bom_count, wxConvAuto(), buf_len);
+            ok = CharToString(&str, buf.data() + bom_count, wxConvAuto(), buf_len);
             break;
         case UTF8:
-            *str = CharToString(buf.data() + bom_count, wxConvUTF8, buf_len);
+            ok = CharToString(&str, buf.data() + bom_count, wxConvUTF8, buf_len);
             break;
         case ISO8859_1:
-            *str = CharToString(buf.data() + bom_count, wxConvISO8859_1, buf_len);
+            ok = CharToString(&str, buf.data() + bom_count, wxConvISO8859_1, buf_len);
             break;
     #ifdef __WXMSW__
         case OEM:
-            *str = CharToString(buf.data() + bom_count, wxMBConvOEM(), buf_len);
+            ok = CharToString(&str, buf.data() + bom_count, wxMBConvOEM(), buf_len);
             break;
     #endif
         case None:
         default:
-            *str = wxConvertMB2WX(buf.data() + bom_count);
+            str = wxConvertMB2WX(buf.data() + bom_count);
             break;
     }
-    return !(buf_len && str->IsEmpty());
+    if (ok && str_ptr) *str_ptr = str;
+    return ok;
 }
 
 /*static*/
