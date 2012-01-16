@@ -1009,7 +1009,7 @@ size_t wxMBConvOEM::ToWChar(wchar_t*    dst, size_t dstLen,
     if (srcLen == wxNO_LEN) srcLen = strlen(src);
     wxCharBuffer buf(srcLen);
 
-    OemToCharBuffA(src, buf.data(), srcLen);
+    OemToCharBuffA(src, buf.data(), (DWORD)srcLen);
     return dst ? mbstowcs(dst, buf.data(), dstLen) : wxBuffer_length(buf);
 }
 
@@ -1023,7 +1023,7 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
     wcstombs(temp.data(), src, srcLen);
     if (dst)
     {
-        CharToOemBuffA(temp.data(), dst, dstLen);
+        CharToOemBuffA(temp.data(), dst, (DWORD)dstLen);
         len = strlen(dst);
     }
     else
