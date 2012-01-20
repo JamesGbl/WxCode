@@ -59,7 +59,7 @@ bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLan
    ok = locale->Init(lang);
    if (ok)
    {
-      locale->AddCatalog(exetitle, (enum wxLanguage)locale->GetLanguage(), wxEmptyString);
+      locale->AddCatalog(exetitle);
    }
    return ok;
 }

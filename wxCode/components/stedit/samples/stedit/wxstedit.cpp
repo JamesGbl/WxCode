@@ -40,7 +40,6 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steshell.h"
 #include "wx/stedit/steart.h"
-#include "../../art/pencil16.xpm"
 
 #include <wx/cmdline.h>
 #include <wx/fileconf.h>
@@ -167,7 +166,7 @@ wxSTEditorFrame* wxStEditApp::CreateMainFrame()
 
         menu->AppendSeparator();
         wxMenuItem* item = new wxMenuItem(menu, wxID_ABOUT, wxGetStockLabelEx(wxID_ABOUT), _("About this program"));
-        item->SetBitmap(wxBitmap(pencil16_xpm)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
+        item->SetBitmap(wxArtProvider::GetBitmap(wxART_STEDIT_APP)); // wx 2.8 bug: bitmap not shown, unless Add(wxAcceleratorEntry(wxID_ABOUT)) above is remove
         menu->Append(item);
 
         wxAcceleratorHelper::SetAccelText(menu, *m_steOptions.GetMenuManager()->GetAcceleratorArray());
