@@ -1878,7 +1878,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2910")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2912")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -3314,7 +3314,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
 void wxSTEditor::ToggleFoldAtLine(int line)
 {
     // Help STC figure where folds are, else you need to scroll to bottom before this works
-    Colourise(0, -1);
+    Colourise();
     if (line < 0) line = GetCurrentLine();
 
     if (!STE_HASBIT(GetFoldLevel(line), wxSTC_FOLDLEVELHEADERFLAG))
@@ -3325,7 +3325,7 @@ void wxSTEditor::ToggleFoldAtLine(int line)
 void wxSTEditor::ExpandFoldsToLevel(int level, bool expand)
 {
     // Help STC figure where folds are, else you need to scroll to bottom before this works
-    Colourise(0, -1);
+    Colourise();
 
     const int line_n = GetLineCount();
     for (int n = 0; n < line_n; n++)
@@ -4040,7 +4040,7 @@ bool wxSTEditor::SetLanguage(int lang)
             GetEditorLangs().UpdateEditor(GetSTERefData()->GetEditor(n));
     }
 
-    Colourise(0, -1);
+    Colourise();
     return true;
 }
 

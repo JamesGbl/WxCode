@@ -527,7 +527,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         m_resultEditor->SetReadOnly(false);
         m_resultEditor->SetText(str);
         m_resultEditor->SetReadOnly(true);
-        m_resultEditor->Colourise(0, -1);
+        m_resultEditor->Colourise();
 
         wxSTEditorStyles::GetGlobalEditorStyles().SetEditorStyle( 3, STE_STYLE_STRING,
                                                                 m_resultEditor, false);

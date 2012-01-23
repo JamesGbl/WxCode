@@ -591,7 +591,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     newEditor->SetFileBOM(editor->GetFileBOM());
 
                     newEditor->SetText(editor->GetText());
-                    newEditor->Colourise(0, -1);
+                    newEditor->Colourise();
 
                     // if they really did save it and to a new file add it
                     if (newEditor->SaveFile(true))

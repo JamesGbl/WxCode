@@ -329,6 +329,15 @@ public :
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
 
+    void Colourise(int start, int end)
+    {
+        wxStyledTextCtrl::Colourise(start, end);
+    }
+    void Colourise() // colorise all
+    {
+        wxStyledTextCtrl::Colourise(0, -1);
+    }
+
     // ------------------------------------------------------------------------
     // wxWidgets 2.8 <--> 2.9 compatibility functions (most functions are const in wx2.9)
 
