@@ -73,11 +73,11 @@ bool ImageDocument::OnNewDocument()
         wxArtID id = wxART_STEDIT_APP;
 
         m_image = wxArtProvider::GetBitmap(id).ConvertToImage();
-        
+
         wxSize size(m_image.GetWidth(), m_image.GetHeight());
         size *= 10;
         m_image.Rescale(size.x, size.y);
-        
+
         SetTitle(id);
         SetFilename(wxEmptyString, true);
     }
@@ -207,7 +207,7 @@ bool ImageView::OnClose(bool deleteWindow)
     return true;
 }
 
-ExampleDocTemplate1::ExampleDocTemplate1(wxDocManager* docManager) : wxDocTemplate(docManager, 
+ExampleDocTemplate1::ExampleDocTemplate1(wxDocManager* docManager) : wxDocTemplate(docManager,
                       _("Image"), wxT("*.png;*.jpg"), wxT(""), wxT("png;jpg"),
                       wxT("Image Doc"), wxT("Image View"),
                       CLASSINFO(ImageDocument), CLASSINFO(ImageView))
@@ -241,6 +241,10 @@ wxFrame* ExampleDocTemplate1::CreateViewFrame(wxView* view)
         menu->AppendSeparator();
         menu->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT) + wxT("\t") + _("Ctrl+Q"));
         menubar->Append(menu, wxGetStockLabel(wxID_FILE));
+
+        menu = new wxMenu();
+        menu->Append(ID_STE_SHOW_FULLSCREEN, wxString(_("&Fullscreen")) + wxT("\t") + _("F11"), wxEmptyString, wxITEM_CHECK);
+        menubar->Append(menu, _("&View"));
 
         menu = new wxMenu();
         menu->Append(wxID_ABOUT, wxGetStockLabel(wxID_ABOUT) + wxT("\t") + _("Shift+F1"));

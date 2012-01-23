@@ -26,10 +26,6 @@ public:
 
     virtual ~EditorDoc();
     virtual bool OnCreate(const wxString& path, long flags);
-/*
-    virtual bool IsModified() const;
-    virtual void Modify(bool mod);
-*/
     virtual bool OnNewDocument();
     virtual wxString GetUserReadableName() const
     {
@@ -49,17 +45,24 @@ protected:
 // Text view classes
 // ----------------------------------------------------------------------------
 
-// The view using a standard wxTextCtrl to show its contents
 class EditorView : public wxSTEditorView
 {
 public:
-    EditorView() : wxSTEditorView(), m_text(NULL) {}
+    EditorView();
 
+    virtual ~EditorView();
     virtual bool OnCreate(wxDocument*, long flags);
     virtual bool OnClose(bool deleteWindow = true);
     virtual void OnChangeFilename();
+    virtual wxPrintout* OnCreatePrintout();
 
-    wxSTEditor* GetWindow() const { return m_text; }
+    EditorDoc* GetDocument()
+    {
+        return wxStaticCast(wxSTEditorView::GetDocument(), EditorDoc);
+    }
+    virtual wxWindow* GetWindow() const { return m_text; }
+    
+    wxSTEditor* GetEditor() const { return wxStaticCast(GetWindow(), wxSTEditor); }
 
 private:
     void OnCopy(wxCommandEvent& WXUNUSED(event)) { m_text->Copy(); }
@@ -75,16 +78,18 @@ private:
 
 class EditorChildFrame : public wxDocMDIChildFrame
 {
-public:
-    bool Create(wxView* view, wxMDIParentFrame*);
-
     DECLARE_DYNAMIC_CLASS(EditorChildFrame)
+public:
+    bool Create(wxView*, wxMDIParentFrame*);
+
+    virtual ~EditorChildFrame();
 };
 
 #ifdef _STEOPTS_H_
 
 class EditorDocTemplate : public wxDocTemplate
 {
+    DECLARE_CLASS(EditorDocTemplate)
     static wxDocTemplate* ms_instance;
 protected:
     wxClassInfo* m_frameClassInfo;

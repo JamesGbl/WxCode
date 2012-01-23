@@ -18,14 +18,15 @@
 IMPLEMENT_DYNAMIC_CLASS(EditorDoc, wxSTEditorDoc)
 IMPLEMENT_DYNAMIC_CLASS(EditorView, wxView)
 IMPLEMENT_DYNAMIC_CLASS(EditorChildFrame,wxDocMDIChildFrame)
+IMPLEMENT_CLASS(EditorDocTemplate, wxDocTemplate)
 
 /*static*/ wxDocTemplate* EditorDocTemplate::ms_instance = NULL;
 
-EditorDocTemplate::EditorDocTemplate(wxDocManager* docManager, wxClassInfo* frameClassInfo) : 
+EditorDocTemplate::EditorDocTemplate(wxDocManager* docManager, wxClassInfo* frameClassInfo) :
     wxDocTemplate(docManager, _("Text"), wxT("*.txt;*.text;*.h;*.c;*.cpp"),
       wxT(""), wxT("txt"), wxT("Editor doc"), wxT("Editor view"),
           CLASSINFO(EditorDoc), CLASSINFO(EditorView)),
-    m_frameClassInfo(frameClassInfo)
+    m_frameClassInfo(frameClassInfo), m_steOptions(STE_DEFAULT_OPTIONS)
 {
     ms_instance = this;
 }
@@ -47,6 +48,10 @@ wxFrame* EditorDocTemplate::CreateViewFrame(wxView* view)
         wxDELETE(subframe);
     }
     return subframe;
+}
+
+EditorChildFrame::~EditorChildFrame()
+{
 }
 
 bool EditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
@@ -82,6 +87,10 @@ bool EditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
         menubar->Append(menu, wxGetStockLabel(wxID_EDIT));
 
         menu = new wxMenu();
+        menu->Append(ID_STE_SHOW_FULLSCREEN, wxString(_("&Fullscreen")) + wxT("\t") + _("F11"), wxEmptyString, wxITEM_CHECK);
+        menubar->Append(menu, _("&View"));
+
+        menu = new wxMenu();
         menu->Append(wxID_ABOUT, wxGetStockLabel(wxID_ABOUT) + wxT("\t") + _("Shift+F1"));
         menubar->Append(menu, wxGetStockLabel(wxID_HELP));
 
@@ -107,17 +116,10 @@ bool EditorDoc::OnCreate(const wxString& path, long flags)
     if ( !wxSTEditorDoc::OnCreate(path, flags) )
         return false;
 
-/*
-    // subscribe to changes in the text control to update the document state
-    // when it's modified
-    GetTextCtrl()->Connect
-    (
-        wxEVT_COMMAND_TEXT_UPDATED,
-        wxCommandEventHandler(EditorDoc::OnTextChange),
-        NULL,
-        this
-    );
-*/
+    m_options = wxStaticCast(GetDocumentTemplate(), EditorDocTemplate)->m_steOptions;
+    m_stePrefs = m_options.GetEditorPrefs();
+    m_steStyles = m_options.GetEditorStyles();
+    m_steLangs = m_options.GetEditorLangs();
     return true;
 }
 
@@ -127,7 +129,6 @@ bool EditorDoc::OnNewDocument()
 
     if (ok)
     {
-        delete GetTextCtrl()->Attach(this);
     }
     return ok;
 }
@@ -141,7 +142,6 @@ bool EditorDoc::DoOpenDocument(const wxString& filename)
     if (ok)
     {
         GetTextCtrl()->SetTextAndInitialize(str);
-        delete GetTextCtrl()->Attach(this);
     }
     return ok;
 }
@@ -153,32 +153,6 @@ bool EditorDoc::DoSaveDocument(const wxString& filename)
     return stream.IsOk() && GetTextCtrl()->SaveFile(stream);
 }
 
-/*
-bool EditorDoc::IsModified() const
-{
-    wxSTEditor* wnd = GetTextCtrl();
-
-    return wxSTEditorDoc::IsModified() || (wnd && wnd->IsModified());
-}
-
-void EditorDoc::Modify(bool modified)
-{
-    wxSTEditorDoc::Modify(modified);
-    wxSTEditor* wnd = GetTextCtrl();
-    if (wnd && !modified)
-    {
-        wnd->DiscardEdits();
-    }
-}
-
-void EditorDoc::OnTextChange(wxCommandEvent& event)
-{
-    Modify(true);
-
-    event.Skip();
-}
-*/
-
 // ----------------------------------------------------------------------------
 // EditorDoc implementation
 // ----------------------------------------------------------------------------
@@ -187,12 +161,21 @@ wxSTEditor* EditorDoc::GetTextCtrl() const
 {
     wxView* view = GetFirstView();
 
-    return view ? wxStaticCast(view, EditorView)->GetWindow() : NULL;
+    return view ? wxStaticCast(view, EditorView)->GetEditor() : NULL;
 }
 
 // ----------------------------------------------------------------------------
 // EditorView implementation
 // ----------------------------------------------------------------------------
+
+EditorView::EditorView() : wxSTEditorView(), m_text(NULL)
+{
+}
+
+EditorView::~EditorView()
+{
+    m_text->Attach(new wxSTEditorRefData());
+}
 
 BEGIN_EVENT_TABLE(EditorView, wxSTEditorView)
     EVT_MENU(wxID_COPY, EditorView::OnCopy)
@@ -200,20 +183,21 @@ BEGIN_EVENT_TABLE(EditorView, wxSTEditorView)
     EVT_MENU(wxID_SELECTALL, EditorView::OnSelectAll)
 END_EVENT_TABLE()
 
-bool EditorView::OnCreate(wxDocument *doc, long flags)
+bool EditorView::OnCreate(wxDocument* doc, long flags)
 {
     bool ok = wxSTEditorView::OnCreate(doc, flags);
-    
+
     if (ok)
     {
         wxFrame* frame = wxStaticCast(doc->GetDocumentTemplate(), EditorDocTemplate)->CreateViewFrame(this);
         wxASSERT(frame == GetFrame());
         wxSTEditor* text = new wxSTEditor();
-        
+
         ok = text->Create(frame);
         if (ok)
         {
             m_text = text;
+            delete m_text->Attach(GetDocument());
             frame->SetIcon(wxICON(text));
             frame->Show();
         }
@@ -239,9 +223,13 @@ bool EditorView::OnClose(bool deleteWindow)
 
     if ( deleteWindow )
     {
-        m_text->Attach(new wxSTEditorRefData());
         GetFrame()->Destroy();
         SetFrame(NULL);
     }
     return true;
+}
+
+wxPrintout* EditorView::OnCreatePrintout()
+{
+    return new wxSTEditorPrintout(m_text);
 }

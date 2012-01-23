@@ -70,6 +70,23 @@ bool App::OnInit()
     return ok;
 }
 
+#ifdef _WX_PERSIST_H_
+template <typename T>
+inline bool wxPersistentRestore(T *obj, const wxString& name)
+{
+    obj->SetName(name);
+
+    return wxPersistenceManager::Get().Restore(obj);
+}
+template <typename T>
+inline void wxPersistentSave(T *obj, const wxString& name)
+{
+    obj->SetName(name);
+
+    wxPersistenceManager::Get().Save(obj);
+}
+#endif
+
 void App::OpenDocuments(wxDocManager* docManager)
 {
     wxFileHistory history;
@@ -79,6 +96,7 @@ void App::OpenDocuments(wxDocManager* docManager)
     config->SetPath(wxT("/OpenWindows"));
     history.Load(*config);
     config->SetPath(wxT("/"));
+    size_t j = 0;
 
     for (size_t i = 0; i < history.GetCount(); i++)
     {
@@ -91,6 +109,14 @@ void App::OpenDocuments(wxDocManager* docManager)
             {
                 first_doc = doc;
             }
+        #ifdef _WX_PERSIST_H_
+            // asserts in wxPersistenceManager::Restore(), "not registered"
+            //::wxPersistentRestore(wxStaticCast(doc->GetFirstView()->GetFrame(), wxMDIChildFrame), wxString::Format(wxT("Pos%d"), j));
+
+            // comes up with bad size (0,0)
+            //::wxPersistentRegisterAndRestore(wxStaticCast(doc->GetFirstView()->GetFrame(), wxMDIChildFrame), wxString::Format(wxT("Pos%d"), j));
+        #endif
+            j++;
         }
         else
         {
@@ -161,6 +187,8 @@ bool App::OnCmdLineParsed(wxCmdLineParser& parser)
 BEGIN_EVENT_TABLE(MainFrame, wxDocMDIParentFrame)
     EVT_MENU(wxID_PROPERTIES, MainFrame::OnProperties)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+    EVT_MENU(ID_STE_SHOW_FULLSCREEN, MainFrame::OnFullscreen)
+    EVT_UPDATE_UI(ID_STE_SHOW_FULLSCREEN, MainFrame::OnUpdateFullscreen)
 END_EVENT_TABLE()
 
 bool MainFrame::Create(wxDocManager* docManager, const wxString& title)
@@ -202,6 +230,18 @@ bool MainFrame::Create(wxDocManager* docManager, const wxString& title)
                       wxCloseEventHandler(MainFrame::OnCloseWindow));
     }
     return ok;
+}
+
+void MainFrame::OnFullscreen(wxCommandEvent&)
+{
+    long style = wxFULLSCREEN_ALL;
+    
+    ShowFullScreen(!IsFullScreen(), style);
+}
+
+void MainFrame::OnUpdateFullscreen(wxUpdateUIEvent& event)
+{
+   event.Check(IsFullScreen());
 }
 
 void MainFrame::OnAbout(wxCommandEvent&)
@@ -247,27 +287,32 @@ void MainFrame::OnProperties(wxCommandEvent&)
    wxArrayString as;
 
    ::wxDocument_Info(doc, &as);
-
    ::wxMessageBox(::wxJoin(as, wxT('\n')), wxMessageBoxCaption, wxOK | wxCENTRE, this);
 }
 
 void MainFrame::OnCloseWindow(wxCloseEvent& event)
 {
     wxConfigBase* config = wxConfig::Get();
-    wxFileHistory history;
+    wxFileHistory open_windows;
     const wxList& list = m_docManager->GetDocuments();
 
+    config->SetPath(wxT("/OpenWindows"));
+    size_t j = 0;
     for (wxList::const_reverse_iterator it = list.rbegin(); it != list.rend(); it++)
     {
         wxDocument* doc = wxStaticCast(*it, wxDocument);
 
         if (doc->GetDocumentSaved())
         {
-            history.AddFileToHistory(doc->GetFilename());
+            open_windows.AddFileToHistory(doc->GetFilename());
+        #ifdef _WX_PERSIST_H_
+            // asserts in wxPersistenceManager::Save(), "not registered"
+            //wxPersistentSave(wxStaticCast(doc->GetFirstView()->GetFrame(), wxMDIChildFrame), wxString::Format(wxT("Pos%d"), j));
+        #endif
+            j++;
         }
     }
-    config->SetPath(wxT("/OpenWindows"));
-    history.Save(*config);
+    open_windows.Save(*config);
     config->SetPath(wxT("/"));
 
     event.Skip();

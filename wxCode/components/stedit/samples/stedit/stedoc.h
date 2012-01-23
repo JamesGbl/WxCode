@@ -61,16 +61,6 @@ public:
     {
         // nothing to do here, wxSTEditor draws itself
     }
-    virtual ~wxSTEditorView()
-    {
-    }
-#if wxUSE_PRINTING_ARCHITECTURE
-    virtual wxPrintout* OnCreatePrintout()
-    {
-        // return new wxSTEditorPrintout();
-        return wxView::OnCreatePrintout();
-    }
-#endif
 };
 
 class wxSTEditorDocTemplate : public wxDocTemplate

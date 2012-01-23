@@ -55,6 +55,8 @@ public:
 
 protected:
     void OnCloseWindow(wxCloseEvent&);
+    void OnFullscreen(wxCommandEvent&);
+    void OnUpdateFullscreen(wxUpdateUIEvent&);
     void OnProperties(wxCommandEvent&);
     void OnAbout(wxCommandEvent&);
     DECLARE_EVENT_TABLE()
