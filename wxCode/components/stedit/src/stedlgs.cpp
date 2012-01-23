@@ -1467,7 +1467,7 @@ void wxSTEditorPrefDialog::OnApply(wxCommandEvent &event)
 
     // set the language without update since will do it later
     if (GetEditorPrefData().GetEditor())
-        GetEditorPrefData().GetEditor()->GetSTERefData()->m_steLang_id = GetEditorPrefData().GetLanguageId();
+        GetEditorPrefData().GetEditor()->GetSTERefData()->SetLanguage(GetEditorPrefData().GetLanguageId());
         //GetEditorPrefData().GetEditor()->SetLanguage(GetEditorPrefData().GetLanguageId());
 
     if (GetEditorPrefData().GetStyles().IsOk())

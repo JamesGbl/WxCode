@@ -14,39 +14,39 @@
 #ifdef _STEDIT_H_
 
 // ----------------------------------------------------------------------------
-// wxSTEditorDocBase: wxDocument and wxTextCtrl married
+// A very simple text document class
 // ----------------------------------------------------------------------------
 
-class wxSTEditorDocBase : public wxDocument
+class wxSTEditorDoc : public wxDocument, public wxSTEditorRefData
 {
 public:
-    wxSTEditorDocBase() : wxDocument() { }
+    wxSTEditorDoc() : wxDocument(), wxSTEditorRefData() { }
+    wxTextCtrl* GetTextCtrl() const;
+
+    wxFileName GetFilename() const
+    { 
+        return wxSTEditorRefData::GetFilename();
+    }
+
+    virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
+    {
+        wxSTEditorRefData::SetFilename(fileName, notifyViews);
+        wxDocument::SetFilename(fileName.GetFullPath(), notifyViews);
+    }
 
     virtual bool OnCreate(const wxString& path, long flags);
-
-    virtual wxTextCtrl* GetTextCtrl() const = 0;
-
     virtual bool IsModified() const;
     virtual void Modify(bool mod);
+    virtual wxString GetUserReadableName() const
+    {
+        return GetFilename().GetFullPath();
+    }
 
 protected:
     virtual bool DoSaveDocument(const wxString& filename);
     virtual bool DoOpenDocument(const wxString& filename);
 
     void OnTextChange(wxCommandEvent& event);
-
-    DECLARE_CLASS(wxSTEditorDocBase)
-};
-
-// ----------------------------------------------------------------------------
-// A very simple text document class
-// ----------------------------------------------------------------------------
-
-class wxSTEditorDoc : public wxSTEditorDocBase, public wxSTEditorRefData
-{
-public:
-    wxSTEditorDoc() : wxSTEditorDocBase() { }
-    virtual wxTextCtrl* GetTextCtrl() const;
 
     DECLARE_DYNAMIC_CLASS(wxSTEditorDoc)
 };

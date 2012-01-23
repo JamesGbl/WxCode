@@ -133,9 +133,55 @@ public:
         m_fileName = fileName;
     }
 
+    bool SetLanguage(int lang)
+    {
+        wxCHECK_MSG(lang >= 0, false, wxT("Invalid language ID"));
+        m_steLang_id = lang;
+        return true;
+    }
+    bool SetLanguage(const wxFileName&, const wxSTEditorLangs&);
+    int GetLanguageId() const
+    {
+        return m_steLang_id;
+    }
+
+    void SetFileEncoding(const wxString& encoding)
+    {
+        m_encoding = encoding;
+    }
+    wxString GetFileEncoding() const
+    {
+        return m_encoding;
+    }
+    void SetFileBOM(bool bom)
+    {
+        m_file_bom = bom;
+    }
+    bool GetFileBOM() const
+    {
+        return m_file_bom;
+    }
+
+#if wxUSE_STREAMS
+    // Load a file from the wxInputStream (probably a wxFileInputStream)
+    //  The fileName is used only for the message on error
+    //  flags is STE_LoadFileType
+    bool LoadFileToString( wxString* filedata,
+                           wxInputStream& stream,
+                           const wxFileName& filename,
+                           const wxSTEditorPrefs& prefs,
+                           const wxSTEditorLangs& langs,
+                           int flags = STE_LOAD_QUERY_UNICODE,
+                           wxWindow* parent = NULL,
+                           const wxString& encoding = wxEmptyString);
+#endif
+
 protected:
     wxArrayPtrVoid m_editors;       // editors that share this data
     wxFileName   m_fileName;        // current filename for the editor
+    int m_steLang_id;               // index into the wxSTEditorLangs used
+    wxString m_encoding;            // encoding specified by LoadFile parameter, or else, found inside file
+    bool m_file_bom;                // bom found inside file
 
 public:
     wxDateTime   m_modifiedTime;    // file modification time, else invalid
@@ -143,10 +189,6 @@ public:
 
     int m_last_autoindent_line;     // last line that was auto indented
     int m_last_autoindent_len;      // the length of the line before auto indenting
-
-    int m_steLang_id;               // index into the wxSTEditorLangs used
-    wxString m_encoding;            // encoding specified by LoadFile parameter, or else, found inside file
-    bool m_file_bom;                // bom found inside file
 
     wxSTEditorOptions m_options;    // options, always created
 

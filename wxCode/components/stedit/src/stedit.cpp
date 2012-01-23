@@ -82,17 +82,203 @@ static const wxString EOLModeStrings[] =
 const wxClassInfo* wxSTEditorRefData::ms_refdata_classinfo = CLASSINFO(wxSTEditorRefDataImpl);
 
 wxSTEditorRefData::wxSTEditorRefData()
-                  :wxObjectRefData(), m_last_autoindent_line(-1),
-                                      m_last_autoindent_len(0),
-                                      m_steLang_id(STE_LANG_NULL),
+                  :wxObjectRefData(), m_steLang_id(STE_LANG_NULL),
                                       m_encoding(),
-                                      m_file_bom(wxBOM_None)
+                                      m_file_bom(wxBOM_None),
+                                      m_last_autoindent_line(-1),
+                                      m_last_autoindent_len(0)
 {
 }
 
 wxSTEditorRefData::~wxSTEditorRefData()
 {
     m_editors.Clear();
+}
+
+bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath, const wxSTEditorLangs& langs)
+{
+    int lang = STE_LANG_NULL;
+
+    // use current langs or default if none
+    if (langs.IsOk())
+        lang = langs.FindLanguageByFilename(filePath);
+    else
+        lang = wxSTEditorLangs(true).FindLanguageByFilename(filePath);
+
+    if (lang != STE_LANG_NULL)
+        return SetLanguage(lang);
+
+    return false;
+}
+
+bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
+                                           wxInputStream& stream,
+                                           const wxFileName& fileName,
+                                           const wxSTEditorPrefs& prefs,
+                                           const wxSTEditorLangs& langs,
+                                           int flags,
+                                           wxWindow* parent,
+                                           const wxString& strEncoding)
+{
+    wxTextEncoding::Type encoding = wxTextEncoding::TypeFromString(strEncoding);
+    bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
+    flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
+
+    const wxFileOffset stream_len = stream.GetLength();
+    bool ok = (stream_len <= STE_MaxFileSize);
+
+    if (ok)
+    {
+        bool want_lang = prefs.IsOk() && prefs.GetPrefBool(STE_PREF_LOAD_INIT_LANG);
+        wxCharBuffer charBuf(stream_len);
+        wxString str;
+        wxBOM file_bom = wxBOM_None;
+
+        if (  (encoding == wxTextEncoding::None)
+            && dynamic_cast<wxStringInputStream*>(&stream))
+        {
+            // wxStringInputStream is utf8 always
+            encoding = wxTextEncoding::UTF8;
+        }
+
+        ok = ((size_t)stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
+
+        if (ok)
+        {
+            bool found_lang = false;
+            bool html = false;
+            bool xml = false;
+
+            if (want_lang && !found_lang)
+            {
+                found_lang = SetLanguage(fileName, langs);
+                if (found_lang)
+                {
+                    html = (0 == langs.GetName(GetLanguageId()).CmpNoCase(wxT("html")));
+                    xml  = (0 == langs.GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
+                }
+            }
+            if ((want_lang && !found_lang) || ( (html || xml) && (encoding == wxTextEncoding::None)) )
+            {
+                // sample just one line; feeble attempt to detect xml (in files w/o the .xml extension), and/or utf8 encoding in html files (w html extension)
+                const char* newline = strpbrk(charBuf.data(), "\n\r");
+                size_t len = newline ? (newline - charBuf.data()) : stream_len;
+                wxCharBuffer firstline(len);
+
+                strncpy(firstline.data(), charBuf.data(), len);
+
+                if (want_lang && !found_lang)
+                {
+                    const char xml_header[] = "<?xml version=\"";
+
+                    if (   (len >= WXSIZEOF(xml_header))
+                        && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
+                       )
+                    {
+                        found_lang = xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")), langs);
+                    }
+                }
+                if (encoding == wxTextEncoding::None)
+                {
+                    if (html)
+                    {
+                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "charset=", "; \"");
+                    }
+                    if (xml)
+                    {
+                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "encoding=\"", "\"");
+                    }
+                }
+            }
+            switch (encoding)
+            {
+                case wxTextEncoding::None:
+                    // load file and get BOM
+                    ok = wxTextEncoding::CharToStringDetectBOM(&str, charBuf, stream_len, &file_bom);
+                #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
+                    if (ok) switch (file_bom)
+                    {
+                        case wxBOM_UTF16LE:
+                            if (flags == STE_LOAD_QUERY_UNICODE)
+                            {
+                                int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
+                                                       _("Load Unicode?"),
+                                                       wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
+                                                       parent);
+                                switch (ret)
+                                {
+                                    case wxYES:
+                                        break;
+                                    case wxNO:
+                                    case wxCANCEL:
+                                    default:
+                                        ok = false;
+                                        break;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                #endif
+                    if (ok) switch (file_bom)
+                    {
+                        case wxBOM_UTF8:    encoding = wxTextEncoding::UTF8   ; break;
+                        case wxBOM_UTF16LE: encoding = wxTextEncoding::Unicode_LE; break;
+                        default:            encoding = wxTextEncoding::None   ; break;
+                    }
+                    break;
+                case wxTextEncoding::Unicode_LE:
+                case wxTextEncoding::UTF8:
+                case wxTextEncoding::ISO8859_1:
+            #ifdef __WXMSW__
+                case wxTextEncoding::OEM:
+            #endif
+                    // get BOM
+                    file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
+
+                    // load file
+                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, encoding, file_bom);
+
+                    break;
+                default:
+                    ok = false;
+                    break;
+            }
+            if (ok)
+            {
+                // sanity check
+                ok = !(stream_len && str.IsEmpty());
+            }
+            if (!ok)
+            {
+                wxMessageBox(_("Bad encoding."),
+                    _("Error loading file"), wxOK|wxICON_ERROR, parent);
+                // give it one more shot
+                if (wxTextEncoding::None != encoding)
+                {
+                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, wxTextEncoding::None);
+                }
+            }
+        }
+        if (ok)
+        {
+            SetFileEncoding(wxTextEncoding::TypeToString(encoding));
+            SetFileBOM(file_bom != wxBOM_None);
+            SetFilename(fileName);
+            if (filedata)
+            {
+                *filedata = str;
+            }
+        }
+    }
+    else if (!noerrdlg)
+    {
+        wxMessageBox(_("This file is too large for this editor, sorry."),
+            _("Error loading file"), wxOK|wxICON_EXCLAMATION, parent);
+    }
+
+    return ok;
 }
 
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataImpl, wxObject)
@@ -1692,7 +1878,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2899")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2910")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2252,176 +2438,28 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                            wxWindow* parent,
                            const wxString& strEncoding)
 {
-    wxTextEncoding::Type encoding = wxTextEncoding::TypeFromString(strEncoding);
-    bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
-    flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
-
-    const wxFileOffset stream_len = stream.GetLength();
-    bool ok = (stream_len <= STE_MaxFileSize);
-
-    ClearAll();
-
+    wxString str;
+    bool ok = GetSTERefData()->LoadFileToString(&str, stream, fileName,
+                                               GetEditorPrefs(), GetEditorLangs(),
+                                               flags, parent, strEncoding);
     if (ok)
     {
-        bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
-        wxCharBuffer charBuf(stream_len);
-        wxString str;
-        wxBOM file_bom = wxBOM_None;
-
-        if (  (encoding == wxTextEncoding::None)
-            && dynamic_cast<wxStringInputStream*>(&stream))
-        {
-            // wxStringInputStream is utf8 always
-            encoding = wxTextEncoding::UTF8;
-        }
-
         ClearAll();
+        SetText(str);
+        SetLanguage(GetSTERefData()->GetLanguageId());// -> Colourise();
 
-        ok = ((size_t)stream_len == stream.Read(charBuf.data(), stream_len).LastRead());
-
-        if (ok)
+        UpdateCanDo(true);
+        EmptyUndoBuffer();
+        SetModified(false);
+        GotoPos(0);
+        ScrollToColumn(0); // extra help to ensure scrolled to 0
+                           // otherwise scrolled halfway thru 1st char
+        if (fileName.FileExists())
         {
-            bool found_lang = false;
-            bool html = false;
-            bool xml = false;
-
-            if (want_lang && !found_lang)
-            {
-                found_lang = SetLanguage(fileName);
-                if (found_lang)
-                {
-                    html = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("html")));
-                    xml  = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
-                }
-            }
-            if ((want_lang && !found_lang) || ( (html || xml) && (encoding == wxTextEncoding::None)) )
-            {
-                // sample just one line; feeble attempt to detect xml (in files w/o the .xml extension), and/or utf8 encoding in html files (w html extension)
-                const char* newline = strpbrk(charBuf.data(), "\n\r");
-                size_t len = newline ? (newline - charBuf.data()) : stream_len;
-                wxCharBuffer firstline(len);
-
-                strncpy(firstline.data(), charBuf.data(), len);
-
-                if (want_lang && !found_lang)
-                {
-                    const char xml_header[] = "<?xml version=\"";
-
-                    if (   (len >= WXSIZEOF(xml_header))
-                        && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
-                       )
-                    {
-                        found_lang = xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
-                    }
-                }
-                if (encoding == wxTextEncoding::None)
-                {
-                    if (html)
-                    {
-                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "charset=", "; \"");
-                    }
-                    if (xml)
-                    {
-                        wxTextEncoding::TypeFromString(&encoding, firstline.data(), "encoding=\"", "\"");
-                    }
-                }
-            }
-            switch (encoding)
-            {
-                case wxTextEncoding::None:
-                    // load file and get BOM
-                    ok = wxTextEncoding::CharToStringDetectBOM(&str, charBuf, stream_len, &file_bom);
-                #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
-                    if (ok) switch (file_bom)
-                    {
-                        case wxBOM_UTF16LE:
-                            if (flags == STE_LOAD_QUERY_UNICODE)
-                            {
-                                int ret = wxMessageBox(_("Unicode text file. Convert to Ansi text?"),
-                                                       _("Load Unicode?"),
-                                                       wxYES_NO | wxCANCEL | wxCENTRE | wxICON_QUESTION,
-                                                       parent);
-                                switch (ret)
-                                {
-                                    case wxYES:
-                                        break;
-                                    case wxNO:
-                                    case wxCANCEL:
-                                    default:
-                                        ok = false;
-                                        break;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                #endif
-                    if (ok) switch (file_bom)
-                    {
-                        case wxBOM_UTF8:    encoding = wxTextEncoding::UTF8   ; break;
-                        case wxBOM_UTF16LE: encoding = wxTextEncoding::Unicode_LE; break;
-                        default:            encoding = wxTextEncoding::None   ; break;
-                    }
-                    break;
-                case wxTextEncoding::Unicode_LE:
-                case wxTextEncoding::UTF8:
-                case wxTextEncoding::ISO8859_1:
-            #ifdef __WXMSW__
-                case wxTextEncoding::OEM:
-            #endif
-                    // get BOM
-                    file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
-
-                    // load file
-                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, encoding, file_bom);
-
-                    break;
-                default:
-                    ok = false;
-                    break;
-            }
-            if (ok)
-            {
-                // sanity check
-                ok = !(stream_len && str.IsEmpty());
-            }
-            if (!ok)
-            {
-                wxMessageBox(_("Bad encoding."),
-                    _("Error loading file"), wxOK|wxICON_ERROR, parent);
-                // give it one more shot
-                if (wxTextEncoding::None != encoding)
-                {
-                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, wxTextEncoding::None);
-                }
-            }
+            SetFileModificationTime(fileName.GetModificationTime());
         }
-        if (ok)
-        {
-            SetText(str);
-            SetFileEncoding(wxTextEncoding::TypeToString(encoding));
-            SetFileBOM(file_bom != wxBOM_None);
-
-            UpdateCanDo(true);
-            EmptyUndoBuffer();
-            SetModified(false);
-            GotoPos(0);
-            ScrollToColumn(0); // extra help to ensure scrolled to 0
-                               // otherwise scrolled halfway thru 1st char
-            SetFileName(fileName, true);
-            if (fileName.FileExists())
-            {
-                SetFileModificationTime(fileName.GetModificationTime());
-            }
-        }
+        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
     }
-    else if (!noerrdlg)
-    {
-        wxMessageBox(_("This file is too large for this editor, sorry."),
-            _("Error loading file"), wxOK|wxICON_EXCLAMATION, parent);
-    }
-
     return ok;
 }
 
@@ -3981,9 +4019,8 @@ void wxSTEditor::SetOptions(const wxSTEditorOptions& options)
 
 bool wxSTEditor::SetLanguage(int lang)
 {
-    wxCHECK_MSG(lang >= 0, false, wxT("Invalid language ID"));
-
-    GetSTERefData()->m_steLang_id = lang;
+    if (!GetSTERefData()->SetLanguage(lang))
+        return false;
 
     size_t n, editRefCount = GetSTERefData()->GetEditorCount();
 
@@ -4025,27 +4062,27 @@ bool wxSTEditor::SetLanguage(const wxFileName &filePath)
 
 int wxSTEditor::GetLanguageId() const
 {
-    return GetSTERefData()->m_steLang_id;
+    return GetSTERefData()->GetLanguageId();
 }
 
 void wxSTEditor::SetFileEncoding(const wxString& encoding)
 {
-    GetSTERefData()->m_encoding = encoding;
+    GetSTERefData()->SetFileEncoding(encoding);
 }
 
 wxString wxSTEditor::GetFileEncoding() const
 {
-    return GetSTERefData()->m_encoding;
+    return GetSTERefData()->GetFileEncoding();
 }
 
 void wxSTEditor::SetFileBOM(bool file_bom)
 {
-    GetSTERefData()->m_file_bom = file_bom;
+    GetSTERefData()->SetFileBOM(file_bom);
 }
 
 bool wxSTEditor::GetFileBOM() const
 {
-    return GetSTERefData()->m_file_bom;
+    return GetSTERefData()->GetFileBOM();
 }
 
 const wxSTEditorPrefs& wxSTEditor::GetEditorPrefs() const

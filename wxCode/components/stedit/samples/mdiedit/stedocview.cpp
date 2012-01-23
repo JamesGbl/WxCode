@@ -14,8 +14,7 @@
 #include "stedocview.h"
 #include "../../src/wxext.h"
 
-IMPLEMENT_CLASS(wxSTEditorDocBase, wxDocument)
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorDoc, wxSTEditorDocBase)
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorDoc, wxDocument)
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorView, wxView)
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorChildFrame,wxDocMDIChildFrame)
 
@@ -66,6 +65,8 @@ bool wxSTEditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
         menu->Append(wxID_SAVEAS, wxGetStockLabelEx(wxID_SAVEAS) + wxT("\t") + _("Ctrl+Shift+S"));
         menu->Append(wxID_REVERT, _("Re&vert..."));
         menu->AppendSeparator();
+        menu->Append(wxID_PROPERTIES, wxGetStockLabelEx(wxID_PROPERTIES) + wxT("\t") + _("Alt+Enter"));
+        menu->AppendSeparator();
         menu->Append(wxID_PRINT);
         menu->Append(wxID_PRINT_SETUP, _("Print Set&up..."));
         menu->Append(wxID_PREVIEW, wxGetStockLabelEx(wxID_PREVIEW) + wxT("\t") + _("Ctrl+Shift+P"));
@@ -92,7 +93,7 @@ bool wxSTEditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
 // wxSTEditorDocBase: wxDocument and wxTextCtrl married
 // ----------------------------------------------------------------------------
 
-bool wxSTEditorDocBase::OnCreate(const wxString& path, long flags)
+bool wxSTEditorDoc::OnCreate(const wxString& path, long flags)
 {
     if ( !wxDocument::OnCreate(path, flags) )
         return false;
@@ -102,7 +103,7 @@ bool wxSTEditorDocBase::OnCreate(const wxString& path, long flags)
     GetTextCtrl()->Connect
     (
         wxEVT_COMMAND_TEXT_UPDATED,
-        wxCommandEventHandler(wxSTEditorDocBase::OnTextChange),
+        wxCommandEventHandler(wxSTEditorDoc::OnTextChange),
         NULL,
         this
     );
@@ -112,30 +113,38 @@ bool wxSTEditorDocBase::OnCreate(const wxString& path, long flags)
 
 // Since text windows have their own method for saving to/loading from files,
 // we override DoSave/OpenDocument instead of Save/LoadObject
-bool wxSTEditorDocBase::DoSaveDocument(const wxString& filename)
+bool wxSTEditorDoc::DoSaveDocument(const wxString& filename)
 {
     return GetTextCtrl()->SaveFile(filename);
 }
 
-bool wxSTEditorDocBase::DoOpenDocument(const wxString& filename)
+bool wxSTEditorDoc::DoOpenDocument(const wxString& filename)
 {
-    if ( !GetTextCtrl()->LoadFile(filename) )
-        return false;
+    wxString str;
+    wxFileInputStream stream(filename);
+    bool ok = stream.IsOk() && LoadFileToString(&str, stream, wxFileName(filename), wxSTEditorPrefs(), wxSTEditorLangs());
 
-    // we're not modified by the user yet
-    Modify(false);
+    if (ok)
+    {
+        GetTextCtrl()->SetValue(str);
 
-    return true;
+        // we're not modified by the user yet
+        Modify(false);
+
+        SetFilename(filename); // call virtual version
+    }
+    return ok;
 }
 
-bool wxSTEditorDocBase::IsModified() const
+bool wxSTEditorDoc::IsModified() const
 {
     wxTextCtrl* wnd = GetTextCtrl();
     return wxDocument::IsModified() || (wnd && wnd->IsModified());
 }
 
-void wxSTEditorDocBase::Modify(bool modified)
+void wxSTEditorDoc::Modify(bool modified)
 {
+    wxSTEditorRefData::Modify(modified);
     wxDocument::Modify(modified);
 
     wxTextCtrl* wnd = GetTextCtrl();
@@ -145,7 +154,7 @@ void wxSTEditorDocBase::Modify(bool modified)
     }
 }
 
-void wxSTEditorDocBase::OnTextChange(wxCommandEvent& event)
+void wxSTEditorDoc::OnTextChange(wxCommandEvent& event)
 {
     Modify(true);
 

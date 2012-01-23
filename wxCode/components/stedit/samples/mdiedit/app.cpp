@@ -17,6 +17,7 @@
 #ifdef _WX_PERSIST_H_
 #include "persist-mdi.h"
 #endif
+#include "wxtrunk.h"
 
 #define APP_NAME_SHORT   wxT("mdiedit")
 #define APP_NAME_DISPLAY wxT("MDIEdit")
@@ -158,6 +159,7 @@ bool App::OnCmdLineParsed(wxCmdLineParser& parser)
 }
 
 BEGIN_EVENT_TABLE(MainFrame, wxDocMDIParentFrame)
+    EVT_MENU(wxID_PROPERTIES, MainFrame::OnProperties)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
 END_EVENT_TABLE()
 
@@ -205,6 +207,48 @@ bool MainFrame::Create(wxDocManager* docManager, const wxString& title)
 void MainFrame::OnAbout(wxCommandEvent&)
 {
     ::wxSTEditorAboutDialog(this);
+}
+
+wxView* wxDocument_GetCurrentView(const wxDocument* doc)
+{
+   wxView* view = doc->GetDocumentManager()->GetCurrentView();
+
+   return (view && (view->GetDocument() == doc)) ? view : doc->GetFirstView();
+}
+
+void wxDocument_Info(const wxDocument* doc, wxArrayString* as)
+{
+   const wxString fmt = wxT("%s:\t%s");
+   wxView* active_view = wxDocument_GetCurrentView(doc);
+   wxView* view  = active_view ? active_view : doc->GetFirstView();
+   wxWindow* frame = view ? view->GetFrame() : NULL;;
+
+   as->Add(wxString::Format(fmt, wxT("Doc class"), doc->GetClassInfo()->GetClassName()));
+   if (view)
+   {
+      as->Add(wxString::Format(fmt, wxT("View class"), view->GetClassInfo()->GetClassName()));
+   }
+   as->Add(wxString::Format(fmt, wxT("Frame class"), frame ? frame->GetClassInfo()->GetClassName() : wxEmptyString));
+   if (frame)
+   {
+      as->Add(wxString::Format(fmt, wxT("Frame label"), frame->GetLabel().wx_str()));
+   }
+   as->Add(wxString::Format(fmt, wxT("GetFilename"), doc->GetFilename().wx_str()));
+   as->Add(wxString::Format(fmt, wxT("GetTitle"), doc->GetTitle().wx_str()));
+   as->Add(wxString::Format(fmt, wxT("GetUserReadableName"), doc->GetUserReadableName().wx_str()));
+   as->Add(wxString::Format(fmt, wxT("IsModified"), doc->IsModified() ? _("Yes") : _("No")));
+   as->Add(wxString::Format(fmt, wxT("GetDocumentSaved"), doc->GetDocumentSaved() ? _("Yes") : _("No")));
+   as->Add(wxString::Format(fmt, wxT("GetDocumentName"), doc->GetDocumentName().wx_str()));
+}
+
+void MainFrame::OnProperties(wxCommandEvent&)
+{
+   const wxDocument* doc = GetDocumentManager()->GetCurrentDocument();
+   wxArrayString as;
+
+   ::wxDocument_Info(doc, &as);
+
+   ::wxMessageBox(::wxJoin(as, wxT('\n')), wxMessageBoxCaption, wxOK | wxCENTRE, this);
 }
 
 void MainFrame::OnCloseWindow(wxCloseEvent& event)

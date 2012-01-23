@@ -31,6 +31,12 @@ public:
     wxSTEditorDoc();
 
     virtual ~wxSTEditorDoc();
+
+    wxFileName GetFilename() const
+    { 
+        return wxSTEditorRefData::GetFilename();
+    }
+
     virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
     {
         wxSTEditorRefData::SetFilename(fileName, notifyViews);

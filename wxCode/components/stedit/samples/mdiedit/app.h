@@ -55,6 +55,7 @@ public:
 
 protected:
     void OnCloseWindow(wxCloseEvent&);
+    void OnProperties(wxCommandEvent&);
     void OnAbout(wxCommandEvent&);
     DECLARE_EVENT_TABLE()
 };

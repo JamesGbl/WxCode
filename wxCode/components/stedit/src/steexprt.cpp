@@ -1974,9 +1974,8 @@ bool wxSTEditorExportDialog::Create(wxWindow* parent,
 
     wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
     bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
-    Fit();
-    SetMinSize(GetSize());
-    Centre();
+
+    GetSizer()->SetSizeHints(this);
 
     return true;
 }
