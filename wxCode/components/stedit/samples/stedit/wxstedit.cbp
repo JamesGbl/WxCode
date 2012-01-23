@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Win32 DLL Unicode Debug">
-				<Option output="bin\wxsteditd.gcc" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\wxsteditd" prefix_auto="1" extension_auto="1" />
 				<Option object_output="gcc_mswud\wxstedit" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -68,7 +68,7 @@
 				</Linker>
 			</Target>
 			<Target title="Win32 DLL Debug">
-				<Option output="bin\wxstedit95d.gcc" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\wxstedit95d" prefix_auto="1" extension_auto="1" />
 				<Option object_output="gcc_mswd\wxstedit" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -91,11 +91,10 @@
 					<Add library="libwxmsw28d_html" />
 					<Add library="libwxbase28d" />
 					<Add directory="$(#WX.lib)\gcc_dll$(WX_CFG)" />
-					<Add directory="..\..\lib\gcc_lib" />
 				</Linker>
 			</Target>
 			<Target title="Win32 Unicode Release">
-				<Option output="bin\wxstedit.gcc" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\wxstedit" prefix_auto="1" extension_auto="1" />
 				<Option object_output="gcc_mswu\wxstedit" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -153,7 +152,7 @@
 				</Linker>
 			</Target>
 			<Target title="Win32 Release">
-				<Option output="bin\wxstedit95.gcc" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\wxstedit95" prefix_auto="1" extension_auto="1" />
 				<Option object_output="gcc_msw\wxstedit" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -220,6 +219,7 @@
 		</ResourceCompiler>
 		<Linker>
 			<Add directory="$(#WX.lib)" />
+			<Add directory="..\..\lib\gcc_lib" />
 		</Linker>
 		<Unit filename="stedoc.cpp" />
 		<Unit filename="wxstedit.cpp" />

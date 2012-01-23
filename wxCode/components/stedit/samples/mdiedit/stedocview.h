@@ -17,22 +17,11 @@
 // A very simple text document class
 // ----------------------------------------------------------------------------
 
-class wxSTEditorDoc : public wxDocument, public wxSTEditorRefData
+class EditorDoc : public wxSTEditorDoc
 {
 public:
-    wxSTEditorDoc() : wxDocument(), wxSTEditorRefData() { }
+    EditorDoc() : wxSTEditorDoc(false) { }
     wxTextCtrl* GetTextCtrl() const;
-
-    wxFileName GetFilename() const
-    { 
-        return wxSTEditorRefData::GetFilename();
-    }
-
-    virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
-    {
-        wxSTEditorRefData::SetFilename(fileName, notifyViews);
-        wxDocument::SetFilename(fileName.GetFullPath(), notifyViews);
-    }
 
     virtual bool OnCreate(const wxString& path, long flags);
     virtual bool IsModified() const;
@@ -48,7 +37,7 @@ protected:
 
     void OnTextChange(wxCommandEvent& event);
 
-    DECLARE_DYNAMIC_CLASS(wxSTEditorDoc)
+    DECLARE_DYNAMIC_CLASS(EditorDoc)
 };
 #endif // _STEDIT_H_
 
@@ -57,10 +46,10 @@ protected:
 // ----------------------------------------------------------------------------
 
 // The view using a standard wxTextCtrl to show its contents
-class wxSTEditorView : public wxView
+class EditorView : public wxView
 {
 public:
-    wxSTEditorView() : wxView(), m_text(NULL) {}
+    EditorView() : wxView(), m_text(NULL) {}
 
     virtual bool OnCreate(wxDocument*, long flags);
     virtual void OnDraw(wxDC*);
@@ -76,31 +65,31 @@ private:
     wxTextCtrl* m_text;
 
     DECLARE_EVENT_TABLE()
-    DECLARE_DYNAMIC_CLASS(wxSTEditorView)
+    DECLARE_DYNAMIC_CLASS(EditorView)
 };
 
-class wxSTEditorChildFrame : public wxDocMDIChildFrame
+class EditorChildFrame : public wxDocMDIChildFrame
 {
 public:
     bool Create(wxView* view, wxMDIParentFrame*);
 
-    DECLARE_DYNAMIC_CLASS(wxSTEditorChildFrame)
+    DECLARE_DYNAMIC_CLASS(EditorChildFrame)
 };
 
-class wxSTEditorDocTemplate : public wxDocTemplate
+class EditorDocTemplate : public wxDocTemplate
 {
     static wxDocTemplate* ms_instance;
 protected:
     wxClassInfo* m_frameClassInfo;
 
-    wxSTEditorDocTemplate(wxDocManager*, wxClassInfo* frameClassInfo);
+    EditorDocTemplate(wxDocManager*, wxClassInfo* frameClassInfo);
 
     virtual wxFrame* CreateViewFrame(wxView*);
 public:
     static wxDocTemplate* Create(wxDocManager*);
     static wxDocTemplate* GetInstance() { return ms_instance; }
 
-    friend class wxSTEditorView;
+    friend class EditorView;
 };
 
 #endif // __STEDOCVIEW_H__

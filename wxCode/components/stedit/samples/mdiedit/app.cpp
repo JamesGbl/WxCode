@@ -261,7 +261,10 @@ void MainFrame::OnCloseWindow(wxCloseEvent& event)
     {
         wxDocument* doc = wxStaticCast(*it, wxDocument);
 
-        history.AddFileToHistory(doc->GetFilename());
+        if (doc->GetDocumentSaved())
+        {
+            history.AddFileToHistory(doc->GetFilename());
+        }
     }
     config->SetPath(wxT("/OpenWindows"));
     history.Save(*config);

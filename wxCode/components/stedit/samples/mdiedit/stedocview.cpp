@@ -11,32 +11,33 @@
 #include "precomp.h"
 
 #include "wx/stedit/stedit.h"
+#include "../stedit/stedoc.h"
 #include "stedocview.h"
 #include "../../src/wxext.h"
 
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorDoc, wxDocument)
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorView, wxView)
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorChildFrame,wxDocMDIChildFrame)
+IMPLEMENT_DYNAMIC_CLASS(EditorDoc, wxSTEditorDoc)
+IMPLEMENT_DYNAMIC_CLASS(EditorView, wxView)
+IMPLEMENT_DYNAMIC_CLASS(EditorChildFrame,wxDocMDIChildFrame)
 
-/*static*/ wxDocTemplate* wxSTEditorDocTemplate::ms_instance = NULL;
+/*static*/ wxDocTemplate* EditorDocTemplate::ms_instance = NULL;
 
-wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager, wxClassInfo* frameClassInfo) : 
+EditorDocTemplate::EditorDocTemplate(wxDocManager* docManager, wxClassInfo* frameClassInfo) : 
     wxDocTemplate(docManager, _("Text"), wxT("*.txt;*.text;*.h;*.c;*.cpp"),
       wxT(""), wxT("txt"), wxT("Editor doc"), wxT("Editor view"),
-          CLASSINFO(wxSTEditorDoc), CLASSINFO(wxSTEditorView)),
+          CLASSINFO(EditorDoc), CLASSINFO(EditorView)),
     m_frameClassInfo(frameClassInfo)
 {
     ms_instance = this;
 }
 
-/*static*/ wxDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)
+/*static*/ wxDocTemplate* EditorDocTemplate::Create(wxDocManager* docManager)
 {
-   return new wxSTEditorDocTemplate(docManager, CLASSINFO(wxSTEditorChildFrame));
+   return new EditorDocTemplate(docManager, CLASSINFO(EditorChildFrame));
 }
 
-wxFrame* wxSTEditorDocTemplate::CreateViewFrame(wxView* view)
+wxFrame* EditorDocTemplate::CreateViewFrame(wxView* view)
 {
-    wxSTEditorChildFrame* subframe = wxStaticCast(m_frameClassInfo->CreateObject(), wxSTEditorChildFrame);
+    EditorChildFrame* subframe = wxStaticCast(m_frameClassInfo->CreateObject(), EditorChildFrame);
 
     if (subframe->Create(view, wxStaticCast(wxTheApp->GetTopWindow(), wxMDIParentFrame)))
     {
@@ -48,7 +49,7 @@ wxFrame* wxSTEditorDocTemplate::CreateViewFrame(wxView* view)
     return subframe;
 }
 
-bool wxSTEditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
+bool EditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
 {
     bool ok = wxDocMDIChildFrame::Create(view->GetDocument(), view, frame, wxID_ANY, wxEmptyString);
 
@@ -90,12 +91,12 @@ bool wxSTEditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
 }
 
 // ----------------------------------------------------------------------------
-// wxSTEditorDocBase: wxDocument and wxTextCtrl married
+// EditorDoc
 // ----------------------------------------------------------------------------
 
-bool wxSTEditorDoc::OnCreate(const wxString& path, long flags)
+bool EditorDoc::OnCreate(const wxString& path, long flags)
 {
-    if ( !wxDocument::OnCreate(path, flags) )
+    if ( !wxSTEditorDoc::OnCreate(path, flags) )
         return false;
 
     // subscribe to changes in the text control to update the document state
@@ -103,7 +104,7 @@ bool wxSTEditorDoc::OnCreate(const wxString& path, long flags)
     GetTextCtrl()->Connect
     (
         wxEVT_COMMAND_TEXT_UPDATED,
-        wxCommandEventHandler(wxSTEditorDoc::OnTextChange),
+        wxCommandEventHandler(EditorDoc::OnTextChange),
         NULL,
         this
     );
@@ -113,12 +114,12 @@ bool wxSTEditorDoc::OnCreate(const wxString& path, long flags)
 
 // Since text windows have their own method for saving to/loading from files,
 // we override DoSave/OpenDocument instead of Save/LoadObject
-bool wxSTEditorDoc::DoSaveDocument(const wxString& filename)
+bool EditorDoc::DoSaveDocument(const wxString& filename)
 {
     return GetTextCtrl()->SaveFile(filename);
 }
 
-bool wxSTEditorDoc::DoOpenDocument(const wxString& filename)
+bool EditorDoc::DoOpenDocument(const wxString& filename)
 {
     wxString str;
     wxFileInputStream stream(filename);
@@ -136,16 +137,16 @@ bool wxSTEditorDoc::DoOpenDocument(const wxString& filename)
     return ok;
 }
 
-bool wxSTEditorDoc::IsModified() const
+bool EditorDoc::IsModified() const
 {
     wxTextCtrl* wnd = GetTextCtrl();
-    return wxDocument::IsModified() || (wnd && wnd->IsModified());
+    return wxSTEditorDoc::IsModified() || (wnd && wnd->IsModified());
 }
 
-void wxSTEditorDoc::Modify(bool modified)
+void EditorDoc::Modify(bool modified)
 {
     wxSTEditorRefData::Modify(modified);
-    wxDocument::Modify(modified);
+    wxSTEditorDoc::Modify(modified);
 
     wxTextCtrl* wnd = GetTextCtrl();
     if (wnd && !modified)
@@ -154,7 +155,7 @@ void wxSTEditorDoc::Modify(bool modified)
     }
 }
 
-void wxSTEditorDoc::OnTextChange(wxCommandEvent& event)
+void EditorDoc::OnTextChange(wxCommandEvent& event)
 {
     Modify(true);
 
@@ -162,31 +163,31 @@ void wxSTEditorDoc::OnTextChange(wxCommandEvent& event)
 }
 
 // ----------------------------------------------------------------------------
-// wxSTEditorDoc implementation
+// EditorDoc implementation
 // ----------------------------------------------------------------------------
 
-wxTextCtrl* wxSTEditorDoc::GetTextCtrl() const
+wxTextCtrl* EditorDoc::GetTextCtrl() const
 {
     wxView* view = GetFirstView();
-    return view ? wxStaticCast(view, wxSTEditorView)->GetText() : NULL;
+    return view ? wxStaticCast(view, EditorView)->GetText() : NULL;
 }
 
 // ----------------------------------------------------------------------------
-// wxSTEditorView implementation
+// EditorView implementation
 // ----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(wxSTEditorView, wxView)
-    EVT_MENU(wxID_COPY, wxSTEditorView::OnCopy)
-    EVT_MENU(wxID_PASTE, wxSTEditorView::OnPaste)
-    EVT_MENU(wxID_SELECTALL, wxSTEditorView::OnSelectAll)
+BEGIN_EVENT_TABLE(EditorView, wxView)
+    EVT_MENU(wxID_COPY, EditorView::OnCopy)
+    EVT_MENU(wxID_PASTE, EditorView::OnPaste)
+    EVT_MENU(wxID_SELECTALL, EditorView::OnSelectAll)
 END_EVENT_TABLE()
 
-bool wxSTEditorView::OnCreate(wxDocument *doc, long flags)
+bool EditorView::OnCreate(wxDocument *doc, long flags)
 {
     if ( !wxView::OnCreate(doc, flags) )
         return false;
 
-    wxFrame* frame = wxStaticCast(doc->GetDocumentTemplate(), wxSTEditorDocTemplate)->CreateViewFrame(this);
+    wxFrame* frame = wxStaticCast(doc->GetDocumentTemplate(), EditorDocTemplate)->CreateViewFrame(this);
     wxASSERT(frame == GetFrame());
     m_text = new wxTextCtrl(frame, wxID_ANY, wxEmptyString,
                             wxDefaultPosition, wxDefaultSize,
@@ -197,12 +198,12 @@ bool wxSTEditorView::OnCreate(wxDocument *doc, long flags)
     return true;
 }
 
-void wxSTEditorView::OnDraw(wxDC *WXUNUSED(dc))
+void EditorView::OnDraw(wxDC *WXUNUSED(dc))
 {
     // nothing to do here, wxTextCtrl draws itself
 }
 
-bool wxSTEditorView::OnClose(bool deleteWindow)
+bool EditorView::OnClose(bool deleteWindow)
 {
     if ( !wxView::OnClose(deleteWindow) )
         return false;

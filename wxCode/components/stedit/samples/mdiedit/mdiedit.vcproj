@@ -443,7 +443,7 @@
 				AdditionalOptions="/EHsc "
 				Optimization="1"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\msw;..\"
+				AdditionalIncludeDirectories="..\..\include;$(WXWIN)\include;$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\contrib\include"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -540,7 +540,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\"
+				AdditionalIncludeDirectories="..\..\include;$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;$(WXWIN)\contrib\include"
 				PreprocessorDefinitions="__WXDEBUG__;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -639,7 +639,7 @@
 				AdditionalOptions="/EHsc "
 				Optimization="1"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\vc_lib\mswu;..\"
+				AdditionalIncludeDirectories="..\..\include;$(WXWIN)\include;$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\contrib\include"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -668,7 +668,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxzlib.lib wxexpat.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib comctl32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib "
+				AdditionalDependencies="wxtiff.lib wxjpeg.lib wxzlib.lib wxexpat.lib wxpng.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib comctl32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib "
 				OutputFile="..\bin/mdiedit64.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -735,7 +735,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\"
+				AdditionalIncludeDirectories="..\..\include;$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;$(WXWIN)\contrib\include"
 				PreprocessorDefinitions="__WXDEBUG__;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -765,6 +765,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="wxtiff.lib wxjpeg.lib wxzlib.lib wxpng.lib wxexpat.lib "
 				OutputFile="..\bin/mdiedit95d.9.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -1049,6 +1050,42 @@
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\stedit\stedoc.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>

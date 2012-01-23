@@ -286,7 +286,7 @@ wxDocument* DocManager::CreateDocument(const wxString& path, long flags)
 
 wxDocument* DocManager::CreateNewDefaultDocument()
 {
-    wxDocTemplate* docTemplate = wxSTEditorDocTemplate::GetInstance();
+    wxDocTemplate* docTemplate = EditorDocTemplate::GetInstance();
     wxDocument* doc = docTemplate->CreateDocument(wxEmptyString, wxDOC_NEW);
 
     if (doc->OnNewDocument())
@@ -316,7 +316,7 @@ wxDocManager* App::CreateDocManager()
 {
     wxDocManager* docManager = new DocManager();
 
-    wxSTEditorDocTemplate::Create(docManager);
+    EditorDocTemplate::Create(docManager);
     ExampleDocTemplate1::Create(docManager);
 
     return docManager;

@@ -19,7 +19,7 @@
 //   then wxSTEditor fits in better when it can produce a wxDocument instance
 //   for you, eg you can implement "universal" File Open code that returns a non-NULL
 //   wxDocument pointer always, if succesful,
-//      wxDocument* OpenSomeFile(filename); // May returns a wxSTEditorDoc instance
+//      wxDocument* OpenSomeFile(filename); // Returns a wxSTEditorDoc instance
 //                                          // *or* some other wxDocument instance
 // 
 //-----------------------------------------------------------------------------
@@ -29,6 +29,7 @@ class wxSTEditorDoc : public wxDocument, public wxSTEditorRefData
     DECLARE_DYNAMIC_CLASS(wxSTEditorDoc)
 public:
     wxSTEditorDoc();
+    wxSTEditorDoc(bool living_in_wxSTEditorFrame);
 
     virtual ~wxSTEditorDoc();
 
@@ -47,6 +48,9 @@ public:
         wxSTEditorRefData::Modify(mod);
         wxDocument::Modify(mod);
     }
+private:
+    void Init();
+    bool m_living_in_wxSTEditorFrame;
 };
 
 class wxSTEditorView : public wxView

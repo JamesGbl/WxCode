@@ -110,6 +110,7 @@
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="stedocview.cpp" />
+		<Unit filename="..\stedit\stedoc.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
