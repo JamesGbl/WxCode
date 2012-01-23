@@ -139,7 +139,7 @@ public:
         m_steLang_id = lang;
         return true;
     }
-    bool SetLanguage(const wxFileName&, const wxSTEditorLangs&);
+    bool SetLanguage(const wxFileName&);
     int GetLanguageId() const
     {
         return m_steLang_id;
@@ -169,8 +169,6 @@ public:
     bool LoadFileToString( wxString* filedata,
                            wxInputStream& stream,
                            const wxFileName& filename,
-                           const wxSTEditorPrefs& prefs,
-                           const wxSTEditorLangs& langs,
                            int flags = STE_LOAD_QUERY_UNICODE,
                            wxWindow* parent = NULL,
                            const wxString& encoding = wxEmptyString);
@@ -768,6 +766,9 @@ public :
 
     void SetFileBOM(bool);
     bool GetFileBOM() const;
+
+    void SetTextAndInitialize(const wxString&);
+    wxSTEditorRefData* Attach(wxSTEditorRefData*);
 
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages

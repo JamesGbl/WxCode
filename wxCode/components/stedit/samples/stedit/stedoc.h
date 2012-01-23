@@ -59,6 +59,7 @@ class wxSTEditorView : public wxView
 public:
     virtual void OnDraw(wxDC*)
     {
+        // nothing to do here, wxSTEditor draws itself
     }
     virtual ~wxSTEditorView()
     {

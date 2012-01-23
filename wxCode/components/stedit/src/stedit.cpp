@@ -95,13 +95,13 @@ wxSTEditorRefData::~wxSTEditorRefData()
     m_editors.Clear();
 }
 
-bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath, const wxSTEditorLangs& langs)
+bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath)
 {
     int lang = STE_LANG_NULL;
 
     // use current langs or default if none
-    if (langs.IsOk())
-        lang = langs.FindLanguageByFilename(filePath);
+    if (m_steLangs.IsOk())
+        lang = m_steLangs.FindLanguageByFilename(filePath);
     else
         lang = wxSTEditorLangs(true).FindLanguageByFilename(filePath);
 
@@ -114,8 +114,6 @@ bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath, const wxSTEditor
 bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
                                            wxInputStream& stream,
                                            const wxFileName& fileName,
-                                           const wxSTEditorPrefs& prefs,
-                                           const wxSTEditorLangs& langs,
                                            int flags,
                                            wxWindow* parent,
                                            const wxString& strEncoding)
@@ -129,7 +127,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
 
     if (ok)
     {
-        bool want_lang = prefs.IsOk() && prefs.GetPrefBool(STE_PREF_LOAD_INIT_LANG);
+        bool want_lang = m_stePrefs.IsOk() && m_stePrefs.GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         wxCharBuffer charBuf(stream_len);
         wxString str;
         wxBOM file_bom = wxBOM_None;
@@ -151,11 +149,11 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
 
             if (want_lang && !found_lang)
             {
-                found_lang = SetLanguage(fileName, langs);
+                found_lang = SetLanguage(fileName);
                 if (found_lang)
                 {
-                    html = (0 == langs.GetName(GetLanguageId()).CmpNoCase(wxT("html")));
-                    xml  = (0 == langs.GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
+                    html = (0 == m_steLangs.GetName(GetLanguageId()).CmpNoCase(wxT("html")));
+                    xml  = (0 == m_steLangs.GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
                 }
             }
             if ((want_lang && !found_lang) || ( (html || xml) && (encoding == wxTextEncoding::None)) )
@@ -175,7 +173,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
                         && (0 == strncmp(xml_header, firstline.data(), WXSIZEOF(xml_header)-1))
                        )
                     {
-                        found_lang = xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")), langs);
+                        found_lang = xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
                     }
                 }
                 if (encoding == wxTextEncoding::None)
@@ -2432,6 +2430,35 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
+wxSTEditorRefData* wxSTEditor::Attach(wxSTEditorRefData* ref)
+{
+    wxSTEditorRefData* old = GetSTERefData();
+
+    m_refData = ref;
+    ref->AddEditor(this);
+    return old;
+}
+
+void wxSTEditor::SetTextAndInitialize(const wxString& str)
+{
+    ClearAll();
+    SetText(str);
+    SetLanguage(GetSTERefData()->GetLanguageId());// -> Colourise();
+
+    UpdateCanDo(true);
+    EmptyUndoBuffer();
+    SetModified(false);
+    GotoPos(0);
+    ScrollToColumn(0); // extra help to ensure scrolled to 0
+                       // otherwise scrolled halfway thru 1st char
+    wxFileName filename = GetFileName();
+    if (filename.FileExists())
+    {
+        SetFileModificationTime(filename.GetModificationTime());
+    }
+    SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), filename.GetFullPath());
+}
+
 bool wxSTEditor::LoadFile( wxInputStream& stream,
                            const wxFileName& fileName,
                            int flags,
@@ -2440,25 +2467,10 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
 {
     wxString str;
     bool ok = GetSTERefData()->LoadFileToString(&str, stream, fileName,
-                                               GetEditorPrefs(), GetEditorLangs(),
                                                flags, parent, strEncoding);
     if (ok)
     {
-        ClearAll();
-        SetText(str);
-        SetLanguage(GetSTERefData()->GetLanguageId());// -> Colourise();
-
-        UpdateCanDo(true);
-        EmptyUndoBuffer();
-        SetModified(false);
-        GotoPos(0);
-        ScrollToColumn(0); // extra help to ensure scrolled to 0
-                           // otherwise scrolled halfway thru 1st char
-        if (fileName.FileExists())
-        {
-            SetFileModificationTime(fileName.GetModificationTime());
-        }
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+        SetTextAndInitialize(str);
     }
     return ok;
 }
