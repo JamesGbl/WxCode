@@ -75,6 +75,32 @@ static const wxString EOLModeStrings[] =
 };
 
 //-----------------------------------------------------------------------------
+// wxSTEditorRefDataImpl
+// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and
+// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance
+// can be created like this,
+// CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
+//-----------------------------------------------------------------------------
+
+class wxSTEditorRefDataImpl : public wxObject, public wxSTEditorRefData
+{
+    DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataImpl)
+public:
+    wxSTEditorRefDataImpl();
+    virtual ~wxSTEditorRefDataImpl();
+};
+
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataImpl, wxObject)
+
+wxSTEditorRefDataImpl::wxSTEditorRefDataImpl() : wxObject(), wxSTEditorRefData()
+{
+}
+
+wxSTEditorRefDataImpl::~wxSTEditorRefDataImpl()
+{
+}
+
+//-----------------------------------------------------------------------------
 // wxSTEditorRefData - data that the styled text editor shares with refed ones
 //-----------------------------------------------------------------------------
 
@@ -111,13 +137,15 @@ bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath)
     return false;
 }
 
-bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
+bool wxSTEditorRefData::LoadFileToString(  wxString* str,
                                            wxInputStream& stream,
                                            const wxFileName& fileName,
                                            int flags,
                                            wxWindow* parent,
                                            const wxString& strEncoding)
 {
+    wxCHECK_MSG(str, false, wxS("string pointer must be provided") );
+
     wxTextEncoding::Type encoding = wxTextEncoding::TypeFromString(strEncoding);
     bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
@@ -129,7 +157,6 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
     {
         bool want_lang = m_stePrefs.IsOk() && m_stePrefs.GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         wxCharBuffer charBuf(stream_len);
-        wxString str;
         wxBOM file_bom = wxBOM_None;
 
         if (  (encoding == wxTextEncoding::None)
@@ -158,7 +185,10 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
             }
             if ((want_lang && !found_lang) || ( (html || xml) && (encoding == wxTextEncoding::None)) )
             {
-                // sample just one line; feeble attempt to detect xml (in files w/o the .xml extension), and/or utf8 encoding in html files (w html extension)
+                // sample just the first line; feeble but functional attempt to detect xml (in files w/o the .xml extension), 
+                // and/or utf8 encoding in html files (w html extension)
+                // typical html: content="charset=utf-8"
+                // typical xml: encoding="utf-8"
                 const char* newline = strpbrk(charBuf.data(), "\n\r");
                 size_t len = newline ? (newline - charBuf.data()) : stream_len;
                 wxCharBuffer firstline(len);
@@ -192,7 +222,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
             {
                 case wxTextEncoding::None:
                     // load file and get BOM
-                    ok = wxTextEncoding::CharToStringDetectBOM(&str, charBuf, stream_len, &file_bom);
+                    ok = wxTextEncoding::CharToStringDetectBOM(str, charBuf, stream_len, &file_bom);
                 #if !(wxUSE_UNICODE || wxUSE_UNICODE_UTF8)
                     if (ok) switch (file_bom)
                     {
@@ -236,7 +266,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
                     file_bom = wxConvAuto_DetectBOM(charBuf.data(), stream_len);
 
                     // load file
-                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, encoding, file_bom);
+                    ok = wxTextEncoding::CharToString(str, charBuf, stream_len, encoding, file_bom);
 
                     break;
                 default:
@@ -246,7 +276,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
             if (ok)
             {
                 // sanity check
-                ok = !(stream_len && str.IsEmpty());
+                ok = !(stream_len && str->IsEmpty());
             }
             if (!ok)
             {
@@ -255,7 +285,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
                 // give it one more shot
                 if (wxTextEncoding::None != encoding)
                 {
-                    ok = wxTextEncoding::CharToString(&str, charBuf, stream_len, wxTextEncoding::None);
+                    ok = wxTextEncoding::CharToString(str, charBuf, stream_len, wxTextEncoding::None);
                 }
             }
         }
@@ -264,10 +294,6 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
             SetFileEncoding(wxTextEncoding::TypeToString(encoding));
             SetFileBOM(file_bom != wxBOM_None);
             SetFilename(fileName);
-            if (filedata)
-            {
-                *filedata = str;
-            }
         }
     }
     else if (!noerrdlg)
@@ -277,16 +303,6 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* filedata,
     }
 
     return ok;
-}
-
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataImpl, wxObject)
-
-wxSTEditorRefDataImpl::wxSTEditorRefDataImpl() : wxObject(), wxSTEditorRefData()
-{
-}
-
-wxSTEditorRefDataImpl::~wxSTEditorRefDataImpl()
-{
 }
 
 //-----------------------------------------------------------------------------
@@ -483,6 +499,15 @@ void wxSTEditor::RefEditor(wxSTEditor *origEditor)
     if (GetEditorStyles().IsOk()) GetEditorStyles().RegisterEditor(this);
     if (GetEditorPrefs().IsOk())  GetEditorPrefs().RegisterEditor(this);
     if (GetEditorLangs().IsOk())  GetEditorLangs().RegisterEditor(this);
+}
+
+wxSTEditorRefData* wxSTEditor::AttachRefData(wxSTEditorRefData* ref)
+{
+    wxSTEditorRefData* old = GetSTERefData();
+
+    m_refData = ref;
+    ref->AddEditor(this);
+    return old;
 }
 
 void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
@@ -1876,7 +1901,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2912")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2914")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2430,15 +2455,6 @@ bool wxSTEditor::CopyFilePathToClipboard()
     return SetClipboardText(GetFileName().GetFullPath());
 }
 
-wxSTEditorRefData* wxSTEditor::Attach(wxSTEditorRefData* ref)
-{
-    wxSTEditorRefData* old = GetSTERefData();
-
-    m_refData = ref;
-    ref->AddEditor(this);
-    return old;
-}
-
 void wxSTEditor::SetTextAndInitialize(const wxString& str)
 {
     ClearAll();
@@ -2451,12 +2467,6 @@ void wxSTEditor::SetTextAndInitialize(const wxString& str)
     GotoPos(0);
     ScrollToColumn(0); // extra help to ensure scrolled to 0
                        // otherwise scrolled halfway thru 1st char
-    wxFileName filename = GetFileName();
-    if (filename.FileExists())
-    {
-        SetFileModificationTime(filename.GetModificationTime());
-    }
-    SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), filename.GetFullPath());
 }
 
 bool wxSTEditor::LoadFile( wxInputStream& stream,
@@ -2466,11 +2476,13 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
                            const wxString& strEncoding)
 {
     wxString str;
-    bool ok = GetSTERefData()->LoadFileToString(&str, stream, fileName,
-                                               flags, parent, strEncoding);
+    bool ok = GetSTERefData()->LoadFileToString(&str, stream, fileName, flags, parent, strEncoding);
+
     if (ok)
     {
         SetTextAndInitialize(str);
+
+        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), fileName.GetFullPath());
     }
     return ok;
 }

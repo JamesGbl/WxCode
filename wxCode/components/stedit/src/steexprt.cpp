@@ -377,7 +377,7 @@ bool wxSTEditorExporter::SaveToRTF(const wxFileName& saveName, int start, int en
         end = lengthDoc;
 
     //RemoveFindMarks();
-    m_editor->Colourise(); // wEditor.Call(SCI_COLOURISE, 0, -1);
+    m_editor->Colourise(0, -1); // wEditor.Call(SCI_COLOURISE, 0, -1);
 
     // Read the default settings
     //char key[200];
@@ -569,7 +569,7 @@ bool wxSTEditorExporter::SaveToHTMLCSS(const wxFileName& saveName)
     wxBusyCursor busy;
 
     //RemoveFindMarks();
-    m_editor->Colourise();             //SendEditor(SCI_COLOURISE, 0, -1);
+    m_editor->Colourise(0, -1);             //SendEditor(SCI_COLOURISE, 0, -1);
     int tabSize = m_editor->GetTabWidth();  //props.GetInt("tabsize");
     if (tabSize == 0)
         tabSize = 4;
@@ -1277,7 +1277,7 @@ bool wxSTEditorExporter::SaveToPDF(const wxFileName& saveName)
     PDFRender pr;
 
     //RemoveFindMarks();
-    m_editor->Colourise(); //SendEditor(SCI_COLOURISE, 0, -1);
+    m_editor->Colourise(0, -1); //SendEditor(SCI_COLOURISE, 0, -1);
     // read exporter flags
     int tabSize = m_editor->GetTabWidth(); //props.GetInt("tabsize", PDF_TAB_DEFAULT);
     if (tabSize < 0) {
@@ -1485,7 +1485,7 @@ bool wxSTEditorExporter::SaveToTEX(const wxFileName& saveName)
     wxBusyCursor busy;
 
     //RemoveFindMarks();
-    m_editor->Colourise();             //SendEditor(SCI_COLOURISE, 0, -1);
+    m_editor->Colourise(0, -1);             //SendEditor(SCI_COLOURISE, 0, -1);
     int tabSize = m_editor->GetTabWidth();  //props.GetInt("tabsize");
     if (tabSize == 0)
         tabSize = 4;
@@ -1645,7 +1645,7 @@ bool wxSTEditorExporter::SaveToXML(const wxFileName& saveName)
     // but will eventually use utf-8 (once i know how to get them out).
 
     //RemoveFindMarks();
-    m_editor->Colourise();             //SendEditor(SCI_COLOURISE, 0, -1) ;
+    m_editor->Colourise(0, -1);             //SendEditor(SCI_COLOURISE, 0, -1) ;
 
     int tabSize = m_editor->GetTabWidth();  //props.GetInt("tabsize") ;
     if (tabSize == 0) {
@@ -1852,7 +1852,7 @@ wxString wxSTEditorExporter::RenderAsHTML(int from, int to) const
     bool wysiwyg = false; // FIXME
     wxFileName fileName = m_editor->GetFileName();
 
-    m_editor->Colourise();
+    m_editor->Colourise(0, -1);
 
     StyleDefinition sd[STYLE_MAX + 1]; // index is scintilla styles
 
@@ -1974,8 +1974,9 @@ bool wxSTEditorExportDialog::Create(wxWindow* parent,
 
     wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
     bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
-
-    GetSizer()->SetSizeHints(this);
+    Fit();
+    SetMinSize(GetSize());
+    Centre();
 
     return true;
 }

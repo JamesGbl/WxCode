@@ -1359,7 +1359,9 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
     m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_STYLES,    wxART_TOOLBAR, wxSTEIconSize));
     m_imageList->Add(wxArtProvider::GetBitmap(wxART_STEDIT_PREFDLG_LANGS,     wxART_TOOLBAR, wxSTEIconSize));
 
-    m_noteBook = new wxListbook(this, ID_STEDLG_PREF_NOTEBOOK,
+    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                 wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_BORDER);
+    m_noteBook = new wxListbook(panel, ID_STEDLG_PREF_NOTEBOOK,
                                 wxDefaultPosition, wxDefaultSize,
                                 0); //wxNB_MULTILINE);
     m_noteBook->SetImageList(m_imageList);
@@ -1435,10 +1437,10 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 
     wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(m_noteBook, 0, wxEXPAND | wxALL, 5);
-    SetSizer(sizer);
+    panel->SetSizer(sizer);
 
-    wxStdDialogButtonSizer* buttonpane = wxSTEditorStdDialogButtonSizer(this, wxOK | wxCANCEL | wxAPPLY);
-    wxButton *resetButton = new wxButton(this, wxID_RESET, _("Default"));
+    wxStdDialogButtonSizer* buttonpane = wxSTEditorStdDialogButtonSizer(panel, wxOK | wxCANCEL | wxAPPLY);
+    wxButton *resetButton = new wxButton(panel, wxID_RESET, _("Default"));
 #if wxUSE_TOOLTIPS
     resetButton->SetToolTip(_("Reset this page's values to their default"));
 #endif //wxUSE_TOOLTIPS

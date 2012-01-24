@@ -168,13 +168,13 @@ wxSTEditor* EditorDoc::GetTextCtrl() const
 // EditorView implementation
 // ----------------------------------------------------------------------------
 
-EditorView::EditorView() : wxSTEditorView(), m_text(NULL)
+EditorView::EditorView() : wxSTEditorView()
 {
 }
 
 EditorView::~EditorView()
 {
-    m_text->Attach(new wxSTEditorRefData());
+    m_text->AttachRefData(new wxSTEditorRefData());
 }
 
 BEGIN_EVENT_TABLE(EditorView, wxSTEditorView)
@@ -197,7 +197,7 @@ bool EditorView::OnCreate(wxDocument* doc, long flags)
         if (ok)
         {
             m_text = text;
-            delete m_text->Attach(GetDocument());
+            delete m_text->AttachRefData(GetDocument());
             frame->SetIcon(wxICON(text));
             frame->Show();
         }
@@ -227,9 +227,4 @@ bool EditorView::OnClose(bool deleteWindow)
         SetFrame(NULL);
     }
     return true;
-}
-
-wxPrintout* EditorView::OnCreatePrintout()
-{
-    return new wxSTEditorPrintout(m_text);
 }

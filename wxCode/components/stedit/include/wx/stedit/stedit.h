@@ -131,6 +131,7 @@ public:
     {
         wxUnusedVar(notifyViews);
         m_fileName = fileName;
+        m_modifiedTime = fileName.FileExists() ? fileName.GetModificationTime() :wxInvalidDateTime;
     }
 
     bool SetLanguage(int lang)
@@ -174,7 +175,7 @@ public:
                            const wxString& encoding = wxEmptyString);
 #endif
 
-protected:
+private:
     wxArrayPtrVoid m_editors;       // editors that share this data
     wxFileName   m_fileName;        // current filename for the editor
     int m_steLang_id;               // index into the wxSTEditorLangs used
@@ -198,24 +199,6 @@ public:
     wxSTEditorLangs  m_steLangs;
 
     static const wxClassInfo* ms_refdata_classinfo;
-};
-
-//-----------------------------------------------------------------------------
-// wxSTEditorRefDataImpl
-// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and
-// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance
-// can be created like this,
-// CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
-//
-// Maybe "wxSTEditorRefDataObject" is a better name?
-//-----------------------------------------------------------------------------
-
-class WXDLLIMPEXP_STEDIT wxSTEditorRefDataImpl : public wxObject, public wxSTEditorRefData
-{
-    DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataImpl)
-public:
-    wxSTEditorRefDataImpl();
-    virtual ~wxSTEditorRefDataImpl();
 };
 
 //-----------------------------------------------------------------------------
@@ -599,6 +582,9 @@ public :
     // couldn't be read for some reason.
     bool Revert();
 
+    // Replace the entire text, and do wxSTC setup.
+    void SetTextAndInitialize(const wxString&);
+
     // Show a dialog to allow users to export the document
     //   See wxSTEditorExporter
     bool ShowExportDialog();
@@ -767,9 +753,6 @@ public :
     void SetFileBOM(bool);
     bool GetFileBOM() const;
 
-    void SetTextAndInitialize(const wxString&);
-    wxSTEditorRefData* Attach(wxSTEditorRefData*);
-
     // ------------------------------------------------------------------------
     // Editor preferences, styles, languages
     //
@@ -925,6 +908,9 @@ public :
     //  to have this mirror the original wxSTEditor, origEditor isn't modified
     //  See usage in wxSTEditorSplitter
     virtual void RefEditor(wxSTEditor *origEditor);
+
+    // Replace the current ref with a new one, prepared by the caller, from within a wxDocument class for instance
+    wxSTEditorRefData* AttachRefData(wxSTEditorRefData*);
 
 protected:
     bool m_sendEvents; // block sending events if false

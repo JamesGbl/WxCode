@@ -57,10 +57,23 @@ class wxSTEditorView : public wxView
 {
     DECLARE_DYNAMIC_CLASS(wxSTEditorView)
 public:
+    wxSTEditorView() : wxView(), m_text(NULL) {}
+
+    wxSTEditorDoc* GetDocument()
+    {
+        return wxStaticCast(wxView::GetDocument(), wxSTEditorDoc);
+    }
+
     virtual void OnDraw(wxDC*)
     {
         // nothing to do here, wxSTEditor draws itself
     }
+    virtual wxPrintout* OnCreatePrintout();
+    virtual wxWindow* GetWindow() const { return m_text; }
+
+    wxSTEditor* GetEditor() const { return wxStaticCast(GetWindow(), wxSTEditor); }
+protected:
+    wxSTEditor* m_text;
 };
 
 class wxSTEditorDocTemplate : public wxDocTemplate

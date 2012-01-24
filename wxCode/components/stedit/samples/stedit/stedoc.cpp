@@ -39,6 +39,11 @@ wxSTEditorDoc::~wxSTEditorDoc()
     }
 }
 
+wxPrintout* wxSTEditorView::OnCreatePrintout()
+{
+    return new wxSTEditorPrintout(m_text);
+}
+
 /*static*/ wxDocTemplate* wxSTEditorDocTemplate::ms_instance = NULL;
 
 wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager) : 

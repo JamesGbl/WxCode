@@ -27,16 +27,31 @@ public:
     virtual ~EditorDoc();
     virtual bool OnCreate(const wxString& path, long flags);
     virtual bool OnNewDocument();
+
+#if (wxVERSION_NUMBER >= 2900)
     virtual wxString GetUserReadableName() const
     {
+        // full path in mdi child caption
         return GetFilename().IsOk() ? GetFilename().GetFullPath() : wxSTEditorDoc::GetUserReadableName();
     }
-
+#else
+    virtual bool GetPrintableName(wxString& buf) const
+    {
+        if (GetFilename().IsOk())
+        {
+            // full path in mdi child caption
+            buf = GetFilename().GetFullPath();
+            return true;
+        }
+        else
+        {
+            return wxSTEditorDoc::GetPrintableName(buf);
+        }
+    }
+#endif
 protected:
     virtual bool DoSaveDocument(const wxString& filename);
     virtual bool DoOpenDocument(const wxString& filename);
-
-    //void OnTextChange(wxCommandEvent& event);
 
     DECLARE_DYNAMIC_CLASS(EditorDoc)
 };
@@ -54,22 +69,15 @@ public:
     virtual bool OnCreate(wxDocument*, long flags);
     virtual bool OnClose(bool deleteWindow = true);
     virtual void OnChangeFilename();
-    virtual wxPrintout* OnCreatePrintout();
 
     EditorDoc* GetDocument()
     {
         return wxStaticCast(wxSTEditorView::GetDocument(), EditorDoc);
     }
-    virtual wxWindow* GetWindow() const { return m_text; }
-    
-    wxSTEditor* GetEditor() const { return wxStaticCast(GetWindow(), wxSTEditor); }
-
 private:
     void OnCopy(wxCommandEvent& WXUNUSED(event)) { m_text->Copy(); }
     void OnPaste(wxCommandEvent& WXUNUSED(event)) { m_text->Paste(); }
     void OnSelectAll(wxCommandEvent& WXUNUSED(event)) { m_text->SelectAll(); }
-
-    wxSTEditor* m_text;
 
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(EditorView)
