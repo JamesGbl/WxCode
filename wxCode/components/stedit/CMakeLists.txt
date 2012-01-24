@@ -31,6 +31,8 @@ if (NOT wxWidgets_COMPONENTS)
 endif()
 
 FIND_WXWIDGETS(wxWidgets_COMPONENTS) # Ok to call multiple times
+# wxWidgets include (this will do all the magic to configure everything)
+include( "${wxWidgets_USE_FILE}" )
 
 # ===========================================================================
 # Add subdirectories containing CMakeLists.txt files or specify projects
@@ -43,6 +45,12 @@ set( wxStEdit_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxStE
 # ---------------------------------------------------------------------------
 
 if (NOT TARGET wxStEditLib)
+
+set( wxStEdit_VERSION         "1.4.0" )
+set( wxStEdit_MAJOR_VERSION   "1" )
+set( wxStEdit_MINOR_VERSION   "4" )
+set( wxStEdit_RELEASE_VERSION "0" )
+
 
 ADD_CPPCHECK_TEST(wxStEdit_CppCheck)
 
@@ -112,7 +120,11 @@ ADD_LIBRARY_FULL(wxStEditLib
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_STEDIT"
     PROPERTIES FOLDER "wxStEdit")
 
+WXLIKE_LIBRARY_NAMES( wxStEditLib wxstedit "${wxStEdit_VERSION}")
+
 # ---------------------------------------------------------------------------
+
+export(TARGETS wxStEditLib FILE "${CMAKE_BINARY_DIR}/wxStEditLib-exports.cmake")
 
 install(FILES
         ${wxStEdit_ROOT_DIR}/docs/ChangeLog.txt

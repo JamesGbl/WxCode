@@ -31,6 +31,8 @@ if (NOT wxWidgets_COMPONENTS)
 endif()
 
 FIND_WXWIDGETS(wxWidgets_COMPONENTS) # Ok to call multiple times
+# wxWidgets include (this will do all the magic to configure everything)
+include( "${wxWidgets_USE_FILE}" )
 
 # ===========================================================================
 # Add subdirectories containing CMakeLists.txt files or specify projects
