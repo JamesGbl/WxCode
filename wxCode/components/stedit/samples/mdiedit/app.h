@@ -53,6 +53,8 @@ public:
 
     bool Create(wxDocManager* docManager, const wxString& title);
 
+    virtual bool ProcessEvent(wxEvent&);
+
 protected:
     void OnCloseWindow(wxCloseEvent&);
     void OnFullscreen(wxCommandEvent&);

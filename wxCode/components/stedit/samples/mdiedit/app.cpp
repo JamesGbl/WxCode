@@ -185,7 +185,7 @@ bool App::OnCmdLineParsed(wxCmdLineParser& parser)
 }
 
 BEGIN_EVENT_TABLE(MainFrame, wxDocMDIParentFrame)
-    EVT_MENU(wxID_PROPERTIES, MainFrame::OnProperties)
+    EVT_MENU(ID_STE_PROPERTIES, MainFrame::OnProperties)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
     EVT_MENU(ID_STE_SHOW_FULLSCREEN, MainFrame::OnFullscreen)
     EVT_UPDATE_UI(ID_STE_SHOW_FULLSCREEN, MainFrame::OnUpdateFullscreen)
@@ -288,6 +288,17 @@ void MainFrame::OnProperties(wxCommandEvent&)
 
    ::wxDocument_Info(doc, &as);
    ::wxMessageBox(::wxJoin(as, wxT('\n')), wxMessageBoxCaption, wxOK | wxCENTRE, this);
+}
+
+bool MainFrame::ProcessEvent(wxEvent& event)
+{
+    bool processed = false;//wxMDIParentFrame::ProcessEvent(event); // skip m_docManager->ProcessEvent
+
+    if (!processed)
+    {
+        processed = wxDocMDIParentFrame::ProcessEvent(event); // try m_docManager->ProcessEvent
+    }
+    return processed;
 }
 
 void MainFrame::OnCloseWindow(wxCloseEvent& event)

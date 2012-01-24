@@ -314,7 +314,6 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
 
    switch (id)
    {
-      STOCKITEM(wxID_OPEN,       _("&Open..."))    // + ellipsis
       STOCKITEM(wxID_SAVEAS,     _("Save &As...")) // + ellipsis
       STOCKITEM(wxID_SELECTALL,  _("Select &All")) // + ampersand
       STOCKITEM(wxID_FIND,       _("&Find..."))    // + ellipsis
@@ -322,6 +321,11 @@ wxString wxGetStockLabelEx(wxWindowID id, long flags)
       STOCKITEM(wxID_REVERT,     _("Re&vert..."))
       STOCKITEM(wxID_PREVIEW,    _("Print Previe&w")) // + ampersand
       STOCKITEM(wxID_PROPERTIES, _("Proper&ties...")) // + ellipsis
+#if (wxVERSION_NUMBER >= 2900)
+#else
+      STOCKITEM(wxID_OPEN,       _("&Open..."))  // + ellipsis
+      STOCKITEM(wxID_PRINT,      _("&Print...")) // + ellipsis
+#endif
       default:
          break;
    }

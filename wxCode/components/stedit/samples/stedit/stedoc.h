@@ -43,11 +43,7 @@ public:
         wxSTEditorRefData::SetFilename(fileName, notifyViews);
         wxDocument::SetFilename(fileName.GetFullPath(), notifyViews);
     }
-    virtual void Modify(bool mod)
-    {
-        wxSTEditorRefData::Modify(mod);
-        wxDocument::Modify(mod);
-    }
+    virtual void Modify(bool);
 private:
     void Init();
     bool m_living_in_wxSTEditorFrame;
@@ -71,7 +67,26 @@ public:
     virtual wxPrintout* OnCreatePrintout();
     virtual wxWindow* GetWindow() const { return m_text; }
 
-    wxSTEditor* GetEditor() const { return wxStaticCast(GetWindow(), wxSTEditor); }
+#if (wxVERSION_NUMBER < 2900)
+    virtual void OnChangeFilename()
+    {
+       //base::OnChangeFilename(); // skip
+       wxWindow *win = GetFrame();
+       if (!win) return;
+
+       wxDocument *doc = GetDocument();
+       if (!doc) return;
+
+       wxString label = doc->GetUserReadableName();
+       if (doc->IsModified())
+       {
+          label += wxT('*');
+       }
+       win->SetLabel(label);
+    }
+#endif
+
+    wxSTEditor* GetEditor() const { return m_text; }
 protected:
     wxSTEditor* m_text;
 };

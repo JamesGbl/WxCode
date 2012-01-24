@@ -233,7 +233,7 @@ wxFrame* ExampleDocTemplate1::CreateViewFrame(wxView* view)
         menu->Append(wxID_OPEN);
         menu->Append(wxID_CLOSE, wxGetStockLabel(wxID_CLOSE) + wxT("\t") + _("Ctrl+W"));
         menu->AppendSeparator();
-        menu->Append(wxID_PROPERTIES, wxGetStockLabelEx(wxID_PROPERTIES) + wxT("\t") + _("Alt+Enter"));
+        menu->Append(ID_STE_PROPERTIES, wxGetStockLabelEx(wxID_PROPERTIES) + wxT("\t") + _("Alt+Enter"));
         menu->AppendSeparator();
         menu->Append(wxID_PRINT);
         menu->Append(wxID_PRINT_SETUP, _("Print Set&up..."));

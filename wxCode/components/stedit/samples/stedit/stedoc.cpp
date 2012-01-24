@@ -39,6 +39,23 @@ wxSTEditorDoc::~wxSTEditorDoc()
     }
 }
 
+void wxSTEditorDoc::Modify(bool mod)
+{
+#if (wxVERSION_NUMBER < 2900)
+    bool asterisk = mod != m_documentModified;
+#endif
+    wxSTEditorRefData::Modify(mod);
+    wxDocument::Modify(mod);
+#if (wxVERSION_NUMBER < 2900)
+    if (asterisk)
+    {
+        // Allow views to append asterix to the title
+        wxView* view = GetFirstView();
+        if (view) view->OnChangeFilename();
+    }
+#endif
+}
+
 wxPrintout* wxSTEditorView::OnCreatePrintout()
 {
     return new wxSTEditorPrintout(m_text);

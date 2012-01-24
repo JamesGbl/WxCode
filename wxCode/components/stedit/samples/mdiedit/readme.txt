@@ -6,5 +6,4 @@ Notes:
 - MDI comes up tabbed on platforms other that MSW
 
 TODO:
-- Wire in wxSTEditor (instead of wxTextCtrl)
 - CMake setup
