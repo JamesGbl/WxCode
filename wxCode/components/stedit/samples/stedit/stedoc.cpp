@@ -1,4 +1,12 @@
-// stedoc.cpp
+///////////////////////////////////////////////////////////////////////////////
+// Name:        stedoc.cpp
+// Purpose:     MDI wxSTEditor app
+// Author:      Troels K
+// Modified by:
+// Created:     2012-01-19
+// Copyright:   (c) Troels K
+// Licence:     wxWidgets licence
+///////////////////////////////////////////////////////////////////////////////
 
 #include <wx/wxprec.h>
 #include <wx/docview.h>
@@ -61,7 +69,7 @@ wxPrintout* wxSTEditorView::OnCreatePrintout()
     return new wxSTEditorPrintout(m_text);
 }
 
-/*static*/ wxDocTemplate* wxSTEditorDocTemplate::ms_instance = NULL;
+/*static*/ wxSTEditorDocTemplate* wxSTEditorDocTemplate::ms_instance = NULL;
 
 wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager) : 
     wxDocTemplate(docManager, _("Text"), wxT("*.txt;*.text;*.h;*.c;*.cpp"),
@@ -71,7 +79,7 @@ wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager) :
     ms_instance = this;
 }
 
-/*static*/ wxDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)
+/*static*/ wxSTEditorDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)
 {
    return new wxSTEditorDocTemplate(docManager);
 }

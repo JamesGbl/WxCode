@@ -11,6 +11,8 @@
 // Define a new application
 class App : public wxApp
 {
+protected:
+    wxLocale m_locale;
 public:
     App();
 
@@ -26,6 +28,7 @@ public:
     {
         public:
             FileNameArray m_fileNames;
+            enum wxLanguage m_lang;
     } m_cmdLine;
 
 #if (wxVERSION_NUMBER < 2900)

@@ -7,3 +7,4 @@ Notes:
 
 TODO:
 - CMake setup
+- splitter

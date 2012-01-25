@@ -20,7 +20,7 @@ IMPLEMENT_DYNAMIC_CLASS(EditorView, wxView)
 IMPLEMENT_DYNAMIC_CLASS(EditorChildFrame,wxDocMDIChildFrame)
 IMPLEMENT_CLASS(EditorDocTemplate, wxDocTemplate)
 
-/*static*/ wxDocTemplate* EditorDocTemplate::ms_instance = NULL;
+/*static*/ EditorDocTemplate* EditorDocTemplate::ms_instance = NULL;
 
 EditorDocTemplate::EditorDocTemplate(wxDocManager* docManager, wxClassInfo* frameClassInfo) :
     wxDocTemplate(docManager, _("Text"), wxT("*.txt;*.text;*.h;*.c;*.cpp"),
@@ -34,7 +34,7 @@ EditorDocTemplate::EditorDocTemplate(wxDocManager* docManager, wxClassInfo* fram
     m_steOptions.GetMenuManager()->SetMenuItems(STE_MENU_HELP_MENU, 0);
 }
 
-/*static*/ wxDocTemplate* EditorDocTemplate::Create(wxDocManager* docManager)
+/*static*/ EditorDocTemplate* EditorDocTemplate::Create(wxDocManager* docManager)
 {
    return new EditorDocTemplate(docManager, CLASSINFO(EditorChildFrame));
 }
@@ -88,7 +88,7 @@ bool EditorChildFrame::Create(wxView* view, wxMDIParentFrame* frame)
 
         wxMenu* menu = new wxMenu();
         menu->Append(wxID_NEW);
-        menu->Append(wxID_OPEN);
+        menu->Append(wxID_OPEN, wxGetStockLabelEx(wxID_OPEN));
         menu->Append(wxID_CLOSE, wxGetStockLabel(wxID_CLOSE) + wxT("\t") + _("Ctrl+W"));
         menu->Append(wxID_SAVE);
         menu->Append(wxID_SAVEAS, wxGetStockLabelEx(wxID_SAVEAS) + wxT("\t") + _("Ctrl+Shift+S"));

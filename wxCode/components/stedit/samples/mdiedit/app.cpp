@@ -14,9 +14,6 @@
 #include "../../src/wxext.h" // FileNameArray
 #include "app.h"
 #include "wx/stedit/stedit.h"
-#ifdef _WX_PERSIST_H_
-#include "persist-mdi.h"
-#endif
 #include "wxtrunk.h"
 
 #define APP_NAME_SHORT   wxT("mdiedit")
@@ -33,6 +30,7 @@ END_EVENT_TABLE()
 
 App::App() : wxApp()
 {
+    m_cmdLine.m_lang = wxLANGUAGE_DEFAULT;
 }
 
 bool App::OnInit()
@@ -41,6 +39,7 @@ bool App::OnInit()
 
     if (ok)
     {
+        wxLocaleHelper::Init(&m_locale, STE_APPNAME, m_cmdLine.m_lang);
         ::wxInitAllImageHandlers();
 
         // Fill in the application information fields before creating wxConfig.
@@ -140,7 +139,7 @@ void App::OpenDocuments(wxDocManager* docManager)
         else
         {
             docManager->OnOpenFileFailure();
-            wxMessageBox(wxString::Format(_("Failed to open %s"), filename.GetFullPath().wx_str()));
+            //wxMessageBox(wxString::Format(_("Failed to open %s"), filename.GetFullPath().wx_str()));
         }
     }
     if (first_doc == NULL)
@@ -160,6 +159,7 @@ int App::OnExit()
 
     docManager->FileHistorySave(*wxConfig::Get());
     delete docManager;
+    wxTheClipboard->Flush();
     return wxApp::OnExit();
 }
 

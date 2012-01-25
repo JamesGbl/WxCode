@@ -1,4 +1,12 @@
-// stedoc.h
+////////////////////////////////////////////////////////////////////////////////
+// Name:        stedoc.h
+// Purpose:     MDI wxSTEditor app
+// Author:      Troels K
+// Modified by:
+// Created:     2012-01-19
+// Copyright:   (c) Troels K
+// Licence:     wxWidgets licence
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef _STEDOC_H_
 #define _STEDOC_H_
@@ -94,10 +102,10 @@ protected:
 class wxSTEditorDocTemplate : public wxDocTemplate
 {
    wxSTEditorDocTemplate(wxDocManager*);
-   static wxDocTemplate* ms_instance;
+   static wxSTEditorDocTemplate* ms_instance;
 public:
-   static wxDocTemplate* Create(wxDocManager*);
-   static wxDocTemplate* GetInstance() { return ms_instance; }
+   static wxSTEditorDocTemplate* Create(wxDocManager*);
+   static wxSTEditorDocTemplate* GetInstance() { return ms_instance; }
 };
 
 #endif  // _STEDOC_H_

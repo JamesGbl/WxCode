@@ -15,7 +15,7 @@
 class EditorDocTemplate : public wxDocTemplate
 {
     DECLARE_CLASS(EditorDocTemplate)
-    static wxDocTemplate* ms_instance;
+    static EditorDocTemplate* ms_instance;
 protected:
     wxClassInfo* m_frameClassInfo;
 
@@ -23,8 +23,8 @@ protected:
 
     virtual wxFrame* CreateViewFrame(wxView*);
 public:
-    static wxDocTemplate* Create(wxDocManager*);
-    static wxDocTemplate* GetInstance() { return ms_instance; }
+    static EditorDocTemplate* Create(wxDocManager*);
+    static EditorDocTemplate* GetInstance() { return ms_instance; }
 
     wxSTEditorOptions m_steOptions;
 
