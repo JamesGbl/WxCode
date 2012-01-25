@@ -45,6 +45,8 @@ extern wxPrintData *g_printData;
 #define sfALL_SHAPES false
 #define sfPROMPT true
 #define sfNO_PROMPT false
+#define sfWITH_BACKGROUND true
+#define sfWITHOUT_BACKGROUND false
 
 // default values
 /*! \brief Default value of wxSFCanvasSettings::m_nBackgroundColor data member */
@@ -337,9 +339,19 @@ public:
 	void SaveCanvas(const wxString& file);
     /*!
      * \brief Export canvas content to BMP file.
+	 * DEPRECATED: use SaveCanvasToImage() instead.
      * \param file Full file name
      */
 	void SaveCanvasToBMP(const wxString& file);
+	/*!
+	 * \brief Export canvas content to image file.
+	 * \param file Full file name
+	 * \param type Image type. See wxBitmapType for more details. Default type is
+	 * wxBITMAP_TYPE_BMP.
+	 * \param background Export also diagram background
+	 * \param scale Image scale. If -1 then current canvas scale id used.
+	 */
+	void SaveCanvasToImage(const wxString& file, wxBitmapType type = wxBITMAP_TYPE_BMP, bool background = true, double scale = -1);
 
     /*!
      * \brief Start interactive connection creation.
@@ -398,6 +410,11 @@ public:
 	 * \param rct Rectangle to be invalidated
 	 */
 	void InvalidateRect(const wxRect& rct);
+	
+	/*!
+	 * \brief Mark whole visible canvas portion as an invalidated rectangle.
+	 */
+	void InvalidateVisibleRect();
 	/*!
 	 * \brief Refresh all canvas rectangles marked as invalidated.
 	 * \sa wxSFShapeCanvas::InvalidateRect()
@@ -477,10 +494,10 @@ public:
 	void PrintPreview(wxSFPrintout *preview, wxSFPrintout *printout = NULL);
 	/*! \brief Show page setup dialog for printing. */
 	void PageSetup();
-	#ifdef __WXMAC__
-	/*! \brief Show page margins setup dialog (available only for MAC). */
-	void PageMargins();
-	#endif
+	// #ifdef __WXMAC__
+	// /*! \brief Show page margins setup dialog (available only for MAC). */
+	// void PageMargins();
+	// #endif 
 
     /*!
      * \brief Convert device position to logical position.
@@ -1057,6 +1074,8 @@ private:
 	void ClearTemporaries();
 	/*! \brief Assign give shape to parent at given location (if exists) */
 	void ReparentShape(wxSFShapeBase *shape, const wxPoint& parentpos);
+	/*! \brief Propagate selection recursively to all parents if sfsPROPAGATE_SELECTION flag is set */
+	void PropagateSelection(wxSFShapeBase *shape, bool selection);
 
 	// private event handlers
 	/*!
