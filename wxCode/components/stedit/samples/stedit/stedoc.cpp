@@ -77,6 +77,7 @@ wxSTEditorDocTemplate::wxSTEditorDocTemplate(wxDocManager* docManager) :
           CLASSINFO(wxSTEditorDoc), CLASSINFO(wxSTEditorView))
 {
     ms_instance = this;
+    STE_GlobalRefDataClassInfo = m_docClassInfo;
 }
 
 /*static*/ wxSTEditorDocTemplate* wxSTEditorDocTemplate::Create(wxDocManager* docManager)

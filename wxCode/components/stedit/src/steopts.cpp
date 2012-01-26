@@ -53,7 +53,8 @@ public:
                                     m_notebookPopupMenu(NULL),
                                     m_editorPopupMenu_static(false),
                                     m_splitterPopupMenu_static(false),
-                                    m_notebookPopupMenu_static(false)
+                                    m_notebookPopupMenu_static(false),
+                                    m_displayPathSeparator(wxPATH_NATIVE)
     {
         m_optionNames.Alloc(STE_OPTION__MAX);
         m_optionNames.Add(wxT("STE_OPTION_EDITOR"));
@@ -117,6 +118,8 @@ public:
     bool m_editorPopupMenu_static;
     bool m_splitterPopupMenu_static;
     bool m_notebookPopupMenu_static;
+
+    wxPathFormat m_displayPathSeparator;
 };
 
 #define STEO_REFDATA ((wxSTEditorOptions_RefData*)m_refData)
@@ -254,6 +257,8 @@ wxStatusBar* wxSTEditorOptions::GetStatusBar() const    { return STEO_REFDATA->m
 wxMenu* wxSTEditorOptions::GetEditorPopupMenu() const   { return STEO_REFDATA->m_editorPopupMenu; }
 wxMenu* wxSTEditorOptions::GetSplitterPopupMenu() const { return STEO_REFDATA->m_splitterPopupMenu; }
 wxMenu* wxSTEditorOptions::GetNotebookPopupMenu() const { return STEO_REFDATA->m_notebookPopupMenu; }
+wxPathFormat wxSTEditorOptions::GetDisplayPathSeparator() const  { return STEO_REFDATA->m_displayPathSeparator; } // maybe use GetOptionInt() instead
+void wxSTEditorOptions::SetDisplayPathSeparator(wxPathFormat display_fmt) { STEO_REFDATA->m_displayPathSeparator = display_fmt; } // maybe use SetOptionInt() instead
 
 void wxSTEditorOptions::SetMenuBar(wxMenuBar* menuBar)
 {
@@ -304,8 +309,6 @@ void wxSTEditorOptions::SetNotebookPopupMenu(wxMenu* menu, bool is_static)
 {
    wxRegisterId(ID_STE__LAST); // TODO: how to do this right?
 }
-
-/*static*/ wxPathFormat wxSTEditorOptions::m_path_display_format = wxPATH_NATIVE;
 
 void wxSTEditorOptions::SetClientObject( wxClientData *data )
 {
@@ -413,3 +416,18 @@ void wxSTEditorOptions::SaveFileConfig(wxConfigBase &config)
     fileHistory->Save(config);
     config.SetPath(oldpath);
 }
+
+//-----------------------------------------------------------------------------
+// wxSTEditorRefDataObject
+// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and
+// the wxWidgets RTTI system, so that an wxSTEditorRefData instance
+// can be created like this,
+// CLASSINFO(wxSTEditorRefDataObject)->CreateObject()
+//-----------------------------------------------------------------------------
+
+class wxSTEditorRefDataObject : public wxObject, public wxSTEditorRefData
+{
+    DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataObject)
+};
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataObject, wxObject)
+const wxClassInfo* STE_GlobalRefDataClassInfo = CLASSINFO(wxSTEditorRefDataObject);

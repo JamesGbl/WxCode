@@ -195,9 +195,9 @@ bool wxStEditApp::OnInit()
         return false;
 
 #ifdef _WX_DOCH__
-    new wxDocManager();
-    wxSTEditorDocTemplate::Create(wxDocManager::GetDocumentManager());
-    wxSTEditorRefData::ms_refdata_classinfo = CLASSINFO(wxSTEditorDoc);
+    wxDocManager* docManager = new wxDocManager();
+    wxSTEditorDocTemplate::Create(docManager);
+    // now wxWidgets tracks all the files opened (wxDocManager::GetDocuments())
 #endif
 
     SetAppName(STE_APPNAME);

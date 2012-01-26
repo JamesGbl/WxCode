@@ -235,13 +235,14 @@ EditorDoc::~EditorDoc()
 
 bool EditorDoc::OnCreate(const wxString& path, long flags)
 {
-    if ( !wxSTEditorDoc::OnCreate(path, flags) )
-        return false;
-
     m_options = wxStaticCast(GetDocumentTemplate(), EditorDocTemplate)->m_steOptions;
     m_stePrefs = m_options.GetEditorPrefs();
     m_steStyles = m_options.GetEditorStyles();
     m_steLangs = m_options.GetEditorLangs();
+
+    if ( !wxSTEditorDoc::OnCreate(path, flags) )
+        return false;
+
     return true;
 }
 
@@ -284,11 +285,6 @@ wxSTEditor* EditorDoc::GetTextCtrl() const
     wxView* view = GetFirstView();
 
     return view ? wxStaticCast(view, EditorView)->GetEditor() : NULL;
-}
-
-wxSTEditorOptions& EditorDoc::GetOptions() const
-{
-    return GetDocumentTemplate()->m_steOptions;
 }
 
 // ----------------------------------------------------------------------------
@@ -369,6 +365,9 @@ bool EditorView::OnClose(bool deleteWindow)
         return false;
 
     Activate(false);
+
+    GetDocument()->GetOptions().SetMenuBar(NULL);
+    GetDocument()->GetOptions().SetToolBar(NULL);
 
     if ( deleteWindow )
     {

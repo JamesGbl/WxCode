@@ -44,7 +44,7 @@ public:
     EditorDoc();
 
     wxSTEditor* GetTextCtrl() const;
-    wxSTEditorOptions& GetOptions() const;
+    wxSTEditorOptions& GetOptions() { return m_options; }
     
     EditorDocTemplate* GetDocumentTemplate() const
     {

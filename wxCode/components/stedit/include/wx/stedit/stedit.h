@@ -93,15 +93,12 @@ enum STE_TranslatePosType
 // STE_ClipboardType - options of how to get/set data from/to the clipboard
 //-----------------------------------------------------------------------------
 
-#ifndef STE_ClipboardType_DEFINED
-#define STE_ClipboardType_DEFINED
 enum STE_ClipboardType
 {
     STE_CLIPBOARD_DEFAULT = 1, // use the normal clipboard
     STE_CLIPBOARD_PRIMARY = 2, // use the primary clipboard
     STE_CLIPBOARD_BOTH    = 3  // use both clipboards (only valid for set functions)
 };
-#endif // STE_ClipboardType_DEFINED
 
 //-----------------------------------------------------------------------------
 // wxSTEditorRefData - ref counted data to share with refed editors
@@ -165,8 +162,8 @@ public:
 
 #if wxUSE_STREAMS
     // Load a file from the wxInputStream (probably a wxFileInputStream)
-    //  The fileName is used only for the message on error
     //  flags is STE_LoadFileType
+    // If successful: sets m_fileName, m_modifiedTime, m_encoding, m_file_bom
     bool LoadFileToString( wxString* filedata,
                            wxInputStream& stream,
                            const wxFileName& filename,
@@ -197,8 +194,6 @@ public:
     wxSTEditorPrefs  m_stePrefs;
     wxSTEditorStyles m_steStyles;
     wxSTEditorLangs  m_steLangs;
-
-    static const wxClassInfo* ms_refdata_classinfo;
 };
 
 //-----------------------------------------------------------------------------
@@ -551,7 +546,6 @@ public :
 
 #if wxUSE_STREAMS
     // Load a file from the wxInputStream (probably a wxFileInputStream)
-    //  The fileName is used only for the message on error
     //  flags is STE_LoadFileType
     bool LoadFile( wxInputStream& stream,
                    const wxFileName& filename,

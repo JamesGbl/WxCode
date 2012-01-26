@@ -534,8 +534,9 @@ wxString wxSTEditorFrame::MakeTitle(const wxSTEditor* editor) const
 {
     wxFileName filename = editor->GetFileName() ;
     const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
+
     return wxString::Format(wxT("%s - %s"),
-        (filename.GetFullPath(wxSTEditorOptions::m_path_display_format) + modified).wx_str(),
+        (filename.GetFullPath(GetOptions().GetDisplayPathSeparator()) + modified).wx_str(),
         m_titleBase.wx_str());
 }
 
@@ -675,7 +676,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             if (!ok)
             {
                wxMessageBox(wxString::Format(_("Error opening file: '%s'"),
-                              fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+                              fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                         STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
             }
         }

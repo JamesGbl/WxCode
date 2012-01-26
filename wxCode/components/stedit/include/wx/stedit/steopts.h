@@ -194,6 +194,9 @@ WXDLLIMPEXP_DATA_STEDIT(extern wxString) STE_DefaultFileName;
 // wxT("Lua file (*.lua)|*.lua|") wxT("Python file (*.py)|*.py"))
 WXDLLIMPEXP_DATA_STEDIT(extern wxString) STE_DefaultFileExtensions;
 
+// wxSTEditorRefData run-time class information
+WXDLLIMPEXP_DATA_STEDIT(extern const wxClassInfo*) STE_GlobalRefDataClassInfo;
+
 class WXDLLIMPEXP_STEDIT wxSTEditorOptions : public wxObject
 {
 public:
@@ -278,6 +281,10 @@ public:
     void SetDefaultFilePath( const wxString& filePath ) { SetOption(STE_OPTION_DEFAULT_FILEPATH, filePath); }
     void SetDefaultFileExtensions( const wxString& fileExt ) { SetOption(STE_OPTION_DEFAULT_FILEEXTS, fileExt); }
 
+    // Optional slash/backslash
+    wxPathFormat GetDisplayPathSeparator() const;
+    void SetDisplayPathSeparator(wxPathFormat);
+
     // -----------------------------------------------------------------------
     // Get the prefs/styles/langs to use in the editors (may be !IsOk())
     wxSTEditorPrefs&  GetEditorPrefs() const;
@@ -354,7 +361,6 @@ public:
     // -----------------------------------------------------------------------
     // Register wxStEdits menu id's so that they do not collide with the id's of the calling app
     static void RegisterIds();
-    static wxPathFormat m_path_display_format;
 
     // -----------------------------------------------------------------------
     // Load/Save the config for the prefs/styles/langs, see CFGPATH options

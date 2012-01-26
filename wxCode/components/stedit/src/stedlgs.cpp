@@ -1568,7 +1568,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
         const wxFileName fileName = m_editor->GetFileName();
 
         wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
-        textCtrl->SetValue(fileName.GetFullPath());
+        textCtrl->SetValue(fileName.GetFullPath(m_editor->GetOptions().GetDisplayPathSeparator()));
 
         wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
         wxString strSize;

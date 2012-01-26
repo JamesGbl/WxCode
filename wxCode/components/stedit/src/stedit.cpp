@@ -75,37 +75,8 @@ static const wxString EOLModeStrings[] =
 };
 
 //-----------------------------------------------------------------------------
-// wxSTEditorRefDataImpl
-// Derives from wxObject, to satisfy DECLARE_DYNAMIC_CLASS() and
-// the wxWidgets RTTI system, so that an wxSTEditorRefData[impl] instance
-// can be created like this,
-// CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
-//-----------------------------------------------------------------------------
-
-class wxSTEditorRefDataImpl : public wxObject, public wxSTEditorRefData
-{
-    DECLARE_DYNAMIC_CLASS(wxSTEditorRefDataImpl)
-public:
-    wxSTEditorRefDataImpl();
-    virtual ~wxSTEditorRefDataImpl();
-};
-
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorRefDataImpl, wxObject)
-
-wxSTEditorRefDataImpl::wxSTEditorRefDataImpl() : wxObject(), wxSTEditorRefData()
-{
-}
-
-wxSTEditorRefDataImpl::~wxSTEditorRefDataImpl()
-{
-}
-
-//-----------------------------------------------------------------------------
 // wxSTEditorRefData - data that the styled text editor shares with refed ones
 //-----------------------------------------------------------------------------
-
-// static
-const wxClassInfo* wxSTEditorRefData::ms_refdata_classinfo = CLASSINFO(wxSTEditorRefDataImpl);
 
 wxSTEditorRefData::wxSTEditorRefData()
                   :wxObjectRefData(), m_steLang_id(STE_LANG_NULL),
@@ -345,9 +316,9 @@ END_EVENT_TABLE()
 
 void wxSTEditor::Init()
 {
-    // This is the same as CLASSINFO(wxSTEditorRefDataImpl)->CreateObject()
-    // unless the user initializes wxSTEditorRefData::ms_refdata_classinfo to something else
-    m_refData = dynamic_cast<wxSTEditorRefData*>(wxSTEditorRefData::ms_refdata_classinfo->CreateObject());
+    // This is the same as CLASSINFO(wxSTEditorRefDataObject)->CreateObject()
+    // unless the user initializes STE_GlobalRefDataClassInfo to something else
+    m_refData = dynamic_cast<wxSTEditorRefData*>(STE_GlobalRefDataClassInfo->CreateObject());
 
     m_sendEvents = false;
     m_activating = false;
@@ -506,7 +477,9 @@ wxSTEditorRefData* wxSTEditor::AttachRefData(wxSTEditorRefData* ref)
     wxSTEditorRefData* old = GetSTERefData();
 
     m_refData = ref;
+    wxASSERT(1 == old->GetEditorCount());
     ref->AddEditor(this);
+    old->RemoveEditor(this);
     return old;
 }
 
@@ -1901,7 +1874,7 @@ bool wxSTEditor::ShowGotoLineDialog()
     return false;
 }
 
-#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2914")
+#define STE_VERSION_STRING_SVN STE_VERSION_STRING wxT(" svn 2920")
 
 #if (wxVERSION_NUMBER >= 2902)
 /*static*/ wxVersionInfo wxSTEditor::GetLibraryVersionInfo()
@@ -2594,7 +2567,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     // FIXME check for write permission wxAccess - access
     if (!file.Open(fileName.GetFullPath(), wxFile::write))
     {
-        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
         return false;
     }
@@ -2625,7 +2598,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
     }
     else
     {
-        wxMessageBox(wxString::Format(_("Error saving file :'%s'"), fileName.GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+        wxMessageBox(wxString::Format(_("Error saving file :'%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
     }
     return false;
@@ -2714,7 +2687,7 @@ int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
     m_sendEvents = false; // block focus when dialog closes
 
     int ret = wxMessageBox(wxString::Format(_("%s\nHas unsaved changes.\nWould you like to save your file before closing?"),
-                                 GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+                                 GetFileName().GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                            _("Unsaved changes"),
                            style|wxCENTRE|wxICON_QUESTION, GetModalParent());
 
@@ -2752,7 +2725,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
         if (show_reload_dialog)
         {
             wxMessageBox(wxString::Format(_("%s\nDoesn't exist on disk anymore."),
-                           GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+                           GetFileName().GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                           _("File removed from disk"),
                           wxOK | wxICON_EXCLAMATION, GetModalParent());
         }
@@ -2767,7 +2740,7 @@ bool wxSTEditor::IsAlteredOnDisk(bool show_reload_dialog)
     if (altered && show_reload_dialog)
     {
         int ret = wxMessageBox( wxString::Format(_("The file '%s' has been modified externally.\nWould you like to reload the file?"),
-                                    GetFileName().GetFullPath(wxSTEditorOptions::m_path_display_format).wx_str()),
+                                    GetFileName().GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                                 _("File changed on disk"),
                                 wxYES_NO | wxICON_QUESTION, GetModalParent());
         if (ret == wxYES)
@@ -4061,10 +4034,12 @@ bool wxSTEditor::SetLanguage(int lang)
     if (GetEditorLangs().IsOk())
     {
         for (n = 0; n < editRefCount; n++)
-            GetEditorLangs().UpdateEditor(GetSTERefData()->GetEditor(n));
+            GetEditorLangs().UpdateEditor(GetSTERefData()->GetEditor(n)); // -> Colourise()
     }
-
-    Colourise();
+    else
+    {
+        Colourise();
+    }
     return true;
 }
 
