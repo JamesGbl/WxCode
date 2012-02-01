@@ -145,6 +145,9 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
 
 # ---------------------------------------------------------------------------
 
+export( TARGETS wxPlotCtrlLib wxThingsLib
+        FILE "${CMAKE_BINARY_DIR}/build/wxPlotCtrl-config.cmake")
+
 install(FILES
     ${wxPlotCtrl_ROOT_DIR}/docs/changelog.txt
     ${wxPlotCtrl_ROOT_DIR}/docs/readme.htm

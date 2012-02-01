@@ -221,6 +221,9 @@ ADD_TARGET_INCLUDE_PATHS(wxThingsLib ${CMAKE_CURRENT_BINARY_DIR}/include/)
 
 # ---------------------------------------------------------------------------
 
+export( TARGETS wxThingsLib
+        FILE "${CMAKE_BINARY_DIR}/build/wxThings-config.cmake")
+
 install(FILES
     ${wxThings_ROOT_DIR}/docs/readme.txt
     DESTINATION "doc")

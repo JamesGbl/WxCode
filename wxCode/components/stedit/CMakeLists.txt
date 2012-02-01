@@ -56,10 +56,10 @@ ADD_CPPCHECK_TEST(wxStEdit_CppCheck)
 
 # The user can provide their own "wx/stedit/setup.h" by changing this path
 if (NOT DEFINED wxStEdit_SETUP_INCLUDE_PATH)
-    set(wxStEdit_SETUP_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include CACHE INTERNAL "Path to the configured wxStEdit setup.h" FORCE)
+    set(wxStEdit_SETUP_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include CACHE INTERNAL "Path to the configured wxStEdit wx/stedit/setup.h" FORCE)
 endif()
 
-#
+# Only copy it once so they can modify it and rerun CMake
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h)
     configure_file(${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
                    ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h COPYONLY)
@@ -124,7 +124,8 @@ WXLIKE_LIBRARY_NAMES( wxStEditLib wxstedit "${wxStEdit_VERSION}")
 
 # ---------------------------------------------------------------------------
 
-export(TARGETS wxStEditLib FILE "${CMAKE_BINARY_DIR}/wxStEditLib-exports.cmake")
+export( TARGETS wxStEditLib
+        FILE "${CMAKE_BINARY_DIR}/build/wxStEdit-config.cmake")
 
 install(FILES
         ${wxStEdit_ROOT_DIR}/docs/ChangeLog.txt

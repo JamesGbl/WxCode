@@ -82,6 +82,9 @@ ADD_LIBRARY_FULL(wxVidCapLib
 
 # ---------------------------------------------------------------------------
 
+export( TARGETS wxVidCapLib
+        FILE "${CMAKE_BINARY_DIR}/build/wxVidCap-config.cmake")
+
 install(FILES
     ${wxVidCap_ROOT_DIR}/docs/README.txt
     DESTINATION "doc")

@@ -87,6 +87,9 @@ ADD_LIBRARY_FULL(wxSheetLib
 
 # ---------------------------------------------------------------------------
 
+export( TARGETS wxSheetLib
+        FILE "${CMAKE_BINARY_DIR}/build/wxSheet-config.cmake")
+
 install(FILES
         ${wxSheet_ROOT_DIR}/docs/ChangeLog.txt
         ${wxSheet_ROOT_DIR}/docs/README.txt
