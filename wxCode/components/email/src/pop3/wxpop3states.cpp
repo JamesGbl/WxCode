@@ -29,18 +29,23 @@ void wxPOP3::InitialState::onEnterState(wxCmdlineProtocol& context) const
 {
    WX_SMTP_PRINT_DEBUG("Entering InitialState\n");
 
-   /* Perform server connection */
+   /* Perform the server connection */
    context.Connect();
 
-   /* Start timer */
-   context.TimerStart(((wxPOP3&)context).timeout_value);
+   /* check if we shall perform a ssl connection */
+   if (((wxPOP3&)context).ssl_enabled)
+   {
+      context.ChangeState(wxPOP3::ssl_negociation_state);
+   }
+   else
+   {
+      context.ChangeState(wxPOP3::hello_state);
+   }
 }
 
-void wxPOP3::InitialState::onLeaveState(wxCmdlineProtocol& context) const
+void wxPOP3::InitialState::onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const
 {
    WX_SMTP_PRINT_DEBUG("Leaving InitialState\n");
-
-   context.TimerStop();
 }
 
 void wxPOP3::InitialState::onDisconnect(wxCmdlineProtocol& context) const
@@ -63,6 +68,108 @@ void wxPOP3::InitialState::onResponse(wxCmdlineProtocol& context, const wxString
       /* extract digest that will be used during APOP command */
       ((wxPOP3&)context).session_digest = wxString(_T("<")) + line.AfterFirst('<').BeforeLast('>');
 
+      /* Check if we shall switch to ssl or authorisation state */
+      if (((wxPOP3&)context).ssl_enabled)
+      {
+         context.ChangeState(wxPOP3::ssl_negociation_state);
+      }
+      else
+      {
+         context.ChangeState(wxPOP3::hello_state);
+      }
+   }
+   else
+   {
+      ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
+      context.ChangeState(wxPOP3::exit_state);
+   }
+}
+
+void wxPOP3::SslNegociationState::onEnterState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Entering SslNegociationState\n");
+
+   /* Send the HELLO command */
+   switch (context.InitiateSSLSession())
+   {
+      case SslConnected:
+         context.ChangeState(wxPOP3::hello_state);
+         break;
+
+      case SslPending:
+         context.TimerStart(((wxPOP3&)context).timeout_value);
+         break;
+
+      case SslFailed:
+      default:
+         ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
+         context.ChangeState(wxPOP3::exit_state);
+         break;
+   }
+}
+
+void wxPOP3::SslNegociationState::onLeaveState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Leaving SslNegociationState\n");
+   context.TimerStop();
+}
+
+void wxPOP3::SslNegociationState::onResponse(wxCmdlineProtocol& context, const wxString& WXUNUSED(line)) const
+{
+   /* try a new connection */
+   switch (context.InitiateSSLSession())
+   {
+      case SslConnected:
+         context.ChangeState(wxPOP3::hello_state);
+         break;
+
+      case SslPending:
+         context.TimerStart(((wxPOP3&)context).timeout_value);
+         break;
+
+      case SslFailed:
+      default:
+         ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
+         context.ChangeState(wxPOP3::exit_state);
+         break;
+   }
+}
+
+void wxPOP3::SslNegociationState::onDisconnect(wxCmdlineProtocol& context) const
+{
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
+   context.ChangeState(wxPOP3::exit_state);
+}
+
+void wxPOP3::SslNegociationState::onTimeout(wxCmdlineProtocol& context) const
+{
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
+   context.ChangeState(wxPOP3::exit_state);
+}
+
+void wxPOP3::HelloState::onEnterState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Entering HelloState\n");
+
+   /* Start timer */
+   context.TimerStart(((wxPOP3&)context).timeout_value);
+}
+
+void wxPOP3::HelloState::onLeaveState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Leaving HelloState\n");
+   context.TimerStop();
+}
+
+void wxPOP3::HelloState::onResponse(wxCmdlineProtocol& context, const wxString& line) const
+{
+   /* check the response content */
+   if (line.StartsWith(_T("+OK")))
+   {
+      /* extract digest that will be used during APOP command */
+      ((wxPOP3&)context).session_digest = wxString(_T("<")) + line.AfterFirst('<').BeforeLast('>');
+
+      /* Switch to authorisation state */
       context.ChangeState(wxPOP3::authorisation_state);
    }
    else
@@ -70,6 +177,18 @@ void wxPOP3::InitialState::onResponse(wxCmdlineProtocol& context, const wxString
       ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
       context.ChangeState(wxPOP3::exit_state);
    }
+}
+
+void wxPOP3::HelloState::onDisconnect(wxCmdlineProtocol& context) const
+{
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
+   context.ChangeState(wxPOP3::exit_state);
+}
+
+void wxPOP3::HelloState::onTimeout(wxCmdlineProtocol& context) const
+{
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
+   context.ChangeState(wxPOP3::exit_state);
 }
 
 void wxPOP3::AuthorisationState::onEnterState(wxCmdlineProtocol& context) const
@@ -81,11 +200,30 @@ void wxPOP3::AuthorisationState::onEnterState(wxCmdlineProtocol& context) const
    /* compute digest */
    wxString digest = wxMD5::ComputeMd5(((wxPOP3&)context).session_digest + ((wxPOP3&)context).user_password);
 
-   /* Send the APOP command */
-   context.SendLine(wxString(_T("APOP ")) + ((wxPOP3&)context).user_name + _T(" ") + digest);
+   /* check which authentication scheme shall be used */
+   switch (((wxPOP3&)context).authentication_scheme)
+   {
+      case UserPassAuthenticationMethod:
 
-   /* Initialise the authorisation state */
-   ((wxPOP3&)context).authorisation_status = wxPOP3::SentApopCmdStatus;
+         /* Send the USER command command */
+         context.SendLine(wxString(_T("USER ")) + ((wxPOP3&)context).user_name);
+
+         /* Initialise the authorisation state */
+         ((wxPOP3&)context).authorisation_status = wxPOP3::SentUserCmdStatus;
+
+         break;
+
+      case APopAuthenticationMethod:
+      default:
+
+         /* Send the APOP command */
+         context.SendLine(wxString(_T("APOP ")) + ((wxPOP3&)context).user_name + _T(" ") + digest);
+
+         /* Initialise the authorisation state */
+         ((wxPOP3&)context).authorisation_status = wxPOP3::SentApopCmdStatus;
+
+         break;
+   }
 
    /* Start timeout */
    context.TimerStart(((wxPOP3&)context).timeout_value);
@@ -214,25 +352,42 @@ void wxPOP3::GetMessagesListState::onResponse(wxCmdlineProtocol& context, const 
    }
    else if (line == _T("."))
    {
-      /* We received complete list -> switch to HandlingMessage */
-      context.ChangeState(wxPOP3::handling_message_state);
+      /* We received complete list -> propose user to filter handled messages */
+      ((wxPOP3&)context).current_operation_listener->OnFilterHandledMessages(((wxPOP3&)context).messages_list);
 
-      /* refresh timer */
-      context.TimerRestart();
+      /* switch to HandlingMessage */
+      context.ChangeState(wxPOP3::handling_message_state);
    }
    else if (line.BeforeFirst(' ').ToULong(&msg_nr))
    {
       /* Append message to list */
-      ((wxPOP3&)context).messages_list.push_back(msg_nr);
+      if (((wxPOP3&)context).in_uid_list)
+      {
+         ((wxPOP3&)context).messages_list.push_back(wxEmailMessage::MessageId(true, line.AfterFirst(' '), (void*)msg_nr));
+      }
+      else
+      {
+         ((wxPOP3&)context).messages_list.push_back(wxEmailMessage::MessageId(false, line.BeforeFirst(' '), (void*)msg_nr));
+      }
 
       /* refresh timer */
       context.TimerRestart();
    }
    else
    {
-      /* An error occured */
-      ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
-       context.ChangeState(wxPOP3::exit_state);
+      /* An error occured -> check mode in which we are */
+      if (((wxPOP3&)context).in_uid_list && ((wxPOP3&)context).messages_list.size() <= 0)
+      {
+         /* UIDL command probably not handled -> we will switch to LIST mode */
+         context.SendLine(_T("LIST"));
+         ((wxPOP3&)context).in_uid_list = false;
+      }
+      else
+      {
+         /* Error occured -> exit... */
+         ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
+         context.ChangeState(wxPOP3::exit_state);
+      }
    }
 }
 
@@ -247,10 +402,11 @@ void wxPOP3::GetMessagesListState::onEnterState(wxCmdlineProtocol& context) cons
    WX_SMTP_PRINT_DEBUG("Entering GetMessagesListState\n");
 
    /* Send the LIST command */
-   context.SendLine(_T("LIST"));
+   context.SendLine(_T("UIDL"));
 
    /* Clears the list_message stuff */
    ((wxPOP3&)context).messages_list.clear();
+   ((wxPOP3&)context).in_uid_list = true;
 
    /* Start timer */
    context.TimerStart(((wxPOP3&)context).timeout_value);
@@ -269,32 +425,48 @@ void wxPOP3::GetMessagesListState::onLeaveState(wxCmdlineProtocol& context) cons
 
 void wxPOP3::HandlingMessage::onConnect(wxCmdlineProtocol& context) const
 {
-   /* Should never occur... */
+   /* This state is no more useful -> should be suppressed */
    ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
    context.ChangeState(wxPOP3::exit_state);
 }
 
 void wxPOP3::HandlingMessage::onDisconnect(wxCmdlineProtocol& context) const
 {
+   /* This state is no more useful -> should be suppressed */
    ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
    context.ChangeState(wxPOP3::exit_state);
 }
 
-void wxPOP3::HandlingMessage::onResponse(wxCmdlineProtocol& context, const wxString& line) const
+void wxPOP3::HandlingMessage::onResponse(wxCmdlineProtocol& context, const wxString& WXUNUSED(line)) const
 {
+   /* This state is no more useful -> should be suppressed */
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Error);
+   context.ChangeState(wxPOP3::exit_state);
+}
+
+void wxPOP3::HandlingMessage::onTimeout(wxCmdlineProtocol& context) const
+{
+   /* This state is no more useful -> should be suppressed */
+   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
+   context.ChangeState(wxPOP3::exit_state);
+}
+
+void wxPOP3::HandlingMessage::onEnterState(wxCmdlineProtocol& context) const
+{
+   /* This state is no more useful -> should be suppressed */
+   WX_SMTP_PRINT_DEBUG("Entering HandlingMessage\n");
+
+   /* Check if there is a message to send */
+   if (((wxPOP3&)context).messages_list.size() <= 0)
+   {
+      /* go to exit state */
+      ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Succeed);
+      context.ChangeState(wxPOP3::exit_state);
+      return;
+   }
+
    /* Prepare the message id */
-   if (line.StartsWith(_T("+OK")))
-   {
-      /* format message id */
-      ((wxPOP3&)context).handled_message_id.id = line.AfterLast(' ');
-      ((wxPOP3&)context).handled_message_id.is_unique = true;
-   }
-   else
-   {
-      /* command not supported -> format message id */
-      ((wxPOP3&)context).handled_message_id.id = wxString(_T("")) << ((wxPOP3&)context).messages_list.front();
-      ((wxPOP3&)context).handled_message_id.is_unique = false;
-   }
+   ((wxPOP3&)context).handled_message_id = ((wxPOP3&)context).messages_list.front();
 
    /* Invoke user callback */
    Listener::ExtractionMode_t extraction_mode;
@@ -331,37 +503,9 @@ void wxPOP3::HandlingMessage::onResponse(wxCmdlineProtocol& context, const wxStr
    }
 }
 
-void wxPOP3::HandlingMessage::onTimeout(wxCmdlineProtocol& context) const
-{
-   ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Timeout);
-   context.ChangeState(wxPOP3::exit_state);
-}
-
-void wxPOP3::HandlingMessage::onEnterState(wxCmdlineProtocol& context) const
-{
-   WX_SMTP_PRINT_DEBUG("Entering HandlingMessage\n");
-
-   /* Check if there is a message to send */
-   if (((wxPOP3&)context).messages_list.size() <= 0)
-   {
-      /* go to exit state */
-      ((wxPOP3&)context).current_operation_listener->OnOperationFinished(wxPOP3::Listener::Succeed);
-      context.ChangeState(wxPOP3::exit_state);
-      return;
-   }
-
-   /* Initiate the UUID command on next message */
-   context.SendLine(wxString(_T("UIDL ")) << ((wxPOP3&)context).messages_list.front());
-
-   /* start timer */
-   context.TimerStart(((wxPOP3&)context).timeout_value);
-}
-
-void wxPOP3::HandlingMessage::onLeaveState(wxCmdlineProtocol& context) const
+void wxPOP3::HandlingMessage::onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const
 {
    WX_SMTP_PRINT_DEBUG("Leaving HandlingMessage\n");
-
-   context.TimerStop();
 }
 
 void wxPOP3::DownloadingMessage::onConnect(wxCmdlineProtocol& context) const
@@ -471,11 +615,11 @@ void wxPOP3::DownloadingMessage::onEnterState(wxCmdlineProtocol& context) const
    if (((wxPOP3&)context).extraction_mode == Listener::ExtractHeader)
    {
       //TODO : why 30 lines ?
-      context.SendLine(wxString(_T("TOP ")) << ((wxPOP3&)context).messages_list.front() << _T(" 30"));
+      context.SendLine(wxString(_T("TOP ")) << (long)((wxPOP3&)context).messages_list.front().user_data << _T(" 30"));
    }
    else
    {
-      context.SendLine(wxString(_T("RETR ")) << ((wxPOP3&)context).messages_list.front());
+      context.SendLine(wxString(_T("RETR ")) << (long)((wxPOP3&)context).messages_list.front().user_data);
    }
 
    /* Start timer */
@@ -528,7 +672,7 @@ void wxPOP3::SuppressingMessage::onEnterState(wxCmdlineProtocol& context) const
    WX_SMTP_PRINT_DEBUG("Entering SuppressingMessage\n");
 
    /* Initiate the DELE message */
-   context.SendLine(wxString(_T("DELE ")) << ((wxPOP3&)context).messages_list.front());
+   context.SendLine(wxString(_T("DELE ")) << (long)((wxPOP3&)context).messages_list.front().user_data);
 
    /* Start timer */
    context.TimerStart(((wxPOP3&)context).timeout_value);

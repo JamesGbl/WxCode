@@ -96,6 +96,7 @@ WXEMAIL_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtp.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpemail.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpstates.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxSSLSocketClient.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxcmdprot.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxmd5.o
 WXEMAIL_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
@@ -140,6 +141,7 @@ WXEMAIL_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtp.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpemail.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpstates.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxSSLSocketClient.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxmd5.o
 WXEMAILSMTP_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
@@ -412,6 +414,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpemail.o: ../sr
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpstates.o: ../src/smtp/wxsmtpstates.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxSSLSocketClient.o: ../src/ssl/wxSSLSocketClient.cpp
+	$(CXX) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxcmdprot.o: ../src/utils/wxcmdprot.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -524,6 +529,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpemail.o: ../sr
 	$(CXX) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpstates.o: ../src/smtp/wxsmtpstates.cpp
+	$(CXX) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxSSLSocketClient.o: ../src/ssl/wxSSLSocketClient.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.o: ../src/utils/wxcmdprot.cpp

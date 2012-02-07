@@ -48,12 +48,12 @@ Version::ver_type Version::maj() const
     return m_maj;
 }
 
-Version::ver_type Version::min() const
+Version::ver_type Version::v_min() const
 {
     return m_min;
 }
 
-Version::ver_type Version::build() const
+Version::ver_type Version::v_build() const
 {
     return m_build;
 }
@@ -63,12 +63,12 @@ void Version::maj(Version::ver_type maj)
     m_maj = maj;
 }
 
-void Version::min(Version::ver_type min)
+void Version::v_min(Version::ver_type min)
 {
     m_min = min;
 }
 
-void Version::build(Version::ver_type build)
+void Version::v_build(Version::ver_type build)
 {
     m_build = build;
 }

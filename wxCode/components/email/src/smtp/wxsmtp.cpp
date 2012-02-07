@@ -67,15 +67,17 @@
 /*!
  * All SMTP states instances
  */
-const wxSMTP::ConnectState      wxSMTP::g_connectState;
-const wxSMTP::HeloState         wxSMTP::g_heloState;
-const wxSMTP::AuthenticateState wxSMTP::g_authenticateState;
-const wxSMTP::SendMailFromState wxSMTP::g_sendMailFromState;
-const wxSMTP::RcptListState     wxSMTP::g_rcptListState;
-const wxSMTP::BeginDataState    wxSMTP::g_beginDataState;
-const wxSMTP::DataState         wxSMTP::g_dataState;
-const wxSMTP::QuitState         wxSMTP::g_quitState;
-const wxSMTP::ClosedState       wxSMTP::g_closedState;
+const wxSMTP::ConnectState          wxSMTP::g_connectState;
+const wxSMTP::HeloState             wxSMTP::g_heloState;
+const wxSMTP::StartTLSState         wxSMTP::g_startTlsState;
+const wxSMTP::SSLNegociationState   wxSMTP::g_sslNegociationState;
+const wxSMTP::AuthenticateState     wxSMTP::g_authenticateState;
+const wxSMTP::SendMailFromState     wxSMTP::g_sendMailFromState;
+const wxSMTP::RcptListState         wxSMTP::g_rcptListState;
+const wxSMTP::BeginDataState        wxSMTP::g_beginDataState;
+const wxSMTP::DataState             wxSMTP::g_dataState;
+const wxSMTP::QuitState             wxSMTP::g_quitState;
+const wxSMTP::ClosedState           wxSMTP::g_closedState;
 
 /*! Other static variables instanciation */
 const unsigned long wxSMTP::timeout = DEFAULT_SMTP_TIMEOUT;
@@ -87,9 +89,11 @@ wxSMTP::Listener wxSMTP::g_nullListener;
 
 wxSMTP::wxSMTP(const wxString& host,
                unsigned short port,
+               bool ssl_enabled,
                Listener* listener)
        :shall_trigger_disconnection_callback(0),
-        authentication_scheme(NoAuthentication)
+        authentication_scheme(NoAuthentication),
+        ssl_enabled(ssl_enabled)
 {
    /* Configure host */
    SetHost(host, port);
@@ -115,11 +119,13 @@ wxSMTP::~wxSMTP()
 
 void wxSMTP::ConfigureAuthenticationScheme(AuthenticationScheme_t authentication_scheme,
                                           const wxString& user_name,
-                                          const wxString& password)
+                                          const wxString& password,
+                                          bool ssl_enabled)
 {
    this->authentication_scheme = authentication_scheme;
    this->user_name = user_name;
    this->password = password;
+   this->ssl_enabled = ssl_enabled;
 }
 
 void wxSMTP::SendMessage(const wxEmailMessage& message, bool shall_start_sending_process)
@@ -171,31 +177,73 @@ unsigned long wxSMTP::GetNbRetryMessages() const
    return result;
 }
 
+wxString wxSMTP::DecodeBase64(const wxString& data)
+{
+	   mimetic::Base64::Decoder b64;
+	   char *decoded_digest_buffer;
+	   decoded_digest_buffer = new char[data.Len()+1];
+	   memset(decoded_digest_buffer, 0, data.Len()+1);
+	   mimetic::encode((const char*)data.c_str(),
+					   ((const char*)data.c_str())+data.Len(),
+					   b64,
+					   decoded_digest_buffer);
+	   wxString ret(decoded_digest_buffer);
+	   delete decoded_digest_buffer;
+   return ret;
+}
+
+wxString wxSMTP::EncodeBase64(const wxString& data)
+{
+	   mimetic::Base64::Encoder b64_enc(0);
+		   char *encoded_digest_buffer;
+		   encoded_digest_buffer = new char[2*data.Len()+1];
+		   memset(encoded_digest_buffer, 0, 2*data.Len()+1);
+		   mimetic::encode((const char*)data.c_str(),
+						   ((const char*)data.c_str()) + data.Len(),
+						   b64_enc,
+						   encoded_digest_buffer);
+
+		   wxString ret(encoded_digest_buffer);
+
+		   delete encoded_digest_buffer;
+	   return ret;
+}
+
 wxString wxSMTP::ComputeAuthenticationDigest(const wxString& digest)
 {
-   /* Decode from base64 */
-   mimetic::Base64::Decoder b64;
-   char decoded_digest_buffer[digest.Len()+1];
-   memset(decoded_digest_buffer, 0, digest.Len()+1);
-   mimetic::encode((const char*)digest.c_str(),
-                   ((const char*)digest.c_str())+digest.Len(),
-                   b64,
-                   decoded_digest_buffer);
-   wxString decoded_digest(decoded_digest_buffer);
+	wxString ret = wxEmptyString;
 
-   /* Compute hash */
-   wxString encoded_str = wxMD5::ComputeKeyedMd5(decoded_digest, password);
+	switch (current_authentication_scheme) {
+	case wxSMTP::LoginAuthentication:
+		if (digest.IsSameAs("VXNlcm5hbWU6")) {
+		// username
+			ret = EncodeBase64(user_name);
+		} else if (digest.IsSameAs("UGFzc3dvcmQ6")) {
+		// password
+			ret = EncodeBase64(password);
+			authentication_digest_sent = true;
+		}
+		break;
+	case wxSMTP::CramMd5Authentication: {
 
-   /* Compute complete response */
-   wxString response_scheme = user_name + " " + encoded_str;
+		   /* Compute hash */
+		   wxString encoded_str = wxMD5::ComputeKeyedMd5(DecodeBase64(digest), password);
 
-   /* code it in Base64 */
-   mimetic::Base64::Encoder b64_enc(0);
-   char encoded_digest_buffer[2*response_scheme.Len()+1];
-   memset(encoded_digest_buffer, 0, 2*response_scheme.Len()+1);
-   mimetic::encode((const char*)response_scheme.c_str(),
-                   ((const char*)response_scheme.c_str()) + response_scheme.Len(),
-                   b64_enc,
-                   encoded_digest_buffer);
-   return wxString(encoded_digest_buffer);
+		   /* Compute complete response */
+		   wxString response_scheme = user_name + " " + encoded_str;
+
+		   /* code it in Base64 */
+		   ret = EncodeBase64(response_scheme);
+
+		   authentication_digest_sent = true;
+		}
+		break;
+	case wxSMTP::PlainAuthentication:
+		wxChar zero = 0;
+		ret = EncodeBase64(zero + user_name + zero + password);
+		authentication_digest_sent = true;
+		break;
+	}
+
+   return ret;
 }

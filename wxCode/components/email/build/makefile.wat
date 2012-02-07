@@ -233,6 +233,7 @@ WXEMAIL_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtp.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpemail.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpstates.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxSSLSocketClient.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxcmdprot.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxmd5.obj
 WXEMAIL_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
@@ -277,6 +278,7 @@ WXEMAIL_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtp.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpemail.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpstates.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxSSLSocketClient.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxmd5.obj
 WXEMAILSMTP_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
@@ -491,6 +493,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpemail.obj :  .
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxsmtpstates.obj :  .AUTODEPEND ..\src\smtp\wxsmtpstates.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxSSLSocketClient.obj :  .AUTODEPEND ..\src\ssl\wxSSLSocketClient.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxcmdprot.obj :  .AUTODEPEND ..\src\utils\wxcmdprot.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_LIB_CXXFLAGS) $<
 
@@ -603,6 +608,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpemail.obj :  .
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpstates.obj :  .AUTODEPEND ..\src\smtp\wxsmtpstates.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxSSLSocketClient.obj :  .AUTODEPEND ..\src\ssl\wxSSLSocketClient.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXEMAIL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.obj :  .AUTODEPEND ..\src\utils\wxcmdprot.cpp

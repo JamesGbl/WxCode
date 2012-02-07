@@ -123,6 +123,7 @@ void wxSMTP::wxSmtpEmailMessage::Encode(wxOutputStream& out)
       /* Insert HTML data */
       //TODO : I have no idea on how to do so...
       TextPlain* html = new TextPlain((const char*)html_alternative.mb_str(wxConvLocal));
+      html->header().contentType(ContentType("text","html"));
       root->body().parts().insert(root->body().parts().end(),
                                   html);
    }

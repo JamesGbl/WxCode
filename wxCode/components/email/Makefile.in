@@ -87,8 +87,63 @@ WXEMAIL_LIB_OBJECTS =  \
 	wxEMail_lib_wxsmtp.o \
 	wxEMail_lib_wxsmtpemail.o \
 	wxEMail_lib_wxsmtpstates.o \
+	wxEMail_lib_wxSSLSocketClient.o \
 	wxEMail_lib_wxcmdprot.o \
 	wxEMail_lib_wxmd5.o
+WXEMAIL_LIB_HEADERS =  \
+	include/wx/wxemail.h \
+	include/wx/wxsmtpdef.h \
+	include/wx/codec/charsetconv.h \
+	include/wx/codec/rfc2047.h \
+	include/wx/codec/rfc2231.h \
+	include/wx/mimetic/body.h \
+	include/wx/mimetic/circular_buffer.h \
+	include/wx/mimetic/contentdescription.h \
+	include/wx/mimetic/contentdisposition.h \
+	include/wx/mimetic/contentid.h \
+	include/wx/mimetic/contenttransferencoding.h \
+	include/wx/mimetic/contenttype.h \
+	include/wx/mimetic/fieldparam.h \
+	include/wx/mimetic/header.h \
+	include/wx/mimetic/message.h \
+	include/wx/mimetic/mimeentity.h \
+	include/wx/mimetic/mimeentitylist.h \
+	include/wx/mimetic/mimetic.h \
+	include/wx/mimetic/mimeversion.h \
+	include/wx/mimetic/streambufs.h \
+	include/wx/mimetic/strutils.h \
+	include/wx/mimetic/tokenizer.h \
+	include/wx/mimetic/tree.h \
+	include/wx/mimetic/utils.h \
+	include/wx/mimetic/version.h \
+	include/wx/mimetic/wxFileIterator.h \
+	include/wx/mimetic/codec/base64.h \
+	include/wx/mimetic/codec/code.h \
+	include/wx/mimetic/codec/codec.h \
+	include/wx/mimetic/codec/codec_base.h \
+	include/wx/mimetic/codec/codec_chain.h \
+	include/wx/mimetic/codec/other_codecs.h \
+	include/wx/mimetic/codec/qp.h \
+	include/wx/mimetic/parser/itparser.h \
+	include/wx/mimetic/parser/itparserdecl.h \
+	include/wx/mimetic/rfc822/address.h \
+	include/wx/mimetic/rfc822/addresslist.h \
+	include/wx/mimetic/rfc822/body.h \
+	include/wx/mimetic/rfc822/datetime.h \
+	include/wx/mimetic/rfc822/field.h \
+	include/wx/mimetic/rfc822/fieldvalue.h \
+	include/wx/mimetic/rfc822/group.h \
+	include/wx/mimetic/rfc822/header.h \
+	include/wx/mimetic/rfc822/mailbox.h \
+	include/wx/mimetic/rfc822/mailboxlist.h \
+	include/wx/mimetic/rfc822/message.h \
+	include/wx/mimetic/rfc822/messageid.h \
+	include/wx/mimetic/rfc822/rfc822.h \
+	include/wx/pop3/wxpop3.h \
+	include/wx/smtp/wxsmtp.h \
+	include/wx/ssl/wxOpenSSL.h \
+	include/wx/ssl/wxSSLSocketClient.h \
+	include/wx/utils/wxcmdprot.h
 WXEMAIL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_EMAIL $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXEMAIL_DLL_OBJECTS =  \
@@ -128,8 +183,63 @@ WXEMAIL_DLL_OBJECTS =  \
 	wxEMail_dll_wxsmtp.o \
 	wxEMail_dll_wxsmtpemail.o \
 	wxEMail_dll_wxsmtpstates.o \
+	wxEMail_dll_wxSSLSocketClient.o \
 	wxEMail_dll_wxcmdprot.o \
 	wxEMail_dll_wxmd5.o
+WXEMAIL_DLL_HEADERS =  \
+	include/wx/wxemail.h \
+	include/wx/wxsmtpdef.h \
+	include/wx/codec/charsetconv.h \
+	include/wx/codec/rfc2047.h \
+	include/wx/codec/rfc2231.h \
+	include/wx/mimetic/body.h \
+	include/wx/mimetic/circular_buffer.h \
+	include/wx/mimetic/contentdescription.h \
+	include/wx/mimetic/contentdisposition.h \
+	include/wx/mimetic/contentid.h \
+	include/wx/mimetic/contenttransferencoding.h \
+	include/wx/mimetic/contenttype.h \
+	include/wx/mimetic/fieldparam.h \
+	include/wx/mimetic/header.h \
+	include/wx/mimetic/message.h \
+	include/wx/mimetic/mimeentity.h \
+	include/wx/mimetic/mimeentitylist.h \
+	include/wx/mimetic/mimetic.h \
+	include/wx/mimetic/mimeversion.h \
+	include/wx/mimetic/streambufs.h \
+	include/wx/mimetic/strutils.h \
+	include/wx/mimetic/tokenizer.h \
+	include/wx/mimetic/tree.h \
+	include/wx/mimetic/utils.h \
+	include/wx/mimetic/version.h \
+	include/wx/mimetic/wxFileIterator.h \
+	include/wx/mimetic/codec/base64.h \
+	include/wx/mimetic/codec/code.h \
+	include/wx/mimetic/codec/codec.h \
+	include/wx/mimetic/codec/codec_base.h \
+	include/wx/mimetic/codec/codec_chain.h \
+	include/wx/mimetic/codec/other_codecs.h \
+	include/wx/mimetic/codec/qp.h \
+	include/wx/mimetic/parser/itparser.h \
+	include/wx/mimetic/parser/itparserdecl.h \
+	include/wx/mimetic/rfc822/address.h \
+	include/wx/mimetic/rfc822/addresslist.h \
+	include/wx/mimetic/rfc822/body.h \
+	include/wx/mimetic/rfc822/datetime.h \
+	include/wx/mimetic/rfc822/field.h \
+	include/wx/mimetic/rfc822/fieldvalue.h \
+	include/wx/mimetic/rfc822/group.h \
+	include/wx/mimetic/rfc822/header.h \
+	include/wx/mimetic/rfc822/mailbox.h \
+	include/wx/mimetic/rfc822/mailboxlist.h \
+	include/wx/mimetic/rfc822/message.h \
+	include/wx/mimetic/rfc822/messageid.h \
+	include/wx/mimetic/rfc822/rfc822.h \
+	include/wx/pop3/wxpop3.h \
+	include/wx/smtp/wxsmtp.h \
+	include/wx/ssl/wxOpenSSL.h \
+	include/wx/ssl/wxSSLSocketClient.h \
+	include/wx/utils/wxcmdprot.h
 WXEMAILSMTP_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXEMAILSMTP_OBJECTS =  \
@@ -293,7 +403,7 @@ distclean: clean
 
 @COND_SHARED_0@install_wxEMail_lib_headers: 
 @COND_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_SHARED_0@	for f in ; do \
+@COND_SHARED_0@	for f in $(WXEMAIL_LIB_HEADERS); do \
 @COND_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_SHARED_0@	fi; \
@@ -301,7 +411,7 @@ distclean: clean
 @COND_SHARED_0@	done
 
 @COND_SHARED_0@uninstall_wxEMail_lib_headers: 
-@COND_SHARED_0@	for f in ; do \
+@COND_SHARED_0@	for f in $(WXEMAIL_LIB_HEADERS); do \
 @COND_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_0@	done
 
@@ -323,7 +433,7 @@ distclean: clean
 
 @COND_SHARED_1@install_wxEMail_dll_headers: 
 @COND_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_SHARED_1@	for f in ; do \
+@COND_SHARED_1@	for f in $(WXEMAIL_DLL_HEADERS); do \
 @COND_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_SHARED_1@	fi; \
@@ -331,7 +441,7 @@ distclean: clean
 @COND_SHARED_1@	done
 
 @COND_SHARED_1@uninstall_wxEMail_dll_headers: 
-@COND_SHARED_1@	for f in ; do \
+@COND_SHARED_1@	for f in $(WXEMAIL_DLL_HEADERS); do \
 @COND_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_1@	done
 
@@ -461,6 +571,9 @@ wxEMail_lib_wxsmtpemail.o: $(srcdir)/src/smtp/wxsmtpemail.cpp
 wxEMail_lib_wxsmtpstates.o: $(srcdir)/src/smtp/wxsmtpstates.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(srcdir)/src/smtp/wxsmtpstates.cpp
 
+wxEMail_lib_wxSSLSocketClient.o: $(srcdir)/src/ssl/wxSSLSocketClient.cpp
+	$(CXXC) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(srcdir)/src/ssl/wxSSLSocketClient.cpp
+
 wxEMail_lib_wxcmdprot.o: $(srcdir)/src/utils/wxcmdprot.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(srcdir)/src/utils/wxcmdprot.cpp
 
@@ -574,6 +687,9 @@ wxEMail_dll_wxsmtpemail.o: $(srcdir)/src/smtp/wxsmtpemail.cpp
 
 wxEMail_dll_wxsmtpstates.o: $(srcdir)/src/smtp/wxsmtpstates.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(srcdir)/src/smtp/wxsmtpstates.cpp
+
+wxEMail_dll_wxSSLSocketClient.o: $(srcdir)/src/ssl/wxSSLSocketClient.cpp
+	$(CXXC) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(srcdir)/src/ssl/wxSSLSocketClient.cpp
 
 wxEMail_dll_wxcmdprot.o: $(srcdir)/src/utils/wxcmdprot.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(srcdir)/src/utils/wxcmdprot.cpp

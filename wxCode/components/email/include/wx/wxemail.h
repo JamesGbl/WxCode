@@ -77,7 +77,9 @@ class WXDLLIMPEXP_SMTP wxEmailMessage
       {
          bool     is_unique;
          wxString id;
-         MessageId(bool is_unique = false, wxString id = _T("")): is_unique(is_unique), id(id) {}
+         void*    user_data;
+         MessageId(bool is_unique = false, wxString id = _T(""), void* user_data = NULL)
+               :is_unique(is_unique), id(id), user_data(user_data) {}
       } MessageId;
 
       /*!
@@ -358,14 +360,14 @@ class WXDLLIMPEXP_SMTP wxEmailMessage
       std::list<Address> m_ccArray;
       std::list<Address> m_bccArray;
 
+      MessageId message_id;
+
       bool has_html_alternative;
       wxString html_alternative;
 
       std::vector<wxString> attachments_names;
       std::vector<wxString> attachments_MIME_ids;
       std::vector<std::vector<unsigned char> > attachments_contents;
-
-      MessageId message_id;
 
       bool has_message_MIME_content;
       wxString message_MIME_content;

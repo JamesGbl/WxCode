@@ -72,6 +72,7 @@ class MySMTPListener : public wxSMTP::Listener
                                    unsigned long                              WXUNUSED(nb_retry_messages),
                                    const std::list<wxEmailMessage::Address>&  rejected_addresses,
                                    const std::list<wxEmailMessage::Address>&  accepted_addresses,
+                                   bool                                       WXUNUSED(can_retry),
                                    bool&                                      shall_retry,
                                    unsigned long&                             WXUNUSED(retry_delay_s),
                                    bool&                                      shall_stop)
@@ -210,16 +211,20 @@ bool App::OnInit()
    }
 
    /* Instanciate the smtp client */
+   long port = 25;
+   RequestUser(_T("Please enter the port of the smtp server (default : 25)"), false).ToLong(&port);
    smtp = new wxSMTP(RequestUser(_T("Please enter the smtp server address (ex: relay.skynet.be) :"), false),
-                     25,
+                     port,
+                     false,
                      new MySMTPListener(*this));
 
    /* Ask user if server requests authentication */
-   if (AskUser(_T("Does your server requests authentication ?\n\nNote that only SASL CRAM-MD5 authentication mechanism is currently implemented...")))
+   if (AskUser(_T("Does your server requests authentication ?")))
    {
-      smtp->ConfigureAuthenticationScheme(wxSMTP::CramMd5Authentication,
+      smtp->ConfigureAuthenticationScheme(wxSMTP::LoginAuthentication,
             RequestUser(_T("Please enter the user name used for SMTP server connection :"), false),
-            RequestUser(_T("Please enter the password used for SMTP server connection :"), false));
+            RequestUser(_T("Please enter the password used for SMTP server connection :"), false),
+            AskUser(_T("Does your server requests an SSL connection ?")));
    }
 
    /* instanciate a busy info window that will be displayed until the message will be sent*/

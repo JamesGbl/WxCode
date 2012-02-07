@@ -13,18 +13,20 @@
    <set var="COMP_SRC" append="1">$(fileList('src/mimetic/rfc822/*.cxx'))</set>
    <set var="COMP_SRC" append="1">$(fileList('src/pop3/*.cpp'))</set>
    <set var="COMP_SRC" append="1">$(fileList('src/smtp/*.cpp'))</set>
+   <set var="COMP_SRC" append="1">$(fileList('src/ssl/*.cpp'))</set>
    <set var="COMP_SRC" append="1">$(fileList('src/utils/*.cpp'))</set>
 
    <set var="COMP_HDR">$(fileList('include/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/codec/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/mimetic/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/mimetic/codec/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/mimetic/parser/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/mimetic/rfc822/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/pop3/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/smtp/*.h'))</set>
-   <set var="COMP_HDR" append="1">$(fileList('include/include/wx/utils/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/codec/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/mimetic/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/mimetic/codec/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/mimetic/parser/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/mimetic/rfc822/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/pop3/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/smtp/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/ssl/*.h'))</set>
+   <set var="COMP_HDR" append="1">$(fileList('include/wx/utils/*.h'))</set>
 
    <lib id="wxEMail_lib" template="wxcode-lib" cond="SHARED=='0'">
    </lib>

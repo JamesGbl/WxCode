@@ -130,36 +130,64 @@ void wxCmdlineProtocol::Disconnect()
    NextSocketSerialNr();
 }
 
-void wxCmdlineProtocol::OnInput(wxSocketEvent& WXUNUSED(event))
+void wxCmdlineProtocol::OnInput()
 {
-   // get data
-   const int bufsize = 256;
-   char buf[bufsize];
-   Read(buf, bufsize);
-   m_inputLine += wxString(buf, wxConvLocal, LastCount());
-
-   // search for a newline
-   size_t pos = 0;
-   while (long(pos) < long(long(m_inputLine.Length()) - 1))
+   /* Check if an SSL session is pending */
+   if (SslSessionPending())
    {
-      if (m_inputLine[pos] == 13)
+      /* Perform a dummy input */
+      WX_SMTP_PRINT_DEBUG("Ssl connection data");
+      GetCurrentState().onResponse(*this, "");
+   }
+   else
+   {
+      while (1)
       {
-         if (m_inputLine[pos + 1] == 10)
+         // get data
+         const int bufsize = 256;
+         char buf[bufsize];
+         Read(buf, bufsize);
+         if (!Error())
          {
-            // line found, evaluate
-            WX_SMTP_PRINT_DEBUG("%s", m_inputLine.Mid(0, pos).mb_str(wxConvLocal));
+            if (LastCount() > 0)
+            {
+               m_inputLine += wxString(buf, wxConvLocal, LastCount());
+            }
+            else
+            {
+               break;
+            }
+         }
+         else
+         {
+            break;
+         }
 
-            GetCurrentState().onResponse(*this, m_inputLine.Mid(0, pos));
 
-            // adjust buffer
-            m_inputLine = m_inputLine.Mid(pos + 2);
+         // search for a newline
+         size_t pos = 0;
+         while (long(pos) < long(long(m_inputLine.Length()) - 1))
+         {
+            if (m_inputLine[pos] == 13)
+            {
+               if (m_inputLine[pos + 1] == 10)
+               {
+                  // line found, evaluate
+                  WX_SMTP_PRINT_DEBUG("%s", m_inputLine.Mid(0, pos).mb_str(wxConvLocal));
 
-            /* restart search */
-            pos = 0;
-            continue;
+                  GetCurrentState().onResponse(*this, m_inputLine.Mid(0, pos));
+
+                  // adjust buffer
+                  m_inputLine = m_inputLine.Mid(pos + 2);
+
+                  /* restart search */
+                  pos = 0;
+                  continue;
+               }
+            }
+            pos++;
          }
       }
-      pos++;
    }
 }
 
@@ -170,7 +198,7 @@ void wxCmdlineProtocol::OnSocketEvent(wxSocketEvent& event)
       switch(event.GetSocketEvent())
       {
          case wxSOCKET_INPUT:
-            OnInput(event);
+            OnInput();
             break;
          case wxSOCKET_LOST:
             GetCurrentState().onDisconnect(*this);
@@ -190,7 +218,7 @@ void wxCmdlineProtocol::SendLine(const wxString& msg)
 
    wxString complete_line = msg;
    complete_line << _T("\x00d\x00a");
-   wxSocketClient::Write(complete_line.mb_str(wxConvLocal), complete_line.Length());
+   wxSSLSocketClient::Write(complete_line.mb_str(wxConvLocal), complete_line.Length());
 }
 
 void wxCmdlineProtocol::OnTimerEvent(wxTimerEvent& WXUNUSED(event))
@@ -213,4 +241,4 @@ void wxCmdlineProtocol::TimerRestart()
    timer.Start();
 }
 
-const wxCmdlineProtocol::State wxCmdlineProtocol::default_state;
+const wxCmdlineProtocol::State wxCmdlineProtocol::default_state = wxCmdlineProtocol::State();

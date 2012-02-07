@@ -97,7 +97,7 @@
 #endif
 
 #ifdef WX_SMTP_DEBUG
-#define WX_SMTP_PRINT_DEBUG(...) printf(__VA_ARGS__); fflush(stdout)
+#define WX_SMTP_PRINT_DEBUG(...) wxLogDebug(wxString::Format(__VA_ARGS__));
 #else
 #define WX_SMTP_PRINT_DEBUG(...)
 #endif

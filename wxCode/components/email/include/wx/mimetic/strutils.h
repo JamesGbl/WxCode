@@ -107,26 +107,58 @@ struct istring: public string
 
 inline bool operator==(const istring& is, const std::string& s)
 {
-    return (0 == ichar_traits::compare(is.c_str(),s.c_str(),
-            std::max(is.length(),s.length())) );
+   if (is.length() > s.length())
+   {
+      return (0 == ichar_traits::compare(is.c_str(),s.c_str(),
+             is.length()) );
+   }
+   else
+   {
+      return (0 == ichar_traits::compare(is.c_str(),s.c_str(),
+             s.length()) );
+   }
 }
 
 inline bool operator!=(const istring& is, const std::string& s)
 {
-    return (0 != ichar_traits::compare(is.c_str(),s.c_str(),
-            std::max(is.length(),s.length())) );
+   if (is.length() > s.length())
+   {
+      return (0 != ichar_traits::compare(is.c_str(),s.c_str(),
+              is.length()) );
+   }
+   else
+   {
+      return (0 != ichar_traits::compare(is.c_str(),s.c_str(),
+              s.length()) );
+   }
 }
 
 inline bool operator!=(const istring& is, const char* str)
 {
-    return (0 != ichar_traits::compare(is.c_str(),str,
-            std::max(is.length(),::strlen(str))) );
+   if (is.length() > ::strlen(str))
+   {
+      return (0 != ichar_traits::compare(is.c_str(),str,
+              is.length()) );
+   }
+   else
+   {
+      return (0 != ichar_traits::compare(is.c_str(),str,
+              ::strlen(str)) );
+   }
 }
 
 inline bool operator==(const istring& is, const char* str)
 {
-    return (0 == ichar_traits::compare(is.c_str(),str,
-            std::max(is.length(),::strlen(str))) );
+   if (is.length() > ::strlen(str))
+   {
+      return (0 == ichar_traits::compare(is.c_str(),str,
+              is.length()) );
+   }
+   else
+   {
+      return (0 == ichar_traits::compare(is.c_str(),str,
+              ::strlen(str)) );
+   }
 }
 
 inline std::string dquoted(const std::string& s)

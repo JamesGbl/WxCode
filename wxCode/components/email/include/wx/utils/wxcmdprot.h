@@ -37,6 +37,8 @@
 
 #include "../wxemail.h"
 
+#include "../ssl/wxSSLSocketClient.h"
+
 /**
  * \internal
  *
@@ -61,7 +63,7 @@
  * different events generated, and implementing the communication with
  * the server.
  */
-class WXDLLIMPEXP_SMTP wxCmdlineProtocol : public wxEvtHandler, public wxSocketClient
+class WXDLLIMPEXP_SMTP wxCmdlineProtocol : public wxEvtHandler, public wxSSLSocketClient
 {
    protected:
 
@@ -124,6 +126,11 @@ class WXDLLIMPEXP_SMTP wxCmdlineProtocol : public wxEvtHandler, public wxSocketC
              * This function is invoked when the state is left.
              */
             virtual void onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const {}
+
+            /*!
+             * Just to be sure we have a virtual destructor
+             */
+            virtual ~State() {}
       };
 
    public:
@@ -241,7 +248,7 @@ class WXDLLIMPEXP_SMTP wxCmdlineProtocol : public wxEvtHandler, public wxSocketC
        * It shall reconstitute the lines received from the server and invoke
        * the wxCmdlineProtocol::State::onResponse for each received line
        */
-      void OnInput(wxSocketEvent& event);
+      void OnInput();
 
       /*!
        * This function is timer handling timeout conditions. It will dispatch

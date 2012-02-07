@@ -112,7 +112,10 @@ class wxFileIterator : public std::iterator<std::forward_iterator_tag, char>
       wxFileIterator& operator --();
       wxFileIterator operator --(int);
 
-      bool operator ==(const wxFileIterator& b) const;
+      bool operator ==(const wxFileIterator& b) const
+      {
+         return !(*this != b);
+      }
       bool operator >(const wxFileIterator& b) const;
       bool operator <(const wxFileIterator& b) const;
       bool operator >=(const wxFileIterator& b) const;

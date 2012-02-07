@@ -1,7 +1,7 @@
 /****************************************************************************
 
  Project     : wxSMTP
- Author      : Brice Andrï¿½
+ Author      : Brice André
  Description : Sample illustrating the usage of wxSMTP library
 
  VERSION INFORMATION:
@@ -138,6 +138,8 @@ class App : public wxApp
       wxBusyInfo*       busy_info;
       MessagesList*     message_list;
 
+      bool AskUser(const wxString& message);
+
    DECLARE_NO_COPY_CLASS(App)
 };
 
@@ -194,7 +196,9 @@ bool App::OnInit()
    pop3 = new wxPOP3(RequestUser(_T("Please enter the user name of the pop3 account"), false),
                      RequestUser(_T("Please enter the password of the pop3 account"), true),
                      RequestUser(_T("Please enter the pop3 server address"), false),
-                     110);
+                     atoi(RequestUser(_T("Please enter the server port number (default 110)"), false).c_str()),
+                     AskUser("Do you want to use the APOP authentication method ?")?wxPOP3::APopAuthenticationMethod:wxPOP3::UserPassAuthenticationMethod,
+                     AskUser("Does your server requests a SSL/TLS connection ?"));
 
    /* Start a download operation */
    bool result = pop3->DownloadMessages(&download_headers_listener);
@@ -719,4 +723,10 @@ void AttachmentsList::OnElementSelected(wxListEvent& event)
                           wxOK);
       dlg.ShowModal();
    }
+}
+
+bool App::AskUser(const wxString& message)
+{
+   wxMessageDialog dlg(NULL, message, _T("Pop3 Client"), wxYES_NO);
+   return dlg.ShowModal()==wxID_YES;
 }

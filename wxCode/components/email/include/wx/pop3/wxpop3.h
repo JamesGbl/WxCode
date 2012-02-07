@@ -60,6 +60,8 @@
  *    node [shape=record, fontname=Helvetica, fontsize=10];
  *
  *    InitialState [ label="InitialState" URL="\ref wxPOP3::InitialState"];
+ *    SslNegociationState [ label="SslNegociationState" URL="\ref wxPOP3::SslNegociationState"];
+ *    HelloState [ label="HelloState" URL="\ref wxPOP3::HelloState"];
  *    AuthorisationState [ label="AuthorisationState" URL="\ref wxPOP3::AuthorisationState"];
  *    GetMessagesListState [ label="GetMessagesListState" URL="\ref wxPOP3::GetMessagesListState"];
  *    HandlingMessage [ label="HandlingMessage" URL="\ref wxPOP3::HandlingMessage"];
@@ -68,7 +70,14 @@
  *    ExitState [ label="ExitState" URL="\ref wxPOP3::InitialState"];
  *
  *    InitialState -> ExitState [ label="KO|timeout|\ndisconnect", arrowhead="open", style="dashed" ];
- *    InitialState -> AuthorisationState [ label="OK", arrowhead="open", style="dashed" ];
+ *    InitialState -> HelloState [ label="OK-NoSSl", arrowhead="open", style="dashed" ];
+ *    InitialState -> StartSslState [ label="OK-SSl", arrowhead="open", style="dashed" ];
+ *
+ *    SslNegociationState -> ExitState [ label="KO|timeout|\ndisconnect", arrowhead="open", style="dashed" ];
+ *    SslNegociationState -> HelloState [ label="OK", arrowhead="open", style="dashed" ];
+ *
+ *    HelloState -> ExitState [ label="KO|timeout|\ndisconnect", arrowhead="open", style="dashed" ];
+ *    HelloState -> AuthorisationState [ label="OK", arrowhead="open", style="dashed" ];
  *
  *    AuthorisationState -> ExitState [ label="OK_test|KO|\ntimeout|disconnect", arrowhead="open", style="dashed" ];
  *    AuthorisationState -> GetMessagesListState [ label="OK_download", arrowhead="open", style="dashed" ];
@@ -186,8 +195,24 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
                delete message;
                shall_stop = false;
             }
+
+            /*!
+             * This function is invoked before messages are handled. The provided list contains all ids of messages
+             * present on the server.
+             * The user can freely remove all entries from the list he does not want to be handled by the pop3 session.
+             */
+            virtual void OnFilterHandledMessages(std::list<wxEmailMessage::MessageId>& WXUNUSED(handled_messages))
+            {}
       };
 
+      /*!
+       * This enumerates all implemented authentication schemes available
+       */
+      typedef enum
+      {
+         UserPassAuthenticationMethod,
+         APopAuthenticationMethod
+      } AuthenticationScheme_t;
 
       /*!
        * This is the default constructor of the POP3 client.
@@ -202,7 +227,23 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
              wxString client_password,
              wxString server_name,
              unsigned long port = 110,
+             AuthenticationScheme_t authentication_scheme = UserPassAuthenticationMethod,
+             bool ssl_enabled = false,
              Listener* default_listener = NULL);
+
+      /*!
+       * This function allows configuring the authentication scheme used for connection
+       * to the SMTP server
+       *
+       * \param authentication_scheme The ::AuthenticationScheme_t used for the connection
+       * \param user_name The user name to be used, if requested
+       * \param password The password to be used, if requested
+       * \param ssl_enabled enables SSL connection
+       */
+      void ConfigureAuthenticationScheme(AuthenticationScheme_t authentication_scheme,
+                                         const wxString& user_name = wxT(""),
+                                         const wxString& password = wxT(""),
+                                         bool ssl_enabled = false);
 
       /*!
        * Indicates if an operation is currently in progress
@@ -250,21 +291,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
 
       /*!
        * This state is entered when the client initiates a connection to the server.
-       * We remain in this state until the connection is established and the server
-       * sends the acknowledge.
-       *
-       * The following transitions are implemented :
-       * \li \c timeout/disconnect If the server does not respond before timeout expires or if
-       *                           the connection is lost, the
-       *                           ::wxPOP3::ExitState is entered. The function
-       *                           Listener::OnOperationFinished is
-       *                           invoked with ::wxPOP3::Listener::Timeout status
-       * \li \c KO If the server send a NACK, the ::wxPOP3::ExitState is entered.
-       *           The function Listener::OnOperationFinished is
-       *           invoked with ::wxPOP3::Listener::Error status
-       * \li \c OK If the server send an ACK, the ::wxPOP3::AuthorisationState is entered.
-       *           The variable session_digest is updated with the provided digest in order
-       *           to be able to initiate a APOP command later
+       * We immediately leave this state to SslNegociationState if an ssl connection
+       * is requested of for Hello state if not.
        */
       class InitialState : public wxCmdlineProtocol::State
       {
@@ -274,6 +302,61 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
             void onTimeout(wxCmdlineProtocol& context) const;
             void onEnterState(wxCmdlineProtocol& context) const;
             void onLeaveState(wxCmdlineProtocol& context) const;
+      };
+
+      /*!
+       * \internal
+       *
+       * When entering this state, the SSL session is negociated. A timer is started.
+       *
+       * When leaving this state, the timer is stopped.
+       *
+       * The following transitions are implemented:
+       * \li \c timeout/disconnect If the server does not respond before timeout expires or if
+       *                           the connection is lost, the
+       *                           ::wxPOP3::ExitState is entered. The function
+       *                           Listener::OnOperationFinished is
+       *                           invoked with ::wxPOP3::Listener::Timeout status
+       * \li \c KO If the ssl session cannot be established.
+       *           The function Listener::OnOperationFinished is
+       *           invoked with ::wxPOP3::Listener::Error status
+       * \li \c OK If the ssl session is properly established, the ::wxPOP3::HelloState is entered.
+       */
+      class SslNegociationState : public wxCmdlineProtocol::State
+      {
+         void onDisconnect(wxCmdlineProtocol& context) const;
+         void onResponse(wxCmdlineProtocol& context, const wxString& line) const ;
+         void onTimeout(wxCmdlineProtocol& context) const;
+         void onEnterState(wxCmdlineProtocol& context) const;
+         void onLeaveState(wxCmdlineProtocol& context) const;
+      };
+
+      /*!
+       * \internal
+       *
+       * When entering this state, the we wait for the ACK message received from the server.
+       * A timer is started
+       *
+       * When leaving this state, the timer is stopped.
+       *
+       * The following transitions are implemented:
+       * \li \c timeout/disconnect If the server does not respond before timeout expires or if
+       *                           the connection is lost, the
+       *                           ::wxPOP3::ExitState is entered. The function
+       *                           Listener::OnOperationFinished is
+       *                           invoked with ::wxPOP3::Listener::Timeout status
+       * \li \c KO If the server send a NACK, the ::wxPOP3::ExitState is entered.
+       *           The function Listener::OnOperationFinished is
+       *           invoked with ::wxPOP3::Listener::Error status
+       * \li \c OK If the server send an ACK, the ::wxPOP3::AuthorisationState is entered.
+       */
+      class HelloState : public wxCmdlineProtocol::State
+      {
+         void onDisconnect(wxCmdlineProtocol& context) const;
+         void onResponse(wxCmdlineProtocol& context, const wxString& line) const ;
+         void onTimeout(wxCmdlineProtocol& context) const;
+         void onEnterState(wxCmdlineProtocol& context) const;
+         void onLeaveState(wxCmdlineProtocol& context) const;
       };
 
       /*!
@@ -455,6 +538,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
       };
 
       static InitialState           initial_state;
+      static HelloState             hello_state;
+      static SslNegociationState    ssl_negociation_state;
       static AuthorisationState     authorisation_state;
       static GetMessagesListState   get_message_list_state;
       static HandlingMessage        handling_message_state;
@@ -462,7 +547,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
       static SuppressingMessage     suppressing_message_state;
       static ExitState              exit_state;
 
-      std::list<unsigned long> messages_list;
+      std::list<wxEmailMessage::MessageId> messages_list;
+      bool in_uid_list;
       bool shall_suppress;
       wxString message_content;
       wxString session_digest;
@@ -473,6 +559,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
 
       wxString user_name;
       wxString user_password;
+
+      bool ssl_enabled;
 
       enum
       {
@@ -500,6 +588,8 @@ class WXDLLIMPEXP_SMTP wxPOP3 : public wxCmdlineProtocol
       Listener::ExtractionMode_t extraction_mode;
 
       bool in_init;
+
+      AuthenticationScheme_t authentication_scheme;
 };
 
 

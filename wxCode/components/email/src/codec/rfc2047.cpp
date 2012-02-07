@@ -103,7 +103,7 @@ wxString wxRfc2047::Decode(const wxString& encoded_str)
 
          /* Flush content in a string */
          str_content = _T("");
-         for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()]; p++)
+         for (unsigned char* p = &buffer[0]; p <= &buffer[buffer.size()-1]; p++)
          {
             str_content.Append(*p, 1);
          }

@@ -68,6 +68,8 @@
  *
  *    ConnectState [ label="ConnectState" URL="\ref wxSMTP::ConnectState"];
  *    HeloState [ label="HeloState" URL="\ref wxSMTP::HeloState"];
+ *    StartTLSState [ label="StartTLSState" URL="\ref wxSMTP::StartTLSState"];
+ *    SSLNegociationState [ label="SSLNegociationState" URL="\ref wxSMTP::SSLNegociationState"];
  *    AuthenticateState [ label="AuthenticateState" URL="\ref wxSMTP::AuthenticateState"];
  *    SendMailFromState [ label="SendMailFromState" URL="\ref wxSMTP::SendMailFromState"];
  *    RcptListState [ label="RcptListState" URL="\ref wxSMTP::RcptListState"];
@@ -80,10 +82,19 @@
  *    ConnectState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
  *    ConnectState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
  *
- *    HeloState -> SendMailFromState [ label="OK,NoAuth", arrowhead="open", style="dashed" ];
- *    HeloState -> AuthenticateState [ label="OK,ShallAuth", arrowhead="open", style="dashed" ];
+ *    HeloState -> StartTLSState [ label="OK,SSL", arrowhead="open", style="dashed" ];
+ *    HeloState -> SendMailFromState [ label="OK,NoAuth,NoSSL", arrowhead="open", style="dashed" ];
+ *    HeloState -> AuthenticateState [ label="OK,ShallAuth,NoSSL", arrowhead="open", style="dashed" ];
  *    HeloState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
  *    HeloState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
+ *
+ *    StartTLSState -> SSLNegociationState [ label="OK", arrowhead="open", style="dashed" ];
+ *    StartTLSState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
+ *    StartTLSState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
+ *
+ *    SSLNegociationState -> HeloState [ label="OK", arrowhead="open", style="dashed" ];
+ *    SSLNegociationState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ];
+ *    SSLNegociationState -> ClosedState [ label="disconnect", arrowhead="open", style="dashed" ];
  *
  *    AuthenticateState -> SendMailFromState [ label="OK", arrowhead="open", style="dashed" ]
  *    AuthenticateState -> QuitState [ label="KO|timeout", arrowhead="open", style="dashed" ]
@@ -159,6 +170,7 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
              *        if the status is not ::wxSMTP::Listener::SendingSucceeded, some recipients could be properly handled.
              *        In this case, the caller can make the assumption that those recipients have properly
              *        been handled and those addresses will not be included in retry process, if any.
+             * \param can_retry if true, user can request a retry, if false, message is definitively rejected and retry is not possible.
              * \param shall_retry If status is different from ::wxSMTP::Listener::SendingSucceeded, the user shall set this
              *        flag to indicate if the SMTP client shall retry sending the mail. Note that this is
              *        not a good idea to set this flag if status is ::SendingMessageRejected.
@@ -173,6 +185,7 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
                                          unsigned long                              WXUNUSED(nb_retry_messages),
                                          const std::list<wxEmailMessage::Address>&  WXUNUSED(rejected_addresses),
                                          const std::list<wxEmailMessage::Address>&  WXUNUSED(accepted_addresses),
+                                         bool                                       WXUNUSED(can_retry),
                                          bool&                                      shall_retry,
                                          unsigned long&                             WXUNUSED(retry_delay_s),
                                          bool&                                      shall_stop)
@@ -192,7 +205,8 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
                StatusRetry,                  /*!< The server requests a retry of sending process */
                StatusError,                  /*!< The server rejected a command, which ended the sending process */
                StatusUserAbort,              /*!< The user requested an abort */
-               StatusInvalidUserNamePassword /*!< The provided user name or password is invalid */
+               StatusInvalidUserNamePassword,/*!< The provided user name or password is invalid */
+               StatusSslError                /*!< The Ssl session could not be initiated */
             } DisconnectionStatus_t;
 
             /*!
@@ -227,6 +241,7 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        */
       wxSMTP(const wxString& host,
              unsigned short port = 25,
+             bool ssl_enabled = false,
              Listener* listener = NULL);
 
       /*!
@@ -235,7 +250,10 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
       typedef enum
       {
          NoAuthentication, /*!< No authentication required */
-         CramMd5Authentication /*!< SASL CRAM-MD5 authentication scheme */
+         AutodetectAuthenticationMethod,
+         CramMd5Authentication, /*!< SASL CRAM-MD5 authentication scheme */
+         PlainAuthentication,
+         LoginAuthentication
       } AuthenticationScheme_t;
 
       /*!
@@ -245,10 +263,12 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        * \param authentication_scheme The ::AuthenticationScheme_t used for the connection
        * \param user_name The user name to be used, if requested
        * \param password The password to be used, if requested
+       * \param ssl_enabled enables SSL connection
        */
       void ConfigureAuthenticationScheme(AuthenticationScheme_t authentication_scheme,
                                          const wxString& user_name = wxT(""),
-                                         const wxString& password = wxT(""));
+                                         const wxString& password = wxT(""),
+                                         bool ssl_enabled = false);
 
       /*!
        * This function posts the message in the list of messages to be sent.
@@ -431,6 +451,11 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
              * This function flushes all currently sent messages to abort sending process.
              */
             virtual void onFlushMessages(wxCmdlineProtocol& WXUNUSED(context)) const = 0;
+
+            /*!
+             * Just to be sure we have a virtual destructor
+             */
+            virtual ~SMTPState() {}
       };
 
       /*!
@@ -468,11 +493,61 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        * When leaving this state, the timer is stopped.
        *
        * The following transitions are implemented:
+       *    \li ::wxSMTP::StartTLSState If the server ACKS the connection and ssl connection is requested
+       *    \li ::wxSMTP::AuthenticateState If the server ACKS the connection and authentication is requested
        *    \li ::wxSMTP::SendMailFromState If the server ACKS the connection and no authentication is requested
        *    \li ::wxSMTP::QuitState In case of timeout or NACK sent by server, the wxSMTP#disconnection_status flag is updated accordingly
        *    \li ::wxSMTP::ClosedState In case of disconnection by the server, the wxSMTP#disconnection_status flag is updated accordingly
        */
       class HeloState : public SMTPState
+      {
+         public:
+            void onDisconnect(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onResponse(wxCmdlineProtocol& WXUNUSED(context), const wxString& WXUNUSED(line)) const;
+            void onTimeout(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onEnterState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onFlushMessages(wxCmdlineProtocol& WXUNUSED(context)) const;
+      };
+
+      /*!
+       * \internal
+       *
+       * When entering this state, the StartTLSState command is sent to server and
+       * a timeout is triggered.
+       *
+       * When leaving this state, the timer is stopped.
+       *
+       * The following transitions are implemented:
+       *    \li ::wxSMTP::SSLNegociationState If the server ACKS the connection
+       *    \li ::wxSMTP::QuitState In case of timeout or NACK sent by server, the wxSMTP#disconnection_status flag is updated accordingly
+       *    \li ::wxSMTP::ClosedState In case of disconnection by the server, the wxSMTP#disconnection_status flag is updated accordingly
+       */
+      class StartTLSState : public SMTPState
+      {
+         public:
+            void onDisconnect(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onResponse(wxCmdlineProtocol& WXUNUSED(context), const wxString& WXUNUSED(line)) const;
+            void onTimeout(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onEnterState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onLeaveState(wxCmdlineProtocol& WXUNUSED(context)) const;
+            void onFlushMessages(wxCmdlineProtocol& WXUNUSED(context)) const;
+      };
+
+      /*!
+       * \internal
+       *
+       * When entering this state, the StartTLSState command is sent to server and
+       * a timeout is triggered.
+       *
+       * When leaving this state, the timer is stopped.
+       *
+       * The following transitions are implemented:
+       *    \li ::wxSMTP::HeloState If the server ACKS the connection
+       *    \li ::wxSMTP::QuitState In case of timeout or NACK sent by server, the wxSMTP#disconnection_status flag is updated accordingly
+       *    \li ::wxSMTP::ClosedState In case of disconnection by the server, the wxSMTP#disconnection_status flag is updated accordingly
+       */
+      class SSLNegociationState : public SMTPState
       {
          public:
             void onDisconnect(wxCmdlineProtocol& WXUNUSED(context)) const;
@@ -734,15 +809,17 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
        */
       unsigned long GetNbRetryMessages() const;
 
-      static const ConnectState      g_connectState;
-      static const HeloState         g_heloState;
-      static const AuthenticateState g_authenticateState;
-      static const SendMailFromState g_sendMailFromState;
-      static const RcptListState     g_rcptListState;
-      static const BeginDataState    g_beginDataState;
-      static const DataState         g_dataState;
-      static const QuitState         g_quitState;
-      static const ClosedState       g_closedState;
+      static const ConnectState        g_connectState;
+      static const HeloState           g_heloState;
+      static const StartTLSState       g_startTlsState;
+      static const SSLNegociationState g_sslNegociationState;
+      static const AuthenticateState   g_authenticateState;
+      static const SendMailFromState   g_sendMailFromState;
+      static const RcptListState       g_rcptListState;
+      static const BeginDataState      g_beginDataState;
+      static const DataState           g_dataState;
+      static const QuitState           g_quitState;
+      static const ClosedState         g_closedState;
 
       /*!
        * \internal
@@ -842,11 +919,18 @@ class WXDLLIMPEXP_SMTP wxSMTP : public wxCmdlineProtocol
       static const unsigned long timeout;
 
       AuthenticationScheme_t authentication_scheme;
+      AuthenticationScheme_t current_authentication_scheme;
       wxString user_name;
       wxString password;
+      bool ssl_enabled;
+      bool shall_enter_ssl;
       bool authentication_digest_sent;
+      wxString authentication_line;
 
       wxString ComputeAuthenticationDigest(const wxString& digest);
+
+	  wxString DecodeBase64(const wxString& data);
+	  wxString EncodeBase64(const wxString& data);
 };
 
 #endif

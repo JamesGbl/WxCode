@@ -144,7 +144,7 @@ void wxEmailMessage::MIMEExtractBody(mimetic::MimeEntity& entity, std::ostream& 
                          entity.body().end(),
                          b64,
                          std::back_inserter(buffer));
-       buffer.push_back(0);
+         buffer.push_back(0);
 
          for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()-1]; p++)
          {
@@ -163,10 +163,11 @@ void wxEmailMessage::MIMEExtractBody(mimetic::MimeEntity& entity, std::ostream& 
                       entity.body().end(),
                       qp,
                       std::back_inserter(buffer));
+      buffer.push_back(0);
 
       /* Flush content in a string */
       wxString content;
-      for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()]; p++)
+      for (unsigned char* p = &buffer[0]; p != &buffer[buffer.size()-1]; p++)
       {
          content.Append(*p, 1);
       }
@@ -190,13 +191,12 @@ void wxEmailMessage::MIMEExtractBody(mimetic::MimeEntity& entity, std::ostream& 
    else if (encoding_type.CmpNoCase(_T("x-token")) == 0)
    {
       //TODO : to implement : x-token format
-      stream << _T("Not supported type ") << encoding_type.c_str();
+      stream << _T("Not supported type ") << encoding_type.c_str() << "!";
    }
    else
    {
-      /* Not supported encoding type -> raise error */
-      //TODO... voir ce qu'on fait dans ce cas là...
-      stream << _T("Not supported type ") << encoding_type.c_str();
+      /* Not supported encoding type -> we will provide content as is as some e-mails are not properly formatted... */
+      stream << entity.body().c_str();
    }
 }
 

@@ -988,6 +988,10 @@ SOURCE=..\src\mimetic\version.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\ssl\wxSSLSocketClient.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\utils\wxcmdprot.cpp
 # End Source File
 # Begin Source File
@@ -1017,6 +1021,222 @@ SOURCE=..\src\smtp\wxsmtpemail.cpp
 # Begin Source File
 
 SOURCE=..\src\smtp\wxsmtpstates.cpp
+# End Source File
+# End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\address.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\addresslist.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\base64.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\body.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\body.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\codec\charsetconv.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\circular_buffer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\code.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\codec.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\codec_base.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\codec_chain.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\contentdescription.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\contentdisposition.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\contentid.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\contenttransferencoding.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\contenttype.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\datetime.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\field.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\fieldparam.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\fieldvalue.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\group.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\header.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\header.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\parser\itparser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\parser\itparserdecl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\mailbox.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\mailboxlist.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\message.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\message.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\messageid.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\mimeentity.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\mimeentitylist.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\mimetic.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\mimeversion.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\other_codecs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\codec\qp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\codec\rfc2047.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\codec\rfc2231.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\rfc822\rfc822.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\streambufs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\strutils.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\tokenizer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\tree.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\utils.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\version.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\mimetic\wxFileIterator.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\ssl\wxOpenSSL.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\ssl\wxSSLSocketClient.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\utils\wxcmdprot.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\wxemail.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\pop3\wxpop3.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\smtp\wxsmtp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\wxsmtpdef.h
 # End Source File
 # End Group
 # End Target

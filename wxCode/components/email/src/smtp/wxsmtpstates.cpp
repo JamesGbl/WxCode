@@ -62,6 +62,12 @@ void wxSMTP::ConnectState::onEnterState(wxCmdlineProtocol& context) const
 {
    WX_SMTP_PRINT_DEBUG("Entering ConnectState\n");
 
+   /* Set disconnection status */
+   ((wxSMTP&)context).disconnection_status = Listener::StatusOK;
+
+   /* Set ssl flag */
+   ((wxSMTP&)context).shall_enter_ssl = ((wxSMTP&)context).ssl_enabled;
+
    /* Start connection process */
    context.Connect();
 
@@ -147,17 +153,28 @@ void wxSMTP::HeloState::onResponse(wxCmdlineProtocol& context, const wxString& l
       /* Check if this is the last answer */
       if (line.StartsWith("250-"))
       {
+		  if (line.StartsWith("250-AUTH")) {
+				((wxSMTP&)context).authentication_line = line;
+		  }
          /* We shall wait next acceptance answer... */
+
       }
       else
       {
-         if (((wxSMTP&)context).authentication_scheme == wxSMTP::NoAuthentication)
+         if (((wxSMTP&)context).shall_enter_ssl)
          {
-            context.ChangeState(g_sendMailFromState);
+            context.ChangeState(g_startTlsState);
          }
          else
          {
-            context.ChangeState(g_authenticateState);
+            if (((wxSMTP&)context).authentication_scheme == wxSMTP::NoAuthentication)
+            {
+               context.ChangeState(g_sendMailFromState);
+            }
+            else
+            {
+               context.ChangeState(g_authenticateState);
+            }
          }
       }
    }
@@ -192,13 +209,166 @@ void wxSMTP::HeloState::onFlushMessages(wxCmdlineProtocol& context) const
    ((wxSMTP&)context).messages_to_send.clear();
 }
 
+void wxSMTP::StartTLSState::onEnterState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Entering StartTLSState\n");
+
+   /* Send the HELLO command */
+   context.SendLine(_T("STARTTLS"));
+
+   /* Start timer */
+   context.TimerStart(((wxSMTP&)context).timeout);
+}
+
+void wxSMTP::StartTLSState::onLeaveState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Leaving StartTLSState\n");
+   context.TimerStop();
+}
+
+void wxSMTP::StartTLSState::onFlushMessages(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).messages_to_send.clear();
+}
+
+void wxSMTP::StartTLSState::onResponse(wxCmdlineProtocol& context, const wxString& line) const
+{
+   /* Extract smpt code */
+   unsigned long smtpCode = 0;
+   line.ToULong(&smtpCode);
+
+   /* Check if command was successful */
+   if (smtpCode == 220)
+   {
+      context.ChangeState(g_sslNegociationState);
+   }
+   else
+   {
+      if ((smtpCode >= 400) && (smtpCode < 500))
+      {
+         ((wxSMTP&)context).disconnection_status = Listener::StatusRetry;
+      }
+      else
+      {
+         ((wxSMTP&)context).disconnection_status = Listener::StatusError;
+      }
+      context.ChangeState(g_quitState);
+   }
+}
+
+void wxSMTP::StartTLSState::onDisconnect(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusDisconnect;
+   context.ChangeState(g_closedState);
+}
+
+void wxSMTP::StartTLSState::onTimeout(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusTimeout;
+   context.ChangeState(g_quitState);
+}
+
+void wxSMTP::SSLNegociationState::onEnterState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Entering SSLNegociationState\n");
+
+   /* Send the HELLO command */
+   switch (context.InitiateSSLSession())
+   {
+      case SslConnected:
+         context.ChangeState(g_heloState);
+         break;
+
+      case SslPending:
+         context.TimerStart(((wxSMTP&)context).timeout);
+         break;
+
+      case SslFailed:
+      default:
+         ((wxSMTP&)context).disconnection_status = Listener::StatusSslError;
+         context.ChangeState(g_quitState);
+         break;
+   }
+}
+
+void wxSMTP::SSLNegociationState::onLeaveState(wxCmdlineProtocol& context) const
+{
+   WX_SMTP_PRINT_DEBUG("Leaving SSLNegociationState\n");
+   context.TimerStop();
+   ((wxSMTP&)context).shall_enter_ssl = false;
+}
+
+void wxSMTP::SSLNegociationState::onResponse(wxCmdlineProtocol& context, const wxString& WXUNUSED(line)) const
+{
+   /* try a new connection */
+   switch (context.InitiateSSLSession())
+   {
+      case SslConnected:
+         context.ChangeState(g_heloState);
+         break;
+
+      case SslPending:
+         /* We will wait to have more data */
+         break;
+
+      case SslFailed:
+      default:
+         ((wxSMTP&)context).disconnection_status = Listener::StatusSslError;
+         context.ChangeState(g_quitState);
+         break;
+   }
+}
+
+void wxSMTP::SSLNegociationState::onFlushMessages(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).messages_to_send.clear();
+}
+
+void wxSMTP::SSLNegociationState::onDisconnect(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusDisconnect;
+   context.ChangeState(g_closedState);
+}
+
+void wxSMTP::SSLNegociationState::onTimeout(wxCmdlineProtocol& context) const
+{
+   ((wxSMTP&)context).disconnection_status = Listener::StatusTimeout;
+   context.ChangeState(g_quitState);
+}
+
 void wxSMTP::AuthenticateState::onEnterState(wxCmdlineProtocol& context) const
 {
    WX_SMTP_PRINT_DEBUG("Entering AuthenticateState\n");
 
-   /* Send the HELLO command */
-   //TODO replace localhost with name of machine
-   context.SendLine(_T("AUTHENTICATE CRAM-MD5"));
+   if (((wxSMTP&)context).authentication_scheme == wxSMTP::AutodetectAuthenticationMethod) {
+
+	   if (((wxSMTP&)context).authentication_line.Find("LOGIN")!=wxNOT_FOUND) {
+			((wxSMTP&)context).current_authentication_scheme = wxSMTP::LoginAuthentication;
+
+	   } else if (((wxSMTP&)context).authentication_line.Find("CRAM_MD5")!=wxNOT_FOUND) {
+			((wxSMTP&)context).current_authentication_scheme = wxSMTP::CramMd5Authentication;
+
+	   } else if (((wxSMTP&)context).authentication_line.Find("PLAIN")!=wxNOT_FOUND) {
+			((wxSMTP&)context).current_authentication_scheme = wxSMTP::PlainAuthentication;
+
+	   } else ((wxSMTP&)context).current_authentication_scheme = wxSMTP::LoginAuthentication;
+
+   } else ((wxSMTP&)context).current_authentication_scheme = ((wxSMTP&)context).authentication_scheme;
+
+
+   switch (((wxSMTP&)context).current_authentication_scheme)
+   {
+	case wxSMTP::LoginAuthentication:
+       context.SendLine(_T("AUTH LOGIN"));
+	   break;
+	case wxSMTP::CramMd5Authentication:
+	   context.SendLine(_T("AUTHENTICATE CRAM-MD5"));
+		break;
+	case wxSMTP::PlainAuthentication:
+       context.SendLine(_T("AUTH PLAIN"));
+		break;
+   }
+   /* check authentication type */
 
    /* Initialise internal state */
    ((wxSMTP&)context).authentication_digest_sent = false;
@@ -290,7 +460,6 @@ void wxSMTP::SendMailFromState::onEnterState(wxCmdlineProtocol& context) const
    /* Then, we check if we have a message to send */
    if (((wxSMTP&)context).messages_to_send.size() <= 0)
    {
-      ((wxSMTP&)context).disconnection_status = Listener::StatusOK;
       context.ChangeState(g_quitState);
    }
    else
@@ -345,6 +514,7 @@ void wxSMTP::SendMailFromState::onResponse(wxCmdlineProtocol& context, const wxS
                                                          ((wxSMTP&)context).GetNbRetryMessages(),
                                                          std::list<wxEmailMessage::Address>(),
                                                          std::list<wxEmailMessage::Address>(),
+                                                         true,
                                                          shall_retry,
                                                          retry_delay,
                                                          shall_stop);
@@ -418,6 +588,7 @@ void wxSMTP::CancelMailSendingProcess(Listener::SendingStatus_t status, bool acc
                                 GetNbRetryMessages(),
                                 total_rejected_recipients,
                                 total_accepted_recipients,
+                                accept_retry,
                                 shall_retry,
                                 retry_delay,
                                 shall_stop);
@@ -682,7 +853,7 @@ void wxSMTP::DataState::onEnterState(wxCmdlineProtocol& context) const
    WX_SMTP_PRINT_DEBUG("Entering DataState\n");
 
    /* Send the complete message on socket */
-   wxSocketOutputStream out(context);
+   wxSslSocketOutputStream out(context);
    ((wxSMTP&)context).messages_to_send.front().Encode(out);
 
    /* Start timer */
@@ -731,6 +902,7 @@ void wxSMTP::DataState::onResponse(wxCmdlineProtocol& context, const wxString& l
                                                          ((wxSMTP&)context).GetNbRetryMessages(),
                                                          ((wxSMTP&)context).total_rejected_recipients,
                                                          ((wxSMTP&)context).total_accepted_recipients,
+                                                         false,
                                                          shall_retry,
                                                          retry_delay,
                                                          shall_stop);
@@ -807,11 +979,7 @@ void wxSMTP::QuitState::onResponse(wxCmdlineProtocol& context, const wxString& l
    line.ToULong(&smtpCode);
 
    /* Check if we received an ACK */
-   if (smtpCode == 221)
-   {
-      ((wxSMTP&)context).disconnection_status = Listener::StatusOK;
-   }
-   else
+   if (smtpCode != 221)
    {
       ((wxSMTP&)context).disconnection_status = Listener::StatusError;
    }
