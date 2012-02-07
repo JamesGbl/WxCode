@@ -9,8 +9,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="SendMail"
-	ProjectGUID="{1B5A84D6-4C11-545D-9453-6AC9C942CD12}"
+	Name="wxEMailPop3"
+	ProjectGUID="{352BD22E-1940-5CB0-A34C-01D27402FEC8}"
 	>
 	<Platforms>
 		<Platform
@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Static ANSI Release Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -54,8 +54,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -68,7 +68,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -77,12 +77,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -97,7 +97,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -115,8 +115,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -146,8 +146,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -160,7 +160,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -169,12 +169,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -189,7 +189,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -207,8 +207,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -238,8 +238,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -252,7 +252,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -261,12 +261,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -281,7 +281,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -299,8 +299,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -330,8 +330,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -344,7 +344,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -353,12 +353,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -373,7 +373,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -391,8 +391,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -425,8 +425,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -439,7 +439,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -448,13 +448,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -469,7 +469,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -487,8 +487,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -521,8 +521,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -535,7 +535,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -544,13 +544,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -565,7 +565,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -583,8 +583,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -617,8 +617,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -631,7 +631,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -640,13 +640,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -661,7 +661,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -679,8 +679,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -713,8 +713,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -727,7 +727,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -736,13 +736,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -757,7 +757,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -775,8 +775,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -807,8 +807,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -821,7 +821,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -830,12 +830,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -850,7 +850,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -868,8 +868,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -900,8 +900,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -914,7 +914,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -923,12 +923,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -943,7 +943,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -961,8 +961,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -993,8 +993,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1007,7 +1007,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1016,12 +1016,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1036,7 +1036,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1054,8 +1054,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1086,8 +1086,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1100,7 +1100,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1109,12 +1109,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1129,7 +1129,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1147,8 +1147,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1182,8 +1182,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1196,7 +1196,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1205,13 +1205,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1226,7 +1226,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1244,8 +1244,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1279,8 +1279,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1293,7 +1293,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1302,13 +1302,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1323,7 +1323,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1341,8 +1341,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1376,8 +1376,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1390,7 +1390,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1399,13 +1399,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1420,7 +1420,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1438,8 +1438,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1473,8 +1473,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1487,7 +1487,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1496,13 +1496,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1517,7 +1517,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1535,8 +1535,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1566,8 +1566,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1580,7 +1580,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1589,12 +1589,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1609,7 +1609,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1627,8 +1627,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1658,8 +1658,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1672,7 +1672,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1681,12 +1681,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1701,7 +1701,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1719,8 +1719,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1750,8 +1750,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1764,7 +1764,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1773,12 +1773,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1793,7 +1793,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1811,8 +1811,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmsw_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1842,8 +1842,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1856,7 +1856,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1865,12 +1865,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1885,7 +1885,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1903,8 +1903,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1937,8 +1937,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -1951,7 +1951,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1960,13 +1960,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1981,7 +1981,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1999,8 +1999,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2033,8 +2033,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2047,7 +2047,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2056,13 +2056,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2077,7 +2077,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2095,8 +2095,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2129,8 +2129,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2143,7 +2143,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2152,13 +2152,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2173,7 +2173,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2191,8 +2191,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswd_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2225,8 +2225,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2239,7 +2239,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2248,13 +2248,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2269,7 +2269,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2287,8 +2287,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2319,8 +2319,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2333,7 +2333,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2342,12 +2342,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2362,7 +2362,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2380,8 +2380,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2412,8 +2412,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2426,7 +2426,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2435,12 +2435,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2455,7 +2455,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2473,8 +2473,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2505,8 +2505,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2519,7 +2519,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2528,12 +2528,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2548,7 +2548,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2566,8 +2566,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswu_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2598,8 +2598,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2612,7 +2612,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2621,12 +2621,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2641,7 +2641,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2659,8 +2659,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2694,8 +2694,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2708,7 +2708,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2717,13 +2717,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2738,7 +2738,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2756,8 +2756,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2791,8 +2791,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2805,7 +2805,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2814,13 +2814,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2835,7 +2835,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2853,8 +2853,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic Static|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2888,8 +2888,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2902,7 +2902,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -2911,13 +2911,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2932,7 +2932,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2950,8 +2950,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic DLL|Win32"
-			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			OutputDirectory="..\samples\Pop3Client"
+			IntermediateDirectory="vcmswud_dll\wxEMailPop3"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2985,8 +2985,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailPop3\"
+				ProgramDataBaseFileName="..\samples\Pop3Client\wxEMailPop3.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="true"
@@ -2999,7 +2999,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\SendMail"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\samples\Pop3Client"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -3008,13 +3008,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\Pop3Client\wxEMailPop3.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\Pop3Client\wxEMailPop3.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -3029,7 +3029,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2005_SendMail.bsc"
+				OutputFile="..\samples\Pop3Client\wxEMail_vc2005_wxEMailPop3.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -3056,7 +3056,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\samples\SendMail\SendMail.cpp"
+				RelativePath="..\samples\Pop3Client\Pop3Client.cpp"
 				>
 			</File>
 		</Filter>

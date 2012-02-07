@@ -75,8 +75,8 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXEMAIL_LIB_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) \
-	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXEMAIL_LIB_CXXFLAGS = $(____wxEMail) $(____wxEMail_5) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXEMAIL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_wxemail.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_charsetconv.o \
@@ -116,9 +116,9 @@ WXEMAIL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_wxsmtpstates.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_wxcmdprot.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_wxmd5.o
-WXEMAIL_DLL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DWXMAKINGDLL_EMAIL \
-	-fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXEMAIL_DLL_CXXFLAGS = $(____wxEMail) $(____wxEMail_5) -W -Wall -I../include \
+	-DWXMAKINGDLL_EMAIL -fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXEMAIL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxemail.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_charsetconv.o \
@@ -158,10 +158,14 @@ WXEMAIL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxsmtpstates.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxcmdprot.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxmd5.o
-SENDMAIL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
-SENDMAIL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/SendMail_SendMail.o
+WXEMAILSMTP_CXXFLAGS = $(____wxEMail) $(____wxEMail_5) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXEMAILSMTP_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMailSmtp_SendMail.o
+WXEMAILPOP3_CXXFLAGS = $(____wxEMail) $(____wxEMail_5) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXEMAILPOP3_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMailPop3_Pop3Client.o
 
 ### Conditionally set variables: ###
 
@@ -233,20 +237,20 @@ endif
 ifeq ($(SHARED),1)
 __uninstall_wxEMail_dll_headers___depname = uninstall_wxEMail_dll_headers
 endif
+ifeq ($(WX_DEBUG),0)
+____wxEMail = -O2
+endif
+ifeq ($(WX_DEBUG),1)
+____wxEMail = -O0
+endif
 ifeq ($(SHARED),1)
-__SendMail_RPATH = -Wl,-rpath,../../lib/gcc_dll
+__wxEMail = -Wl,-rpath,../../lib/gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-VAR = -O2
+____wxEMail_5 = 
 endif
 ifeq ($(WX_DEBUG),1)
-VAR = -O0
-endif
-ifeq ($(WX_DEBUG),0)
-VAR_1 = 
-endif
-ifeq ($(WX_DEBUG),1)
-VAR_1 = -g
+____wxEMail_5 = -g
 endif
 
 
@@ -256,7 +260,7 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) ../samples/SendMail/SendMail
+all: test_for_selected_wxbuild $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) ../samples/SendMail/wxEMailSmtp ../samples/Pop3Client/wxEMailPop3
 
 install: $(__install_wxEMail_lib___depname) $(__install_wxEMail_lib_headers___depname) $(__install_wxEMail_dll___depname) $(__install_wxEMail_dll_headers___depname)
 
@@ -268,7 +272,8 @@ clean:
 	rm -f ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 	rm -f ../lib/gcc_$(__wxEMail_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../lib/gcc_$(__wxEMail_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f ../samples/SendMail/SendMail
+	rm -f ../samples/SendMail/wxEMailSmtp
+	rm -f ../samples/Pop3Client/wxEMailPop3
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
@@ -314,7 +319,7 @@ endif
 
 ifeq ($(SHARED),1)
 ../lib/gcc_$(__wxEMail_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxEMail_dll  $(WXEMAIL_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXEMAIL_DLL_OBJECTS)  $(VAR_1) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXEMAIL_DLL_OBJECTS)  $(____wxEMail_5) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
 endif
 
 ifeq ($(SHARED),1)
@@ -351,11 +356,17 @@ uninstall_wxEMail_dll_headers:
 	done
 endif
 
-../samples/SendMail/SendMail: $(SENDMAIL_OBJECTS) make_sample_dir_SendMail $(__wxEMail_lib___depname)
-	$(CXX) -o $@ $(SENDMAIL_OBJECTS)  $(VAR_1) -L../lib  $(__SendMail_RPATH) $(LDFLAGS)  ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
+../samples/SendMail/wxEMailSmtp: $(WXEMAILSMTP_OBJECTS) make_sample_dir_wxEMailSmtp $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILSMTP_OBJECTS)  $(____wxEMail_5) -L../lib  $(__wxEMail) $(LDFLAGS)  ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
 
-make_sample_dir_SendMail: 
+make_sample_dir_wxEMailSmtp: 
 	@mkdir -p ../samples/SendMail
+
+../samples/Pop3Client/wxEMailPop3: $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3 $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  $(____wxEMail_5) -L../lib  $(__wxEMail) $(LDFLAGS)  ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
+
+make_sample_dir_wxEMailPop3: 
+	@mkdir -p ../samples/Pop3Client
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_lib_wxemail.o: ../src/wxemail.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(CPPDEPS) $<
@@ -585,8 +596,11 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxcmdprot.o: ../src/utils/wx
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMail_dll_wxmd5.o: ../src/utils/wxmd5.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/SendMail_SendMail.o: ../samples/SendMail/SendMail.cpp
-	$(CXX) -c -o $@ $(SENDMAIL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMailSmtp_SendMail.o: ../samples/SendMail/SendMail.cpp
+	$(CXX) -c -o $@ $(WXEMAILSMTP_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxEMailPop3_Pop3Client.o: ../samples/Pop3Client/Pop3Client.cpp
+	$(CXX) -c -o $@ $(WXEMAILPOP3_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all install uninstall clean install_wxEMail_lib uninstall_wxEMail_lib \
 	install_wxEMail_lib_headers uninstall_wxEMail_lib_headers \

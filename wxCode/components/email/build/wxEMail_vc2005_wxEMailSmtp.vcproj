@@ -8,9 +8,9 @@
 -->
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="SendMail"
-	ProjectGUID="{874AF92C-CD30-5A97-BA31-37A060C4A175}"
+	Version="8.00"
+	Name="wxEMailSmtp"
+	ProjectGUID="{9BD8D15D-6D57-5CED-AFC7-546FC1180B4B}"
 	>
 	<Platforms>
 		<Platform
@@ -24,7 +24,7 @@
 		<Configuration
 			Name="Static ANSI Release Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			IntermediateDirectory="vcmsw\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -48,17 +48,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -77,12 +77,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -97,7 +97,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -105,6 +105,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -113,7 +116,7 @@
 		<Configuration
 			Name="Static ANSI Release Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			IntermediateDirectory="vcmsw_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -137,17 +140,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -166,12 +169,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -186,7 +189,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -196,13 +199,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			IntermediateDirectory="vcmsw\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -226,17 +232,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -255,12 +261,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -275,7 +281,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -285,13 +291,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			IntermediateDirectory="vcmsw_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -315,17 +324,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -344,12 +353,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -364,7 +373,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -374,13 +383,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			IntermediateDirectory="vcmswd\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -404,19 +416,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -435,13 +448,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -456,7 +469,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -466,13 +479,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			IntermediateDirectory="vcmswd_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -496,19 +512,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -527,13 +544,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -548,7 +565,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -558,13 +575,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			IntermediateDirectory="vcmswd\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -588,19 +608,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -619,13 +640,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -640,7 +661,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -650,13 +671,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			IntermediateDirectory="vcmswd_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -680,19 +704,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -711,13 +736,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -732,7 +757,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -742,13 +767,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			IntermediateDirectory="vcmswu\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -773,17 +801,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -802,12 +830,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -822,7 +850,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -832,13 +860,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			IntermediateDirectory="vcmswu_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -863,17 +894,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -892,12 +923,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -912,7 +943,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -922,13 +953,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			IntermediateDirectory="vcmswu\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -953,17 +987,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -982,12 +1016,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1002,7 +1036,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1012,13 +1046,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			IntermediateDirectory="vcmswu_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1043,17 +1080,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -1072,12 +1109,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1092,7 +1129,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1102,13 +1139,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			IntermediateDirectory="vcmswud\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1133,19 +1173,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1164,13 +1205,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1185,7 +1226,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1195,13 +1236,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			IntermediateDirectory="vcmswud_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1226,19 +1270,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1257,13 +1302,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1278,7 +1323,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1288,13 +1333,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			IntermediateDirectory="vcmswud\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1319,19 +1367,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1350,13 +1399,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1371,7 +1420,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1381,13 +1430,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			IntermediateDirectory="vcmswud_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1412,19 +1464,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1443,13 +1496,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1464,7 +1517,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1474,13 +1527,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			IntermediateDirectory="vcmsw\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1504,17 +1560,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -1533,12 +1589,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1553,7 +1609,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1563,13 +1619,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			IntermediateDirectory="vcmsw_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1593,17 +1652,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -1622,12 +1681,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib wxbase28_net.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1642,7 +1701,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1652,13 +1711,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw\SendMail"
+			IntermediateDirectory="vcmsw\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1682,17 +1744,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -1711,12 +1773,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1731,7 +1793,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1741,13 +1803,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmsw_dll\SendMail"
+			IntermediateDirectory="vcmsw_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1771,17 +1836,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmsw_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmsw_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -1800,12 +1865,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_email.lib   wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1820,7 +1885,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1830,13 +1895,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			IntermediateDirectory="vcmswd\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1860,19 +1928,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1891,13 +1960,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1912,7 +1981,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1922,13 +1991,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			IntermediateDirectory="vcmswd_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1952,19 +2024,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -1983,13 +2056,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib wxbase28d_net.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2004,7 +2077,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2014,13 +2087,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd\SendMail"
+			IntermediateDirectory="vcmswd\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2044,19 +2120,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2075,13 +2152,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2096,7 +2173,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2106,13 +2183,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswd_dll\SendMail"
+			IntermediateDirectory="vcmswd_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2136,19 +2216,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswd_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswd_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2167,13 +2248,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_email.lib   wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2188,7 +2269,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2198,13 +2279,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			IntermediateDirectory="vcmswu\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2229,17 +2313,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -2258,12 +2342,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2278,7 +2362,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2288,13 +2372,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			IntermediateDirectory="vcmswu_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2319,17 +2406,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -2348,12 +2435,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib wxbase28u_net.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2368,7 +2455,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2378,13 +2465,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu\SendMail"
+			IntermediateDirectory="vcmswu\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2409,17 +2499,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -2438,12 +2528,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2458,7 +2548,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2468,13 +2558,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswu_dll\SendMail"
+			IntermediateDirectory="vcmswu_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2499,17 +2592,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswu_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswu_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -2528,12 +2621,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_email.lib   wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2548,7 +2641,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2558,13 +2651,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			IntermediateDirectory="vcmswud\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2589,19 +2685,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2620,13 +2717,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2641,7 +2738,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2651,13 +2748,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			IntermediateDirectory="vcmswud_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2682,19 +2782,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2713,13 +2814,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib wxbase28ud_net.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2734,7 +2835,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2744,13 +2845,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic Static|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud\SendMail"
+			IntermediateDirectory="vcmswud\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2775,19 +2879,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2806,13 +2911,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2827,7 +2932,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2837,13 +2942,16 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic DLL|Win32"
 			OutputDirectory="..\samples\SendMail"
-			IntermediateDirectory="vcmswud_dll\SendMail"
+			IntermediateDirectory="vcmswud_dll\wxEMailSmtp"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -2868,19 +2976,20 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
 				PreprocessorDefinitions="WIN32;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
+				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="vcmswud_dll\SendMail\"
-				ProgramDataBaseFileName="..\samples\SendMail\SendMail.pdb"
+				ObjectFile="vcmswud_dll\wxEMailSmtp\"
+				ProgramDataBaseFileName="..\samples\SendMail\wxEMailSmtp.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -2899,13 +3008,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_email.lib   wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
-				OutputFile="..\samples\SendMail\SendMail.exe"
+				OutputFile="..\samples\SendMail\wxEMailSmtp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\samples\SendMail\SendMail.pdb"
+				ProgramDatabaseFile="..\samples\SendMail\wxEMailSmtp.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -2920,7 +3029,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\samples\SendMail\wxEMail_vc2008_SendMail.bsc"
+				OutputFile="..\samples\SendMail\wxEMail_vc2005_wxEMailSmtp.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -2928,6 +3037,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

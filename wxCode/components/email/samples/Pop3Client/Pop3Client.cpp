@@ -1,7 +1,7 @@
 /****************************************************************************
 
  Project     : wxSMTP
- Author      : Brice André
+ Author      : Brice Andrï¿½
  Description : Sample illustrating the usage of wxSMTP library
 
  VERSION INFORMATION:
@@ -36,6 +36,7 @@
 #include "wx/html/htmlwin.h"
 #include "wx/protocol/http.h"
 #include "wx/mimetype.h"
+#include "wx/imaglist.h"
 
 #include "wx/pop3/wxpop3.h"
 

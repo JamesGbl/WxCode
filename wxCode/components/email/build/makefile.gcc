@@ -57,8 +57,8 @@ SHARED ?= 0
 CPPDEPS = -MT$@ -MF$@.d -MD -MP
 WXEMAIL_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	$(____wxEMail) $(____wxEMail_5) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
 WXEMAIL_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxemail.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_charsetconv.o \
@@ -100,8 +100,9 @@ WXEMAIL_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxmd5.o
 WXEMAIL_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -W -Wall -I..\include -DWXMAKINGDLL_EMAIL $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	$(____wxEMail) $(____wxEMail_5) -W -Wall -I..\include -DWXMAKINGDLL_EMAIL \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXEMAIL_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxemail.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_charsetconv.o \
@@ -141,12 +142,18 @@ WXEMAIL_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxsmtpstates.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxmd5.o
-SENDMAIL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
-	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
-SENDMAIL_OBJECTS =  \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail_SendMail.o
+WXEMAILSMTP_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	$(____wxEMail) $(____wxEMail_5) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
+WXEMAILSMTP_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMailSmtp_SendMail.o
+WXEMAILPOP3_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	$(____wxEMail) $(____wxEMail_5) -W -Wall -I..\include $(CPPFLAGS) $(CXXFLAGS)
+WXEMAILPOP3_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMailPop3_Pop3Client.o
 
 ### Conditionally set variables: ###
 
@@ -172,6 +179,12 @@ ____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
 ifeq ($(SHARED),1)
 ____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+endif
+ifeq ($(WX_SHARED),0)
+____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
+endif
+ifeq ($(WX_SHARED),1)
+____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 endif
 ifeq ($(WX_SHARED),0)
 ____WX_SHARED = 
@@ -201,16 +214,10 @@ WXLIBPOSTFIX = ud
 endif
 endif
 ifeq ($(WX_DEBUG),0)
-VAR = -O2
+____wxEMail = -O2
 endif
 ifeq ($(WX_DEBUG),1)
-VAR = -O0
-endif
-ifeq ($(WX_SHARED),0)
-____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
-endif
-ifeq ($(WX_SHARED),1)
-____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+____wxEMail = -O0
 endif
 ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_NET_NAME_p = -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net
@@ -231,10 +238,10 @@ ifeq ($(WX_SHARED),1)
 WXLIBPATH = \lib\gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-VAR_1 = 
+____wxEMail_5 = 
 endif
 ifeq ($(WX_DEBUG),1)
-VAR_1 = -g
+____wxEMail_5 = -g
 endif
 
 
@@ -244,7 +251,7 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) ..\samples\SendMail\SendMail.exe
+all: test_for_selected_wxbuild $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) ..\samples\SendMail\wxEMailSmtp.exe ..\samples\Pop3Client\wxEMailPop3.exe
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
@@ -252,7 +259,8 @@ clean:
 	-if exist ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a del ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a
 	-if exist ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.dll del ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.dll
 	-if exist ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a del ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a
-	-if exist ..\samples\SendMail\SendMail.exe del ..\samples\SendMail\SendMail.exe
+	-if exist ..\samples\SendMail\wxEMailSmtp.exe del ..\samples\SendMail\wxEMailSmtp.exe
+	-if exist ..\samples\Pop3Client\wxEMailPop3.exe del ..\samples\Pop3Client\wxEMailPop3.exe
 
 test_for_selected_wxbuild: 
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -278,17 +286,23 @@ make_dir_wxEMail_lib:
 
 ifeq ($(SHARED),1)
 ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.dll: make_dir_wxEMail_dll  $(WXEMAIL_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXEMAIL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(LDFLAGS)  $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXEMAIL_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(LDFLAGS)  $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_wxEMail_dll: 
 	if not exist ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
-..\samples\SendMail\SendMail.exe: $(SENDMAIL_OBJECTS) make_sample_dir_SendMail $(__wxEMail_lib___depname)
-	$(CXX) -o $@ $(SENDMAIL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\samples\SendMail\wxEMailSmtp.exe: $(WXEMAILSMTP_OBJECTS) make_sample_dir_wxEMailSmtp  $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILSMTP_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-make_sample_dir_SendMail: 
+make_sample_dir_wxEMailSmtp: 
 	if not exist ..\samples\SendMail mkdir ..\samples\SendMail
+
+..\samples\Pop3Client\wxEMailPop3.exe: $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3  $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+
+make_sample_dir_wxEMailPop3: 
+	if not exist ..\samples\Pop3Client mkdir ..\samples\Pop3Client
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_lib_wxemail.o: ../src/wxemail.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(CPPDEPS) $<
@@ -518,8 +532,11 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxcmdprot.o: ../src/
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMail_dll_wxmd5.o: ../src/utils/wxmd5.cpp
 	$(CXX) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\SendMail_SendMail.o: ../samples/SendMail/SendMail.cpp
-	$(CXX) -c -o $@ $(SENDMAIL_CXXFLAGS) $(CPPDEPS) $<
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMailSmtp_SendMail.o: ../samples/SendMail/SendMail.cpp
+	$(CXX) -c -o $@ $(WXEMAILSMTP_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxEMailPop3_Pop3Client.o: ../samples/Pop3Client/Pop3Client.cpp
+	$(CXX) -c -o $@ $(WXEMAILPOP3_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean
 

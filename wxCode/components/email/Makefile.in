@@ -130,9 +130,16 @@ WXEMAIL_DLL_OBJECTS =  \
 	wxEMail_dll_wxsmtpstates.o \
 	wxEMail_dll_wxcmdprot.o \
 	wxEMail_dll_wxmd5.o
-SENDMAIL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-SENDMAIL_OBJECTS =  \
-	SendMail_SendMail.o
+WXEMAILSMTP_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
+WXEMAILSMTP_OBJECTS =  \
+	wxEMailSmtp_SendMail.o \
+	$(__wxEMailSmtp___win32rc)
+WXEMAILPOP3_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
+WXEMAILPOP3_OBJECTS =  \
+	wxEMailPop3_Pop3Client.o \
+	$(__wxEMailPop3___win32rc)
 
 ### Conditionally set variables: ###
 
@@ -230,18 +237,27 @@ COND_USE_SOVERSOLARIS_1___wxEMail_dll___so_symlinks_uninst_cmd = rm -f \
 @COND_SHARED_1@	install_wxEMail_dll_headers
 @COND_SHARED_1@__uninstall_wxEMail_dll_headers___depname = \
 @COND_SHARED_1@	uninstall_wxEMail_dll_headers
-@COND_PLATFORM_MAC_0@__SendMail___mac_setfilecmd = @true
-@COND_PLATFORM_MAC_1@__SendMail___mac_setfilecmd = \
+@COND_PLATFORM_MAC_0@__wxEMailSmtp___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__wxEMailSmtp___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
-@COND_PLATFORM_MAC_1@	$(srcdir)/samples/SendMail/SendMail$(EXEEXT)
-COND_PLATFORM_OS2_1___SendMail___os2_emxbindcmd = $(NM) SendMail$(EXEEXT) | if \
-	grep -q pmwin.763 ; then emxbind -ep SendMail$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__SendMail___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___SendMail___os2_emxbindcmd)
-@COND_SHARED_1@__SendMail_RPATH = -Wl,-rpath,../../lib
+@COND_PLATFORM_MAC_1@	$(srcdir)/samples/SendMail/wxEMailSmtp$(EXEEXT)
+COND_PLATFORM_OS2_1___wxEMailSmtp___os2_emxbindcmd = $(NM) \
+	wxEMailSmtp$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	wxEMailSmtp$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__wxEMailSmtp___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___wxEMailSmtp___os2_emxbindcmd)
+@COND_PLATFORM_MAC_0@__wxEMailPop3___mac_setfilecmd = @true
+@COND_PLATFORM_MAC_1@__wxEMailPop3___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
+@COND_PLATFORM_MAC_1@	$(srcdir)/samples/Pop3Client/wxEMailPop3$(EXEEXT)
+COND_PLATFORM_OS2_1___wxEMailPop3___os2_emxbindcmd = $(NM) \
+	wxEMailPop3$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	wxEMailPop3$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__wxEMailPop3___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___wxEMailPop3___os2_emxbindcmd)
+@COND_SHARED_1@__wxEMail = -Wl,-rpath,../../lib
 
 ### Targets: ###
 
-all: $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) $(srcdir)/samples/SendMail/SendMail$(EXEEXT)
+all: $(__wxEMail_lib___depname) $(__wxEMail_dll___depname) $(srcdir)/samples/SendMail/wxEMailSmtp$(EXEEXT) $(srcdir)/samples/Pop3Client/wxEMailPop3$(EXEEXT)
 
 install: $(__install_wxEMail_lib___depname) $(__install_wxEMail_lib_headers___depname) $(__install_wxEMail_dll___depname) $(__install_wxEMail_dll_headers___depname)
 
@@ -257,7 +273,8 @@ clean:
 	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxEMail_dll___targetsuf3)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxEMail_dll___targetsuf2)
-	rm -f $(srcdir)/samples/SendMail/SendMail$(EXEEXT)
+	rm -f $(srcdir)/samples/SendMail/wxEMailSmtp$(EXEEXT)
+	rm -f $(srcdir)/samples/Pop3Client/wxEMailPop3$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -318,14 +335,23 @@ distclean: clean
 @COND_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_SHARED_1@	done
 
-$(srcdir)/samples/SendMail/SendMail$(EXEEXT): $(SENDMAIL_OBJECTS) make_sample_dir_SendMail $(__wxEMail_lib___depname)
-	$(CXX) -o $@ $(SENDMAIL_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__SendMail_RPATH) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+$(srcdir)/samples/SendMail/wxEMailSmtp$(EXEEXT): $(WXEMAILSMTP_OBJECTS) make_sample_dir_wxEMailSmtp  $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILSMTP_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxEMail) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
 	
-	$(__SendMail___mac_setfilecmd)
-	$(__SendMail___os2_emxbindcmd)
+	$(__wxEMailSmtp___mac_setfilecmd)
+	$(__wxEMailSmtp___os2_emxbindcmd)
 
-make_sample_dir_SendMail: 
+make_sample_dir_wxEMailSmtp: 
 	@mkdir -p $(srcdir)/samples/SendMail
+
+$(srcdir)/samples/Pop3Client/wxEMailPop3$(EXEEXT): $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3  $(__wxEMail_lib___depname)
+	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS) -L$(srcdir)/lib  -L$(srcdir)/lib $(LDFLAGS_GUI) $(__wxEMail) $(LDFLAGS)  -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS) $(LIBS)
+	
+	$(__wxEMailPop3___mac_setfilecmd)
+	$(__wxEMailPop3___os2_emxbindcmd)
+
+make_sample_dir_wxEMailPop3: 
+	@mkdir -p $(srcdir)/samples/Pop3Client
 
 wxEMail_lib_wxemail.o: $(srcdir)/src/wxemail.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_LIB_CXXFLAGS) $(srcdir)/src/wxemail.cpp
@@ -555,8 +581,11 @@ wxEMail_dll_wxcmdprot.o: $(srcdir)/src/utils/wxcmdprot.cpp
 wxEMail_dll_wxmd5.o: $(srcdir)/src/utils/wxmd5.cpp
 	$(CXXC) -c -o $@ $(WXEMAIL_DLL_CXXFLAGS) $(srcdir)/src/utils/wxmd5.cpp
 
-SendMail_SendMail.o: $(srcdir)/samples/SendMail/SendMail.cpp
-	$(CXXC) -c -o $@ $(SENDMAIL_CXXFLAGS) $(srcdir)/samples/SendMail/SendMail.cpp
+wxEMailSmtp_SendMail.o: $(srcdir)/samples/SendMail/SendMail.cpp
+	$(CXXC) -c -o $@ $(WXEMAILSMTP_CXXFLAGS) $(srcdir)/samples/SendMail/SendMail.cpp
+
+wxEMailPop3_Pop3Client.o: $(srcdir)/samples/Pop3Client/Pop3Client.cpp
+	$(CXXC) -c -o $@ $(WXEMAILPOP3_CXXFLAGS) $(srcdir)/samples/Pop3Client/Pop3Client.cpp
 
 
 # Include dependency info, if present:
