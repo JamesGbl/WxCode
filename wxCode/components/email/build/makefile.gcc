@@ -176,6 +176,9 @@ ifeq ($(SHARED),1)
 __wxEMail_dll___depname = \
 	..\lib\gcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.dll
 endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_HTML_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html
+endif
 ifeq ($(SHARED),0)
 ____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
@@ -301,7 +304,7 @@ make_sample_dir_wxEMailSmtp:
 	if not exist ..\samples\SendMail mkdir ..\samples\SendMail
 
 ..\samples\Pop3Client\wxEMailPop3.exe: $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3  $(__wxEMail_lib___depname)
-	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.a $(__WXLIB_HTML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 make_sample_dir_wxEMailPop3: 
 	if not exist ..\samples\Pop3Client mkdir ..\samples\Pop3Client

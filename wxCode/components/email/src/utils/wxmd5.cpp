@@ -85,7 +85,6 @@ typedef struct MD5Context MD5_CTX;
 #define CHECK_HARDWARE_PROPERTIES
 
 #include <memory.h>      /* for memcpy() */
-#include <strings.h>
 
 #ifndef HIGHFIRST
 #define byteReverse(buf, len) /* Nothing */

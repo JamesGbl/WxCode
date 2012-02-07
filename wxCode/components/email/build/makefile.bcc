@@ -203,6 +203,9 @@ __wxEMail_lib___depname = \
 __wxEMail_dll___depname = \
 	..\lib\bcc_$(____wxEMail_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.dll
 !endif
+!if "$(WX_MONOLITHIC)" == "0"
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib
+!endif
 !if "$(SHARED)" == "0"
 ____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 !endif
@@ -345,7 +348,7 @@ make_sample_dir_wxEMailSmtp:
 
 ..\samples\Pop3Client\wxEMailPop3.exe: $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3   $(__wxEMail_lib___depname)
 	ilink32 -Tpe -q  -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(____wxEMail_5) -L..$(WXLIBPATH) -aa  $(LDFLAGS) @&&|
-	c0w32.obj $(WXEMAILPOP3_OBJECTS),$@,, ..\lib\bcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.lib $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
+	c0w32.obj $(WXEMAILPOP3_OBJECTS),$@,, ..\lib\bcc_$(____wxEMail_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_email.lib $(__WXLIB_HTML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
 make_sample_dir_wxEMailPop3: 

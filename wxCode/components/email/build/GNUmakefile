@@ -473,7 +473,7 @@ make_sample_dir_wxEMailSmtp:
 	@mkdir -p ../samples/SendMail
 
 ../samples/Pop3Client/wxEMailPop3: $(WXEMAILPOP3_OBJECTS) make_sample_dir_wxEMailPop3 $(__wxEMail_lib___depname)
-	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  $(____wxEMail_5) -L../lib  $(__wxEMail) $(LDFLAGS)  ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,core,base`
+	$(CXX) -o $@ $(WXEMAILPOP3_OBJECTS)  $(____wxEMail_5) -L../lib  $(__wxEMail) $(LDFLAGS)  ../lib/gcc_$(__wxEMail_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_email-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs html,net,core,base`
 
 make_sample_dir_wxEMailPop3: 
 	@mkdir -p ../samples/Pop3Client

@@ -55,6 +55,7 @@
       <has-win32-res/>
 
       <library>wxEMail_lib</library>
+      <wx-lib>html</wx-lib>
       <wx-lib>net</wx-lib>
       <wx-lib>core</wx-lib>
       <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
