@@ -2,7 +2,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-Project: "wxsmtp"=wxsmtp_vc6_wxsmtp.dsp - Package Owner=<4>
+Project: "wxEMail"=wxEMail_vc6_wxEMail.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -14,7 +14,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SendMail"=wxsmtp_vc6_SendMail.dsp - Package Owner=<4>
+Project: "SendMail"=wxEMail_vc6_SendMail.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -23,22 +23,7 @@ Package=<5>
 Package=<4>
 {{{
 Begin Project Dependency
-Project_Dep_Name wxsmtp
-End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "Pop3Client"=wxsmtp_vc6_Pop3Client.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-Begin Project Dependency
-Project_Dep_Name wxsmtp
+Project_Dep_Name wxEMail
 End Project Dependency
 }}}
 

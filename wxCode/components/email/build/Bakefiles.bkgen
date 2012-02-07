@@ -13,7 +13,7 @@
     <!-- you probably need to edit only this tag replacing it with the name of
          your .bkl file:
     -->
-    <input>wxsmtp.bkl</input>
+    <input>wxEMail.bkl</input>
 
     <!--
         The wxCode's wxcode.bkgen file will enable some default formats.
