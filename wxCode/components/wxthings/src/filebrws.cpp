@@ -1535,22 +1535,6 @@ void wxFileBrowser::SplitVertical(bool split_vertically)
     SetBrowserStyle(m_browser_style);
 }
 
-bool wxFileBrowser::GetPathFromFilePath(const wxString &filepath, wxString &path) const
-{
-    path = filepath;
-
-    wxFileName filename(filepath);
-    if (filename.FileExists())
-        path = filename.GetPath();
-
-    if (!wxDirExists(path)) return false;
-
-    if (path.Last() != wxFILE_SEP_PATH)
-        path += wxFILE_SEP_PATH;
-
-    return true;
-}
-
 wxString AddDelete_wxFILE_SEP_PATH(const wxString &path_, bool add_sep)
 {
     wxString path(path_);
@@ -1568,6 +1552,33 @@ wxString AddDelete_wxFILE_SEP_PATH(const wxString &path_, bool add_sep)
         path = path.RemoveLast();
 
     return path;
+}
+
+bool wxFileBrowser::GetPathFromFilePath(const wxString &filepath, wxString &path) const
+{
+    wxFileName filename(filepath);
+
+    // Input is a file, remove path
+    if (filename.FileExists())
+        filename = filename.GetPathWithSep();
+    else
+    {
+        // Need a trailing / so wxFileName thinks it's a dir and not a file
+        filename = AddDelete_wxFILE_SEP_PATH(filepath, true); 
+    }
+
+    if (filename.DirExists())
+    {
+        filename.Normalize();
+        path = filename.GetFullPath();
+
+        if (path.Last() != wxFILE_SEP_PATH)
+            path += wxFILE_SEP_PATH;
+
+        return true;
+    }
+
+    return false;
 }
 
 wxString wxFileBrowser::GetPath(bool add_wxFILE_SEP_PATH) const
@@ -1598,7 +1609,20 @@ bool wxFileBrowser::SetPath(const wxString &dirname)
     m_ignore_tree_event = false;
 
     if (!HasBrowserStyle(wxFILEBROWSER_TREE)) // don't care otherwise
+    {
+#if defined(__WINDOWS__)
+        if (dirname.IsEmpty())
+        {
+            wxFileName filename(m_path);
+            m_fileCtrl->GoToDir(filename.GetVolume());
+            m_fileCtrl->GoToParentDir();
+        }
+        else
+            m_fileCtrl->GoToDir(m_path);
+#else
         m_fileCtrl->GoToDir(m_path);
+#endif
+    }
 
     InsertComboItem(m_pathCombo, GetPath(true), 0);
 
@@ -1623,7 +1647,6 @@ bool wxFileBrowser::GoUpDir()
 
 bool wxFileBrowser::GoToHomeDir()
 {
-
     return SetPath(wxFileName::GetHomeDir());
 }
 
@@ -1765,11 +1788,12 @@ void wxFileBrowser::OnListItemActivated(wxListEvent &event)
     wxCHECK_RET(fd, wxT("Invalid filedata"));
     wxString filePath = fd->GetFilePath();
 
-    wxEventType evtType = fd->IsDir() ? wxEVT_FILEBROWSER_DIR_ACTIVATED :
-                                        wxEVT_FILEBROWSER_FILE_ACTIVATED;
+    wxEventType evtType = (fd->IsDir() || fd->IsDrive())
+                           ? wxEVT_FILEBROWSER_DIR_ACTIVATED :
+                             wxEVT_FILEBROWSER_FILE_ACTIVATED;
     wxFileBrowserEvent fbEvent(evtType, this, GetId());
 
-    if (fd->IsDir())
+    if (fd->IsDir() || fd->IsDrive())
     {
         if (filename == wxT(".."))
             filePath = filePath.RemoveLast().BeforeLast(wxFILE_SEP_PATH);
@@ -2379,13 +2403,13 @@ bool wxFileBrowser::OpenFilePath(const wxString &filePath)
              return false;
     }
 
-    wxFileName filename(path);
+    wxFileName filename(AddDelete_wxFILE_SEP_PATH(path, want_dir));
 
     // Use static DirExists() since member functions doesn't use GetFullPath(),
     // but only the GetPath() part of the filename.
-    if (wxFileName::DirExists(filename.GetFullPath()))
+    if (filename.DirExists())
     {
-        SetPath(path);
+        SetPath(filename.GetFullPath());
         return true;
     }
 

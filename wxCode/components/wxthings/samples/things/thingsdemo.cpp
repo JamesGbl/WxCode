@@ -462,7 +462,7 @@ void MyFrame::OnFileBrowser(wxFileBrowserEvent &event)
     else
         evtTypeStr = wxT("UNKNOWN EVENT TYPE!");
 
-    m_textCtrl->AppendText(wxString::Format(wxT("%s %s(id %d) val %d\n"), wxNow().c_str(), evtTypeStr.c_str(), event.GetId(), event.GetInt()));
+    m_textCtrl->AppendText(wxString::Format(wxT("%s %s(id %d) val %d str '%s'\n"), wxNow().c_str(), evtTypeStr.c_str(), event.GetId(), event.GetInt(), event.GetFilePath().c_str()));
 }
 
 // ============================================================================
