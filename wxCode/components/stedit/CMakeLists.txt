@@ -51,7 +51,6 @@ set( wxStEdit_MAJOR_VERSION   "1" )
 set( wxStEdit_MINOR_VERSION   "4" )
 set( wxStEdit_RELEASE_VERSION "0" )
 
-
 ADD_CPPCHECK_TEST(wxStEdit_CppCheck)
 
 # The user can provide their own "wx/stedit/setup.h" by changing this path

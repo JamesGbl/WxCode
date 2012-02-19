@@ -20,10 +20,10 @@
 //-----------------------------------------------------------------------------
 
 #define wxPLOTCTRL_MAJOR_VERSION      1
-#define wxPLOTCTRL_MINOR_VERSION      0
-#define wxPLOTCTRL_RELEASE_VERSION    1
+#define wxPLOTCTRL_MINOR_VERSION      1
+#define wxPLOTCTRL_RELEASE_VERSION    0
 #define wxPLOTCTRL_SUBRELEASE_VERSION 0
-#define wxPLOTCTRL_VERSION_STRING     wxT("wxPlotCtrl 1.0.1")
+#define wxPLOTCTRL_VERSION_STRING     wxT("wxPlotCtrl 1.1.0")
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the

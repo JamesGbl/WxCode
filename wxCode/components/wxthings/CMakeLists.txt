@@ -46,6 +46,11 @@ set( wxThings_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxThi
 
 if (NOT TARGET wxThingsLib)
 
+set( wxThings_VERSION         "1.0.0" )
+set( wxThings_MAJOR_VERSION   "1" )
+set( wxThings_MINOR_VERSION   "0" )
+set( wxThings_RELEASE_VERSION "0" )
+
 ADD_CPPCHECK_TEST(wxThings_CppCheck)
 
 include_directories( ${wxThings_ROOT_DIR}/include/ )
@@ -218,6 +223,8 @@ ADD_LIBRARY_FULL(wxThingsLib
     PROPERTIES FOLDER "wxThings")
 
 ADD_TARGET_INCLUDE_PATHS(wxThingsLib ${CMAKE_CURRENT_BINARY_DIR}/include/)
+
+WXLIKE_LIBRARY_NAMES( wxThingsLib wxthings "${wxThings_VERSION}")
 
 # ---------------------------------------------------------------------------
 

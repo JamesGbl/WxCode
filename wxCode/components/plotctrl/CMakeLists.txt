@@ -75,6 +75,11 @@ set( wxPlotCtrl_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxP
 
 if (NOT TARGET wxPlotCtrlLib)
 
+set( wxPlotCtrl_VERSION         "1.1.0" )
+set( wxPlotCtrl_MAJOR_VERSION   "1" )
+set( wxPlotCtrl_MINOR_VERSION   "1" )
+set( wxPlotCtrl_RELEASE_VERSION "0" )
+
 ADD_CPPCHECK_TEST(wxPlotCtrl_CppCheck)
 
 # wxThings_ROOT_DIR is set when add_subdirectory( wxThings/build ) has been called
@@ -142,6 +147,8 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_PLOTCTRL"
     PROPERTIES FOLDER "wxPlotCtrl")
+
+WXLIKE_LIBRARY_NAMES( wxPlotCtrlLib wxplotctrl "${wxPlotCtrl_VERSION}")
 
 # ---------------------------------------------------------------------------
 

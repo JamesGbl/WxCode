@@ -429,9 +429,11 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
             set(wxWidgets_COMPONENTS stc ${wxWidgets_COMPONENTS})
         endif()
 
-        list(FIND wxWidgets_COMPONENTS stc idx)
-        if (idx GREATER "-1")
-            include_directories(${wxWidgets_ROOT_DIR}/contrib/include)
+        if (NOT UNIX)
+            list(FIND wxWidgets_COMPONENTS stc idx)
+            if (idx GREATER "-1")
+                include_directories(${wxWidgets_ROOT_DIR}/contrib/include)
+            endif()
         endif()
     else()
 
@@ -764,7 +766,7 @@ endfunction(VERIFY_WXWIDGETS_COMPONENTS)
 # The libs will be named like this: ${lib_prefix}-wx28mswud-${lib_postfix}
 # lib_prefix should be the name of your lib and lib_postfix the version.
 # ---------------------------------------------------------------------------
-macro( WXLIKE_LIBRARY_NAMES target_name lib_prefix lib_postfix )
+function( WXLIKE_LIBRARY_NAMES target_name lib_prefix lib_postfix )
 
     # wxWidgets names their libaries this way - note MSW and Unix are different
     # wx$(PORTNAME)$(WXUNIVNAME)$(WX_RELEASE_NODOT)$(WXUNICODEFLAG)$(WXDEBUGFLAG)$(WX_LIB_FLAVOUR).lib
@@ -794,4 +796,4 @@ macro( WXLIKE_LIBRARY_NAMES target_name lib_prefix lib_postfix )
     set_target_properties(${target_name} PROPERTIES RELEASE_OUTPUT_NAME        ${_libname_release})
     set_target_properties(${target_name} PROPERTIES MINSIZEREL_OUTPUT_NAME     ${_libname_release})
     set_target_properties(${target_name} PROPERTIES RELWITHDEBINFO_OUTPUT_NAME ${_libname_release})
-endmacro()
+endfunction()
