@@ -13,9 +13,6 @@
 #ifndef WX_FILE_ITERATOR_H
 #define WX_FILE_ITERATOR_H
 
-#include "wx/wxprec.h"
-#include "wx/wx.h"
-
 #include "wx/wfstream.h"
 
 class wxFileIterator : public std::iterator<std::forward_iterator_tag, char>

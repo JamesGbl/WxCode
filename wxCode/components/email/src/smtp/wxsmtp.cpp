@@ -67,17 +67,17 @@
 /*!
  * All SMTP states instances
  */
-const wxSMTP::ConnectState          wxSMTP::g_connectState;
-const wxSMTP::HeloState             wxSMTP::g_heloState;
-const wxSMTP::StartTLSState         wxSMTP::g_startTlsState;
-const wxSMTP::SSLNegociationState   wxSMTP::g_sslNegociationState;
-const wxSMTP::AuthenticateState     wxSMTP::g_authenticateState;
-const wxSMTP::SendMailFromState     wxSMTP::g_sendMailFromState;
-const wxSMTP::RcptListState         wxSMTP::g_rcptListState;
-const wxSMTP::BeginDataState        wxSMTP::g_beginDataState;
-const wxSMTP::DataState             wxSMTP::g_dataState;
-const wxSMTP::QuitState             wxSMTP::g_quitState;
-const wxSMTP::ClosedState           wxSMTP::g_closedState;
+const wxSMTP::ConnectState          wxSMTP::g_connectState = wxSMTP::ConnectState();
+const wxSMTP::HeloState             wxSMTP::g_heloState = wxSMTP::HeloState();
+const wxSMTP::StartTLSState         wxSMTP::g_startTlsState = wxSMTP::StartTLSState();
+const wxSMTP::SSLNegociationState   wxSMTP::g_sslNegociationState = wxSMTP::SSLNegociationState();
+const wxSMTP::AuthenticateState     wxSMTP::g_authenticateState = wxSMTP::AuthenticateState();
+const wxSMTP::SendMailFromState     wxSMTP::g_sendMailFromState = wxSMTP::SendMailFromState();
+const wxSMTP::RcptListState         wxSMTP::g_rcptListState = wxSMTP::RcptListState();
+const wxSMTP::BeginDataState        wxSMTP::g_beginDataState = wxSMTP::BeginDataState ();
+const wxSMTP::DataState             wxSMTP::g_dataState = wxSMTP::DataState();
+const wxSMTP::QuitState             wxSMTP::g_quitState = wxSMTP::QuitState();
+const wxSMTP::ClosedState           wxSMTP::g_closedState = wxSMTP::ClosedState();
 
 /*! Other static variables instanciation */
 const unsigned long wxSMTP::timeout = DEFAULT_SMTP_TIMEOUT;
@@ -180,14 +180,19 @@ unsigned long wxSMTP::GetNbRetryMessages() const
 wxString wxSMTP::DecodeBase64(const wxString& data)
 {
 	   mimetic::Base64::Decoder b64;
+	   // wxCharBuffer is a buffer of "char" in either unicode or ansi builds
+	   //  wxString::mb_str() will return the null terminated multi-byte encoded string we need for mimetic::encode()
+	   wxCharBuffer bufDataAsChar = data.mb_str(wxConvUTF8);
+	   size_t nDataLen = strlen(bufDataAsChar.data());
+
 	   char *decoded_digest_buffer;
-	   decoded_digest_buffer = new char[data.Len()+1];
-	   memset(decoded_digest_buffer, 0, data.Len()+1);
-	   mimetic::encode((const char*)data.c_str(),
-					   ((const char*)data.c_str())+data.Len(),
+	   decoded_digest_buffer = new char[nDataLen+1];
+	   memset(decoded_digest_buffer, 0, nDataLen+1);
+	   mimetic::encode(bufDataAsChar.data(),
+					   bufDataAsChar.data() + nDataLen,
 					   b64,
 					   decoded_digest_buffer);
-	   wxString ret(decoded_digest_buffer);
+	   wxString ret(decoded_digest_buffer, wxConvLocal);
 	   delete decoded_digest_buffer;
    return ret;
 }
@@ -195,17 +200,21 @@ wxString wxSMTP::DecodeBase64(const wxString& data)
 wxString wxSMTP::EncodeBase64(const wxString& data)
 {
 	   mimetic::Base64::Encoder b64_enc(0);
-		   char *encoded_digest_buffer;
-		   encoded_digest_buffer = new char[2*data.Len()+1];
-		   memset(encoded_digest_buffer, 0, 2*data.Len()+1);
-		   mimetic::encode((const char*)data.c_str(),
-						   ((const char*)data.c_str()) + data.Len(),
-						   b64_enc,
-						   encoded_digest_buffer);
+	   char *encoded_digest_buffer;
+	   // wxCharBuffer is a buffer of "char" in either unicode or ansi builds
+	   //  wxString::mb_str() will return the null terminated multi-byte encoded (C-style) string we need for mimetic::encode()
+	   wxCharBuffer bufDataAsChar = data.mb_str(wxConvLocal);
+	   size_t nDataLen = strlen(bufDataAsChar.data());
 
-		   wxString ret(encoded_digest_buffer);
+	   encoded_digest_buffer = new char[2*nDataLen+1];
+	   memset(encoded_digest_buffer, 0, 2*nDataLen+1);
+	   mimetic::encode(bufDataAsChar.data(),
+					   bufDataAsChar.data() + nDataLen,
+					   b64_enc,
+					   encoded_digest_buffer);
+	   wxString ret(encoded_digest_buffer, wxConvUTF8);
 
-		   delete encoded_digest_buffer;
+	   delete encoded_digest_buffer;
 	   return ret;
 }
 
@@ -215,10 +224,10 @@ wxString wxSMTP::ComputeAuthenticationDigest(const wxString& digest)
 
 	switch (current_authentication_scheme) {
 	case wxSMTP::LoginAuthentication:
-		if (digest.IsSameAs("VXNlcm5hbWU6")) {
+		if (digest.IsSameAs(wxT("VXNlcm5hbWU6"))) {
 		// username
 			ret = EncodeBase64(user_name);
-		} else if (digest.IsSameAs("UGFzc3dvcmQ6")) {
+		} else if (digest.IsSameAs(wxT("UGFzc3dvcmQ6"))) {
 		// password
 			ret = EncodeBase64(password);
 			authentication_digest_sent = true;
@@ -230,7 +239,7 @@ wxString wxSMTP::ComputeAuthenticationDigest(const wxString& digest)
 		   wxString encoded_str = wxMD5::ComputeKeyedMd5(DecodeBase64(digest), password);
 
 		   /* Compute complete response */
-		   wxString response_scheme = user_name + " " + encoded_str;
+		   wxString response_scheme = user_name + wxT(" ") + encoded_str;
 
 		   /* code it in Base64 */
 		   ret = EncodeBase64(response_scheme);

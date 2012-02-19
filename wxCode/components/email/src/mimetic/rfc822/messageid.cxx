@@ -16,7 +16,10 @@
  ***************************************************************************/
 
 #include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
+#endif
 
 #include <wx/utils.h>
 
@@ -30,7 +33,7 @@ unsigned int MessageId::ms_sequence_number = 0;
 /// pass the thread_id argument if you're using mimetic with threads
 MessageId::MessageId(unsigned long thread_id)
 {
-    std::string host = (const char*)wxGetHostName().fn_str();
+    std::string host = (const char*)wxGetHostName().mb_str(wxConvLocal);
     if(!host.length())
         host = "unknown";
 

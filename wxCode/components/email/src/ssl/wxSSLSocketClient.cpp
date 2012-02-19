@@ -47,39 +47,39 @@ const wxSSLSocketClient::OpenSslInitialisator::LibIf_t& wxSSLSocketClient::OpenS
    {
 #ifndef OPEN_SSL_STATIC_LINK
       /* load the library */
-      if (!ssl_lib.Load("ssleay32"))
+      if (!ssl_lib.Load(wxT("ssleay32")))
       {
-         throw Exception("Unable to load ssleay32 dynamic library");
+         throw Exception(wxT("Unable to load ssleay32 dynamic library"));
       }
-      if (!lib_eay.Load("libeay32"))
+      if (!lib_eay.Load(wxT("libeay32")))
       {
-         throw Exception("Unable to load libeay32 dynamic library");
+         throw Exception(wxT("Unable to load libeay32 dynamic library"));
       }
 
       /* Initialise the library */
-      ((void(*)(void))LoadSymbol(ssl_lib, "SSL_load_error_strings", "ssleay32"))();
-      ((void(*)(void))LoadSymbol(ssl_lib, "SSL_library_init", "ssleay32"))();
+      ((void(*)(void))LoadSymbol(ssl_lib, wxT("SSL_load_error_strings"), wxT("ssleay32")))();
+      ((void(*)(void))LoadSymbol(ssl_lib, wxT("SSL_library_init"), wxT("ssleay32")))();
 
       /* Initialise all requested symbols */
-      lib_if.SSLv23_client_method = (const SSL_METHOD*(*)(void))LoadSymbol(ssl_lib, "SSLv23_client_method", "ssleay32");
-      lib_if.SSL_CTX_new = (SSL_CTX*(*)(const SSL_METHOD*))LoadSymbol(ssl_lib, "SSL_CTX_new", "ssleay32");
-      lib_if.SSL_CTX_free = (void(*)(SSL_CTX*))LoadSymbol(ssl_lib, "SSL_CTX_free", "ssleay32");
-      lib_if.SSL_CTX_ctrl = (long(*)(SSL_CTX*, int,long,void*))LoadSymbol(ssl_lib, "SSL_CTX_ctrl", "ssleay32");
-      lib_if.SSL_new = (SSL*(*)(SSL_CTX*))LoadSymbol(ssl_lib, "SSL_new", "ssleay32");
-      lib_if.SSL_free = (void (*)(SSL*))LoadSymbol(ssl_lib, "SSL_free", "ssleay32");
-      lib_if.SSL_set_cipher_list = (int(*)(SSL*,const char*))LoadSymbol(ssl_lib, "SSL_set_cipher_list", "ssleay32");
-      lib_if.SSL_set_bio = (void(*)(SSL*,BIO*,BIO*))LoadSymbol(ssl_lib, "SSL_set_bio", "ssleay32");
-      lib_if.SSL_set_connect_state = (void(*)(SSL*))LoadSymbol(ssl_lib, "SSL_set_connect_state", "ssleay32");
-      lib_if.SSL_connect = (int(*)(SSL*))LoadSymbol(ssl_lib, "SSL_connect", "ssleay32");
-      lib_if.SSL_shutdown = (int(*)(SSL*))LoadSymbol(ssl_lib, "SSL_shutdown", "ssleay32");
-      lib_if.SSL_read = (int(*)(SSL*,void*,int))LoadSymbol(ssl_lib, "SSL_read", "ssleay32");
-      lib_if.SSL_write = (int(*)(SSL*,const void*,int))LoadSymbol(ssl_lib, "SSL_write", "ssleay32");
-      lib_if.SSL_get_error = (int(*)(const SSL *ssl, int ret))LoadSymbol(ssl_lib, "SSL_get_error", "ssleay32");
+      lib_if.SSLv23_client_method = (const SSL_METHOD*(*)(void))LoadSymbol(ssl_lib, wxT("SSLv23_client_method"), wxT("ssleay32"));
+      lib_if.SSL_CTX_new = (SSL_CTX*(*)(const SSL_METHOD*))LoadSymbol(ssl_lib, wxT("SSL_CTX_new"), wxT("ssleay32"));
+      lib_if.SSL_CTX_free = (void(*)(SSL_CTX*))LoadSymbol(ssl_lib, wxT("SSL_CTX_free"), wxT("ssleay32"));
+      lib_if.SSL_CTX_ctrl = (long(*)(SSL_CTX*, int,long,void*))LoadSymbol(ssl_lib, wxT("SSL_CTX_ctrl"), wxT("ssleay32"));
+      lib_if.SSL_new = (SSL*(*)(SSL_CTX*))LoadSymbol(ssl_lib, wxT("SSL_new"), wxT("ssleay32"));
+      lib_if.SSL_free = (void (*)(SSL*))LoadSymbol(ssl_lib, wxT("SSL_free"), wxT("ssleay32"));
+      lib_if.SSL_set_cipher_list = (int(*)(SSL*,const char*))LoadSymbol(ssl_lib, wxT("SSL_set_cipher_list"), wxT("ssleay32"));
+      lib_if.SSL_set_bio = (void(*)(SSL*,BIO*,BIO*))LoadSymbol(ssl_lib, wxT("SSL_set_bio"), wxT("ssleay32"));
+      lib_if.SSL_set_connect_state = (void(*)(SSL*))LoadSymbol(ssl_lib, wxT("SSL_set_connect_state"), wxT("ssleay32"));
+      lib_if.SSL_connect = (int(*)(SSL*))LoadSymbol(ssl_lib, wxT("SSL_connect"), wxT("ssleay32"));
+      lib_if.SSL_shutdown = (int(*)(SSL*))LoadSymbol(ssl_lib, wxT("SSL_shutdown"), wxT("ssleay32"));
+      lib_if.SSL_read = (int(*)(SSL*,void*,int))LoadSymbol(ssl_lib, wxT("SSL_read"), wxT("ssleay32"));
+      lib_if.SSL_write = (int(*)(SSL*,const void*,int))LoadSymbol(ssl_lib, wxT("SSL_write"), wxT("ssleay32"));
+      lib_if.SSL_get_error = (int(*)(const SSL *ssl, int ret))LoadSymbol(ssl_lib, wxT("SSL_get_error"), wxT("ssleay32"));
 
-      lib_if.BIO_new = (BIO*(*)(BIO_METHOD*))LoadSymbol(lib_eay, "BIO_new", "libeay32");
-      lib_if.BIO_free = (int(*)(BIO*))LoadSymbol(lib_eay, "BIO_free", "libeay32");
-      lib_if.ERR_get_error = (unsigned long(*)(void))LoadSymbol(lib_eay, "ERR_get_error", "libeay32");
-      lib_if.ERR_error_string = (char*(*)(unsigned long e, char *buf))LoadSymbol(lib_eay, "ERR_error_string", "libeay32");
+      lib_if.BIO_new = (BIO*(*)(BIO_METHOD*))LoadSymbol(lib_eay, wxT("BIO_new"), wxT("libeay32"));
+      lib_if.BIO_free = (int(*)(BIO*))LoadSymbol(lib_eay, wxT("BIO_free"), wxT("libeay32"));
+      lib_if.ERR_get_error = (unsigned long(*)(void))LoadSymbol(lib_eay, wxT("ERR_get_error"), wxT("libeay32"));
+      lib_if.ERR_error_string = (char*(*)(unsigned long e, char *buf))LoadSymbol(lib_eay, wxT("ERR_error_string"), wxT("libeay32"));
 #else
       SSL_load_error_strings();
       SSL_library_init();
@@ -95,7 +95,7 @@ void* wxSSLSocketClient::OpenSslInitialisator::LoadSymbol(wxDynamicLibrary& lib,
    void* result = lib.GetSymbol(name);
    if (result == NULL)
    {
-      throw Exception(wxString::Format("Unable to load symbol \"%s\" from library \"%s\"",
+      throw Exception(wxString::Format(_("Unable to load symbol \"%s\" from library \"%s\""),
                                        name.fn_str(),
                                        lib_name.fn_str()));
    }
@@ -409,12 +409,12 @@ int wxSSLSocketClient::SslBio::Read(BIO* bio, char* buffer, int nbytes)
 
 int wxSSLSocketClient::SslBio::Puts(BIO*, const char*)
 {
-   throw Exception("wxSSLSocketClient::SslBio::Puts : not implemented");
+   throw Exception(wxT("wxSSLSocketClient::SslBio::Puts : not implemented"));
 }
 
 int wxSSLSocketClient::SslBio::Gets(BIO*, char*, int)
 {
-   throw Exception("wxSSLSocketClient::SslBio::Gets : not implemented");
+   throw Exception(wxT("wxSSLSocketClient::SslBio::Gets : not implemented"));
 }
 
 long wxSSLSocketClient::SslBio::Ctrl(BIO* WXUNUSED(bio), int WXUNUSED(ctrl), long WXUNUSED(arg), void* WXUNUSED(clbk))

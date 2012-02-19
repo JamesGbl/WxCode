@@ -14,6 +14,17 @@
  licence to the wxWidgets one with authorisation received from Stefano Barbato
 
  ***************************************************************************/
+// For compilers that support precompilation, includes "wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// includes
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
 
 #include <wx/mimetic/mimeentity.h>
 #include <wx/mimetic/body.h>

@@ -13,9 +13,6 @@
 #ifndef _WX_CHARSET_CONV_H_
 #define _WX_CHARSET_CONV_H_
 
-// wxWidgets headers
-#include "wx/wx.h"
-
 class wxCharsetConverter
 {
    public:

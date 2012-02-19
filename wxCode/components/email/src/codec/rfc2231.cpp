@@ -18,8 +18,7 @@
 
 // includes
 #ifndef WX_PRECOMP
-   // here goes the #include <wx/abc.h> directives for those
-   // files which are not included by wxprec.h
+#include "wx/wx.h" 
 #endif
 
 #include "wx/codec/rfc2231.h"

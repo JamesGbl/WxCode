@@ -18,7 +18,10 @@
 #include <wx/mimetic/contentid.h>
 
 #include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
+#endif
 
 namespace mimetic
 {
@@ -28,7 +31,7 @@ const char ContentId::label[] = "Content-ID";
 
 ContentId::ContentId()
 {
-    std::string host = (const char*)wxGetHostName().fn_str();
+    std::string host = (const char*)wxGetHostName().mb_str(wxConvLocal);
     if(!host.length())
         host = "unknown";
   m_cid = "c" + utils::int2str(wxDateTime::Now().GetTicks()) + "." + utils::int2str(wxGetProcessId()) +

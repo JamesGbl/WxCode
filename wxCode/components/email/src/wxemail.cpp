@@ -243,7 +243,7 @@ void wxEmailMessage::MIMEExtractAll(mimetic::MimeEntity& entity, bool& found_pla
 
          /* Open the file as an std output stream */
          std::ofstream file_stream;
-         file_stream.open((const char*)temp_file_name.c_str(),
+         file_stream.open((const char*)temp_file_name.mb_str(wxConvFile),
                           std::ios_base::out|
                              std::ios_base::trunc|
                              std::ios_base::binary);

@@ -13,9 +13,6 @@
 #ifndef _WX_RFC2047_H_
 #define _WX_RFC2047_H_
 
-// wxWidgets headers
-#include "wx/wx.h"
-
 #include "wx/mimetic/mimeentity.h"
 
 class wxRfc2047

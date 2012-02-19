@@ -13,7 +13,6 @@
 #define _WX_POP3_H_
 
 // wxWidgets headers
-#include "wx/wx.h"
 #include <wx/protocol/protocol.h>
 
 #include "../wxsmtpdef.h"

@@ -137,7 +137,7 @@ void wxCmdlineProtocol::OnInput()
    {
       /* Perform a dummy input */
       WX_SMTP_PRINT_DEBUG("Ssl connection data");
-      GetCurrentState().onResponse(*this, "");
+      GetCurrentState().onResponse(*this, wxEmptyString);
    }
    else
    {

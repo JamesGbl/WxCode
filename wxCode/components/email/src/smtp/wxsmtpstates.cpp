@@ -151,9 +151,9 @@ void wxSMTP::HeloState::onResponse(wxCmdlineProtocol& context, const wxString& l
    if (smtpCode == 250)
    {
       /* Check if this is the last answer */
-      if (line.StartsWith("250-"))
+      if (line.StartsWith(wxT("250-")))
       {
-		  if (line.StartsWith("250-AUTH")) {
+		  if (line.StartsWith(wxT("250-AUTH"))) {
 				((wxSMTP&)context).authentication_line = line;
 		  }
          /* We shall wait next acceptance answer... */
@@ -342,13 +342,13 @@ void wxSMTP::AuthenticateState::onEnterState(wxCmdlineProtocol& context) const
 
    if (((wxSMTP&)context).authentication_scheme == wxSMTP::AutodetectAuthenticationMethod) {
 
-	   if (((wxSMTP&)context).authentication_line.Find("LOGIN")!=wxNOT_FOUND) {
+	   if (((wxSMTP&)context).authentication_line.Find(wxT("LOGIN"))!=wxNOT_FOUND) {
 			((wxSMTP&)context).current_authentication_scheme = wxSMTP::LoginAuthentication;
 
-	   } else if (((wxSMTP&)context).authentication_line.Find("CRAM_MD5")!=wxNOT_FOUND) {
+	   } else if (((wxSMTP&)context).authentication_line.Find(wxT("CRAM_MD5"))!=wxNOT_FOUND) {
 			((wxSMTP&)context).current_authentication_scheme = wxSMTP::CramMd5Authentication;
 
-	   } else if (((wxSMTP&)context).authentication_line.Find("PLAIN")!=wxNOT_FOUND) {
+	   } else if (((wxSMTP&)context).authentication_line.Find(wxT("PLAIN"))!=wxNOT_FOUND) {
 			((wxSMTP&)context).current_authentication_scheme = wxSMTP::PlainAuthentication;
 
 	   } else ((wxSMTP&)context).current_authentication_scheme = wxSMTP::LoginAuthentication;
