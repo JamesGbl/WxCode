@@ -20,7 +20,28 @@
 #include <wx/scrolwin.h>
 #include <wx/image.h>
 
+//-----------------------------------------------------------------------------
+// The version of wxVidCap
+//-----------------------------------------------------------------------------
+
+#define wxVIDCAP_MAJOR_VERSION      0
+#define wxVIDCAP_MINOR_VERSION      9
+#define wxVIDCAP_RELEASE_VERSION    0
+#define wxVIDCAP_SUBRELEASE_VERSION 0
+#define wxVIDCAP_VERSION_STRING    wxT("wxVidCap 0.9.0")
+
+// For non-Unix systems (i.e. when building without a configure script),
+// users of this component can use the following macro to check if the
+// current version is at least major.minor.release
+#define wxCHECK_VIDCAP_VERSION(major,minor,release) \
+    (wxVIDCAP_MAJOR_VERSION > (major) || \
+    (wxVIDCAP_MAJOR_VERSION == (major) && wxVIDCAP_MINOR_VERSION > (minor)) || \
+    (wxVIDCAP_MAJOR_VERSION == (major) && wxVIDCAP_MINOR_VERSION == (minor) && wxVIDCAP_RELEASE_VERSION >= (release)))
+
+//-----------------------------------------------------------------------------
 // These are our DLL macros (see the contrib libs like wxPlot)
+//-----------------------------------------------------------------------------
+
 #ifdef WXMAKINGDLL_VIDCAP
     #define WXDLLIMPEXP_VIDCAP WXEXPORT
     #define WXDLLIMPEXP_DATA_VIDCAP(type) WXEXPORT type

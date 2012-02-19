@@ -46,6 +46,11 @@ set( wxVidCap_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxVid
 
 if (NOT TARGET wxVidCapLib)
 
+set( wxVidCap_VERSION         "0.9.0" )
+set( wxVidCap_MAJOR_VERSION   "0" )
+set( wxVidCap_MINOR_VERSION   "9" )
+set( wxVidCap_RELEASE_VERSION "0" )
+
 ADD_CPPCHECK_TEST(wxVidCap_CppCheck)
 
 include_directories( ${wxVidCap_ROOT_DIR}/include/ )
@@ -79,6 +84,8 @@ ADD_LIBRARY_FULL(wxVidCapLib
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_VIDCAP"
     PROPERTIES FOLDER "wxVidCap")
+
+WXLIKE_LIBRARY_NAMES( wxVidCapLib wxvidcap "${wxVidCap_VERSION}")
 
 # ---------------------------------------------------------------------------
 
