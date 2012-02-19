@@ -46,6 +46,11 @@ set( wxSheet_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxShee
 
 if (NOT TARGET wxSheetLib)
 
+set( wxSheet_VERSION         "1.1.0" )
+set( wxSheet_MAJOR_VERSION   "1" )
+set( wxSheet_MINOR_VERSION   "1" )
+set( wxSheet_RELEASE_VERSION "0" )
+
 ADD_CPPCHECK_TEST(wxSheet_CppCheck)
 
 include_directories(${wxSheet_ROOT_DIR}/include/)
@@ -84,6 +89,8 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxWidgets_LIBRARIES}
     PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_SHEET"
     PROPERTIES FOLDER "wxSheet")
+
+WXLIKE_LIBRARY_NAMES( wxSheetLib wxsheet "${wxSheet_VERSION}")
 
 # ---------------------------------------------------------------------------
 
