@@ -87,11 +87,21 @@ include_directories( ${wxThings_ROOT_DIR}/include/ )
 include_directories( ${wxPlotCtrl_ROOT_DIR}/include/ )
 
 # We use some functions from GTK directly
-if ("${wxWidgets_PLATFORM}" STREQUAL "gtk2")
+if ("${wxWidgets_PORTNAME}" STREQUAL "gtk2")
     find_package(GTK2)
+
+    if (NOT GTK2_FOUND)
+        MESSAGE(WARNING "Unable to find GTK2, you might need to install the gtk2-devel package")
+    endif()
+
     include_directories( ${GTK2_INCLUDE_DIRS} )
-elseif ("${wxWidgets_PLATFORM}" STREQUAL "gtk")
+elseif ("${wxWidgets_PORTNAME}" STREQUAL "gtk")
     find_package(GTK)
+
+    if (NOT GTK_FOUND)
+        MESSAGE(WARNING "Unable to find GTK, you might need to install the gtk-devel package")
+    endif()
+
     include_directories( ${GTK_INCLUDE_DIRS} )
 endif()
 
