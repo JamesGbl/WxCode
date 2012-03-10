@@ -25,14 +25,17 @@ class WXDLLIMPEXP_FWD_CORE wxComboBox;
 
 // add a string to the array at the top and remove any to keep the count
 //  if count <= 0 then don't remove any
-void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int count);
+WXDLLIMPEXP_STEDIT void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int count);
 
 // Prepend a string to a wxComboBox, removing any copies of it appearing after
 //   if max_strings > 0 then ensure that there are only max_strings in the combo
-void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox *combo);
+WXDLLIMPEXP_STEDIT void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox *combo);
 
 // Initialize the combo to have these strings and select first
-void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo);
+WXDLLIMPEXP_STEDIT void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo);
+
+// Initialize the menu to have these strings up to max_count number.
+WXDLLIMPEXP_STEDIT void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu* menu, int start_win_id, int max_count);
 
 //-----------------------------------------------------------------------------
 // wxSTEditorFindReplaceData - extended find/replace data class
@@ -99,8 +102,8 @@ public:
     void AddFindString(const wxString& str) { wxSTEPrependArrayString(str, m_findStrings, m_max_strings); }
     void AddReplaceString(const wxString& str) { wxSTEPrependArrayString(str, m_replaceStrings, m_max_strings); }
 
-    wxArrayString* GetFindStrings()    { return &m_findStrings; }
-    wxArrayString* GetReplaceStrings() { return &m_replaceStrings; }
+    const wxArrayString& GetFindStrings()    const { return m_findStrings; }
+    const wxArrayString& GetReplaceStrings() const { return m_replaceStrings; }
 
     // Get/Set max number of search strings to save
     int GetMaxStrings() const { return m_max_strings; }
@@ -108,7 +111,8 @@ public:
 
     // Get the find all strings, set from a previous call to find all
     //   format is "%ld|%s|%d|line text", &editor, filename, line#, text
-    wxArrayString* GetFindAllStrings() { return &m_findAllStrings; }
+    const wxArrayString& GetFindAllStrings() const { return m_findAllStrings; }
+          wxArrayString& GetFindAllStrings()       { return m_findAllStrings; }
 
     // compare the strings with flags = -1 for internal flags or use own flags
     // only compares the strings with or without case, returns true if the same
@@ -136,6 +140,9 @@ public:
     bool HasLoadedConfig() const { return m_loaded_config; }
     void SetLoadedConfig(bool loaded) { m_loaded_config = loaded; }
 
+    // all editors (can and should probably) share the same find/replace data
+    static wxSTEditorFindReplaceData sm_findReplaceData;
+
 protected:
     int m_max_strings;
     bool m_loaded_config;
@@ -144,9 +151,6 @@ protected:
     wxArrayString m_findAllStrings;
     wxSize        m_dialogSize;
 };
-
-// all editors share the same find/replace data
-WXDLLIMPEXP_DATA_STEDIT(extern wxSTEditorFindReplaceData) s_wxSTEditor_FindData;
 
 //-----------------------------------------------------------------------------
 // wxSTEditorFindReplacePanel - enhanced wxFindReplaceDialog panel

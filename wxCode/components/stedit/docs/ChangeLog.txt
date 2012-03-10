@@ -1,10 +1,12 @@
 ===============================================================================
 Changelog:
 
+03/10/2012
+  - Add wxSearchCtrl to the toolbar.
+
 11/13/2011
   - Move user configurable #defines to setup0.h from stedefs.h
   - Rename STN_NOTEBOOK_PAGES_DEFAULT_MAX to STN_NOTEBOOK_PAGES_ALLOWED
-
 
 11/13/2009
   - Bump version to 1.2.6

@@ -47,6 +47,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include <wx/scrolbar.h>
 #include <wx/choicdlg.h>
 #include <wx/textdlg.h>
+#include <wx/srchctrl.h>
 #include <wx/sstream.h>
 #include <wx/log.h>
 #if (wxVERSION_NUMBER >= 2900)
@@ -63,15 +64,13 @@ OR PERFORMANCE OF THIS SOFTWARE.
 //-----------------------------------------------------------------------------
 // Global data
 
-wxSTEditorFindReplaceData s_wxSTEditor_FindData(wxFR_DOWN|STE_FR_WRAPAROUND);
-static wxString s_findString; // for sending wxEVT_STE_FIND_CHANGED to update GUI
-static long s_findFlags = wxFR_DOWN|STE_FR_WRAPAROUND;
-
-static const wxString EOLModeStrings[] =
+// These are strings to match wxStyledTextCtrl::GetEOLMode();
+static const int wxSTC_EOL_Strings_count = 3;
+static const wxString wxSTC_EOL_Strings[wxSTC_EOL_Strings_count] =
 {
-    wxT("CRLF (Dos/MS Windows)"),
-    wxT("CR (Mac)"),
-    wxT("LF (Unix)")
+    wxT("CRLF (Dos/MS Windows)"),   // wxSTC_EOL_CRLF
+    wxT("CR (Mac)"),                // wxSTC_EOL_CR
+    wxT("LF (Unix)")                // wxSTC_EOL_LF
 };
 
 //-----------------------------------------------------------------------------
@@ -156,7 +155,7 @@ bool wxSTEditorRefData::LoadFileToString(  wxString* str,
             }
             if ((want_lang && !found_lang) || ( (html || xml) && (encoding == wxTextEncoding::None)) )
             {
-                // sample just the first line; feeble but functional attempt to detect xml (in files w/o the .xml extension), 
+                // sample just the first line; feeble but functional attempt to detect xml (in files w/o the .xml extension),
                 // and/or utf8 encoding in html files (w html extension)
                 // typical html: content="charset=utf-8"
                 // typical xml: encoding="utf-8"
@@ -1823,8 +1822,8 @@ bool wxSTEditor::ShowConvertEOLModeDialog()
     int eol_mode = GetEOLMode();
 
     wxSingleChoiceDialog dialog(GetModalParent(),
-                      wxString(_("Current EOL : "))+EOLModeStrings[eol_mode],
-                      _("Convert End of Line chars"), 3, EOLModeStrings);
+                      wxString(_("Current EOL : "))+wxSTC_EOL_Strings[eol_mode],
+                      _("Convert End of Line chars"), wxSTC_EOL_Strings_count, wxSTC_EOL_Strings);
     dialog.SetSelection(eol_mode);
 
     if ( dialog.ShowModal() != wxID_OK )
@@ -2907,6 +2906,28 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_INSERT_DATETIME, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COLUMNIZE,       !readonly && sel_lines);
 
+    if (toolBar != NULL)
+    {
+        wxControl* ctrl = toolBar->FindControl(ID_STE_TOOLBAR_FIND_CTRL);
+        wxSearchCtrl* searchCtrl = wxDynamicCast(ctrl, wxSearchCtrl);
+
+        if (searchCtrl != NULL)
+        {
+            wxString findString(GetFindString());
+            if (searchCtrl->GetValue() != findString)
+                searchCtrl->SetValue(findString);
+
+            wxSTEditorFindReplaceData* frData = GetFindReplaceData();
+            if ((frData != NULL) && (searchCtrl->GetMenu() != NULL))
+            {
+                const wxArrayString& findStrings = frData->GetFindStrings();
+                wxSTEInitMenuStrings(findStrings, searchCtrl->GetMenu(),
+                                     ID_STE_TOOLBAR_FIND_CTRL_MENU1,
+                                     ID_STE_TOOLBAR_FIND_CTRL_MENU__LAST-ID_STE_TOOLBAR_FIND_CTRL_MENU0);
+            }
+        }
+    }
+
     // View menu items
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_EDGE_COLUMN,
                           wxString::Format(_("Long l&ine guide column (%d)..."), GetEdgeColumn()));
@@ -2926,7 +2947,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     // Pref menu items
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_TAB_WIDTH,    wxString::Format(_("Set tab &width (%d)..."), GetTabWidth()));
     STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_INDENT_WIDTH, wxString::Format(_("Set indent wi&dth (%d)..."), GetIndent()));
-    STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_EOL_MODE,     _("&EOL Mode (")+EOLModeStrings[GetEOLMode()].BeforeFirst(wxT(' '))+wxT(")..."));
+    STE_MM::DoSetTextItem(menu, menuBar, ID_STE_PREF_EOL_MODE,     _("&EOL Mode (")+wxSTC_EOL_Strings[GetEOLMode()].BeforeFirst(wxT(' '))+wxT(")..."));
 
     if (GetEditorPrefs().IsOk())
         GetEditorPrefs().UpdateMenuToolItems(menu, menuBar, toolBar);
@@ -2967,9 +2988,9 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_PRINT_PAGE_SETUP : ShowPrintPageSetupDialog(); return true;
         case ID_STE_PRINT_OPTIONS    : ShowPrintOptionsDialog(); return true;
         // Edit menu items ----------------------------------------------------
-        case wxID_CUT            : Cut();   return true;
-        case wxID_COPY           : Copy();  return true;
-        case ID_STE_COPY_HTML:
+        case wxID_CUT         : Cut();   return true;
+        case wxID_COPY        : Copy();  return true;
+        case ID_STE_COPY_HTML :
         {
             wxSTEditorExporter steExport(this);
             wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
@@ -2985,9 +3006,9 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             SetClipboardText(GetSelectedText(), STE_CLIPBOARD_BOTH);
             return true;
         }
-        case wxID_PASTE            : Paste(); return true;
-        case ID_STE_PASTE_RECT     : PasteRectangular(); return true;
-        case wxID_CLEAR            :
+        case wxID_PASTE        : Paste(); return true;
+        case ID_STE_PASTE_RECT : PasteRectangular(); return true;
+        case wxID_CLEAR        :
         {
             // Let scintilla handle the WXK_DELETE so it can be used in the macro recorder
             // and we guarantee the same behavior for the menu item and the delete key.
@@ -3026,46 +3047,60 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case wxID_FIND        : ShowFindReplaceDialog(true); return true;
         case ID_STE_FIND_PREV :
         case ID_STE_FIND_NEXT :
+        case ID_STE_TOOLBAR_FIND_CTRL :
         {
+            if (win_id == ID_STE_TOOLBAR_FIND_CTRL)
+            {
+                wxString findString = event.GetString();
+                if (GetFindString() != findString)
+                    SetFindString(findString, true);
+                // call our find next processing code
+                win_id = ID_STE_FIND_NEXT;
+            }
+
             // try our parents (stenotebook) to see if they can handle it
             // we need to use a wxFindDialogEvent to set string and flags
-            wxFindDialogEvent event(wxEVT_COMMAND_FIND_NEXT, GetId());
-            event.SetEventObject(this);
-            event.SetFindString(GetFindString());
+            wxFindDialogEvent event2(wxEVT_COMMAND_FIND_NEXT, GetId());
+            event2.SetEventObject(this);
+            event2.SetFindString(GetFindString());
             int orig_flags = GetFindFlags();
             int flags = orig_flags & ~(STE_FR_FINDALL | STE_FR_BOOKMARKALL);
             if (win_id == ID_STE_FIND_PREV)
             {
                flags = STE_SETBIT(flags, wxFR_DOWN, !(flags & wxFR_DOWN));
             }
-            event.SetFlags(flags);
-            if (!GetParent()->GetEventHandler()->ProcessEvent(event))
+            event2.SetFlags(flags);
+            if (!GetParent()->GetEventHandler()->ProcessEvent(event2))
                 FindString(GetFindString(), GetCurrentPos(), -1, flags);
 
             // restore flags to how they were before
             SetFindFlags(orig_flags, true);
+
+            // Make it easy to keep pressing enter to search again, normally the editor gets the focus.
+            if ((event.GetId() == ID_STE_TOOLBAR_FIND_CTRL) &&
+                (wxDynamicCast(event.GetEventObject(), wxWindow) != NULL))
+            {
+                wxDynamicCast(event.GetEventObject(), wxWindow)->SetFocus();
+            }
 
             return true;
         }
         case ID_STE_FIND_DOWN :
         {
             int flags = GetFindFlags();
-            flags = event.IsChecked() ? flags|wxFR_DOWN : flags&(~wxFR_DOWN);
+            flags = STE_SETBIT(flags, wxFR_DOWN, event.IsChecked());
             SetFindFlags(flags, true);
             UpdateAllItems(); // help toolbar get updated
             return true;
         }
-        case wxID_REPLACE: ShowFindReplaceDialog(false); return true;
+        case wxID_REPLACE : ShowFindReplaceDialog(false); return true;
 
         case ID_STE_GOTO_LINE : ShowGotoLineDialog(); return true;
 
         case wxID_REDO : Redo(); return true;
         case wxID_UNDO : Undo(); return true;
 
-        case ID_STE_READONLY :
-            SetReadOnly(event.IsChecked());
-            return true;
-
+        case ID_STE_READONLY     : SetReadOnly(event.IsChecked()); return true;
         case ID_STE_COMPLETEWORD : StartAutoCompleteWord(false, true); return true;
         case ID_STE_COPYPATH     : CopyFilePathToClipboard(); return true;
 
@@ -3092,10 +3127,10 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_VIEW_NONPRINT   : SetViewNonPrint(event.IsChecked()); return true;
 
         case ID_STE_TRAILING_WHITESPACE : RemoveTrailingWhitespace(); return true;
-        case ID_STE_REMOVE_CHARSAROUND : RemoveCharsAroundPos(); return true;
+        case ID_STE_REMOVE_CHARSAROUND  : RemoveCharsAroundPos(); return true;
 
-        case ID_STE_INSERT_TEXT : ShowInsertTextDialog(); return true;
-        case ID_STE_INSERT_DATETIME: ReplaceSelection(wxDateTime::Now().Format()); return true;
+        case ID_STE_INSERT_TEXT     : ShowInsertTextDialog(); return true;
+        case ID_STE_INSERT_DATETIME : ReplaceSelection(wxDateTime::Now().Format()); return true;
 
         case ID_STE_COLUMNIZE : ShowColumnizeDialog(); return true;
 
@@ -3274,8 +3309,8 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_PREF_EOL_MODE :
         {
             int eol_mode = GetEOLMode();
-            int val = wxGetSingleChoiceIndex(wxString(_("Current EOL : "))+EOLModeStrings[eol_mode],
-                                             _("Select EOL mode"), 3, EOLModeStrings, GetModalParent());
+            int val = wxGetSingleChoiceIndex(wxString(_("Current EOL : "))+wxSTC_EOL_Strings[eol_mode],
+                                             _("Select EOL mode"), wxSTC_EOL_Strings_count, wxSTC_EOL_Strings, GetModalParent());
 
             if ((val != -1) && (val != eol_mode))
             {
@@ -3473,7 +3508,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         //  when -1 it means that we want a new find all search
         if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
         {
-            wxString str = GetFindReplaceData()->GetFindAllStrings()->Item(event.GetExtraLong());
+            wxString str = GetFindReplaceData()->GetFindAllStrings().Item(event.GetExtraLong());
             long editor = 0;
             wxCHECK_RET(str.BeforeFirst(wxT('@')).ToLong(&editor), wxT("Invalid editor in find all str"));
             // just a sanity check to make sure we're good
@@ -3491,7 +3526,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         }
         else if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
         {
-            wxArrayString* findAllStrings = GetFindReplaceData()->GetFindAllStrings();
+            wxArrayString& findAllStrings = GetFindReplaceData()->GetFindAllStrings();
             wxArrayInt startPositions;
             wxArrayInt endPositions;
             size_t n, count = FindAllStrings(findString, flags,
@@ -3512,7 +3547,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
                             (long)this, startPositions[n], endPositions[n],
                             name.wx_str(), line+1);
                     str += GetLine(line);
-                    findAllStrings->Add(str);
+                    findAllStrings.Add(str);
                 }
             }
         }
@@ -3592,25 +3627,24 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
 
 void wxSTEditor::SetFindString(const wxString &findString, bool send_evt)
 {
+    wxString lastFindString(GetFindReplaceData()->GetFindString());
+
     GetFindReplaceData()->SetFindString(findString);
+
     if (findString.Length())
         GetFindReplaceData()->AddFindString(findString);
 
-    if (send_evt && (s_findString != findString))
+    if (send_evt && (lastFindString != findString))
     {
         SetStateSingle(STE_CANFIND, !findString.IsEmpty());
-
-        s_findString = findString;
         SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
     }
 }
 void wxSTEditor::SetFindFlags(long flags, bool send_evt)
 {
-    GetFindReplaceData()->SetFlags(flags);
-
-    if (send_evt && (s_findFlags != flags))
+    if (send_evt && (GetFindReplaceData()->GetFlags() != flags))
     {
-        s_findFlags = flags;
+        GetFindReplaceData()->SetFlags(flags);
         SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
     }
 }

@@ -11,6 +11,8 @@
 
 #include "precomp.h"
 
+#include <wx/srchctrl.h>
+
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 #include "wx/stedit/steart.h"
@@ -25,6 +27,8 @@ IMPLEMENT_DYNAMIC_CLASS(wxSTEditorFrame, wxFrame)
 BEGIN_EVENT_TABLE(wxSTEditorFrame, wxFrame)
     EVT_MENU_OPEN             (wxSTEditorFrame::OnMenuOpen)
     EVT_MENU                  (wxID_ANY, wxSTEditorFrame::OnMenu)
+    EVT_SEARCHCTRL_SEARCH_BTN (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
+    EVT_TEXT_ENTER            (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
 
     //EVT_STE_CREATED           (wxID_ANY, wxSTEditorFrame::OnSTECreatedEvent)
     EVT_STE_STATE_CHANGED     (wxID_ANY, wxSTEditorFrame::OnSTEState)

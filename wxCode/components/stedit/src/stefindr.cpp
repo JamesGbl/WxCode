@@ -56,7 +56,7 @@ void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox
 
 void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo)
 {
-    wxCHECK_RET(combo, wxT("Invalid combobox in wxSTEditorFindReplaceDialog::InitComboBoxStrings"));
+    wxCHECK_RET(combo, wxT("Invalid combobox in wxSTEInitComboBoxStrings"));
 
     combo->Clear();
 
@@ -67,9 +67,41 @@ void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo)
         combo->SetSelection(0);
 }
 
+void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu* menu, int start_win_id, int max_count)
+{
+    wxCHECK_RET(menu, wxT("Invalid wxMenu in wxSTEInitMenuStrings"));
+
+    int value_count = values.GetCount();
+
+    for (int n = 0; n < max_count; n++)
+    {
+        int win_id = n + start_win_id;
+        wxMenuItem* menuItem = menu->FindItem(win_id);
+
+        if (n >= value_count)
+        {
+            if (menuItem != NULL)
+                menu->Remove(win_id);
+        }
+        else if (menuItem != NULL)
+        {
+            menuItem->SetItemLabel(values[n]);
+        }
+        else
+        {
+            menu->Append(win_id, values[n]);
+
+        }
+    }
+}
+
 //-----------------------------------------------------------------------------
 // wxSTEditorFindReplaceData
 //-----------------------------------------------------------------------------
+
+// static
+wxSTEditorFindReplaceData wxSTEditorFindReplaceData::sm_findReplaceData(wxFR_DOWN|STE_FR_WRAPAROUND);
+
 int wxSTEditorFindReplaceData::STEToScintillaFlags(int ste_flags)
 {
     int sci_flags = 0;
@@ -383,8 +415,8 @@ void wxSTEditorFindReplacePanel::SetData(wxSTEditorFindReplaceData *data)
     m_findReplaceData = data;
 
     // setup the find/replace comboboxes
-    wxSTEInitComboBoxStrings(*m_findReplaceData->GetFindStrings(), m_findCombo);
-    wxSTEInitComboBoxStrings(*m_findReplaceData->GetReplaceStrings(), m_replaceCombo);
+    wxSTEInitComboBoxStrings(m_findReplaceData->GetFindStrings(),    m_findCombo);
+    wxSTEInitComboBoxStrings(m_findReplaceData->GetReplaceStrings(), m_replaceCombo);
 
     // setup the options checkboxes
     int flags = m_findReplaceData->GetFlags();
@@ -486,7 +518,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         ((event.GetEventType() == wxEVT_COMMAND_FIND) ||
          (event.GetEventType() == wxEVT_COMMAND_FIND_NEXT)))
     {
-        m_findReplaceData->GetFindAllStrings()->Clear();
+        m_findReplaceData->GetFindAllStrings().Clear();
         m_resultEditor->SetReadOnly(false);
         m_resultEditor->SetText(wxEmptyString);
         m_resultEditor->SetReadOnly(true);
@@ -515,11 +547,11 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
             m_resultEditor->SetLanguage(edit->GetLanguageId());
         }
 
-        wxArrayString* findAllStrings = m_findReplaceData->GetFindAllStrings();
-        size_t n, count = findAllStrings->GetCount();
+        const wxArrayString& findAllStrings = m_findReplaceData->GetFindAllStrings();
+        size_t n, count = findAllStrings.GetCount();
         wxString str;
         for (n = 0; n < count; n++)
-            str += findAllStrings->Item(n).AfterFirst(wxT('|'));
+            str += findAllStrings.Item(n).AfterFirst(wxT('|'));
 
         m_resultEditor->Clear();
         m_resultEditor->ClearAllIndicators();
@@ -536,7 +568,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
 
         for (n = 0; n < count; n++)
         {
-            str = findAllStrings->Item(n).AfterFirst(wxT('|'));
+            str = findAllStrings.Item(n).AfterFirst(wxT('|'));
             STE_TextPos pos = m_resultEditor->PositionFromLine((int)n);
             m_resultEditor->StartStyling(pos, 31);
             int length = (int)str.BeforeFirst(wxT('(')).Length() - 1;
@@ -819,9 +851,9 @@ void wxSTEditorFindReplacePanel::OnMarginClick( wxStyledTextEvent &event )
     if (editor->GetLine(line).Strip(wxString::both).IsEmpty())
         return;
 
-    wxArrayString* findAllStrings = m_findReplaceData->GetFindAllStrings();
+    const wxArrayString& findAllStrings = m_findReplaceData->GetFindAllStrings();
 
-    if ((line < 0) || (line >= (int)findAllStrings->GetCount()))
+    if ((line < 0) || (line >= (int)findAllStrings.GetCount()))
         return;
 
     editor->MarkerDeleteAll(STE_MARKER_BOOKMARK);

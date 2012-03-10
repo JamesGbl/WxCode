@@ -39,7 +39,7 @@ class wxSTEditorOptions_RefData : public wxObjectRefData, public wxClientDataCon
 {
 public:
     wxSTEditorOptions_RefData() :
-                                    m_steFRData(&s_wxSTEditor_FindData),
+                                    m_steFRData(&wxSTEditorFindReplaceData::sm_findReplaceData),
                                     m_steFRData_static(true),
                                     m_steMM(NULL),
                                     m_steMM_static(false),
@@ -161,7 +161,7 @@ wxSTEditorOptions::wxSTEditorOptions(long editor_opt,
 
     SetUseGlobalPrefsStylesLangs();
 
-    SetFindReplaceData(&s_wxSTEditor_FindData, true);
+    SetFindReplaceData(&wxSTEditorFindReplaceData::sm_findReplaceData, true);
     SetMenuManager(new wxSTEditorMenuManager(0), false);
 }
 

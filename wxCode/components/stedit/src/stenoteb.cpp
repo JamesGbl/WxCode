@@ -1120,7 +1120,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
         //  when -1 it means that we want a new find all search
         if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
         {
-            wxString str = editor->GetFindReplaceData()->GetFindAllStrings()->Item(event.GetExtraLong());
+            wxString str = editor->GetFindReplaceData()->GetFindAllStrings().Item(event.GetExtraLong());
             long editor_addr = 0;
             wxCHECK_RET(str.BeforeFirst(wxT('@')).ToLong(&editor_addr), wxT("Invalid editor in find all str"));
 

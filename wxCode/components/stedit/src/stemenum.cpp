@@ -11,6 +11,8 @@
 
 #include "precomp.h"
 
+#include <wx/srchctrl.h>
+
 #include "wx/stedit/stemenum.h"
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steart.h"
@@ -402,7 +404,9 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
     if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
-        wxComboBox *combo = new wxComboBox(tb, ID_STE_TOOLBAR_FIND_COMBO);
+        //wxComboBox *combo = new wxComboBox(tb, ID_STE_TOOLBAR_FIND_CTRL);
+        wxSearchCtrl *combo = new wxSearchCtrl(tb, ID_STE_TOOLBAR_FIND_CTRL, wxT(""), wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
+        combo->SetMenu(new wxMenu);
         tb->AddControl(combo);
     }
     if (HasToolbarToolType(STE_TOOLBAR_BOOKMARK))
