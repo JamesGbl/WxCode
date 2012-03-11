@@ -132,6 +132,9 @@ class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrefDialog;
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrintout;            // steprint.h
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPrintOptionsDialog;
 
+class WXDLLIMPEXP_STEDIT wxSTEditorTreeCtrl;                // stetree.h
+class WXDLLIMPEXP_STEDIT wxSTEditorTreeItemData;            // stetree.h
+
 //-----------------------------------------------------------------------------
 // STE_StateType - State of the wxSTEditor
 //   See wxSTEditor::GetState and
@@ -483,6 +486,19 @@ enum
 
     // wxMenu ID of the regexp menu on the insert chars menu
     ID_STEDLG_MENU_INSERTMENURE,
+
+    // ------------------------------------------------------------------------
+    // Menu IDs for the wxSTEditorTreeCtrl popup menu
+
+    ID_STT_FILE_OPEN,
+    ID_STT_FILE_CLOSE,
+    ID_STT_FILE_PROPERTIES,
+    ID_STT_EXPAND_ALL,
+    ID_STT_COLLAPSE_ALL,
+    ID_STT_SHOW_FILENAME_ONLY,
+    ID_STT_SHOW_FILEPATH_ONLY,
+    ID_STT_SHOW_PATH_THEN_FILENAME,
+    ID_STT_SHOW_ALL_PATHS,
 
     // ------------------------------------------------------------------------
     // Dialog and Window IDs

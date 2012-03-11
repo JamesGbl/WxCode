@@ -116,7 +116,7 @@ public:
     // Get the sidebar notebook, NULL if not style STF_SIDEBAR
     virtual wxNotebook* GetSideNotebook() const { return m_sideNotebook; }
     // Get the file treectrl in the sidebar notebook, NULL if not style STF_SIDEBAR
-    virtual wxTreeCtrl* GetFileTreeCtrl() const { return m_fileTreeCtrl; }
+    virtual wxSTEditorTreeCtrl* GetFileTreeCtrl() const { return m_steTreeCtrl; }
 
     // Update all the menu/tool items in the wxSTEditorOptions
     virtual void UpdateAllItems();
@@ -139,11 +139,11 @@ public:
     void SaveConfig( wxConfigBase &config,
                      const wxString &configPath = wxT("/wxSTEditor/Frame") );
 
+    virtual wxConfigBase* GetConfigBase();
+
     // -----------------------------------------------------------------------
     // implementation
     void OnNotebookPageChanged(wxNotebookEvent &event);
-    void OnFileTreeCtrl(wxTreeEvent &event);
-    virtual void UpdateFileTreeCtrl();
 
     void OnSTECreated(wxCommandEvent &event);
     void OnSTEState(wxSTEditorEvent &event);
@@ -156,8 +156,6 @@ public:
 
     void OnClose(wxCloseEvent &event);
 
-    virtual wxConfigBase* GetConfigBase();
-
 protected:
     wxSTEditorOptions m_options;
     wxString m_titleBase;
@@ -167,7 +165,7 @@ protected:
     wxSplitterWindow   *m_mainSplitter;  // splitter for notebook/editor and bottom notebook
     wxSplitterWindow   *m_sideSplitter;  // splitter for editor and left hand panels
     wxNotebook         *m_sideNotebook;  // notebook to hold... file listbox
-    wxTreeCtrl         *m_fileTreeCtrl;  // display the notebook pages, may be NULL
+    wxSTEditorTreeCtrl *m_steTreeCtrl;   // display the notebook pages, may be NULL
 
     wxWindow           *m_sideSplitterWin1; // these are the two pages of the side splitter
     wxWindow           *m_sideSplitterWin2;
@@ -194,94 +192,5 @@ public:
     wxSTEditorFrame *m_owner;
 };
 #endif //wxUSE_DRAG_AND_DROP
-
-//-----------------------------------------------------------------------------
-// wxSTETreeItemData - wxTreeItemData for the wxTreeCtrl file list
-//-----------------------------------------------------------------------------
-
-class wxSTETreeItemData : public wxTreeItemData
-{
-public:
-    wxSTETreeItemData(int page_num = -1, wxWindow* win = NULL) :
-        m_page_num(page_num), m_window(win), m_modified(false) { }
-
-    wxSTETreeItemData(const wxSTETreeItemData& steTreeData) :
-        m_page_num(steTreeData.m_page_num), m_window(steTreeData.m_window),
-        m_modified(steTreeData.m_modified), m_root(steTreeData.m_root),
-        m_fileName(steTreeData.m_fileName), m_treePath(steTreeData.m_treePath) {}
-
-    int m_page_num;                 // the notebook page #, or -1 for none
-    wxWindow* m_window;             // should be a wxSTEditorSplitter
-    bool m_modified;                // is it modified
-    wxString m_root;                // root leaf in the treectrl
-    wxFileName m_fileName;          // filename of the page
-    wxArrayString m_treePath;       // path to the tree item, without root item
-};
-
-/*
-WX_DEFINE_ARRAY(wxSTETreeItemData *, wxArraySTETreeItemData);
-
-int wxCMPFUNC_CONV STE_TreeItemSortCompareFunction( wxSTETreeItemData** first, wxSTETreeItemData** second)
-{
-    int ret = wxStrcmp((*first)->m_root, (*second)->m_root);
-    if (ret == 0)
-        ret = wxStrcmp((*first)->m_fileName, (*second)->m_fileName);
-    return ret;
-}
-*/
-
-//-----------------------------------------------------------------------------
-// wxSTETreeCtrlHelper - wxTreeCtrl helper class
-//-----------------------------------------------------------------------------
-
-// options for the wxSTETreeCtrlHelper::GetAllItemIds function
-enum STE_TreeCtrlHelperGetAll_Type
-{
-    STE_TREECTRLHELPER_GET_DATA   = 1, // get items that have data
-    STE_TREECTRLHELPER_GET_NODATA = 2, // get items that don't have data
-    STE_TREECTRLHELPER_GET_ALL    = 3  // get all items
-};
-
-// options for the wxSTETreeCtrlHelper::FindOrInsertItem function
-enum STE_TreeCtrlHelperFindInsert_Type
-{
-    STE_TREECTRLHELPER_FIND           = 1, // only find an existing item
-    STE_TREECTRLHELPER_INSERT         = 2, // just insert the item, even if one with same path exists
-    STE_TREECTRLHELPER_FIND_OR_INSERT = 3  // try to find existing, else insert
-};
-
-class wxSTETreeCtrlHelper
-{
-public:
-    wxSTETreeCtrlHelper(wxTreeCtrl* treeCtrl) : m_treeCtrl(treeCtrl) {}
-
-    // Get the "path" to the item by traversing up the tree from the item
-    wxArrayString GetItemPath(const wxTreeItemId& id);
-
-    // Find or creates paths to insert the item, each index in array is a leaf
-    //   the last array element is the item itself, if only_find then if the
-    //   item doesn't exist an invalid wxTreeItemId is returned.
-    //   returns the existing or new item id or invalid one if it didn't exist
-    wxTreeItemId FindOrInsertItem(const wxArrayString& treePath, int find_type = STE_TREECTRLHELPER_FIND_OR_INSERT);
-
-    // Delete the item with the given path, if delete_empty then remove parents
-    //   that are empty after removing the item
-    bool DeleteItem(const wxArrayString& treePath, bool delete_empty = true);
-
-    // Delete the item with the given id and travel up the parents if
-    //  delete_empty deleting item + parents the number of levels up,
-    //  levels = -1 means go all the way up to the root tree item.
-    //  returns the # of nodes deleted
-    int DeleteItem(const wxTreeItemId& id, bool delete_empty, int levels = -1);
-
-    // Get all the treectrl items in an array, type determines what items to add
-    size_t GetAllItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type = STE_TREECTRLHELPER_GET_ALL);
-    size_t DoGetAllItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type = STE_TREECTRLHELPER_GET_ALL);
-
-    // Recursively sort all the children starting with this parent
-    void SortChildren(const wxTreeItemId& item);
-
-    wxTreeCtrl* m_treeCtrl;
-};
 
 #endif  // _STEFRAME_H_

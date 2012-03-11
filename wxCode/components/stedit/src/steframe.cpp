@@ -16,6 +16,7 @@
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 #include "wx/stedit/steart.h"
+#include "wx/stedit/stetree.h"
 
 #include "wxext.h"
 
@@ -36,7 +37,6 @@ BEGIN_EVENT_TABLE(wxSTEditorFrame, wxFrame)
     EVT_STE_POPUPMENU         (wxID_ANY, wxSTEditorFrame::OnSTEPopupMenu)
 
     EVT_STN_PAGE_CHANGED      (wxID_ANY, wxSTEditorFrame::OnNotebookPageChanged)
-    EVT_TREE_ITEM_ACTIVATED   (ID_STF_FILE_TREECTRL, wxSTEditorFrame::OnFileTreeCtrl)
 
     EVT_CLOSE                 (wxSTEditorFrame::OnClose)
 END_EVENT_TABLE()
@@ -48,7 +48,7 @@ void wxSTEditorFrame::Init()
     m_mainSplitter     = NULL;
     m_sideSplitter     = NULL;
     m_sideNotebook     = NULL;
-    m_fileTreeCtrl     = NULL;
+    m_steTreeCtrl      = NULL;
     m_sideSplitterWin1 = NULL;
     m_sideSplitterWin2 = NULL;
 }
@@ -205,12 +205,8 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         m_sideSplitter = new wxSplitterWindow(this, ID_STF_SIDE_SPLITTER);
         m_sideSplitter->SetMinimumPaneSize(10);
         m_sideNotebook = new wxNotebook(m_sideSplitter, ID_STF_SIDE_NOTEBOOK);
-        m_fileTreeCtrl = new wxTreeCtrl(m_sideNotebook, ID_STF_FILE_TREECTRL,
-                                wxDefaultPosition, wxDefaultSize,
-                                wxTR_SINGLE|wxTR_HAS_BUTTONS|wxTR_HIDE_ROOT|wxTR_LINES_AT_ROOT );
-        m_fileTreeCtrl->SetIndent(6);
-        m_fileTreeCtrl->AddRoot(_("Files"));
-        m_sideNotebook->AddPage(m_fileTreeCtrl, _("Files"));
+        m_steTreeCtrl  = new wxSTEditorTreeCtrl(m_sideNotebook, ID_STF_FILE_TREECTRL);
+        m_sideNotebook->AddPage(m_steTreeCtrl, _("Files"));
         m_sideSplitterWin1 = m_sideNotebook;
     }
 
@@ -227,6 +223,9 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         m_steNotebook->UpdateAllItems();
         m_mainSplitter->Initialize(m_steNotebook);
         m_sideSplitterWin2 = m_mainSplitter;
+
+        if (m_steTreeCtrl)
+            m_steTreeCtrl->SetSTENotebook(m_steNotebook);
     }
     else if (!m_steSplitter && GetOptions().HasFrameOption(STF_CREATE_SINGLEPAGE))
     {
@@ -241,7 +240,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 
     if (GetOptions().HasFrameOption(STF_CREATE_SIDEBAR) && GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
     {
-        GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 100);
+        GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 200);
     }
 
 #if wxUSE_DRAG_AND_DROP
@@ -343,6 +342,11 @@ void wxSTEditorFrame::SaveConfig(wxConfigBase &config, const wxString &configPat
        config.Write(configPath + wxT("/FrameSize"), wxString::Format(wxT("%d,%d,%d,%d"), rect.x, rect.y, rect.width, rect.height));
 }
 
+wxConfigBase* wxSTEditorFrame::GetConfigBase()
+{
+    return wxConfigBase::Get(false);
+}
+
 void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
 {
     wxSTEditor *editor = GetEditor();
@@ -362,169 +366,14 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
             steMM->EnableEditorItems(false, NULL, GetMenuBar(), GetToolBar());
     }
 
-    UpdateFileTreeCtrl();
     SetTitle(title);
-}
-
-void wxSTEditorFrame::OnFileTreeCtrl(wxTreeEvent &event)
-{
-    if (GetEditorNotebook())
-    {
-        wxTreeItemId id = event.GetItem();
-        wxSTETreeItemData* data = (wxSTETreeItemData*)m_fileTreeCtrl->GetItemData(id);
-        if (data && (data->m_page_num >= 0))
-            GetEditorNotebook()->SetSelection(data->m_page_num);
-        else
-            event.Skip();
-    }
-}
-
-// can't use wxArray::Index since MSVC can't convert from wxTreeItemId to wxTreeItemIdBase
-static int Find_wxArrayTreeItemId(const wxArrayTreeItemIds& arrayIds, const wxTreeItemId& id)
-{
-    size_t n, id_count = arrayIds.GetCount();
-    for (n = 0; n < id_count; n++)
-    {
-        if (arrayIds[n] == id)
-            return (int)n;
-    }
-    return wxNOT_FOUND;
-}
-
-void wxSTEditorFrame::UpdateFileTreeCtrl()
-{
-    wxSTEditorNotebook *noteBook = GetEditorNotebook();
-    wxTreeCtrl *treeCtrl = GetFileTreeCtrl();
-    if (!treeCtrl || !noteBook)
-        return;
-
-    int n;
-    int page_count = (int)noteBook->GetPageCount();
-    int note_sel   = noteBook->GetSelection();
-
-    wxTreeItemId id, selId;
-    wxSTETreeCtrlHelper treeHelper(treeCtrl);
-
-    // Check for and add a root item to the treectrl
-    wxTreeItemId rootId = treeCtrl->GetRootItem();
-    if (!rootId)
-        rootId = treeCtrl->AddRoot(_("Root"), -1, -1, NULL);
-
-    // Check for and add a "Opened files" item to the treectrl
-    wxArrayString openedfilesPath; openedfilesPath.Add(_("Opened files"));
-    wxTreeItemId openedId = treeHelper.FindOrInsertItem(openedfilesPath, STE_TREECTRLHELPER_FIND_OR_INSERT);
-
-    // Get all the current children of the "Opened files", should be notebook pages
-    wxArrayTreeItemIds arrayIds;
-    treeHelper.GetAllItemIds(openedId, arrayIds, STE_TREECTRLHELPER_GET_DATA);
-
-    treeCtrl->Freeze();
-
-    for (n = 0; n < page_count; n++)
-    {
-        // create new data to use or compare with existing
-        wxSTETreeItemData steTreeData(n, noteBook->GetPage(n));
-        wxSTEditor* editor = noteBook->GetEditor(n);
-        wxWindow* notePage = noteBook->GetPage(n);
-
-        // this is an editor, else some other unknown window type
-        if (editor)
-        {
-            steTreeData.m_root = _("Opened files");
-            steTreeData.m_fileName = editor->GetFileName();
-            steTreeData.m_modified = editor->IsModified();
-            wxFileName fn(steTreeData.m_fileName);
-            fn.Normalize();
-
-            steTreeData.m_treePath.Add(steTreeData.m_root);
-            steTreeData.m_treePath.Add(fn.GetPath());
-            steTreeData.m_treePath.Add(fn.GetFullName());
-        }
-        else
-        {
-            steTreeData.m_root = _("Others");
-            steTreeData.m_fileName = noteBook->GetPageText(n);
-
-            steTreeData.m_treePath.Add(steTreeData.m_root);
-            steTreeData.m_treePath.Add(steTreeData.m_fileName.GetFullPath());
-        }
-
-        wxTreeItemId id; // initially null
-
-        if (editor && editor->GetTreeItemId())
-        {
-            // get and check the old tree item id, the filename/path could have changed
-            id = editor->GetTreeItemId();
-            wxSTETreeItemData* oldData = (wxSTETreeItemData*)treeCtrl->GetItemData(id);
-            if (oldData && (oldData->m_window == notePage) &&
-                (oldData->m_treePath != treeHelper.GetItemPath(id)))
-            {
-                treeHelper.DeleteItem(id, true, 2);
-
-                int id_idx = Find_wxArrayTreeItemId(arrayIds, id);
-                if (id_idx != wxNOT_FOUND)
-                    arrayIds.RemoveAt(id_idx);
-
-                id = wxTreeItemId(); // null it and add it correctly later
-                editor->SetTreeItemId(id);
-            }
-        }
-
-        if (!id)
-        {
-            // always insert a new editor since if we already did,
-            //   it'd have a treeitem id, for other windows, who knows, you can
-            //   only have one tree node per notebook page name
-            if (editor)
-            {
-                id = treeHelper.FindOrInsertItem(steTreeData.m_treePath, STE_TREECTRLHELPER_INSERT);
-                editor->SetTreeItemId(id);
-            }
-            else
-                id = treeHelper.FindOrInsertItem(steTreeData.m_treePath, STE_TREECTRLHELPER_FIND_OR_INSERT);
-        }
-
-        // must set new data before deleting old in MSW since it checks old before setting new
-        wxTreeItemData* oldData = treeCtrl->GetItemData(id);
-        treeCtrl->SetItemData(id, new wxSTETreeItemData(steTreeData));
-        if (oldData) delete oldData;
-
-        int id_idx = Find_wxArrayTreeItemId(arrayIds, id);
-        if (id_idx != wxNOT_FOUND)
-            arrayIds.RemoveAt(id_idx);
-
-        treeCtrl->SetItemTextColour(id, steTreeData.m_modified ? *wxRED : *wxBLACK);
-        if (treeCtrl->IsBold(id))
-            treeCtrl->SetItemBold(id, false);
-
-        if (n == note_sel)
-            selId = id;
-    }
-
-    // remove the orphaned items, but only if they have our data in them
-    size_t i, id_count = arrayIds.GetCount();
-    for (i = 0; i < id_count; i++)
-    {
-        wxSTETreeItemData* data = (wxSTETreeItemData*)treeCtrl->GetItemData(arrayIds[i]);
-        if (data)
-            treeHelper.DeleteItem(arrayIds[i], true, -1);
-            //treeHelper.DeleteItem(data->m_treePath);
-    }
-
-    treeHelper.SortChildren(treeCtrl->GetRootItem());
-    treeCtrl->Thaw();
-
-    if (selId)
-    {
-        treeCtrl->SetItemBold(selId);
-        treeCtrl->SelectItem(selId);
-    }
 }
 
 void wxSTEditorFrame::OnSTECreated(wxCommandEvent &event)
 {
     event.Skip();
-    UpdateFileTreeCtrl();
+    if (m_steTreeCtrl != NULL)
+        m_steTreeCtrl->UpdateFromNotebook();
 }
 
 void wxSTEditorFrame::OnSTEPopupMenu(wxSTEditorEvent &event)
@@ -538,7 +387,6 @@ wxString wxSTEditorFrame::MakeTitle(const wxSTEditor* editor) const
 {
     wxFileName filename = editor->GetFileName() ;
     const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
-
     return wxString::Format(wxT("%s - %s"),
         (filename.GetFullPath(GetOptions().GetDisplayPathSeparator()) + modified).wx_str(),
         m_titleBase.wx_str());
@@ -553,7 +401,7 @@ void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
     {
         SetTitle(MakeTitle(editor));
 
-        UpdateFileTreeCtrl();
+        //UpdateFileTreeCtrl();
         if (event.HasStateChange(STE_FILENAME) && GetOptions().GetFileHistory())
         {
             if (wxFileExists(event.GetString()))
@@ -794,223 +642,3 @@ bool wxSTEditorFrameFileDropTarget::OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXU
 }
 
 #endif //wxUSE_DRAG_AND_DROP
-
-//-----------------------------------------------------------------------------
-// wxSTETreeCtrlHelper - wxTreeCtrl helper class
-//-----------------------------------------------------------------------------
-
-wxArrayString wxSTETreeCtrlHelper::GetItemPath(const wxTreeItemId& id_)
-{
-    wxArrayString pathArray;
-    wxCHECK_MSG(m_treeCtrl, pathArray, wxT("Invalid wxTreeCtrl"));
-
-    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
-
-    for (wxTreeItemId id = id_;
-         id && (id != rootId);
-         id = m_treeCtrl->GetItemParent(id))
-    {
-        pathArray.Insert(m_treeCtrl->GetItemText(id), 0);
-    }
-    return pathArray;
-}
-
-bool wxSTETreeCtrlHelper::DeleteItem(const wxArrayString& treePath, bool delete_empty)
-{
-    wxCHECK_MSG(m_treeCtrl, false, wxT("Invalid wxTreeCtrl"));
-
-    wxTreeItemId id = FindOrInsertItem(treePath, STE_TREECTRLHELPER_FIND);
-
-    return DeleteItem(id, delete_empty, -1) > 0;
-}
-
-int wxSTETreeCtrlHelper::DeleteItem(const wxTreeItemId& id_, bool delete_empty, int levels)
-{
-    wxCHECK_MSG(m_treeCtrl, 0, wxT("Invalid wxTreeCtrl"));
-
-    int n = 0;
-    wxTreeItemId id = id_;
-    wxTreeItemId parentId;
-    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
-
-    if (!id)
-        return 0;
-    else if (!delete_empty)
-    {
-        m_treeCtrl->Delete(id);
-        n++;
-    }
-    else
-    {
-        // back up the tree and delete all parents that have no other children
-        wxTreeItemId parentId_last;
-        wxTreeItemId rootId = m_treeCtrl->GetRootItem();
-        m_treeCtrl->Delete(id);
-        n++;
-
-        for (wxTreeItemId parentId = m_treeCtrl->GetItemParent(id);
-             parentId && (parentId != rootId) && ((n <= levels) || (levels == -1));
-             )
-        {
-            wxTreeItemIdValue tmpCookie;
-            wxTreeItemId siblingId = m_treeCtrl->GetFirstChild(parentId, tmpCookie);
-
-            if (!siblingId)
-            {
-                // no other children in this node, try next parent
-                parentId_last = parentId;
-                parentId = m_treeCtrl->GetItemParent(parentId);
-                n++;
-            }
-            else
-            {
-                if (parentId_last)
-                {
-                    m_treeCtrl->Delete(parentId_last);
-                }
-
-                break;
-            }
-        }
-    }
-
-    return n;
-}
-
-wxTreeItemId wxSTETreeCtrlHelper::FindOrInsertItem(const wxArrayString& treePath, int find_type)
-{
-    wxCHECK_MSG(m_treeCtrl, wxTreeItemId(), wxT("Invalid wxTreeCtrl"));
-    wxCHECK_MSG(treePath.GetCount() > 0, wxTreeItemId(), wxT("Nothing to insert"));
-
-    size_t n = 0, count = treePath.GetCount();
-
-    // check for and add "Root" if not only_find
-    wxTreeItemId parentId = m_treeCtrl->GetRootItem();
-    if (!parentId)
-    {
-        if (find_type == STE_TREECTRLHELPER_FIND)
-            return wxTreeItemId();
-
-        parentId = m_treeCtrl->AddRoot(_("Root"), -1, -1, NULL);
-    }
-
-    wxTreeItemIdValue rootCookie;
-    wxTreeItemId id = m_treeCtrl->GetFirstChild(parentId, rootCookie);
-
-    // check for and add first path if not only_find
-    if (!id)
-    {
-        if (find_type == STE_TREECTRLHELPER_FIND)
-            return wxTreeItemId();
-
-        parentId = id = m_treeCtrl->AppendItem(parentId, treePath[n], -1, -1, NULL);
-        n++;
-    }
-
-    // Iterate though the path list
-    while (id && (n < count))
-    {
-        if (m_treeCtrl->GetItemText(id) == treePath[n])
-        {
-            if (n == count - 1)       // found the existing item w/ full path
-            {
-                if (find_type == STE_TREECTRLHELPER_INSERT)
-                    return m_treeCtrl->AppendItem(parentId, treePath[n], -1, -1, NULL);
-                else
-                    return id;
-            }
-
-            parentId = id;
-            id = m_treeCtrl->GetFirstChild(id, rootCookie); // next path part
-            n++;
-        }
-        else
-        {
-            id = m_treeCtrl->GetNextSibling(id);         // find this path part
-        }
-
-        if (!id)
-        {
-            if (find_type == STE_TREECTRLHELPER_FIND)
-                return wxTreeItemId();
-
-            id = parentId;                              // use last good parent
-            for (; n < count; n++)                      // append rest of path
-            {
-                id = m_treeCtrl->AppendItem(id, treePath[n], -1, -1, NULL);
-
-                if (n == count - 1)
-                    return id;
-            }
-        }
-
-    }
-
-    return wxTreeItemId();
-}
-
-size_t wxSTETreeCtrlHelper::GetAllItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type)
-{
-    wxCHECK_MSG(m_treeCtrl, 0, wxT("Invalid wxTreeCtrl"));
-
-    // MSW crashes on GetNextSibling on the root item
-    if (start_id == m_treeCtrl->GetRootItem())
-    {
-        wxTreeItemIdValue cookie;
-        wxTreeItemId id = m_treeCtrl->GetFirstChild(start_id, cookie);
-        return DoGetAllItemIds(id, arrayIds, get_type);
-    }
-
-    return DoGetAllItemIds(start_id, arrayIds, get_type);
-}
-
-size_t wxSTETreeCtrlHelper::DoGetAllItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type)
-{
-    size_t count = 0;
-
-    for (wxTreeItemId id = start_id;
-         id;
-         id = m_treeCtrl->GetNextSibling(id))
-    {
-        if (get_type == STE_TREECTRLHELPER_GET_ALL)
-        {
-            arrayIds.Add(id);
-            count++;
-        }
-        else
-        {
-            wxTreeItemData* data = m_treeCtrl->GetItemData(id);
-            if ((data && ((get_type & STE_TREECTRLHELPER_GET_DATA) != 0)) ||
-                (!data && ((get_type & STE_TREECTRLHELPER_GET_NODATA) != 0)))
-            {
-                arrayIds.Add(id);
-                count++;
-            }
-        }
-
-        wxTreeItemIdValue childCookie;
-        wxTreeItemId childId = m_treeCtrl->GetFirstChild(id, childCookie);
-        if (childId)
-            count += DoGetAllItemIds(childId, arrayIds, get_type);
-    }
-    return count;
-}
-
-void wxSTETreeCtrlHelper::SortChildren(const wxTreeItemId& item_)
-{
-    wxCHECK_RET(m_treeCtrl && item_, wxT("Invalid wxTreeCtrl"));
-
-    wxTreeItemIdValue cookie;
-    for (wxTreeItemId childId = m_treeCtrl->GetFirstChild(item_, cookie);
-         childId;
-         childId = m_treeCtrl->GetNextChild(item_, cookie))
-    {
-        m_treeCtrl->SortChildren(childId);
-        SortChildren(childId);
-    }
-}
-
-wxConfigBase* wxSTEditorFrame::GetConfigBase()
-{
-   return wxConfigBase::Get(false);
-}

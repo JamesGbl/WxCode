@@ -2431,14 +2431,14 @@ void wxSTEditor::SetTextAndInitialize(const wxString& str)
 {
     ClearAll();
     SetText(str);
-    SetLanguage(GetSTERefData()->GetLanguageId());// -> Colourise();
-
-    UpdateCanDo(true);
     EmptyUndoBuffer();
     SetModified(false);
     GotoPos(0);
     ScrollToColumn(0); // extra help to ensure scrolled to 0
                        // otherwise scrolled halfway thru 1st char
+
+    SetLanguage(GetSTERefData()->GetLanguageId());// -> Colourise();
+    UpdateCanDo(true);
 }
 
 bool wxSTEditor::LoadFile( wxInputStream& stream,

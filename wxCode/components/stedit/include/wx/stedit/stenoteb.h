@@ -64,7 +64,7 @@ public:
     wxSTEditorSplitter *GetEditorSplitter(int page = -1);
 
     // Find the page that this editor is in or -1 for none
-    int FindEditorPage(const wxSTEditor*);
+    int FindEditorPage(const wxSTEditor* editor);
     // Find the page who's editor has this filename or id, returns first found or -1 for not found.
     int FindEditorPageByFileName(const wxFileName&);
     int FindEditorPageById(wxWindowID win_id);
@@ -84,7 +84,7 @@ public:
     void SetMaxPageCount(size_t count) { m_stn_max_page_count = (int)count; }
 
     // strip the path off the wxSTEditor::GetFileName to use as tab name
-    wxString FileNameToTabName(const wxSTEditor*) const;
+    wxString FileNameToTabName(const wxSTEditor* editor) const;
 
     // Delete a page and if query_save_if_modified & modified call
     //   wxSTEditor::QuerySaveIfModified()

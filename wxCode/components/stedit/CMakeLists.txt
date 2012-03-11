@@ -89,6 +89,7 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steshell.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stesplit.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stestyls.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stetree.h
         ${wxStEdit_ROOT_DIR}/src/precomp.h
         ${wxStEdit_ROOT_DIR}/src/wxext.h
         ${wxStEdit_ROOT_DIR}/src/stedlgs_wdr.h
@@ -110,6 +111,7 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/src/steshell.cpp
         ${wxStEdit_ROOT_DIR}/src/stesplit.cpp
         ${wxStEdit_ROOT_DIR}/src/stestyls.cpp
+        ${wxStEdit_ROOT_DIR}/src/stetree.cpp
         ${wxStEdit_ROOT_DIR}/src/wxext.cpp
     PRECOMPILED_INCLUDE precomp.h
     PRECOMPILED_HEADER  ${wxStEdit_ROOT_DIR}/src/precomp.h
