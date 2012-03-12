@@ -139,25 +139,6 @@ if (NOT DEFINED CMAKE_SKIP_INSTALL_ALL_DEPENDENCY)
 endif()
 
 # ===========================================================================
-# Enable doxygen to be run via "make doc" if the doxygen executable is found
-# It includes the Doxyfile.in file.
-# ===========================================================================
-
-find_package(Doxygen)
-
-if (DOXYGEN_FOUND_fixme)
-    configure_file( ${CMAKE_SOURCE_DIR}/build/Doxyfile.in
-                    ${CMAKE_BINARY_DIR}/Doxyfile @ONLY )
-    add_custom_target( doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                       COMMENT "Generate API documentation with Doxygen" VERBATUM )
-
-    message( STATUS "* Doxygen found, run $make doc to generate documentation in doc/ folder" )
-else()
-    message( STATUS "* WARNING: Doxygen NOT found, 'doc' target will not be generated" )
-endif (DOXYGEN_FOUND_fixme)
-
-# ===========================================================================
 # Build Settings
 # ===========================================================================
 

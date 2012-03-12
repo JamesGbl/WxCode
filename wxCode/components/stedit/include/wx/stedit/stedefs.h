@@ -413,9 +413,6 @@ enum
 
     // Menu items used for wxSTEditorFrame
     ID_STF_SHOW_SIDEBAR = ID_STN_CLOSE_PAGE_START+STN_NOTEBOOK_PAGES_MAX,
-    ID_STF_SIDE_SPLITTER,
-    ID_STF_SIDE_NOTEBOOK,
-    ID_STF_MAIN_SPLITTER,
 
     // Menu items for the insert character menu for dialogs
     ID_STEDLG_INSERTMENU_TAB,
@@ -506,8 +503,12 @@ enum
     // ID of the find replace dialog
     ID_STE_FINDREPLACE_DIALOG,
 
-    // ID of the wxListBox used to display files for the STF
+    // IDs of child windows of the wxSTEditorFrame
+    ID_STF_SIDE_SPLITTER,
+    ID_STF_SIDE_NOTEBOOK,
+    ID_STF_MAIN_SPLITTER,
     ID_STF_FILE_TREECTRL,
+    ID_STF_FILE_DIRCTRL,
 
     // IDs of the editors used in the wxSTEditorPrefDialogPageStyles
     ID_STEDLG_STYLE_COLOUR_EDITOR,

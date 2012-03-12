@@ -11,14 +11,15 @@
 
 #include "precomp.h"
 
-#include <wx/srchctrl.h>
-
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/steframe.h"
 #include "wx/stedit/steart.h"
 #include "wx/stedit/stetree.h"
 
 #include "wxext.h"
+
+#include <wx/srchctrl.h>
+#include <wx/dirctrl.h>
 
 //-----------------------------------------------------------------------------
 // wxSTEditorFrame
@@ -31,26 +32,32 @@ BEGIN_EVENT_TABLE(wxSTEditorFrame, wxFrame)
     EVT_SEARCHCTRL_SEARCH_BTN (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
     EVT_TEXT_ENTER            (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
 
-    //EVT_STE_CREATED           (wxID_ANY, wxSTEditorFrame::OnSTECreatedEvent)
+    //EVT_STE_CREATED           (wxID_ANY, wxSTEditorFrame::OnSTECreated)
     EVT_STE_STATE_CHANGED     (wxID_ANY, wxSTEditorFrame::OnSTEState)
     EVT_STC_UPDATEUI          (wxID_ANY, wxSTEditorFrame::OnSTCUpdateUI)
     EVT_STE_POPUPMENU         (wxID_ANY, wxSTEditorFrame::OnSTEPopupMenu)
 
     EVT_STN_PAGE_CHANGED      (wxID_ANY, wxSTEditorFrame::OnNotebookPageChanged)
 
+    EVT_TREE_ITEM_ACTIVATED   (wxID_ANY, wxSTEditorFrame::OnDirCtrlItemActivation)
+
     EVT_CLOSE                 (wxSTEditorFrame::OnClose)
 END_EVENT_TABLE()
 
 void wxSTEditorFrame::Init()
 {
-    m_steNotebook      = NULL;
-    m_steSplitter      = NULL;
-    m_mainSplitter     = NULL;
     m_sideSplitter     = NULL;
-    m_sideNotebook     = NULL;
-    m_steTreeCtrl      = NULL;
     m_sideSplitterWin1 = NULL;
     m_sideSplitterWin2 = NULL;
+    m_sideSplitter_pos = 200;
+
+    m_sideNotebook     = NULL;
+    m_steTreeCtrl      = NULL;
+    m_dirCtrl          = NULL;
+
+    m_mainSplitter     = NULL;
+    m_steNotebook      = NULL;
+    m_steSplitter      = NULL;
 }
 
 bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
@@ -68,16 +75,7 @@ bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
 
     ::wxFrame_SetInitialPosition(this, pos, size);
-#ifdef x__WXDEBUG__
-    wxCommandEvent menu(wxEVT_COMMAND_MENU_SELECTED);
-    menu.SetId(ID_STE_PROPERTIES);
-    //menu.SetId(ID_STE_EXPORT);
-    //menu.SetId(wxID_OPEN);
-    //menu.SetId(wxID_SAVEAS);
-    //menu.SetId(ID_STE_PREFERENCES);
-    //menu.SetId(ID_STE_EXPORT);
-    ::wxPostEvent(this, menu);
-#endif
+
     return true;
 }
 
@@ -114,19 +112,11 @@ bool wxSTEditorFrame::Destroy()
 
     return wxFrame::Destroy();
 }
-void wxSTEditorFrame::SetSendSTEEvents(bool send)
-{
-    if (GetEditorNotebook())
-        GetEditorNotebook()->SetSendSTEEvents(send);
-    else if (GetEditorSplitter())
-        GetEditorSplitter()->SetSendSTEEvents(send);
-    else if (GetEditor())
-        GetEditor()->SetSendSTEEvents(send);
-}
 
 void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 {
     m_options = options;
+
     wxConfigBase *config = GetConfigBase();
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
 
@@ -137,36 +127,36 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 
     if (steMM && GetOptions().HasFrameOption(STF_CREATE_MENUBAR))
     {
-        wxMenuBar *menuBar = GetMenuBar() ? GetMenuBar() : new wxMenuBar(wxMB_DOCKABLE);
+        wxMenuBar *menuBar = GetMenuBar();
+
+        if (!menuBar)
+            menuBar = new wxMenuBar(wxMB_DOCKABLE);
+
         steMM->CreateMenuBar(menuBar, true);
 
-        if (menuBar)
-        {
-            SetMenuBar(menuBar);
-            wxAcceleratorHelper::SetAcceleratorTable(this, *steMM->GetAcceleratorArray());
-            wxAcceleratorHelper::SetAccelText(menuBar, *steMM->GetAcceleratorArray());
+        SetMenuBar(menuBar);
+        wxAcceleratorHelper::SetAcceleratorTable(this, *steMM->GetAcceleratorArray());
+        wxAcceleratorHelper::SetAccelText(menuBar, *steMM->GetAcceleratorArray());
 
-            if (GetOptions().HasFrameOption(STF_CREATE_FILEHISTORY) && !GetOptions().GetFileHistory())
+        if (GetOptions().HasFrameOption(STF_CREATE_FILEHISTORY) && !GetOptions().GetFileHistory())
+        {
+            // If there is wxID_OPEN then we can use wxFileHistory to save them
+            wxMenu* menu = NULL;
+            wxMenuItem* item = menuBar->FindItem(wxID_OPEN, &menu);
+
+            if (menu && item)
             {
-                // if has file open then we can use wxFileHistory to save them
-                wxMenu* menu = NULL;
-                wxMenuItem* item = menuBar->FindItem(wxID_OPEN, &menu);
-                if (item)
+                int open_index = menu->GetMenuItems().IndexOf(item);
+
+                if (open_index != wxNOT_FOUND)
                 {
-                    for (size_t i = 0; i < menu->GetMenuItemCount(); i++)
+                    wxMenu* submenu = new wxMenu();
+                    menu->Insert(open_index + 1, wxID_ANY, _("Open &Recent"), submenu);
+                    GetOptions().SetFileHistory(new wxFileHistory(9), false);
+                    GetOptions().GetFileHistory()->UseMenu(submenu);
+                    if (config)
                     {
-                       if (menu->GetMenuItems().Item(i)->GetData() == item)
-                       {
-                          wxMenu* submenu = new wxMenu();
-                          menu->Insert(i + 1, wxID_ANY, _("Open &Recent"), submenu);
-                          GetOptions().SetFileHistory(new wxFileHistory(9), false);
-                          GetOptions().GetFileHistory()->UseMenu(submenu);
-                          if (config)
-                          {
-                              GetOptions().LoadFileConfig(*config);
-                          }
-                          break;
-                       }
+                        GetOptions().LoadFileConfig(*config);
                     }
                 }
             }
@@ -206,7 +196,18 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         m_sideSplitter->SetMinimumPaneSize(10);
         m_sideNotebook = new wxNotebook(m_sideSplitter, ID_STF_SIDE_NOTEBOOK);
         m_steTreeCtrl  = new wxSTEditorTreeCtrl(m_sideNotebook, ID_STF_FILE_TREECTRL);
+        m_dirCtrl      = new wxGenericDirCtrl(m_sideNotebook, ID_STF_FILE_DIRCTRL,
+                                              wxFileName::GetCwd(),
+                                              wxDefaultPosition, wxDefaultSize,
+                                              wxDIRCTRL_3D_INTERNAL
+#if wxCHECK_VERSION(2, 9, 2)
+                                              |(GetOptions().HasFrameOption(STF_CREATE_NOTEBOOK) ? wxDIRCTRL_MULTIPLE : 0)
+#endif // wxCHECK_VERSION(2, 9, 2)
+                                              );
+
         m_sideNotebook->AddPage(m_steTreeCtrl, _("Files"));
+        m_sideNotebook->AddPage(m_dirCtrl,     _("Open"));
+
         m_sideSplitterWin1 = m_sideNotebook;
     }
 
@@ -240,7 +241,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
 
     if (GetOptions().HasFrameOption(STF_CREATE_SIDEBAR) && GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
     {
-        GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 200);
+        GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, m_sideSplitter_pos);
     }
 
 #if wxUSE_DRAG_AND_DROP
@@ -265,6 +266,17 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         editor->UpdateAllItems();
 }
 
+// --------------------------------------------------------------------------
+
+void wxSTEditorFrame::SetSendSTEEvents(bool send)
+{
+    if      (GetEditorNotebook()) GetEditorNotebook()->SetSendSTEEvents(send);
+    else if (GetEditorSplitter()) GetEditorSplitter()->SetSendSTEEvents(send);
+    else if (GetEditor())         GetEditor()->SetSendSTEEvents(send);
+}
+
+// --------------------------------------------------------------------------
+
 wxSTEditor *wxSTEditorFrame::GetEditor(int page) const
 {
     wxSTEditorSplitter *splitter = GetEditorSplitter(page);
@@ -274,6 +286,63 @@ wxSTEditor *wxSTEditorFrame::GetEditor(int page) const
 wxSTEditorSplitter *wxSTEditorFrame::GetEditorSplitter(int page) const
 {
     return GetEditorNotebook() ? GetEditorNotebook()->GetEditorSplitter(page) : m_steSplitter;
+}
+
+void wxSTEditorFrame::ShowSidebar(bool show_left_side)
+{
+    wxSplitterWindow* sideSplitter = GetSideSplitter();
+
+    if (sideSplitter && m_sideSplitterWin1 && m_sideSplitterWin2)
+    {
+        if (show_left_side)
+        {
+            if (!sideSplitter->IsSplit())
+            {
+                // If they want it shown, make it large enough to be vagely useful
+                // but never wider than the window itself.
+                int win_width = sideSplitter->GetSize().GetWidth();
+                int sash_pos  = wxMax(m_sideSplitter_pos, 100);
+                sash_pos      = wxMin(m_sideSplitter_pos, int(0.8*win_width));
+                sideSplitter->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, sash_pos);
+                GetSideNotebook()->Show();
+            }
+        }
+        else if (sideSplitter->IsSplit())
+        {
+            m_sideSplitter_pos = sideSplitter->GetSashPosition();
+            sideSplitter->Unsplit(m_sideSplitterWin1);
+        }
+        UpdateAllItems();
+    }
+}
+
+// --------------------------------------------------------------------------
+
+bool wxSTEditorFrame::LoadFile(const wxFileName& fileName, bool show_error_dialog_on_error)
+{
+    bool ok;
+
+    if (GetEditorNotebook())
+    {
+        ok = GetEditorNotebook()->LoadFile(fileName);
+    }
+    else if (GetEditor())
+    {
+        ok = GetEditor()->LoadFile(fileName);
+    }
+    else
+    {
+        ok = false;
+    }
+
+    if (show_error_dialog_on_error && !ok)
+    {
+        wxMessageBox(wxString::Format(_("Error opening file: '%s'"),
+                     fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
+                     STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
+    }
+
+    return ok;
 }
 
 void wxSTEditorFrame::UpdateAllItems()
@@ -289,6 +358,13 @@ void wxSTEditorFrame::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *t
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STF_SHOW_SIDEBAR, GetSideSplitter() != NULL);
     STE_MM::DoCheckItem(menu, menuBar, toolBar, ID_STF_SHOW_SIDEBAR, (GetSideSplitter() != NULL) && GetSideSplitter()->IsSplit());
+}
+
+// --------------------------------------------------------------------------
+
+wxConfigBase* wxSTEditorFrame::GetConfigBase()
+{
+    return wxConfigBase::Get(false);
 }
 
 void wxSTEditorFrame::LoadConfig(wxConfigBase &config, const wxString &configPath_)
@@ -328,6 +404,7 @@ void wxSTEditorFrame::LoadConfig(wxConfigBase &config, const wxString &configPat
         }
     }
 }
+
 void wxSTEditorFrame::SaveConfig(wxConfigBase &config, const wxString &configPath_)
 {
     wxString configPath = wxSTEditorOptions::FixConfigPath(configPath_, false);
@@ -342,31 +419,38 @@ void wxSTEditorFrame::SaveConfig(wxConfigBase &config, const wxString &configPat
        config.Write(configPath + wxT("/FrameSize"), wxString::Format(wxT("%d,%d,%d,%d"), rect.x, rect.y, rect.width, rect.height));
 }
 
-wxConfigBase* wxSTEditorFrame::GetConfigBase()
-{
-    return wxConfigBase::Get(false);
-}
-
 void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
 {
     wxSTEditor *editor = GetEditor();
-    wxString title = m_titleBase;
+    wxString title;
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
 
     if (editor)
     {
+        title = MakeTitle(editor);
+
         if ( steMM && !steMM->HasEnabledEditorItems())
             steMM->EnableEditorItems(true, NULL, GetMenuBar(), GetToolBar());
-
-        title = MakeTitle(editor);
     }
     else
     {
+        title = m_titleBase;
+
         if (steMM && steMM->HasEnabledEditorItems())
             steMM->EnableEditorItems(false, NULL, GetMenuBar(), GetToolBar());
     }
 
     SetTitle(title);
+}
+
+void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &event)
+{
+    wxString filePath = m_dirCtrl->GetFilePath();
+
+    if (!filePath.IsEmpty())
+    {
+        LoadFile(filePath, true);
+    }
 }
 
 void wxSTEditorFrame::OnSTECreated(wxCommandEvent &event)
@@ -511,26 +595,7 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
         if (GetOptions().GetFileHistory())
         {
             wxFileName fileName = GetOptions().GetFileHistory()->GetHistoryFile(win_id-wxID_FILE1);
-            bool ok;
-
-            if (GetEditorNotebook())
-            {
-                ok = GetEditorNotebook()->LoadFile(fileName);
-            }
-            else if (editor)
-            {
-                ok = editor->LoadFile(fileName);
-            }
-            else
-            {
-                ok = false;
-            }
-            if (!ok)
-            {
-               wxMessageBox(wxString::Format(_("Error opening file: '%s'"),
-                              fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
-                        STE_APPDISPLAYNAME, wxOK|wxICON_ERROR , this);
-            }
+            LoadFile(fileName, true);
         }
 
         return true;
@@ -539,11 +604,16 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     switch (win_id)
     {
         case ID_STE_SHOW_FULLSCREEN :
-            ShowFullScreen(event.IsChecked());
+        {
+            long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOTOOLBAR|wxFULLSCREEN_NOCAPTION;
+            ShowFullScreen(event.IsChecked(), style);
             return true;
+        }
         case ID_STF_SHOW_SIDEBAR :
+        {
             ShowSidebar(event.IsChecked());
             return true;
+        }
         case wxID_EXIT :
         {
             if (GetEditorNotebook())
@@ -558,39 +628,14 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
             return true;
         }
         case wxID_ABOUT :
+        {
             wxSTEditorAboutDialog(this);
             return true;
+        }
         default : break;
     }
 
     return false;
-}
-
-void wxSTEditorFrame::ShowFullScreen(bool on)
-{
-    //long style = wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION;
-    long style = wxFULLSCREEN_ALL;
-    wxFrame::ShowFullScreen(on, style);
-}
-
-void wxSTEditorFrame::ShowSidebar(bool on)
-{
-    if (GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
-    {
-        if (on)
-        {
-            if (!GetSideSplitter()->IsSplit())
-            {
-                GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, 100);
-                GetSideNotebook()->Show();
-            }
-        }
-        else if (GetSideSplitter()->IsSplit())
-        {
-            GetSideSplitter()->Unsplit(m_sideSplitterWin1);
-        }
-        UpdateAllItems();
-    }
 }
 
 void wxSTEditorFrame::OnClose( wxCloseEvent &event )
@@ -625,6 +670,7 @@ bool wxSTEditorFrameFileDropTarget::OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXU
                                                 const wxArrayString& filenames)
 {
     wxCHECK_MSG(m_owner, false, wxT("Invalid drop target"));
+
     const size_t count = filenames.GetCount();
     if (count == 0)
         return false;

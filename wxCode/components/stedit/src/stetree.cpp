@@ -20,14 +20,14 @@
 // wxSTETreeItemData - wxTreeItemData for the wxTreeCtrl file list
 //-----------------------------------------------------------------------------
 
-wxSTETreeItemData::wxSTETreeItemData(const wxSTETreeItemData& steTreeData) 
+wxSTETreeItemData::wxSTETreeItemData(const wxSTETreeItemData& steTreeData)
                   :m_id(steTreeData.m_id),
-                   m_page_num(steTreeData.m_page_num), 
+                   m_page_num(steTreeData.m_page_num),
                    m_notePage(steTreeData.m_notePage),
-                   m_modified(steTreeData.m_modified), 
+                   m_modified(steTreeData.m_modified),
                    m_root(steTreeData.m_root),
-                   m_fileName(steTreeData.m_fileName), 
-                   m_treePath(steTreeData.m_treePath) 
+                   m_fileName(steTreeData.m_fileName),
+                   m_treePath(steTreeData.m_treePath)
 {
 }
 
@@ -55,7 +55,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxSTEditorTreeCtrl, wxTreeCtrl)
 
 BEGIN_EVENT_TABLE(wxSTEditorTreeCtrl, wxTreeCtrl)
     EVT_RIGHT_UP            (wxSTEditorTreeCtrl::OnRightUp)
-    EVT_MENU                (wxID_ANY, wxSTEditorTreeCtrl::OnMenu)    
+    EVT_MENU                (wxID_ANY, wxSTEditorTreeCtrl::OnMenu)
     EVT_TREE_ITEM_ACTIVATED (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
 END_EVENT_TABLE()
 
@@ -79,7 +79,7 @@ bool wxSTEditorTreeCtrl::Create(wxWindow *parent, wxWindowID id,
     m_popupMenu->AppendRadioItem(ID_STT_SHOW_FILEPATH_ONLY,      _("Show only the full file path"), _("Show only the full file path"));
     m_popupMenu->AppendRadioItem(ID_STT_SHOW_PATH_THEN_FILENAME, _("Show files grouped by paths"), _("Show files grouped by paths"));
     m_popupMenu->AppendRadioItem(ID_STT_SHOW_ALL_PATHS,          _("Show all paths"), _("Show all paths"));
-    
+
     m_popupMenu->Check(ID_STT_SHOW_PATH_THEN_FILENAME, true);
 
     return true;
@@ -135,14 +135,14 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
 {
     int win_id  = event.GetId();
     wxTreeItemId id = GetSelection();
-    
+
     wxSTETreeItemData* data = NULL;
     if (id)
         data = (wxSTETreeItemData*)GetItemData(id);
 
     switch (win_id)
     {
-        case ID_STT_FILE_OPEN : 
+        case ID_STT_FILE_OPEN :
         {
             if (id)
             {
@@ -151,7 +151,7 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
             }
             return true;
         }
-        case ID_STT_FILE_CLOSE : 
+        case ID_STT_FILE_CLOSE :
         {
             if (id && m_steNotebook && data)
             {
@@ -159,7 +159,7 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
             }
             return true;
         }
-        case ID_STT_FILE_PROPERTIES : 
+        case ID_STT_FILE_PROPERTIES :
         {
             if (id && m_steNotebook && data && data->m_notePage)
             {
@@ -189,7 +189,7 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
                 CollapseAllChildren(childId);
             }
             return true;
-        }        
+        }
         case ID_STT_SHOW_FILENAME_ONLY :
         case ID_STT_SHOW_FILEPATH_ONLY :
         case ID_STT_SHOW_PATH_THEN_FILENAME :
@@ -225,12 +225,9 @@ void wxSTEditorTreeCtrl::OnNotebookPageChanged(wxNotebookEvent &event)
 void wxSTEditorTreeCtrl::OnSTEState(wxSTEditorEvent &event)
 {
     event.Skip();
-    wxSTEditor *editor = event.GetEditor();
 
     if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED | STE_EDITABLE) )
-    {
         UpdateFromNotebook();
-    }
 }
 
 void wxSTEditorTreeCtrl::OnWindowDestroy( wxWindowDestroyEvent& event )
@@ -251,16 +248,16 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
 {
     if (m_steNotebook != NULL)
     {
-        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STN_PAGE_CHANGED, 
+        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
                                   wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                   NULL, this);
-        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STE_STATE_CHANGED, 
+        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STE_STATE_CHANGED,
                                   wxSTEditorEventHandler(wxSTEditorTreeCtrl::OnSTEState),
                                   NULL, this);
     }
 
     m_steNotebook = notebook;
-    
+
     DeleteAllItems();
     m_windowToSTETreeItemDataMap.clear();
 
@@ -268,10 +265,10 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
     {
         UpdateFromNotebook();
 
-        m_steNotebook->Connect(wxID_ANY, wxEVT_STN_PAGE_CHANGED, 
+        m_steNotebook->Connect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
                                wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                NULL, this);
-        m_steNotebook->Connect(wxID_ANY, wxEVT_STE_STATE_CHANGED, 
+        m_steNotebook->Connect(wxID_ANY, wxEVT_STE_STATE_CHANGED,
                                wxSTEditorEventHandler(wxSTEditorTreeCtrl::OnSTEState),
                                NULL, this);
     }
@@ -283,6 +280,7 @@ void wxSTEditorTreeCtrl::SetDisplayType(Display_Type display_type)
     SetSTENotebook(m_steNotebook);
 }
 
+/*
 // can't use wxArray::Index since MSVC can't convert from wxTreeItemId to wxTreeItemIdBase
 static int Find_wxArrayTreeItemId(const wxArrayTreeItemIds& arrayIds, const wxTreeItemId& id)
 {
@@ -294,6 +292,7 @@ static int Find_wxArrayTreeItemId(const wxArrayTreeItemIds& arrayIds, const wxTr
     }
     return wxNOT_FOUND;
 }
+*/
 
 void wxSTEditorTreeCtrl::UpdateFromNotebook()
 {
@@ -335,7 +334,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             wxSTETreeItemData* oldData = NULL;
             if (id)
                 oldData = (wxSTETreeItemData*)GetItemData(id);
-            
+
             if (oldData && (oldData->m_notePage == notePage) &&
                 (oldData->m_fileName != editor->GetFileName()))
             {
@@ -361,10 +360,10 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             // Create new data to add to the wxTreeItem
             wxSTETreeItemData* steTreeData = new wxSTETreeItemData(n, notePage);
 
-            notePage->Connect(wxID_ANY, wxEVT_DESTROY, 
+            notePage->Connect(wxID_ANY, wxEVT_DESTROY,
                               wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
                               NULL, this);
-            
+
             if (editor)
             {
                 steTreeData->m_root = _("Opened files");
@@ -397,7 +396,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
                     case SHOW_ALL_PATHS :
                     {
                         steTreeData->m_treePath.Add(steTreeData->m_root);
-                
+
                         //steTreeData.m_treePath.Add(fn.GetPath());
                         wxArrayString dirs = fn.GetDirs();
                         for (size_t i = 0; i < dirs.GetCount(); ++i)
@@ -412,12 +411,12 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             {
                 steTreeData->m_root = _("Others");
                 steTreeData->m_fileName = noteBook->GetPageText(n);
-    
+
                 steTreeData->m_treePath.Add(steTreeData->m_root);
                 steTreeData->m_treePath.Add(steTreeData->m_fileName.GetFullPath());
             }
 
-            // Always insert a new editor since if we already did, it'd have a treeitem id. 
+            // Always insert a new editor since if we already did, it'd have a treeitem id.
             // For other windows, who knows, you can only have one tree node per notebook page name
             if (editor)
             {
@@ -426,7 +425,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             }
             else
                 id = FindOrInsertItem(steTreeData->m_treePath, STE_TREECTRL_FIND_OR_INSERT);
-    
+
             // must set new data before deleting old in MSW since it checks old before setting new
             wxTreeItemData* oldData = GetItemData(id);
             steTreeData->m_id = id;
@@ -453,7 +452,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
         DeleteItem(oldData->m_id, true, -1, openedId);
         m_windowToSTETreeItemDataMap.erase(it->first);
     }
-    
+
     SortAllChildren(GetRootItem());
     Thaw();
 
@@ -493,7 +492,7 @@ int wxSTEditorTreeCtrl::OnCompareItems(const wxTreeItemId& item1, const wxTreeIt
             return ret;
         }
     }
-    
+
     // by default sort by the name shown in the tree
     return wxTreeCtrl::OnCompareItems(item1, item2);
 }
@@ -544,7 +543,7 @@ int wxSTEditorTreeCtrl::DeleteItem(const wxTreeItemId& id_, bool delete_empty, i
         Delete(id);
         n++;
 
-        while( parentId && (parentId != rootId) && (parentId != topId) && 
+        while( parentId && (parentId != rootId) && (parentId != topId) &&
                ((n <= levels) || (levels == -1)))
         {
             unsigned int child_count = GetChildrenCount(parentId, false);

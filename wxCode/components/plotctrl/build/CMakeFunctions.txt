@@ -1342,8 +1342,19 @@ endfunction()
 # made to call "doxygen ${doxyfile_out}" from the doxygen_working_dir.
 # Usage : ADD_DOXYGEN( doc
 #                      ${CMAKE_SOURCE_DIR}/build/Doxyfile.in
-#                      ${CMAKE_BINARY_DIR}/Doxyfile
+#                      ${CMAKE_BINARY_DIR}/Doxyfile.cfg
 #                      ${CMAKE_BINARY_DIR} )
+#
+# These are some doxygen.cfg settings you might want to set to @VAR_NAME@
+# then set their variables in CMake so that when configured the doxygen file
+# will be setup correctly.
+#
+# set( DOXYGEN_PROJECT_NAME      "MyProgram" )
+# set( DOXYGEN_PROJECT_NUMBER    "1.2.3" )
+# set( DOXYGEN_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/doc" )
+# set( DOXYGEN_STRIP_FROM_PATH   "${CMAKE_SOURCE_DIR}/include" )
+# set( DOXYGEN_INPUT             "${CMAKE_SOURCE_DIR}/include/..." )
+# set( DOXYGEN_FILE_PATTERNS     "*.h *.hpp" )
 # ---------------------------------------------------------------------------
 
 function( ADD_DOXYGEN target_name doxyfile_in doxyfile_out doxygen_working_dir)

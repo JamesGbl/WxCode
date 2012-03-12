@@ -1436,7 +1436,7 @@ bool wxSTEditorPrefDialog::Create( const wxSTEditorPrefPageData& editorPrefData,
 #endif
 
     wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-    sizer->Add(m_noteBook, 0, wxEXPAND | wxALL, 5);
+    sizer->Add(m_noteBook, 1, wxEXPAND | wxALL, 5);
     panel->SetSizer(sizer);
 
     wxStdDialogButtonSizer* buttonpane = wxSTEditorStdDialogButtonSizer(panel, wxOK | wxCANCEL | wxAPPLY);
