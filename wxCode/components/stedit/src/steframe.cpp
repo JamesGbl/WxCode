@@ -443,7 +443,7 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
     SetTitle(title);
 }
 
-void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &event)
+void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &WXUNUSED(event))
 {
     wxString filePath = m_dirCtrl->GetFilePath();
 

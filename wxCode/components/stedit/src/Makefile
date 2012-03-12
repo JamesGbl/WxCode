@@ -92,6 +92,7 @@ OBJECTS = \
     stesplit.o \
     steshell.o \
     stestyls.o \
+    stetree.o \
     wxext.o
 
 DEPFILES := $(OBJECTS:.o=.d)
