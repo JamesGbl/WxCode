@@ -234,6 +234,14 @@ void wxSTEditorTreeCtrl::OnWindowDestroy( wxWindowDestroyEvent& event )
 {
     event.Skip();
 
+    // Clear the notebook since it's being deleted
+    if (event.GetEventObject() == m_steNotebook)
+    {
+        SetSTENotebook(NULL);
+        return;
+    }
+
+    // Else this is a page in the notebook
     wxLongToLongHashMap::iterator it = m_windowToSTETreeItemDataMap.find((long)event.GetEventObject());
 
     if (it != m_windowToSTETreeItemDataMap.end())
@@ -248,6 +256,9 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
 {
     if (m_steNotebook != NULL)
     {
+        m_steNotebook->Disconnect(wxID_ANY, wxEVT_DESTROY,
+                                  wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
+                                  NULL, this);
         m_steNotebook->Disconnect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
                                   wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                   NULL, this);
@@ -265,6 +276,9 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
     {
         UpdateFromNotebook();
 
+        m_steNotebook->Connect(wxID_ANY, wxEVT_DESTROY,
+                               wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
+                               NULL, this);
         m_steNotebook->Connect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
                                wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                NULL, this);
