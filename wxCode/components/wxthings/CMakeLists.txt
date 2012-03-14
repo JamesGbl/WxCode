@@ -55,12 +55,13 @@ set( wxThings_RELEASE_VERSION "0" )
 
 ADD_CPPCHECK_TEST(wxThings_CppCheck)
 
-set( DOXYGEN_PROJECT_NAME      "wxThings" )
-set( DOXYGEN_PROJECT_NUMBER    "${wxThings_VERSION}" )
-set( DOXYGEN_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/doc-wxThings" )
-set( DOXYGEN_STRIP_FROM_PATH   "${wxThings_ROOT_DIR}/include" )
-set( DOXYGEN_INPUT             "${wxThings_ROOT_DIR}/include" )
-set( DOXYGEN_FILE_PATTERNS     "*.h *.hpp" )
+set( DOXYGEN_PROJECT_NAME        "wxThings" )
+set( DOXYGEN_PROJECT_NUMBER      "${wxThings_VERSION}" )
+set( DOXYGEN_OUTPUT_DIRECTORY    "${CMAKE_BINARY_DIR}/doc-wxThings" )
+set( DOXYGEN_STRIP_FROM_PATH     "${wxThings_ROOT_DIR}/include" )
+set( DOXYGEN_STRIP_FROM_INC_PATH "${wxThings_ROOT_DIR}/include" )
+set( DOXYGEN_INPUT               "${wxThings_ROOT_DIR}/include" )
+set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
 
 ADD_DOXYGEN( wxThings_doxygen
              ${wxThings_ROOT_DIR}/build/CMake-doxygen.in

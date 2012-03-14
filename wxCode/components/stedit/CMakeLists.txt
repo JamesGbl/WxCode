@@ -55,12 +55,13 @@ set( wxStEdit_RELEASE_VERSION "0" )
 
 ADD_CPPCHECK_TEST(wxStEdit_CppCheck)
 
-set( DOXYGEN_PROJECT_NAME      "wxStEdit" )
-set( DOXYGEN_PROJECT_NUMBER    "${wxStEdit_VERSION}" )
-set( DOXYGEN_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/doc-wxStEdit" )
-set( DOXYGEN_STRIP_FROM_PATH   "${wxStEdit_ROOT_DIR}/include" )
-set( DOXYGEN_INPUT             "${wxStEdit_ROOT_DIR}/include" )
-set( DOXYGEN_FILE_PATTERNS     "*.h *.hpp" )
+set( DOXYGEN_PROJECT_NAME        "wxStEdit" )
+set( DOXYGEN_PROJECT_NUMBER      "${wxStEdit_VERSION}" )
+set( DOXYGEN_OUTPUT_DIRECTORY    "${CMAKE_BINARY_DIR}/doc-wxStEdit" )
+set( DOXYGEN_STRIP_FROM_PATH     "${wxStEdit_ROOT_DIR}/include" )
+set( DOXYGEN_STRIP_FROM_INC_PATH "${wxStEdit_ROOT_DIR}/include" )
+set( DOXYGEN_INPUT               "${wxStEdit_ROOT_DIR}/include" )
+set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
 
 ADD_DOXYGEN( wxStEdit_doxygen
              ${wxStEdit_ROOT_DIR}/build/CMake-doxygen.in

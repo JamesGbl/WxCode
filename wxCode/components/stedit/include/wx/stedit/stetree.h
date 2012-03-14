@@ -24,7 +24,7 @@ class wxSTETreeItemData : public wxTreeItemData
 {
 public:
     wxSTETreeItemData(int page_num = -1, wxWindow* win = NULL) :
-        m_page_num(page_num), m_notePage(win), m_modified(false) { }
+        m_page_num(page_num), m_notePage(win) { }
 
     wxSTETreeItemData(const wxSTETreeItemData& steTreeData);
 
@@ -34,7 +34,6 @@ public:
     int m_page_num;                 // the notebook page #, or -1 for none
     wxWindow* m_notePage;           // The wxNotebook's wxWindow page
                                     // Most likely a wxSTEditorSplitter/wxSTEditor
-    bool m_modified;                // is it modified
     wxString m_root;                // root leaf in the treectrl
     wxFileName m_fileName;          // filename of the page
     wxArrayString m_treePath;       // path to the tree item, without root item
@@ -53,7 +52,7 @@ int wxCMPFUNC_CONV STE_TreeItemSortCompareFunction( wxSTETreeItemData** first, w
 */
 
 //-----------------------------------------------------------------------------
-// 
+//
 //-----------------------------------------------------------------------------
 
 // options for the wxSTETreeCtrl::GetAllItemIds() function
@@ -106,14 +105,14 @@ public:
 
     enum Display_Type
     {
-                                 // For c:\software\program\readme.txt 
+                                 // For c:\software\program\readme.txt
         SHOW_FILENAME_ONLY,      // Nodes only with the filename, i.e. 'readme.txt'
         SHOW_FILEPATH_ONLY,      // Nodes only with the full path, i.e. 'c:\software\program\readme.txt'
         SHOW_PATH_THEN_FILENAME, // Nodes of 'c:\software\program\' child node of -> 'readme.txt'
         SHOW_ALL_PATHS           // Nodes of 'c:\' -> 'software' -> 'program' -> 'readme.txt'
     };
 
-    // 
+    //
     void SetDisplayType(Display_Type display_type);
 
     // Update the treectrl from the set wxSTEditorNotebook.
@@ -140,7 +139,7 @@ public:
     // Delete the item with the given id and travel up the parents if
     //  delete_empty deleting item + parents the number of levels up,
     //  levels = -1 means go all the way up to the root tree item.
-    //  topId if valid is the highest treeId to traverse to and stop at. 
+    //  topId if valid is the highest treeId to traverse to and stop at.
     //  returns the # of nodes deleted
     int DeleteItem(const wxTreeItemId& id, bool delete_empty, int levels = -1, const wxTreeItemId& topId = wxTreeItemId());
 

@@ -30,11 +30,11 @@ class WXDLLIMPEXP_FWD_CORE wxGenericDirCtrl;
 
 //---------------------------------------------------------------------------
 /** @class wxSTEditorFrame
+    @brief A wxFrame to contain either a single editor or editors in a wxSTEditorNotebook.
 
-    A wxFrame to contain either a single editor
-    or editors in a wxSTEditorNotebook. You can optionally have a splitter
-    that will contain a wxNotebook in the left panel with a wxListBox
-    containing a list of the pages in the notebook.
+    A wxFrame to contain either a single editor or editors in a wxSTEditorNotebook.
+    You can optionally have a splitter that will contain a wxNotebook in the
+    left panel with a wxListBox containing a list of the pages in the notebook.
     See the CreateOptions function.
 
     In order to make this as generic as possible all requests for windows call

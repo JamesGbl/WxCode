@@ -80,7 +80,24 @@ set( wxPlotCtrl_MAJOR_VERSION   "1" )
 set( wxPlotCtrl_MINOR_VERSION   "1" )
 set( wxPlotCtrl_RELEASE_VERSION "0" )
 
+# ---------------------------------------------------------------------------
+
 ADD_CPPCHECK_TEST(wxPlotCtrl_CppCheck)
+
+set( DOXYGEN_PROJECT_NAME        "wxPlotCtrl" )
+set( DOXYGEN_PROJECT_NUMBER      "${wxPlotCtrl_VERSION}" )
+set( DOXYGEN_OUTPUT_DIRECTORY    "${CMAKE_BINARY_DIR}/doc-wxPlotCtrl" )
+set( DOXYGEN_STRIP_FROM_PATH     "${wxPlotCtrl_ROOT_DIR}/include" )
+set( DOXYGEN_STRIP_FROM_INC_PATH "${wxPlotCtrl_ROOT_DIR}/include" )
+set( DOXYGEN_INPUT               "${wxPlotCtrl_ROOT_DIR}/include" )
+set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
+
+ADD_DOXYGEN( wxPlotCtrl_doxygen
+             ${wxPlotCtrl_ROOT_DIR}/build/CMake-doxygen.in
+             ${CMAKE_BINARY_DIR}/doxygen_wxPlotCtrl.cfg
+             ${CMAKE_BINARY_DIR} )
+
+# ---------------------------------------------------------------------------
 
 # wxThings_ROOT_DIR is set when add_subdirectory( wxThings/build ) has been called
 include_directories( ${wxThings_ROOT_DIR}/include/ )

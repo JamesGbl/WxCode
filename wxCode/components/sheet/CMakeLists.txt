@@ -55,12 +55,13 @@ set( wxSheet_RELEASE_VERSION "0" )
 
 ADD_CPPCHECK_TEST(wxSheet_CppCheck)
 
-set( DOXYGEN_PROJECT_NAME      "wxSheet" )
-set( DOXYGEN_PROJECT_NUMBER    "${wxSheet_VERSION}" )
-set( DOXYGEN_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/doc-wxSheet" )
-set( DOXYGEN_STRIP_FROM_PATH   "${wxSheet_ROOT_DIR}/include" )
-set( DOXYGEN_INPUT             "${wxSheet_ROOT_DIR}/include" )
-set( DOXYGEN_FILE_PATTERNS     "*.h *.hpp" )
+set( DOXYGEN_PROJECT_NAME        "wxSheet" )
+set( DOXYGEN_PROJECT_NUMBER      "${wxSheet_VERSION}" )
+set( DOXYGEN_OUTPUT_DIRECTORY    "${CMAKE_BINARY_DIR}/doc-wxSheet" )
+set( DOXYGEN_STRIP_FROM_PATH     "${wxSheet_ROOT_DIR}/include" )
+set( DOXYGEN_STRIP_FROM_INC_PATH "${wxSheet_ROOT_DIR}/include" )
+set( DOXYGEN_INPUT               "${wxSheet_ROOT_DIR}/include" )
+set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
 
 ADD_DOXYGEN( wxSheet_doxygen
              ${wxSheet_ROOT_DIR}/build/CMake-doxygen.in

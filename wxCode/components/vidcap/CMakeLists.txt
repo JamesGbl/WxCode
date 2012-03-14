@@ -55,12 +55,13 @@ set( wxVidCap_RELEASE_VERSION "0" )
 
 ADD_CPPCHECK_TEST(wxVidCap_CppCheck)
 
-set( DOXYGEN_PROJECT_NAME      "wxVidCap" )
-set( DOXYGEN_PROJECT_NUMBER    "${wxVidCap_VERSION}" )
-set( DOXYGEN_OUTPUT_DIRECTORY  "${CMAKE_BINARY_DIR}/doc-wxVidCap" )
-set( DOXYGEN_STRIP_FROM_PATH   "${wxVidCap_ROOT_DIR}/include" )
-set( DOXYGEN_INPUT             "${wxVidCap_ROOT_DIR}/include" )
-set( DOXYGEN_FILE_PATTERNS     "*.h *.hpp" )
+set( DOXYGEN_PROJECT_NAME        "wxVidCap" )
+set( DOXYGEN_PROJECT_NUMBER      "${wxVidCap_VERSION}" )
+set( DOXYGEN_OUTPUT_DIRECTORY    "${CMAKE_BINARY_DIR}/doc-wxVidCap" )
+set( DOXYGEN_STRIP_FROM_PATH     "${wxVidCap_ROOT_DIR}/include" )
+set( DOXYGEN_STRIP_FROM_INC_PATH "${wxVidCap_ROOT_DIR}/include" )
+set( DOXYGEN_INPUT               "${wxVidCap_ROOT_DIR}/include" )
+set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
 
 ADD_DOXYGEN( wxVidCap_doxygen
              ${wxVidCap_ROOT_DIR}/build/CMake-doxygen.in
