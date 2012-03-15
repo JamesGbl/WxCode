@@ -224,9 +224,10 @@ private:
     DECLARE_DYNAMIC_CLASS(wxSTEditorFrame)
 };
 
-//-----------------------------------------------------------------------------
-/// @class wxSTEditorFrameFileDropTarget A wxFileDropTarget for the wxSTEditorFrame.
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+/** @class wxSTEditorFrameFileDropTarget
+    @brief A wxFileDropTarget for the wxSTEditorFrame.
+*/ //------------------------------------------------------------------------
 
 #if wxUSE_DRAG_AND_DROP
 

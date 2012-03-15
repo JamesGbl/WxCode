@@ -62,6 +62,7 @@ set( DOXYGEN_STRIP_FROM_PATH     "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_STRIP_FROM_INC_PATH "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_INPUT               "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
+set( DOXYGEN_PREDEFINED          "WXDLLIMPEXP_DATA_STEDIT(x)=x")
 
 ADD_DOXYGEN( wxStEdit_doxygen
              ${wxStEdit_ROOT_DIR}/build/CMake-doxygen.in

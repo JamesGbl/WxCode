@@ -147,7 +147,7 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
         {
             if (id)
             {
-                wxTreeEvent treeEvent(wxEVT_NULL, this, id);
+                wxTreeEvent treeEvent(wxEVT_COMMAND_TREE_ITEM_ACTIVATED, this, id);
                 OnTreeCtrl(treeEvent);
             }
             return true;
@@ -208,7 +208,7 @@ void wxSTEditorTreeCtrl::OnTreeCtrl(wxTreeEvent &event)
 {
     wxTreeItemId id = event.GetItem();
 
-    if (!id || (m_steNotebook != NULL))
+    if (!id || (m_steNotebook == NULL))
         return;
 
     wxSTETreeItemData* data = (wxSTETreeItemData*)GetItemData(id);

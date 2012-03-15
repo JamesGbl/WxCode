@@ -46,7 +46,7 @@
 //-----------------------------------------------------------------------------
 // The version of wxStEdit
 //-----------------------------------------------------------------------------
-
+///@{
 #define STE_MAJOR_VERSION      1
 #define STE_MINOR_VERSION      4
 #define STE_RELEASE_VERSION    0
@@ -55,11 +55,12 @@
 #define STE_APPDISPLAYNAME    wxT("wxStEdit")
 #define STE_VERSION_STRING    STE_APPDISPLAYNAME wxT(" 1.4.0")
 #define STE_WEBSITE           "http://wxcode.sourceforge.net/showcomp.php?name=wxStEdit"
+///@}
 
 
-// For non-Unix systems (i.e. when building without a configure script),
-// users of this component can use the following macro to check if the
-// current version is at least major.minor.release
+/// For non-Unix systems (i.e. when building without a configure script),
+/// users of this component can use the following macro to check if the
+/// current version is at least major.minor.release
 #define wxCHECK_STE_VERSION(major, minor, release) \
     (STE_MAJOR_VERSION > (major) || \
     (STE_MAJOR_VERSION == (major) && STE_MINOR_VERSION > (minor)) || \

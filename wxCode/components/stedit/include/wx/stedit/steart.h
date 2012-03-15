@@ -14,10 +14,14 @@
 #include <wx/artprov.h>
 #include "wx/stedit/stedefs.h"
 
+/** @file */
+
 // --------------------------------------------------------------------------
-// wxArtIDs used by the wxStEditor classes to get bitmaps
-// Note: We cannot use the default wxArtProvider icons since we require a few
-//       extra ones and mixing the two will look strange at best.
+/// @defgroup wxART_STEDIT_defines wxART_STEDIT_* #defines
+/// wxArtIDs used by the wxStEditor classes to get bitmaps
+/// Note: We cannot use the default wxArtProvider icons since we require a few
+///       extra ones and mixing the two will look strange at best.
+///@{
 
 #define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)     // the pencil icon
 
@@ -53,29 +57,38 @@
 #define wxART_STEDIT_PREFDLG_STYLES     wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_STYLES)
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
-// --------------------------------------------------------------------------
-// System default sizes
-
-WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTEIconSize;      // Normal icon size for this platform
-WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize; // Small icon size for this platform
+///@}
 
 // --------------------------------------------------------------------------
-// Convenience macros to reduce typing, gets an appropriate bitmap for the client
+///@{
 
+/// Normal icon size for this platform from wxSystemSettings::GetMetric(...)
+WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTEIconSize;
+/// Small icon size for this platform from wxSystemSettings::GetMetric(...)
+WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize;
+
+///@}
+// --------------------------------------------------------------------------
+///@{
+
+/// Convenience macro to get an appropriate menu bitmap for the input client
 #define STE_ARTMENU(id) wxArtProvider::GetBitmap(id, wxART_MENU)
+/// Convenience macro to get an appropriate toolbar bitmap for the input client
 #define STE_ARTTOOL(id) wxArtProvider::GetBitmap(id, wxART_TOOLBAR)
 
-// --------------------------------------------------------------------------
-// wxSTEditorArtProvider - a holding place for our art for menu items and
-//  toolbar tools.
-//
-// The XPM files located in the "art" directory contain the images used by
-//  this art provider.
-// If you wish to use your own images, create your own wxArtProvider and call
-//  wxArtProvider::PushProvider(new myArtProvider);
-//  and have it return your own bitmaps using the wxArtIDs set above
-//  in your overridden virtual CreateBitmap(...) function.
-// --------------------------------------------------------------------------
+///@}
+//---------------------------------------------------------------------------
+/** @class wxSTEditorArtProvider
+    @brief A holding place for our art for menu items and toolbar tools.
+
+    The XPM files located in the "art" directory contain the images used by
+    this art provider.
+    If you wish to use your own images, create your own wxArtProvider and call
+    wxArtProvider::PushProvider(new myArtProvider);
+    and have it return your own bitmaps using the wxArtIDs set above
+    in your overridden virtual CreateBitmap(...) function.
+    @see wxART_STEDIT_defines
+*/ // -----------------------------------------------------------------------
 
 class WXDLLIMPEXP_STEDIT wxSTEditorArtProvider : public wxArtProvider
 {
@@ -85,34 +98,35 @@ public:
 
     // ----------------------------------------------------------------------
 
-    // Get a wxBitmap for one of the wxART_STEDIT_* wxArtIDs.
-    //   returns an invalid bitmap for all other wxArtIDs
-    // Respects GetSizeHint(client) if size == wxDefaultSize
-    // User created wxArtProviders may call this function to guarantee that
-    //   they get one of our bitmaps if they wish.
+    /// Get a wxBitmap for one of the wxART_STEDIT_* wxArtIDs.
+    ///   returns an invalid bitmap for all other wxArtIDs.
+    /// Respects GetSizeHint(client) if size == wxDefaultSize
+    /// User created wxArtProviders may call this function to guarantee that
+    ///   they get one of our bitmaps if they wish.
+    /// @see wxART_STEDIT_defines
     static wxBitmap DoGetBitmap(const wxArtID& id,
                                 const wxArtClient& client,
                                 const wxSize& size = wxDefaultSize);
 
-    // Helper function to resize the input bitmap to have the given size
+    /// Helper function to resize the input bitmap to have the given size
     static wxBitmap Resize(const wxBitmap& bmp, const wxSize& size);
 
-    // Get a wxIconBundle of the wxART_STEDIT_APP icon for wxStEdit dialogs
-    // This function exists since static wxArtProvider::GetIconBundle()
-    //  is only in >= 2.9
+    /// Get a wxIconBundle of the wxART_STEDIT_APP icon for wxStEdit dialogs
+    /// This function exists since static wxArtProvider::GetIconBundle()
+    ///  is only in >= 2.9
     static wxIconBundle GetDialogIconBundle();
 
 protected:
 
     // ----------------------------------------------------------------------
-    // Overridden virtual functions from wxArtProvider to get bitmaps
-    // Always use the static wxArtProvider functions to get bitmaps
+    /// Overridden virtual functions from wxArtProvider to get bitmaps
+    /// Always use the static wxArtProvider functions to get bitmaps
 
     virtual wxBitmap CreateBitmap(const wxArtID& id,
                                   const wxArtClient& client,
                                   const wxSize& size);
 
-    // This function is in wx >= 2.9
+    /// This function is in wx >= 2.9
     virtual wxIconBundle CreateIconBundle(const wxArtID& id,
                                           const wxArtClient& client);
 

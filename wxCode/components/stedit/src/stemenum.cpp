@@ -401,7 +401,7 @@ bool wxSTEditorMenuManager::CreateToolBar(wxToolBar *tb) const
         tb->AddTool(ID_STE_FIND_PREV, wxEmptyString, STE_ARTTOOL(wxART_STEDIT_FINDUP  ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBarTool_MakeShortHelp(_("Find previous"), *m_accelerator_array, ID_STE_FIND_PREV), _("Find previous occurance in document"));
         tb->AddTool(wxID_REPLACE    , wxEmptyString, STE_ARTTOOL(wxART_STEDIT_REPLACE ), wxNullBitmap, wxITEM_NORMAL, ::wxToolBarTool_MakeShortHelp(*m_accelerator_array, wxID_REPLACE), _("Replace text in document"));
     }
-    if (HasToolbarToolType(STE_TOOLBAR_EDIT_FINDCOMBO))
+    if (HasToolbarToolType(STE_TOOLBAR_EDIT_FIND_CTRL))
     {
         if (tb->GetToolsCount()) tb->AddSeparator();
         //wxComboBox *combo = new wxComboBox(tb, ID_STE_TOOLBAR_FIND_CTRL);
