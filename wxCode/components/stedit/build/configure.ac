@@ -10,7 +10,7 @@
 
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
-AC_INIT([wxstedit], [1.2.6], [jrl1@sourceforge.net])
+AC_INIT([wxstedit], [1.6.0], [jrl1@sourceforge.net])
 AC_CONFIG_AUX_DIR(build)
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT

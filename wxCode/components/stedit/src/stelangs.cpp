@@ -5477,7 +5477,7 @@ void wxSTEditorLangs::UpdateEditor( wxSTEditor *editor )
     for (word_n = 0; word_n < keyword_count; word_n++)
         editor->SetKeyWords((int)word_n, GetKeyWords(lang_n, word_n));
 
-    editor->Colourise(); // FIXME this can take awhile! but otherwise it gets garbled
+    editor->ColouriseDocument(); // FIXME this can take awhile! but otherwise it gets garbled
 }
 
 // global precreated wxSTEditorLangs

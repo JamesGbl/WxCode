@@ -15,6 +15,7 @@
 #include "wx/stedit/stenoteb.h"
 #include "wx/stedit/stedlgs.h"
 #include <wx/progdlg.h>   // wxProgressDialog
+
 #include "wxext.h"   // FileNameArray
 
 //-----------------------------------------------------------------------------
@@ -116,9 +117,7 @@ wxString wxSTEditorNotebook::FileNameToTabName(const wxSTEditor* editor) const
 #endif
     if (editor->GetReadOnly())
     {
-        name << wxT(" [");
-        name << _("Read only");
-        name << wxT("]");
+        name << wxT(" [") << _("Read only") << wxT("]");
     }
     if (editor->IsModified())
     {
@@ -230,13 +229,15 @@ int wxSTEditorNotebook::FindEditorPageByFileName(const wxFileName& filename)
     {
         wxSTEditor* editor = GetEditor(n);
         if (editor && (editor->GetFileName() == filename))
-            return (int)n;
+            return n;
     }
     return wxNOT_FOUND;
 }
 
 int wxSTEditorNotebook::FindEditorPageById(wxWindowID win_id)
 {
+    // TODO? Find a different type of window in the notebook?
+    //       people probably shouldn't mix window types in this notebook.
     wxWindow *win = FindWindow(win_id);
     if (win && wxDynamicCast(win, wxSTEditor))
         return FindEditorPage((wxSTEditor*)win);
@@ -291,7 +292,7 @@ wxSTEditorSplitter* wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxWindow
     splitter->GetEditor()->NewFile(title);
     if (!InsertEditorSplitter(nPage, splitter, bSelect))
     {
-       wxDELETE(splitter);
+       wxDELETE(splitter); // failed to insert it, delete it to not leak memory
     }
     return splitter;
 }
@@ -320,7 +321,7 @@ bool wxSTEditorNotebook::InsertEditorSplitter(int nPage, wxSTEditorSplitter* spl
         if ((n_pages > 0) && GetOptions().HasNotebookOption(STN_ALPHABETICAL_TABS))
         {
             wxArrayString names;
-            names.Add(title+wxT("=999999")); // insert after any other pages
+            names.Add(title+wxT("=999999")); // insert after any other pages with same name
 
             for (size_t n = 0; n < n_pages; n++)
             {
@@ -372,7 +373,7 @@ void wxSTEditorNotebook::SortTabs(int style)
             if ((name.Length() > 0) && (name[0u] == wxT('*')))
                 name = name.Mid(1);
 
-            names.Add(name + wxString::Format(wxT("=%d"), n));
+            names.Add(name + wxString::Format(wxT("=%d"), (int)n));
         }
 
         names.Sort(STN_SortNameCompareFunction);
@@ -451,12 +452,26 @@ bool wxSTEditorNotebook::ClosePage(int n, bool query_save_if_modified)
     return ret != 0;
 }
 
-bool wxSTEditorNotebook::CloseAllPages(bool query_save_if_modified)
+bool wxSTEditorNotebook::CloseAllPages(bool query_save_if_modified, int except_this_page)
 {
     if (query_save_if_modified && !QuerySaveIfModified())
         return false;
 
-    DeleteAllPages();
+    if (except_this_page < 0)
+    {
+        DeleteAllPages();
+    }
+    else
+    {
+        wxWindow* win = GetPage(except_this_page);
+        wxString title(GetPageText(except_this_page));
+
+        if (win && RemovePage(except_this_page))
+        {
+            DeleteAllPages();
+            AddPage(win, title, true);
+        }
+    }
 
     if ((GetPageCount() == 0) && !GetOptions().HasNotebookOption(STN_ALLOW_NO_PAGES))
         InsertEditorSplitter(-1, wxID_ANY, GetOptions().GetDefaultFileName(), true);
@@ -501,8 +516,8 @@ bool wxSTEditorNotebook::CanSaveAll()
 #if defined(__WXMSW__) && (wxVERSION_NUMBER >= 2900)
 void wxSTEditorNotebook::OnLeftUp(wxMouseEvent &event)
 {
-    wxPoint MClickPoint = event.GetPosition();
-    int page = HitTest(MClickPoint, NULL);
+    wxPoint pos = event.GetPosition();
+    int page = HitTest(pos, NULL);
 
     if (page != wxNOT_FOUND)
     {
@@ -526,10 +541,13 @@ void wxSTEditorNotebook::OnRightUp(wxMouseEvent &event)
 
 void wxSTEditorNotebook::OnMiddleUp(wxMouseEvent &event)
 {
-    wxPoint MClickPoint = event.GetPosition();
-    int page = HitTest(MClickPoint, NULL);
+    wxPoint pos = event.GetPosition();
+    long flags = 0;
+    int page = HitTest(pos, &flags);
 
-    if (page != wxNOT_FOUND)
+    wxPrintf(wxT("page %d %d\n"), page, (int)flags);
+
+    if ((page != wxNOT_FOUND) && ((flags & wxBK_HITTEST_NOWHERE) == 0))
     {
         ClosePage(page, true);
     }
@@ -557,11 +575,15 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
     switch (win_id)
     {
         case wxID_NEW:
+        {
             NewPage();
             return true;
+        }
         case wxID_OPEN:
+        {
             LoadFiles();
             return true;
+        }
         case wxID_SAVEAS:
         {
             wxSTEditor *editor = GetEditor();
@@ -591,7 +613,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     newEditor->SetFileBOM(editor->GetFileBOM());
 
                     newEditor->SetText(editor->GetText());
-                    newEditor->Colourise();
+                    newEditor->ColouriseDocument();
 
                     // if they really did save it and to a new file add it
                     if (newEditor->SaveFile(true))
@@ -610,36 +632,53 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
             return true;
         }
         case ID_STN_SAVE_ALL:
+        {
             SaveAllFiles();
             return true;
+        }
         case ID_STN_CLOSE_PAGE:
+        {
             if ((GetSelection() != -1) && GetEditor(GetSelection()))
             {
                 ClosePage(GetSelection(), true);
             }
             return true;
+        }
         case ID_STN_CLOSE_ALL:
-            if (wxOK == wxMessageBox(_("Close all pages?"), _("Confim closing"),
-                                   wxICON_QUESTION|wxOK|wxCANCEL, this))
+        {
+            if (wxYES == wxMessageBox(_("Close all pages?"), _("Confim closing all pages"),
+                                   wxICON_QUESTION|wxYES_NO, this))
             {
-                CloseAllPages(true);
+                CloseAllPages(true, -1);
             }
             return true;
+        }
+        case ID_STN_CLOSE_ALL_OTHERS:
+        {
+            CloseAllPages(true, GetSelection());
+            return true;
+        }
         case ID_STN_WIN_PREVIOUS:
+        {
             if ((GetPageCount() > 0) && (GetSelection() - 1 >= 0))
                 SetSelection(GetSelection() - 1);
             else if (GetPageCount() > 0)
                 SetSelection((int)GetPageCount() - 1);
             return true;
+        }
         case ID_STN_WIN_NEXT:
+        {
             if ((GetPageCount() > 0) && (GetSelection() + 1 < (int)GetPageCount()))
                 SetSelection(GetSelection() + 1);
             else if (GetPageCount() > 0)
                 SetSelection(0);
             return true;
+        }
         case ID_STN_WINDOWS:
+        {
             wxSTEditorWindowsDialog(this, _("Windows"));
             return true;
+        }
         case ID_STE_PASTE_NEW:
         {
             wxString text;
@@ -656,6 +695,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
             return true;
         }
         default:
+        {
             if ((win_id >= ID_STN_GOTO_PAGE_START) && (win_id < ID_STN_GOTO_PAGE_START+n_page))
             {
                 SetSelection(win_id - ID_STN_GOTO_PAGE_START);
@@ -667,6 +707,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                 return true;
             }
             break;
+        }
     }
     return false;
 }
@@ -718,7 +759,9 @@ bool wxSTEditorNotebook::NewPage( const wxString& title_ )
     return false;
 }
 
-bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_, const wxString &extensions_, const wxString& encoding_ref)
+bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_,
+                                   const wxString &extensions_,
+                                   const wxString& encoding_ref)
 {
     wxString encoding = encoding_ref;
     wxFileName fileName = fileName_;
@@ -845,21 +888,23 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
     return true;
 }
 
-bool wxSTEditorNotebook::LoadFiles( const FileNameArray* filePaths_,
+bool wxSTEditorNotebook::LoadFiles( const wxArrayFileName* fileNames,
                                     const wxString &extensions)
 {
-    wxArrayString filePaths;
-
-    if (filePaths_)
+    if (fileNames != NULL)
     {
-        for (size_t i = 0, count = filePaths_->GetCount();
-             i < count;
-             i++)
+        wxArrayString filePaths;
+
+        size_t n, count = fileNames->GetCount();
+        for (n = 0; n < count; n++)
         {
-            filePaths.Add(filePaths_->Item(i).GetFullPath());
+            filePaths.Add(fileNames->Item(n).GetFullPath());
         }
+
+        return LoadFiles(&filePaths, extensions);
     }
-    return LoadFiles(filePaths_ ? &filePaths : NULL, extensions);
+
+    return LoadFiles((wxArrayString*)NULL, extensions); // use file dialog to ask user
 }
 
 void wxSTEditorNotebook::SaveAllFiles()
@@ -995,10 +1040,11 @@ void wxSTEditorNotebook::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_WIN_PREVIOUS, has_pages); // && (GetSelection() > 0));
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_WIN_NEXT,     has_pages); // && (GetSelection()+1 < (int)GetPageCount()));
 
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_MENU_GOTO,  has_pages);
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_CLOSE_PAGE, editor_page);
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_CLOSE_ALL,  has_pages);
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_MENU_CLOSE, has_pages);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_MENU_GOTO,        has_pages);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_CLOSE_PAGE,       editor_page);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_CLOSE_ALL,        has_pages);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_CLOSE_ALL_OTHERS, has_pages);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STN_MENU_CLOSE,       has_pages);
 }
 
 void wxSTEditorNotebook::UpdatePageState()
@@ -1157,7 +1203,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
             }
             else
             {
-                wxBell();                 // bell ok to signify no more occurances?
+                wxBell(); // bell ok to signify no more occurances?
             }
         }
     }

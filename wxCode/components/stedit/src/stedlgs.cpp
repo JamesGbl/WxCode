@@ -45,6 +45,7 @@ wxSTEditorPrefPageData::wxSTEditorPrefPageData(const wxSTEditorPrefs& prefs,
                                                int options)
 {
     m_refData = new wxSTEditorPrefPageData_RefData();
+
     STEPPD_REFDATA->m_prefs      = prefs;
     STEPPD_REFDATA->m_styles     = styles;
     STEPPD_REFDATA->m_langs      = langs;
@@ -120,6 +121,7 @@ wxSTEditorPrefDialogPagePrefs::wxSTEditorPrefDialogPagePrefs( const wxSTEditorPr
     // The IDs are from wxDesigner, may be out of order, use lookup table
     m_prefsToIds.Alloc(STE_PREF__MAX);
     m_prefsToIds.Add(-1, STE_PREF__MAX);       // may be -1 for not handled
+
     m_prefsToIds[STE_PREF_HIGHLIGHT_SYNTAX]    = ID_STEDLG_HIGHLIGHT_SYNTAX_CHECKBOX;
     m_prefsToIds[STE_PREF_HIGHLIGHT_PREPROC]   = ID_STEDLG_HIGHLIGHT_PREPROC_CHECKBOX;
     m_prefsToIds[STE_PREF_HIGHLIGHT_BRACES]    = ID_STEDLG_HIGHLIGHT_BRACES_CHECKBOX;
@@ -785,8 +787,10 @@ void wxSTEditorPrefDialogPageStyles::UpdateEditor(wxSTEditor* editor, wxArrayInt
         int style_index = lineArray[n];
         int ste_style = m_styleArray[style_index];
         // skip over default preset styles of scintilla
-        size_t sci_style = n < wxSTC_STYLE_DEFAULT ? n :
-                                                  n + wxSTC_STYLE_INDENTGUIDE - wxSTC_STYLE_DEFAULT;
+        size_t sci_style = n;
+        if (n >= wxSTC_STYLE_DEFAULT)
+            sci_style += (wxSTC_STYLE_INDENTGUIDE - wxSTC_STYLE_DEFAULT);
+
         steStyles.SetEditorStyle((int)sci_style, ste_style, editor);
 
         int line = (int)n;
@@ -827,7 +831,7 @@ void wxSTEditorPrefDialogPageStyles::SetControlValues()
 
     // enable/disable unused items
     int  use_info = steStyles.GetStyleUsage(m_current_style);
-    bool use_font = (use_info & STE_STYLE_USES_FONT) != 0;
+    bool use_font = (use_info & STE_STYLE_USES_FONT      ) != 0;
     bool use_fore = (use_info & STE_STYLE_USES_FORECOLOUR) != 0;
     bool use_back = (use_info & STE_STYLE_USES_BACKCOLOUR) != 0;
 
@@ -1542,8 +1546,12 @@ void wxSTEditorPrefDialog::OnUpdateUIApply(wxUpdateUIEvent& event)
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
 #define SET_STATTEXT(win_id,val) wxStaticCast(FindWindow(win_id),wxStaticText)->SetLabel(val)
-
 #define ENC_OFFSET 1
+
+BEGIN_EVENT_TABLE(wxSTEditorPropertiesDialog, wxDialog)
+    EVT_UPDATE_UI(ID_STEPROP_ENCODING_CHOICE,       wxSTEditorPropertiesDialog::OnUpdateNeedEditable)
+    EVT_UPDATE_UI(ID_STEPROP_ENCODING_BOM_CHECKBOX, wxSTEditorPropertiesDialog::OnUpdateBomCheckBox)
+END_EVENT_TABLE()
 
 wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor) : wxDialog(),
     m_editor(editor),
@@ -1556,116 +1564,117 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
                                         const wxString& title,
                                         long style)
 {
-    bool ok = wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, style);
+    if (!wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, style))
+        return false;
 
-    if (ok)
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+    wxSTEditorPropertiesSizer(this, true, true);
+
+    wxSTEditorStdDialogButtonSizer(this, wxCANCEL | (IsEditable() ? wxOK : 0));
+
+    // File Properties panel
+
+    const wxFileName fileName = m_editor->GetFileName();
+
+    wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
+    textCtrl->SetValue(fileName.GetFullPath(m_editor->GetOptions().GetDisplayPathSeparator()));
+
+    wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
+    wxString strSize;
+    if (m_editor->IsFileFromDisk())
     {
-        SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
-        wxSTEditorPropertiesSizer(this, true, true);
+        fileName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
+        wxULongLong size = fileName.GetSize();
+        strSize = wxString::Format(_("%s bytes"), size.ToString().wx_str());
 
-        wxSTEditorStdDialogButtonSizer(this, wxCANCEL | (IsEditable() ? wxOK : 0));
-
-        const wxFileName fileName = m_editor->GetFileName();
-
-        wxTextCtrl *textCtrl = wxStaticCast(FindWindow(ID_STEPROP_FILENAME_TEXTCTRL), wxTextCtrl);
-        textCtrl->SetValue(fileName.GetFullPath(m_editor->GetOptions().GetDisplayPathSeparator()));
-
-        wxDateTime dtOpened, dtAccessed, dtModified, dtCreated;
-        wxString strSize;
-        if (m_editor->IsFileFromDisk())
+        if (size.GetValue() >= 1024)
         {
-            fileName.GetTimes(&dtAccessed, &dtModified, &dtCreated);
-            wxULongLong size = fileName.GetSize();
-            strSize = wxString::Format(_("%s bytes"), size.ToString().wx_str());
-
-            if (size.GetValue() >= 1024)
-            {
-                strSize = wxString::Format(wxT("%s (%s)"),
-                   wxFileName::GetHumanReadableSize(size).wx_str(),
-                   strSize.wx_str());
-            }
+            strSize = wxString::Format(wxT("%s (%s)"),
+                                        wxFileName::GetHumanReadableSize(size).wx_str(),
+                                        strSize.wx_str());
         }
-        else
-        {
-            strSize = _("<Unknown>");
-        }
-        SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, strSize);
-
-        dtOpened = m_editor->GetFileModificationTime();
-        SET_STATTEXT(ID_STEPROP_FILEOPENED_TEXT  , dtOpened  .IsValid() ? dtOpened  .Format() : wxString(_("Not originally loaded from disk")));
-        SET_STATTEXT(ID_STEPROP_FILEMODIFIED_TEXT, dtModified.IsValid() ? dtModified.Format() : wxString(_("<Unknown>")));
-        SET_STATTEXT(ID_STEPROP_FILEACCESSED_TEXT, dtAccessed.IsValid() ? dtAccessed.Format() : wxString(_("<Unknown>")));
-        SET_STATTEXT(ID_STEPROP_FILECREATED_TEXT , dtCreated .IsValid() ? dtCreated .Format() : wxString(_("<Unknown>")));
-
-        SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, m_editor->GetEditorLangs().IsOk() ? m_editor->GetEditorLangs().GetName(m_editor->GetLanguageId()) : wxString(_("<Unknown>")));
-
-        SET_STATTEXT(ID_STEPROP_NUMLINES_TEXT, wxString::Format(wxT("%d"), m_editor->GetLineCount()));
-        SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), m_editor->GetTextLength()));
-        SET_STATTEXT(ID_STEPROP_NUMWORDS_TEXT, wxString::Format(wxT("%d"), (int)m_editor->GetWordCount()));
-
-        wxString mimeStr;
-    #if wxUSE_MIMETYPE
-        wxString ext = fileName.GetExt();
-        if (!ext.IsEmpty())
-        {
-            wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
-
-            if (ft)
-            {
-                ft->GetMimeType(&mimeStr);
-                delete ft;
-            }
-        }
-    #endif
-        SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
-
-        int crlf = 0, cr = 0, lf = 0, tabs = 0;
-        m_editor->GetEOLCount(&crlf, &cr, &lf, &tabs);
-        SET_STATTEXT(ID_STEPROP_NUMTABS_TEXT, wxString::Format(wxT("%d"), tabs));
-
-        wxString eolStr;
-        if (crlf > 0)
-            eolStr += wxString::Format(wxT("CRLF (DOS/Win)=%d"), crlf);
-        if (cr > 0)
-        {
-            if (crlf > 0)
-                eolStr += wxT(", ");
-
-            eolStr += wxString::Format(wxT("CR (Mac)=%d"), cr);
-        }
-        if (lf > 0)
-        {
-            if ((crlf > 0) || (cr > 0))
-                eolStr += wxT(", ");
-
-            eolStr += wxString::Format(wxT("LF (Unix)=%d"), lf);
-        }
-        if (eolStr.IsEmpty())
-            eolStr = _("none");
-
-        SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
-
-        wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->SetValidator(wxGenericValidator(&m_encoding));
-        wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox)->SetValidator(wxGenericValidator(&m_bom));
-
-        wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Append(_("none")); // ENC_OFFSET
-        for (size_t i = 0; i < wxTextEncoding::EnumCount; i++)
-        {
-            wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Append(wxTextEncoding::TypeToString((wxTextEncoding::Type)i));
-        }
-
-        TransferDataToWindow();
-        Fit();
-        GetSizer()->SetSizeHints(this);
-        Centre();
     }
-    return ok;
-}
+    else
+    {
+        strSize = _("<Unknown>");
+    }
+    SET_STATTEXT(ID_STEPROP_FILESIZE_TEXT, strSize);
 
-BEGIN_EVENT_TABLE(wxSTEditorPropertiesDialog, wxDialog)
-    EVT_UPDATE_UI(ID_CHOICE, wxSTEditorPropertiesDialog::OnUpdateNeedEditable)
-    EVT_UPDATE_UI(ID_CHECKBOX, wxSTEditorPropertiesDialog::OnUpdateBomCheckBox)
-END_EVENT_TABLE()
+    dtOpened = m_editor->GetFileModificationTime();
+    SET_STATTEXT(ID_STEPROP_FILEOPENED_TEXT  , dtOpened  .IsValid() ? dtOpened  .Format() : wxString(_("Not originally loaded from disk")));
+    SET_STATTEXT(ID_STEPROP_FILEMODIFIED_TEXT, dtModified.IsValid() ? dtModified.Format() : wxString(_("<Unknown>")));
+    SET_STATTEXT(ID_STEPROP_FILEACCESSED_TEXT, dtAccessed.IsValid() ? dtAccessed.Format() : wxString(_("<Unknown>")));
+    SET_STATTEXT(ID_STEPROP_FILECREATED_TEXT , dtCreated .IsValid() ? dtCreated .Format() : wxString(_("<Unknown>")));
+
+    // Information panel
+
+    SET_STATTEXT(ID_STEPROP_LANGUAGE_TEXT, m_editor->GetEditorLangs().IsOk() ? m_editor->GetEditorLangs().GetName(m_editor->GetLanguageId()) : wxString(_("<Unknown>")));
+
+    wxChoice* encodingChoice = wxStaticCast(FindWindow(ID_STEPROP_ENCODING_CHOICE), wxChoice);
+    encodingChoice->SetValidator(wxGenericValidator(&m_encoding));
+    wxStaticCast(FindWindow(ID_STEPROP_ENCODING_BOM_CHECKBOX), wxCheckBox)->SetValidator(wxGenericValidator(&m_bom));
+
+    encodingChoice->Append(_("none")); // ENC_OFFSET
+    for (size_t i = 0; i < wxTextEncoding::EnumCount; i++)
+    {
+        encodingChoice->Append(wxTextEncoding::TypeToString((wxTextEncoding::TextEncoding_Type)i));
+    }
+
+    // Current Statistics
+
+    SET_STATTEXT(ID_STEPROP_NUMLINES_TEXT, wxString::Format(wxT("%d"), m_editor->GetLineCount()));
+    SET_STATTEXT(ID_STEPROP_NUMCHARS_TEXT, wxString::Format(wxT("%d"), m_editor->GetTextLength()));
+    SET_STATTEXT(ID_STEPROP_NUMWORDS_TEXT, wxString::Format(wxT("%d"), (int)m_editor->GetWordCount()));
+
+    wxString mimeStr;
+#if wxUSE_MIMETYPE
+    wxString ext = fileName.GetExt();
+    if (!ext.IsEmpty())
+    {
+        wxFileType* ft = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
+
+        if (ft)
+        {
+            ft->GetMimeType(&mimeStr);
+            delete ft;
+        }
+    }
+#endif
+    SET_STATTEXT(ID_STEPROP_FILE_TYPE_TEXT, mimeStr);
+
+    int crlf = 0, cr = 0, lf = 0, tabs = 0;
+    m_editor->GetEOLCount(&crlf, &cr, &lf, &tabs);
+    SET_STATTEXT(ID_STEPROP_NUMTABS_TEXT, wxString::Format(wxT("%d"), tabs));
+
+    wxString eolStr;
+    if (crlf > 0)
+        eolStr += wxString::Format(wxT("CRLF (DOS/Win)=%d"), crlf);
+    if (cr > 0)
+    {
+        if (crlf > 0)
+            eolStr += wxT(", ");
+
+        eolStr += wxString::Format(wxT("CR (Mac)=%d"), cr);
+    }
+    if (lf > 0)
+    {
+        if ((crlf > 0) || (cr > 0))
+            eolStr += wxT(", ");
+
+        eolStr += wxString::Format(wxT("LF (Unix)=%d"), lf);
+    }
+    if (eolStr.IsEmpty())
+        eolStr = _("none");
+
+    SET_STATTEXT(ID_STEPROP_EOLCHARS_TEXT, eolStr);
+
+    TransferDataToWindow();
+    Fit();
+    GetSizer()->SetSizeHints(this);
+    Centre();
+
+    return true;
+}
 
 bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
 {
@@ -1676,7 +1685,7 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
         wxASSERT(IsEditable());
         // do not actually store the values until certain that
         // all went right - it did if we get here
-        m_editor->SetFileEncoding(wxTextEncoding::TypeToString((wxTextEncoding::Type)(m_encoding - ENC_OFFSET)));
+        m_editor->SetFileEncoding(wxTextEncoding::TypeToString((wxTextEncoding::TextEncoding_Type)(m_encoding - ENC_OFFSET)));
         m_editor->SetFileBOM(m_bom);
         m_editor->SetModified(true);
     }
@@ -1693,7 +1702,7 @@ static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)
     int enc = list->GetSelection();
     bool bom_current = checkbox->IsChecked();
     size_t count;
-    bool bom = (enc >= ENC_OFFSET) && wxTextEncoding::GetBOMChars((wxTextEncoding::Type)(enc - ENC_OFFSET), &count);
+    bool bom = (enc >= ENC_OFFSET) && wxTextEncoding::GetBOMChars((wxTextEncoding::TextEncoding_Type)(enc - ENC_OFFSET), &count);
 
     if (bom_current && !bom)
     {
@@ -1704,7 +1713,7 @@ static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)
 
 void wxSTEditorPropertiesDialog::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
 {
-    bool bom = ::EnableBomCheckBox(wxStaticCast(FindWindow(ID_CHOICE), wxChoice), wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox));
+    bool bom = ::EnableBomCheckBox(wxStaticCast(FindWindow(ID_STEPROP_ENCODING_CHOICE), wxChoice), wxStaticCast(FindWindow(ID_STEPROP_ENCODING_BOM_CHECKBOX), wxCheckBox));
 
     event.Enable(m_editor->IsEditable() && bom);
 }
@@ -2249,6 +2258,10 @@ void wxSTEditorColumnizeDialog::OnText(wxCommandEvent& event)
         FormatText();
 }
 
+//-----------------------------------------------------------------------------
+// wxSTEditorFileOpenPanel
+//-----------------------------------------------------------------------------
+
 #if STE_FILEOPENEXTRA
 // panel with custom controls for file dialog
 class wxSTEditorFileOpenPanel : public wxPanel
@@ -2264,11 +2277,11 @@ public:
 
     wxChoice* GetList()
     {
-        return wxStaticCast(FindWindow(ID_CHOICE), wxChoice);
+        return wxStaticCast(FindWindow(ID_STEFILEOPEN_ENCODING_CHOICE), wxChoice);
     }
     wxCheckBox* GetCheckBox()
     {
-        return wxStaticCast(FindWindow(ID_CHECKBOX), wxCheckBox);
+        return wxStaticCast(FindWindow(ID_STEFILEOPEN_ENCODING_BOM_CHECKBOX), wxCheckBox);
     }
 
     static wxWindow* ControlCreator(wxWindow* parent)
@@ -2292,13 +2305,13 @@ protected:
 
 IMPLEMENT_CLASS(wxSTEditorFileOpenPanel, wxPanel)
 
+BEGIN_EVENT_TABLE(wxSTEditorFileOpenPanel, wxPanel)
+    EVT_UPDATE_UI(ID_STEFILEOPEN_ENCODING_BOM_CHECKBOX, wxSTEditorFileOpenPanel::OnUpdateBomCheckBox)
+END_EVENT_TABLE()
+
 wxSTEditorFileOpenPanel::wxSTEditorFileOpenPanel() : wxPanel(), m_index(wxTextEncoding::None + ENC_OFFSET)
 {
 }
-
-BEGIN_EVENT_TABLE(wxSTEditorFileOpenPanel, wxPanel)
-    EVT_UPDATE_UI(ID_CHECKBOX, wxSTEditorFileOpenPanel::OnUpdateBomCheckBox)
-END_EVENT_TABLE()
 
 // nevet gets called :-(
 void wxSTEditorFileOpenPanel::OnUpdateBomCheckBox(wxUpdateUIEvent& event)
@@ -2323,7 +2336,7 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
             m_index = wxTextEncoding::TypeFromString(wxSTEditorFileDialog::m_encoding) + ENC_OFFSET;
             m_bom   = wxSTEditorFileDialog::m_file_bom;
 
-            wxStaticCast(FindWindow(ID_CHOICE), wxChoice)->Append(_("none"));
+            wxStaticCast(FindWindow(ID_STEFILEOPEN_ENCODING_CHOICE), wxChoice)->Append(_("none"));
             for (size_t i = 0; i < wxTextEncoding::EnumCount; i++)
             {
                 GetList()->Append(wxTextEncoding::TypeToString((wxTextEncoding::Type)i));
@@ -2355,6 +2368,10 @@ enum filterindex
 #endif
 };
 #endif // STE_FILEOPENEXTRA
+
+//-----------------------------------------------------------------------------
+// wxSTEditorFileDialog
+//-----------------------------------------------------------------------------
 
 IMPLEMENT_CLASS(wxSTEditorFileDialog, wxFileDialog)
 
@@ -2426,6 +2443,10 @@ int wxSTEditorFileDialog::ShowModal()
     return n;
 }
 
+//-----------------------------------------------------------------------------
+// wxSTEditorStdDialogButtonSizer
+//-----------------------------------------------------------------------------
+
 wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long flags)
 {
     wxStdDialogButtonSizer* buttonpane = new wxStdDialogButtonSizer();
@@ -2453,12 +2474,16 @@ wxStdDialogButtonSizer* wxSTEditorStdDialogButtonSizer(wxWindow* parent, long fl
     return buttonpane;
 }
 
+//-----------------------------------------------------------------------------
+// wxSTEditorAboutDialog
+//-----------------------------------------------------------------------------
+
 void wxSTEditorAboutDialog(wxWindow* parent)
 {
     wxString msg, buildStr;
 
 #ifdef wxUSE_UNICODE
-    #if wxUSE_UNICODE_UTF8 // wx 2.9+
+    #if defined(wxUSE_UNICODE_UTF8) && wxUSE_UNICODE_UTF8 // wx 2.9+
         buildStr = wxT("UTF8");
     #else
         buildStr = wxT("Unicode");
@@ -2466,6 +2491,7 @@ void wxSTEditorAboutDialog(wxWindow* parent)
 #else
     buildStr = wxT("Ansi");
 #endif
+
 #ifdef __WXDEBUG__
     if (!buildStr.IsEmpty()) buildStr += wxT(", ");
     buildStr += wxT("Debug"); // don't show release, that's assumed
@@ -2473,8 +2499,8 @@ void wxSTEditorAboutDialog(wxWindow* parent)
     buildStr = wxT(" (") + buildStr + wxT(")");
 
     msg.Printf( wxT("Welcome to ") STE_VERSION_STRING wxT(".\n\n")
-                wxT("Using %s, http://www.scintilla.org\n")
-                wxT("and ") wxVERSION_STRING wxT(", http://www.wxwidgets.org.\n")
+                wxT("Using ") wxVERSION_STRING wxT(", http://www.wxwidgets.org\n")
+                wxT("and %s, http://www.scintilla.org\n")
                 wxT("\n")
                 wxT("Compiled on %s%s."),
             #if (wxVERSION_NUMBER >= 2902)

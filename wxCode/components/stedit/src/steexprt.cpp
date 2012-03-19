@@ -1974,6 +1974,7 @@ bool wxSTEditorExportDialog::Create(wxWindow* parent,
 
     wxBitmapButton *bmpButton = wxStaticCast(FindWindow(ID_STEDLG_EXPORT_FILENAME_BITMAPBUTTON), wxBitmapButton);
     bmpButton->SetBitmapLabel(STE_ARTTOOL(wxART_STEDIT_OPEN));
+
     Fit();
     SetMinSize(GetSize());
     Centre();
@@ -1992,13 +1993,13 @@ void wxSTEditorExportDialog::SetFileName(const wxFileName& fileName)
     m_fileNameCombo->SetValue(fileName.GetFullPath());
     m_fileNameCombo->SetFocus();
 }
-int wxSTEditorExportDialog::GetFileFormat() const
+STE_Export_Type wxSTEditorExportDialog::GetFileFormat() const
 {
-    return m_fileFormatChoice->GetSelection();
+    return (STE_Export_Type)m_fileFormatChoice->GetSelection();
 }
-void wxSTEditorExportDialog::SetFileFormat(int file_format)
+void wxSTEditorExportDialog::SetFileFormat(STE_Export_Type file_format)
 {
-    m_fileFormatChoice->SetSelection(file_format);
+    m_fileFormatChoice->SetSelection((int)file_format);
 }
 
 wxFileName wxSTEditorExportDialog::FileNameExtChange(const wxFileName& fileName, int file_format) const

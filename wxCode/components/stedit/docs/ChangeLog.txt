@@ -1,6 +1,11 @@
 ===============================================================================
 Changelog:
 
+03/18/2012
+  - Add doxygen docs to all headers.
+  - Cleanup and reorder functions to make maintenance easier.
+  - Bump version to 1.6.0
+
 03/10/2012
   - Add wxSearchCtrl to the toolbar.
   - Add new class wxSTEditorTreeCtrl to show wxSTEditorNotebook pages

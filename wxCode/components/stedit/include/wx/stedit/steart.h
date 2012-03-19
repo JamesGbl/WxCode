@@ -14,40 +14,41 @@
 #include <wx/artprov.h>
 #include "wx/stedit/stedefs.h"
 
-/** @file */
-
 // --------------------------------------------------------------------------
-/// @defgroup wxART_STEDIT_defines wxART_STEDIT_* #defines
-/// wxArtIDs used by the wxStEditor classes to get bitmaps
+/// @name wxART_STEDIT_* #defines
+/// wxArtIDs used by the wxSTEditor classes to get bitmaps.
 /// Note: We cannot use the default wxArtProvider icons since we require a few
 ///       extra ones and mixing the two will look strange at best.
-///@{
+/// @{
 
-#define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)     // the pencil icon
+#define wxART_STEDIT_APP            wxART_MAKE_ART_ID(wxART_STEDIT_APP)     ///< the pencil icon
 
-#define wxART_STEDIT_NEW            wxART_MAKE_ART_ID(wxART_STEDIT_NEW)     // wxART_NEW
-#define wxART_STEDIT_OPEN           wxART_MAKE_ART_ID(wxART_STEDIT_OPEN)    // wxART_FILE_OPEN
-#define wxART_STEDIT_SAVE           wxART_MAKE_ART_ID(wxART_STEDIT_SAVE)    // wxART_FILE_SAVE
+#define wxART_STEDIT_NEW            wxART_MAKE_ART_ID(wxART_STEDIT_NEW)     ///< wxART_NEW
+#define wxART_STEDIT_OPEN           wxART_MAKE_ART_ID(wxART_STEDIT_OPEN)    ///< wxART_FILE_OPEN
+#define wxART_STEDIT_SAVE           wxART_MAKE_ART_ID(wxART_STEDIT_SAVE)    ///< wxART_FILE_SAVE
 #define wxART_STEDIT_SAVEALL        wxART_MAKE_ART_ID(wxART_STEDIT_SAVEALL)
-#define wxART_STEDIT_SAVEAS         wxART_MAKE_ART_ID(wxART_STEDIT_SAVEAS)  // wxART_FILE_SAVE_AS
-#define wxART_STEDIT_PRINT          wxART_MAKE_ART_ID(wxART_STEDIT_PRINT)   // wxART_PRINT
+#define wxART_STEDIT_SAVEAS         wxART_MAKE_ART_ID(wxART_STEDIT_SAVEAS)  ///< wxART_FILE_SAVE_AS
+#define wxART_STEDIT_PRINT          wxART_MAKE_ART_ID(wxART_STEDIT_PRINT)   ///< wxART_PRINT
 #define wxART_STEDIT_PRINTPREVIEW   wxART_MAKE_ART_ID(wxART_STEDIT_PRINTPREVIEW)
 #define wxART_STEDIT_PRINTSETUP     wxART_MAKE_ART_ID(wxART_STEDIT_PRINTSETUP)
 #define wxART_STEDIT_PRINTPAGESETUP wxART_MAKE_ART_ID(wxART_STEDIT_PRINTPAGESETUP)
-#define wxART_STEDIT_QUIT           wxART_MAKE_ART_ID(wxART_STEDIT_QUIT)    // wxART_QUIT
-#define wxART_STEDIT_CUT            wxART_MAKE_ART_ID(wxART_STEDIT_CUT)     // wxART_CUT
-#define wxART_STEDIT_COPY           wxART_MAKE_ART_ID(wxART_STEDIT_COPY)    // wxART_COPY
-#define wxART_STEDIT_PASTE          wxART_MAKE_ART_ID(wxART_STEDIT_PASTE)   // wxART_PASTE
-#define wxART_STEDIT_FIND           wxART_MAKE_ART_ID(wxART_STEDIT_FIND)    // wxART_FIND
+#define wxART_STEDIT_QUIT           wxART_MAKE_ART_ID(wxART_STEDIT_QUIT)    ///< wxART_QUIT
+#define wxART_STEDIT_CUT            wxART_MAKE_ART_ID(wxART_STEDIT_CUT)     ///< wxART_CUT
+#define wxART_STEDIT_COPY           wxART_MAKE_ART_ID(wxART_STEDIT_COPY)    ///< wxART_COPY
+#define wxART_STEDIT_PASTE          wxART_MAKE_ART_ID(wxART_STEDIT_PASTE)   ///< wxART_PASTE
+#define wxART_STEDIT_FIND           wxART_MAKE_ART_ID(wxART_STEDIT_FIND)    ///< wxART_FIND
 #define wxART_STEDIT_FINDNEXT       wxART_MAKE_ART_ID(wxART_STEDIT_FINDNEXT)
 #define wxART_STEDIT_FINDUP         wxART_MAKE_ART_ID(wxART_STEDIT_FINDUP)
 #define wxART_STEDIT_FINDDOWN       wxART_MAKE_ART_ID(wxART_STEDIT_FINDDOWN)
-#define wxART_STEDIT_REPLACE        wxART_MAKE_ART_ID(wxART_STEDIT_REPLACE) // wxART_FIND_AND_REPLACE
-#define wxART_STEDIT_UNDO           wxART_MAKE_ART_ID(wxART_STEDIT_UNDO)    // wxART_UNDO
-#define wxART_STEDIT_REDO           wxART_MAKE_ART_ID(wxART_STEDIT_REDO)    // wxART_REDO
-#define wxART_STEDIT_CLEAR          wxART_MAKE_ART_ID(wxART_STEDIT_CLEAR)   // wxART_DELETE
+#define wxART_STEDIT_REPLACE        wxART_MAKE_ART_ID(wxART_STEDIT_REPLACE) ///< wxART_FIND_AND_REPLACE
+#define wxART_STEDIT_UNDO           wxART_MAKE_ART_ID(wxART_STEDIT_UNDO)    ///< wxART_UNDO
+#define wxART_STEDIT_REDO           wxART_MAKE_ART_ID(wxART_STEDIT_REDO)    ///< wxART_REDO
+#define wxART_STEDIT_CLEAR          wxART_MAKE_ART_ID(wxART_STEDIT_CLEAR)   ///< wxART_DELETE
 
-// wxArtIDs for each preference dialog page
+/// @}
+/// @name wxArtIDs for each preference dialog page
+/// @{
+
 #define wxART_STEDIT_PREFDLG_VIEW       wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_VIEW)
 #define wxART_STEDIT_PREFDLG_TABSEOL    wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_TABSEOL)
 #define wxART_STEDIT_PREFDLG_FOLDWRAP   wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_FOLDWRAP)
@@ -57,26 +58,27 @@
 #define wxART_STEDIT_PREFDLG_STYLES     wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_STYLES)
 #define wxART_STEDIT_PREFDLG_LANGS      wxART_MAKE_ART_ID(wxART_STEDIT_PREFDLG_LANGS)
 
-///@}
-
+/// @}
 // --------------------------------------------------------------------------
-///@{
+/// @name wxSTEditorArtProvider Default Icon Sizes
+/// @{
 
 /// Normal icon size for this platform from wxSystemSettings::GetMetric(...)
 WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTEIconSize;
 /// Small icon size for this platform from wxSystemSettings::GetMetric(...)
 WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize;
 
-///@}
+/// @}
 // --------------------------------------------------------------------------
-///@{
+/// @name wxSTEditorArtProvider Convenience Macros
+/// @{
 
 /// Convenience macro to get an appropriate menu bitmap for the input client
 #define STE_ARTMENU(id) wxArtProvider::GetBitmap(id, wxART_MENU)
 /// Convenience macro to get an appropriate toolbar bitmap for the input client
 #define STE_ARTTOOL(id) wxArtProvider::GetBitmap(id, wxART_TOOLBAR)
 
-///@}
+/// @}
 //---------------------------------------------------------------------------
 /** @class wxSTEditorArtProvider
     @brief A holding place for our art for menu items and toolbar tools.
@@ -111,9 +113,9 @@ public:
     /// Helper function to resize the input bitmap to have the given size
     static wxBitmap Resize(const wxBitmap& bmp, const wxSize& size);
 
-    /// Get a wxIconBundle of the wxART_STEDIT_APP icon for wxStEdit dialogs
+    /// Get a wxIconBundle of the wxART_STEDIT_APP icon for wxSTEdit dialogs
     /// This function exists since static wxArtProvider::GetIconBundle()
-    ///  is only in >= 2.9
+    ///  is only in >= 2.9.
     static wxIconBundle GetDialogIconBundle();
 
 protected:
@@ -126,7 +128,7 @@ protected:
                                   const wxArtClient& client,
                                   const wxSize& size);
 
-    /// This function is in wx >= 2.9
+    /// This function is in wx >= 29.
     virtual wxIconBundle CreateIconBundle(const wxArtID& id,
                                           const wxArtClient& client);
 

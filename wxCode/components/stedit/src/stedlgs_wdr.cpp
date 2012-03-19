@@ -3,9 +3,6 @@
 // Do not modify this file, all changes will be lost!
 //------------------------------------------------------------------------------
 
-// Custom source
-#include "precomp.h"
-
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
     #pragma implementation "stedlgs_wdr.h"
 #endif
@@ -21,6 +18,9 @@
 #include "stedlgs_wdr.h"
 
 #include <wx/intl.h>
+
+// Custom source
+#include "precomp.h"
 
 // Implement window functions
 
@@ -339,10 +339,10 @@ wxSizer *wxSTEditorPropertiesSizer( wxWindow *parent, bool call_fit, bool set_si
     wxBoxSizer *item33 = new wxBoxSizer( wxHORIZONTAL );
 
     wxString *strs34 = (wxString*) NULL;
-    wxChoice *item34 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs34, 0 );
+    wxChoice *item34 = new wxChoice( parent, ID_STEPROP_ENCODING_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs34, 0 );
     item33->Add( item34, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
 
-    wxCheckBox *item35 = new wxCheckBox( parent, ID_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox *item35 = new wxCheckBox( parent, ID_STEPROP_ENCODING_BOM_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
     item33->Add( item35, 0, wxALIGN_CENTER|wxLEFT, 5 );
 
     item27->Add( item33, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
@@ -353,7 +353,7 @@ wxSizer *wxSTEditorPropertiesSizer( wxWindow *parent, bool call_fit, bool set_si
 
     item0->Add( item25, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5 );
 
-    wxStaticBox *item37 = new wxStaticBox( parent, -1, _("Current statistics") );
+    wxStaticBox *item37 = new wxStaticBox( parent, -1, _("Document Statistics") );
     wxStaticBoxSizer *item36 = new wxStaticBoxSizer( item37, wxVERTICAL );
 
     wxFlexGridSizer *item38 = new wxFlexGridSizer( 3, 5, 5 );
@@ -1483,10 +1483,10 @@ wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit, bool set_size
     wxStaticBoxSizer *item1 = new wxStaticBoxSizer( item2, wxHORIZONTAL );
 
     wxString *strs3 = (wxString*) NULL;
-    wxChoice *item3 = new wxChoice( parent, ID_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs3, 0 );
+    wxChoice *item3 = new wxChoice( parent, ID_STEFILEOPEN_ENCODING_CHOICE, wxDefaultPosition, wxDefaultSize, 0, strs3, 0 );
     item1->Add( item3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxCheckBox *item4 = new wxCheckBox( parent, ID_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox *item4 = new wxCheckBox( parent, ID_STEFILEOPEN_ENCODING_BOM_CHECKBOX, _("BOM"), wxDefaultPosition, wxDefaultSize, 0 );
     item1->Add( item4, 0, wxALIGN_CENTER|wxALL, 5 );
 
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );

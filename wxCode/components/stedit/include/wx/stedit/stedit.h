@@ -30,13 +30,20 @@ class WXDLLIMPEXP_FWD_CORE wxToolBar;
 #include "wx/stedit/steopts.h"
 
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceDialog;
+class WXDLLIMPEXP_FWD_STEDIT wxSTETreeItemData;
 
 //-----------------------------------------------------------------------------
-// wxSTERecursionGuard - a simple recursion guard to block reentrant functions
-//  We have our own version since it's used as a class member and wxWidgets may
-//    change their implementation.
+/// @class wxSTERecursionGuard
+/// @brief A simple recursion guard to block reentrant functions.
+/// Create a wxSTERecursionGuardFlag as a member of a class (or whereever) and
+/// in functions that may recurse, create a wxSTERecursionGuard and handle
+/// recursion appropriately by calling IsInside().
+/// wxStEdit has its own version since it's used as a class member and wxWidgets
+/// may change their implementation.
 //-----------------------------------------------------------------------------
 
+/// @class wxSTERecursionGuardFlag
+/// @brief Create one of these classes to maintain the recursion flag state.
 class WXDLLIMPEXP_STEDIT wxSTERecursionGuardFlag
 {
 public:
@@ -47,6 +54,8 @@ public:
 class WXDLLIMPEXP_STEDIT wxSTERecursionGuard
 {
 public:
+    /// Attach to a wxSTERecursionGuardFlag whose lifetime MUST be greater
+    /// than the life of this class instance.
     wxSTERecursionGuard(wxSTERecursionGuardFlag& flag) : m_flag(flag)
     {
         m_isInside = (flag.m_flag++ != 0);
@@ -66,47 +75,55 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-// STE_FindStringType - options of what to do when finding strings
-//   see wxSTEditor::FindString()
+/// @enum STE_FindStringType options of what to do when finding strings.
+/// @see wxSTEditor::FindString()
 //-----------------------------------------------------------------------------
 
 enum STE_FindStringType
 {
-    STE_FINDSTRING_NOTHING = 0,     // do nothing when finding a string
+    STE_FINDSTRING_NOTHING = 0,     ///< Do nothing when finding a string.
 
-    STE_FINDSTRING_SELECT  = 0x01,  // select the string if found
-    STE_FINDSTRING_GOTO    = 0x02   // goto the start pos of string
+    STE_FINDSTRING_SELECT  = 0x01,  ///< Select the string if found.
+    STE_FINDSTRING_GOTO    = 0x02   ///< Goto the start pos of string.
 };
 
 //-----------------------------------------------------------------------------
-// STE_TranslatePosType - options of what to do for wxSTEditor::TranslateXXX()
+/// @enum STE_TranslatePosType options of what to do for wxSTEditor::TranslateXXX().
 //-----------------------------------------------------------------------------
 
 enum STE_TranslatePosType
 {
-    STE_TRANSLATE_NOTHING   = 0, // take input literally
-    STE_TRANSLATE_SELECTION = 1, // use selection to translate
-    STE_TRANSLATE_TARGET    = 2  // use target to translate
+    STE_TRANSLATE_NOTHING   = 0, ///< Take input literally.
+    STE_TRANSLATE_SELECTION = 1, ///< Use selection to translate.
+    STE_TRANSLATE_TARGET    = 2  ///< Use target to translate.
 };
 
 //-----------------------------------------------------------------------------
-// STE_ClipboardType - options of how to get/set data from/to the clipboard
+/// @enum STE_ClipboardType options of how to get/set data from/to the clipboard.
 //-----------------------------------------------------------------------------
 
 enum STE_ClipboardType
 {
-    STE_CLIPBOARD_DEFAULT = 1, // use the normal clipboard
-    STE_CLIPBOARD_PRIMARY = 2, // use the primary clipboard
-    STE_CLIPBOARD_BOTH    = 3  // use both clipboards (only valid for set functions)
+    STE_CLIPBOARD_DEFAULT = 1, ///< Use the normal clipboard.
+    STE_CLIPBOARD_PRIMARY = 2, ///< Use the primary clipboard (Unix systems only).
+    STE_CLIPBOARD_BOTH    = 3  ///< Use both clipboards (only valid for Set functions).
 };
 
 //-----------------------------------------------------------------------------
-// wxSTEditorRefData - ref counted data to share with refed editors
-//
-//  You normally do not need to access any of this, use the member functions
-//  in the wxSTEditor.
+/// @class wxSTEditorRefData
+/// @brief A wxObject ref counted data to share with refed (split) wxSTEditor instances.
+///
+/// You normally should not need to access any of this, use the member functions
+/// in the wxSTEditor. Triple check that you cannot do what you want through
+/// the wxSTEditor before accessing members of this class.
+///
+/// Instead of trying to derive from this class to add members, please create
+/// your own wxClientData object with the extra data you need and use the
+/// wxSTEditor::Get/SetClientData() functions. The wxClientData is deleted by
+/// this class, so if you need it to be persistent make your data a shared pointer
+/// member of the wxClientData container you set.
 //-----------------------------------------------------------------------------
-class WXDLLIMPEXP_STEDIT wxSTEditorRefData : public wxObjectRefData
+class WXDLLIMPEXP_STEDIT wxSTEditorRefData : public wxObjectRefData, public wxClientDataContainer
 {
 public:
     wxSTEditorRefData();
@@ -120,17 +137,6 @@ public:
     void AddEditor(wxSTEditor* editor)       { if (!HasEditor(editor)) m_editors.Add(editor); }
     void RemoveEditor(wxSTEditor* editor)    { int n = FindEditor(editor); if (n != wxNOT_FOUND) m_editors.RemoveAt(n); }
 
-    virtual void Modify(bool WXUNUSED(mod)) {}
-
-    wxFileName GetFilename() const { return m_fileName; }
-
-    virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
-    {
-        wxUnusedVar(notifyViews);
-        m_fileName = fileName;
-        m_modifiedTime = fileName.FileExists() ? fileName.GetModificationTime() :wxInvalidDateTime;
-    }
-
     bool SetLanguage(int lang)
     {
         wxCHECK_MSG(lang >= 0, false, wxT("Invalid language ID"));
@@ -138,53 +144,23 @@ public:
         return true;
     }
     bool SetLanguage(const wxFileName&);
-    int GetLanguageId() const
-    {
-        return m_steLang_id;
-    }
 
-    void SetFileEncoding(const wxString& encoding)
-    {
-        m_encoding = encoding;
-    }
-    wxString GetFileEncoding() const
-    {
-        return m_encoding;
-    }
-    void SetFileBOM(bool bom)
-    {
-        m_file_bom = bom;
-    }
-    bool GetFileBOM() const
-    {
-        return m_file_bom;
-    }
-
-#if wxUSE_STREAMS
-    // Load a file from the wxInputStream (probably a wxFileInputStream)
-    //  flags is STE_LoadFileType
-    // If successful: sets m_fileName, m_modifiedTime, m_encoding, m_file_bom
-    bool LoadFileToString( wxString* filedata,
-                           wxInputStream& stream,
-                           const wxFileName& filename,
-                           int flags = STE_LOAD_QUERY_UNICODE,
-                           wxWindow* parent = NULL,
-                           const wxString& encoding = wxEmptyString);
-#endif
-
-private:
-    wxArrayPtrVoid m_editors;       // editors that share this data
+protected:
     wxFileName   m_fileName;        // current filename for the editor
-    int m_steLang_id;               // index into the wxSTEditorLangs used
-    wxString m_encoding;            // encoding specified by LoadFile parameter, or else, found inside file
-    bool m_file_bom;                // bom found inside file
-
-public:
     wxDateTime   m_modifiedTime;    // file modification time, else invalid
-    wxTreeItemId m_treeItemId;      // the treeitem if tracked in a wxTreeCtrl
+    wxString     m_encoding;        // encoding specified by LoadFile parameter, or else, found inside file
+    bool         m_file_bom;        // bom found inside file
 
-    int m_last_autoindent_line;     // last line that was auto indented
-    int m_last_autoindent_len;      // the length of the line before auto indenting
+    int          m_steLang_id;      // index into the wxSTEditorLangs used
+
+    wxSTETreeItemData* m_treeItemData; // the data if tracked in a wxTreeCtrl
+
+    int     m_last_autoindent_line; // last line that was auto indented
+    int     m_last_autoindent_len;  // the length of the line before auto indenting
+
+    long    m_state;                // what state does this editor have, enum STE_StateType
+    bool    m_dirty_flag;           // set if file format is changed by the user, in the properties dialog
+                                    // There is no opposite of SCI_SETSAVEPOINT
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -194,10 +170,22 @@ public:
     wxSTEditorPrefs  m_stePrefs;
     wxSTEditorStyles m_steStyles;
     wxSTEditorLangs  m_steLangs;
+
+private:
+    wxArrayPtrVoid m_editors;       // editors that share this data
+
+    friend class wxSTEditor;
+    friend class wxSTETreeItemData;
 };
 
 //-----------------------------------------------------------------------------
-// wxSTEditor
+/// @class wxSTEditor
+/// @brief A wxStyledTextCtrl derived editor control with many added features.
+///
+/// This control can be created and used as a wxStyledTextCtrl editor, but it
+/// is best created by the wxSTEditorSplitter. Be sure to call CreateOptions(...)
+/// if you create the editor by itself, however this is not necessary, but
+/// quite a bit of the added functionally will be missing.
 //-----------------------------------------------------------------------------
 
 class WXDLLIMPEXP_STEDIT wxSTEditor : public wxStyledTextCtrl
@@ -221,98 +209,98 @@ public :
                  long style = 0, // wxStyledTextCtrl ors this with defaults
                  const wxString& name = wxT("wxSTEditor"));
 
-    // Clone this editor, uses wxClassInfo so derived classes should work.
-    // Override if you want to create your own type for the splitter to use in
-    //   wxSTEditorSplitter::CreateEditor().
+    /// Clone this editor, uses wxClassInfo so derived classes should work without
+    /// having to override this.
+    /// Override if you need to create your own type for the wxSTEditorSplitter to use in
+    ///   wxSTEditorSplitter::CreateEditor().
+    /// Be sure to use DECLARE_DYNAMIC_CLASS() and IMPLEMENT_DYNAMIC_CLASS()
+    /// in you derived editor.
     virtual wxSTEditor* Clone(wxWindow *parent, wxWindowID id = wxID_ANY,
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,
                               long style = 0, // wxStyledTextCtrl ors this with defaults
                               const wxString& name = wxT("wxSTEditor")) const;
 
-    wxWindow* GetModalParent() { return this; }
+    wxWindow* GetModalParent() { return this; } // TODO : remove this
 
-    // Create any elements desired in the wxSTEditorOptions.
-    //   This function is always called after creation by the parent splitter
-    //     with its options and would be a good function to override to setup
-    //     the editor your own way.
-    // This registers the prefs, styles, langs in the options,
-    //   and creates any items set by the options.
+    /// If this editor is going to use a Refed document, run this after construction.
+    /// A refed editor will mirror the original wxSTEditor, the input origEditor isn't modified.
+    ///  @see wxSTEditorSplitter for usage, be careful to get it right.
+    virtual void RefEditor(wxSTEditor *origEditor);
+
+    /// Create all the elements set in the wxSTEditorOptions.
+    /// This function is always called after creation by the parent wxSTEditorSplitter
+    /// with its options and would be a good function to override to setup
+    /// the editor your own way.
+    /// This registers the prefs, styles, langs in the options,
+    /// and creates any enum STE_EditorOptionsType items set in the options.
     virtual void CreateOptions(const wxSTEditorOptions& options);
-    // GetOptions, use this to change editor option values
+    /// GetOptions, use this to get editor option values.
     const wxSTEditorOptions& GetOptions() const;
+    /// GetOptions, use this to get/change editor option values.
     wxSTEditorOptions& GetOptions();
-    // Set the options, the options will now be refed copies of the ones you send
-    // in. This can be used to detach the options for a particular editor from
-    // the rest of them. See also CreateOptions()
+    /// Set the options, the options will now be refed copies of the ones you send in.
+    /// This can be used to detach the options for a particular editor from
+    /// the rest of them. This function doesn't do anything other than
+    /// set the new options, nothing will be created or destroyed.
+    /// @see CreateOptions(...) to set and create items.
     void SetOptions(const wxSTEditorOptions& options);
 
     // ************************************************************************
-    // NOTE: This might not be necessary anymore since overriding Destroy()
-    //
-    // IMPORTANT! In your wxApp::OnExit or wxFrame's EVT_CLOSE handler
-    // make sure you call this to ensure that any extraneous focus events
-    // are blocked. GTK 2.0 for example sends them, MSW has been known to do it
-    // as well (but that was for a different control)
-    //
-    // The problem occurs because focus events may be sent to the window if the
-    // user closes it and immediately clicks on it before it's destroyed. This
-    // is not typical, but can happen suprisingly easily.
-    // The sequence of events is as follows, the focus event is created
-    // from wxWidgets and the ste editor tries to update the menus and toolbars.
-    // In GTK2, for example, the event loop is run when updating a
-    // toolbar tool and so the ste editor can be destroyed before the toolbar
-    // finishes updating. When the function returns the program crashes.
-    void SetSendSTEEvents(bool send);
+    /// Enable or disable sending or handling events, for use during initialization or destruction.
+    /// NOTE: This might not be necessary anymore since overriding Destroy()
+    ///
+    /// IMPORTANT! In your wxApp::OnExit or wxFrame's EVT_CLOSE handler
+    /// make sure you call this to ensure that any extraneous focus events
+    /// are blocked. GTK 2.0 for example sends them, MSW has been known to do it
+    /// as well (but that was for a different control).
+    ///
+    /// The problem occurs because focus events may be sent to the window if the
+    /// user closes it and immediately clicks on it before it's destroyed. This
+    /// is not typical, but can happen suprisingly easily.
+    /// The sequence of events is as follows, the focus event is created
+    /// from wxWidgets and the ste editor tries to update the menus and toolbars.
+    /// In GTK2, for example, the event loop is run when updating a
+    /// toolbar tool and so the ste editor can be destroyed before the toolbar
+    /// finishes updating. When the function returns the program crashes.
+    void SetSendSTEEvents(bool send) { m_sendEvents = send; }
     // ************************************************************************
 
     // ------------------------------------------------------------------------
-    // wxTextCtrl methods - this can be used as a replacement textctrl with
-    //                      very few, if any, code changes.
+    /// @name wxTextCtrl methods and a few simple convenience functions.
+    /// This editor can be used as a replacement wxTextCtrl with very few, if any, code changes.
+    /// Many functions are simply const versions that were not in wxWidgets 2.8.
+    /// @{
 
-#if (wxVERSION_NUMBER < 2900)
-    bool CanCopy() const { return HasSelection(); }
-    bool CanCut()  const { return CanCopy() && IsEditable(); }
-    void SetInsertionPoint(STE_TextPos pos)       { GotoPos(pos); }
-    void SetInsertionPointEnd()           { GotoPos(GetLength()); }
-    void WriteText(const wxString &text)  { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + (STE_TextPos)text.Len()); }
+#if (wxVERSION_NUMBER < 2900) // in wx2.9 wxSTC derived from wxTextCtrlIface
+    bool CanCopy() const                    { return HasSelection(); }
+    bool CanCut()  const                    { return CanCopy() && IsEditable(); }
+    void SetInsertionPoint(STE_TextPos pos) { GotoPos(pos); }
+    void SetInsertionPointEnd()             { GotoPos(GetLength()); }
+    void WriteText(const wxString &text)    { InsertText(GetCurrentPos(), text); SetCurrentPos(GetCurrentPos() + (STE_TextPos)text.Len()); }
     STE_TextPos XYToPosition(long x, long y) const { return x + wxConstCast(this, wxSTEditor)->PositionFromLine(y); }
     // Remove this section of text between markers
-    void Remove(int iStart, int iEnd)     { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }
+    void Remove(int iStart, int iEnd)       { SetTargetStart(iStart); SetTargetEnd(iEnd); ReplaceTarget(wxEmptyString); }
     // Get the row/col representation of the position
     bool PositionToXY(STE_TextPos, long *x, long *y) const;
-    bool HasSelection() const { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
-    void RemoveSelection()    { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
-    void ShowPosition(STE_TextPos pos)    { GotoPos(pos); }
-    void SetValue(const wxString& text)   { SetText(text); }
-    void ChangeValue(const wxString& text){ SetText(text); }
-    wxString GetValue() const             { return wxConstCast(this, wxSTEditor)->GetText(); }
+    bool HasSelection() const               { return (GetSelectionStart() != GetSelectionEnd()); } // some wxTextCtrl implementations have this
+    void RemoveSelection()                  { SetSelection(GetCurrentPos() , GetCurrentPos()); }   // some wxTextCtrl implementations have this
+    void ShowPosition(STE_TextPos pos)      { GotoPos(pos); }
+    void SetValue(const wxString& text)     { SetText(text); }
+    void ChangeValue(const wxString& text)  { SetText(text); }
+    wxString GetValue() const               { return wxConstCast(this, wxSTEditor)->GetText(); }
 
     // verbatim copy of wx trunk wxTextAreaBase::SetModified()
-    void SetModified(bool modified)
-    {
-        if ( modified )
-            MarkDirty();
-        else
-            DiscardEdits();
-    }
-#endif
-    wxString GetLineText(int line) const; // excluding any cr/lf at end
-    int GetLineLength(int iLine) const;   // excluding any cr/lf at end
+    void SetModified(bool modified) { if ( modified ) MarkDirty(); else DiscardEdits(); }
+#endif // (wxVERSION_NUMBER < 2900)
+
+    wxString GetLineText(int line) const; ///< excluding any cr/lf at end.
+    int GetLineLength(int iLine) const;   ///< excluding any cr/lf at end.
 
     virtual void SetEditable(bool editable);
 
     void SetReadOnly(bool readOnly) { SetEditable(!readOnly); } // overload to use our overridden implementation
     bool GetReadOnly() const        { return !IsEditable();   } // overload to use overridden implementation in a derived class
-
-    void Colourise(int start, int end)
-    {
-        wxStyledTextCtrl::Colourise(start, end);
-    }
-    void Colourise() // colorise all
-    {
-        wxStyledTextCtrl::Colourise(0, -1);
-    }
 
     // ------------------------------------------------------------------------
     // wxWidgets 2.8 <--> 2.9 compatibility functions (most functions are const in wx2.9)
@@ -324,18 +312,13 @@ public :
 
 #if (wxVERSION_NUMBER >= 2900)
 
-    //void GetSelection(STE_TextPos* iStart, STE_TextPos* iEnd) const // backwards compatibility, wx2.9 uses long* and int* func is non-const
-    //    { int s=0,e=0; wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetSelection(&s, &e); if (iStart) *iStart=s; if (iEnd) *iEnd=e; }
-
-    bool GetIndentationGuides() const // changed from bool to int in wx trunk
-    {
-        return 0 != wxStyledTextCtrl::GetIndentationGuides(); // enum IndentView.ivNone = 0
-    }
+    /// changed from bool to int in wx trunk, returns enum IndentView.ivNone = 0.
+    bool GetIndentationGuides() const { return 0 != wxStyledTextCtrl::GetIndentationGuides(); }
 
 #else // (wxVERSION_NUMBER < 2900)
 
-    int GetEOLMode() const           { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode(); }
-    STE_TextPos GetInsertionPoint() const    { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
+    int GetEOLMode() const                { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetEOLMode(); }
+    STE_TextPos GetInsertionPoint() const { return wxConstCast(this, wxSTEditor)->GetCurrentPos(); } // not in wx2.8
 
     wxString GetLine(int line) const { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLine(line); }
     int GetLength() const            { return wxConstCast(this, wxSTEditor)->wxStyledTextCtrl::GetLength(); }
@@ -359,386 +342,505 @@ public :
 #endif // (wxVERSION_NUMBER >= 2900)
 
 #ifdef __WXGTK__
-    // NOTE: GTK runs the evt loop during the wxSTC::CanPaste() check which can cause a crash in scintilla's
-    // drawing code in certain circumstances, for now let's just assume you can always paste.
-    // The worst that can happen is that empty text is retrieved from the clipboard and
-    // nothing is pasted which is harmless. In any case, we want this check to be fast.
+    /// Override CanPaste() to return !readonly in GTK.
+    /// NOTE: GTK runs the evt loop during the wxSTC::CanPaste() check which can cause a crash in scintilla's
+    /// drawing code in certain circumstances, for now let's just assume you can always paste if not readonly.
+    /// The worst that can happen is that empty text is retrieved from the clipboard and
+    /// nothing is pasted which is harmless. In any case, we want this check to be fast.
     bool CanPaste()       { return IsEditable(); }
     bool CanPaste() const { return IsEditable(); }
 #endif // __WXGTK__
 
-    virtual bool IsModified() const // not in wx2.8; virtual in wx trunk so make it virtual here too
-    {
-    #if (wxVERSION_NUMBER >= 2900)
-        return m_dirty_flag || wxStyledTextCtrl::IsModified();
-    #else
-        return m_dirty_flag || wxConstCast(this, wxSTEditor)->GetModify();
-    #endif
-    }
-    virtual void MarkDirty(); // not in wx2.8; virtual in wx trunk so make it virtual here too
-    virtual void DiscardEdits(); // not in wx2.8; virtual in wx trunk so make it virtual here too
+    virtual bool IsModified() const; // not in wx2.8; virtual in wx trunk so make it virtual here too
+    virtual void DiscardEdits();     // not in wx2.8; virtual in wx trunk so make it virtual here too
+    virtual void MarkDirty();        // not in wx2.8; virtual in wx trunk so make it virtual here too
 
+    // ----------------------------------------------------------------------
+
+    /// Colourize the whole document.
+    void ColouriseDocument() { Colourise(0, -1); }
+
+    /// Returns true if both whitespace and EOL are shown, else false.
+    bool GetViewNonPrint() const;
+    /// Show or hide both whitespace and EOL markers.
+    void SetViewNonPrint(bool show_non_print);
+
+    /// @}
     // ------------------------------------------------------------------------
-    // Convenience functions - other useful functions
+    /// @name Convenience functions and other useful functions.
+    /// @{
 
-    // Translate the start and end positions in the document, returns if !empty
-    //  If start_pos == end_pos == -1 use current selection, target,
-    //    or if none use cursor line based on the STE_TranslatePosType.
-    //  To get the whole document use (0, GetLength()-1) or (0, -1).
+    /// Translate the start and end positions in the document, returns true if !empty.
+    /// If start_pos == end_pos == -1 use current selection/target,
+    ///   if empty selection/target use cursor line based on the STE_TranslatePosType.
+    /// To get the whole document use (0, GetLength()-1) or (0, -1).
     bool TranslatePos(STE_TextPos start_pos, STE_TextPos end_pos,
                       STE_TextPos* trans_start_pos, STE_TextPos* trans_end_pos,
                       STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
-    // Translate the top and bottom lines in the document, returns true if they differ
-    //  If top_line == bottom_line == -1 then use top/bottom line of selection, target,
-    //    or if no selection/target use the cursor line based on STE_TranslatePosType.
-    //  If top_line = 0 and bottom_line = -1 use (0, GetLineCount()-1)
+    /// Translate the top and bottom lines in the document, returns true if they differ.
+    /// If top_line == bottom_line == -1 then use top/bottom line of selection/target,
+    ///   if empty selection/target use the cursor line based on STE_TranslatePosType.
+    /// If top_line = 0 and bottom_line = -1 use (0, GetLineCount()-1).
     bool TranslateLines(int  top_line,       int  bottom_line,
                         int* trans_top_line, int* trans_bottom_line,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
 
-    // Get the text between the GetTargetStart() and GetTargetEnd()
+    // ------------------------------------------------------------------------
+
+    /// Get the text between the GetTargetStart() and GetTargetEnd().
     wxString GetTargetText() const;
 
-    // Is text available in the single specified clipboard in any usable text format.
-    // Formats tested are wxDF_TEXT and if avilable wxDF_UNICODETEXT and wxDF_HTML.
+    // ------------------------------------------------------------------------
+
+    /// Is text available in the single (both is not allowed) specified clipboard
+    ///   in any usable text format.
+    /// Formats tested are wxDF_TEXT and if avilable wxDF_UNICODETEXT and wxDF_HTML.
     static bool IsClipboardTextAvailable(STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
-    // Returns true if there is data in the single specified clipboard with the given formats.
-    // This function takes an array since the clipboard has to be opened to test formats.
+    /// Returns true if there is data in the single (both is not allowed) specified
+    ///   clipboard with the given formats.
+    /// This function takes an array since the clipboard has to be opened to test formats.
     static bool IsClipboardFormatAvailable(const enum wxDataFormatId* array, size_t array_count,
                                            STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
-    // Get the current text in the single specified clipboard into the buf.
-    // Returns true if the clipboard was opened and the buf is not empty.
+    /// Get the current text in the single specified clipboard into the buf.
+    /// Returns true if the clipboard was opened and the buf is not empty.
     static bool GetClipboardText(wxString* buf, STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
-    // Set the text to the specified clipboard(s).
+    /// Set the text to the specified clipboard(s).
     static bool SetClipboardText(const wxString& str, STE_ClipboardType clip_type = STE_CLIPBOARD_DEFAULT);
-    // Set the HTML text to the clipboard. In MSW the clipboard will contain
-    // a valid HTML data object and a text object, on other systems the
-    // clipboard only contains a text object.
+    /// Set the HTML text to the clipboard. In MSW the clipboard will contain
+    /// a valid HTML data object and a text object, on other systems the
+    /// clipboard will only contain a text object.
     static bool SetClipboardHtml(const wxString& htmldata);
 
-    // Paste the text from the clipboard into the text at the current cursor
-    //  position preserving the linefeeds in the text using PasteRectangular()
+    /// Paste the text from the clipboard into the text at the current cursor
+    /// position preserving the linefeeds in the text using PasteRectangular().
     bool PasteRectangular();
-    // Paste the text into the document using the column of pos, -1 means
-    //   current cursor position, as the leftmost side for linefeeds.
+    /// Paste the text into the document using the column of pos, -1 means
+    /// current cursor position, as the leftmost side for linefeeds.
     void PasteRectangular(const wxString& str, STE_TextPos pos = -1);
 
-    // Convert the wxSTC_EOL_CRLF, wxSTC_EOL_CR, wxSTC_EOL_LF type to the
-    // wxTextFileType wxTextFileType_Dos, wxTextFileType_Mac, wxTextFileType_Unix.
-    // Returns wxTextBuffer::typeDefault for unknown input.
+    // ------------------------------------------------------------------------
+
+    /// Convert the wxSTC_EOL_CRLF, wxSTC_EOL_CR, wxSTC_EOL_LF type to the
+    /// wxTextFileType wxTextFileType_Dos, wxTextFileType_Mac, wxTextFileType_Unix.
+    /// Returns wxTextBuffer::typeDefault for unknown input.
     static wxTextFileType ConvertEOLModeType(int stc_eol_mode);
 
-    // Convert the input string to have the appropriate line endings for
-    // the wxSTC_EOL_XXX type.
+    /// Convert the input string to have the appropriate line endings for
+    /// the wxSTC_EOL_XXX type.
     static wxString ConvertEOLMode(const wxString& str, int stc_eol_mode);
 
-    // Get the wxSTC_EOL_XXX string "\r", "\n", "\r\n" as appropriate for
-    //  Mac, Unix, DOS. default (-1) gets EOL string for current doc settings
+    /// Get the wxSTC_EOL_XXX string "\r", "\n", "\r\n" as appropriate for
+    /// Mac, Unix, DOS. Default input (-1) gets EOL string for current doc settings.
     wxString GetEOLString(int stc_eol_mode = -1) const;
 
-    // AppendText to the document and if the cursor was already at the end of
-    //   the document keep the cursor at the end. This is useful for scrolling
-    //   logs so the user can click above the end and read the message without
-    //   it scrolling off the screen as new text is added below.
-    //   If goto_end then always put the cursor at the end.
+    /// AppendText to the document and if the cursor was already at the end of
+    /// the document keep the cursor at the end.
+    /// This is useful for scrolling logs so the user can click above the end and
+    /// read the message without it scrolling off the screen as new text is added below.
+    /// If goto_end then always put the cursor at the end.
     void AppendTextGotoEnd(const wxString &text, bool goto_end = false);
 
-    // Write the text to the line, adding lines if necessary
-    //   if inc_newline then also overwrite the newline char at end of line
-    // See also GetLineText in wxTextCtrl compatibility functions
-    //   which excludes any crlf at the end of the line
+    /// Write the text to the line, adding lines if necessary.
+    /// If inc_newline then also overwrite the newline char at end of line.
+    /// @see GetLineText() in wxTextCtrl compatibility functions
+    /// which excludes any crlf at the end of the line.
     void SetLineText(int line, const wxString& text, bool inc_newline = false);
 
+    /// Go to the start of the current line.
     void GotoStartOfCurrentLine() { GotoLine(LineFromPosition(GetInsertionPoint())); }
 
-    // Get the number of words in the string, counts words as contiguous isalnum
+    /// Get the number of words in the string, counts words as contiguous isalnum().
     size_t GetWordCount(const wxString& text) const;
-    // Get the number of words, counts words as contiguous isalnum
-    //  See TranslatePos(start_pos, end_pos) for start/end interpretation
+    /// Get the number of words, counts words as contiguous isalnum().
+    /// @see TranslatePos(start_pos, end_pos) for start/end interpretation.
     size_t GetWordCount(STE_TextPos start_pos = 0, STE_TextPos end_pos = -1,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
-    // Get the count of these "words", they may be single characters and
-    // they may also be parts of other words. Returns total count.
-    // The output int array contains the count in the same order as the words array.
+    /// Get the count of the "words", they may be single characters and
+    /// they may also be parts of other words. Returns total count.
+    /// The output int array contains the count in the same order as the words array.
     size_t GetWordArrayCount(const wxString& text,
                              const wxArrayString& words, wxArrayInt& count,
                              bool ignoreCase = false);
-    // Get the EOL count for each EOL type (also tabs), each and all types can be NULL
+    /// Get the EOL count for each EOL type and tabs, each and all inputs can be NULL.
     void GetEOLCount(int *crlf, int *cr, int *lf, int *tabs = NULL);
 
-    // calls ToggleFold on the parent fold of the line (if any)
-    //  if line = -1 then use the current line
-    void ToggleFoldAtLine(int line = -1);
-    // Expand or collapse all folds at and above or below the level
-    void ExpandFoldsToLevel(int level, bool expand = true);
-    void CollapseFoldsToLevel(int level) { ExpandFoldsToLevel(level, false); }
-    // Expand or collapse all the folds in the document
-    void ExpandAllFolds()   { ExpandFoldsToLevel(wxSTC_FOLDLEVELNUMBERMASK, true); }
-    void CollapseAllFolds() { CollapseFoldsToLevel(0); }
-
-    // Set the indentation of a line or set of lines, width is usually GetIndent()
-    //  See TranslateLines(top_line, bottom_line) for top/bottom interpretation
+    /// Set the indentation of a line or set of lines, width is usually GetIndent().
+    /// @see TranslateLines(top_line, bottom_line) for top/bottom interpretation.
     void SetIndentation(int width, int top_line = -1, int bottom_line = -1,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
 
-    // Convert tab characters to spaces uses GetTabWidth for # spaces to use
-    //  returns the number of replacements.
-    //  See TranslatePos(start_pos, end_pos) for start/end interpretation
+    /// Convert tab characters to spaces uses GetTabWidth() for # spaces to use,
+    /// returns the number of replacements.
+    /// @see TranslatePos(start_pos, end_pos) for start/end interpretation.
     size_t ConvertTabsToSpaces(bool to_spaces, STE_TextPos start_pos = -1, STE_TextPos end_pos = -1,
                                STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
-    // Remove all trailing spaces and tabs from the document
-    //  See TranslateLines(top_line, bottom_line) for top/bottom interpretation
+    /// Remove all trailing spaces and tabs from the document.
+    /// @see TranslateLines(top_line, bottom_line) for top/bottom interpretation.
     bool RemoveTrailingWhitespace(int top_line = -1, int bottom_line = -1);
-    // Remove chars before and after the position until char not in remove found
-    //  only works on a single line, if pos == -1 then use GetCurrentPos()
+    /// Remove chars before and after the position until char not in remove found.
+    /// Only works on a single line, if pos == -1 then use GetCurrentPos().
     bool RemoveCharsAroundPos(STE_TextPos pos = -1, const wxString& remove = wxT(" \t"));
-    // Inserts specified text at the column (adding spaces as necessary)
-    //  if col == 0, prepend text, < 0 then append text, else insert at column
-    //  See TranslateLines(top_line, bottom_line) for top/bottom interpretation
+    /// Inserts specified text at the column (adding spaces as necessary).
+    /// If col == 0, prepend text, < 0 then append text, else insert at column.
+    /// @see TranslateLines(top_line, bottom_line) for top/bottom interpretation.
     bool InsertTextAtCol(int col, const wxString& text,
                          int top_line = -1, int bottom_line = -1);
 
-    // Put all the text in the lines in equally spaced columns using the chars
-    //  to split in cols before, after and what chars will bound regions that
-    //  you want to preserve (like strings).
+    /// Put all the text in the input lines in equally spaced columns using the chars
+    /// to split in cols before, after, and what chars will bound regions that
+    /// you want to preserve (like strings).
     bool Columnize(int top_line = -1, int bottom_line = -1,
-                   const wxString& splitBefore = wxT(")]{}"),
-                   const wxString& splitAfter  = wxT(",;"),
+                   const wxString& splitBefore   = wxT(")]{}"),
+                   const wxString& splitAfter    = wxT(",;"),
                    const wxString& preserveChars = wxT("\""),
                    const wxString& ignoreAfterChars = wxEmptyString);
 
-    // Show a dialog that allows the user to append, prepend, or insert text
-    //  in the selected lines or the current line
+    // ------------------------------------------------------------------------
+
+    /// Show a dialog that allows the user to append, prepend, or insert text
+    ///  in the selected lines or the current line.
     bool ShowInsertTextDialog();
-    // Show a dialog to allow the user to turn the selected text into columns
+    /// Show a dialog to allow the user to turn the selected text into columns.
     bool ShowColumnizeDialog();
-    // Show a convert EOL dialog to allow the user to select one
+    /// Show a convert EOL dialog to allow the user to select one.
     bool ShowConvertEOLModeDialog();
-    // Show a dialog to allow the user to select a text size zoom to use
+    /// Show a dialog to allow the user to select a text size zoom to use.
     bool ShowSetZoomDialog();
-    // Simple dialog to goto a particular line in the text
+    /// Simple dialog to goto a particular line in the text.
     bool ShowGotoLineDialog();
 
-#if (wxVERSION_NUMBER >= 2902)
-    static wxVersionInfo GetLibraryVersionInfo();
-#else
-    static wxString GetLibraryVersionString();
-#endif
+    // ------------------------------------------------------------------------
 
-    // Returns true if both whitespace and EOL are shown, else false.
-    bool GetViewNonPrint();
-    // Show or hide both whitespace and EOL markers.
-    void SetViewNonPrint(bool show_non_print);
+    /// Calls ToggleFold on the parent fold of the line (if any).
+    /// If line = -1 then use the current line.
+    void ToggleFoldAtLine(int line = -1);
+    /// Expand all folds at and above or below the level.
+    void ExpandFoldsToLevel(int level, bool expand = true);
+    /// Collapse all folds at and above or below the level.
+    void CollapseFoldsToLevel(int level) { ExpandFoldsToLevel(level, false); }
+    /// Expand all the folds in the document.
+    void ExpandAllFolds()   { ExpandFoldsToLevel(wxSTC_FOLDLEVELNUMBERMASK, true); }
+    /// Collapse all the folds in the document.
+    void CollapseAllFolds() { CollapseFoldsToLevel(0); }
 
     // ------------------------------------------------------------------------
-    // Load/Save methods
 
-    // Returns true if the document was ever loaded from or saved to disk.
+#if (wxVERSION_NUMBER >= 2902)
+    /// Get a wxVersionInfo for the wxStEdit library.
+    /// See also wxStyledTextCtrl::GetLibraryVersionInfo().
+    static wxVersionInfo GetStEditorVersionInfo();
+#else
+    /// Get a wxString of the version information for the wxStEdit library.
+    /// See also wxStyledTextCtrl::GetLibraryVersionInfo().
+    static wxString GetStEditorVersionString();
+#endif
+
+    /// @}
+    // ------------------------------------------------------------------------
+    /// @name Load/Save methods
+    /// @{
+
+    /// Get the current filename, including path.
+    wxFileName GetFileName() const;
+    /// Set the current filename, including path.
+    void SetFileName(const wxFileName& filename, bool send_event = false);
+
+    /// Copy the current filename and path to the clipboard.
+    bool CopyFilePathToClipboard();
+
+    /// Returns true if the document was ever loaded from or saved to disk.
     bool IsFileFromDisk() const { return GetFileModificationTime().IsValid(); }
 
-    // return true if the document hasn't been modified since the last time it
-    // was saved (implying that it returns false if it was never saved, even if
-    // the document is not modified)
-    bool AlreadySaved() const { return !IsModified() && IsFileFromDisk(); }
+    /// Set the last modification time of the file on the disk (internal use).
+    /// Doesn't read/write to/from disk and the time should be invalid if it wasn't
+    /// loaded from a file in the first place.
+    void SetFileModificationTime(const wxDateTime &dt);
+    /// Get the last modification time of the file on the disk.
+    wxDateTime GetFileModificationTime() const;
 
-    // Can/Should this document be saved (has valid filename and is modified)
-    bool CanSave() const { return !AlreadySaved(); }
+    /// Can/Should this document be saved.
+    /// Returns false if the document hasn't been modified since the last time it
+    /// was saved. Returns true if it was never saved, even if the document is
+    /// not modified which is used to show that "new" files should be saved.
+    bool CanSave() const { return IsModified() || !IsFileFromDisk(); }
 
 #if wxUSE_STREAMS
-    // Load a file from the wxInputStream (probably a wxFileInputStream)
-    //  flags is STE_LoadFileType
+    /// Load a file from the wxInputStream (probably a wxFileInputStream).
+    /// Flags are enum STE_LoadFileType.
     bool LoadFile( wxInputStream& stream,
                    const wxFileName& filename,
                    int flags = STE_LOAD_QUERY_UNICODE,
                    wxWindow* parent = NULL,
                    const wxString& encoding = wxEmptyString);
 
-    // Save the file to wxOutputStream
-    bool SaveFile( wxOutputStream& stream, const wxString& encoding = wxEmptyString, bool file_bom = false);
+    /// Load a file from the wxInputStream (probably a wxFileInputStream).
+    /// Flags are enum STE_LoadFileType.
+    /// If successful: sets filename, modified time, encoding, and bom.
+    bool LoadFileToString( wxString* filedata,
+                           wxInputStream& stream,
+                           const wxFileName& filename,
+                           int flags = STE_LOAD_QUERY_UNICODE,
+                           wxWindow* parent = NULL,
+                           const wxString& encoding = wxEmptyString);
+
+    /// Save the text to wxOutputStream.
+    bool SaveFile( wxOutputStream& stream,
+                   const wxString& encoding = wxEmptyString,
+                   bool file_bom = false);
 #endif
 
-    // Load a file, if filename is wxEmptyString then use wxFileSelector
-    //   if using wxFileSelector then if extensions is wxEmptyString use
-    //   GetOptions().GetDefaultFileExtensions() else the ones supplied
-    virtual bool LoadFile( const wxFileName& fileName = wxFileName(), // #define wxNullFileName wxFileName()
+    /// Load a file, if filename is wxEmptyString then use wxFileSelector.
+    /// If using wxFileSelector then if extensions is wxEmptyString use
+    /// GetOptions().GetDefaultFileExtensions() else the ones supplied.
+    virtual bool LoadFile( const wxFileName& fileName = wxFileName(),
                            const wxString &extensions = wxEmptyString,
                            bool query_if_changed = true,
                            const wxString& encoding = wxEmptyString);
-    // Save current file, if use_dialog or GetFileName() is empty use wxFileSelector
+    /// Save current file, if use_dialog or GetFileName() is empty use wxFileSelector.
     virtual bool SaveFile( bool use_dialog = true,
                            const wxString &extensions = wxEmptyString );
-    // clear everything to a blank page
-    //   if title is empty then pop up a dialog to ask the user what name to use
+    /// Clear everything to a blank page.
+    /// If title is empty then pop up a dialog to ask the user what name to use.
     virtual bool NewFile(const wxString &title = wxEmptyString);
 
-    // Revert the document to the version on disk if it was ever loaded.
-    // Returns success on reloading the file, false if it was never saved or
-    // couldn't be read for some reason.
+    /// Revert the document to the version on disk if it was ever loaded.
+    /// Returns success on reloading the file, false if it was never saved or
+    /// couldn't be reread for some reason.
     bool Revert();
 
-    // Replace the entire text, and do wxSTC setup.
-    void SetTextAndInitialize(const wxString&);
+    /// Replace the entire text, and do wxSTC setup, don't forget to set filename
+    /// and file modification time.
+    void SetTextAndInitialize(const wxString& text);
 
-    // Show a dialog to allow users to export the document
-    //   See wxSTEditorExporter
-    bool ShowExportDialog();
-
-    // If IsModified show a message box asking if the user wants to save the file
-    //   returns wxYES, wxNO, wxCANCEL, if the user does wxYES then file is
-    //   automatically saved if save_file, wxCANCEL implies that the user wants
-    //   to continue editing.
-    //   note: use EVT_CLOSE in frame before hiding frame so this dialog
-    //         check for wxCloseEvent::CanVeto and if it can't be vetoed use the
-    //         style wxYES_NO only since it can't be canceled.
+    /// If IsModified() show a message box asking if the user wants to save the file.
+    /// Returns wxYES, wxNO, wxCANCEL.
+    /// If wxYES then the file is automatically saved if save_file is true.
+    ///
+    /// wxCANCEL should be used when the program is closing to allow the user to
+    ///   cancel the exit and continue editing.
+    /// Use EVT_CLOSE in frame before hiding the frame for this dialog.
+    /// Check for wxCloseEvent::CanVeto and if it can't be vetoed use the
+    ///   style wxYES_NO only since it can't be canceled.
     virtual int QuerySaveIfModified(bool save_file, int style = wxYES_NO|wxCANCEL);
 
-    // Get/Set the current filename, including path
-    wxFileName GetFileName() const;
-    void SetFileName(const wxFileName&, bool send_event = false);
-
-    // Copy the current filename and path to the clipboard
-    bool CopyFilePathToClipboard();
-
-    // If there's a valid filename, return false if its modification time is
-    //   before the current doc's times if the time is valid.
-    //   if show_reload_dialog then ask user if they want to reload
-    //   if yes then the file is reloaded else modified time is set to an
-    //   invalid time so that the user won't be asked again.
+    /// If there's a valid filename, return false if its modification time is
+    ///   before the file on disk time or if it is invalid (not loaded from disk).
+    /// If show_reload_dialog then ask user if they want to reload.
+    /// If yes then the file is reloaded else modified time is set to an
+    ///   invalid time so that the user won't be asked again.
     bool IsAlteredOnDisk(bool show_reload_dialog);
-    // Get/Set the last modification time of the file on the disk (internal use)
-    //   doesn't read/write to/from disk and the time is invalid if it wasn't
-    //   loaded from a file in the first place.
-    void SetFileModificationTime(const wxDateTime &dt);
-    wxDateTime GetFileModificationTime() const;
 
-    // Show a modal dialog that displays the properties of this editor
-    //   see wxSTEditorPropertiesDialog
+    /// Show a dialog to allow users to export the document.
+    ///  @see wxSTEditorExporter
+    bool ShowExportDialog();
+
+    /// Show a modal dialog that displays the properties of this editor.
+    /// @see wxSTEditorPropertiesDialog
     void ShowPropertiesDialog();
 
+    /// @}
     // ------------------------------------------------------------------------
-    // Find/Replace methods
+    /// @name Find/Replace methods
+    ///
+    /// A note about the find dialog system.
+    ///
+    /// When you create a find/replace dialog this checks if the grandparent is
+    /// a wxSTEditorNotebook and uses that as a parent. Else, if the parent is
+    /// a wxSTEditorSplitter then use that as a parent to avoid this being 2nd
+    /// window and user unsplits. Finally this is used as a parent.
+    ///
+    /// Find/Replace events from the dialog are sent to the parent (see above).
+    /// If in a notebook and STE_FR_ALLDOCS is set the notebook handles the event
+    /// and switches pages automatically to find the next occurance, else the
+    /// current editor handles the event. If the splitter is the parent, it does
+    /// nothing and passes the event to the current editor.
+    ///
+    /// ShowFindReplaceDialog(true...) will Destroy() a previously made dialog by
+    /// checking if a window exists with the name
+    /// wxSTEditorFindReplaceDialogNameStr and creates a new one so there will only
+    /// ever be one created.
+    /// @{
 
-    // A note about the find dialog system.
-    //
-    // When you create a find/replace dialog this checks if the grandparent is
-    // a wxSTEditorNotebook and uses that as a parent. Else, if the parent is
-    // a wxSTEditorSplitter then use that as a parent to avoid this being 2nd
-    // window and user unsplits. Finally this is used as a parent.
-    //
-    // Find/Replace events from the dialog are sent to the parent (see above).
-    // If in a notebook and STE_FR_ALLDOCS is set the notebook handles the event
-    // and switches pages automatically to find the next occurance, else the
-    // current editor handles the event. If the splitter is the parent, it does
-    // nothing and passes the event to the current editor.
-    //
-    // ShowFindReplaceDialog(true...) will Destroy a previously made dialog by
-    // checking if a window exists with the name
-    // wxSTEditorFindReplaceDialogNameStr and create a new one.
-
-    // Find the string using the flags (see STEFindReplaceFlags)
-    //   start_pos is the starting position, -1 uses GetCursorPos()
-    //   end_pos is the ending position, -1 uses GetTextLength or
-    //     if flags doesn't have STE_FR_DOWN then 0.
-    //   if flags = -1 uses GetFindFlags()
-    //   action is of type STE_FindStringType selects, goto, or do nothing
-    //   found_start_pos/end_pos if !NULL are set to the start/end pos of string
-    //     note found_end_pos - found_start_pos might not be string.length for regexp
-    //   returns starting position of the found string
+    /// Find the string using the STEFindReplaceFlags flags.
+    /// @param findString The string to search for.
+    /// @param start_pos The starting position, -1 uses GetCursorPos().
+    /// @param end_pos The ending position, -1 uses GetTextLength() or
+    ///   if flags doesn't have STE_FR_DOWN then 0 would be the end.
+    /// @param flags If = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
+    /// @param action Type STE_FindStringType selects, goto, or do nothing.
+    /// @param found_start_pos If !NULL are set to the start pos of the string.
+    /// @param found_end_pos If !NULL are set to the end pos of string.
+    /// Note: found_end_pos - found_start_pos might not be the string length for regexp.
+    /// @returns Starting position of the found string.
     STE_TextPos FindString(const wxString &findString,
                    STE_TextPos start_pos = -1, STE_TextPos end_pos = -1,
                    int flags = -1,
                    int action = STE_FINDSTRING_SELECT|STE_FINDSTRING_GOTO,
                    STE_TextPos* found_start_pos = NULL, STE_TextPos* found_end_pos = NULL);
-    // Does the current selection match the findString using the flags
-    //   if flags = -1 uses GetFindFlags()
+    /// Does the current selection match the findString using the flags.
+    /// If flags = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
     bool SelectionIsFindString(const wxString &findString, int flags = -1);
-    // Replace all occurances of the find string with the replace string
-    //   if flags = -1 uses GetFindFlags()
-    //   returns the number of replacements
+    /// Replace all occurances of the find string with the replace string.
+    /// If flags = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
+    /// @returns The number of replacements.
     int ReplaceAllStrings(const wxString &findString,
                           const wxString &replaceString, int flags = -1);
-    // Finds all occurances of the string and returns their starting positions
-    //   if flags = -1 uses GetFindFlags()
-    //   returns the number of strings found
-    //   if startPositions is !NULL then fill with the starting positions
-    //   if endPositions if !NULL then fill that with the ending positions
-    //     note: for regexp end - start might not equal findString.length.
+    /// Finds all occurances of the string and returns their starting positions.
+    /// If flags = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
+    /// If startPositions is !NULL then fill with the starting positions.
+    /// If endPositions if !NULL then fill that with the ending positions
+    /// Note: For regexp end - start might not equal the findString length.
+    /// @returns The number of strings found.
     size_t FindAllStrings(const wxString &findString, int flags = -1,
                           wxArrayInt* startPositions = NULL,
                           wxArrayInt* endPositions = NULL);
 
+    /// Show the find or replace dialog to the user.
     void ShowFindReplaceDialog(bool find);
+    /// Get the currently shown find/replace dialog or NULL.
     wxSTEditorFindReplaceDialog* GetCurrentFindReplaceDialog();
 
-    // Get the find replace data from the options
+    /// Get the find replace data from the options.
     wxSTEditorFindReplaceData *GetFindReplaceData() const;
-    // Get the current string to find
+    /// Get the current string to find.
     wxString GetFindString() const;
-    // Get the current replace string
+    /// Get the current replace string.
     wxString GetReplaceString() const;
-    // set the current string to find, only sends wxEVT_STE_CANFIND_CHANGED if value changes
+    /// Set the current string to find, only sends wxEVT_STE_CANFIND_CHANGED if value changes.
     void SetFindString(const wxString &str, bool send_evt = false);
-    // Get the flags used to find a string
+    /// Get the STEFindReplaceFlags flags used to find a string.
     int GetFindFlags() const;
-    // set the current find flags, only sends wxEVT_STE_CANFIND_CHANGED if flags change
+    /// Set the current find flags, only sends wxEVT_STE_CANFIND_CHANGED if flags change.
     void SetFindFlags(long flags, bool send_evt = false);
-    // get the direction of search
+    /// Get the direction of search.
     bool GetFindDown() const { return (GetFindFlags() & wxFR_DOWN) != 0; }
-    // false if the last search failed and the flags or findstr hasn't changed
+    /// Returns false if the last search failed and the flags or the find string hasn't changed.
     bool CanFind() const { return HasState(STE_CANFIND); }
-    // reset the canfind variable in case you change something else
+    /// Reset the canfind variable in case you change something else.
     void SetCanFind(bool can_find) { SetStateSingle(STE_CANFIND, can_find); }
 
+    /// @}
     // ------------------------------------------------------------------------
-    // Set/ClearIndicator methods
+    /// @name Set/ClearIndicator methods
+    /// @{
 
-    // Indicate a section of text starting at pos to len, of indic type wxSTC_INDIC(0,1,2)_MASK
+    /// Indicate a section of text starting at pos of length len, of indic type wxSTC_INDIC(0,1,2)_MASK.
     void SetIndicator(STE_TextPos pos, int len, int indic);
-    // Indicates all strings using indic type wxSTC_INDIC(0,1,2)_MASK
-    //   if str = wxEmptyString use GetFindString(), if flags = -1 use GetFindFlags()|STE_FR_WHOLEDOC
-    bool IndicateAllStrings(const wxString &str=wxEmptyString, int flags = -1, int indic=wxSTC_INDIC0_MASK);
-    // clear a single character of indicated text of indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all
+    /// Indicates all strings using indic type wxSTC_INDIC(0,1,2)_MASK.
+    /// If str = wxEmptyString use GetFindString(), if flags = -1 use GetFindFlags()|STE_FR_WHOLEDOC.
+    bool IndicateAllStrings(const wxString &str = wxEmptyString, int flags = -1, int indic = wxSTC_INDIC0_MASK);
+    /// Clear a single character of indicated text of indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
     bool ClearIndicator(int pos, int indic = wxSTC_INDIC0_MASK);
-    // clear an indicator starting at any position within the indicated text of
-    //   indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all
-    //   returns position after last indicated text or -1 if nothing done
+    /// Clear an indicator starting at any position within the indicated text of
+    ///   Indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
+    /// @returns The position after last indicated text or -1 if nothing done.
     int ClearIndication(int pos, int indic = wxSTC_INDIC0_MASK);
-    // clears all the indicators of type wxSTC_INDIC(0,1,2)_MASK or -1 for all
+    /// Clears all the indicators of type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
     void ClearAllIndicators(int indic = -1);
 
+    /// @}
     // ------------------------------------------------------------------------
-    // Printing/Rendering methods
+    /// @name Preprocessor and brace matching functions.
+    /// @{
 
-    // Show the wxWidgets print dialog
+    // These are not currently used
+    int  IsLinePreprocessorCondition(const wxString &line);
+    bool FindMatchingPreprocessorCondition(int &curLine, int direction,
+                                           int condEnd1, int condEnd2);
+    bool FindMatchingPreprocCondPosition(bool isForward, STE_TextPos& mppcAtCaret, STE_TextPos& mppcMatch);
+
+    /// Internal use brace matching and highlighting other brace.
+    bool DoFindMatchingBracePosition(STE_TextPos& braceAtCaret, STE_TextPos& braceOpposite, bool sloppy);
+    /// Internal use brace matching and highlighting other brace.
+    void DoBraceMatch();
+
+    /// Get the column of the caret in the line it's currently in.
+    STE_TextPos GetCaretInLine();
+
+    /// @}
+    // ------------------------------------------------------------------------
+    /// @name Autocomplete functions
+    /// @{
+
+    /// Remove duplicates and sort a space separated list of words.
+    /// Returns true if the word list was modified.
+    wxString EliminateDuplicateWords(const wxString& words) const;
+
+    /// Get keywords as a space separated list from the langs that begin with root
+    virtual wxString GetAutoCompleteKeyWords(const wxString& root);
+    /// Add the matching keywords from the langs to the array string.
+    /// @returns The number added.
+    size_t DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString& words);
+
+    /// Show the autocompletion box if any keywords from the langs match the start
+    /// of the current word.
+    bool StartAutoComplete();
+    /// Show the autocompletion box if any other words in the document match the start
+    ///   of the current word.
+    /// If onlyOneWord then if more than one word then don't show box.
+    /// If add_keywords then also add the keywords from the langs.
+    virtual bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
+
+    /// @}
+    // ------------------------------------------------------------------------
+    /// @name Printing/Rendering methods
+    /// @{
+
+    /// Show the wxWidgets print dialog.
     bool ShowPrintDialog();
-    // Show the wxWidgets print preview dialog
+    /// Show the wxWidgets print preview dialog.
     bool ShowPrintPreviewDialog();
-    // Show the wxWidgets printer setup dialog (papersize, orientation...)
+    /// Show the wxWidgets printer setup dialog (papersize, orientation...).
     bool ShowPrintSetupDialog();
-    // Show the wxWidgets print page setup dialog (papersize, margins...)
+    /// Show the wxWidgets print page setup dialog (papersize, margins...).
     bool ShowPrintPageSetupDialog();
-    // Show a STC specific options dialog (Wrapmode, magnification, colourmode)
+    /// Show a STC specific options dialog (wrapmode, magnification, colourmode).
     bool ShowPrintOptionsDialog();
 
+    /// @}
     // ------------------------------------------------------------------------
-    // Menu/MenuBar/Toolbar management
+    /// @name Menu/MenuBar/Toolbar management
+    /// @{
 
-    // Update all the menu/tool items in the wxSTEditorOptions for this editor
+    /// Update all the menu/tool items in the wxSTEditorOptions for this editor.
     virtual void UpdateAllItems();
-    // Update all the known items for a menu, menubar, toolbar, if they're NULL
-    //  then they're not updated
-    virtual void UpdateItems(wxMenu *menu=NULL, wxMenuBar *menuBar=NULL, wxToolBar *toolBar=NULL);
+    /// Update all the known IDs for a menu, menubar, toolbar which may be NULL
+    ///  to not be updated.
+    virtual void UpdateItems( wxMenu *menu = NULL,
+                              wxMenuBar *menuBar = NULL,
+                              wxToolBar *toolBar = NULL );
+    /// Handle menu events of known types, returns success, false for unknown IDs.
+    virtual bool HandleMenuEvent(wxCommandEvent &event);
 
+    /// Update all the CanSave(), CanXXX() functions to see if they've changed and
+    ///   send appropriate events as to what has changed for updating the UI.
+    /// This is called in OnSTCUpdateUI(), but Saving doesn't generate an event
+    ///   but CanSave becomes false. Make sure to call this in odd cases like this.
+    /// If send_event is false don't send events just update internal values.
+    /// @returns The changes in GetState() since the last call to this function.
+    long UpdateCanDo(bool send_event);
+
+    /// Get combinations enum STE_StateType.
+    long GetState() const     { return GetSTERefData()->m_state; }
+    /// Set combinations enum STE_StateType.
+    void SetState(long state) { GetSTERefData()->m_state = state; }
+    /// Get if one or a combination of enum STE_StateType is set.
+    bool HasState(long ste_statetype) const   { return (GetSTERefData()->m_state & ste_statetype) != 0; }
+    /// Set a single or combination of enum STE_StateType.
+    void SetStateSingle(long state, bool set) { if (set) SetState(GetSTERefData()->m_state | state); else SetState(GetSTERefData()->m_state & ~state); }
+
+    /// @}
     // ------------------------------------------------------------------------
-    // Set Lexer Language - you must have set wxSTEditorLangs
+    /// @name Lexer Language - you must have set wxSTEditorLangs
+    /// @{
 
-    // Setup colouring and lexing based on wxSTEditorLangs type
+    /// Setup colouring and lexing based on wxSTEditorLangs type.
     bool SetLanguage(int lang);
-    // Setup colouring and lexing based on wxSTEditorLangs::GetFilePattern()
+    /// Setup colouring and lexing based on wxSTEditorLangs::GetFilePattern().
     bool SetLanguage(const wxFileName&);
-    // What language are we using, the index into wxSTEditorLangs
-    //   This may or may not match wxSTC::GetLexer since
-    //   different languages may use the same lexer. (Java uses CPP lexer)
+    /// What language are we using, the index into wxSTEditorLangs.
+    /// This may or may not match wxStyledTextCtrl::GetLexer() since
+    /// different languages may use the same lexer. (Java uses CPP lexer)
     int  GetLanguageId() const;
 
     void SetFileEncoding(const wxString&);
@@ -747,170 +849,136 @@ public :
     void SetFileBOM(bool);
     bool GetFileBOM() const;
 
+    /// @}
     // ------------------------------------------------------------------------
-    // Editor preferences, styles, languages
-    //
-    // There are global versions that many editors can share and they're ref
-    // counted so you don't need to keep any local versions around.
-    // You should use the globals in at least one editor to not let them go
-    // to waste. There's nothing special about them, it's just that if you're
-    // bothering to use this class you'll probably want at least one of each.
-    //
-    // The prefs/styles/langs are initially not set for an editor, but can be
-    // set by the function CreateOptions if you have set them in the options.
-    // If however you wish to use different ones you may call RegisterXXX to
-    // "detach" this editor from the others.
-    //
-    // example usage :
-    //    editor->RegisterPreferences(wxSTEditorPrefs()); // no prefs
-    //
-    //    wxSTEditorPrefs myPrefs(true);                 // create
-    //    myPrefs.SetPrefBool(STE_PREF_VIEWEOL, true);   // adjust as necessary
-    //    editor->RegisterPreferences(myPrefs);          // assign to editor
+    /// @name Editor preferences, styles, languages.
+    ///
+    /// There are global versions that many editors can share and they're ref
+    /// counted so you don't need to keep any local versions around.
+    /// You should use the globals in at least one editor to not let them go
+    /// to waste. There's nothing special about them, it's just that if you're
+    /// bothering to use this class you'll probably want at least one of each.
+    ///
+    /// The prefs/styles/langs are initially not set for an editor, but can be
+    /// set by the function CreateOptions if you have set them in the options.
+    /// If however you wish to use different ones you may call RegisterXXX to
+    /// "detach" this editor from the others.
+    ///
+    /// Example usage :
+    /// @code
+    ///    editor->RegisterPreferences(wxSTEditorPrefs()); // no prefs
+    ///
+    ///    wxSTEditorPrefs myPrefs(true);                 // create
+    ///    myPrefs.SetPrefBool(STE_PREF_VIEWEOL, true);   // adjust as necessary
+    ///    editor->RegisterPreferences(myPrefs);          // assign to editor
+    /// @endcode
+    /// @{
 
-    // register this editor to use these preferences
-    //   the default is to use the prefs in the options (if set) which by
-    //   default will be the static global wxSTEditorPrefs::GetGlobalEditorPrefs()
-    //   RegisterPrefs(wxSTEditorPrefs(false)) to not use any preferences
+    /// Register this editor to use these preferences.
+    /// The default is to use the prefs in the options (if set) which by
+    ///   default will be the static global wxSTEditorPrefs::GetGlobalEditorPrefs().
+    /// RegisterPrefs(wxSTEditorPrefs(false)) to not use any preferences.
     void RegisterPrefs(const wxSTEditorPrefs& prefs);
     const wxSTEditorPrefs& GetEditorPrefs() const;
     wxSTEditorPrefs& GetEditorPrefs();
 
-    // register this editor to use these styles
-    //   the default is to use the styles in the options (if set) which by
-    //   default will be the static global wxSTEditorStyles::GetGlobalEditorStyles()
-    //   RegisterStyles(wxSTEditorStyles(false)) to not use any styles
+    /// Register this editor to use these styles.
+    /// The default is to use the styles in the options (if set) which by
+    ///   default will be the static global wxSTEditorStyles::GetGlobalEditorStyles().
+    /// RegisterStyles(wxSTEditorStyles(false)) to not use any styles.
     void RegisterStyles(const wxSTEditorStyles& styles);
     const wxSTEditorStyles& GetEditorStyles() const;
     wxSTEditorStyles& GetEditorStyles();
 
-    // register this editor to use these languages
-    //   the default is to use the langs in the options (if set) which by
-    //   default will be the static global wxSTEditorLangs::GetGlobalEditorLangs()
-    //   RegisterLangs(wxSTEditorLangs(false)) to not use any languages
+    /// Register this editor to use these languages.
+    /// The default is to use the langs in the options (if set) which by
+    ///   default will be the static global wxSTEditorLangs::GetGlobalEditorLangs().
+    /// RegisterLangs(wxSTEditorLangs(false)) to not use any languages.
     void RegisterLangs(const wxSTEditorLangs& langs);
     const wxSTEditorLangs& GetEditorLangs() const;
     wxSTEditorLangs& GetEditorLangs();
 
+    /// @}
     // -----------------------------------------------------------------------
-    // implementation
+    /// @name Implementation
+    /// @{
+
+    /// Setup and send an event.
+    /// Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
+    ///   extra_long is the state values.
+    ///   Otherwise the int/long values are those in the wxCommandEvent
+    bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
+                   const wxString &evtStr = wxEmptyString, bool do_post = false );
+
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
-    void OnContextMenu(wxContextMenuEvent&); // popup menu if one is set in options
-
-    void OnMenu(wxCommandEvent &event);
-    // handle menu events of known types, returns sucess, false for unknown id
-    virtual bool HandleMenuEvent(wxCommandEvent &event);
-
-    void OnFindDialog(wxFindDialogEvent& event);
-    // handle the find dialog event
-    virtual void HandleFindDialogEvent(wxFindDialogEvent& event);
-
-    void OnSTCUpdateUI(wxStyledTextEvent &event);
     void OnSTCCharAdded(wxStyledTextEvent &event);
-    void OnSTCMarginClick(wxStyledTextEvent &event);
-    void OnSTCMarginDClick(wxStyledTextEvent &event); // we generate this event
-    void OnSetFocus(wxFocusEvent &event);
-    void OnSTEState(wxSTEditorEvent &event);
-    void OnSTEFocus(wxSTEditorEvent &event);
-    void OnEraseBackground(wxEraseEvent &event) { event.Skip(false); }
+    void OnSTCUpdateUI(wxStyledTextEvent &event);
     void OnMouseWheel(wxMouseEvent& event); // FIXME - only for wxGTK 2.0
     void OnScroll(wxScrollEvent& event);
     void OnScrollWin(wxScrollWinEvent& event);
 
-    // Access to the scrollbars in wxStyledTextCtrl
+    void OnContextMenu(wxContextMenuEvent&); // popup menu if one is set in options
+    void OnMenu(wxCommandEvent &event);
+
+    void OnSTCMarginClick(wxStyledTextEvent &event);
+    void OnSTCMarginDClick(wxStyledTextEvent &event); // we generate this event
+    void OnSetFocus(wxFocusEvent &event);
+    void OnSTEFocus(wxSTEditorEvent &event);
+    void OnEraseBackground(wxEraseEvent &event) { event.Skip(false); }
+
+    // Note that these event functions below are intentionally out of order
+    // in the source code so they're easier to maintain.
+
+    void OnFindDialog(wxFindDialogEvent& event);
+    virtual void HandleFindDialogEvent(wxFindDialogEvent& event);
+
+    void OnSTEState(wxSTEditorEvent &event);
+
+    // ------------------------------------------------------------------------
+
+    /// Access the scrollbar in the wxStyledTextCtrl.
     wxScrollBar* GetHScrollBar() { return m_hScrollBar; }
+    /// Access the scrollbar in the wxStyledTextCtrl.
     wxScrollBar* GetVScrollBar() { return m_vScrollBar; }
 
-    // Get the width in pixels of the longest line between top_line and
-    //  bottom_line takeing care of ctrl chars and tabs.
-    //  if top_line = bottom_line = -1 then use the visible lines.
+    /// Get the width in pixels of the longest line between top_line and
+    ///  bottom_line takeing care of ctrl chars and tabs.
+    /// If top_line = bottom_line = -1 then use the visible lines.
+    /// Used to adjust the length of the horizontal scrollbar.
     int GetLongestLinePixelWidth(int top_line = -1, int bottom_line = -1);
 
-    // Update all the CanSave, CanXXX functions to see if they've changed and
-    //   and send appropriate events as to what has changed for updating UI
-    //   this is called in OnSTCUpdateUI, but Saving doesn't generate an event
-    //   but CanSave becomes false. Make sure to call this in odd cases like this.
-    //   if send_event is false don't send events just update internal values.
-    // Returns the changes in GetState() since the last call to this function.
-    long UpdateCanDo(bool send_event);
-
-    // Get/Set combinations enum STE_StateType
-    long GetState() const     { return m_state; }
-    void SetState(long state) { m_state = state; }
-    bool HasState(long ste_statetype) const { return (m_state & ste_statetype) != 0; }
-    void SetStateSingle(long state, bool set) { if (set) SetState(m_state | state); else SetState(m_state & ~state); }
-
-    // Check if we autoindented but the user didn't type anything and
-    //   remove the space we added. (resets m_last_autoindent_line/len)
+    /// Check if we autoindented but the user didn't type anything and
+    ///   remove the space we added.  Resets m_last_autoindent_line/len.
     bool ResetLastAutoIndentLine();
 
-    // These are not currently used
-    int  IsLinePreprocessorCondition(const wxString &line);
-    bool FindMatchingPreprocessorCondition(int &curLine, int direction,
-                                           int condEnd1, int condEnd2);
-    bool FindMatchingPreprocCondPosition(bool isForward, STE_TextPos& mppcAtCaret, STE_TextPos& mppcMatch);
+    // ------------------------------------------------------------------------
 
-    // for brace matching and highlighting other brace
-    bool DoFindMatchingBracePosition(STE_TextPos& braceAtCaret, STE_TextPos& braceOpposite, bool sloppy);
-    void DoBraceMatch();
-
-    // Get the position (col) of the caret in the line it's currently in
-    STE_TextPos GetCaretInLine();
+    /// Get the wxSTETreeItemData if this editor being tracked in the wxSTEditorTreeCtrl.
+    wxSTETreeItemData* GetTreeItemData() const;
+    /// Set the wxSTETreeItemData if this editor being tracked in the wxSTEditorTreeCtrl.
+    void SetTreeItemData(wxSTETreeItemData* treeData);
 
     // ------------------------------------------------------------------------
-    // Autocomplete functions
 
-    // Remove duplicates and sort a space separated list of words.
-    // Returns true if the word list was modified.
-    wxString EliminateDuplicateWords(const wxString& words) const;
-
-    // Get keywords as a space separated list from the langs that begin with root
-    virtual wxString GetAutoCompleteKeyWords(const wxString& root);
-    // Add the matching keywords from the langs to the array string
-    //   returns the number added
-    size_t DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString& words);
-
-    // Show the autocompletion box if any keywords from the langs match the start
-    //   of the current word
-    bool StartAutoComplete();
-    // Show the autocompletion box if any other words in the document match the start
-    //   of the current word
-    //   if onlyOneWord then if more than one word then don't show box
-    //   if add_keywords then also add the keywords from the langs
-    virtual bool StartAutoCompleteWord(bool onlyOneWord, bool add_keywords);
+    /// Get the wxClientData object you set or NULL if none set.
+    wxClientData *GetClientObject() const;
+    /// Set a new wxClientData object which will be deleted when all refed
+    /// copies of this editor are deleted.
+    /// Note that you can use this to determine when it is deleted.
+    void SetClientObject( wxClientData *data );
 
     // ------------------------------------------------------------------------
-    // Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
-    //   extra_long is the state values.
-    //   Otherwise the int/long values are those in the wxCommandEvent
-    bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
-                   const wxString &evtStr = wxEmptyString, bool do_post = false );
-
-    // ------------------------------------------------------------------------
-    // Get/Set a wxTreeItemId if this editor being tracked in a wxTreeCtrl
-    //   used by the wxSTEditorFrame
-    wxTreeItemId GetTreeItemId() const;
-    void SetTreeItemId(const wxTreeItemId& id);
-
-    // ------------------------------------------------------------------------
-    // Get the ref counted data for the editor (ref counted for splitting)
-    //  The ref data is ALWAYS expected to exist, do NOT call wxObject::UnRef
+    /// Get the ref counted data for the editor (ref counted for splitting).
+    /// The ref data is ALWAYS expected to exist, do NOT call wxObject::UnRef()
+    /// unless you IMMEDIATELY replace it.
     wxSTEditorRefData* GetSTERefData() const { return (wxSTEditorRefData*)GetRefData(); }
 
-    // If this editor is going to use a Refed document, run this after construction
-    //  to have this mirror the original wxSTEditor, origEditor isn't modified
-    //  See usage in wxSTEditorSplitter
-    virtual void RefEditor(wxSTEditor *origEditor);
-
-    // Replace the current ref with a new one, prepared by the caller, from within a wxDocument class for instance
-    wxSTEditorRefData* AttachRefData(wxSTEditorRefData*);
+    /// @}
 
 protected:
     bool m_sendEvents; // block sending events if false
     bool m_activating; // are we in EVT_ACTIVATE already
-    long m_state;      // what state does this editor have, enum STE_StateType
-    bool m_dirty_flag; // set if file format is changed by the user, in the properties dialog
 
     wxLongLong m_marginDClickTime;   // last time margin was clicked
     int        m_marginDClickLine;   // last line margin was clicked on
@@ -924,25 +992,17 @@ private:
     void Init();
 
     // Please use the virtual method IsModified() instead
-    bool GetModify()
-    {
-        return wxStyledTextCtrl::GetModify();
-    }
-
+    bool GetModify() { return wxStyledTextCtrl::GetModify(); }
     // Please use one of the virtual methods instead, SetModified(false) or DiscardEdits()
-    void SetSavePoint()
-    {
-        wxStyledTextCtrl::SetSavePoint();
-    }
+    void SetSavePoint() { wxStyledTextCtrl::SetSavePoint(); }
 
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxSTEditor)
 };
 
 //-----------------------------------------------------------------------------
-// wxSTEditorEvent
-//
-// helper events to update the gui only when items change (avoids UpdateUI overkill)
+/// @class wxSTEditorEvent
+/// @brief A specialized wxCommandEvent for use with the wxSTEditor.
 //-----------------------------------------------------------------------------
 class WXDLLIMPEXP_STEDIT wxSTEditorEvent : public wxCommandEvent
 {
@@ -953,16 +1013,19 @@ public:
                      int stateChange, int stateValues,
                      const wxString& fileName );
 
-    // Has the state of the editor changed see STE_StateType for different states.
-    //   can OR states together to see if any of them have changed
+    /// Has the state of the editor changed see STE_StateType for different states.
+    /// Can OR states together to see if any of them have changed.
     bool HasStateChange(int stateChange) const { return (GetStateChange() & stateChange) != 0; }
     bool GetStateValue(STE_StateType stateValue) const { return (GetStateValues() & stateValue) != 0; }
 
+    /// Get the changes of the wxSTEditor::GetState() for the wxEVT_STE_STATE_CHANGED.
     int  GetStateChange() const { return GetInt(); }
+    /// Get the wxSTEditor::GetState() for any wxEVT_STE_* events.
     int  GetStateValues() const { return int(GetExtraLong()); }
     void SetStateChange(int stateChange) { SetInt(stateChange); }
     void SetStateValues(int stateValues) { SetExtraLong(stateValues); }
 
+    ///. Get the filename of the wxStEditor for wxEVT_STE_* events.
     wxFileName GetFileName() const { return wxFileName(GetString()); }
     void SetFileName( const wxFileName& fileName ) { SetString( fileName.GetFullPath() ); }
 
@@ -975,70 +1038,76 @@ private:
     DECLARE_DYNAMIC_CLASS_NO_ASSIGN(wxSTEditorEvent)
 };
 
+// --------------------------------------------------------------------------
+/// @name wxSTEditor wxEvent types
+
 BEGIN_DECLARE_EVENT_TYPES()
-    // editor created, event.GetEventObject is the editor, use to setup after constructor
-    //   (this is a wxCommandEvent)
+/// @{
+    /// wxSTEditor created, event.GetEventObject() is the editor, use to setup after constructor
+    /// and at the end of the call to wxSTEditor::CreateOptions(...).
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_CREATED, 0)
-    // splitter created, event.GetEventObject is the splitter, use to setup after constructor
-    //   (this is a wxCommandEvent)
+    /// wxSTEditorSplitter created, event.GetEventObject() is the splitter, use to setup after constructor.
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_CREATED, 0)
-    // notebook created, event.GetEventObject is the notebook, use to setup after constructor
-    //   (this is a wxCommandEvent)
+    /// wxSTEditorNotebook created, event.GetEventObject() is the notebook, use to setup after constructor.
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_CREATED, 0)
 
-    // The state of the editor has changed see STE_StateType for the types of changes
-    //   (this is a wxSTEditorEvent)
+    /// The state of the editor has changed see STE_StateType for the types of changes.
+    /// An event to update the gui only when items change to avoid UpdateUI overkill.
+    ///   (this is a wxSTEditorEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_STATE_CHANGED, 0)
-    // This editor has the focus now, (serves to pass EVT_SET_FOCUS to parents)
-    //   (this is a wxSTEditorEvent)
+    /// This wxSTEditor has the focus now, (serves to pass EVT_SET_FOCUS to parents).
+    ///   (this is a wxSTEditorEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_SET_FOCUS, 0)
-    // The popup menu for the wxSTEditor is about to be shown, maybe you want to update it?
-    //   (this is a wxSTEditorEvent)
+    /// The popup menu for the wxSTEditor is about to be shown, maybe you want to update it?
+    ///   (this is a wxSTEditorEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_POPUPMENU, 0)
 
-    // The margin has been double clicked in the same line
-    //   (this is a wxStyledTextEvent)
+    /// The margin has been double clicked in the same line.
+    ///   (this is a wxStyledTextEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_MARGINDCLICK, 0)
 
-    // A wxSTEditor is about to be created for the wxSTEditorSplitter.
-    // event.GetEventObject is the parent wxSTEditorSplitter.
-    // You can set the event.SetEventObject to a "new wxSTEditor" or a
-    // subclassed one of your own and this editor will be used instead.
-    // Make sure that the parent of your editor is the splitter
-    //    (ie. the original event.GetEventObject)
-    // event.GetInt is the preferred id (probably wxID_ANY)
-    //   (this is a wxCommandEvent)
+    /// A wxSTEditor is about to be created for the wxSTEditorSplitter.
+    /// event.GetEventObject() is the parent wxSTEditorSplitter.
+    /// You can set the event.SetEventObject() to a "new wxSTEditor" or a
+    /// subclassed one of your own and this editor will be used instead.
+    /// Make sure that the parent of your editor is the splitter
+    ///    (ie. the original event.GetEventObject())
+    /// event.GetInt() is the preferred id (probably wxID_ANY)
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_CREATE_EDITOR, 0)
 
-    // A wxSTEditorSplitter is about to be created for the wxSTEditorNotebook.
-    // event.GetEventObject is the parent wxSTEditorNotebook.
-    // You can set the event.SetEventObject to a "new wxSTEditorSplitter" or a
-    // subclassed one of your own and this splitter will be used instead.
-    // Make sure that the parent of your splitter is the notebook
-    //    (ie. the original event.GetEventObject)
-    // event.GetInt is the preferred id (probably wxID_ANY)
-    //   (this is a wxCommandEvent)
+    /// A wxSTEditorSplitter is about to be created for the wxSTEditorNotebook.
+    /// event.GetEventObject() is the parent wxSTEditorNotebook.
+    /// You can set the event.SetEventObject() to a "new wxSTEditorSplitter" or a
+    /// subclassed one of your own and this splitter will be used instead.
+    /// Make sure that the parent of your splitter is the notebook
+    ///    (ie. the original event.GetEventObject())
+    /// event.GetInt() is the preferred id (probably wxID_ANY)
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_CREATE_SPLITTER, 0)
 
-    // The user has clicked on one of the splitter buttons in the
-    //   wxSTEditor. This event is received by the splitter and then
-    //   the splitting occurs. The event.GetInt() is enum wxSPLIT_VERTICAL
-    //   or wxSPLIT_HORIZONTAL.
-    //   (this is a wxCommandEvent)
+    /// The user has clicked on one of the splitter buttons in the
+    ///   wxSTEditor. This event is received by the splitter and then
+    ///   the splitting occurs. The event.GetInt() is enum wxSPLIT_VERTICAL
+    ///   or wxSPLIT_HORIZONTAL.
+    ///   (this is a wxCommandEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_SPLIT_BEGIN,     0)
 
-    // The wxNotebook doesn't always send enough events to follow it's state.
-    //  This event is sent whenever the selection or page count changes
-    //  eg. When all the pages are deleted, gtk doesn't notify you that the
-    //  selection is now -1
-    //   (this is a wxNotebookEvent)
+    /// The wxNotebook doesn't always send enough events to follow it's state.
+    ///  This event is sent whenever the selection or page count changes
+    ///  eg. When all the pages are deleted, gtk doesn't notify you that the
+    ///  selection is now -1
+    ///   (this is a wxNotebookEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_PAGE_CHANGED,    0)
 
-    // Enter has been pressed on the last line of the wxSTEditorShell
-    //   GetString for the event contains the contents of the line.
-    //   (this is a wxSTEditorEvent)
+    /// Enter has been pressed on the last line of the wxSTEditorShell.
+    ///   event.GetString() contains the contents of the line.
+    ///   (this is a wxSTEditorEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STESHELL_ENTER,      0)
-
+/// @}
 END_DECLARE_EVENT_TYPES()
 
 typedef void (wxEvtHandler::*wxSTEditorEventFunction)(wxSTEditorEvent&);

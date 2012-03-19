@@ -120,11 +120,6 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     wxConfigBase *config = GetConfigBase();
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
 
-    if (steMM)
-    {
-        steMM->InitAcceleratorArray();
-    }
-
     if (steMM && GetOptions().HasFrameOption(STF_CREATE_MENUBAR))
     {
         wxMenuBar *menuBar = GetMenuBar();
@@ -445,12 +440,34 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
 
 void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &WXUNUSED(event))
 {
-    wxString filePath = m_dirCtrl->GetFilePath();
+    if (!m_dirCtrl) return;
 
-    if (!filePath.IsEmpty())
+    wxArrayString files;
+
+    if (m_dirCtrl->GetTreeCtrl()->HasFlag(wxTR_MULTIPLE))
     {
-        LoadFile(filePath, true);
+        // We won't reach here in 2.8 since wxDIRCTRL_MULTIPLE doesn't exist
+        #if wxCHECK_VERSION(2, 9, 2)
+            // Avoid assert in GTK for calling wxTreeCtrl::GetSelection() on multiple selection treectrl
+            m_dirCtrl->GetFilePaths(files);
+        #endif
     }
+    else
+    {
+        wxString filePath = m_dirCtrl->GetFilePath();
+        if (!filePath.IsEmpty())
+            files.Add(filePath);
+    }
+
+    if (files.IsEmpty())
+        return;
+
+    if (GetEditorNotebook())
+    {
+        GetEditorNotebook()->LoadFiles(&files, wxEmptyString);
+    }
+    else
+        LoadFile(files[0], true);
 }
 
 void wxSTEditorFrame::OnSTECreated(wxCommandEvent &event)

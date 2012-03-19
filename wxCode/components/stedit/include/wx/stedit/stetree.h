@@ -17,26 +17,26 @@
 #include <wx/hashmap.h>
 
 //-----------------------------------------------------------------------------
-// wxSTETreeItemData - wxTreeItemData for the wxTreeCtrl file list
+/// @class wxSTETreeItemData
+/// @brief wxTreeItemData for the wxSTEditorTreeCtrl wxTreeCtrl file list.
 //-----------------------------------------------------------------------------
 
 class wxSTETreeItemData : public wxTreeItemData
 {
 public:
-    wxSTETreeItemData(int page_num = -1, wxWindow* win = NULL) :
-        m_page_num(page_num), m_notePage(win) { }
-
-    wxSTETreeItemData(const wxSTETreeItemData& steTreeData);
+    wxSTETreeItemData(int page_num = -1, wxWindow* win = NULL);
 
     virtual ~wxSTETreeItemData();
 
-    wxTreeItemId m_id;              // The id in the wxTreeCtrl
-    int m_page_num;                 // the notebook page #, or -1 for none
-    wxWindow* m_notePage;           // The wxNotebook's wxWindow page
-                                    // Most likely a wxSTEditorSplitter/wxSTEditor
-    wxString m_root;                // root leaf in the treectrl
-    wxFileName m_fileName;          // filename of the page
-    wxArrayString m_treePath;       // path to the tree item, without root item
+    wxTreeItemId  m_id;         ///< The tree id in the wxTreeCtrl.
+    int           m_page_num;   ///< The notebook page number, or -1 for none.
+    wxWindow*     m_notePage;   ///< The wxNotebook's wxWindow page
+                                ///<   most likely a wxSTEditorSplitter/wxSTEditor.
+    wxString      m_root;       ///< Root leaf in the wxTreeCtrl.
+    wxFileName    m_fileName;   ///< Filename of the page.
+    wxArrayString m_treePath;   ///< Path to the tree item, without root item.
+
+    wxSTEditorRefData* m_steRefData; ///< If a node for a wxSTEditor, its data.
 };
 
 /*
@@ -55,7 +55,7 @@ int wxCMPFUNC_CONV STE_TreeItemSortCompareFunction( wxSTETreeItemData** first, w
 //
 //-----------------------------------------------------------------------------
 
-// options for the wxSTETreeCtrl::GetAllItemIds() function
+/// Options for the wxSTETreeCtrl::GetAllItemIds() function.
 enum STE_TreeCtrlGetAll_Type
 {
     STE_TREECTRL_GET_DATA   = 1, // get items that have data
@@ -63,12 +63,20 @@ enum STE_TreeCtrlGetAll_Type
     STE_TREECTRL_GET_ALL    = 3  // get all items
 };
 
-// options for the wxSTETreeCtrl::FindOrInsertItem() function
+/// Options for the wxSTETreeCtrl::FindOrInsertItem() function.
 enum STE_TreeCtrlFindInsert_Type
 {
     STE_TREECTRL_FIND           = 1, // only find an existing item
     STE_TREECTRL_INSERT         = 2, // just insert the item, even if one with same path exists
     STE_TREECTRL_FIND_OR_INSERT = 3  // try to find existing, else insert
+};
+
+/// Indexes into the wxImageList assigned to the wxSTETreeCtrl.
+enum STE_TreeCtrlImage_Type
+{
+    STT_IMAGE_FOLDER = 0,
+    STT_IMAGE_EDITOR,
+    STT_IMAGE_OTHER
 };
 
 //-----------------------------------------------------------------------------

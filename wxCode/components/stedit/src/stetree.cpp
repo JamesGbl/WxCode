@@ -13,6 +13,7 @@
 
 #include "wx/stedit/stedit.h"
 #include "wx/stedit/stetree.h"
+#include "wx/stedit/steart.h"
 
 #include "wxext.h"
 
@@ -20,30 +21,18 @@
 // wxSTETreeItemData - wxTreeItemData for the wxTreeCtrl file list
 //-----------------------------------------------------------------------------
 
-wxSTETreeItemData::wxSTETreeItemData(const wxSTETreeItemData& steTreeData)
-                  :m_id(steTreeData.m_id),
-                   m_page_num(steTreeData.m_page_num),
-                   m_notePage(steTreeData.m_notePage),
-                   m_root(steTreeData.m_root),
-                   m_fileName(steTreeData.m_fileName),
-                   m_treePath(steTreeData.m_treePath)
+wxSTETreeItemData::wxSTETreeItemData(int page_num, wxWindow* win)
+                  :m_page_num(page_num),
+                   m_notePage(win),
+                   m_steRefData(NULL)
 {
 }
 
 wxSTETreeItemData::~wxSTETreeItemData()
 {
-    wxSTEditor* editor = NULL;
-
-    if (m_notePage != NULL)
-    {
-        editor = wxDynamicCast(m_notePage, wxSTEditor);
-
-        if (!editor && wxDynamicCast(m_notePage, wxSTEditorSplitter))
-            editor = wxDynamicCast(m_notePage, wxSTEditorSplitter)->GetEditor();
-    }
-
-    if (editor)
-        editor->SetTreeItemId(wxTreeItemId());
+    // The wxTreeCtrl should be the one deleting this.
+    if (m_steRefData != NULL)
+        m_steRefData->m_treeItemData = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -67,6 +56,12 @@ bool wxSTEditorTreeCtrl::Create(wxWindow *parent, wxWindowID id,
 {
     if (!wxTreeCtrl::Create(parent, id, pos, size, style, validator, name))
         return false;
+
+    wxImageList* imageList = new wxImageList(16, 16, true, 3);
+    imageList->Add(wxArtProvider::GetBitmap(wxART_FOLDER, wxART_MENU, wxSize(16, 16)));
+    imageList->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_MENU, wxSize(16, 16)));
+    imageList->Add(wxArtProvider::GetBitmap(wxART_REPORT_VIEW, wxART_MENU, wxSize(16, 16)));
+    AssignImageList(imageList);
 
     m_popupMenu = new wxMenu;
     m_popupMenu->Append(ID_STT_FILE_OPEN,  wxGetStockLabelEx(wxID_OPEN), _("Open file"));
@@ -358,13 +353,13 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
         wxSTETreeItemData* steTreeItemData = NULL;
 
         // If this editor was already added to the tree, check if it's still correct
-        if (editor && editor->GetTreeItemId())
+        if (editor && editor->GetTreeItemData())
         {
             // get and check the old tree item id, the filename/path could have changed
-            id = editor->GetTreeItemId();
+            steTreeItemData = editor->GetTreeItemData();
 
-            if (id)
-                steTreeItemData = (wxSTETreeItemData*)GetItemData(id);
+            if (steTreeItemData)
+                id = steTreeItemData->m_id;
 
             if (steTreeItemData)
             {
@@ -389,7 +384,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
 
                 // null it and add it correctly later
                 id = wxTreeItemId();
-                editor->SetTreeItemId(wxTreeItemId());
+                editor->SetTreeItemData(NULL);
             }
         }
 
@@ -461,10 +456,15 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             if (editor)
             {
                 id = FindOrInsertItem(steTreeItemData->m_treePath, STE_TREECTRL_INSERT);
-                editor->SetTreeItemId(id);
+                SetItemImage(id, STT_IMAGE_EDITOR);
+                editor->SetTreeItemData(steTreeItemData);
+                steTreeItemData->m_steRefData = editor->GetSTERefData();
             }
             else
+            {
                 id = FindOrInsertItem(steTreeItemData->m_treePath, STE_TREECTRL_FIND_OR_INSERT);
+                SetItemImage(id, STT_IMAGE_OTHER);
+            }
 
             // must set new data before deleting old in MSW since it checks old before setting new
             wxTreeItemData* oldData = GetItemData(id);
@@ -645,7 +645,9 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
         if (find_type == STE_TREECTRL_FIND)
             return wxTreeItemId();
 
-        parentId = id = AppendItem(parentId, treePath[n], -1, -1, NULL);
+        parentId = id = AppendItem(parentId, treePath[n],
+                                   (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                   -1, NULL);
         n++;
     }
 
@@ -657,7 +659,9 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
             if (n == count - 1)       // found the existing item w/ full path
             {
                 if (find_type == STE_TREECTRL_INSERT)
-                    return AppendItem(parentId, treePath[n], -1, -1, NULL);
+                    return AppendItem(parentId, treePath[n],
+                                      (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                      -1, NULL);
                 else
                     return id;
             }
@@ -679,7 +683,9 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
             id = parentId;                              // use last good parent
             for (; n < count; n++)                      // append rest of path
             {
-                id = AppendItem(id, treePath[n], -1, -1, NULL);
+                id = AppendItem(id, treePath[n],
+                                (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                -1, NULL);
 
                 if (n == count - 1)
                     return id;

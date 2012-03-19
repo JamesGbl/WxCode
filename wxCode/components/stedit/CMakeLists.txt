@@ -46,9 +46,9 @@ set( wxStEdit_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxStE
 
 if (NOT TARGET wxStEditLib)
 
-set( wxStEdit_VERSION         "1.4.0" )
+set( wxStEdit_VERSION         "1.6.0" )
 set( wxStEdit_MAJOR_VERSION   "1" )
-set( wxStEdit_MINOR_VERSION   "4" )
+set( wxStEdit_MINOR_VERSION   "6" )
 set( wxStEdit_RELEASE_VERSION "0" )
 
 # ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ set( DOXYGEN_STRIP_FROM_PATH     "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_STRIP_FROM_INC_PATH "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_INPUT               "${wxStEdit_ROOT_DIR}/include" )
 set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
-set( DOXYGEN_PREDEFINED          "WXDLLIMPEXP_DATA_STEDIT(x)=x")
+set( DOXYGEN_PREDEFINED          "${DOXYGEN_PREDEFINED_WXWIDGETS} WXDLLIMPEXP_DATA_STEDIT(x)=x")
 
 ADD_DOXYGEN( wxStEdit_doxygen
              ${wxStEdit_ROOT_DIR}/build/CMake-doxygen.in
@@ -72,14 +72,21 @@ ADD_DOXYGEN( wxStEdit_doxygen
 # ---------------------------------------------------------------------------
 
 # The user can provide their own "wx/stedit/setup.h" by changing this path
+# Also show them where it is so they can modify it.
 if (NOT DEFINED wxStEdit_SETUP_INCLUDE_PATH)
-    set(wxStEdit_SETUP_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include CACHE INTERNAL "Path to the configured wxStEdit wx/stedit/setup.h" FORCE)
+    set(wxStEdit_SETUP_INCLUDE_PATH "${CMAKE_BINARY_DIR}/include")
 endif()
+set(wxStEdit_SETUP_INCLUDE_PATH ${wxStEdit_SETUP_INCLUDE_PATH} CACHE PATH "Path to the configured wxStEdit wx/stedit/setup.h" FORCE)
+
+if (NOT DEFINED wxStEdit_COPY_SETUP0_TO_SETUP_H)
+    set(wxStEdit_COPY_SETUP0_TO_SETUP_H TRUE)
+endif()
+set(wxStEdit_COPY_SETUP0_TO_SETUP_H ${wxStEdit_COPY_SETUP0_TO_SETUP_H} CACHE BOOL "Copy the wx/stedit/setup0.h file to wx/stedit/setup.h overwriting any changes." FORCE)
 
 # Only copy it once so they can modify it and rerun CMake
-if (NOT EXISTS ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h)
+if (wxStEdit_COPY_SETUP0_TO_SETUP_H)
     configure_file(${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
-                   ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h COPYONLY)
+                   ${wxStEdit_SETUP_INCLUDE_PATH}/wx/stedit/setup.h COPYONLY)
 endif()
 
 include_directories(${wxStEdit_ROOT_DIR}/include/ ${wxStEdit_SETUP_INCLUDE_PATH})

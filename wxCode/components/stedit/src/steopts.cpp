@@ -307,7 +307,7 @@ void wxSTEditorOptions::SetNotebookPopupMenu(wxMenu* menu, bool is_static)
 
 /*static*/ void wxSTEditorOptions::RegisterIds()
 {
-   wxRegisterId(ID_STE__LAST); // TODO: how to do this right?
+    wxRegisterId(ID_STE__LAST); // TODO: how to do this right?
 }
 
 void wxSTEditorOptions::SetClientObject( wxClientData *data )
@@ -353,6 +353,7 @@ wxString wxSTEditorOptions::GetConfigPath(size_t path_option_n) const
     return FixConfigPath(basePath, true) + optionPath;
 }
 
+// static
 wxString wxSTEditorOptions::FixConfigPath(const wxString& path, bool add_sep)
 {
     if (add_sep && (!path.Length() || (path.Last() != wxT('/'))))

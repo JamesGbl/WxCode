@@ -74,8 +74,8 @@ const int ID_STEPROP_FILEACCESSED_TEXT = 20025;
 const int ID_STEPROP_FILECREATED_TEXT = 20026;
 const int ID_STEPROP_FILE_TYPE_TEXT = 20027;
 const int ID_STEPROP_LANGUAGE_TEXT = 20028;
-const int ID_CHOICE = 20029;
-const int ID_CHECKBOX = 20030;
+const int ID_STEPROP_ENCODING_CHOICE = 20029;
+const int ID_STEPROP_ENCODING_BOM_CHECKBOX = 20030;
 const int ID_STEPROP_NUMLINES_TEXT = 20031;
 const int ID_STEPROP_NUMCHARS_TEXT = 20032;
 const int ID_STEPROP_NUMWORDS_TEXT = 20033;
@@ -197,6 +197,8 @@ const int ID_STEDLG_SAVE_WHITESPACE_CHECKBOX = 20118;
 const int ID_STEDLG_SAVE_LINEENDINGS_CHECKBOX = 20119;
 wxSizer *wxSTEditorLoadSavePrefsSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
 
+const int ID_STEFILEOPEN_ENCODING_CHOICE = 20120;
+const int ID_STEFILEOPEN_ENCODING_BOM_CHECKBOX = 20121;
 wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
 
 // Declare menubar functions

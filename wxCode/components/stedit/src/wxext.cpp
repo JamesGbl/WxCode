@@ -28,8 +28,8 @@
 #endif // WXPRECOMP
 
 #include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(AcceleratorArray);
-WX_DEFINE_OBJARRAY(FileNameArray);
+WX_DEFINE_OBJARRAY(wxArrayAcceleratorEntry);
+WX_DEFINE_OBJARRAY(wxArrayFileName);
 
 bool wxGetExeFolder(wxFileName* filename)
 {
@@ -182,7 +182,7 @@ wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
 }
 
 /*static*/
-void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const AcceleratorArray& array)
+void wxAcceleratorHelper::SetAcceleratorTable(wxWindow* wnd, const wxArrayAcceleratorEntry& array)
 {
    const size_t count = array.GetCount();
    wxAcceleratorEntry* temp = new wxAcceleratorEntry[count];
@@ -370,7 +370,7 @@ static wxString wxGetAccelText(const wxAcceleratorEntry& accel)
 }
 
 /*static*/
-void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const AcceleratorArray& accel)
+void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const wxArrayAcceleratorEntry& accel)
 {
    size_t count = menubar->GetMenuCount();
 
@@ -382,7 +382,7 @@ void wxAcceleratorHelper::SetAccelText(wxMenuBar* menubar, const AcceleratorArra
    }
 }
 
-wxString wxToolBarTool_MakeShortHelp(const wxString& rstr, const AcceleratorArray& accel, int id)
+wxString wxToolBarTool_MakeShortHelp(const wxString& rstr, const wxArrayAcceleratorEntry& accel, int id)
 {
    wxString str = rstr;
 
@@ -436,7 +436,7 @@ static void wxMenu_SetAccelText(wxMenu* menu, const wxAcceleratorEntry& accel)
 }
 
 /*static*/
-void wxAcceleratorHelper::SetAccelText(wxMenu* menu, const AcceleratorArray& array)
+void wxAcceleratorHelper::SetAccelText(wxMenu* menu, const wxArrayAcceleratorEntry& array)
 {
     size_t i, count = array.GetCount();
 
@@ -554,9 +554,9 @@ void wxFrame_ClonePosition(wxFrame* wnd, wxWindow* otherwindow /*= NULL*/)
 #define HASBIT(value, bit)      (((value) & (bit)) != 0)
 
 /*static*/
-bool wxClipboardHelper::IsTextAvailable(Type clip_type)
+bool wxClipboardHelper::IsTextAvailable(Clipboard_Type clip_type)
 {
-    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+    wxCHECK_MSG(clip_type != CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
 
     bool ok = false;
 #if wxUSE_CLIPBOARD
@@ -580,9 +580,9 @@ bool wxClipboardHelper::IsTextAvailable(Type clip_type)
 /*static*/
 bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
                                                      size_t array_count,
-                                                     Type clip_type)
+                                                     Clipboard_Type clip_type)
 {
-    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+    wxCHECK_MSG(clip_type != CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
 
     bool ok = false;
 #if wxUSE_CLIPBOARD
@@ -594,7 +594,7 @@ bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
     {
         size_t i;
 
-        clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+        clipboard->UsePrimarySelection(HASBIT(clip_type, CLIPBOARD_PRIMARY));
         for (i = 0; i < array_count; i++)
         {
         #ifdef __WXMSW__
@@ -625,9 +625,9 @@ bool wxClipboardHelper::IsFormatAvailable(const enum wxDataFormatId* array,
 }
 
 /*static*/
-bool wxClipboardHelper::GetText(wxString* str, Type clip_type)
+bool wxClipboardHelper::GetText(wxString* str, Clipboard_Type clip_type)
 {
-    wxCHECK_MSG(clip_type != Both, false, wxT("Getting values from both clipboards is not supported"));
+    wxCHECK_MSG(clip_type != CLIPBOARD_BOTH, false, wxT("Getting values from both clipboards is not supported"));
 
     if (!str) return false;
     bool ok = false;
@@ -641,7 +641,7 @@ bool wxClipboardHelper::GetText(wxString* str, Type clip_type)
     {
         wxTextDataObject temp;
 
-        clipboard->UsePrimarySelection(HASBIT(clip_type, Primary));
+        clipboard->UsePrimarySelection(HASBIT(clip_type, CLIPBOARD_PRIMARY));
         ok = clipboard->GetData(temp);
 
         if (ok)
@@ -700,11 +700,11 @@ bool wxClipboardHelper::Set(wxDataObject* def, wxDataObject* primary)
 }
 
 /*static*/
-bool wxClipboardHelper::SetText(const wxString& str, Type clip_type)
+bool wxClipboardHelper::SetText(const wxString& str, Clipboard_Type clip_type)
 {
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
-    return Set(HASBIT(clip_type, Default) ? new wxTextDataObject(str) : NULL,
-               HASBIT(clip_type, Primary) ? new wxTextDataObject(str) : NULL);
+    return Set(HASBIT(clip_type, CLIPBOARD_DEFAULT) ? new wxTextDataObject(str) : NULL,
+               HASBIT(clip_type, CLIPBOARD_PRIMARY) ? new wxTextDataObject(str) : NULL);
 #else
     return false;
 #endif
@@ -864,7 +864,7 @@ bool wxTextEncoding::CharToString(wxString* str_ptr, const char* src, const wxMB
         if (str.IsEmpty())
             return false;
     }
-    
+
     if (str_ptr) *str_ptr = str;
     return true;
 }
@@ -880,7 +880,7 @@ wxCharBuffer wxTextEncoding::StringToChar(const wxString& src, const wxMBConv& c
 }
 
 /*static*/
-wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, Type encoding, size_t* size_ptr)
+wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, TextEncoding_Type encoding, size_t* size_ptr)
 {
     wxCharBuffer buf;
     size_t size;
@@ -981,7 +981,7 @@ bool wxTextEncoding::CharToStringDetectBOM(wxString* str_ptr, const wxCharBuffer
 }
 
 /*static*/
-const char* wxTextEncoding::GetBOMChars(Type encoding, size_t* count)
+const char* wxTextEncoding::GetBOMChars(TextEncoding_Type encoding, size_t* count)
 {
     switch (encoding)
     {
@@ -1051,20 +1051,20 @@ C_ASSERT(WXSIZEOF(s_textencoding_text) == wxTextEncoding::EnumCount);
 #endif
 
 /*static*/
-wxTextEncoding::Type wxTextEncoding::TypeFromString(const wxString& str)
+wxTextEncoding::TextEncoding_Type wxTextEncoding::TypeFromString(const wxString& str)
 {
     for (size_t i = 0; i < WXSIZEOF(s_textencoding_text); i++)
     {
         if (0 == str.CmpNoCase(s_textencoding_text[i]))
         {
-            return (wxTextEncoding::Type)i;
+            return (wxTextEncoding::TextEncoding_Type)i;
         }
     }
     return wxTextEncoding::None;
 }
 
 /*static*/
-wxString wxTextEncoding::TypeToString(Type encoding)
+wxString wxTextEncoding::TypeToString(TextEncoding_Type encoding)
 {
     return ((encoding != wxTextEncoding::None) && (encoding < wxTextEncoding::EnumCount))
                 ? s_textencoding_text[encoding]
@@ -1072,7 +1072,8 @@ wxString wxTextEncoding::TypeToString(Type encoding)
 }
 
 /*static*/
-bool wxTextEncoding::TypeFromString(Type* encoding, const char* str, const char* identifier, const char* strpbrk_ctrl)
+bool wxTextEncoding::TypeFromString(TextEncoding_Type* encoding, const char* str,
+                                    const char* identifier, const char* strpbrk_ctrl)
 {
     const char* p = strstr(str, identifier);
 
@@ -1094,7 +1095,8 @@ bool wxTextEncoding::TypeFromString(Type* encoding, const char* str, const char*
 }
 
 /*static*/
-bool wxTextEncoding::CharToString(wxString* str_ptr, const wxCharBuffer& buf, size_t buf_len, Type encoding, wxBOM bom)
+bool wxTextEncoding::CharToString(wxString* str_ptr, const wxCharBuffer& buf, size_t buf_len,
+                                  TextEncoding_Type encoding, wxBOM bom)
 {
     size_t bom_count = 0;
     wxString str;
@@ -1140,7 +1142,7 @@ bool wxTextEncoding::CharToString(wxString* str_ptr, const wxCharBuffer& buf, si
 }
 
 /*static*/
-bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, Type encoding, bool file_bom)
+bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, TextEncoding_Type encoding, bool file_bom)
 {
     bool ok = true;
     const char* bom_chars;

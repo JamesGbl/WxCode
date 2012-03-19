@@ -96,7 +96,7 @@ public:
 
     // ----------------------------------------------------------------------
     /// @name Create the frame from the wxSTEditorOptions
-    ///@{
+    ///  @{
 
     /// Create and set the wxSTEditorOptions, call this after creation
     ///  or just create the child windows yourself.
@@ -108,14 +108,14 @@ public:
     /// Call this to detach the options for a particular frame from the others.
     void SetOptions(const wxSTEditorOptions& options) { m_options = options; }
 
-    ///@}
+    /// @}
 
     /// Enable/disable sending wxSTEditor events from children editors
     void SetSendSTEEvents(bool send);
 
     // ----------------------------------------------------------------------
     /// @name Get child windows
-    ///@{
+    /// @{
 
     /// Get either the single editor for STF_SINGLEPAGE or
     /// the editor at page, if page = -1 get the current editor.
@@ -144,7 +144,7 @@ public:
     /// Get the file treectrl in the sidebar notebook, NULL if not style STF_SIDEBAR.
     virtual wxGenericDirCtrl* GetDirCtrl() const { return m_dirCtrl; }
 
-    ///@}
+    /// @}
 
     /// Load a file into either the notebook or single editor.
     /// Returns success and optionally shows a wxMessageDialog with a error message on failure.
@@ -164,7 +164,7 @@ public:
 
     // ----------------------------------------------------------------------
     /// @name wxConfig saving and loading
-    ///@{
+    /// @{
     /// Get wxConfigBase::Get(false), override to return a custom wxConfig.
     virtual wxConfigBase* GetConfigBase();
     /// Load the config for showing the sidebar and frame size.
@@ -175,11 +175,11 @@ public:
     ///   @see wxSTEditorOptions for paths and internal saving config.
     void SaveConfig( wxConfigBase &config,
                      const wxString &configPath = wxT("/wxSTEditor/Frame") );
-    ///@}
+    /// @}
 
     // -----------------------------------------------------------------------
     /// @name implementation
-    ///@{
+    /// @{
 
     void OnNotebookPageChanged(wxNotebookEvent &event);
     void OnDirCtrlItemActivation(wxTreeEvent &event);
@@ -196,7 +196,7 @@ public:
 
     void OnClose(wxCloseEvent &event);
 
-    ///@}
+    /// @}
 
 protected:
     wxSTEditorOptions m_options;

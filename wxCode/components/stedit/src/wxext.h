@@ -16,7 +16,7 @@
 
 #include "wx/stedit/stedefs.h" // WXDLLIMPEXP_STEDIT
 
-WX_DECLARE_OBJARRAY_WITH_DECL(wxFileName, FileNameArray, class WXDLLIMPEXP_STEDIT);
+WX_DECLARE_OBJARRAY_WITH_DECL(wxFileName, wxArrayFileName, class WXDLLIMPEXP_STEDIT);
 
 #ifdef _WX_INTL_H_
 WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
@@ -43,20 +43,20 @@ WXDLLIMPEXP_STEDIT void wxCommandLineUsage(wxWindow* parent);
 
 #if wxUSE_ACCEL
 class WXDLLIMPEXP_FWD_CORE wxMenuBar;
-WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, AcceleratorArray, class WXDLLIMPEXP_STEDIT);
+WX_DECLARE_OBJARRAY_WITH_DECL(wxAcceleratorEntry, wxArrayAcceleratorEntry, class WXDLLIMPEXP_STEDIT);
 class WXDLLIMPEXP_STEDIT wxAcceleratorHelper
 {
 public:
 
     static wxAcceleratorEntry GetStockAccelerator(wxWindowID);
 
-    static void SetAcceleratorTable(wxWindow*, const AcceleratorArray&);
+    static void SetAcceleratorTable(wxWindow*, const wxArrayAcceleratorEntry&);
 
-    static void SetAccelText(wxMenuBar*, const AcceleratorArray&);
+    static void SetAccelText(wxMenuBar*, const wxArrayAcceleratorEntry&);
 
-    static void SetAccelText(wxMenu*, const AcceleratorArray&);
+    static void SetAccelText(wxMenu*, const wxArrayAcceleratorEntry&);
 };
-WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const AcceleratorArray&, int id);
+WXDLLIMPEXP_STEDIT wxString wxToolBarTool_MakeShortHelp(const wxString&, const wxArrayAcceleratorEntry&, int id);
 #endif
 
 #if (wxVERSION_NUMBER >= 2900)
@@ -101,28 +101,28 @@ protected:
 class WXDLLIMPEXP_STEDIT wxClipboardHelper
 {
 public:
-    enum Type
+    enum Clipboard_Type
     {
-        Default = 1, // use the normal clipboard
-        Primary = 2, // use the primary clipboard
-        Both    = 3  // use both clipboards (only valid for set functions)
+        CLIPBOARD_DEFAULT = 1, // use the normal clipboard
+        CLIPBOARD_PRIMARY = 2, // use the primary clipboard
+        CLIPBOARD_BOTH    = 3  // use both clipboards (only valid for set functions)
     };
 
     // Is text available in the single specified clipboard in any usable text format.
     // Formats tested are wxDF_TEXT and if avilable wxDF_UNICODETEXT and wxDF_HTML.
-    static bool IsTextAvailable(Type clip_type = Default);
+    static bool IsTextAvailable(Clipboard_Type clip_type = CLIPBOARD_DEFAULT);
 
     // Returns true if there is data in the single specified clipboard with the given formats.
     // This function takes an array since the clipboard has to be opened to test formats.
-    static bool IsFormatAvailable(const enum wxDataFormatId* array, size_t array_count, Type clip_type = Default);
+    static bool IsFormatAvailable(const enum wxDataFormatId* array, size_t array_count, Clipboard_Type clip_type = CLIPBOARD_DEFAULT);
 
     // Get the current text in the single specified clipboard into the buf.
     // Returns true if the clipboard was opened and the buf is not empty.
-    static bool GetText(wxString* buf, Type clip_type = Default);
-    
+    static bool GetText(wxString* buf, Clipboard_Type clip_type = CLIPBOARD_DEFAULT);
+
     // Set the text to the specified clipboard(s).
-    static bool SetText(const wxString& str, Type clip_type = Default);
-    
+    static bool SetText(const wxString& str, Clipboard_Type clip_type = CLIPBOARD_DEFAULT);
+
     // Set the HTML text to the clipboard. In MSW the clipboard will contain
     // a valid HTML data object and a text object, on other systems the
     // clipboard only contains a text object.
@@ -152,7 +152,7 @@ public:
 class WXDLLIMPEXP_STEDIT wxTextEncoding
 {
 public:
-    enum Type
+    enum TextEncoding_Type
     {
         UTF8,
         Unicode_LE,
@@ -166,10 +166,12 @@ public:
 
 #if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
     // char -> wxString method. Specify encoding.
-    static bool CharToString(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, Type encoding = None, wxBOM bom = wxBOM_None);
+    static bool CharToString(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN,
+                             TextEncoding_Type encoding = None, wxBOM bom = wxBOM_None);
 
     // char -> wxString method. Utilizing wxConvAuto::DetectBOM.
-    static bool CharToStringDetectBOM(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN, wxBOM* file_bom = NULL);
+    static bool CharToStringDetectBOM(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN,
+                                      wxBOM* file_bom = NULL);
 #endif
 
     // char -> wxString method. Specify wxMBConv conversion class
@@ -178,28 +180,28 @@ public:
     // wxString -> char method. Specify wxMBConv conversion class
     static wxCharBuffer StringToChar(const wxString&, const wxMBConv&);
 
-    // wxString -> char method. Specify Type conversion; creates wxMBConv instance and calls StringToChar(wxMBConv) above
-    static wxCharBuffer StringToChar(const wxString&, Type, size_t* size_ptr);
+    // wxString -> char method. Specify TextEncoding_Type conversion; creates wxMBConv instance and calls StringToChar(wxMBConv) above
+    static wxCharBuffer StringToChar(const wxString&, TextEncoding_Type, size_t* size_ptr);
 
-    // enum -> string representation (eg Type::UTF8 -> "utf-8")
-    static wxString TypeToString(Type);
+    // enum -> string representation (eg TextEncoding_Type::UTF8 -> "utf-8")
+    static wxString TypeToString(TextEncoding_Type);
 
-    // String representation -> enum (eg "utf-8" -> Type::UTF8)
-    static Type TypeFromString(const wxString&);
+    // String representation -> enum (eg "utf-8" -> TextEncoding_Type::UTF8)
+    static TextEncoding_Type TypeFromString(const wxString&);
 
     // Search the provided string for encoding specification (eg "utf-8")
-    static bool TypeFromString(Type*, const char* str, const char* identifier, const char* strpbrk_ctrl);
+    static bool TypeFromString(TextEncoding_Type*, const char* str, const char* identifier, const char* strpbrk_ctrl);
 
 #ifdef _WX_XML_H_
-    inline static Type TypeFromString(const wxXmlDocument& xml)
+    inline static TextEncoding_Type TypeFromString(const wxXmlDocument& xml)
     {
         return TypeFromString(xml.GetFileEncoding());
     }
 #endif
 
-    static const char* GetBOMChars(Type, size_t* count);
+    static const char* GetBOMChars(TextEncoding_Type, size_t* count);
 
-    static bool SaveFile(const wxString&, wxOutputStream&, Type encoding = None, bool file_bom = false);
+    static bool SaveFile(const wxString&, wxOutputStream&, TextEncoding_Type encoding = None, bool file_bom = false);
 };
 
 #endif // __WXEXT_H__

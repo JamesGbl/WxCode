@@ -286,8 +286,8 @@ bool wxStEditApp::OnInit()
     // ------------------------------------------------------------------------
     // handle loading the files
     size_t n;
-    FileNameArray badFileNames;
-    FileNameArray fileNames = m_fileNames;
+    wxArrayFileName badFileNames;
+    wxArrayFileName fileNames = m_fileNames;
 
     // handle recursive file loading
     if (m_recurse_dirs && m_frame->GetEditorNotebook())
