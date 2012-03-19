@@ -52,7 +52,6 @@ void wxSTEditorDoc::Modify(bool mod)
 #if (wxVERSION_NUMBER < 2900)
     bool asterisk = mod != m_documentModified;
 #endif
-    wxSTEditorRefData::Modify(mod);
     wxDocument::Modify(mod);
 #if (wxVERSION_NUMBER < 2900)
     if (asterisk)

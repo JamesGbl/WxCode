@@ -938,6 +938,10 @@ SOURCE=..\src\stestyls.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\stetree.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\wxext.cpp
 # End Source File
 # End Group
@@ -947,6 +951,10 @@ SOURCE=..\src\wxext.cpp
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\pairarr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\stedit\setup.h
 # End Source File
 # Begin Source File
 
@@ -1015,6 +1023,14 @@ SOURCE=..\include\wx\stedit\stesplit.h
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\stestyls.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\stedit\stetree.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\wxext.h
 # End Source File
 # End Group
 # End Target

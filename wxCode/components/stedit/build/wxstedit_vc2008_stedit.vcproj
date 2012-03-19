@@ -3132,6 +3132,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\stetree.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\wxext.cpp"
 				>
 			</File>
@@ -3143,6 +3147,10 @@
 			>
 			<File
 				RelativePath="..\include\wx\stedit\pairarr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\stedit\setup.h"
 				>
 			</File>
 			<File
@@ -3211,6 +3219,14 @@
 			</File>
 			<File
 				RelativePath="..\include\wx\stedit\stestyls.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\wx\stedit\stetree.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\wxext.h"
 				>
 			</File>
 		</Filter>

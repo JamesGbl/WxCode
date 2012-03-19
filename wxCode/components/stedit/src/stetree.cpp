@@ -17,6 +17,8 @@
 
 #include "wxext.h"
 
+#include <wx/imaglist.h>
+
 //-----------------------------------------------------------------------------
 // wxSTETreeItemData - wxTreeItemData for the wxTreeCtrl file list
 //-----------------------------------------------------------------------------

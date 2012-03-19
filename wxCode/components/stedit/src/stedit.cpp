@@ -1408,7 +1408,8 @@ bool wxSTEditor::LoadFile( const wxFileName &fileName_,
 
         fileName = wxFileSelector(_("Open file"), path, fileName.GetFullPath(),
                                   wxEmptyString, extensions,
-                                  wxFD_DEFAULT_STYLE_OPEN, GetModalParent());
+                                  wxFD_OPEN | wxFD_FILE_MUST_EXIST,
+                                  GetModalParent());
 
         if (fileName.GetFullPath().IsEmpty())
             return false;
@@ -1641,7 +1642,7 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
         wxSTEditorFileDialog fileDialog( this, _("Save file"),
                                  path,
                                  extensions,
-                                 wxFD_DEFAULT_STYLE_SAVE);
+                                 wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
         fileDialog.SetFilename(fileName.GetFullName());
         fileDialog.m_file_bom = file_bom;

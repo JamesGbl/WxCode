@@ -43,12 +43,12 @@ public:
 
     wxFileName GetFilename() const
     { 
-        return wxSTEditorRefData::GetFilename();
+        return m_fileName;
     }
 
     virtual void SetFilename(const wxFileName& fileName, bool notifyViews = false)
     {
-        wxSTEditorRefData::SetFilename(fileName, notifyViews);
+        m_fileName = fileName;
         wxDocument::SetFilename(fileName.GetFullPath(), notifyViews);
     }
     virtual void Modify(bool);

@@ -78,6 +78,7 @@ STEDIT_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steshell.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.o
 STEDIT_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -102,6 +103,7 @@ STEDIT_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steshell.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.o
 WXSTEDIT_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -327,6 +329,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.o: ../src/st
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.o: ../src/stestyls.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.o: ../src/stetree.cpp
+	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.o: ../src/wxext.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -379,6 +384,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.o: ../src/st
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.o: ../src/stestyls.cpp
+	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.o: ../src/stetree.cpp
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.o: ../src/wxext.cpp

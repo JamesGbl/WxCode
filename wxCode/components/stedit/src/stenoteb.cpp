@@ -772,7 +772,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_,
         wxSTEditorFileDialog fileDialog( this, _("Open file into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
-                                 wxFD_DEFAULT_STYLE_OPEN);
+                                 wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
         fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)
@@ -830,7 +830,7 @@ bool wxSTEditorNotebook::LoadFiles( wxArrayString *filePaths_,
         wxSTEditorFileDialog fileDialog( this, _("Open file(s) into new notebook page"),
                                  GetOptions().GetDefaultFilePath(),
                                  extensions,
-                                 wxFD_DEFAULT_STYLE_OPEN | wxFD_MULTIPLE);
+                                 wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE);
 
         fileDialog.m_encoding = encoding;
         if (fileDialog.ShowModal() == wxID_OK)

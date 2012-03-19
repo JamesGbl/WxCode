@@ -96,10 +96,12 @@ STEDIT_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steshell.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stesplit.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stestyls.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stetree.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_wxext.o
 STEDIT_LIB_HEADERS =  \
 	include/wx/stedit/pairarr.h \
 	include/wx/stedit/setup0.h \
+	include/wx/stedit/setup.h \
 	include/wx/stedit/steart.h \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
@@ -115,7 +117,9 @@ STEDIT_LIB_HEADERS =  \
 	include/wx/stedit/steprint.h \
 	include/wx/stedit/steshell.h \
 	include/wx/stedit/stesplit.h \
-	include/wx/stedit/stestyls.h
+	include/wx/stedit/stestyls.h \
+	include/wx/stedit/stetree.h \
+	src/wxext.h
 STEDIT_DLL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DWXMAKINGDLL_STEDIT \
 	-I$(WXWIN)/contrib/include -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
@@ -137,10 +141,12 @@ STEDIT_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steshell.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stesplit.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stestyls.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stetree.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_wxext.o
 STEDIT_DLL_HEADERS =  \
 	include/wx/stedit/pairarr.h \
 	include/wx/stedit/setup0.h \
+	include/wx/stedit/setup.h \
 	include/wx/stedit/steart.h \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
@@ -156,7 +162,9 @@ STEDIT_DLL_HEADERS =  \
 	include/wx/stedit/steprint.h \
 	include/wx/stedit/steshell.h \
 	include/wx/stedit/stesplit.h \
-	include/wx/stedit/stestyls.h
+	include/wx/stedit/stestyls.h \
+	include/wx/stedit/stetree.h \
+	src/wxext.h
 WXSTEDIT_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include \
 	-I$(WXWIN)/contrib/include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
 	$(CPPFLAGS) $(CXXFLAGS)
@@ -417,6 +425,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stesplit.o: ../src/stesplit.c
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stestyls.o: ../src/stestyls.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stetree.o: ../src/stetree.cpp
+	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_wxext.o: ../src/wxext.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -469,6 +480,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stesplit.o: ../src/stesplit.c
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stestyls.o: ../src/stestyls.cpp
+	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stetree.o: ../src/stetree.cpp
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_wxext.o: ../src/wxext.cpp

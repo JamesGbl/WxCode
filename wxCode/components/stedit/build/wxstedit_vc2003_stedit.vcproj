@@ -2245,6 +2245,9 @@
 				RelativePath="..\src\stestyls.cpp">
 			</File>
 			<File
+				RelativePath="..\src\stetree.cpp">
+			</File>
+			<File
 				RelativePath="..\src\wxext.cpp">
 			</File>
 		</Filter>
@@ -2254,6 +2257,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\include\wx\stedit\pairarr.h">
+			</File>
+			<File
+				RelativePath="..\include\wx\stedit\setup.h">
 			</File>
 			<File
 				RelativePath="..\include\wx\stedit\setup0.h">
@@ -2305,6 +2311,12 @@
 			</File>
 			<File
 				RelativePath="..\include\wx\stedit\stestyls.h">
+			</File>
+			<File
+				RelativePath="..\include\wx\stedit\stetree.h">
+			</File>
+			<File
+				RelativePath="..\src\wxext.h">
 			</File>
 		</Filter>
 	</Files>

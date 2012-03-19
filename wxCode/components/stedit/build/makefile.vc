@@ -87,6 +87,7 @@ STEDIT_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steshell.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.obj
 STEDIT_DLL_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
@@ -115,6 +116,7 @@ STEDIT_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steshell.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.obj
 WXSTEDIT_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
@@ -387,6 +389,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.obj: ..\src\s
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.obj: ..\src\stestyls.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\stestyls.cpp
 
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.obj: ..\src\stetree.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\stetree.cpp
+
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.obj: ..\src\wxext.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\wxext.cpp
 
@@ -440,6 +445,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.obj: ..\src\s
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.obj: ..\src\stestyls.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\stestyls.cpp
+
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.obj: ..\src\stetree.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\stetree.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.obj: ..\src\wxext.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\wxext.cpp

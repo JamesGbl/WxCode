@@ -220,6 +220,7 @@ STEDIT_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steshell.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.obj
 STEDIT_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
@@ -245,6 +246,7 @@ STEDIT_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steshell.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.obj
 WXSTEDIT_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
@@ -387,6 +389,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stesplit.obj :  .AUTO
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stestyls.obj :  .AUTODEPEND ..\src\stestyls.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stetree.obj :  .AUTODEPEND ..\src\stetree.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_wxext.obj :  .AUTODEPEND ..\src\wxext.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
 
@@ -439,6 +444,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stesplit.obj :  .AUTO
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stestyls.obj :  .AUTODEPEND ..\src\stestyls.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stetree.obj :  .AUTODEPEND ..\src\stetree.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_wxext.obj :  .AUTODEPEND ..\src\wxext.cpp

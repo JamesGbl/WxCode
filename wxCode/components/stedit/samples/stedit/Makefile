@@ -34,9 +34,6 @@ else
 endif
 
 
-
-
-
 # ----------------------------------------------------------------------------
 # Settings for the stedit library
 
@@ -47,7 +44,7 @@ WXSTEDIT_LIBNAME = $(WXBASENAME)_stedit-$(WXRELEASE)
 WXSTEDIT_LIBNAME := $(patsubst wx_%,wxcode_%,$(WXSTEDIT_LIBNAME))
 
 LIBVERSION_CURRENT  = 1
-LIBVERSION_REVISION = 4
+LIBVERSION_REVISION = 6
 LIBVERSION_AGE      = 0
 
 TARGET_LIBNAME = lib$(WXSTEDIT_LIBNAME)
@@ -94,11 +91,11 @@ stedit_lib :
 	@(cd ../../src && $(MAKE))
 
 # wxstedit program using shared stedit.so library
-wxstedit: $(OBJECTS) stedit_lib
+wxstedit: stedit_lib $(OBJECTS)
 	$(CXX) $(LDFLAGS_EXE) $(WXLIBDIR_RPATH) -Xlinker -rpath $(WXSTEDIT_LIBDIR_ABS) -o $@ $(OBJECTS) $(APPEXTRALIBS) -L${WXSTEDIT_LIBDIR} -l$(WXSTEDIT_LIBNAME) $(LDLIBS)
 
 # wxstedit program using static stedit.a library
-wxstedit-static: $(OBJECTS) stedit_lib
+wxstedit-static: stedit_lib $(OBJECTS)
 	$(CXX) $(LDFLAGS_EXE) $(WXLIBDIR_RPATH) -o $@ $(PROGRAM).o $(APPEXTRALIBS) $(TARGET_LIB_STATIC) $(LDLIBS) 
 
 docs:
