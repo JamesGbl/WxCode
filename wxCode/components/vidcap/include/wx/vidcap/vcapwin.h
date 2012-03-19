@@ -351,10 +351,10 @@ public:
     //   VFW - the devices [0..9] are listed in system.ini
     virtual int GetDeviceIndex() { return m_deviceIndex; }
 
-    // Connect to one of the available devices, returns sucess
+    // Connect to one of the available devices, returns success
     //    VFW supports only [0..9]
     virtual bool DeviceConnect(int index) = 0;
-    // disconnect from the device, returns sucess
+    // disconnect from the device, returns success
     virtual bool DeviceDisconnect() = 0;
 
     // ----------------------------------------------------------------------
@@ -410,7 +410,7 @@ public:
     virtual wxSize GetMinImageSize() { return m_minImageSize; }
     virtual wxSize GetMaxImageSize() { return m_maxImageSize; }
 
-    // get the video format characteristics, returns sucess
+    // get the video format characteristics, returns success
     //   format is a 4 character string, "UYVY" or whatever comes out
     virtual bool GetVideoFormat( int *width, int *height, int *bpp, FOURCC *fourcc ) = 0;
 
@@ -421,7 +421,7 @@ public:
     // Known culprits - Kensington
     // No problem - Pinnacle (bt878)
     //***********************************************************************
-    // attempt to set the video format the device puts out, returns sucess
+    // attempt to set the video format the device puts out, returns success
     //  -1 for width/height/bpp and format=-1 uses current value
     //  FOURCC is the 4 chararacter code "UYUV" or whatever
     virtual bool SetVideoFormat( int width, int height, int bpp, FOURCC fourcc ) = 0;
@@ -440,7 +440,7 @@ public:
     // Capture Preview and Overlay
     // ----------------------------------------------------------------------
 
-    // turn software previewing on/off, returns sucess, on = false turns both off
+    // turn software previewing on/off, returns success, on = false turns both off
     //   VFW - wxpreview = false uses the VFW preview capabilities
     //         wxpreview = true, uses the callback to decompress frames to m_wximage
     //   V4L - wxpreview is ignored as it always uses wxImages
@@ -452,14 +452,14 @@ public:
     // true if previewing using wxImages & OnPaint
     virtual bool IsPreviewingwxImage() const { return m_preview_wximage; }
 
-    // scale preview window to window's size (no scrollbars), returns sucess
+    // scale preview window to window's size (no scrollbars), returns success
     // if overlaying then just center the window
     virtual bool PreviewScaled(bool fit_window) { m_previewscaled = fit_window; return true; }
 
     // video is scaled to the capture window size Preview, or centered Overlay
     virtual bool IsPreviewScaled() { return m_previewscaled; }
 
-    // set the number of milliseconds per frames to *try* to capture at, returns sucess
+    // set the number of milliseconds per frames to *try* to capture at, returns success
     // this has NOTHING to do with how many you'll actually get
     // if > than hardware capability, default = 66ms or 15fps
     // bool SetPreviewRateMS( unsigned int msperframe = 66 );
@@ -479,7 +479,7 @@ public:
 
     // device supports hardware video overlay
     virtual bool HasOverlay() { return m_has_overlay; }
-    // use video card hardware overlay, ie. pci framegrabbers, returns sucess
+    // use video card hardware overlay, ie. pci framegrabbers, returns success
     // automatically turns off preview if necessary
     virtual bool Overlay(bool on) = 0;
     // true if displaying using hardware video overlay method
@@ -489,11 +489,11 @@ public:
     // Capture single frames, take snapshots of streaming video
     // ----------------------------------------------------------------------
 
-    // single stop action snapshot to window, stops previewing, returns sucess
+    // single stop action snapshot to window, stops previewing, returns success
     virtual bool SnapshotToWindow() = 0;
-    // capture a single frame to the clipboard, returns sucess
+    // capture a single frame to the clipboard, returns success
     virtual bool SnapshotToClipboard() = 0;
-    // single snapshot of video, save it as a DIB (.BMP) file, returns sucess
+    // single snapshot of video, save it as a DIB (.BMP) file, returns success
     virtual bool SnapshotToBMP( const wxString &filename ) = 0;
     // take a single snapshot and fill this image, doesn't need to be Created
     virtual bool SnapshotTowxImage( wxImage &image) = 0;

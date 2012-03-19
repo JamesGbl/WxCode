@@ -781,7 +781,7 @@ public:
     // ------------------------------------------------------------------------
 
     // Find a curve at pt, in rect of size +- dxdyPt, starting with active curve
-    // return sucess, setting curve_index, data_index if data curve, and if
+    // return success, setting curve_index, data_index if data curve, and if
     // curvePt fills the exact point in the curve.
     bool FindCurve(const wxPoint2DDouble &pt, const wxPoint2DDouble &dxdyPt,
                    int &curve_index, int &data_index, wxPoint2DDouble *curvePt = NULL) const;

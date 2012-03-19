@@ -437,7 +437,7 @@ WXDLLIMPEXP_PLOTCTRL wxPlotData wxClipboardGetPlotData();
 // Set the plotdata curve into the wxClipboard, actually just sets a
 // wxPlotDataObject which is a string containing wxNow. The plotdata is not
 // actually copied to the clipboard since no other program could use it anyway.
-// returns sucess
+// returns success
 WXDLLIMPEXP_PLOTCTRL bool wxClipboardSetPlotData(const wxPlotData& plotData);
 
 // ----------------------------------------------------------------------------

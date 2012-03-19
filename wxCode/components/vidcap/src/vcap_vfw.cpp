@@ -1585,7 +1585,7 @@ void wxVideoCaptureWindowVFW::SetChunkGranularity( unsigned int chunkbytes )
 }
 
 
-// record a video segment, exit by setting up capture parameters, returns sucess
+// record a video segment, exit by setting up capture parameters, returns success
 bool wxVideoCaptureWindowVFW::CaptureVideoToFile()
 {
     if (!HasAudioHardware()) SetCaptureAudio(false);
@@ -1661,7 +1661,7 @@ bool wxVideoCaptureWindowVFW::SetCaptureFilename(const wxString &capfilename)
     return (0 != capFileSetCaptureFile(m_hWndC, capfilename.fn_str()));
 }
 
-// Get the capture filename from MSW AVIcap window, returns sucess
+// Get the capture filename from MSW AVIcap window, returns success
 // internal use only
 bool wxVideoCaptureWindowVFW::VFW_GetCaptureFilename()
 {

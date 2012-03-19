@@ -62,7 +62,7 @@ set( DOXYGEN_STRIP_FROM_PATH     "${wxVidCap_ROOT_DIR}/include" )
 set( DOXYGEN_STRIP_FROM_INC_PATH "${wxVidCap_ROOT_DIR}/include" )
 set( DOXYGEN_INPUT               "${wxVidCap_ROOT_DIR}/include" )
 set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
-set( DOXYGEN_PREDEFINED          "WXDLLIMPEXP_DATA_VIDCAP(x)=x")
+set( DOXYGEN_PREDEFINED          "${DOXYGEN_PREDEFINED_WXWIDGETS}  WXDLLIMPEXP_DATA_VIDCAP(x)=x")
 
 ADD_DOXYGEN( wxVidCap_doxygen
              ${wxVidCap_ROOT_DIR}/build/CMake-doxygen.in

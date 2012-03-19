@@ -91,7 +91,7 @@ set( DOXYGEN_STRIP_FROM_PATH     "${wxPlotCtrl_ROOT_DIR}/include" )
 set( DOXYGEN_STRIP_FROM_INC_PATH "${wxPlotCtrl_ROOT_DIR}/include" )
 set( DOXYGEN_INPUT               "${wxPlotCtrl_ROOT_DIR}/include" )
 set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
-set( DOXYGEN_PREDEFINED          "WXDLLIMPEXP_DATA_PLOTCTRL(x)=x")
+set( DOXYGEN_PREDEFINED          "${DOXYGEN_PREDEFINED_WXWIDGETS}  WXDLLIMPEXP_DATA_PLOTCTRL(x)=x")
 
 ADD_DOXYGEN( wxPlotCtrl_doxygen
              ${wxPlotCtrl_ROOT_DIR}/build/CMake-doxygen.in

@@ -141,11 +141,11 @@ public:
     // get how many frames we've taken, reset to -1 when closed
     int GetCapturedFramesToFileCount() { return m_capsingleframecount; }
 
-    // open an AVI file to capture single frames into it, returns sucess
+    // open an AVI file to capture single frames into it, returns success
     bool CaptureSingleFramesToFileOpen();
-    // capture single frames into the AVI file, returns sucess
+    // capture single frames into the AVI file, returns success
     bool CaptureSingleFramesToFile();
-    // close the AVI file when done, returns sucess
+    // close the AVI file when done, returns success
     bool CaptureSingleFramesToFileClose();
 
     // a simple dialog to capture single frames to an AVI file
@@ -156,7 +156,7 @@ public:
     // Capture streaming video to an AVI file
     // ----------------------------------------------------------------------
 
-    // record video segment, returns sucess
+    // record video segment, returns success
     // starting/stopping controlled by setting up capture parameters
     bool CaptureVideoToFile();
 
@@ -271,23 +271,23 @@ public:
     bool CaptureFileExists();
     // returns the name of the file to capture to AVI file
     wxString GetCaptureFilename();
-    // set the name of the file to capture AVI file to, returns sucess
+    // set the name of the file to capture AVI file to, returns success
     //  doesn't create/open/allocate
     bool SetCaptureFilename(const wxString &capfilename);
-    // Get the capture filename from MSW AVIcap window, returns sucess
+    // Get the capture filename from MSW AVIcap window, returns success
     //  internal use only
     bool VFW_GetCaptureFilename();
-    // dialog to ask the user what capture filename to use, returns sucess
+    // dialog to ask the user what capture filename to use, returns success
     bool SetCaptureFilenameDialog();
 
-    // preallocate space for the capture file, returns sucess
+    // preallocate space for the capture file, returns success
     // this is to get a fixed "contiguous" file to capture to,
     // however the user must run a defrag program to guarantee it's contiguous
     // if the captured data is smaller, then the rest of the file is just junk
     // if set to zero or smaller than the actual capture size or if the file
     // doesn't exist there be a performance loss...
     bool SetCaptureFilesizeMB(unsigned int filesizeMB=0 );
-    // dialog to preallocate space for video capture, returns sucess
+    // dialog to preallocate space for video capture, returns success
     bool SetCaptureFileSizeDialog();
 
     // extract actual data from the SetCaptureFilename(), save it to new file
@@ -315,7 +315,7 @@ public:
                          int bitspersample = 8,
                          long int samplespersecond = 11025 );
 
-    // get the audio format, see SetAudioFormat, returns sucess
+    // get the audio format, see SetAudioFormat, returns success
     bool GetAudioFormat( int *channels ,
                          int *bitspersample ,
                          long int *samplespersecond );
@@ -414,7 +414,7 @@ protected:
     // Platform dependent video conversion
     // ----------------------------------------------------------------------
 
-    // decompress a video frame into the m_wximage member variable, returns sucess
+    // decompress a video frame into the m_wximage member variable, returns success
     // Device Dependent Bitmap -> 24bpp Device Independent Bitmap -> m_wximage
     bool VFW_DDBtoDIB(LPVIDEOHDR lpVHdr);
 

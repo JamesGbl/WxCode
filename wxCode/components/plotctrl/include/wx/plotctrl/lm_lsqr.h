@@ -90,11 +90,11 @@ public:
     LM_LeastSquare();
     virtual ~LM_LeastSquare() { Destroy(); }
 
-    // Initialize everything, returns sucess, on failure GetResultMessage()
+    // Initialize everything, returns success, on failure GetResultMessage()
     //   you may call Create and then Fit on a single instance on this
     //   as many times as you like.
     bool Create(const wxPlotData &plotData, const wxPlotFunction &plotFunc);
-    // Has this been sucessfully created and is ready to be Fit()
+    // Has this been successfully created and is ready to be Fit()
     bool Ok() const { return m_ok; }
 
     // After creation fit the plotFunc's vars to the plotData, returns # iterations

@@ -62,7 +62,7 @@ set( DOXYGEN_STRIP_FROM_PATH     "${wxThings_ROOT_DIR}/include" )
 set( DOXYGEN_STRIP_FROM_INC_PATH "${wxThings_ROOT_DIR}/include" )
 set( DOXYGEN_INPUT               "${wxThings_ROOT_DIR}/include" )
 set( DOXYGEN_FILE_PATTERNS       "*.h *.hpp" )
-set( DOXYGEN_PREDEFINED          "WXDLLIMPEXP_DATA_THINGS(x)=x")
+set( DOXYGEN_PREDEFINED          "${DOXYGEN_PREDEFINED_WXWIDGETS}  WXDLLIMPEXP_DATA_THINGS(x)=x")
 
 ADD_DOXYGEN( wxThings_doxygen
              ${wxThings_ROOT_DIR}/build/CMake-doxygen.in

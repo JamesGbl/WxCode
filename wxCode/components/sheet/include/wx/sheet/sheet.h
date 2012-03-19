@@ -815,9 +815,9 @@ public:
     // ------------------------------------------------------------------------
     // Edit control functions (mostly used internally)
 
-    // enable and show the editor control at the coords, returns sucess, ie. !vetoed
+    // enable and show the editor control at the coords, returns success, ie. !vetoed
     bool EnableCellEditControl( const wxSheetCoords& coords );
-    // hide and disable the editor and save the value if save_value, returns sucess, ie. !vetoed
+    // hide and disable the editor and save the value if save_value, returns success, ie. !vetoed
     bool DisableCellEditControl( bool save_value );
     // is this cell valid and editable
     bool CanEnableCellControl(const wxSheetCoords& coords) const;
@@ -829,10 +829,10 @@ public:
     // Create and show the appropriate editor at the EnableCellEditControl() coords
     //  this is called internally by EnableCellEditControl(), but if you call
     //  HideCellEditControl() and if IsCellEditControlCreated() then you can reshow
-    //  it with this, returns sucess
+    //  it with this, returns success
     bool ShowCellEditControl();
     // Hide the editor, doesn't destroy it (use DisableCellEditControl)
-    //  check if IsCellEditControlShown() first, returns sucess
+    //  check if IsCellEditControlShown() first, returns success
     bool HideCellEditControl();
     // Save the value of the editor, check IsCellEditControlEnabled() first
     void SaveEditControlValue();

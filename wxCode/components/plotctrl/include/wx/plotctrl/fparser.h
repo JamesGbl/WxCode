@@ -99,10 +99,10 @@ public:
                      FunctionPtr, unsigned paramsAmount);
     bool AddFunction(const wxString& name, wxFunctionParser&);
 
-    // Try to optimize the parser, use after sucessful call to Parse
+    // Try to optimize the parser, use after successful call to Parse
     void Optimize();
 
-    // Ok is true after a sucessful call to Parse
+    // Ok is true after a successful call to Parse
     bool Ok() const { return m_ok; }
     // Get the number of comma delimited variables sent to Parse
     int GetNumberVariables() const;

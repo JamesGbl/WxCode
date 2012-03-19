@@ -42,7 +42,7 @@ public:
 
     virtual ~wxPlotFunction() {}
 
-    // Initialize curve, returns -1 on sucess and errormsg is wxEmptyString.
+    // Initialize curve, returns -1 on success and errormsg is wxEmptyString.
     //   On error, the errormsg contains a message and the character location
     //   in the 'function' string where the error occurred is returned.
     //   Check if errormsg != wxEmptyString, or curve.Ok() not the returned int
@@ -110,7 +110,7 @@ private :
 WXDLLIMPEXP_PLOTCTRL wxPlotFunction wxClipboardGetPlotFunction();
 // Set the plot function curve into the clipboard. Copies function and vars string
 // separated by a ';' as a text object, use wxString::Before/AfterLast(wxT(';')).
-// returns sucess
+// returns success
 WXDLLIMPEXP_PLOTCTRL bool wxClipboardSetPlotFunction(const wxPlotFunction& plotFunction);
 
 #endif // wxUSE_DATAOBJ && wxUSE_CLIPBOARD
