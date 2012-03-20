@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stelangs.h
+/// @brief wxSTEditorLangs, lexer information.
+
 #ifndef _STELANGS_H_
 #define _STELANGS_H_
 

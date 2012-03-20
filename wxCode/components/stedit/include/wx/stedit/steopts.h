@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steopts.h
+/// @brief wxSTEditorOptions, options for creation and behavior of wxSTEditor* classes.
+
 #ifndef _STEOPTS_H_
 #define _STEOPTS_H_
 

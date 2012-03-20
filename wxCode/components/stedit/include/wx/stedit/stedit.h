@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stedit.h
+/// @brief wxSTEditor, a wxStyledTextCtrl derived class and the wxSTEditorEvent class.
+
 #ifndef _STEDIT_H_
 #define _STEDIT_H_
 

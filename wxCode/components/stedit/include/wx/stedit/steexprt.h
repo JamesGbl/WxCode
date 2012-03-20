@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steexprt.h
+/// @brief wxSTEditorExporter and wxSTEditorExportDialog to save to html, pdf, rtf, tex, and xml.
+
 #ifndef _STEEXPORT_H_
 #define _STEEXPORT_H_
 

@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stesplit.h
+/// @brief wxSTEditorSplitter, a wxSplitter that manages and can split a wxSTEditor.
+
 #ifndef _STESPLIT_H_
 #define _STESPLIT_H_
 

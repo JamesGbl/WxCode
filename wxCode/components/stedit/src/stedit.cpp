@@ -3093,7 +3093,8 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE,        CanPaste());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW,  IsClipboardTextAvailable());
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, CanPaste());
-    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR,        !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COMPLETEWORD, !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CLEAR,          !readonly);
 
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_CUT,       !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_LINE_DELETE,    !readonly);
@@ -3121,6 +3122,7 @@ void wxSTEditor::UpdateItems(wxMenu *menu, wxMenuBar *menuBar, wxToolBar *toolBa
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_SPACES_TO_TABS,  !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_CONVERT_EOL,     !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_TRAILING_WHITESPACE, !readonly);
+    STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_REMOVE_CHARSAROUND,  !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_INSERT_TEXT,     !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_INSERT_DATETIME, !readonly);
     STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COLUMNIZE,       !readonly && sel_lines);
@@ -3377,6 +3379,9 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         // Bookmark menu items ------------------------------------------------
         case ID_STE_BOOKMARKS :
         {
+            wxSTEditorBookmarkDialog(this, _("Windows"));
+            return true;
+
             // TODO : make a full dialog to add and delete markers and work with notebook
             wxArrayString bookmarks;
             int current_line = (int)GetCurrentLine();
@@ -3389,7 +3394,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
                 if (labs(current_line - line) < best_marker_distance)
                     best_marker = (int)bookmarks.GetCount();
 
-                wxString s(wxString::Format(wxT("%-5d : "), line+1) + GetLine(line));
+                wxString s(wxString::Format(wxT("%-5d : "), line+1) + GetLineText(line));
                 if (s.Length() > 100) s = s.Mid(0, 100) + wxT("...");
                 bookmarks.Add(s);
                 line = MarkerNext(line+1, 1<<STE_MARKER_BOOKMARK);

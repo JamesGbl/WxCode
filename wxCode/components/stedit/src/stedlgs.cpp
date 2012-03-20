@@ -1852,6 +1852,276 @@ void wxSTEditorWindowsDialog::OnButton(wxCommandEvent& event)
 }
 
 //-----------------------------------------------------------------------------
+// wxSTEditorBookmarkDialog
+//-----------------------------------------------------------------------------
+IMPLEMENT_ABSTRACT_CLASS(wxSTEditorBookmarkDialog, wxDialog);
+
+BEGIN_EVENT_TABLE(wxSTEditorBookmarkDialog, wxDialog)
+    EVT_TREE_ITEM_ACTIVATED (wxID_ANY, wxSTEditorBookmarkDialog::OnTreeCtrl)
+    EVT_TREE_SEL_CHANGED    (wxID_ANY, wxSTEditorBookmarkDialog::OnTreeCtrl)
+
+    EVT_BUTTON(ID_STEDLGS_BOOKMARKS_GOTO_BUTTON,   wxSTEditorBookmarkDialog::OnButton)
+    EVT_BUTTON(ID_STEDLGS_BOOKMARKS_DELETE_BUTTON, wxSTEditorBookmarkDialog::OnButton)
+END_EVENT_TABLE()
+
+wxSTEditorBookmarkDialog::wxSTEditorBookmarkDialog(wxWindow *win,
+                                                   const wxString& title,
+                                                   long style)
+                         :wxDialog()
+{
+    m_notebook = NULL;
+    m_editor   = NULL;
+    m_treeCtrl = NULL;
+
+    wxWindow* parent = win;
+
+    if (wxDynamicCast(win, wxSTEditor) != NULL)
+    {
+        m_editor = wxDynamicCast(win, wxSTEditor);
+
+        wxWindow *p = win->GetParent();
+        while (p)
+        {
+            if (wxDynamicCast(p, wxSTEditorNotebook) != NULL)
+            {
+                m_notebook = wxDynamicCast(p, wxSTEditorNotebook);
+                parent = m_notebook;
+                break;
+            }
+
+            p = p->GetParent();
+        }
+    }
+    else if (wxDynamicCast(win, wxSTEditorNotebook) != NULL)
+    {
+        m_notebook = wxDynamicCast(win, wxSTEditorNotebook);
+    }
+
+    if (!wxDialog::Create(parent, wxID_ANY, title,
+                          wxDefaultPosition, wxSize(500, 400), style))
+        return;
+
+    wxCHECK_RET(m_notebook || m_editor, wxT("Invalid parent"));
+
+    wxSTEditorBookmarkSizer(this, true, true);
+
+    m_treeCtrl = wxStaticCast(FindWindow(ID_STEDLGS_BOOKMARKS_TREECTRL), wxTreeCtrl);
+
+    wxImageList* imageList = new wxImageList(16, 16, true, 2);
+    imageList->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE,  wxART_MENU, wxSize(16, 16)));
+    imageList->Add(wxArtProvider::GetBitmap(wxART_ADD_BOOKMARK, wxART_MENU, wxSize(16, 16)));
+    m_treeCtrl->AssignImageList(imageList);
+
+    UpdateTreeCtrl();
+    //m_treeCtrl->SetSelection(m_notebook->GetSelection());
+    UpdateButtons();
+    Centre();
+    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+    ShowModal();
+}
+
+void wxSTEditorBookmarkDialog::UpdateTreeCtrl()
+{
+    m_treeCtrl->DeleteAllItems();
+
+    wxTreeItemId rootId = m_treeCtrl->AddRoot(wxT("root"));
+
+    int n, count = m_notebook ? (int)m_notebook->GetPageCount() : 0;
+
+    for (n = 0; n < count; n++)
+    {
+        wxSTEditor* editor = m_notebook ? m_notebook->GetEditor(n) : m_editor;
+        if (editor == NULL) continue;
+
+        int line = editor->MarkerNext(0, 1<<STE_MARKER_BOOKMARK);
+        wxTreeItemId editorId;
+
+        while (line != -1)
+        {
+            if (!editorId)
+            {
+                wxString s(wxString::Format(wxT("%-5d : "), n+1) + editor->GetFileName().GetFullPath());
+                editorId = m_treeCtrl->AppendItem(rootId, s, 0, -1, NULL);
+                m_treeCtrl->SetItemTextColour(editorId, *wxBLUE);
+            }
+
+            wxString s(wxString::Format(wxT("%-5d : "), line+1) + editor->GetLineText(line));
+            if (s.Length() > 100) s = s.Mid(0, 100) + wxT("...");
+            m_treeCtrl->AppendItem(editorId, s, 1, -1, NULL);
+
+            line = editor->MarkerNext(line+1, 1<<STE_MARKER_BOOKMARK);
+        }
+    }
+
+    m_treeCtrl->ExpandAll();
+}
+
+bool wxSTEditorBookmarkDialog::GetItemInfo(const wxTreeItemId& id,
+                                           long& notebook_page, long& bookmark_line)
+{
+    notebook_page = -1;
+    bookmark_line = -1;
+    wxTreeItemId editorId;
+
+    if (id)
+    {
+        editorId = m_treeCtrl->GetItemParent(id);
+
+        // This is a file, not a bookmark
+        if (editorId != m_treeCtrl->GetRootItem())
+        {
+            if ( !m_treeCtrl->GetItemText(editorId).BeforeFirst(wxT(' ')).Trim(false).ToLong(&notebook_page) ||
+                 !m_treeCtrl->GetItemText(id).BeforeFirst(wxT(' ')).Trim(false).ToLong(&bookmark_line) )
+            {
+                notebook_page = -1;
+                bookmark_line = -1;
+            }
+            else
+            {
+                notebook_page--; // make 0 based
+                bookmark_line--;
+            }
+        }
+    }
+
+    return (bookmark_line != -1);
+}
+
+void wxSTEditorBookmarkDialog::UpdateButtons()
+{
+    wxTreeItemId id;
+    wxArrayTreeItemIds selectedIds;
+    size_t count = m_treeCtrl->GetSelections(selectedIds);
+
+    if (count == 1)
+        id = selectedIds[0];
+
+    // is this a filename or a bookmark
+    if (id && (m_treeCtrl->GetItemParent(id) == m_treeCtrl->GetRootItem()))
+        id = wxTreeItemId();
+
+    bool can_delete = false;
+    for (size_t n = 0; n < count; ++n)
+    {
+        long notebook_page = -1;
+        long bookmark_line = -1;
+        GetItemInfo(selectedIds[n], notebook_page, bookmark_line);
+        if (bookmark_line != -1)
+        {
+            can_delete = true;
+            break;
+        }
+    }
+
+    FindWindow(ID_STEDLGS_BOOKMARKS_GOTO_BUTTON)->Enable((bool)id);
+    FindWindow(ID_STEDLGS_BOOKMARKS_DELETE_BUTTON)->Enable(can_delete);
+}
+
+void wxSTEditorBookmarkDialog::OnTreeCtrl(wxTreeEvent& event)
+{
+    wxTreeItemId id;
+    long notebook_page = -1;
+    long bookmark_line = -1;
+
+    wxArrayTreeItemIds selectedIds;
+    size_t count = m_treeCtrl->GetSelections(selectedIds);
+
+    if (count == 1)
+        GetItemInfo(selectedIds[0], notebook_page, bookmark_line);
+
+    // activate selection and close dialog
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_ACTIVATED)
+    {
+        wxCommandEvent buttonEvent(wxEVT_COMMAND_BUTTON_CLICKED,
+                                   ID_STEDLGS_BOOKMARKS_GOTO_BUTTON);
+        OnButton(buttonEvent);
+    }
+    else if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGED)
+    {
+        if (bookmark_line != -1)
+        {
+            if (m_notebook)
+            {
+                m_notebook->SetSelection(notebook_page);
+                m_notebook->GetEditor(notebook_page)->GotoLine(bookmark_line);
+            }
+            else if (m_editor)
+                m_editor->GotoLine(bookmark_line);
+        }
+    }
+
+    UpdateButtons();
+    event.Skip();
+}
+
+void wxSTEditorBookmarkDialog::OnButton(wxCommandEvent& event)
+{
+    wxTreeItemId id;
+    long notebook_page = -1;
+    long bookmark_line = -1;
+
+    wxArrayTreeItemIds selectedIds;
+    size_t count = m_treeCtrl->GetSelections(selectedIds);
+
+    if (count > 0)
+        GetItemInfo(selectedIds[0], notebook_page, bookmark_line);
+
+    // shouldn't get here, but just in case reset buttons
+    if (count == 0)
+    {
+        UpdateButtons();
+        return;
+    }
+
+    switch (event.GetId())
+    {
+        case ID_STEDLGS_BOOKMARKS_GOTO_BUTTON :
+        {
+            if (bookmark_line != -1)
+            {
+                if (m_notebook)
+                {
+                    m_notebook->SetSelection(notebook_page);
+                    m_notebook->GetEditor(notebook_page)->GotoLine(bookmark_line);
+                }
+                else if (m_editor)
+                    m_editor->GotoLine(bookmark_line);
+
+                EndModal(wxID_OK);
+            }
+            break;
+        }
+        case ID_STEDLGS_BOOKMARKS_DELETE_BUTTON :
+        {
+            for (size_t n = 0; n < count; ++n)
+            {
+                id = selectedIds[n];
+                GetItemInfo(id, notebook_page, bookmark_line);
+
+                if (bookmark_line == -1) continue;
+
+                if (m_notebook)
+                {
+                    m_notebook->GetEditor(notebook_page)->MarkerDelete(bookmark_line, STE_MARKER_BOOKMARK);
+                }
+                else if (m_editor)
+                    m_editor->MarkerDelete(bookmark_line, STE_MARKER_BOOKMARK);
+
+                if (m_treeCtrl->GetChildrenCount(m_treeCtrl->GetItemParent(id)) > 1)
+                    m_treeCtrl->Delete(id);
+                else
+                    m_treeCtrl->Delete(m_treeCtrl->GetItemParent(id));
+            }
+
+            break;
+        }
+        default : break;
+    }
+
+    UpdateButtons();
+}
+
+//-----------------------------------------------------------------------------
 // wxSTEditorInsertTextDialog
 //-----------------------------------------------------------------------------
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorInsertTextDialog, wxDialog);

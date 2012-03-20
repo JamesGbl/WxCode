@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /// @file setup0.h
-/// This file is distributed as setup0.h and should be copied to setup.h.
+/// @brief This file is distributed as wx/stedit/setup0.h and should be copied to wx/stedit/setup.h.
 /// You may modify the copied setup.h file to control the behavior of the
 /// wxSTEditor or override the default values of the #defines, where allowed,
 /// using the compiler flag "-D STE_USE_HTML_PRINT=1" (for example).

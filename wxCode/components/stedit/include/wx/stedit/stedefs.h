@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stedefs.h
+/// @brief wxWindowIds, pref/style,language enums, and defines.
+
 #ifndef _STEDEFS_H_
 #define _STEDEFS_H_
 

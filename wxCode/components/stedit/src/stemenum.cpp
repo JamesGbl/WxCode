@@ -1160,6 +1160,7 @@ void wxSTEditorMenuManager::EnableEditorItems(bool enable, wxMenu *menu,
         ID_STE_SPACES_TO_TABS,
         ID_STE_CONVERT_EOL,
         ID_STE_TRAILING_WHITESPACE,
+        ID_STE_REMOVE_CHARSAROUND,
 
         ID_STE_FOLDS_TOGGLE_CURRENT,
         ID_STE_FOLDS_COLLAPSE_LEVEL,

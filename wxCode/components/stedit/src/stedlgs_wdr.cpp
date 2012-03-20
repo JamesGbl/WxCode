@@ -1085,7 +1085,7 @@ wxSizer *wxSTEditorWindowsSizer( wxWindow *parent, bool call_fit, bool set_sizer
         _("Item2"),
         _("Item3")
     };
-    wxListBox *item4 = new wxListBox( parent, ID_STEDLG_WINDOWS_LISTBOX, wxDefaultPosition, wxSize(300,200), 3, strs4, wxLB_EXTENDED|wxLB_HSCROLL );
+    wxListBox *item4 = new wxListBox( parent, ID_STEDLG_WINDOWS_LISTBOX, wxDefaultPosition, wxSize(400,400), 3, strs4, wxLB_EXTENDED );
     item3->Add( item4, 1, wxGROW|wxALL, 5 );
 
     wxFlexGridSizer *item5 = new wxFlexGridSizer( 1, 0, 0 );
@@ -1102,7 +1102,7 @@ wxSizer *wxSTEditorWindowsSizer( wxWindow *parent, bool call_fit, bool set_sizer
 
     item5->Add( 20, 20, 0, wxALIGN_CENTER|wxALL, 5 );
 
-    wxButton *item9 = new wxButton( parent, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton *item9 = new wxButton( parent, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     item5->Add( item9, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     item5->AddGrowableRow( 3 );
@@ -1490,6 +1490,53 @@ wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit, bool set_size
     item1->Add( item4, 0, wxALIGN_CENTER|wxALL, 5 );
 
     item0->Add( item1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    if (set_sizer)
+    {
+        parent->SetSizer( item0 );
+        if (call_fit)
+            item0->SetSizeHints( parent );
+    }
+
+    return item0;
+}
+
+wxSizer *wxSTEditorBookmarkSizer( wxWindow *parent, bool call_fit, bool set_sizer )
+{
+    wxBoxSizer *item0 = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticBox *item2 = new wxStaticBox( parent, -1, _("Select Bookmark") );
+    wxStaticBoxSizer *item1 = new wxStaticBoxSizer( item2, wxHORIZONTAL );
+
+    wxFlexGridSizer *item3 = new wxFlexGridSizer( 2, 0, 0 );
+
+    wxTreeCtrl *item4 = new wxTreeCtrl( parent, ID_STEDLGS_BOOKMARKS_TREECTRL, wxDefaultPosition, wxSize(400,400), wxTR_MULTIPLE|wxTR_HAS_BUTTONS|wxTR_LINES_AT_ROOT|wxSUNKEN_BORDER|wxTR_HIDE_ROOT );
+    item3->Add( item4, 1, wxGROW|wxALL, 5 );
+
+    wxFlexGridSizer *item5 = new wxFlexGridSizer( 1, 0, 0 );
+
+    wxButton *item6 = new wxButton( parent, ID_STEDLGS_BOOKMARKS_GOTO_BUTTON, _("&Goto"), wxDefaultPosition, wxDefaultSize, 0 );
+    item5->Add( item6, 0, wxALIGN_CENTER|wxALL, 5 );
+
+    wxButton *item7 = new wxButton( parent, ID_STEDLGS_BOOKMARKS_DELETE_BUTTON, _("&Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+    item5->Add( item7, 0, wxALIGN_CENTER|wxALL, 5 );
+
+    item5->Add( 20, 20, 0, wxALIGN_CENTER|wxALL, 5 );
+
+    wxButton *item8 = new wxButton( parent, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    item5->Add( item8, 0, wxALIGN_CENTER|wxALL, 5 );
+
+    item5->AddGrowableRow( 2 );
+
+    item3->Add( item5, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5 );
+
+    item3->AddGrowableCol( 0 );
+
+    item3->AddGrowableRow( 0 );
+
+    item1->Add( item3, 1, wxGROW|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+    item0->Add( item1, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     if (set_sizer)
     {

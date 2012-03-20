@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steart.h
+/// @brief wxSTEditorArtProvider class and related functions.
+
 #ifndef _STEART_H_
 #define _STEART_H_
 

@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stedlgs.h
+/// @brief Most of the dialogs for prefs, styles, langs, and others.
+
 #ifndef _STEDLGS_H_
 #define _STEDLGS_H_
 
@@ -432,6 +435,39 @@ public:
 private:
     DECLARE_EVENT_TABLE()
     DECLARE_ABSTRACT_CLASS(wxSTEditorWindowsDialog);
+};
+
+//-----------------------------------------------------------------------------
+/// @class wxSTEditorBookmarkDialog
+/// @brief Dialog to manage bookmarks.
+///
+/// The user can goto or delete bookmarks.
+/// The dialog is shown modal and closes itself.
+//-----------------------------------------------------------------------------
+
+class WXDLLIMPEXP_STEDIT wxSTEditorBookmarkDialog : public wxDialog
+{
+public:
+    wxSTEditorBookmarkDialog(wxWindow *win,
+                             const wxString& title = _("Bookmarks"),
+                             long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+    // -----------------------------------------------------------------------
+    // implementation
+
+    bool GetItemInfo(const wxTreeItemId& id, long& notebook_page, long& bookmark_line);
+
+    void UpdateTreeCtrl();
+    void UpdateButtons();
+    void OnTreeCtrl(wxTreeEvent& event);
+    void OnButton(wxCommandEvent& event);
+
+    wxSTEditorNotebook* m_notebook;
+    wxSTEditor* m_editor;
+    wxTreeCtrl* m_treeCtrl;
+
+private:
+    DECLARE_EVENT_TABLE()
+    DECLARE_ABSTRACT_CLASS(wxSTEditorBookmarkDialog);
 };
 
 //-----------------------------------------------------------------------------

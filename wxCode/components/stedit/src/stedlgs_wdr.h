@@ -201,6 +201,11 @@ const int ID_STEFILEOPEN_ENCODING_CHOICE = 20120;
 const int ID_STEFILEOPEN_ENCODING_BOM_CHECKBOX = 20121;
 wxSizer *wxSTEditorFileOpenSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
 
+const int ID_STEDLGS_BOOKMARKS_TREECTRL = 20122;
+const int ID_STEDLGS_BOOKMARKS_GOTO_BUTTON = 20123;
+const int ID_STEDLGS_BOOKMARKS_DELETE_BUTTON = 20124;
+wxSizer *wxSTEditorBookmarkSizer( wxWindow *parent, bool call_fit = true, bool set_sizer = true );
+
 // Declare menubar functions
 
 // Declare toolbar functions

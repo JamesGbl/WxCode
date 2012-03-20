@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steprint.h
+/// @brief wxSTEditorPrintout and printing related classes.
+
 #ifndef _STEPRINT_H_
 #define _STEPRINT_H_
 

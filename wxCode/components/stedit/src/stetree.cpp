@@ -458,14 +458,14 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             if (editor)
             {
                 id = FindOrInsertItem(steTreeItemData->m_treePath, STE_TREECTRL_INSERT);
-                SetItemImage(id, STT_IMAGE_EDITOR);
+                SetItemImage(id, STE_TREECTRL_IMAGE_EDITOR);
                 editor->SetTreeItemData(steTreeItemData);
                 steTreeItemData->m_steRefData = editor->GetSTERefData();
             }
             else
             {
                 id = FindOrInsertItem(steTreeItemData->m_treePath, STE_TREECTRL_FIND_OR_INSERT);
-                SetItemImage(id, STT_IMAGE_OTHER);
+                SetItemImage(id, STE_TREECTRL_IMAGE_OTHER);
             }
 
             // must set new data before deleting old in MSW since it checks old before setting new
@@ -566,11 +566,11 @@ bool wxSTEditorTreeCtrl::DeleteItem(const wxArrayString& treePath, bool delete_e
     return DeleteItem(id, delete_empty, -1) > 0;
 }
 
-int wxSTEditorTreeCtrl::DeleteItem(const wxTreeItemId& id_, bool delete_empty, int levels, const wxTreeItemId& topId)
+int wxSTEditorTreeCtrl::DeleteItem(const wxTreeItemId& id_, bool delete_empty,
+                                   int levels, const wxTreeItemId& topId)
 {
     int n = 0;
     wxTreeItemId id = id_;
-    wxTreeItemId parentId;
     wxTreeItemId rootId = GetRootItem();
 
     if (!id)
@@ -622,7 +622,8 @@ int wxSTEditorTreeCtrl::DeleteItem(const wxTreeItemId& id_, bool delete_empty, i
     return n;
 }
 
-wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath, int find_type)
+wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
+                                                  STE_TreeCtrlFindInsert_Type find_type)
 {
     wxCHECK_MSG(treePath.GetCount() > 0, wxTreeItemId(), wxT("Nothing to insert"));
 
@@ -648,7 +649,7 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
             return wxTreeItemId();
 
         parentId = id = AppendItem(parentId, treePath[n],
-                                   (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                   (n < count-1) ? STE_TREECTRL_IMAGE_FOLDER : -1,
                                    -1, NULL);
         n++;
     }
@@ -662,7 +663,7 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
             {
                 if (find_type == STE_TREECTRL_INSERT)
                     return AppendItem(parentId, treePath[n],
-                                      (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                      (n < count-1) ? STE_TREECTRL_IMAGE_FOLDER : -1,
                                       -1, NULL);
                 else
                     return id;
@@ -686,7 +687,7 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
             for (; n < count; n++)                      // append rest of path
             {
                 id = AppendItem(id, treePath[n],
-                                (n < count-1) ? STT_IMAGE_FOLDER : -1,
+                                (n < count-1) ? STE_TREECTRL_IMAGE_FOLDER : -1,
                                 -1, NULL);
 
                 if (n == count - 1)
@@ -699,7 +700,9 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
     return wxTreeItemId();
 }
 
-size_t wxSTEditorTreeCtrl::GetAllChildrenItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type)
+size_t wxSTEditorTreeCtrl::GetAllChildrenItemIds(const wxTreeItemId& start_id,
+                                                 wxArrayTreeItemIds& arrayIds,
+                                                 STE_TreeCtrlGet_Type get_type)
 {
     // MSW crashes on GetNextSibling on the root item
     if (start_id == GetRootItem())
@@ -712,13 +715,13 @@ size_t wxSTEditorTreeCtrl::GetAllChildrenItemIds(const wxTreeItemId& start_id, w
     return DoGetAllChildrenItemIds(start_id, arrayIds, get_type);
 }
 
-size_t wxSTEditorTreeCtrl::DoGetAllChildrenItemIds(const wxTreeItemId& start_id, wxArrayTreeItemIds& arrayIds, int get_type)
+size_t wxSTEditorTreeCtrl::DoGetAllChildrenItemIds(const wxTreeItemId& start_id,
+                                                   wxArrayTreeItemIds& arrayIds,
+                                                   STE_TreeCtrlGet_Type get_type)
 {
     size_t count = 0;
 
-    for (wxTreeItemId id = start_id;
-         id;
-         id = GetNextSibling(id))
+    for (wxTreeItemId id = start_id; id; id = GetNextSibling(id))
     {
         if (get_type == STE_TREECTRL_GET_ALL)
         {
@@ -728,7 +731,7 @@ size_t wxSTEditorTreeCtrl::DoGetAllChildrenItemIds(const wxTreeItemId& start_id,
         else
         {
             wxTreeItemData* data = GetItemData(id);
-            if ((data && ((get_type & STE_TREECTRL_GET_DATA) != 0)) ||
+            if (( data && ((get_type & STE_TREECTRL_GET_DATA)   != 0)) ||
                 (!data && ((get_type & STE_TREECTRL_GET_NODATA) != 0)))
             {
                 arrayIds.Add(id);

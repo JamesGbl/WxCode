@@ -676,7 +676,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
         }
         case ID_STN_WINDOWS:
         {
-            wxSTEditorWindowsDialog(this, _("Windows"));
+            wxSTEditorWindowsDialog(this, _("Bookmarks"));
             return true;
         }
         case ID_STE_PASTE_NEW:

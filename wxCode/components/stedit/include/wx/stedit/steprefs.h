@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steprefs.h
+/// @brief wxSTEditorPrefs, editor preference information.
+
 #ifndef _STEPREFS_H_
 #define _STEPREFS_H_
 

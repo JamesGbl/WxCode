@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steshell.h
+/// @brief wxSTEditorShell, a command prompt made out of a wxSTEditor.
+
 #ifndef _STESHELL_H_
 #define _STESHELL_H_
 

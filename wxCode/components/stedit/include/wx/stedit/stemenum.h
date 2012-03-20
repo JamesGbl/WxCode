@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stemenum.h
+/// @brief wxSTEditorMenuManager, creates and manages menus and toolbars.
+
 #ifndef _STEMENUM_H_
 #define _STEMENUM_H_
 

@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stenoteb.h
+/// @brief wxSTEditorNotebook, a wxNotebook for managing wxSTEditorSplitters.
+
 #ifndef _STENOTEB_H_
 #define _STENOTEB_H_
 

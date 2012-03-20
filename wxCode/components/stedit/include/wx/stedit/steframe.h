@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file steframe.h
+/// @brief wxSTEditorFrame, a wxFrame for an editor or notebook.
+
 #ifndef _STEFRAME_H_
 #define _STEFRAME_H_
 

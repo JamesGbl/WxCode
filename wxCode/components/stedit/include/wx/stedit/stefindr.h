@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stefindr.h
+/// @brief Find/replace functions and dialog.
+
 #ifndef _STEFINDR_H_
 #define _STEFINDR_H_
 

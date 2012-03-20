@@ -8,6 +8,9 @@
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
+/// @file stestyls.h
+/// @brief wxSTEditorStyles, lexer colorizing information.
+
 #ifndef _STESTYLS_H_
 #define _STESTYLS_H_
 
