@@ -1150,53 +1150,9 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
 
 bool wxSTEditor::ShowInsertTextDialog()
 {
-    STE_TextPos sel_start  = GetSelectionStart();
-    STE_TextPos sel_end    = GetSelectionEnd();
-    int line_start = LineFromPosition(sel_start);
-    int line_end   = LineFromPosition(sel_end);
+    wxSTEditorInsertTextDialog dialog(this);
 
-    if (line_start != line_end)
-    {
-        sel_start = PositionFromLine(line_start);
-        sel_end   = GetLineEndPosition(line_end);
-        SetSelection(sel_start, sel_end);
-    }
-
-    wxString initText = GetSelectedText();
-
-    wxSTEditorInsertTextDialog dialog(GetModalParent());
-    dialog.GetTestEditor()->RegisterStyles(GetEditorStyles());
-    dialog.GetTestEditor()->RegisterLangs(GetEditorLangs());
-    dialog.GetTestEditor()->SetLanguage(GetLanguageId());
-    dialog.SetText(initText);
-
-    if ( dialog.ShowModal() != wxID_OK )
-        return false;
-
-    switch (dialog.GetInsertType())
-    {
-        case STE_INSERT_TEXT_PREPEND  : return InsertTextAtCol(0, dialog.GetPrependText());
-        case STE_INSERT_TEXT_APPEND   : return InsertTextAtCol(-1, dialog.GetAppendText());
-        case STE_INSERT_TEXT_ATCOLUMN : return InsertTextAtCol(dialog.GetColumn(), dialog.GetPrependText());
-        case STE_INSERT_TEXT_SURROUND :
-        {
-            wxString prependText = dialog.GetPrependText();
-            wxString appendText  = dialog.GetAppendText();
-
-            if (appendText.Length() > 0u)
-                InsertText(sel_end, appendText);
-            if (prependText.Length() > 0u)
-                InsertText(sel_start, prependText);
-
-            sel_start -= (int)prependText.Length();
-            sel_end   += (int)prependText.Length();
-            SetSelection(sel_start, sel_end);
-            return true;
-        }
-        default : break;
-    }
-
-    return false;
+    return dialog.ShowModal() == wxID_OK;
 }
 
 bool wxSTEditor::ShowColumnizeDialog()

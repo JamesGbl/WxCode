@@ -1856,6 +1856,9 @@ void wxSTEditorWindowsDialog::OnButton(wxCommandEvent& event)
 //-----------------------------------------------------------------------------
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorBookmarkDialog, wxDialog);
 
+wxPoint wxSTEditorBookmarkDialog::ms_dialogPosition(wxDefaultPosition);
+wxSize  wxSTEditorBookmarkDialog::ms_dialogSize(550, 400);
+
 BEGIN_EVENT_TABLE(wxSTEditorBookmarkDialog, wxDialog)
     EVT_TREE_ITEM_ACTIVATED (wxID_ANY, wxSTEditorBookmarkDialog::OnTreeCtrl)
     EVT_TREE_SEL_CHANGED    (wxID_ANY, wxSTEditorBookmarkDialog::OnTreeCtrl)
@@ -1873,12 +1876,14 @@ wxSTEditorBookmarkDialog::wxSTEditorBookmarkDialog(wxWindow *win,
     m_editor   = NULL;
     m_treeCtrl = NULL;
 
-    wxWindow* parent = win;
+    wxWindow* parent = win; // what parent to use for this dialog
 
     if (wxDynamicCast(win, wxSTEditor) != NULL)
     {
         m_editor = wxDynamicCast(win, wxSTEditor);
 
+        // Try to find a wxSTEditorNotebook parent since we can then show
+        // all the bookmarks.
         wxWindow *p = win->GetParent();
         while (p)
         {
@@ -1897,11 +1902,10 @@ wxSTEditorBookmarkDialog::wxSTEditorBookmarkDialog(wxWindow *win,
         m_notebook = wxDynamicCast(win, wxSTEditorNotebook);
     }
 
-    if (!wxDialog::Create(parent, wxID_ANY, title,
-                          wxDefaultPosition, wxSize(500, 400), style))
+    if (!wxDialog::Create(parent, wxID_ANY, title, ms_dialogPosition, ms_dialogSize, style))
         return;
 
-    wxCHECK_RET(m_notebook || m_editor, wxT("Invalid parent"));
+    wxCHECK_RET(m_notebook || m_editor, wxT("Invalid parent, must be a wxSTEditorNotebook or a wxSTEditor."));
 
     wxSTEditorBookmarkSizer(this, true, true);
 
@@ -1913,11 +1917,18 @@ wxSTEditorBookmarkDialog::wxSTEditorBookmarkDialog(wxWindow *win,
     m_treeCtrl->AssignImageList(imageList);
 
     UpdateTreeCtrl();
-    //m_treeCtrl->SetSelection(m_notebook->GetSelection());
     UpdateButtons();
-    Centre();
-    SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+
+    if (ms_dialogPosition == wxDefaultPosition)
+        Centre();
+
     ShowModal();
+}
+
+wxSTEditorBookmarkDialog::~wxSTEditorBookmarkDialog()
+{
+    ms_dialogPosition = GetPosition();
+    ms_dialogSize     = GetSize();
 }
 
 void wxSTEditorBookmarkDialog::UpdateTreeCtrl()
@@ -1925,8 +1936,10 @@ void wxSTEditorBookmarkDialog::UpdateTreeCtrl()
     m_treeCtrl->DeleteAllItems();
 
     wxTreeItemId rootId = m_treeCtrl->AddRoot(wxT("root"));
+    wxTreeItemId selectedId;
 
-    int n, count = m_notebook ? (int)m_notebook->GetPageCount() : 0;
+    int n, count      = m_notebook ? (int)m_notebook->GetPageCount() : 0;
+    int selected_page = m_notebook ? (int)m_notebook->GetSelection() : -1;
 
     for (n = 0; n < count; n++)
     {
@@ -1943,17 +1956,25 @@ void wxSTEditorBookmarkDialog::UpdateTreeCtrl()
                 wxString s(wxString::Format(wxT("%-5d : "), n+1) + editor->GetFileName().GetFullPath());
                 editorId = m_treeCtrl->AppendItem(rootId, s, 0, -1, NULL);
                 m_treeCtrl->SetItemTextColour(editorId, *wxBLUE);
+
+                if (n == selected_page)
+                    selectedId = editorId;
             }
 
             wxString s(wxString::Format(wxT("%-5d : "), line+1) + editor->GetLineText(line));
             if (s.Length() > 100) s = s.Mid(0, 100) + wxT("...");
-            m_treeCtrl->AppendItem(editorId, s, 1, -1, NULL);
+            wxTreeItemId id = m_treeCtrl->AppendItem(editorId, s, 1, -1, NULL);
+
+            if ((n == selected_page) && (line == editor->GetCurrentLine()))
+                selectedId = id;
 
             line = editor->MarkerNext(line+1, 1<<STE_MARKER_BOOKMARK);
         }
     }
 
     m_treeCtrl->ExpandAll();
+    if (selectedId)
+        m_treeCtrl->SelectItem(selectedId);
 }
 
 bool wxSTEditorBookmarkDialog::GetItemInfo(const wxTreeItemId& id,
@@ -1961,27 +1982,18 @@ bool wxSTEditorBookmarkDialog::GetItemInfo(const wxTreeItemId& id,
 {
     notebook_page = -1;
     bookmark_line = -1;
-    wxTreeItemId editorId;
 
-    if (id)
+    if (!id) return false;
+
+    wxTreeItemId parentId = m_treeCtrl->GetItemParent(id);
+    // This is a file, not a bookmark, if the parent is the root
+    if (parentId == m_treeCtrl->GetRootItem()) return false;
+
+    if (m_treeCtrl->GetItemText(parentId).BeforeFirst(wxT(' ')).Trim(false).ToLong(&notebook_page) &&
+        m_treeCtrl->GetItemText(id).BeforeFirst(wxT(' ')).Trim(false).ToLong(&bookmark_line) )
     {
-        editorId = m_treeCtrl->GetItemParent(id);
-
-        // This is a file, not a bookmark
-        if (editorId != m_treeCtrl->GetRootItem())
-        {
-            if ( !m_treeCtrl->GetItemText(editorId).BeforeFirst(wxT(' ')).Trim(false).ToLong(&notebook_page) ||
-                 !m_treeCtrl->GetItemText(id).BeforeFirst(wxT(' ')).Trim(false).ToLong(&bookmark_line) )
-            {
-                notebook_page = -1;
-                bookmark_line = -1;
-            }
-            else
-            {
-                notebook_page--; // make 0 based
-                bookmark_line--;
-            }
-        }
+        notebook_page--; // make 0 based
+        bookmark_line--;
     }
 
     return (bookmark_line != -1);
@@ -2000,17 +2012,19 @@ void wxSTEditorBookmarkDialog::UpdateButtons()
     if (id && (m_treeCtrl->GetItemParent(id) == m_treeCtrl->GetRootItem()))
         id = wxTreeItemId();
 
+    // See if anything selected can be deleted, at least one bookmark selected.
+    // Files cannot be deleted or gone to, unselect them.
     bool can_delete = false;
     for (size_t n = 0; n < count; ++n)
     {
         long notebook_page = -1;
         long bookmark_line = -1;
         GetItemInfo(selectedIds[n], notebook_page, bookmark_line);
+
         if (bookmark_line != -1)
-        {
             can_delete = true;
-            break;
-        }
+        else
+            m_treeCtrl->SelectItem(selectedIds[n], false);
     }
 
     FindWindow(ID_STEDLGS_BOOKMARKS_GOTO_BUTTON)->Enable((bool)id);
@@ -2142,25 +2156,36 @@ END_EVENT_TABLE()
 
 void wxSTEditorInsertTextDialog::Init()
 {
+    m_editor             = NULL;
+    m_editor_sel_start   = 0;
+    m_editor_sel_end     = 0;
+
     m_prependCombo       = NULL;
     m_appendCombo        = NULL;
     m_prependText        = NULL;
     m_insertMenu         = NULL;
     m_testEditor         = NULL;
-    m_type               = RadioIdToType(sm_radioID);
-    m_col                = sm_spinValue;
+    m_insert_type        = RadioIdToType(sm_radioID);
+    m_column             = sm_spinValue;
     m_prepend_insert_pos = 0;
     m_append_insert_pos  = 0;
     m_created            = false;
 }
 
-bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
-                                        long style)
+wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxSTEditor* editor,
+                                                       long style)
 {
-    if (!wxDialog::Create(parent, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style))
-        return false;
+    Init();
+
+    if (!wxDialog::Create(editor, wxID_ANY, _("Insert Text"), wxDefaultPosition, wxDefaultSize, style))
+        return;
 
     SetIcons(wxSTEditorArtProvider::GetDialogIconBundle());
+
+    m_editor = editor;
+    m_editor_sel_start = m_editor->GetSelectionStart();
+    m_editor_sel_end   = m_editor->GetSelectionEnd();
+
     m_testEditor = new wxSTEditor(this, ID_STEDLG_INSERT_EDITOR,
                                   wxDefaultPosition, wxSize(400, 200));
 
@@ -2181,7 +2206,7 @@ bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
     m_prependString = m_prependCombo->GetValue();
     m_appendString  = m_appendCombo->GetValue();
 
-    wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_col);
+    wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_column);
     wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
 
     UpdateControls();
@@ -2191,12 +2216,59 @@ bool wxSTEditorInsertTextDialog::Create(wxWindow* parent,
     Centre();
 
     m_created = true;  // now we can handle events
-    return true;
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
 {
     delete m_insertMenu;
+}
+
+bool wxSTEditorInsertTextDialog::InitFromEditor()
+{
+    int line_start = m_editor->LineFromPosition(m_editor_sel_start);
+    int line_end   = m_editor->LineFromPosition(m_editor_sel_end);
+
+    // Works on whole lines
+    if (1 || (line_start != line_end))
+    {
+        m_editor_sel_start = m_editor->PositionFromLine(line_start);
+        m_editor_sel_end   = m_editor->GetLineEndPosition(line_end);
+        m_editor->SetSelection(m_editor_sel_start, m_editor_sel_end);
+    }
+
+    wxString initText = m_editor->GetSelectedText();
+
+    m_testEditor->RegisterStyles(m_editor->GetEditorStyles());
+    m_testEditor->RegisterLangs(m_editor->GetEditorLangs());
+    m_testEditor->SetLanguage(m_editor->GetLanguageId());
+    SetText(initText);
+
+    return !initText.IsEmpty();
+}
+
+bool wxSTEditorInsertTextDialog::InsertIntoEditor()
+{
+    switch (m_insert_type)
+    {
+        case STE_INSERT_TEXT_PREPEND  : return m_editor->InsertTextAtCol(0, m_prependString);
+        case STE_INSERT_TEXT_APPEND   : return m_editor->InsertTextAtCol(-1, m_appendString);
+        case STE_INSERT_TEXT_ATCOLUMN : return m_editor->InsertTextAtCol(GetColumn(), m_prependString);
+        case STE_INSERT_TEXT_SURROUND :
+        {
+            if (m_appendString.Length() > 0u)
+                m_editor->InsertText(m_editor_sel_end, m_appendString);
+            if (m_prependString.Length() > 0u)
+                m_editor->InsertText(m_editor_sel_start, m_prependString);
+
+            m_editor_sel_start -= (int)m_prependString.Length();
+            m_editor_sel_end   += (int)m_prependString.Length();
+            m_editor->SetSelection(m_editor_sel_start, m_editor_sel_end);
+            return true;
+        }
+        default : break;
+    }
+
+    return false;
 }
 
 void wxSTEditorInsertTextDialog::SetText(const wxString& text)
@@ -2221,37 +2293,35 @@ void wxSTEditorInsertTextDialog::FormatText()
     m_testEditor->SetText(m_initText);
     m_testEditor->SetSelection(0, m_testEditor->GetLength());
 
-    switch (GetInsertType())
+    switch (m_insert_type)
     {
         case STE_INSERT_TEXT_PREPEND  :
         {
-            m_testEditor->InsertTextAtCol(0, GetPrependText());
+            m_testEditor->InsertTextAtCol(0, m_prependString);
             break;
         }
         case STE_INSERT_TEXT_APPEND   :
         {
-            m_testEditor->InsertTextAtCol(-1, GetAppendText());
+            m_testEditor->InsertTextAtCol(-1, m_appendString);
             break;
         }
         case STE_INSERT_TEXT_ATCOLUMN :
         {
-            m_testEditor->InsertTextAtCol(GetColumn(), GetPrependText());
+            m_testEditor->InsertTextAtCol(GetColumn(), m_prependString);
             break;
         }
         case STE_INSERT_TEXT_SURROUND :
         {
             STE_TextPos sel_start = 0; //GetSelectionStart();
             STE_TextPos sel_end   = m_testEditor->GetLength(); //GetSelectionEnd();
-            wxString prependText = GetPrependText();
-            wxString appendText  = GetAppendText();
 
-            if (appendText.Length() > 0u)
-                m_testEditor->InsertText(sel_end, appendText);
-            if (prependText.Length() > 0u)
-                m_testEditor->InsertText(sel_start, prependText);
+            if (m_appendString.Length() > 0u)
+                m_testEditor->InsertText(sel_end, m_appendString);
+            if (m_prependString.Length() > 0u)
+                m_testEditor->InsertText(sel_start, m_prependString);
 
-            sel_start -= (STE_TextPos)prependText.Length();
-            sel_end   += (STE_TextPos)prependText.Length();
+            sel_start -= (STE_TextPos)m_prependString.Length();
+            sel_end   += (STE_TextPos)m_prependString.Length();
             m_testEditor->SetSelection(sel_start, sel_end);
             break;
         }
@@ -2287,13 +2357,14 @@ void wxSTEditorInsertTextDialog::OnButton(wxCommandEvent& event)
         {
             // only remember these if they pressed OK
             sm_radioID   = GetSelectedRadioId();
-            sm_spinValue = m_col;
+            sm_spinValue = m_column;
 
             if (m_prependString.Length())
                 wxSTEPrependArrayString(m_prependString, sm_prependValues, 10);
             if (m_appendString.Length())
                 wxSTEPrependArrayString(m_appendString, sm_appendValues, 10);
 
+            InsertIntoEditor();
             break;
         }
         default : break;
@@ -2374,16 +2445,16 @@ void wxSTEditorInsertTextDialog::UpdateControls()
     if (!m_created) return;
     m_prependString = m_prependCombo->GetValue();
     m_appendString  = m_appendCombo->GetValue();
-    m_col  = wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->GetValue();
-    m_type = RadioIdToType(GetSelectedRadioId());
+    m_column        = wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->GetValue();
+    m_insert_type   = RadioIdToType(GetSelectedRadioId());
 
-    m_prependCombo->Enable((m_type == STE_INSERT_TEXT_PREPEND) ||
-                           (m_type == STE_INSERT_TEXT_ATCOLUMN) ||
-                           (m_type == STE_INSERT_TEXT_SURROUND));
-    m_appendCombo->Enable ((m_type == STE_INSERT_TEXT_APPEND) ||
-                           (m_type == STE_INSERT_TEXT_SURROUND));
+    m_prependCombo->Enable((m_insert_type == STE_INSERT_TEXT_PREPEND) ||
+                           (m_insert_type == STE_INSERT_TEXT_ATCOLUMN) ||
+                           (m_insert_type == STE_INSERT_TEXT_SURROUND));
+    m_appendCombo->Enable ((m_insert_type == STE_INSERT_TEXT_APPEND) ||
+                           (m_insert_type == STE_INSERT_TEXT_SURROUND));
 
-    if (m_type == STE_INSERT_TEXT_ATCOLUMN)
+    if (m_insert_type == STE_INSERT_TEXT_ATCOLUMN)
         m_prependText->SetLabel(_("Insert"));
     else
         m_prependText->SetLabel(_("Prepend"));
@@ -2405,7 +2476,7 @@ wxWindowID wxSTEditorInsertTextDialog::GetSelectedRadioId() const
     return wxID_ANY;
 }
 
-STE_InsertText_Type wxSTEditorInsertTextDialog::RadioIdToType( wxWindowID id ) const
+wxSTEditorInsertTextDialog::STE_InsertText_Type wxSTEditorInsertTextDialog::RadioIdToType( wxWindowID id ) const
 {
     // the wxWindowIDs are in the same order as the enum
     if ((id >= ID_STEDLG_INSERT_PREPEND_RADIOBUTTON) && (id <= ID_STEDLG_INSERT_SURROUND_RADIOBUTTON))

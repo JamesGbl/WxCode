@@ -87,7 +87,7 @@ public:
     wxSTEditorLangs&  GetLangs() const;
 
     /// The language selection for the "current" editor.
-    int GetLanguageId() const;
+    int  GetLanguageId() const;
     void SetLanguageId(int lang_id);
     /// Get the "current" editor to update the languange selection for.
     wxSTEditor* GetEditor() const;
@@ -147,8 +147,8 @@ public:
     wxSTEditorPrefPageData GetEditorPrefData() const { return m_editorPrefData; }
 
     // implementation
-    void OnApply(wxCommandEvent& ) { Apply(); } // wxID_APPLY, wxID_OK
-    void OnReset(wxCommandEvent& ) { Reset(); } // wxID_RESET
+    void OnApply(wxCommandEvent& event) { Apply(); } // wxID_APPLY, wxID_OK
+    void OnReset(wxCommandEvent& event) { Reset(); } // wxID_RESET
 
 protected:
     wxSTEditorPrefPageData m_editorPrefData;
@@ -357,7 +357,7 @@ public:
     void OnCancel(wxCommandEvent& event);
     void OnOk(wxCommandEvent& event);
     void OnReset(wxCommandEvent& event);
-    void OnNotebookPageChanged(wxNotebookEvent &event);
+    void OnNotebookPageChanged(wxNotebookEvent& event);
     void OnUpdateUIApply(wxUpdateUIEvent& event);
 
 private:
@@ -384,7 +384,7 @@ private:
 class WXDLLIMPEXP_STEDIT wxSTEditorPropertiesDialog : public wxDialog
 {
 public:
-    wxSTEditorPropertiesDialog(wxSTEditor*);
+    wxSTEditorPropertiesDialog(wxSTEditor* editor);
 
     bool Create(wxWindow* parent,
                 const wxString& title,
@@ -392,10 +392,8 @@ public:
 
     virtual bool TransferDataFromWindow();
 
-    bool IsEditable() const
-    {
-        return m_editor->IsEditable();
-    }
+    bool IsEditable() const { return m_editor->IsEditable(); }
+
 private:
     wxSTEditor* m_editor;
     int m_encoding;
@@ -430,7 +428,7 @@ public:
     void OnButton(wxCommandEvent& event);
 
     wxSTEditorNotebook* m_notebook;
-    wxListBox* m_listBox;
+    wxListBox*          m_listBox;
 
 private:
     DECLARE_EVENT_TABLE()
@@ -451,6 +449,9 @@ public:
     wxSTEditorBookmarkDialog(wxWindow *win,
                              const wxString& title = _("Bookmarks"),
                              long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+
+    virtual ~wxSTEditorBookmarkDialog();
+
     // -----------------------------------------------------------------------
     // implementation
 
@@ -462,8 +463,11 @@ public:
     void OnButton(wxCommandEvent& event);
 
     wxSTEditorNotebook* m_notebook;
-    wxSTEditor* m_editor;
-    wxTreeCtrl* m_treeCtrl;
+    wxSTEditor*         m_editor;
+    wxTreeCtrl*         m_treeCtrl;
+
+    static wxPoint ms_dialogPosition;
+    static wxSize  ms_dialogSize;
 
 private:
     DECLARE_EVENT_TABLE()
@@ -472,45 +476,41 @@ private:
 
 //-----------------------------------------------------------------------------
 /// @class wxSTEditorInsertTextDialog
-/// @brief Get values from the user for the wxSTEditor::InsertTextAtCol() function.
-///
-/// You can then use the values from the dialog to call the
-/// wxSTEditor::InsertTextAtCol() yourself.
+/// @brief Provides a UI for the wxSTEditor::InsertTextAtCol() function.
 //-----------------------------------------------------------------------------
-
-/// How to insert text into an editor.
-enum STE_InsertText_Type
-{
-    STE_INSERT_TEXT_PREPEND,
-    STE_INSERT_TEXT_APPEND,
-    STE_INSERT_TEXT_ATCOLUMN,
-    STE_INSERT_TEXT_SURROUND
-};
 
 class WXDLLIMPEXP_STEDIT wxSTEditorInsertTextDialog: public wxDialog
 {
 public:
-    wxSTEditorInsertTextDialog() : wxDialog() { Init(); }
-    wxSTEditorInsertTextDialog(wxWindow* parent,
-                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE) : wxDialog()
-    {
-        Init();
-        Create(parent, style);
-    }
-
-    bool Create(wxWindow* parent,
-                long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
+    /// Create the dialog and call ShowModal(), the editor will be updated
+    /// if the user clicks Ok and wxID_OK is returned from ShowModal().
+    wxSTEditorInsertTextDialog(wxSTEditor* editor,
+                               long style = wxDEFAULT_DIALOG_STYLE_RESIZE);
 
     virtual ~wxSTEditorInsertTextDialog();
 
-    /// Get the type of insert desired.
-    STE_InsertText_Type GetInsertType() const { return m_type; }
+    // -----------------------------------------------------------------------
+    // implementation
+
+    /// Setup this dialog from the editor
+    bool InitFromEditor();
+    /// If the user pressed wxID_OK, call this to replace the
+    /// text in the editor with the settings in the dialog.
+    /// Make sure that the selection in the editor has NOT changed
+    /// since the call to InitFromEditor(editor).
+    bool InsertIntoEditor();
+
+    /// How to insert text into an editor.
+    enum STE_InsertText_Type
+    {
+        STE_INSERT_TEXT_PREPEND,
+        STE_INSERT_TEXT_APPEND,
+        STE_INSERT_TEXT_ATCOLUMN,
+        STE_INSERT_TEXT_SURROUND
+    };
+
     /// Get the column to insert the text at.
-    int GetColumn() const { return m_col-1; }
-    /// Text to be prepended.
-    wxString GetPrependText() const { return m_prependString; }
-    /// Text to be appended.
-    wxString GetAppendText() const  { return m_appendString; }
+    int GetColumn() const { return m_column-1; }
 
     /// Set the text to display to the user to be formatted.
     void SetText(const wxString& text);
@@ -519,10 +519,6 @@ public:
     /// Format the text that you sent in with SetText using values in the gui.
     void FormatText();
 
-    wxSTEditor* GetTestEditor() { return m_testEditor; }
-
-    // -----------------------------------------------------------------------
-    // implementation
     void OnButton(wxCommandEvent& event);
     void OnMenu(wxCommandEvent& event);
     void OnRadioButton(wxCommandEvent& event);
@@ -533,14 +529,18 @@ public:
     STE_InsertText_Type RadioIdToType( wxWindowID id ) const;
     wxWindowID GetSelectedRadioId() const;
 
+    wxSTEditor*   m_editor;
+    STE_TextPos   m_editor_sel_start;
+    STE_TextPos   m_editor_sel_end;
+
     wxComboBox*   m_prependCombo;
     wxComboBox*   m_appendCombo;
     wxStaticText* m_prependText;
     wxMenu*       m_insertMenu;
     wxSTEditor*   m_testEditor;
 
-    STE_InsertText_Type m_type;
-    int       m_col;
+    STE_InsertText_Type m_insert_type;
+    int       m_column;
     wxString  m_prependString;
     wxString  m_appendString;
     wxTextPos m_prepend_insert_pos;
