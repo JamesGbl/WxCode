@@ -147,8 +147,8 @@ public:
     wxSTEditorPrefPageData GetEditorPrefData() const { return m_editorPrefData; }
 
     // implementation
-    void OnApply(wxCommandEvent& event) { Apply(); } // wxID_APPLY, wxID_OK
-    void OnReset(wxCommandEvent& event) { Reset(); } // wxID_RESET
+    void OnApply(wxCommandEvent& ) { Apply(); } // wxID_APPLY, wxID_OK
+    void OnReset(wxCommandEvent& ) { Reset(); } // wxID_RESET
 
 protected:
     wxSTEditorPrefPageData m_editorPrefData;

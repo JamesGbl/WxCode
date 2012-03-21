@@ -59,7 +59,7 @@ TARGET_LIB_LINK2  = $(TARGET_LIBNAME).so
 # CXX flags and libs
 
 CXXFLAGS = $(WXCXXFLAGS) -MMD -g  -Wall -Wunused -Wunused-parameter -fPIC -DPIC
-LDLIBS   = $(WXLIBS)
+LDLIBS   = $(WXLIBS) -Wl,--as-needed
 CXX      = $(WXCXX)
 
 # -pg in libs and defs for profiling
