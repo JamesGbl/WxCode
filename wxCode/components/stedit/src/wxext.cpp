@@ -887,7 +887,7 @@ wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, TextEncoding_Type e
 
     switch (encoding)
     {
-        case None:
+        case Ascii:
             buf = s.mb_str(*wxConvCurrent);
             size = wxBuffer_length(buf);
             break;
@@ -1039,34 +1039,35 @@ size_t wxMBConvOEM::FromWChar(char*          dst, size_t dstLen,
 
 static const wxChar* const s_textencoding_text[] =
 {
-    wxT("UTF-8"     ),
-    wxT("Unicode"   ),
+    wxT("Ascii"),
+    wxT("UTF-8"),
+    wxT("Unicode"),
     wxT("ISO-8859-1"),
 #ifdef __WXMSW__
-    wxT("OEM"       ),
+    wxT("OEM"),
 #endif
 };
 #ifdef C_ASSERT
-C_ASSERT(WXSIZEOF(s_textencoding_text) == wxTextEncoding::EnumCount);
+C_ASSERT(WXSIZEOF(s_textencoding_text) == wxTextEncoding::TextEncoding__Count);
 #endif
 
 /*static*/
 wxTextEncoding::TextEncoding_Type wxTextEncoding::TypeFromString(const wxString& str)
 {
-    for (size_t i = 0; i < WXSIZEOF(s_textencoding_text); i++)
+    for (int i = 0; i < TextEncoding__Count; i++)
     {
         if (0 == str.CmpNoCase(s_textencoding_text[i]))
         {
             return (wxTextEncoding::TextEncoding_Type)i;
         }
     }
-    return wxTextEncoding::None;
+    return wxTextEncoding::Ascii;
 }
 
 /*static*/
 wxString wxTextEncoding::TypeToString(TextEncoding_Type encoding)
 {
-    return ((encoding != wxTextEncoding::None) && (encoding < wxTextEncoding::EnumCount))
+    return (encoding < wxTextEncoding::TextEncoding__Count)
                 ? s_textencoding_text[encoding]
                 : wxEmptyString;
 }
@@ -1132,7 +1133,7 @@ bool wxTextEncoding::CharToString(wxString* str_ptr, const wxCharBuffer& buf, si
             ok = CharToString(&str, buf.data() + bom_count, wxMBConvOEM(), buf_len);
             break;
     #endif
-        case None:
+        case Ascii:
         default:
             str = wxConvertMB2WX(buf.data() + bom_count);
             break;
@@ -1149,24 +1150,27 @@ bool wxTextEncoding::SaveFile(const wxString& s, wxOutputStream& stream, TextEnc
     size_t size;
 
     // write bom
-    if (ok && file_bom) switch (encoding)
+    if (ok && file_bom)
     {
-        case Unicode_LE:
-            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
-            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
-            break;
-        case UTF8:
-            bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
-            ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
-            break;
-        case None:
-    #ifdef __WXMSW__
-        case OEM:
-    #endif
-            break;
-        default:
-            ok = false;
-            break;
+        switch (encoding)
+        {
+            case Unicode_LE:
+                bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF16LE, &size);
+                ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
+                break;
+            case UTF8:
+                bom_chars = wxConvAuto_GetBOMChars(wxBOM_UTF8, &size);
+                ok = bom_chars && (size == stream.Write(bom_chars, size * sizeof(char)).LastWrite());
+                break;
+            case Ascii:
+        #ifdef __WXMSW__
+            case OEM:
+        #endif
+                break;
+            default:
+                ok = false;
+                break;
+        }
     }
 
     // write text

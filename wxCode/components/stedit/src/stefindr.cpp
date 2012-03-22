@@ -21,7 +21,7 @@
 // Static functions for prepending strings to wxArrayString and wxComboBoxes
 //-----------------------------------------------------------------------------
 
-void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int count)
+void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int max_count)
 {
     const int idx = strArray.Index(str);
     if (idx == 0)
@@ -30,11 +30,11 @@ void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int c
         strArray.RemoveAt(idx);
 
     strArray.Insert(str, 0);
-    if ((count > 0) && ((int)strArray.GetCount() > count))
-        strArray.RemoveAt(count, strArray.GetCount()-count);
+    if ((max_count > 0) && ((int)strArray.GetCount() > max_count))
+        strArray.RemoveAt(max_count, strArray.GetCount()-max_count);
 }
 
-void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox *combo)
+void wxSTEPrependComboBoxString(const wxString &str, wxComboBox *combo, int max_strings)
 {
     wxCHECK_RET(combo, wxT("Invalid combobox in wxSTEPrependComboBoxString"));
 
@@ -473,11 +473,11 @@ void wxSTEditorFindReplacePanel::SendEvent(const wxEventType& evtType)
     event.SetExtraLong(-1);
 
     if (evtType != wxEVT_COMMAND_FIND_CLOSE)
-        wxSTEPrependComboBoxString(m_findCombo->GetValue(), m_findReplaceData->GetMaxStrings(), m_findCombo);
+        wxSTEPrependComboBoxString(m_findCombo->GetValue(), m_findCombo, m_findReplaceData->GetMaxStrings());
 
     if ( HasFlag(wxFR_REPLACEDIALOG) )
     {
-        wxSTEPrependComboBoxString(m_replaceCombo->GetValue(), m_findReplaceData->GetMaxStrings(), m_replaceCombo);
+        wxSTEPrependComboBoxString(m_replaceCombo->GetValue(), m_replaceCombo, m_findReplaceData->GetMaxStrings());
         event.SetReplaceString(m_replaceCombo->GetValue());
     }
 

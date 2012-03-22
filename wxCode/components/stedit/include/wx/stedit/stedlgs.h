@@ -396,8 +396,8 @@ public:
 
 private:
     wxSTEditor* m_editor;
-    int m_encoding;
-    bool m_bom;
+    int         m_encoding;
+    bool        m_bom;
 
     void OnUpdateNeedEditable(wxUpdateUIEvent&);
     void OnUpdateBomCheckBox(wxUpdateUIEvent&);

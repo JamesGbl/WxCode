@@ -27,16 +27,21 @@ class WXDLLIMPEXP_FWD_CORE wxComboBox;
 //-----------------------------------------------------------------------------
 /// @{
 
-/// Add a string to the array at the top and remove any to keep the count
-///  if count <= 0 then don't remove any.
-WXDLLIMPEXP_STEDIT void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int count);
+/// Add a string to the array at the top and remove any to keep the max_count.
+/// If max_count <= 0 then don't remove any.
+WXDLLIMPEXP_STEDIT void wxSTEPrependArrayString(const wxString &str,
+                                                wxArrayString &strArray,
+                                                int max_count);
 
-/// Prepend a string to a wxComboBox, removing any copies of it appearing after
-///   if max_strings > 0 then ensure that there are only max_strings in the combo.
-WXDLLIMPEXP_STEDIT void wxSTEPrependComboBoxString(const wxString &str, int max_strings, wxComboBox *combo);
+/// Prepend a string to a wxComboBox, removing any copies of it appearing after.
+/// If max_strings > 0 then ensure that there are only max_strings in the combo.
+WXDLLIMPEXP_STEDIT void wxSTEPrependComboBoxString(const wxString &str,
+                                                   wxComboBox *combo,
+                                                   int max_strings);
 
 /// Initialize the combo to have these strings and select first.
-WXDLLIMPEXP_STEDIT void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo);
+WXDLLIMPEXP_STEDIT void wxSTEInitComboBoxStrings(const wxArrayString& values,
+                                                 wxComboBox* combo);
 
 /// Initialize the menu to have these strings up to max_count number.
 WXDLLIMPEXP_STEDIT void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu* menu,
@@ -50,22 +55,22 @@ WXDLLIMPEXP_STEDIT void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu
 
 enum STEFindReplaceFlags
 {
-    STE_FR_DOWN          = 0x001, // wxFR_DOWN       = 1,
-    STE_FR_WHOLEWORD     = 0x002, // wxFR_WHOLEWORD  = 2,
-    STE_FR_MATCHCASE     = 0x004, // wxFR_MATCHCASE  = 4
+    STE_FR_DOWN          = 0x001, ///< wxFR_DOWN       = 1,
+    STE_FR_WHOLEWORD     = 0x002, ///< wxFR_WHOLEWORD  = 2,
+    STE_FR_MATCHCASE     = 0x004, ///< wxFR_MATCHCASE  = 4
 
-    STE_FR_WORDSTART     = 0x010, // find if string is whole or start of word
-    STE_FR_WRAPAROUND    = 0x020, // wrap around the doc if not found
-    STE_FR_REGEXP        = 0x040, // use wxSTC regexp
-    STE_FR_POSIX         = 0x080, // use wxSTC regexp posix () not \(\) to tagged
-    STE_FR_FINDALL       = 0x100, // Find all occurances in document
-    STE_FR_BOOKMARKALL   = 0x200, // Bookmark all occurances in document
+    STE_FR_WORDSTART     = 0x010, ///< find if string is whole or start of word
+    STE_FR_WRAPAROUND    = 0x020, ///< wrap around the doc if not found
+    STE_FR_REGEXP        = 0x040, ///< use wxSTC regexp
+    STE_FR_POSIX         = 0x080, ///< use wxSTC regexp posix () not \(\) to tagged
+    STE_FR_FINDALL       = 0x100, ///< Find all occurances in document
+    STE_FR_BOOKMARKALL   = 0x200, ///< Bookmark all occurances in document
     // Choose only one of these
-    STE_FR_WHOLEDOC      = 0x1000, // search the whole doc starting from top
-    STE_FR_FROMCURSOR    = 0x2000, // search starting at cursor
-    STE_FR_ALLDOCS       = 0x4000, // for notebook, starts at current page and goes forward
+    STE_FR_WHOLEDOC      = 0x1000, ///< search the whole doc starting from top
+    STE_FR_FROMCURSOR    = 0x2000, ///< search starting at cursor
+    STE_FR_ALLDOCS       = 0x4000, ///< for notebook, starts at current page and goes forward
 
-    STE_FR_SEARCH_MASK   = (STE_FR_WHOLEDOC|STE_FR_FROMCURSOR|STE_FR_ALLDOCS)
+    STE_FR_SEARCH_MASK   = (STE_FR_WHOLEDOC|STE_FR_FROMCURSOR|STE_FR_ALLDOCS) ///< Mask bits of how to search.
 };
 
 //-----------------------------------------------------------------------------
@@ -187,7 +192,7 @@ public:
                                const wxString& name = wxT("wxSTEditorFindReplacePanel"))
     {
         Init();
-        (void)Create(parent, winid, data, pos, size, style, name);
+        Create(parent, winid, data, pos, size, style, name);
     }
 
     bool Create(wxWindow *parent, wxWindowID winid,
@@ -299,7 +304,7 @@ public:
                                  const wxString &name = wxSTEditorFindReplaceDialogNameStr)
     {
         Init();
-        (void)Create(parent, data, title, style, name);
+        Create(parent, data, title, style, name);
     }
 
     bool Create( wxWindow *parent,

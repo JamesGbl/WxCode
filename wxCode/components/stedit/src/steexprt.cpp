@@ -1989,7 +1989,7 @@ wxFileName wxSTEditorExportDialog::GetFileName() const
 
 void wxSTEditorExportDialog::SetFileName(const wxFileName& fileName)
 {
-    wxSTEPrependComboBoxString(fileName.GetFullPath(), 10, m_fileNameCombo);
+    wxSTEPrependComboBoxString(fileName.GetFullPath(), m_fileNameCombo, 10);
     m_fileNameCombo->SetValue(fileName.GetFullPath());
     m_fileNameCombo->SetFocus();
 }

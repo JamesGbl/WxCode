@@ -1411,7 +1411,7 @@ bool wxSTEditor::LoadFileToString( wxString* str,
         wxCharBuffer charBuf(stream_len);
         wxBOM file_bom = wxBOM_None;
 
-        if (  (encoding == wxTextEncoding::None)
+        if (  (encoding == wxTextEncoding::Ascii)
             && dynamic_cast<wxStringInputStream*>(&stream))
         {
             // wxStringInputStream is utf8 always
@@ -1435,7 +1435,7 @@ bool wxSTEditor::LoadFileToString( wxString* str,
                     is_xml  = (0 == GetEditorLangs().GetName(GetLanguageId()).CmpNoCase(wxT("xml")));
                 }
             }
-            if ((want_lang && !found_lang) || ( (is_html || is_xml) && (encoding == wxTextEncoding::None)) )
+            if ((want_lang && !found_lang) || ( (is_html || is_xml) && (encoding == wxTextEncoding::Ascii)) )
             {
                 // sample just the first line; feeble but functional attempt to detect xml (in files w/o the .xml extension),
                 // and/or utf8 encoding in html files (w html extension)
@@ -1458,7 +1458,7 @@ bool wxSTEditor::LoadFileToString( wxString* str,
                         found_lang = is_xml = SetLanguage(wxFileName(wxEmptyString, fileName.GetName(), wxT("xml")));
                     }
                 }
-                if (encoding == wxTextEncoding::None)
+                if (encoding == wxTextEncoding::Ascii)
                 {
                     if (is_html)
                     {
@@ -1472,7 +1472,7 @@ bool wxSTEditor::LoadFileToString( wxString* str,
             }
             switch (encoding)
             {
-                case wxTextEncoding::None:
+                case wxTextEncoding::Ascii:
                     // load file and get BOM
                     ok = wxTextEncoding::CharToStringDetectBOM(str, charBuf, stream_len, &file_bom);
                 #if !(wxUSE_UNICODE || (defined(wxUSE_UNICODE_UTF8) && wxUSE_UNICODE_UTF8))
@@ -1503,9 +1503,9 @@ bool wxSTEditor::LoadFileToString( wxString* str,
                 #endif
                     if (ok) switch (file_bom)
                     {
-                        case wxBOM_UTF8:    encoding = wxTextEncoding::UTF8   ; break;
+                        case wxBOM_UTF8:    encoding = wxTextEncoding::UTF8;       break;
                         case wxBOM_UTF16LE: encoding = wxTextEncoding::Unicode_LE; break;
-                        default:            encoding = wxTextEncoding::None   ; break;
+                        default:            encoding = wxTextEncoding::Ascii;      break;
                     }
                     break;
                 case wxTextEncoding::Unicode_LE:
@@ -1536,9 +1536,9 @@ bool wxSTEditor::LoadFileToString( wxString* str,
                              _("Error loading file"),
                              wxOK|wxICON_ERROR, parent);
                 // give it one more shot
-                if (wxTextEncoding::None != encoding)
+                if (wxTextEncoding::Ascii != encoding)
                 {
-                    ok = wxTextEncoding::CharToString(str, charBuf, stream_len, wxTextEncoding::None);
+                    ok = wxTextEncoding::CharToString(str, charBuf, stream_len, wxTextEncoding::Ascii);
                 }
             }
         }

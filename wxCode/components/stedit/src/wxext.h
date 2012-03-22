@@ -154,20 +154,20 @@ class WXDLLIMPEXP_STEDIT wxTextEncoding
 public:
     enum TextEncoding_Type
     {
+        Ascii = 0,
         UTF8,
         Unicode_LE,
         ISO8859_1,
     #ifdef __WXMSW__
         OEM,
     #endif
-        EnumCount,
-        None = wxNOT_FOUND
+        TextEncoding__Count
     };
 
 #if (defined(__WXTRUNK_H__) || (wxVERSION_NUMBER >= 2903) ) && defined(_WX_CONVAUTO_H_) // wxBOM enum is in wx/convauto.h
     // char -> wxString method. Specify encoding.
     static bool CharToString(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN,
-                             TextEncoding_Type encoding = None, wxBOM bom = wxBOM_None);
+                             TextEncoding_Type encoding = Ascii, wxBOM bom = wxBOM_None);
 
     // char -> wxString method. Utilizing wxConvAuto::DetectBOM.
     static bool CharToStringDetectBOM(wxString*, const wxCharBuffer& buf, size_t buf_len = wxNO_LEN,
@@ -201,7 +201,7 @@ public:
 
     static const char* GetBOMChars(TextEncoding_Type, size_t* count);
 
-    static bool SaveFile(const wxString&, wxOutputStream&, TextEncoding_Type encoding = None, bool file_bom = false);
+    static bool SaveFile(const wxString&, wxOutputStream&, TextEncoding_Type encoding = Ascii, bool file_bom = false);
 };
 
 #endif // __WXEXT_H__

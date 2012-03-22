@@ -1546,17 +1546,17 @@ void wxSTEditorPrefDialog::OnUpdateUIApply(wxUpdateUIEvent& event)
 IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPropertiesDialog, wxDialog);
 
 #define SET_STATTEXT(win_id,val) wxStaticCast(FindWindow(win_id),wxStaticText)->SetLabel(val)
-#define ENC_OFFSET 1
 
 BEGIN_EVENT_TABLE(wxSTEditorPropertiesDialog, wxDialog)
     EVT_UPDATE_UI(ID_STEPROP_ENCODING_CHOICE,       wxSTEditorPropertiesDialog::OnUpdateNeedEditable)
     EVT_UPDATE_UI(ID_STEPROP_ENCODING_BOM_CHECKBOX, wxSTEditorPropertiesDialog::OnUpdateBomCheckBox)
 END_EVENT_TABLE()
 
-wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor) : wxDialog(),
-    m_editor(editor),
-    m_encoding(wxTextEncoding::TypeFromString(editor->GetFileEncoding()) + ENC_OFFSET),
-    m_bom(editor->GetFileBOM())
+wxSTEditorPropertiesDialog::wxSTEditorPropertiesDialog(wxSTEditor* editor)
+                           :wxDialog(),
+                            m_editor(editor),
+                            m_encoding(wxTextEncoding::TypeFromString(editor->GetFileEncoding())),
+                            m_bom(editor->GetFileBOM())
 {
 }
 
@@ -1614,8 +1614,7 @@ bool wxSTEditorPropertiesDialog::Create(wxWindow* parent,
     encodingChoice->SetValidator(wxGenericValidator(&m_encoding));
     wxStaticCast(FindWindow(ID_STEPROP_ENCODING_BOM_CHECKBOX), wxCheckBox)->SetValidator(wxGenericValidator(&m_bom));
 
-    encodingChoice->Append(_("none")); // ENC_OFFSET
-    for (size_t i = 0; i < wxTextEncoding::EnumCount; i++)
+    for (int i = 0; i < wxTextEncoding::TextEncoding__Count; i++)
     {
         encodingChoice->Append(wxTextEncoding::TypeToString((wxTextEncoding::TextEncoding_Type)i));
     }
@@ -1685,7 +1684,7 @@ bool wxSTEditorPropertiesDialog::TransferDataFromWindow()
         wxASSERT(IsEditable());
         // do not actually store the values until certain that
         // all went right - it did if we get here
-        m_editor->SetFileEncoding(wxTextEncoding::TypeToString((wxTextEncoding::TextEncoding_Type)(m_encoding - ENC_OFFSET)));
+        m_editor->SetFileEncoding(wxTextEncoding::TypeToString((wxTextEncoding::TextEncoding_Type)(m_encoding)));
         m_editor->SetFileBOM(m_bom);
         m_editor->SetModified(true);
     }
@@ -1702,7 +1701,7 @@ static bool EnableBomCheckBox(wxChoice* list, wxCheckBox* checkbox)
     int enc = list->GetSelection();
     bool bom_current = checkbox->IsChecked();
     size_t count;
-    bool bom = (enc >= ENC_OFFSET) && wxTextEncoding::GetBOMChars((wxTextEncoding::TextEncoding_Type)(enc - ENC_OFFSET), &count);
+    bool bom = (wxTextEncoding::GetBOMChars((wxTextEncoding::TextEncoding_Type)enc, &count) != NULL);
 
     if (bom_current && !bom)
     {
@@ -2674,11 +2673,10 @@ bool wxSTEditorFileOpenPanel::Create(wxWindow* parent)
         {
             wxSTEditorFileDialog* dlg = (wxSTEditorFileDialog*)parent;
 
-            m_index = wxTextEncoding::TypeFromString(wxSTEditorFileDialog::m_encoding) + ENC_OFFSET;
+            m_index = wxTextEncoding::TypeFromString(wxSTEditorFileDialog::m_encoding);
             m_bom   = wxSTEditorFileDialog::m_file_bom;
 
-            wxStaticCast(FindWindow(ID_STEFILEOPEN_ENCODING_CHOICE), wxChoice)->Append(_("none"));
-            for (size_t i = 0; i < wxTextEncoding::EnumCount; i++)
+            for (size_t i = 0; i < wxTextEncoding::TextEncoding__Count; i++)
             {
                 GetList()->Append(wxTextEncoding::TypeToString((wxTextEncoding::Type)i));
             }
@@ -2723,8 +2721,8 @@ wxSTEditorFileDialog::wxSTEditorFileDialog(wxWindow* parent,
                                            const wxString& message,
                                            const wxString& defaultDir,
                                            const wxString& extensions,
-                                           long style) :
-    wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, style)
+                                           long style)
+                     :wxFileDialog(parent, message, defaultDir, wxEmptyString, extensions, style)
 {
     //m_encoding = wxBOM_UTF8;
     //SetFilterIndex(extensions.Freq('|')/2); // "All Files (*)" is at the very bottom of the combobox
@@ -2762,23 +2760,26 @@ int wxSTEditorFileDialog::ShowModal()
         //wnd->TransferDataFromWindow();
         //trac.wxwidgets.org/ticket/13611
 
-        m_encoding = wxTextEncoding::TypeToString((wxTextEncoding::Type)(wnd->m_index - ENC_OFFSET));
+        m_encoding = wxTextEncoding::TypeToString((wxTextEncoding::Type)wnd->m_index);
         m_file_bom = wnd->m_bom;
     }
 #else // !STE_FILEOPENEXTRA
-    if (n == wxID_OK) switch (GetFilterIndex())
+    if (n == wxID_OK)
     {
-        case filterindex_utf8:
-            m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::UTF8);
-            break;
-        case filterindex_unicode:
-            m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::Unicode_LE);
-            break;
-    #ifdef __WXMSW__
-        case filterindex_oem:
-            m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::OEM);
-            break;
-    #endif
+        switch (GetFilterIndex())
+        {
+            case filterindex_utf8:
+                m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::UTF8);
+                break;
+            case filterindex_unicode:
+                m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::Unicode_LE);
+                break;
+        #ifdef __WXMSW__
+            case filterindex_oem:
+                m_encoding = wxTextEncoding::TypeToString(wxTextEncoding::OEM);
+                break;
+        #endif
+        }
     }
 #endif // STE_FILEOPENEXTRA
     return n;
