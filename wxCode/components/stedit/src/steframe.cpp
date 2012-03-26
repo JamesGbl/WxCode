@@ -234,6 +234,14 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     }
     //else user will set up the rest
 
+    if (0 && m_mainSplitter)
+    {
+        wxSTEditorFindResultsEditor* findResultsEditor = new wxSTEditorFindResultsEditor(m_mainSplitter, wxID_ANY);
+        findResultsEditor->CreateOptions(options);
+        wxSTEditorFindReplacePanel::SetFindResultsEditor(findResultsEditor);
+        m_mainSplitter->SplitHorizontally(m_steNotebook, findResultsEditor, 200);
+    }
+
     if (GetOptions().HasFrameOption(STF_CREATE_SIDEBAR) && GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
     {
         GetSideSplitter()->SplitVertically(m_sideSplitterWin1, m_sideSplitterWin2, m_sideSplitter_pos);
@@ -486,10 +494,10 @@ void wxSTEditorFrame::OnSTEPopupMenu(wxSTEditorEvent &event)
 
 wxString wxSTEditorFrame::MakeTitle(const wxSTEditor* editor) const
 {
-    wxFileName filename = editor->GetFileName() ;
+    wxFileName fileName = editor->GetFileName();
     const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
     return wxString::Format(wxT("%s - %s"),
-        (filename.GetFullPath(GetOptions().GetDisplayPathSeparator()) + modified).wx_str(),
+        wxString(fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()) + modified).wx_str(),
         m_titleBase.wx_str());
 }
 

@@ -53,10 +53,9 @@ END_EVENT_TABLE()
 
 bool wxSTEditorTreeCtrl::Create(wxWindow *parent, wxWindowID id,
                                 const wxPoint& pos, const wxSize& size,
-                                long style, const wxValidator& validator,
-                                const wxString& name)
+                                long style, const wxString& name)
 {
-    if (!wxTreeCtrl::Create(parent, id, pos, size, style, validator, name))
+    if (!wxTreeCtrl::Create(parent, id, pos, size, style, wxDefaultValidator, name))
         return false;
 
     wxImageList* imageList = new wxImageList(16, 16, true, 3);

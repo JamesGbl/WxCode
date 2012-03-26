@@ -95,11 +95,10 @@ public:
                        const wxPoint& pos = wxDefaultPosition,
                        const wxSize& size = wxDefaultSize,
                        long style = wxTR_SINGLE|wxTR_HAS_BUTTONS|wxTR_HIDE_ROOT|wxTR_LINES_AT_ROOT,
-                       const wxValidator& validator = wxDefaultValidator,
                        const wxString& name = wxT("wxSTEditorTreeCtrl")) : wxTreeCtrl()
     {
         Init();
-        Create(parent, id, pos, size, style, validator, name);
+        Create(parent, id, pos, size, style, name);
     }
 
     virtual ~wxSTEditorTreeCtrl();
@@ -108,7 +107,6 @@ public:
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
                 long style = wxTR_SINGLE|wxTR_HAS_BUTTONS|wxTR_HIDE_ROOT|wxTR_LINES_AT_ROOT,
-                const wxValidator& validator = wxDefaultValidator,
                 const wxString& name = wxT("wxSTEditorTreeCtrl"));
 
     /// Set the wxSTEditorNotebook to show the pages for.

@@ -323,7 +323,7 @@ public:
     void SetUseGlobalPrefsStylesLangs();
 
     // -----------------------------------------------------------------------
-    /// Get/Set the find/replace data to use, by default use the global version.
+    /// Get the find/replace data to use, by default use the global version.
     wxSTEditorFindReplaceData* GetFindReplaceData() const;
     /// Set a "new" find/replace data to use, if !is_static it'll be deleted, NULL for none.
     void SetFindReplaceData(wxSTEditorFindReplaceData* frData, bool is_static);

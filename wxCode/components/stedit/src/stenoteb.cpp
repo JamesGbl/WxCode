@@ -228,6 +228,7 @@ int wxSTEditorNotebook::FindEditorPageByFileName(const wxFileName& filename)
     for (n = 0; n < count; n++)
     {
         wxSTEditor* editor = GetEditor(n);
+
         if (editor && (editor->GetFileName() == filename))
             return n;
     }
@@ -1166,12 +1167,25 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
         //  when -1 it means that we want a new find all search
         if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
         {
-            wxString str = editor->GetFindReplaceData()->GetFindAllStrings().Item(event.GetExtraLong());
-            long editor_addr = 0;
-            wxCHECK_RET(str.BeforeFirst(wxT('@')).ToLong(&editor_addr), wxT("Invalid editor in find all str"));
+            wxString findAllString = event.GetString();
 
-            wxSTEditor *e = (wxSTEditor*)editor_addr;
-            int page = FindEditorPage(e);
+            wxString fileName;
+            int line_number      = 0;
+            int line_start_pos   = 0;
+            int string_start_pos = 0;
+            int string_length    = 0;
+            wxString lineText;
+
+            bool ok = wxSTEditorFindReplaceData::ParseFindAllString(findAllString,
+                                                                    fileName,
+                                                                    line_number, line_start_pos,
+                                                                    string_start_pos, string_length,
+                                                                    lineText);
+            int page = wxNOT_FOUND;
+
+            if (ok)
+                page = FindEditorPageByFileName(fileName);
+
             if (page != wxNOT_FOUND)
             {
                 SetSelection(page);

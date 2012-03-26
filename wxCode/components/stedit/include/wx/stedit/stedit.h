@@ -146,7 +146,7 @@ public:
         m_steLang_id = lang;
         return true;
     }
-    bool SetLanguage(const wxFileName&);
+    bool SetLanguage(const wxFileName& fileName);
 
 protected:
     wxFileName   m_fileName;        // current filename for the editor
@@ -1112,6 +1112,15 @@ BEGIN_DECLARE_EVENT_TYPES()
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STESHELL_ENTER,      0)
 /// @}
 END_DECLARE_EVENT_TYPES()
+
+
+#if !defined(wxStyledTextEventHandler) // not in < wx29
+typedef void (wxEvtHandler::*wxStyledTextEventFunction)(wxStyledTextEvent&);
+
+#define wxStyledTextEventHandler( func ) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxStyledTextEventFunction, &func)
+    //wxEVENT_HANDLER_CAST( wxStyledTextEventFunction, func )
+#endif // !defined(wxStyledTextEventHandler)
 
 typedef void (wxEvtHandler::*wxSTEditorEventFunction)(wxSTEditorEvent&);
 

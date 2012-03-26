@@ -1975,20 +1975,25 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         //  when -1 it means that we want a new find all search
         if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
         {
-            wxString str = GetFindReplaceData()->GetFindAllStrings().Item(event.GetExtraLong());
-            long editor = 0;
-            wxCHECK_RET(str.BeforeFirst(wxT('@')).ToLong(&editor), wxT("Invalid editor in find all str"));
-            // just a sanity check to make sure we're good
-            if (editor == (long)this)
+            wxString str = event.GetString();
+
+            wxString fileName;
+            int line_number      = 0;
+            int line_start_pos   = 0;
+            int string_start_pos = 0;
+            int string_length    = 0;
+            wxString lineText;
+
+            bool ok = wxSTEditorFindReplaceData::ParseFindAllString(str, fileName,
+                                                                    line_number, line_start_pos,
+                                                                    string_start_pos, string_length,
+                                                                    lineText);
+            // sanity check
+            if (ok && (wxFileName(fileName) == GetFileName()) &&
+                (string_start_pos+string_length <= GetLength()))
             {
-                long start_pos = 0;
-                long end_pos = 0;
-                wxString s = str.AfterFirst(wxT('@'));
-                wxCHECK_RET(s.BeforeFirst(wxT(',')).ToLong(&start_pos), wxT("Invalid start pos in find all str"));
-                s = str.AfterFirst(wxT(','));
-                wxCHECK_RET(s.BeforeFirst(wxT('|')).ToLong(&end_pos), wxT("Invalid end pos in find all str"));
-                GotoPos(start_pos);
-                SetSelection(start_pos, end_pos);
+                GotoPos(string_start_pos);
+                SetSelection(string_start_pos, string_start_pos+string_length);
             }
         }
         else if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
@@ -1999,7 +2004,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
             size_t n, count = FindAllStrings(findString, flags,
                                              &startPositions, &endPositions);
 
-            wxString name = wxFileName(GetFileName()).GetFullName();
+            wxString name = GetFileName().GetFullName();
 
             for (n = 0; n < count; n++)
             {
@@ -2009,11 +2014,11 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
 
                 if (STE_HASBIT(flags, STE_FR_FINDALL))
                 {
-                    wxString str;
-                    str += wxString::Format(wxT("%ld@%d,%d|%s (%4d) "),
-                            (long)this, startPositions[n], endPositions[n],
-                            name.wx_str(), line+1);
-                    str += GetLine(line);
+                    wxString str(wxSTEditorFindReplaceData::CreateFindAllString(
+                                    GetFileName().GetFullPath(),
+                                    line, PositionFromLine(line),
+                                    startPositions[n], endPositions[n]-startPositions[n],
+                                    GetLine(line)));
                     findAllStrings.Add(str);
                 }
             }
@@ -2128,7 +2133,7 @@ STE_TextPos wxSTEditor::FindString(const wxString &findString,
     SetFindString(findString, true);
 
     if (flags == -1) flags = GetFindFlags();
-    int sci_flags = wxSTEditorFindReplaceData::STEToScintillaFlags(flags);
+    int sci_flags = wxSTEditorFindReplaceData::STEToScintillaFindFlags(flags);
     SetSearchFlags(sci_flags);
 
     int textLength = GetTextLength();
@@ -2314,10 +2319,10 @@ bool wxSTEditor::IndicateAllStrings(const wxString &str,
 
     wxArrayInt startPositions;
     wxArrayInt endPositions;
-    size_t count = FindAllStrings(findString, flags,
-                                  &startPositions, &endPositions);
+    size_t n, count = FindAllStrings(findString, flags,
+                                     &startPositions, &endPositions);
 
-    for (size_t n = 0; n < count; n++)
+    for (n = 0; n < count; n++)
     {
         SetIndicator(startPositions[n],
                      endPositions[n] - startPositions[n], indic);

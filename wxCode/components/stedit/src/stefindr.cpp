@@ -21,26 +21,28 @@
 // Static functions for prepending strings to wxArrayString and wxComboBoxes
 //-----------------------------------------------------------------------------
 
-void wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int max_count)
+bool wxSTEPrependArrayString(const wxString &str, wxArrayString &strArray, int max_count)
 {
     const int idx = strArray.Index(str);
     if (idx == 0)
-        return;
+        return false;
     if (idx != wxNOT_FOUND)
         strArray.RemoveAt(idx);
 
     strArray.Insert(str, 0);
     if ((max_count > 0) && ((int)strArray.GetCount() > max_count))
         strArray.RemoveAt(max_count, strArray.GetCount()-max_count);
+
+    return true;
 }
 
-void wxSTEPrependComboBoxString(const wxString &str, wxComboBox *combo, int max_strings)
+bool wxSTEPrependComboBoxString(const wxString &str, wxComboBox *combo, int max_strings)
 {
-    wxCHECK_RET(combo, wxT("Invalid combobox in wxSTEPrependComboBoxString"));
+    wxCHECK_MSG(combo, false, wxT("Invalid combobox in wxSTEPrependComboBoxString"));
 
-    wxTextPos pos = combo->FindString(str);
+    int pos = combo->FindString(str);
     if (pos == 0)
-        return;
+        return false;
     if (pos != wxNOT_FOUND)
         combo->Delete(pos);
 
@@ -52,6 +54,7 @@ void wxSTEPrependComboBoxString(const wxString &str, wxComboBox *combo, int max_
         while ((int)combo->GetCount() > max_strings)
             combo->Delete(combo->GetCount()-1);
     }
+    return true;
 }
 
 void wxSTEInitComboBoxStrings(const wxArrayString& values, wxComboBox* combo)
@@ -90,7 +93,6 @@ void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu* menu, int start_w
         else
         {
             menu->Append(win_id, values[n]);
-
         }
     }
 }
@@ -102,7 +104,17 @@ void wxSTEInitMenuStrings(const wxArrayString& values, wxMenu* menu, int start_w
 // static
 wxSTEditorFindReplaceData wxSTEditorFindReplaceData::sm_findReplaceData(wxFR_DOWN|STE_FR_WRAPAROUND);
 
-int wxSTEditorFindReplaceData::STEToScintillaFlags(int ste_flags)
+wxSTEditorFindReplaceData::wxSTEditorFindReplaceData(wxUint32 flags)
+                          :wxFindReplaceData(),
+                           m_max_strings(10),
+                           m_loaded_config(false),
+                           m_dialogSize(wxDefaultSize)
+{
+    SetFlags(flags);
+}
+
+// static
+int wxSTEditorFindReplaceData::STEToScintillaFindFlags(int ste_flags)
 {
     int sci_flags = 0;
     if (STE_HASBIT(ste_flags, STE_FR_MATCHCASE)) sci_flags |= wxSTC_FIND_MATCHCASE;
@@ -112,7 +124,9 @@ int wxSTEditorFindReplaceData::STEToScintillaFlags(int ste_flags)
     if (STE_HASBIT(ste_flags, STE_FR_POSIX    )) sci_flags |= wxSTC_FIND_POSIX;
     return sci_flags;
 }
-int wxSTEditorFindReplaceData::ScintillaToSTEFlags(int sci_flags)
+
+// static
+int wxSTEditorFindReplaceData::ScintillaToSTEFindFlags(int sci_flags)
 {
     int ste_flags = 0;
     if (STE_HASBIT(sci_flags, wxSTC_FIND_MATCHCASE)) ste_flags |= STE_FR_MATCHCASE;
@@ -121,6 +135,71 @@ int wxSTEditorFindReplaceData::ScintillaToSTEFlags(int sci_flags)
     if (STE_HASBIT(sci_flags, wxSTC_FIND_REGEXP   )) ste_flags |= STE_FR_REGEXP;
     if (STE_HASBIT(sci_flags, wxSTC_FIND_POSIX    )) ste_flags |= STE_FR_POSIX;
     return ste_flags;
+}
+
+// static
+wxString wxSTEditorFindReplaceData::CreateFindAllString(const wxString& fileName,
+                                                        int line_number,      int line_start_pos,
+                                                        int string_start_pos, int string_length,
+                                                        const wxString& lineText)
+{
+    return wxString::Format(wxT("%s|%d|%d|%d|%d>"),
+                                fileName.wx_str(),
+                                line_number, line_start_pos,
+                                string_start_pos, string_length) + lineText;
+}
+
+// static
+bool wxSTEditorFindReplaceData::ParseFindAllString(const wxString& findAllString,
+                                                    wxString& fileName,
+                                                    int& line_number_,      int& line_start_pos_,
+                                                    int& string_start_pos_, int& string_length_,
+                                                    wxString& lineText)
+{
+    wxString s(findAllString);
+    long line_number      = 0;
+    long line_start_pos   = 0;
+    long string_start_pos = 0;
+    long string_length    = 0;
+
+    fileName = s.BeforeFirst(wxT('|'));
+    s = s.AfterFirst(wxT('|'));
+
+    if (s.BeforeFirst(wxT('|')).ToLong(&line_number))
+    {
+        line_number_ = (int)line_number;
+        s = s.AfterFirst(wxT('|'));
+    }
+    else
+        return false;
+
+    if (s.BeforeFirst(wxT('|')).ToLong(&line_start_pos))
+    {
+        line_start_pos_ = (int)line_start_pos;
+        s = s.AfterFirst(wxT('|'));
+    }
+    else
+        return false;
+
+    if (s.BeforeFirst(wxT('|')).ToLong(&string_start_pos))
+    {
+        string_start_pos_ = (int)string_start_pos;
+        s = s.AfterFirst(wxT('|'));
+    }
+    else
+        return false;
+
+    if (s.BeforeFirst(wxT('>')).ToLong(&string_length))
+    {
+        string_length_ = (int)string_length;
+        s = s.AfterFirst(wxT('>'));
+    }
+    else
+        return false;
+
+    lineText = s;
+
+    return true;
 }
 
 bool wxSTEditorFindReplaceData::LoadConfig(wxConfigBase &config,
@@ -146,10 +225,201 @@ void wxSTEditorFindReplaceData::SaveConfig(wxConfigBase &config,
 }
 
 //-----------------------------------------------------------------------------
+// wxSTEditorFindResultsEditor
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS(wxSTEditorFindResultsEditor, wxSTEditor)
+
+BEGIN_EVENT_TABLE(wxSTEditorFindResultsEditor, wxSTEditor)
+    EVT_STC_MARGINCLICK (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+    EVT_STE_MARGINDCLICK(wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+    EVT_STC_DOUBLECLICK (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+END_EVENT_TABLE()
+
+void wxSTEditorFindResultsEditor::Init()
+{
+    m_targetWin = NULL;
+}
+
+bool wxSTEditorFindResultsEditor::Create(wxWindow *parent, wxWindowID winid,
+                                         const wxPoint& pos, const wxSize& size,
+                                         long style, const wxString& name)
+{
+    if (!wxSTEditor::Create(parent, winid, pos, size, style, name))
+        return false;
+
+    SetStyleBits(5); // want to show indicators
+
+    //SetMarginType(STE_MARGIN_NUMBER, wxSTC_MARGIN_NUMBER);
+    //SetMarginWidth(STE_MARGIN_NUMBER, TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_9999")));
+    //SetMarginSensitive(STE_MARGIN_NUMBER, true); // don't select line
+
+    SetMarginWidth(STE_MARGIN_MARKER, 16);
+    SetMarginSensitive(STE_MARGIN_MARKER, true); // don't select line
+
+    //SetMarginWidth(STE_MARGIN_FOLD, 16);
+    //SetMarginSensitive(STE_MARGIN_FOLD, true); // don't select line
+
+    // edge colour
+    //SetEdgeMode(wxSTC_EDGE_LINE);
+    //SetEdgeColumn(7);
+
+    SetReadOnly(true);
+    RegisterStyles(wxSTEditorStyles::GetGlobalEditorStyles());
+    RegisterLangs(wxSTEditorLangs::GetGlobalEditorLangs());
+
+    SetLanguage(STE_LANG_NULL);
+
+    return true;
+}
+
+wxSTEditorFindResultsEditor::~wxSTEditorFindResultsEditor()
+{
+}
+
+void wxSTEditorFindResultsEditor::CreateOptions(const wxSTEditorOptions& options)
+{
+    // fixme - need this for the notebook
+    SetOptions(options);
+}
+
+void wxSTEditorFindResultsEditor::SetResults(const wxSTEditorFindReplaceData& findReplaceData)
+{
+    m_findReplaceData = findReplaceData;
+
+    const wxArrayString& findAllStrings = m_findReplaceData.GetFindAllStrings();
+    size_t n, count = findAllStrings.GetCount();
+
+    m_lineArrayMap.Clear();
+    Clear();
+    ClearAllIndicators();
+
+    if (count < 1)
+    {
+        SetReadOnly(false);
+        SetText(wxEmptyString);
+        SetReadOnly(true);
+        return;
+    }
+
+    IndicatorSetStyle(wxSTC_INDIC0_MASK, wxSTC_INDIC_ROUNDBOX);
+    IndicatorSetForeground(wxSTC_INDIC0_MASK, *wxRED);
+
+    wxSTEditorStyles::GetGlobalEditorStyles().SetEditorStyle( 3, STE_STYLE_STRING,
+                                                              this, false);
+    wxSTEditorStyles::GetGlobalEditorStyles().SetEditorStyle( 4, STE_STYLE_NUMBER,
+                                                              this, false);
+
+    wxString fileName;
+    int line_number      = 0;
+    int line_start_pos   = 0;
+    int string_start_pos = 0;
+    int string_length    = 0;
+    wxString lineText;
+
+    int pos = 0;
+    wxString lastFileName;
+    wxString str;
+
+    SetReadOnly(false);
+
+    for (n = 0; n < count; n++)
+    {
+        if (!wxSTEditorFindReplaceData::ParseFindAllString(findAllStrings.Item(n),
+                                                           fileName,
+                                                           line_number, line_start_pos,
+                                                           string_start_pos, string_length,
+                                                           lineText))
+        {
+            continue;
+        }
+
+        if (fileName != lastFileName)
+        {
+            lastFileName = fileName;
+
+            pos = GetLength();
+            SetFoldLevel(LineFromPosition(pos), 0);
+
+            m_lineArrayMap.Add(-1);
+            AppendText(fileName + wxT("\n"));
+            StartStyling(pos, 31);
+            SetStyling(fileName.Length(), 3);
+        }
+
+        m_lineArrayMap.Add(n);
+
+        pos = GetLength();
+        SetFoldLevel(LineFromPosition(pos), 1);
+
+        wxString lineString(wxString::Format(wxT("%5d"), line_number));
+        AppendText(lineString);
+        StartStyling(pos, 31);
+        SetStyling(lineString.Length(), 4);
+
+        pos = GetLength();
+        AppendText(wxT(" : ") + lineText);
+
+        SetIndicator(pos + 3 + (string_start_pos-line_start_pos),
+                     string_length,
+                     wxSTC_INDIC2_MASK);
+
+    }
+
+    SetReadOnly(true);
+    ColouriseDocument();
+
+    //IndicateAllStrings(m_findReplaceData.GetFindString(),
+    //                   m_findReplaceData.GetFlags(),
+    //                   wxSTC_INDIC0_MASK);
+}
+
+void wxSTEditorFindResultsEditor::OnMarginClick( wxStyledTextEvent &event )
+{
+    //if (!m_created) return; // set after editor is fully created
+
+    if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
+        return;
+
+    STE_TextPos pos = event.GetPosition();
+
+    if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
+        pos = GetCurrentPos();
+
+    int line = LineFromPosition(pos);
+
+    if (GetLine(line).Strip(wxString::both).IsEmpty())
+        return;
+
+    MarkerDeleteAll(STE_MARKER_BOOKMARK);
+
+    if ((line < 0) || (line >= (int)m_lineArrayMap.GetCount()) || (m_lineArrayMap[line] < 0))
+        return;
+
+    int findall_index = m_lineArrayMap[line];
+
+    MarkerAdd(line, STE_MARKER_BOOKMARK);
+
+    wxFindDialogEvent fEvent(wxEVT_COMMAND_FIND_NEXT, GetId());
+    fEvent.SetEventObject(this);
+    fEvent.SetFindString(m_findReplaceData.GetFindAllStrings()[findall_index]);
+    fEvent.SetFlags(m_findReplaceData.GetFlags());
+    fEvent.SetExtraLong(findall_index);
+    //Send(fEvent);
+
+    if (m_targetWin)
+        m_targetWin->GetEventHandler()->ProcessEvent(fEvent);
+    else
+        GetParent()->GetEventHandler()->ProcessEvent(fEvent);
+}
+
+//-----------------------------------------------------------------------------
 // wxSTEditorFindReplacePanel
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorFindReplacePanel, wxPanel)
+
+wxSTEditorFindResultsEditor* wxSTEditorFindReplacePanel::sm_findResultsEditor = NULL;
 
 BEGIN_EVENT_TABLE(wxSTEditorFindReplacePanel, wxPanel)
     EVT_TEXT        (ID_STEDLG_FIND_COMBO,    wxSTEditorFindReplacePanel::OnFindComboText)
@@ -159,10 +429,6 @@ BEGIN_EVENT_TABLE(wxSTEditorFindReplacePanel, wxPanel)
     EVT_RADIOBUTTON (wxID_ANY,                wxSTEditorFindReplacePanel::OnCheckBox)
     EVT_BUTTON      (wxID_ANY,                wxSTEditorFindReplacePanel::OnButton)
     EVT_MENU        (wxID_ANY,                wxSTEditorFindReplacePanel::OnMenu)
-
-    EVT_STC_MARGINCLICK (wxID_ANY, wxSTEditorFindReplacePanel::OnMarginClick)
-    EVT_STE_MARGINDCLICK(wxID_ANY, wxSTEditorFindReplacePanel::OnMarginClick)
-    EVT_STC_DOUBLECLICK (wxID_ANY, wxSTEditorFindReplacePanel::OnMarginClick)
 
 #ifdef __WXMSW__
     EVT_IDLE        (wxSTEditorFindReplacePanel::OnIdle)
@@ -181,19 +447,16 @@ wxSTEditorFindReplacePanel::~wxSTEditorFindReplacePanel()
 
 void wxSTEditorFindReplacePanel::Init()
 {
-    m_created = false;
-    m_ignore_activation = false;
+    m_created            = false;
+    m_ignore_activation  = false;
 
-    m_targetWin = NULL;
+    m_targetWin          = NULL;
 
-    m_flags = 0;
-    m_findReplaceData = NULL;
+    m_flags              = 0;
+    m_findReplaceData    = NULL;
 
     m_find_insert_pos    = 0;
     m_replace_insert_pos = 0;
-
-    m_findCombo    = NULL;
-    m_replaceCombo = NULL;
 
     m_findCombo          = NULL;
     m_replaceCombo       = NULL;
@@ -377,18 +640,8 @@ bool wxSTEditorFindReplacePanel::Create(wxWindow *parent, wxWindowID winid,
     rootSizer->AddGrowableRow( 1 );
     rootSizer->Add(frSizer, 0, wxGROW, 0);
 
-    m_resultEditor = new wxSTEditor(this, wxID_ANY); // create before SetData
+    m_resultEditor = new wxSTEditorFindResultsEditor(this, wxID_ANY);
     m_resultEditor->Show(false);
-    m_resultEditor->SetStyleBits(5); // want to show indicators
-    m_resultEditor->SetMarginType(STE_MARGIN_NUMBER, wxSTC_MARGIN_NUMBER);
-    m_resultEditor->SetMarginWidth(STE_MARGIN_NUMBER, m_resultEditor->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_9999")));
-    m_resultEditor->SetMarginSensitive(STE_MARGIN_NUMBER, true); // don't select line
-    m_resultEditor->SetMarginSensitive(STE_MARGIN_MARKER, true); // don't select line
-    m_resultEditor->SetMarginWidth(STE_MARGIN_MARKER, 16);
-    m_resultEditor->SetMarginWidth(STE_MARGIN_FOLD, 0);
-    m_resultEditor->SetReadOnly(true);
-    m_resultEditor->RegisterStyles(wxSTEditorStyles::GetGlobalEditorStyles());
-    m_resultEditor->RegisterLangs(wxSTEditorLangs::GetGlobalEditorLangs());
 
     rootSizer->Add(m_resultEditor, 1, wxGROW, 0);
     //rootSizer->Show(m_resultEditor, m_findReplaceData->HasFlag(STE_FR_FINDALL));
@@ -511,17 +764,17 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         }
     }
 
+    wxSTEditorFindResultsEditor* resultsEditor = GetFindResultsEditor() ? GetFindResultsEditor() : m_resultEditor;
+
     // ExtraLong is the line number pressed in the find all editor
     //  when -1 it means that we want a new find all search
-    if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && m_resultEditor &&
+    if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && resultsEditor &&
         (event.GetExtraLong() == -1) &&
         ((event.GetEventType() == wxEVT_COMMAND_FIND) ||
          (event.GetEventType() == wxEVT_COMMAND_FIND_NEXT)))
     {
         m_findReplaceData->GetFindAllStrings().Clear();
-        m_resultEditor->SetReadOnly(false);
-        m_resultEditor->SetText(wxEmptyString);
-        m_resultEditor->SetReadOnly(true);
+        resultsEditor->SetResults(*m_findReplaceData);
     }
 
     wxWindow *target = GetTargetWindow();
@@ -533,56 +786,16 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         // because the dialog is a top level window, so do it manually as
         // in 9 cases of 10 the message must be processed by the dialog
         // owner and not the dialog itself
-        (void)target->GetEventHandler()->ProcessEvent(event);
+        target->GetEventHandler()->ProcessEvent(event);
     }
 
-    if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && m_resultEditor &&
+    if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && resultsEditor &&
         (event.GetExtraLong() == -1) &&
         ((event.GetEventType() == wxEVT_COMMAND_FIND) ||
          (event.GetEventType() == wxEVT_COMMAND_FIND_NEXT)))
     {
-        wxSTEditor* edit = GetEditor();
-        if (edit)
-        {
-            m_resultEditor->SetLanguage(edit->GetLanguageId());
-        }
-
-        const wxArrayString& findAllStrings = m_findReplaceData->GetFindAllStrings();
-        size_t n, count = findAllStrings.GetCount();
-        wxString str;
-        for (n = 0; n < count; n++)
-            str += findAllStrings.Item(n).AfterFirst(wxT('|'));
-
-        m_resultEditor->Clear();
-        m_resultEditor->ClearAllIndicators();
-
-        m_resultEditor->SetReadOnly(false);
-        m_resultEditor->SetText(str);
-        m_resultEditor->SetReadOnly(true);
-        m_resultEditor->ColouriseDocument();
-
-        wxSTEditorStyles::GetGlobalEditorStyles().SetEditorStyle( 3, STE_STYLE_STRING,
-                                                                m_resultEditor, false);
-        wxSTEditorStyles::GetGlobalEditorStyles().SetEditorStyle( 4, STE_STYLE_NUMBER,
-                                                                m_resultEditor, false);
-
-        for (n = 0; n < count; n++)
-        {
-            str = findAllStrings.Item(n).AfterFirst(wxT('|'));
-            STE_TextPos pos = m_resultEditor->PositionFromLine((int)n);
-            m_resultEditor->StartStyling(pos, 31);
-            int length = (int)str.BeforeFirst(wxT('(')).Length() - 1;
-            m_resultEditor->SetStyling(length, 3);
-
-            pos = pos + length + 1;
-            m_resultEditor->StartStyling(pos, 31);
-            length = (int)str.AfterFirst(wxT('(')).BeforeFirst(wxT(')')).Length() + 2;
-            m_resultEditor->SetStyling(length, 4);
-        }
-
-        m_resultEditor->IndicateAllStrings(m_findReplaceData->GetFindString(),
-                                           m_findReplaceData->GetFlags(),
-                                           wxSTC_INDIC0_MASK);
+        resultsEditor->SetTargetWindow(GetTargetWindow());
+        resultsEditor->SetResults(*m_findReplaceData);
     }
 
     UpdateButtons();
@@ -731,7 +944,8 @@ void wxSTEditorFindReplacePanel::UpdateFindFlags()
     else if (m_scopecursorRadioButton->GetValue())  m_flags |= STE_FR_FROMCURSOR;
     else if (m_scopealldocsRadioButton->GetValue()) m_flags |= STE_FR_ALLDOCS;
 
-    if (m_resultEditor->IsShown() != STE_HASBIT(m_flags, STE_FR_FINDALL))
+    if (!GetFindResultsEditor() && m_resultEditor &&
+        (m_resultEditor->IsShown() != STE_HASBIT(m_flags, STE_FR_FINDALL)))
     {
         InvalidateBestSize();
         SetMinSize(wxSize(10, 10));
@@ -831,40 +1045,6 @@ void wxSTEditorFindReplacePanel::UpdateButtons()
         wxSTE_WIN_ENABLE(m_replaceButton, enable);
         wxSTE_WIN_ENABLE(m_replaceFindButton, enable);
     }
-}
-
-void wxSTEditorFindReplacePanel::OnMarginClick( wxStyledTextEvent &event )
-{
-    if (!m_resultEditor) return; // set after editor is fully created
-
-    if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
-        return;
-
-    wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
-    STE_TextPos pos = event.GetPosition();
-
-    if (event.GetEventType() == wxEVT_STC_DOUBLECLICK) // event pos not set correctly
-        pos = editor->GetCurrentPos();
-
-    int line = editor->LineFromPosition(pos);
-
-    if (editor->GetLine(line).Strip(wxString::both).IsEmpty())
-        return;
-
-    const wxArrayString& findAllStrings = m_findReplaceData->GetFindAllStrings();
-
-    if ((line < 0) || (line >= (int)findAllStrings.GetCount()))
-        return;
-
-    editor->MarkerDeleteAll(STE_MARKER_BOOKMARK);
-    editor->MarkerAdd(line, STE_MARKER_BOOKMARK);
-
-    wxFindDialogEvent fEvent(wxEVT_COMMAND_FIND_NEXT, GetId());
-    fEvent.SetEventObject(this);
-    fEvent.SetFindString(m_findCombo->GetValue());
-    fEvent.SetFlags(GetFindFlags());
-    fEvent.SetExtraLong(line);
-    Send(fEvent);
 }
 
 //-----------------------------------------------------------------------------

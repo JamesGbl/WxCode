@@ -72,7 +72,7 @@ public:
     /// Find the page that this editor is in or -1 for none.
     int FindEditorPage(const wxSTEditor* editor);
     /// Find the page who's editor has this filename, returns first found or -1 for not found.
-    int FindEditorPageByFileName(const wxFileName&);
+    int FindEditorPageByFileName(const wxFileName& fileName);
     /// Find the page who's editor has this id, returns first found or -1 for not found.
     int FindEditorPageById(wxWindowID win_id);
 

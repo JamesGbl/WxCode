@@ -21,6 +21,9 @@
 // Include wxStyledTextCtrl
 #include <wx/stc/stc.h>
 
+// Include the wxWidgets 2.9 shared ptr or the one backported to 2.8
+//#include "wx/stedit/sharedptr.h"
+
 #if (wxVERSION_NUMBER >= 2900)
     // #include <wx/stc/private.h> // wx2stc() has been moved here, but isn't exported
     #define wx2stc(wxstr)    (wxstr).mb_str()
