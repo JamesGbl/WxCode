@@ -164,7 +164,7 @@ install(FILES
 # CMake build file for wxStEdit sample
 # ---------------------------------------------------------------------------
 
-ADD_EXECUTABLE_FULL( wxStEdit WIN32
+ADD_EXECUTABLE_FULL( wxStEdit WIN32 MACOSX_BUNDLE
     HEADERS
         ${wxStEdit_ROOT_DIR}/samples/stedit/readme_htm.hpp
         #${wxStEdit_ROOT_DIR}/samples/stedit/stedoc.h

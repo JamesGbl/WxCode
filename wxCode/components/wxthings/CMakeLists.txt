@@ -268,7 +268,7 @@ install(FILES
 # CMake build file for wxThings sample
 # ---------------------------------------------------------------------------
 
-ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
+ADD_EXECUTABLE_FULL( wxThingsDemo WIN32 MACOSX_BUNDLE
     HEADERS ""
     SOURCES
         ${wxThings_ROOT_DIR}/samples/things/thingsdemo.cpp
@@ -282,7 +282,7 @@ ADD_EXECUTABLE_FULL( wxThingsDemo WIN32
 # CMake build file for wxThings FileBrowser sample
 # ---------------------------------------------------------------------------
 
-ADD_EXECUTABLE_FULL( wxFileBrowser WIN32
+ADD_EXECUTABLE_FULL( wxFileBrowser WIN32 MACOSX_BUNDLE
     HEADERS ""
     SOURCES
         ${wxThings_ROOT_DIR}/samples/filebrws/wxfilebrowser.cpp

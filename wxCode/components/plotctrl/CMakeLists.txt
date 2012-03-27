@@ -195,7 +195,7 @@ install(FILES
 # CMake build file for wxPlotCtrl sample
 # ---------------------------------------------------------------------------
 
-ADD_EXECUTABLE_FULL( wxPlotCtrlDemo WIN32
+ADD_EXECUTABLE_FULL( wxPlotCtrlDemo WIN32 MACOSX_BUNDLE
     HEADERS
         ""
     SOURCES

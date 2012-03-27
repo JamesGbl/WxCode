@@ -125,7 +125,7 @@ install(FILES
 # CMake build file for wxSheet sample
 # ---------------------------------------------------------------------------
 
-ADD_EXECUTABLE_FULL( wxSheetDemo WIN32
+ADD_EXECUTABLE_FULL( wxSheetDemo WIN32 MACOSX_BUNDLE
     HEADERS
         ${wxSheet_ROOT_DIR}/samples/sheet/sheetdemo.h
     SOURCES
