@@ -4110,9 +4110,10 @@ void wxSheet::DrawAllGridLines( wxDC& dc, const wxRegion & WXUNUSED(reg) )
                 }
             }
         }
-
+#if !defined(__WXMAC__) || wxCHECK_VERSION(2,9,0)
         if (done)
             dc.SetDeviceClippingRegion( clippedcells );
+#endif
     }
 
     dc.SetPen( wxPen(GetGridLineColour(), 1, wxSOLID) );
