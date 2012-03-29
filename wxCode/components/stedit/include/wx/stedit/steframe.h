@@ -90,7 +90,7 @@ public:
     virtual bool Destroy(); ///< overrides wxFrame::Destroy()
 
     /// Create a wxSTEditorFrame, call only if you've used the default constructor.
-    bool Create(wxWindow *parent = NULL, wxWindowID id = wxID_ANY,
+    bool Create(wxWindow *parent, wxWindowID id = wxID_ANY,
                 const wxString& title = STE_APPDISPLAYNAME,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,

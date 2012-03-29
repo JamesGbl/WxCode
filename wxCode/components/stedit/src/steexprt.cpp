@@ -2049,7 +2049,7 @@ void wxSTEditorExportDialog::OnButton(wxCommandEvent& event)
                 }
             }
 
-            fileName = wxFileSelector( _("Export to file"), path, fileName.GetFullPath(),
+            fileName = wxFileSelector( _("Export to a html, pdf, rtf, tex, or xml file"), path, fileName.GetFullPath(),
                                        extension, wildcards,
                                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT,
                                        this );

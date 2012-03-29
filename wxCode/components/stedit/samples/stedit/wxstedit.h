@@ -23,10 +23,10 @@ public:
     wxStEditApp();
 
     // wxApp overridden virtual functions
-    virtual bool OnInit();
-    virtual int OnExit();
-    virtual void OnInitCmdLine(wxCmdLineParser& parser);
+    virtual void OnInitCmdLine(wxCmdLineParser& parser);   // wxApp::OnInit() calls these
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+    virtual bool OnInit();
+    virtual int  OnExit();
 
 protected:
     void CreateShell();
@@ -40,7 +40,7 @@ protected:
 
     wxSTEditorOptions m_steOptions;
     wxArrayFileName  m_fileNames;      // command line filenames
-    bool m_recurse_dirs;            // command line option to recurse dirs
-    enum wxLanguage m_lang;         // command line language
+    bool m_recurse_dirs;               // command line option to recurse dirs
+    enum wxLanguage m_lang;            // command line language
     wxLocale m_locale;
 };

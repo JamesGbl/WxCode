@@ -19,18 +19,24 @@
 WX_DECLARE_OBJARRAY_WITH_DECL(wxFileName, wxArrayFileName, class WXDLLIMPEXP_STEDIT);
 
 #ifdef _WX_INTL_H_
-WX_DEFINE_ARRAY_INT(enum wxLanguage, LanguageArray);
 class WXDLLIMPEXP_STEDIT wxLocaleHelper
 {
 public:
 
     static bool Init(wxLocale*, const wxString& exetitle, enum wxLanguage lang = wxLANGUAGE_DEFAULT);
 
-    static bool GetSupportedLanguages(LanguageArray*);
+    /// Get an array of enum wxLanguage directories found.
+    /// If the localeDir string is empty, the current app_dir/locale is searched.
+    static size_t GetSupportedLanguages(wxArrayInt& languages,
+                                        const wxString& localeDir = wxEmptyString);
 
-    static bool SingleChoice(const LanguageArray&, enum wxLanguage*);
+    /// Show a dialog to choose a language from an array of enum wxLanguage.
+    /// Returns false if the dialog is canceled and modifies lang on user selection.
+    static bool SingleChoice(const wxArrayInt& languages, wxLanguage* selected_language);
 
-    static bool Find(const wxString&, enum wxLanguage*);
+    /// Find the enum wxLanguage corresponding to the localeName (de, fr, ...)
+    /// Returns false if not found and lang is unmodified.
+    static bool Find(const wxString& localeName, wxLanguage* found_language);
 };
 #endif
 

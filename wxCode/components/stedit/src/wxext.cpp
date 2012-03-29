@@ -50,94 +50,115 @@ bool wxGetExeFolder(wxFileName* filename)
 /*static*/
 bool wxLocaleHelper::Init(wxLocale* locale, const wxString& exetitle, enum wxLanguage lang)
 {
-   bool ok;
-   wxFileName filename;
+    wxFileName filename;
+    wxGetExeFolder(&filename);
+    filename.AppendDir(wxT("locale"));
+    wxLocale::AddCatalogLookupPathPrefix(filename.GetFullPath());
 
-   wxGetExeFolder(&filename);
-   filename.AppendDir(wxT("locale"));
-   wxLocale::AddCatalogLookupPathPrefix(filename.GetFullPath());
-   ok = locale->Init(lang);
-   if (ok)
-   {
-      locale->AddCatalog(exetitle);
-   }
-   return ok;
+    if (locale->Init(lang))
+    {
+        locale->AddCatalog(exetitle);
+        return true;
+    }
+
+    return false;
 }
 
 /*static*/
-bool wxLocaleHelper::Find(const wxString& str, enum wxLanguage* lang)
+bool wxLocaleHelper::Find(const wxString& localeName, wxLanguage* found_language)
 {
-   const size_t len = str.Length();
+    const size_t len = localeName.Length();
 
-   for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
-   {
-      const wxLanguageInfo* info = wxLocale::GetLanguageInfo(i);
+    for (int i = wxLANGUAGE_UNKNOWN + 1; i < wxLANGUAGE_USER_DEFINED; i++)
+    {
+        const wxLanguageInfo* info = wxLocale::GetLanguageInfo(i);
 
-      if (   info
-          && (   (0 == str.CmpNoCase(info->CanonicalName))
-              || (0 == str.CmpNoCase(info->CanonicalName.Left(len)))
-             )
-          )
-      {
-         *lang = (enum wxLanguage)i;
-         return true;
-      }
-   }
-   return false;
+        if ( info && ((0 == localeName.CmpNoCase(info->CanonicalName)) ||
+                      (0 == localeName.CmpNoCase(info->CanonicalName.Left(len)))))
+        {
+            if (found_language)
+                *found_language = (wxLanguage)i;
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /*static*/
-bool wxLocaleHelper::GetSupportedLanguages(LanguageArray* array)
+size_t wxLocaleHelper::GetSupportedLanguages(wxArrayInt& languages,
+                                             const wxString& localeDir)
 {
-   bool ok;
-   wxFileName filename;
-   wxDir dir;
+    size_t init_count = languages.GetCount();
 
-   wxGetExeFolder(&filename);
-   filename.AppendDir(wxT("locale"));
-   ok = dir.Open(filename.GetFullPath());
-   if (ok)
-   {
-      const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
-      wxString str;
+    wxFileName filename(localeDir);
 
-      array->Add(default_lang);
-      for (bool cont = dir.GetFirst(&str, wxEmptyString, wxDIR_DIRS);
+    if (localeDir.IsEmpty())
+    {
+        wxGetExeFolder(&filename);
+        filename.AppendDir(wxT("locale"));
+    }
+
+    const enum wxLanguage default_lang = wxLANGUAGE_ENGLISH;
+    languages.Add(default_lang);
+
+    wxDir    dir;
+    wxString dirName;
+
+    if (!dir.Open(filename.GetFullPath()))
+        return 0;
+
+    for (bool cont = dir.GetFirst(&dirName, wxEmptyString, wxDIR_DIRS);
            cont;
-           cont = dir.GetNext(&str))
-      {
-         enum wxLanguage lang;
+           cont = dir.GetNext(&dirName))
+    {
+        enum wxLanguage lang = default_lang;
 
-         if (   wxLocaleHelper::Find(str, &lang)
-             && (lang != default_lang))
-         {
-            array->Add(lang);
-         }
-      }
-   }
-   return ok;
+        if (wxLocaleHelper::Find(dirName, &lang) &&
+            (lang != default_lang) &&
+            (languages.Index(lang) == wxNOT_FOUND))
+            languages.Add(lang);
+    }
+
+   return languages.GetCount() - init_count;
 }
 
 /*static*/
-bool wxLocaleHelper::SingleChoice(const LanguageArray& array, enum wxLanguage* lang)
+bool wxLocaleHelper::SingleChoice(const wxArrayInt& languages, wxLanguage* selected_language)
 {
-   bool ok;
-   int index;
-   wxArrayString as;
+    size_t n, count = languages.GetCount();
 
-   for (size_t i = 0; i < array.GetCount(); i++)
-   {
-      enum wxLanguage temp = (enum wxLanguage)array.Item(i);
+    if (count == 0u)
+    {
+        wxMessageBox(_("Unable to find language translations, defaulting to English."),
+                     _("No Languages Found"), wxOK|wxICON_ERROR);
+        return false;
+    }
 
-      as.Add(wxLocale::GetLanguageName(temp));
-   }
-   index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, as);
-   ok = (index != wxNOT_FOUND);
-   if (ok && lang)
-   {
-      *lang = (enum wxLanguage)array.Item(index);
-   }
-   return ok;
+    wxArrayString languageNames;
+
+    for (n = 0; n < count; ++n)
+    {
+        enum wxLanguage lang = (enum wxLanguage)languages.Item(n);
+
+        wxString name = wxLocale::GetLanguageName(lang);
+
+        if (!name.IsEmpty())
+            languageNames.Add(name);
+    }
+
+    int index = wxGetSingleChoiceIndex(wxT("Language"), wxMessageBoxCaption, languageNames);
+
+    if (index != wxNOT_FOUND)
+    {
+        if (selected_language)
+            *selected_language = (wxLanguage)languages.Item(index);
+
+        return true;
+    }
+
+    return wxLANGUAGE_UNKNOWN;
 }
 
 #if wxUSE_ACCEL
@@ -145,12 +166,10 @@ bool wxLocaleHelper::SingleChoice(const LanguageArray& array, enum wxLanguage* l
 /*static*/
 wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
 {
-    wxAcceleratorEntry ret;
+    wxAcceleratorEntry accelEntry;
 
     #define STOCKITEM(stockid, flags, keycode)      \
-        case stockid:                               \
-            ret.Set(flags, keycode, stockid);       \
-            break;
+        case stockid: accelEntry.Set(flags, keycode, stockid); break;
 
     // subjective list of accelerators considered "stock" (standard)
     switch (id)
@@ -166,19 +185,19 @@ wxAcceleratorEntry wxAcceleratorHelper::GetStockAccelerator(wxWindowID id)
         STOCKITEM(wxID_EXIT,          wxACCEL_CTRL,                 'Q')
         STOCKITEM(wxID_ABOUT,         wxACCEL_SHIFT,           WXK_HELP)
         default:
-            ret = wxGetStockAccelerator(id);
+            accelEntry = wxGetStockAccelerator(id);
             break;
     }
 
     #undef STOCKITEM
 
 #if (wxVERSION_NUMBER >= 2902)
-    wxASSERT(ret.IsOk());
+    wxASSERT(accelEntry.IsOk());
 #else
     // trac.wxwidgets.org/ticket/12444
     // trac.wxwidgets.org/ticket/12445
 #endif
-    return ret;
+    return accelEntry;
 }
 
 /*static*/
