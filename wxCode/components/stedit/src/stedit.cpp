@@ -117,30 +117,31 @@ bool wxSTEditorRefData::SetLanguage(const wxFileName &filePath)
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditor, wxStyledTextCtrl)
 
 BEGIN_EVENT_TABLE(wxSTEditor, wxStyledTextCtrl)
-    EVT_SET_FOCUS            (wxSTEditor::OnSetFocus)
+    EVT_SET_FOCUS               (wxSTEditor::OnSetFocus)
 
-    EVT_CONTEXT_MENU         (wxSTEditor::OnContextMenu)
-    EVT_KEY_DOWN             (wxSTEditor::OnKeyDown)
-    //EVT_KEY_UP               (wxSTEditor::OnKeyUp)
-    EVT_MOUSEWHEEL           (wxSTEditor::OnMouseWheel)
-    EVT_SCROLL               (wxSTEditor::OnScroll)
-    EVT_SCROLLWIN            (wxSTEditor::OnScrollWin)
+    EVT_CONTEXT_MENU            (wxSTEditor::OnContextMenu)
+    EVT_KEY_DOWN                (wxSTEditor::OnKeyDown)
+    //EVT_KEY_UP                (wxSTEditor::OnKeyUp)
+    EVT_MOUSEWHEEL              (wxSTEditor::OnMouseWheel)
+    EVT_SCROLL                  (wxSTEditor::OnScroll)
+    EVT_SCROLLWIN               (wxSTEditor::OnScrollWin)
 
-    EVT_MENU                 (wxID_ANY, wxSTEditor::OnMenu)
+    EVT_MENU                    (wxID_ANY, wxSTEditor::OnMenu)
 
-    EVT_STC_CHARADDED        (wxID_ANY, wxSTEditor::OnSTCCharAdded)
-    EVT_STC_UPDATEUI         (wxID_ANY, wxSTEditor::OnSTCUpdateUI)
-    EVT_STC_MARGINCLICK      (wxID_ANY, wxSTEditor::OnSTCMarginClick)
-    EVT_STE_MARGINDCLICK     (wxID_ANY, wxSTEditor::OnSTCMarginDClick)
+    EVT_STC_CHARADDED           (wxID_ANY, wxSTEditor::OnSTCCharAdded)
+    EVT_STC_UPDATEUI            (wxID_ANY, wxSTEditor::OnSTCUpdateUI)
+    EVT_STC_MARGINCLICK         (wxID_ANY, wxSTEditor::OnSTCMarginClick)
+    EVT_STEDITOR_MARGINDCLICK   (wxID_ANY, wxSTEditor::OnSTCMarginDClick)
 
-    EVT_STE_STATE_CHANGED    (wxID_ANY, wxSTEditor::OnSTEState)
-    EVT_STE_SET_FOCUS        (wxID_ANY, wxSTEditor::OnSTEFocus)
+    EVT_STEDITOR_STATE_CHANGED  (wxID_ANY, wxSTEditor::OnSTEState)
+    EVT_STEDITOR_SET_FOCUS      (wxID_ANY, wxSTEditor::OnSTEFocus)
 
-    EVT_FIND                 (wxID_ANY, wxSTEditor::OnFindDialog)
-    EVT_FIND_NEXT            (wxID_ANY, wxSTEditor::OnFindDialog)
-    EVT_FIND_REPLACE         (wxID_ANY, wxSTEditor::OnFindDialog)
-    EVT_FIND_REPLACE_ALL     (wxID_ANY, wxSTEditor::OnFindDialog)
-    EVT_FIND_CLOSE           (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_FIND                    (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_FIND_NEXT               (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_FIND_REPLACE            (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_FIND_REPLACE_ALL        (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_FIND_CLOSE              (wxID_ANY, wxSTEditor::OnFindDialog)
+    EVT_STEFIND_GOTO            (wxID_ANY, wxSTEditor::OnFindDialog)
 END_EVENT_TABLE()
 
 // Put these macros at the top of a function you want to block executing
@@ -301,7 +302,7 @@ void wxSTEditor::CreateOptions(const wxSTEditorOptions& options)
 
     // Send created event to parent, not to this.
     // A derived editor would simply have overridden this function.
-    wxCommandEvent event(wxEVT_STE_CREATED, GetId());
+    wxCommandEvent event(wxEVT_STEDITOR_CREATED, GetId());
     event.SetEventObject(this);
     GetParent()->GetEventHandler()->ProcessEvent(event);
 }
@@ -349,7 +350,7 @@ void wxSTEditor::SetEditable(bool editable)
     wxStyledTextCtrl::SetReadOnly(!editable); // SetEditable() doesn't exist in wx28
 #endif
 
-    SendEvent(wxEVT_STE_STATE_CHANGED, STE_EDITABLE, GetState(), GetFileName().GetFullPath());
+    SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_EDITABLE, GetState(), GetFileName().GetFullPath());
 }
 
 bool wxSTEditor::IsModified() const
@@ -370,14 +371,14 @@ void wxSTEditor::DiscardEdits()
 #endif
     GetSTERefData()->m_dirty_flag = false;
 
-    SendEvent(wxEVT_STE_STATE_CHANGED, STE_MODIFIED, GetState(), GetFileName().GetFullPath());
+    SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_MODIFIED, GetState(), GetFileName().GetFullPath());
 }
 
 void wxSTEditor::MarkDirty()
 {
     //wxStyledTextCtrl::MarkDirty(); // not implemented, asserts
     GetSTERefData()->m_dirty_flag = true;
-    SendEvent(wxEVT_STE_STATE_CHANGED, STE_MODIFIED, GetState(), GetFileName().GetFullPath());
+    SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_MODIFIED, GetState(), GetFileName().GetFullPath());
 }
 
 bool wxSTEditor::GetViewNonPrint() const
@@ -1297,7 +1298,7 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
         GetSTERefData()->m_fileName = fileName;
         if (send_event)
         {
-            SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
+            SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
         }
     }
 }
@@ -1329,7 +1330,7 @@ bool wxSTEditor::LoadFile( wxInputStream& stream,
     {
         SetTextAndInitialize(str);
 
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_FILENAME, GetState(), fileName.GetFullPath());
+        SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_FILENAME, GetState(), fileName.GetFullPath());
     }
     return ok;
 }
@@ -1969,34 +1970,32 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
                 pos -= (STE_TextPos)findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
 
-    if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
+    if (eventType == wxEVT_STEFIND_GOTO)
     {
-        // ExtraLong is the line number pressed in the find all editor
-        //  when -1 it means that we want a new find all search
-        if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
+        wxString str = event.GetString();
+
+        wxString fileName;
+        int line_number      = 0;
+        int line_start_pos   = 0;
+        int string_start_pos = 0;
+        int string_length    = 0;
+        wxString lineText;
+
+        bool ok = wxSTEditorFindReplaceData::ParseFindAllString(str, fileName,
+                                                                line_number, line_start_pos,
+                                                                string_start_pos, string_length,
+                                                                lineText);
+        // sanity check
+        if (ok && (wxFileName(fileName) == GetFileName()) &&
+            (string_start_pos+string_length <= GetLength()))
         {
-            wxString str = event.GetString();
-
-            wxString fileName;
-            int line_number      = 0;
-            int line_start_pos   = 0;
-            int string_start_pos = 0;
-            int string_length    = 0;
-            wxString lineText;
-
-            bool ok = wxSTEditorFindReplaceData::ParseFindAllString(str, fileName,
-                                                                    line_number, line_start_pos,
-                                                                    string_start_pos, string_length,
-                                                                    lineText);
-            // sanity check
-            if (ok && (wxFileName(fileName) == GetFileName()) &&
-                (string_start_pos+string_length <= GetLength()))
-            {
-                GotoPos(string_start_pos);
-                SetSelection(string_start_pos, string_start_pos+string_length);
-            }
+            GotoPos(string_start_pos);
+            SetSelection(string_start_pos, string_start_pos+string_length);
         }
-        else if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
+    }
+    else if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
+    {
+        if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
         {
             wxArrayString& findAllStrings = GetFindReplaceData()->GetFindAllStrings();
             wxArrayInt startPositions;
@@ -2109,7 +2108,7 @@ void wxSTEditor::SetFindString(const wxString &findString, bool send_evt)
     if (send_evt && (lastFindString != findString))
     {
         SetStateSingle(STE_CANFIND, !findString.IsEmpty());
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
+        SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
     }
 }
 void wxSTEditor::SetFindFlags(long flags, bool send_evt)
@@ -2117,7 +2116,7 @@ void wxSTEditor::SetFindFlags(long flags, bool send_evt)
     if (send_evt && (GetFindReplaceData()->GetFlags() != flags))
     {
         GetFindReplaceData()->SetFlags(flags);
-        SendEvent(wxEVT_STE_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
+        SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_CANFIND, GetState(), GetFileName().GetFullPath());
     }
 }
 
@@ -3585,7 +3584,7 @@ long wxSTEditor::UpdateCanDo(bool send_event)
     }
 
     if (send_event && (state_change != 0))
-       SendEvent(wxEVT_STE_STATE_CHANGED, state_change, GetState(), GetFileName().GetFullPath());
+       SendEvent(wxEVT_STEDITOR_STATE_CHANGED, state_change, GetState(), GetFileName().GetFullPath());
 
     return state_change;
 }
@@ -3787,8 +3786,8 @@ bool wxSTEditor::SendEvent(wxEventType eventType, int evt_int, long extra_long,
 
     //wxPrintf(wxT("Send event %d, %d %ld '%s'\n"), long(eventType), evt_int, extra_long, evtStr.wx_str());
 
-    if ((eventType == wxEVT_STE_STATE_CHANGED) ||
-        (eventType == wxEVT_STE_SET_FOCUS) ||
+    if ((eventType == wxEVT_STEDITOR_STATE_CHANGED) ||
+        (eventType == wxEVT_STEDITOR_SET_FOCUS) ||
         (eventType == wxEVT_STESHELL_ENTER))
     {
         wxSTEditorEvent event(GetId(), eventType, this,
@@ -4021,7 +4020,7 @@ void wxSTEditor::OnContextMenu(wxContextMenuEvent& event)
     if (popupMenu)
     {
         UpdateItems(popupMenu);
-        if (!SendEvent(wxEVT_STE_POPUPMENU, 0, GetState(), GetFileName().GetFullPath()))
+        if (!SendEvent(wxEVT_STEDITOR_POPUPMENU, 0, GetState(), GetFileName().GetFullPath()))
         {
             PopupMenu(popupMenu);
         }
@@ -4059,7 +4058,7 @@ void wxSTEditor::OnSTCMarginClick(wxStyledTextEvent &event)
         (line == last_line) && (margin == last_margin))
     {
         wxStyledTextEvent dClickEvent(event);
-        dClickEvent.SetEventType(wxEVT_STE_MARGINDCLICK);
+        dClickEvent.SetEventType(wxEVT_STEDITOR_MARGINDCLICK);
         dClickEvent.SetEventObject(this);
         dClickEvent.SetLine(line);
         dClickEvent.SetMargin(margin);
@@ -4123,7 +4122,7 @@ void wxSTEditor::OnSetFocus(wxFocusEvent &event)
         }
     }
 
-    SendEvent(wxEVT_STE_SET_FOCUS, 0, GetState(), GetFileName().GetFullPath());
+    SendEvent(wxEVT_STEDITOR_SET_FOCUS, 0, GetState(), GetFileName().GetFullPath());
 }
 void wxSTEditor::OnSTEFocus(wxSTEditorEvent &event)
 {
@@ -4268,43 +4267,4 @@ bool wxSTEditor::ResetLastAutoIndentLine()
     }
 
     return false;
-}
-
-//-----------------------------------------------------------------------------
-// wxSTEditorEvent
-//-----------------------------------------------------------------------------
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STE_CREATED)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STS_CREATED)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STN_CREATED)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STE_STATE_CHANGED)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STE_SET_FOCUS)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STE_POPUPMENU)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STE_MARGINDCLICK)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STS_CREATE_EDITOR)
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STN_CREATE_SPLITTER)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STS_SPLIT_BEGIN)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STN_PAGE_CHANGED)
-
-DEFINE_LOCAL_EVENT_TYPE(wxEVT_STESHELL_ENTER)
-
-//-----------------------------------------------------------------------------
-// wxSTEditorEvent
-//-----------------------------------------------------------------------------
-IMPLEMENT_DYNAMIC_CLASS(wxSTEditorEvent, wxCommandEvent)
-
-wxSTEditorEvent::wxSTEditorEvent( int id, wxEventType type, wxObject* obj,
-                                  int stateChange, int stateValues,
-                                  const wxString& fileName )
-                :wxCommandEvent(type, id)
-{
-    SetEventObject(obj);
-    SetInt(stateChange);
-    SetExtraLong(stateValues);
-    SetString(fileName);
 }

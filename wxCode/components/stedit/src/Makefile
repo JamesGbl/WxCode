@@ -80,6 +80,7 @@ OBJECTS = \
     stedit.o \
     stedlgs.o \
     stedlgs_wdr.o \
+    steevent.o \
     steexprt.o \
     stefindr.o \
     steframe.o \

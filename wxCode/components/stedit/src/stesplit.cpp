@@ -98,26 +98,26 @@ void wxSTEditorScrollBar::HideOrShowOnRange()
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorSplitter, wxSplitterWindow)
 
 BEGIN_EVENT_TABLE(wxSTEditorSplitter, wxSplitterWindow)
-    EVT_RIGHT_UP      ( wxSTEditorSplitter::OnRightUp )
-    EVT_MENU          ( ID_STS_UNSPLIT,     wxSTEditorSplitter::OnMenu )
-    EVT_MENU          ( ID_STS_SPLIT_HORIZ, wxSTEditorSplitter::OnMenu )
-    EVT_MENU          ( ID_STS_SPLIT_VERT,  wxSTEditorSplitter::OnMenu )
+    EVT_RIGHT_UP                (wxSTEditorSplitter::OnRightUp )
+    EVT_MENU                    (ID_STS_UNSPLIT,     wxSTEditorSplitter::OnMenu )
+    EVT_MENU                    (ID_STS_SPLIT_HORIZ, wxSTEditorSplitter::OnMenu )
+    EVT_MENU                    (ID_STS_SPLIT_VERT,  wxSTEditorSplitter::OnMenu )
 
-    EVT_STE_SET_FOCUS ( wxID_ANY,           wxSTEditorSplitter::OnSTEFocus )
+    EVT_STEDITOR_SET_FOCUS      (wxID_ANY, wxSTEditorSplitter::OnSTEFocus )
 
-    EVT_STS_SPLIT_BEGIN(wxID_ANY,           wxSTEditorSplitter::OnSplitBegin)
+    EVT_STSPLITTER_SPLIT_BEGIN  (wxID_ANY, wxSTEditorSplitter::OnSplitBegin)
 
-    EVT_FIND             (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
-    EVT_FIND_NEXT        (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
-    EVT_FIND_REPLACE     (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
-    EVT_FIND_REPLACE_ALL (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
-    EVT_FIND_CLOSE       (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
+    EVT_FIND                    (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
+    EVT_FIND_NEXT               (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
+    EVT_FIND_REPLACE            (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
+    EVT_FIND_REPLACE_ALL        (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
+    EVT_FIND_CLOSE              (wxID_ANY, wxSTEditorSplitter::OnFindDialog)
 
-    EVT_SCROLL           (wxSTEditorSplitter::OnScroll)
-    EVT_PAINT            (wxSTEditorSplitter::OnPaint)
-    EVT_SIZE             (wxSTEditorSplitter::OnSize)
+    EVT_SCROLL                  (wxSTEditorSplitter::OnScroll)
+    EVT_PAINT                   (wxSTEditorSplitter::OnPaint)
+    EVT_SIZE                    (wxSTEditorSplitter::OnSize)
 
-    EVT_MOUSE_EVENTS     (wxSTEditorSplitter::OnMouse)
+    EVT_MOUSE_EVENTS            (wxSTEditorSplitter::OnMouse)
 END_EVENT_TABLE()
 
 void wxSTEditorSplitter::Init()
@@ -145,7 +145,7 @@ bool wxSTEditorSplitter::Create( wxWindow *parent, wxWindowID id,
     if (!wxSplitterWindow::Create(parent, id, pos, size, style, name))
         return false;
 
-    wxCommandEvent event(wxEVT_STS_CREATED, GetId());
+    wxCommandEvent event(wxEVT_STSPLITTER_CREATED, GetId());
     event.SetEventObject(this);
     GetParent()->GetEventHandler()->ProcessEvent(event);
     return true;
@@ -186,7 +186,7 @@ void wxSTEditorSplitter::SetSendSTEEvents(bool send)
 
 wxSTEditor *wxSTEditorSplitter::CreateEditor(wxWindowID id)
 {
-    wxCommandEvent event(wxEVT_STS_CREATE_EDITOR, GetId());
+    wxCommandEvent event(wxEVT_STSPLITTER_CREATE_EDITOR, GetId());
     event.SetEventObject(this);
     event.SetInt((int)id);
     GetEventHandler()->ProcessEvent(event);
@@ -620,7 +620,7 @@ void wxSTEditorSplitter::OnSplitButtonLeftDown(wxMouseEvent& event)
 
     if (splitting_mode != 0)
     {
-        wxCommandEvent splitEvent(wxEVT_STS_SPLIT_BEGIN, GetId());
+        wxCommandEvent splitEvent(wxEVT_STSPLITTER_SPLIT_BEGIN, GetId());
         splitEvent.SetEventObject(this);
         splitEvent.SetInt(splitting_mode);
         GetEventHandler()->ProcessEvent(splitEvent);

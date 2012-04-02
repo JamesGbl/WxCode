@@ -301,12 +301,12 @@ BEGIN_EVENT_TABLE(wxSTEditorPrefDialogPageStyles, wxSTEditorPrefDialogPageBase)
     EVT_SPINCTRL              (wxID_ANY, wxSTEditorPrefDialogPageStyles::OnSpinEvent)
     EVT_NOTEBOOK_PAGE_CHANGED (wxID_ANY, wxSTEditorPrefDialogPageStyles::OnPageChanged)
 
-    EVT_STC_MARGINCLICK (ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
-    EVT_STE_MARGINDCLICK(ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
-    EVT_STC_DOUBLECLICK (ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
-    EVT_STC_MARGINCLICK (ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
-    EVT_STE_MARGINDCLICK(ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
-    EVT_STC_DOUBLECLICK (ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STC_MARGINCLICK      (ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STEDITOR_MARGINDCLICK(ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STC_DOUBLECLICK      (ID_STEDLG_STYLE_COLOUR_EDITOR, wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STC_MARGINCLICK      (ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STEDITOR_MARGINDCLICK(ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
+    EVT_STC_DOUBLECLICK      (ID_STEDLG_STYLE_STYLE_EDITOR,  wxSTEditorPrefDialogPageStyles::OnMarginClick)
 END_EVENT_TABLE()
 
 #define STYLE_SAMPLE_TEXT(n) wxString(GetPrefData().GetStyles().GetStyleName(m_styleArray[n]))
@@ -735,7 +735,7 @@ void wxSTEditorPrefDialogPageStyles::OnMarginClick( wxStyledTextEvent &event )
 
     if (!m_fontBackButton) return; // set after editor is fully created
 
-    if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
+    if (event.GetEventType() == wxEVT_STEDITOR_MARGINDCLICK)
         return;
 
     wxSTEditor *editor = wxStaticCast(event.GetEventObject(), wxSTEditor);
@@ -960,9 +960,9 @@ IMPLEMENT_ABSTRACT_CLASS(wxSTEditorPrefDialogPageLangs, wxSTEditorPrefDialogPage
 BEGIN_EVENT_TABLE(wxSTEditorPrefDialogPageLangs, wxSTEditorPrefDialogPageBase)
     EVT_CHOICE          (wxID_ANY,                    wxSTEditorPrefDialogPageLangs::OnChoice)
 
-    EVT_STC_MARGINCLICK (ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
-    EVT_STE_MARGINDCLICK(ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
-    EVT_STC_DOUBLECLICK (ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
+    EVT_STC_MARGINCLICK      (ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
+    EVT_STEDITOR_MARGINDCLICK(ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
+    EVT_STC_DOUBLECLICK      (ID_STEDLG_LANG_STYLE_EDITOR, wxSTEditorPrefDialogPageLangs::OnMarginClick)
 END_EVENT_TABLE()
 
 wxString wxSTEditorPrefDialogPageLangs::sm_helpString(
@@ -1221,7 +1221,7 @@ void wxSTEditorPrefDialogPageLangs::SetControlValues()
 
 void wxSTEditorPrefDialogPageLangs::OnMarginClick(wxStyledTextEvent &event)
 {
-    if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
+    if (event.GetEventType() == wxEVT_STEDITOR_MARGINDCLICK)
         return;
 
     STE_TextPos pos = event.GetPosition();

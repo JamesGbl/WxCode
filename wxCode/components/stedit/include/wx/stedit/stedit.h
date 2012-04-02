@@ -36,6 +36,92 @@ class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceDialog;
 class WXDLLIMPEXP_FWD_STEDIT wxSTETreeItemData;
 
 //-----------------------------------------------------------------------------
+/// @class wxSTEPointerLocker
+/// @brief A simple pointer locker for objects to share pointers to data and
+///        be able to clear the pointer for all copies.
+/// Create a wxSTEPointerLocker as a member of a class (or whereever) and pass
+/// it a pointer to keep track of. Other objects can create wxSTEPointerLockers
+/// and ref the locker (as you would a wxPen/wxBitmap) and can access the
+/// shared pointer, BUT only after checking it it's valid by calling IsOk().
+/// This can be used as an alternative to tracking wxWindows by connecting to
+///   wxEVT_DESTROY for each of them.
+/// This class is NOT threadsafe for simplicity.
+//-----------------------------------------------------------------------------
+
+template <class T>
+class WXDLLIMPEXP_STEDIT wxSTEPointerLockerRefData : public wxObjectRefData
+{
+public:
+    wxSTEPointerLockerRefData(T* ptr = NULL, bool is_static = false) : m_pointer(ptr), m_is_static(is_static) {}
+
+    virtual ~wxSTEPointerLockerRefData()
+    {
+        if (!m_is_static)
+            delete m_pointer;
+    }
+
+    T*   m_pointer;
+    bool m_is_static;
+};
+
+template <class T>
+class WXDLLIMPEXP_STEDIT wxSTEPointerLocker : public wxObject
+{
+public:
+    /// Point to an object for objects to share.
+    /// Note that any one of the wxSTEPointerLocker refs may clear the pointer.
+    /// If is_static is false then take ownership of the data and call delete
+    /// on it when there are no longer any references to it.
+    wxSTEPointerLocker(T* ptr, bool is_static)
+    {
+        m_refData = new wxSTEPointerLockerRefData<T>(ptr, is_static);
+    }
+
+    wxSTEPointerLocker(const wxSTEPointerLocker& locker) { Ref(locker); }
+
+    virtual ~wxSTEPointerLocker() { }
+
+    /// Returns true if the pointer is valid.
+    bool IsOk() const { return (GetPointer() != NULL); }
+
+    /// Get the pointer, which may be NULL.
+    T*       GetPointer()       { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
+    /// Get the pointer, which may be NULL.
+    const T* GetPointer() const { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
+
+    /// Set the pointer, clearing the reference to the previous one.
+    void     SetPointer(T* ptr, bool is_static) { UnRef(); m_refData = new wxSTEPointerLockerRefData<T>(ptr, is_static); }
+
+    // ------------------------------------------------------------------------
+    /// @name std/boost::shared_ptr compatibility functions.
+    /// @{
+
+    T*     get()       const { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
+    void   reset(T* ptr, bool is_static) { SetPointer(ptr, is_static); }
+    size_t use_count() const { return m_refData ? m_refData->GetRefCount() : 0; }
+    size_t unique()    const { return use_count() == 0; }
+
+    /// @}
+    // ------------------------------------------------------------------------
+    /// @name Operators
+    /// @{
+    wxSTEditorPrefs& operator = (const wxSTEPointerLocker& locker)
+    {
+        if ( (*this) != locker )
+            Ref(locker);
+        return *this;
+    }
+
+    bool operator == (const wxSTEPointerLocker& locker) const
+        { return m_refData == locker.m_refData; }
+    bool operator != (const wxSTEPointerLocker& locker) const
+        { return m_refData != locker.m_refData; }
+
+    operator bool() const { return unique(); }
+    /// @}
+};
+
+//-----------------------------------------------------------------------------
 /// @class wxSTERecursionGuard
 /// @brief A simple recursion guard to block reentrant functions.
 /// Create a wxSTERecursionGuardFlag as a member of a class (or whereever) and
@@ -709,11 +795,13 @@ public :
     wxString GetFindString() const;
     /// Get the current replace string.
     wxString GetReplaceString() const;
-    /// Set the current string to find, only sends wxEVT_STE_CANFIND_CHANGED if value changes.
+    /// Set the current string to find, only sends wxEVT_STEDITOR_STATE_CHANGED
+    /// with state change STE_CANFIND if value changes.
     void SetFindString(const wxString &str, bool send_evt = false);
     /// Get the STEFindReplaceFlags flags used to find a string.
     int GetFindFlags() const;
-    /// Set the current find flags, only sends wxEVT_STE_CANFIND_CHANGED if flags change.
+    /// Set the current find flags, only sends wxEVT_STEDITOR_STATE_CHANGED
+    /// with state change STE_CANFIND if flags change.
     void SetFindFlags(long flags, bool send_evt = false);
     /// Get the direction of search.
     bool GetFindDown() const { return (GetFindFlags() & wxFR_DOWN) != 0; }
@@ -907,7 +995,7 @@ public :
     /// @{
 
     /// Setup and send an event.
-    /// Note for a wxEVT_STE_STATE_CHANGED event evt_int is the changed state and
+    /// Note for a wxEVT_STEDITOR_STATE_CHANGED event evt_int is the changed state and
     ///   extra_long is the state values.
     ///   Otherwise the int/long values are those in the wxCommandEvent
     bool SendEvent(wxEventType eventType, int evt_int = 0, long extra_long = 0,
@@ -1003,157 +1091,9 @@ private:
     DECLARE_DYNAMIC_CLASS(wxSTEditor)
 };
 
-//-----------------------------------------------------------------------------
-/// @class wxSTEditorEvent
-/// @brief A specialized wxCommandEvent for use with the wxSTEditor.
-//-----------------------------------------------------------------------------
-class WXDLLIMPEXP_STEDIT wxSTEditorEvent : public wxCommandEvent
-{
-public:
-    wxSTEditorEvent() : wxCommandEvent() {}
-    wxSTEditorEvent(const wxSTEditorEvent& event) : wxCommandEvent(event) {}
-    wxSTEditorEvent( int id, wxEventType type, wxObject* obj,
-                     int stateChange, int stateValues,
-                     const wxString& fileName );
-
-    /// Has the state of the editor changed see STE_StateType for different states.
-    /// Can OR states together to see if any of them have changed.
-    bool HasStateChange(int stateChange) const { return (GetStateChange() & stateChange) != 0; }
-    bool GetStateValue(STE_StateType stateValue) const { return (GetStateValues() & stateValue) != 0; }
-
-    /// Get the changes of the wxSTEditor::GetState() for the wxEVT_STE_STATE_CHANGED.
-    int  GetStateChange() const { return GetInt(); }
-    /// Get the wxSTEditor::GetState() for any wxEVT_STE_* events.
-    int  GetStateValues() const { return int(GetExtraLong()); }
-    void SetStateChange(int stateChange) { SetInt(stateChange); }
-    void SetStateValues(int stateValues) { SetExtraLong(stateValues); }
-
-    ///. Get the filename of the wxStEditor for wxEVT_STE_* events.
-    wxFileName GetFileName() const { return wxFileName(GetString()); }
-    void SetFileName( const wxFileName& fileName ) { SetString( fileName.GetFullPath() ); }
-
-    wxSTEditor* GetEditor() const { return wxDynamicCast(GetEventObject(), wxSTEditor); }
-
-    // implementation
-    virtual wxEvent *Clone() const { return new wxSTEditorEvent(*this); }
-
-private:
-    DECLARE_DYNAMIC_CLASS_NO_ASSIGN(wxSTEditorEvent)
-};
-
 // --------------------------------------------------------------------------
-/// @name wxSTEditor wxEvent types
-
-BEGIN_DECLARE_EVENT_TYPES()
-/// @{
-    /// wxSTEditor created, event.GetEventObject() is the editor, use to setup after constructor
-    /// and at the end of the call to wxSTEditor::CreateOptions(...).
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_CREATED, 0)
-    /// wxSTEditorSplitter created, event.GetEventObject() is the splitter, use to setup after constructor.
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_CREATED, 0)
-    /// wxSTEditorNotebook created, event.GetEventObject() is the notebook, use to setup after constructor.
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_CREATED, 0)
-
-    /// The state of the editor has changed see STE_StateType for the types of changes.
-    /// An event to update the gui only when items change to avoid UpdateUI overkill.
-    ///   (this is a wxSTEditorEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_STATE_CHANGED, 0)
-    /// This wxSTEditor has the focus now, (serves to pass EVT_SET_FOCUS to parents).
-    ///   (this is a wxSTEditorEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_SET_FOCUS, 0)
-    /// The popup menu for the wxSTEditor is about to be shown, maybe you want to update it?
-    ///   (this is a wxSTEditorEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_POPUPMENU, 0)
-
-    /// The margin has been double clicked in the same line.
-    ///   (this is a wxStyledTextEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STE_MARGINDCLICK, 0)
-
-    /// A wxSTEditor is about to be created for the wxSTEditorSplitter.
-    /// event.GetEventObject() is the parent wxSTEditorSplitter.
-    /// You can set the event.SetEventObject() to a "new wxSTEditor" or a
-    /// subclassed one of your own and this editor will be used instead.
-    /// Make sure that the parent of your editor is the splitter
-    ///    (ie. the original event.GetEventObject())
-    /// event.GetInt() is the preferred id (probably wxID_ANY)
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_CREATE_EDITOR, 0)
-
-    /// A wxSTEditorSplitter is about to be created for the wxSTEditorNotebook.
-    /// event.GetEventObject() is the parent wxSTEditorNotebook.
-    /// You can set the event.SetEventObject() to a "new wxSTEditorSplitter" or a
-    /// subclassed one of your own and this splitter will be used instead.
-    /// Make sure that the parent of your splitter is the notebook
-    ///    (ie. the original event.GetEventObject())
-    /// event.GetInt() is the preferred id (probably wxID_ANY)
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_CREATE_SPLITTER, 0)
-
-    /// The user has clicked on one of the splitter buttons in the
-    ///   wxSTEditor. This event is received by the splitter and then
-    ///   the splitting occurs. The event.GetInt() is enum wxSPLIT_VERTICAL
-    ///   or wxSPLIT_HORIZONTAL.
-    ///   (this is a wxCommandEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STS_SPLIT_BEGIN,     0)
-
-    /// The wxNotebook doesn't always send enough events to follow it's state.
-    ///  This event is sent whenever the selection or page count changes
-    ///  eg. When all the pages are deleted, gtk doesn't notify you that the
-    ///  selection is now -1
-    ///   (this is a wxNotebookEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STN_PAGE_CHANGED,    0)
-
-    /// Enter has been pressed on the last line of the wxSTEditorShell.
-    ///   event.GetString() contains the contents of the line.
-    ///   (this is a wxSTEditorEvent)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STESHELL_ENTER,      0)
-/// @}
-END_DECLARE_EVENT_TYPES()
-
-
-#if !defined(wxStyledTextEventHandler) // not in < wx29
-typedef void (wxEvtHandler::*wxStyledTextEventFunction)(wxStyledTextEvent&);
-
-#define wxStyledTextEventHandler( func ) \
-    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxStyledTextEventFunction, &func)
-    //wxEVENT_HANDLER_CAST( wxStyledTextEventFunction, func )
-#endif // !defined(wxStyledTextEventHandler)
-
-typedef void (wxEvtHandler::*wxSTEditorEventFunction)(wxSTEditorEvent&);
-
-#define wxSTEditorEventHandler(func) \
-    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxSTEditorEventFunction, &func)
-
-#define wx__DECLARE_STEEVT(evt, id, fn)  wx__DECLARE_EVT1( evt, id, wxSTEditorEventHandler(fn))
-
-#define StyledTextEventHandler(func) \
-    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxStyledTextEventFunction, &func)
-#define wx__DECLARE_STEVT(evt, id, fn)  wx__DECLARE_EVT1( evt, id, StyledTextEventHandler(fn))
-
-#define EVT_STE_CREATED(id, fn)          EVT_COMMAND(id, wxEVT_STE_CREATED, fn)
-#define EVT_STS_CREATED(id, fn)          EVT_COMMAND(id, wxEVT_STS_CREATED, fn)
-#define EVT_STN_CREATED(id, fn)          EVT_COMMAND(id, wxEVT_STN_CREATED, fn)
-
-#define EVT_STE_STATE_CHANGED(id, fn)    wx__DECLARE_STEEVT(wxEVT_STE_STATE_CHANGED, id, fn)
-#define EVT_STE_SET_FOCUS(id, fn)        wx__DECLARE_STEEVT(wxEVT_STE_SET_FOCUS,     id, fn)
-#define EVT_STE_POPUPMENU(id, fn)        wx__DECLARE_STEEVT(wxEVT_STE_POPUPMENU,     id, fn)
-
-#define EVT_STE_MARGINDCLICK(id, fn)     wx__DECLARE_STEVT(wxEVT_STE_MARGINDCLICK,   id, fn)
-
-#define EVT_STS_CREATE_EDITOR(id, fn)    EVT_COMMAND(id, wxEVT_STS_CREATE_EDITOR,   fn)
-#define EVT_STN_CREATE_SPLITTER(id, fn)  EVT_COMMAND(id, wxEVT_STN_CREATE_SPLITTER, fn)
-
-#define EVT_STN_PAGE_CHANGED(id, fn)     wx__DECLARE_EVT1(wxEVT_STN_PAGE_CHANGED, id, wxNotebookEventHandler(fn))
-
-#define EVT_STS_SPLIT_BEGIN(id, fn)      wx__DECLARE_EVT1(wxEVT_STS_SPLIT_BEGIN, id, wxCommandEventHandler(fn))
-
-#define EVT_STESHELL_ENTER(id, fn)       wx__DECLARE_STEEVT(wxEVT_STESHELL_ENTER, id, fn)
-
-
 // include the others so that only this file needs to be included for everything
+#include "wx/stedit/steevent.h"
 #include "wx/stedit/stenoteb.h"
 #include "wx/stedit/steframe.h"
 #include "wx/stedit/stesplit.h"

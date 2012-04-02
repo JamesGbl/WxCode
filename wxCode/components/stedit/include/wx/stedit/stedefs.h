@@ -21,9 +21,6 @@
 // Include wxStyledTextCtrl
 #include <wx/stc/stc.h>
 
-// Include the wxWidgets 2.9 shared ptr or the one backported to 2.8
-//#include "wx/stedit/sharedptr.h"
-
 #if (wxVERSION_NUMBER >= 2900)
     // #include <wx/stc/private.h> // wx2stc() has been moved here, but isn't exported
     #define wx2stc(wxstr)    (wxstr).mb_str()
@@ -133,6 +130,7 @@ class WXDLLIMPEXP_FWD_STEDIT wxSTEditorLangs;               // stelangs.h
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplacePanel;    // stefindr.h
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceDialog;
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindReplaceData;
+class WXDLLIMPEXP_FWD_STEDIT wxSTEditorFindResultsEditor;
 
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorPropertiesDialog;    // stedlgs.h
 class WXDLLIMPEXP_FWD_STEDIT wxSTEditorInsertTextDialog;

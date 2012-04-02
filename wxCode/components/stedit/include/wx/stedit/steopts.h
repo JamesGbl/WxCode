@@ -110,13 +110,18 @@ enum STE_FrameOptionsType
     STF_CREATE_SINGLEPAGE  = 0x0001, ///< Create a single text editor.
     STF_CREATE_NOTEBOOK    = 0x0002, ///< Create a wxSTEditorNotebook for editors.
     STF_CREATE_SIDEBAR     = 0x0004, ///< Create a wxNotebook side panel.
-                                     ///< First page is a wxListBox for listing files,
+                                     ///< First page is a wxSTEditorTreeCtrl for listing files,
                                      ///< you can add other pages in any order.
+    STF_CREATE_RESULT_NOTEBOOK = 0x0008, ///< Create a wxNotebook bottom panel for results.
+                                         ///< First page is a wxSTEditorFindResultsEditor for find results,
+                                         ///< you can add other pages in any order.
     STF_CREATE_TOOLBAR     = 0x0010, ///< Create and maintain a toolbar.
     STF_CREATE_MENUBAR     = 0x0020, ///< Create and maintain a menubar.
     STF_CREATE_STATUSBAR   = 0x0040, ///< Create and maintain a statusbar.
-    STF_CREATE_FILEHISTORY = 0x0080, ///< Create and maintain a wxFileHistory if one doesn't already exist and you have wxID_OPEN.
-    STF_DEFAULT_OPTIONS = STF_CREATE_NOTEBOOK|STF_CREATE_TOOLBAR|STF_CREATE_MENUBAR|STF_CREATE_STATUSBAR|STF_CREATE_FILEHISTORY
+    STF_CREATE_FILEHISTORY = 0x0080, ///< Create and maintain a wxFileHistory
+                                     ///< if one doesn't already exist and you have wxID_OPEN.
+
+    STF_DEFAULT_OPTIONS    = STF_CREATE_NOTEBOOK|STF_CREATE_TOOLBAR|STF_CREATE_MENUBAR|STF_CREATE_STATUSBAR|STF_CREATE_FILEHISTORY
 };
 
 /// Options for using wxConfig to save preferences.
@@ -191,7 +196,7 @@ enum STE_FindReplaceOptionsType
 /// Note: The prefs/styles/langs are ref counted so this class is not very big.
 //-----------------------------------------------------------------------------
 
-/// A default filename to use wxT("untitled.txt"), change this if you want.
+/// A default filename to use, wxT("untitled.txt"), change this if you want.
 WXDLLIMPEXP_DATA_STEDIT(extern wxString) STE_DefaultFileName;
 /// A default set of file extensions to use - change this if you want.
 /// wxT("Any file (*)|*|") wxT("Text file (*.txt)|*.txt|")
@@ -211,7 +216,8 @@ public:
 
     /// Everything setup, new menu manager and global prefs/styles/langs.
     /// Globals refed from wxSTEditor::GetGlobalEditorPrefs/Styles/Langs()
-    wxSTEditorOptions( long editor_opt, //   = STE_DEFAULT_OPTIONS,
+    /// Ueses the static global wxSTEditorFindReplaceData.
+    wxSTEditorOptions( long editor_opt, // = STE_DEFAULT_OPTIONS,
                        long splitter_opt = STS_DEFAULT_OPTIONS,
                        long notebook_opt = STN_DEFAULT_OPTIONS,
                        long frame_opt    = STF_DEFAULT_OPTIONS,
@@ -258,11 +264,11 @@ public:
     /// @name Get/Set/Has integer option flags.
     /// @{
 
-    int GetEditorOptions() const   { return GetOptionInt(STE_OPTION_EDITOR); }   ///< STE_EditorOptionsType
+    int GetEditorOptions()   const { return GetOptionInt(STE_OPTION_EDITOR); }   ///< STE_EditorOptionsType
     int GetSplitterOptions() const { return GetOptionInt(STE_OPTION_SPLITTER); } ///< STE_SplitterOptionsType
     int GetNotebookOptions() const { return GetOptionInt(STE_OPTION_NOTEBOOK); } ///< STE_NotebookOptionsType
-    int GetFrameOptions() const    { return GetOptionInt(STE_OPTION_FRAME); }    ///< STE_FrameOptionsType
-    int GetConfigOptions() const   { return GetOptionInt(STE_OPTION_CONFIG); }   ///< STE_ConfigOptionsType
+    int GetFrameOptions()    const { return GetOptionInt(STE_OPTION_FRAME); }    ///< STE_FrameOptionsType
+    int GetConfigOptions()   const { return GetOptionInt(STE_OPTION_CONFIG); }   ///< STE_ConfigOptionsType
 
     bool HasEditorOption(  int opt) const { return STE_HASBIT(opt, GetEditorOptions()); }
     bool HasSplitterOption(int opt) const { return STE_HASBIT(opt, GetSplitterOptions()); }
@@ -314,9 +320,9 @@ public:
 
     /// @name Set the prefs/styles/langs to use in the editors (may be !IsOk()).
     /// @{
-    void SetEditorPrefs(const wxSTEditorPrefs& prefs);
+    void SetEditorPrefs( const wxSTEditorPrefs& prefs);
     void SetEditorStyles(const wxSTEditorStyles& styles);
-    void SetEditorLangs(const wxSTEditorLangs& langs);
+    void SetEditorLangs( const wxSTEditorLangs& langs);
     /// @}
 
     /// Ref the global prefs/styles/langs see wxSTEditor::GetGlobalEditorXXX()
@@ -355,11 +361,11 @@ public:
     wxMenu* GetNotebookPopupMenu() const;
 
     /// Set a menubar and toolbar to be updated as necessary (won't be deleted)
-    void SetMenuBar(wxMenuBar* menuBar);
-    void SetToolBar(wxToolBar* toolBar);
+    void SetMenuBar(  wxMenuBar*   menuBar);
+    void SetToolBar(  wxToolBar*   toolBar);
     void SetStatusBar(wxStatusBar* statusBar);
     /// Set a "new" wxMenu to use as a popup menu, it'll be deleted if !is_static
-    void SetEditorPopupMenu(wxMenu* menu, bool is_static);
+    void SetEditorPopupMenu(  wxMenu* menu, bool is_static);
     void SetSplitterPopupMenu(wxMenu* menu, bool is_static);
     void SetNotebookPopupMenu(wxMenu* menu, bool is_static);
 
@@ -368,10 +374,10 @@ public:
     /// You can store any extra info here, don't forget to delete void data.
     /// @{
 
-    void SetClientObject( wxClientData *data );
+    void          SetClientObject( wxClientData *data );
     wxClientData *GetClientObject() const;
 
-    void SetClientData( void *data );
+    void  SetClientData( void *data );
     void *GetClientData() const;
 
     /// @}
@@ -380,10 +386,10 @@ public:
     /// @{
 
     static wxString GetGlobalDefaultFileName();
-    static void SetGlobalDefaultFileName(const wxString& fileName);
+    static void     SetGlobalDefaultFileName(const wxString& fileName);
 
     static wxString GetGlobalDefaultExtensions();
-    static void SetGlobalDefaultFileExtensions(const wxString& fileExt);
+    static void     SetGlobalDefaultFileExtensions(const wxString& fileExt);
 
     /// @}
     // -----------------------------------------------------------------------

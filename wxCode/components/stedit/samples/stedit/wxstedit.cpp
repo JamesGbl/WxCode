@@ -373,6 +373,9 @@ bool wxStEditApp::OnInit()
     // end sample code
     // =======================================================================
 
+    // Create a notebook to show the find results in
+    m_steOptions.SetFrameOption(STF_CREATE_RESULT_NOTEBOOK, true);
+
     // Remove the Help menu since wxMac will pull out the wxID_ABOUT to add to
     // the system menu and then hide the Help menu. Later on when we add items
     // to the help menu, they'll be hidden too.

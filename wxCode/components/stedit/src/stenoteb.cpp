@@ -48,7 +48,7 @@ BEGIN_EVENT_TABLE(wxSTEditorNotebook, wxNotebook)
     EVT_RIGHT_UP               (wxSTEditorNotebook::OnRightUp)
     EVT_MIDDLE_UP              (wxSTEditorNotebook::OnMiddleUp)
     EVT_MENU                   (wxID_ANY, wxSTEditorNotebook::OnMenu)
-    EVT_STE_STATE_CHANGED      (wxID_ANY, wxSTEditorNotebook::OnSTEState)
+    EVT_STEDITOR_STATE_CHANGED (wxID_ANY, wxSTEditorNotebook::OnSTEState)
     EVT_NOTEBOOK_PAGE_CHANGED  (wxID_ANY, wxSTEditorNotebook::OnPageChanged)
 
     EVT_FIND                   (wxID_ANY, wxSTEditorNotebook::OnFindDialog)
@@ -56,6 +56,7 @@ BEGIN_EVENT_TABLE(wxSTEditorNotebook, wxNotebook)
     EVT_FIND_REPLACE           (wxID_ANY, wxSTEditorNotebook::OnFindDialog)
     EVT_FIND_REPLACE_ALL       (wxID_ANY, wxSTEditorNotebook::OnFindDialog)
     EVT_FIND_CLOSE             (wxID_ANY, wxSTEditorNotebook::OnFindDialog)
+    EVT_STEFIND_GOTO           (wxID_ANY, wxSTEditorNotebook::OnFindDialog)
 END_EVENT_TABLE()
 
 void wxSTEditorNotebook::Init()
@@ -72,7 +73,7 @@ bool wxSTEditorNotebook::Create( wxWindow *parent, wxWindowID id,
     if (!wxNotebook::Create(parent, id, pos, size, style, name))
         return false;
 
-    wxCommandEvent event(wxEVT_STN_CREATED, GetId());
+    wxCommandEvent event(wxEVT_STNOTEBOOK_CREATED, GetId());
     event.SetEventObject(this);
     GetParent()->GetEventHandler()->ProcessEvent(event);
     return true;
@@ -251,7 +252,7 @@ wxSTEditorSplitter *wxSTEditorNotebook::CreateSplitter(wxWindowID id)
     wxSTEditorSplitter *newSplitter = NULL;
 
     // Let someone create an editor and put it back into the event
-    wxCommandEvent event(wxEVT_STN_CREATE_SPLITTER, GetId());
+    wxCommandEvent event(wxEVT_STNOTEBOOK_CREATE_SPLITTER, GetId());
     event.SetEventObject(this);
     event.SetInt((int)id);
     GetEventHandler()->ProcessEvent(event);
@@ -1057,7 +1058,7 @@ void wxSTEditorNotebook::UpdatePageState()
     if ((page_count == m_stn_page_count) && (selection == m_stn_selection))
         return;
 
-    wxNotebookEvent stnEvent(wxEVT_STN_PAGE_CHANGED, GetId());
+    wxNotebookEvent stnEvent(wxEVT_STNOTEBOOK_PAGE_CHANGED, GetId());
     stnEvent.SetEventObject(this);
     stnEvent.SetSelection(selection);
     stnEvent.SetOldSelection(m_stn_selection);
@@ -1161,38 +1162,37 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
                 pos -= (STE_TextPos)findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
 
-    if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
+
+    if (eventType == wxEVT_STEFIND_GOTO)
     {
-        // ExtraLong is the line number pressed in the find all editor
-        //  when -1 it means that we want a new find all search
-        if (STE_HASBIT(flags, STE_FR_FINDALL) && (event.GetExtraLong() > -1))
+        wxString findAllString = event.GetString();
+
+        wxString fileName;
+        int line_number      = 0;
+        int line_start_pos   = 0;
+        int string_start_pos = 0;
+        int string_length    = 0;
+        wxString lineText;
+
+        bool ok = wxSTEditorFindReplaceData::ParseFindAllString(findAllString,
+                                                                fileName,
+                                                                line_number, line_start_pos,
+                                                                string_start_pos, string_length,
+                                                                lineText);
+        int page = wxNOT_FOUND;
+
+        if (ok)
+            page = FindEditorPageByFileName(fileName);
+
+        if (page != wxNOT_FOUND)
         {
-            wxString findAllString = event.GetString();
-
-            wxString fileName;
-            int line_number      = 0;
-            int line_start_pos   = 0;
-            int string_start_pos = 0;
-            int string_length    = 0;
-            wxString lineText;
-
-            bool ok = wxSTEditorFindReplaceData::ParseFindAllString(findAllString,
-                                                                    fileName,
-                                                                    line_number, line_start_pos,
-                                                                    string_start_pos, string_length,
-                                                                    lineText);
-            int page = wxNOT_FOUND;
-
-            if (ok)
-                page = FindEditorPageByFileName(fileName);
-
-            if (page != wxNOT_FOUND)
-            {
-                SetSelection(page);
-                GetEditor(page)->HandleFindDialogEvent(event);
-            }
+            SetSelection(page);
+            GetEditor(page)->HandleFindDialogEvent(event);
         }
-        else if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
+    }
+    else if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
+    {
+        if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
         {
             // sum up all of the find strings in all editors
             int n, count = (int)GetPageCount();

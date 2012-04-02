@@ -1,6 +1,13 @@
 ===============================================================================
 Changelog:
 
+03/29/2012
+  - Rename (wx)EVT_STE/STS/STN/_ to (wx)EVT_STEDITOR/STSPLITTER/STNOTEBOOK_
+    to make them more readable.
+  - Add a new wxSTEditorTreeCtrl class to view opened files.
+  - Add steevent.h/cpp for events and
+    wxEVT_STEFIND_RESULTS_NEED_SHOWN and wxEVT_STEFIND_GOTO events.
+
 03/18/2012
   - Add doxygen docs to all headers.
   - Cleanup and reorder functions to make maintenance easier.

@@ -102,6 +102,7 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedefs.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedit.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedlgs.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steevent.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steexprt.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/stefindr.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/steframe.h
@@ -124,6 +125,7 @@ ADD_LIBRARY_FULL(wxStEditLib
         ${wxStEdit_ROOT_DIR}/src/stedit.cpp
         ${wxStEdit_ROOT_DIR}/src/stedlgs.cpp
         ${wxStEdit_ROOT_DIR}/src/stedlgs_wdr.cpp
+        ${wxStEdit_ROOT_DIR}/src/steevent.cpp
         ${wxStEdit_ROOT_DIR}/src/steexprt.cpp
         ${wxStEdit_ROOT_DIR}/src/stefindr.cpp
         ${wxStEdit_ROOT_DIR}/src/steframe.cpp

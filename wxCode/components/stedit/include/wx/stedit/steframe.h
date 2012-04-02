@@ -185,6 +185,7 @@ public:
     /// @{
 
     void OnNotebookPageChanged(wxNotebookEvent &event);
+    void OnFindAllResults(wxCommandEvent& event);
     void OnDirCtrlItemActivation(wxTreeEvent &event);
 
     void OnSTECreated(wxCommandEvent &event);
@@ -214,9 +215,16 @@ protected:
     wxSTEditorTreeCtrl *m_steTreeCtrl;      ///< Child of the m_sideNotebook that displays the notebook pages, may be NULL.
     wxGenericDirCtrl   *m_dirCtrl;          ///< Child of the m_sideNotebook to load new files, may be NULL.
 
-    wxSplitterWindow   *m_mainSplitter;     ///< Horizontal splitter for notebook/editor and bottom notebook.
+    wxSplitterWindow   *m_mainSplitter;     ///< Horizontal splitter for notebook/editor and bottom result notebook.
+    wxWindow           *m_mainSplitterWin1; ///< Left page of the main splitter, may be NULL.
+    wxWindow           *m_mainSplitterWin2; ///< Right page of the main splitter.
+    int                 m_mainSplitter_pos;
+
     wxSTEditorNotebook *m_steNotebook;      ///< Top page of main splitter, a notebook for editors (not single editor), may be NULL.
     wxSTEditorSplitter *m_steSplitter;      ///< Top page of main splitter, a single editor (not notebook), may be NULL.
+
+    wxNotebook         *m_resultsNotebook;  ///< Bottom page of the main splitter (if created) to hold a wxSTEditorFindResultsEditor, may be NULL.
+    wxSTEditorFindResultsEditor* m_findResultsEditor; ///< Editor for results of find all, may be NULL.
 
     wxSTERecursionGuardFlag m_rGuard_OnMenu;
     wxSTERecursionGuardFlag m_rGuard_HandleMenuEvent;

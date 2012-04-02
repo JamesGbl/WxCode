@@ -231,9 +231,9 @@ void wxSTEditorFindReplaceData::SaveConfig(wxConfigBase &config,
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorFindResultsEditor, wxSTEditor)
 
 BEGIN_EVENT_TABLE(wxSTEditorFindResultsEditor, wxSTEditor)
-    EVT_STC_MARGINCLICK (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
-    EVT_STE_MARGINDCLICK(wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
-    EVT_STC_DOUBLECLICK (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+    EVT_STC_MARGINCLICK      (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+    EVT_STEDITOR_MARGINDCLICK(wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
+    EVT_STC_DOUBLECLICK      (wxID_ANY, wxSTEditorFindResultsEditor::OnMarginClick)
 END_EVENT_TABLE()
 
 void wxSTEditorFindResultsEditor::Init()
@@ -325,14 +325,13 @@ void wxSTEditorFindResultsEditor::SetResults(const wxSTEditorFindReplaceData& fi
 
     for (n = 0; n < count; n++)
     {
-        if (!wxSTEditorFindReplaceData::ParseFindAllString(findAllStrings.Item(n),
-                                                           fileName,
-                                                           line_number, line_start_pos,
-                                                           string_start_pos, string_length,
-                                                           lineText))
-        {
+        bool parsed = wxSTEditorFindReplaceData::ParseFindAllString(findAllStrings.Item(n),
+                                                                    fileName,
+                                                                    line_number, line_start_pos,
+                                                                    string_start_pos, string_length,
+                                                                    lineText);
+        if (!parsed)
             continue;
-        }
 
         if (fileName != lastFileName)
         {
@@ -372,13 +371,21 @@ void wxSTEditorFindResultsEditor::SetResults(const wxSTEditorFindReplaceData& fi
     //IndicateAllStrings(m_findReplaceData.GetFindString(),
     //                   m_findReplaceData.GetFlags(),
     //                   wxSTC_INDIC0_MASK);
+
+    // Tell our parents that we have new results in case we're hidden
+    if (GetLength() > 0)
+    {
+        wxCommandEvent event(wxEVT_STEFIND_RESULTS_NEED_SHOWN, GetId());
+        event.SetEventObject(this);
+        GetEventHandler()->ProcessEvent(event);
+    }
 }
 
 void wxSTEditorFindResultsEditor::OnMarginClick( wxStyledTextEvent &event )
 {
     //if (!m_created) return; // set after editor is fully created
 
-    if (event.GetEventType() == wxEVT_STE_MARGINDCLICK)
+    if (event.GetEventType() == wxEVT_STEDITOR_MARGINDCLICK)
         return;
 
     STE_TextPos pos = event.GetPosition();
@@ -400,17 +407,17 @@ void wxSTEditorFindResultsEditor::OnMarginClick( wxStyledTextEvent &event )
 
     MarkerAdd(line, STE_MARKER_BOOKMARK);
 
-    wxFindDialogEvent fEvent(wxEVT_COMMAND_FIND_NEXT, GetId());
-    fEvent.SetEventObject(this);
-    fEvent.SetFindString(m_findReplaceData.GetFindAllStrings()[findall_index]);
-    fEvent.SetFlags(m_findReplaceData.GetFlags());
-    fEvent.SetExtraLong(findall_index);
-    //Send(fEvent);
+    wxFindDialogEvent findEvent(wxEVT_STEFIND_GOTO, GetId());
+    findEvent.SetEventObject(this);
+    findEvent.SetFindString(m_findReplaceData.GetFindAllStrings()[findall_index]);
+    findEvent.SetFlags(m_findReplaceData.GetFlags());
+    findEvent.SetExtraLong(findall_index);
+    //Send(findEvent);
 
     if (m_targetWin)
-        m_targetWin->GetEventHandler()->ProcessEvent(fEvent);
+        m_targetWin->GetEventHandler()->ProcessEvent(findEvent);
     else
-        GetParent()->GetEventHandler()->ProcessEvent(fEvent);
+        GetParent()->GetEventHandler()->ProcessEvent(findEvent);
 }
 
 //-----------------------------------------------------------------------------
@@ -434,7 +441,7 @@ BEGIN_EVENT_TABLE(wxSTEditorFindReplacePanel, wxPanel)
     EVT_IDLE        (wxSTEditorFindReplacePanel::OnIdle)
 #endif
 
-    //EVT_ACTIVATE (wxSTEditorFindReplacePanel::OnActivate)
+    //EVT_ACTIVATE  (wxSTEditorFindReplacePanel::OnActivate)
 END_EVENT_TABLE()
 
 wxSTEditorFindReplacePanel::~wxSTEditorFindReplacePanel()
@@ -766,10 +773,7 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
 
     wxSTEditorFindResultsEditor* resultsEditor = GetFindResultsEditor() ? GetFindResultsEditor() : m_resultEditor;
 
-    // ExtraLong is the line number pressed in the find all editor
-    //  when -1 it means that we want a new find all search
     if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && resultsEditor &&
-        (event.GetExtraLong() == -1) &&
         ((event.GetEventType() == wxEVT_COMMAND_FIND) ||
          (event.GetEventType() == wxEVT_COMMAND_FIND_NEXT)))
     {
@@ -790,7 +794,6 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
     }
 
     if (m_findReplaceData->HasFlag(STE_FR_FINDALL) && resultsEditor &&
-        (event.GetExtraLong() == -1) &&
         ((event.GetEventType() == wxEVT_COMMAND_FIND) ||
          (event.GetEventType() == wxEVT_COMMAND_FIND_NEXT)))
     {

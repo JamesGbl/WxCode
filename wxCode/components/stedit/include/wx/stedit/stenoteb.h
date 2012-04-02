@@ -161,7 +161,7 @@ public:
     void UpdateGotoCloseMenu(wxMenu* menu, int startID);
 
     /// @name Overridden wxNotebook methods.
-    /// These send EVT_STN_PAGE_CHANGED events to help update UI (these just call base class).
+    /// These send EVT_STNOTEBOOK_PAGE_CHANGED events to help update UI (these just call base class).
     /// @{
 
     virtual bool AddPage(wxWindow *page, const wxString& text,

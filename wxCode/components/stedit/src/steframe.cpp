@@ -27,21 +27,23 @@
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorFrame, wxFrame)
 
 BEGIN_EVENT_TABLE(wxSTEditorFrame, wxFrame)
-    EVT_MENU_OPEN             (wxSTEditorFrame::OnMenuOpen)
-    EVT_MENU                  (wxID_ANY, wxSTEditorFrame::OnMenu)
-    EVT_SEARCHCTRL_SEARCH_BTN (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
-    EVT_TEXT_ENTER            (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
+    EVT_MENU_OPEN               (wxSTEditorFrame::OnMenuOpen)
+    EVT_MENU                    (wxID_ANY, wxSTEditorFrame::OnMenu)
+    EVT_SEARCHCTRL_SEARCH_BTN   (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
+    EVT_TEXT_ENTER              (ID_STE_TOOLBAR_FIND_CTRL, wxSTEditorFrame::OnMenu) // wxCommandEvent so we can treat it like a menu
 
-    //EVT_STE_CREATED           (wxID_ANY, wxSTEditorFrame::OnSTECreated)
-    EVT_STE_STATE_CHANGED     (wxID_ANY, wxSTEditorFrame::OnSTEState)
-    EVT_STC_UPDATEUI          (wxID_ANY, wxSTEditorFrame::OnSTCUpdateUI)
-    EVT_STE_POPUPMENU         (wxID_ANY, wxSTEditorFrame::OnSTEPopupMenu)
+    //EVT_STEDITOR_CREATED      (wxID_ANY, wxSTEditorFrame::OnSTECreated)
+    EVT_STEDITOR_STATE_CHANGED  (wxID_ANY, wxSTEditorFrame::OnSTEState)
+    EVT_STC_UPDATEUI            (wxID_ANY, wxSTEditorFrame::OnSTCUpdateUI)
+    EVT_STEDITOR_POPUPMENU      (wxID_ANY, wxSTEditorFrame::OnSTEPopupMenu)
 
-    EVT_STN_PAGE_CHANGED      (wxID_ANY, wxSTEditorFrame::OnNotebookPageChanged)
+    EVT_STNOTEBOOK_PAGE_CHANGED (wxID_ANY, wxSTEditorFrame::OnNotebookPageChanged)
 
-    EVT_TREE_ITEM_ACTIVATED   (wxID_ANY, wxSTEditorFrame::OnDirCtrlItemActivation)
+    EVT_STEFIND_RESULTS_NEED_SHOWN(wxID_ANY, wxSTEditorFrame::OnFindAllResults)
 
-    EVT_CLOSE                 (wxSTEditorFrame::OnClose)
+    EVT_TREE_ITEM_ACTIVATED     (wxID_ANY, wxSTEditorFrame::OnDirCtrlItemActivation)
+
+    EVT_CLOSE                   (wxSTEditorFrame::OnClose)
 END_EVENT_TABLE()
 
 void wxSTEditorFrame::Init()
@@ -56,8 +58,14 @@ void wxSTEditorFrame::Init()
     m_dirCtrl          = NULL;
 
     m_mainSplitter     = NULL;
+    m_mainSplitterWin1 = NULL;
+    m_mainSplitterWin1 = NULL;
+
     m_steNotebook      = NULL;
     m_steSplitter      = NULL;
+
+    m_resultsNotebook  = NULL;
+    m_findResultsEditor= NULL;
 }
 
 bool wxSTEditorFrame::Create(wxWindow *parent, wxWindowID id,
@@ -209,7 +217,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     if (!m_steNotebook && GetOptions().HasFrameOption(STF_CREATE_NOTEBOOK))
     {
         m_mainSplitter = new wxSplitterWindow(m_sideSplitter ? (wxWindow*)m_sideSplitter : (wxWindow*)this, ID_STF_MAIN_SPLITTER);
-        m_mainSplitter->SetMinimumPaneSize(10);
+        m_mainSplitter->SetMinimumPaneSize(1);
 
         m_steNotebook = new wxSTEditorNotebook(m_mainSplitter, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                                wxCLIP_CHILDREN);
@@ -218,6 +226,7 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
         // update after adding a single page
         m_steNotebook->UpdateAllItems();
         m_mainSplitter->Initialize(m_steNotebook);
+        m_mainSplitterWin1 = m_steNotebook;
         m_sideSplitterWin2 = m_mainSplitter;
 
         if (m_steTreeCtrl)
@@ -226,20 +235,26 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     else if (!m_steSplitter && GetOptions().HasFrameOption(STF_CREATE_SINGLEPAGE))
     {
         m_mainSplitter = new wxSplitterWindow(m_sideSplitter ? (wxWindow*)m_sideSplitter : (wxWindow*)this, ID_STF_MAIN_SPLITTER);
-        m_mainSplitter->SetMinimumPaneSize(10);
+        m_mainSplitter->SetMinimumPaneSize(1);
 
         m_steSplitter = new wxSTEditorSplitter(m_mainSplitter, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0);
         m_steSplitter->CreateOptions(m_options);
         m_mainSplitter->Initialize(m_steSplitter);
+        m_mainSplitterWin1 = m_steSplitter;
     }
     //else user will set up the rest
 
-    if (0 && m_mainSplitter)
+    if (m_mainSplitter && m_mainSplitterWin1 && !m_resultsNotebook && GetOptions().HasFrameOption(STF_CREATE_RESULT_NOTEBOOK))
     {
-        wxSTEditorFindResultsEditor* findResultsEditor = new wxSTEditorFindResultsEditor(m_mainSplitter, wxID_ANY);
-        findResultsEditor->CreateOptions(options);
-        wxSTEditorFindReplacePanel::SetFindResultsEditor(findResultsEditor);
-        m_mainSplitter->SplitHorizontally(m_steNotebook, findResultsEditor, 200);
+        m_resultsNotebook = new wxNotebook(m_mainSplitter, wxID_ANY);
+
+        m_findResultsEditor = new wxSTEditorFindResultsEditor(m_resultsNotebook, wxID_ANY);
+        m_findResultsEditor->CreateOptions(options);
+        m_resultsNotebook->AddPage(m_findResultsEditor, _("Search Results"));
+
+        wxSTEditorFindReplacePanel::SetFindResultsEditor(m_findResultsEditor);
+        m_mainSplitter->SplitHorizontally(m_mainSplitterWin1, m_resultsNotebook, GetClientSize().GetHeight()*2/3);
+        m_mainSplitterWin2 = m_resultsNotebook;
     }
 
     if (GetOptions().HasFrameOption(STF_CREATE_SIDEBAR) && GetSideSplitter() && m_sideSplitterWin1 && m_sideSplitterWin2)
@@ -444,6 +459,24 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
     }
 
     SetTitle(title);
+}
+
+void wxSTEditorFrame::OnFindAllResults(wxCommandEvent& event)
+{
+    if (m_mainSplitter && m_mainSplitterWin1 && m_mainSplitterWin2)
+    {
+        int split_win_height = m_mainSplitter->GetClientSize().GetHeight();
+
+        if (!m_mainSplitter->IsSplit())
+        {
+            m_mainSplitter->SplitHorizontally(m_mainSplitterWin1, m_mainSplitterWin2, split_win_height*2/3);
+        }
+        else if (m_mainSplitterWin2->GetSize().GetHeight() < 59)
+        {
+
+            m_mainSplitter->SetSashPosition(wxMax(split_win_height/2, 100));
+        }
+    }
 }
 
 void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &WXUNUSED(event))

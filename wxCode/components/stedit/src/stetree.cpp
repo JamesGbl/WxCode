@@ -44,11 +44,11 @@ wxSTETreeItemData::~wxSTETreeItemData()
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorTreeCtrl, wxTreeCtrl)
 
 BEGIN_EVENT_TABLE(wxSTEditorTreeCtrl, wxTreeCtrl)
-    EVT_RIGHT_UP            (wxSTEditorTreeCtrl::OnRightUp)
-    EVT_MENU                (wxID_ANY, wxSTEditorTreeCtrl::OnMenu)
-    EVT_TREE_ITEM_ACTIVATED (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
-    EVT_TREE_ITEM_GETTOOLTIP(wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
-    //EVT_TREE_ITEM_MENU      (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
+    EVT_RIGHT_UP                (wxSTEditorTreeCtrl::OnRightUp)
+    EVT_MENU                    (wxID_ANY, wxSTEditorTreeCtrl::OnMenu)
+    EVT_TREE_ITEM_ACTIVATED     (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
+    EVT_TREE_ITEM_GETTOOLTIP    (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
+    //EVT_TREE_ITEM_MENU        (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
 END_EVENT_TABLE()
 
 bool wxSTEditorTreeCtrl::Create(wxWindow *parent, wxWindowID id,
@@ -271,10 +271,10 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
         m_steNotebook->Disconnect(wxID_ANY, wxEVT_DESTROY,
                                   wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
                                   NULL, this);
-        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
+        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STNOTEBOOK_PAGE_CHANGED,
                                   wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                   NULL, this);
-        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STE_STATE_CHANGED,
+        m_steNotebook->Disconnect(wxID_ANY, wxEVT_STEDITOR_STATE_CHANGED,
                                   wxSTEditorEventHandler(wxSTEditorTreeCtrl::OnSTEState),
                                   NULL, this);
     }
@@ -291,10 +291,10 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
         m_steNotebook->Connect(wxID_ANY, wxEVT_DESTROY,
                                wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
                                NULL, this);
-        m_steNotebook->Connect(wxID_ANY, wxEVT_STN_PAGE_CHANGED,
+        m_steNotebook->Connect(wxID_ANY, wxEVT_STNOTEBOOK_PAGE_CHANGED,
                                wxNotebookEventHandler(wxSTEditorTreeCtrl::OnNotebookPageChanged),
                                NULL, this);
-        m_steNotebook->Connect(wxID_ANY, wxEVT_STE_STATE_CHANGED,
+        m_steNotebook->Connect(wxID_ANY, wxEVT_STEDITOR_STATE_CHANGED,
                                wxSTEditorEventHandler(wxSTEditorTreeCtrl::OnSTEState),
                                NULL, this);
     }
