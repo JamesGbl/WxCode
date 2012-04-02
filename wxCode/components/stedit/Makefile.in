@@ -59,6 +59,7 @@ STEDIT_LIB_OBJECTS =  \
 	stedit_lib_stedit.o \
 	stedit_lib_stedlgs.o \
 	stedit_lib_stedlgs_wdr.o \
+	stedit_lib_steevent.o \
 	stedit_lib_steexprt.o \
 	stedit_lib_stefindr.o \
 	stedit_lib_steframe.o \
@@ -81,6 +82,7 @@ STEDIT_LIB_HEADERS =  \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
 	include/wx/stedit/stedlgs.h \
+	include/wx/stedit/steevent.h \
 	include/wx/stedit/steexprt.h \
 	include/wx/stedit/stefindr.h \
 	include/wx/stedit/steframe.h \
@@ -105,6 +107,7 @@ STEDIT_DLL_OBJECTS =  \
 	stedit_dll_stedit.o \
 	stedit_dll_stedlgs.o \
 	stedit_dll_stedlgs_wdr.o \
+	stedit_dll_steevent.o \
 	stedit_dll_steexprt.o \
 	stedit_dll_stefindr.o \
 	stedit_dll_steframe.o \
@@ -127,6 +130,7 @@ STEDIT_DLL_HEADERS =  \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
 	include/wx/stedit/stedlgs.h \
+	include/wx/stedit/steevent.h \
 	include/wx/stedit/steexprt.h \
 	include/wx/stedit/stefindr.h \
 	include/wx/stedit/steframe.h \
@@ -382,6 +386,9 @@ stedit_lib_stedlgs.o: $(srcdir)/src/stedlgs.cpp $(STEDIT_LIB_ODEP)
 stedit_lib_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/stedlgs_wdr.cpp
 
+stedit_lib_steevent.o: $(srcdir)/src/steevent.cpp $(STEDIT_LIB_ODEP)
+	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steevent.cpp
+
 stedit_lib_steexprt.o: $(srcdir)/src/steexprt.cpp $(STEDIT_LIB_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(srcdir)/src/steexprt.cpp
 
@@ -438,6 +445,9 @@ stedit_dll_stedlgs.o: $(srcdir)/src/stedlgs.cpp $(STEDIT_DLL_ODEP)
 
 stedit_dll_stedlgs_wdr.o: $(srcdir)/src/stedlgs_wdr.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/stedlgs_wdr.cpp
+
+stedit_dll_steevent.o: $(srcdir)/src/steevent.cpp $(STEDIT_DLL_ODEP)
+	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steevent.cpp
 
 stedit_dll_steexprt.o: $(srcdir)/src/steexprt.cpp $(STEDIT_DLL_ODEP)
 	$(CXXC) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(srcdir)/src/steexprt.cpp

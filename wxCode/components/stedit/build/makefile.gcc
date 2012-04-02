@@ -66,6 +66,7 @@ STEDIT_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedit.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stefindr.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steframe.o \
@@ -91,6 +92,7 @@ STEDIT_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedit.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stefindr.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steframe.o \
@@ -293,6 +295,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.o: ../src/ste
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.o: ../src/stedlgs_wdr.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.o: ../src/steevent.cpp
+	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.o: ../src/steexprt.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -348,6 +353,9 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.o: ../src/ste
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.o: ../src/stedlgs_wdr.cpp
+	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.o: ../src/steevent.cpp
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.o: ../src/steexprt.cpp

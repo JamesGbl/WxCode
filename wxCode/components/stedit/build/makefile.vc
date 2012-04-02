@@ -75,6 +75,7 @@ STEDIT_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedit.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stefindr.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steframe.obj \
@@ -104,6 +105,7 @@ STEDIT_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedit.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stefindr.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steframe.obj \
@@ -353,6 +355,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.obj: ..\src\st
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.obj: ..\src\stedlgs_wdr.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\stedlgs_wdr.cpp
 
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.obj: ..\src\steevent.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\steevent.cpp
+
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.obj: ..\src\steexprt.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_LIB_CXXFLAGS) ..\src\steexprt.cpp
 
@@ -409,6 +414,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.obj: ..\src\st
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.obj: ..\src\stedlgs_wdr.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\stedlgs_wdr.cpp
+
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.obj: ..\src\steevent.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\steevent.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.obj: ..\src\steexprt.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(STEDIT_DLL_CXXFLAGS) ..\src\steexprt.cpp

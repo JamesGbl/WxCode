@@ -2209,6 +2209,9 @@
 				RelativePath="..\src\stedlgs_wdr.cpp">
 			</File>
 			<File
+				RelativePath="..\src\steevent.cpp">
+			</File>
+			<File
 				RelativePath="..\src\steexprt.cpp">
 			</File>
 			<File
@@ -2275,6 +2278,9 @@
 			</File>
 			<File
 				RelativePath="..\include\wx\stedit\stedlgs.h">
+			</File>
+			<File
+				RelativePath="..\include\wx\stedit\steevent.h">
 			</File>
 			<File
 				RelativePath="..\include\wx\stedit\steexprt.h">

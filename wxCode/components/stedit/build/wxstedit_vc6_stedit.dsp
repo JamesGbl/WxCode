@@ -890,6 +890,10 @@ SOURCE=..\src\stedlgs_wdr.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\steevent.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\steexprt.cpp
 # End Source File
 # Begin Source File
@@ -975,6 +979,10 @@ SOURCE=..\include\wx\stedit\stedit.h
 # Begin Source File
 
 SOURCE=..\include\wx\stedit\stedlgs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\stedit\steevent.h
 # End Source File
 # Begin Source File
 

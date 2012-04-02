@@ -84,6 +84,7 @@ STEDIT_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stedit.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stedlgs.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stedlgs_wdr.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steevent.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steexprt.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stefindr.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steframe.o \
@@ -106,6 +107,7 @@ STEDIT_LIB_HEADERS =  \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
 	include/wx/stedit/stedlgs.h \
+	include/wx/stedit/steevent.h \
 	include/wx/stedit/steexprt.h \
 	include/wx/stedit/stefindr.h \
 	include/wx/stedit/steframe.h \
@@ -129,6 +131,7 @@ STEDIT_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stedit.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stedlgs.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stedlgs_wdr.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steevent.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steexprt.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stefindr.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steframe.o \
@@ -151,6 +154,7 @@ STEDIT_DLL_HEADERS =  \
 	include/wx/stedit/stedefs.h \
 	include/wx/stedit/stedit.h \
 	include/wx/stedit/stedlgs.h \
+	include/wx/stedit/steevent.h \
 	include/wx/stedit/steexprt.h \
 	include/wx/stedit/stefindr.h \
 	include/wx/stedit/steframe.h \
@@ -389,6 +393,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stedlgs.o: ../src/stedlgs.cpp
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_stedlgs_wdr.o: ../src/stedlgs_wdr.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steevent.o: ../src/steevent.cpp
+	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_lib_steexprt.o: ../src/steexprt.cpp
 	$(CXX) -c -o $@ $(STEDIT_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -444,6 +451,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stedlgs.o: ../src/stedlgs.cpp
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_stedlgs_wdr.o: ../src/stedlgs_wdr.cpp
+	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steevent.o: ../src/steevent.cpp
 	$(CXX) -c -o $@ $(STEDIT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stedit_dll_steexprt.o: ../src/steexprt.cpp

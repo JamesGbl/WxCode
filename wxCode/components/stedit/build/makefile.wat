@@ -208,6 +208,7 @@ STEDIT_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedit.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stefindr.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steframe.obj &
@@ -234,6 +235,7 @@ STEDIT_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedit.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stefindr.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steframe.obj &
@@ -353,6 +355,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs.obj :  .AUTOD
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_stedlgs_wdr.obj :  .AUTODEPEND ..\src\stedlgs_wdr.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steevent.obj :  .AUTODEPEND ..\src\steevent.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_lib_steexprt.obj :  .AUTODEPEND ..\src\steexprt.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_LIB_CXXFLAGS) $<
 
@@ -408,6 +413,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs.obj :  .AUTOD
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_stedlgs_wdr.obj :  .AUTODEPEND ..\src\stedlgs_wdr.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steevent.obj :  .AUTODEPEND ..\src\steevent.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(STEDIT_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stedit_dll_steexprt.obj :  .AUTODEPEND ..\src\steexprt.cpp

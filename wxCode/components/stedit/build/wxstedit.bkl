@@ -22,6 +22,7 @@
         src/stedit.cpp
         src/stedlgs.cpp
         src/stedlgs_wdr.cpp
+        src/steevent.cpp
         src/steexprt.cpp
         src/stefindr.cpp
         src/steframe.cpp
@@ -46,6 +47,7 @@
         include/wx/stedit/stedefs.h
         include/wx/stedit/stedit.h
         include/wx/stedit/stedlgs.h
+        include/wx/stedit/steevent.h
         include/wx/stedit/steexprt.h
         include/wx/stedit/stefindr.h
         include/wx/stedit/steframe.h
