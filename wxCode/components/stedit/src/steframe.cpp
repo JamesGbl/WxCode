@@ -463,7 +463,42 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
 
 void wxSTEditorFrame::OnFindAllResults(wxCommandEvent& event)
 {
-    if (m_mainSplitter && m_mainSplitterWin1 && m_mainSplitterWin2)
+    // nothing to do
+    if (!m_findResultsEditor)
+        return;
+
+    // try to select the page in the results notebook
+    if (m_resultsNotebook)
+    {
+        size_t n, count = m_resultsNotebook->GetPageCount();
+
+        for (n = 0; n < count; ++n)
+        {
+            if (m_resultsNotebook->GetPage(n) == m_findResultsEditor)
+            {
+                m_resultsNotebook->SetSelection(n);
+                break;
+            }
+        }
+    }
+
+    // check that the results editor is in the main splitter
+    bool is_in_mainsplitter = false;
+
+    wxWindow* parent = m_findResultsEditor->GetParent();
+    while (parent)
+    {
+        if (parent == m_mainSplitter)
+        {
+            is_in_mainsplitter = true;
+            break;
+        }
+
+        parent = parent->GetParent();
+    }
+
+    // show the find results in the splitter
+    if (is_in_mainsplitter && m_mainSplitter && m_mainSplitterWin1 && m_mainSplitterWin2)
     {
         int split_win_height = m_mainSplitter->GetClientSize().GetHeight();
 
@@ -473,7 +508,6 @@ void wxSTEditorFrame::OnFindAllResults(wxCommandEvent& event)
         }
         else if (m_mainSplitterWin2->GetSize().GetHeight() < 59)
         {
-
             m_mainSplitter->SetSashPosition(wxMax(split_win_height/2, 100));
         }
     }
