@@ -202,6 +202,37 @@ bool wxSTEditorFindReplaceData::ParseFindAllString(const wxString& findAllString
     return true;
 }
 
+// static
+bool wxSTEditorFindReplaceData::GotoFindAllString(const wxString& findAllString,
+                                                  wxSTEditor* editor)
+{
+    wxCHECK_MSG(editor, false, wxT("Invalid wxSTEditor to goto line in."));
+
+    wxString fileName;
+    int line_number      = 0;
+    int line_start_pos   = 0;
+    int string_start_pos = 0;
+    int string_length    = 0;
+    wxString lineText;
+
+    bool ok = wxSTEditorFindReplaceData::ParseFindAllString(findAllString,
+                                                            fileName,
+                                                            line_number, line_start_pos,
+                                                            string_start_pos, string_length,
+                                                            lineText);
+
+    // sanity check, maybe just go to the end if the doc is now shorter?
+    if (ok && (wxFileName(fileName) == editor->GetFileName()) &&
+        (string_start_pos+string_length <= editor->GetLength()))
+    {
+        editor->GotoPos(string_start_pos);
+        editor->SetSelection(string_start_pos, string_start_pos+string_length);
+        return true;
+    }
+
+    return false;
+}
+
 bool wxSTEditorFindReplaceData::LoadConfig(wxConfigBase &config,
                                            const wxString &configPath)
 {

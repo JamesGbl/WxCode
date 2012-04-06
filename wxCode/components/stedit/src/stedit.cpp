@@ -1972,26 +1972,8 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
 
     if (eventType == wxEVT_STEFIND_GOTO)
     {
-        wxString str = event.GetString();
-
-        wxString fileName;
-        int line_number      = 0;
-        int line_start_pos   = 0;
-        int string_start_pos = 0;
-        int string_length    = 0;
-        wxString lineText;
-
-        bool ok = wxSTEditorFindReplaceData::ParseFindAllString(str, fileName,
-                                                                line_number, line_start_pos,
-                                                                string_start_pos, string_length,
-                                                                lineText);
-        // sanity check
-        if (ok && (wxFileName(fileName) == GetFileName()) &&
-            (string_start_pos+string_length <= GetLength()))
-        {
-            GotoPos(string_start_pos);
-            SetSelection(string_start_pos, string_start_pos+string_length);
-        }
+        wxString findAllString(event.GetString());
+        wxSTEditorFindReplaceData::GotoFindAllString(findAllString, this);
     }
     else if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
     {

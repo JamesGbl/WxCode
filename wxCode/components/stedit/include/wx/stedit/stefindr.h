@@ -103,12 +103,12 @@ public:
     virtual ~wxSTEditorFindReplaceData() {}
 
     // These are in wxFindReplaceData
-    //int GetFlags() const
-    //void SetFlags(wxUint32 flags)
+    //int   GetFlags() const
+    //void  SetFlags(wxUint32 flags)
     //const wxString& GetFindString() { return m_FindWhat; }
     //const wxString& GetReplaceString() { return m_ReplaceWith; }
-    //void SetFindString(const wxString& str) { m_FindWhat = str; }
-    //void SetReplaceString(const wxString& str) { m_ReplaceWith = str; }
+    //void  SetFindString(const wxString& str) { m_FindWhat = str; }
+    //void  SetReplaceString(const wxString& str) { m_ReplaceWith = str; }
 
     bool HasFlag(int flag) const { return (GetFlags() & flag) != 0; }
 
@@ -141,11 +141,14 @@ public:
                                         int string_start_pos, int string_length,
                                         const wxString& lineText);
     /// Parse a "find all" string with the information coded into it, returning success.
-    static bool     ParseFindAllString(const wxString& findAllString,
-                                       wxString& fileName,
-                                       int& line_number,      int& line_start_pos,
-                                       int& string_start_pos, int& string_length,
-                                       wxString& lineText);
+    static bool ParseFindAllString(const wxString& findAllString,
+                                   wxString& fileName,
+                                   int& line_number,      int& line_start_pos,
+                                   int& string_start_pos, int& string_length,
+                                   wxString& lineText);
+    /// Goto and select the text in the "find all" string created by CreateFindAllString().
+    static bool GotoFindAllString(const wxString& findAllString,
+                                  wxSTEditor* editor);
 
     /// Compare the strings with flags = -1 for internal flags or use own flags.
     /// Only compares the strings with or without case, returns true if the same.
@@ -159,7 +162,7 @@ public:
     /// This size is only set if the user expands it, otherwise it's equal to wxDefaultSize.
     /// Also, it does not size the current dialog and only sets the size
     ///   of the dialog when first created.
-    wxSize GetDialogSize() const { return m_dialogSize; }
+    wxSize GetDialogSize() const           { return m_dialogSize; }
     void SetDialogSize(const wxSize& size) { m_dialogSize = size; }
 
     /// Load/Save config for find flags.
@@ -170,7 +173,7 @@ public:
                     const wxString &configPath = wxT("/wxSTEditor/FindReplace/")) const;
 
     /// Returns true after calling LoadConfig().
-    bool HasLoadedConfig() const { return m_loaded_config; }
+    bool HasLoadedConfig() const      { return m_loaded_config; }
     void SetLoadedConfig(bool loaded) { m_loaded_config = loaded; }
 
     /// all editors (can and should probably) share the same find/replace data.
@@ -218,7 +221,7 @@ public:
     void SetResults(const wxSTEditorFindReplaceData& findReplaceData);
 
     /// Set the window to send the events to, if NULL then send to the parent.
-    wxWindow* GetTargetWindow() const { return m_targetWin; }
+    wxWindow* GetTargetWindow() const     { return m_targetWin; }
     void SetTargetWindow( wxWindow* win ) { m_targetWin = win; }
 
 protected:
@@ -270,7 +273,7 @@ public:
     /// @name Get/Set/Create an editor to show the find results in.
     /// @{
 
-    /// Get the global editor to show "find all" string in.
+    /// Get the global editor to show "find all" string in, may be NULL.
     static wxSTEditorFindResultsEditor* GetFindResultsEditor() { return sm_findResultsEditor; }
     /// Set a global editor to show "find all" strings in.
     /// If no editor is set then this find panel will be expanded and the

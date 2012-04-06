@@ -139,6 +139,7 @@ BEGIN_DECLARE_EVENT_TYPES()
     /// Go to the file and line in an editor, probably from a previous find all.
     ///   event.GetString() can be parsed using wxSTEditorFindReplaceData::ParseFindAllString()
     ///   event.GetExtraLong() is the index into the wxSTEditorFindReplaceData::GetFindAllStrings().
+    ///   event.GetEventObject() is the wxSTEditorFindResultsEditor who's results was selected.
     ///   (this is a wxFindDialogEvent)
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_STEDIT, wxEVT_STEFIND_GOTO, 0)
 

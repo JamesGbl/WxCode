@@ -18,7 +18,7 @@
 #include "wx/stedit/stedefs.h"
 
 // --------------------------------------------------------------------------
-/// @name wxART_STEDIT_* #defines
+/// @name wxART_STEDIT_defines
 /// wxArtIDs used by the wxSTEditor classes to get bitmaps.
 /// Note: We cannot use the default wxArtProvider icons since we require a few
 ///       extra ones and mixing the two will look strange at best.
@@ -66,9 +66,9 @@
 /// @name wxSTEditorArtProvider Default Icon Sizes
 /// @{
 
-/// Normal icon size for this platform from wxSystemSettings::GetMetric(...)
+/// Normal icon size for this platform from wxSystemSettings::GetMetric(wxSYS_ICON_X and wxSYS_ICON_Y)
 WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTEIconSize;
-/// Small icon size for this platform from wxSystemSettings::GetMetric(...)
+/// Small icon size for this platform from wxSystemSettings::GetMetric(wxSYS_SMALLICON_X and wxSYS_SMALLICON_Y)
 WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize;
 
 /// @}
@@ -76,9 +76,9 @@ WXDLLIMPEXP_DATA_STEDIT(extern const wxSize) wxSTESmallIconSize;
 /// @name wxSTEditorArtProvider Convenience Macros
 /// @{
 
-/// Convenience macro to get an appropriate menu bitmap for the input client
+/// Convenience macro to get an appropriate menu bitmap for the menu client.
 #define STE_ARTMENU(id) wxArtProvider::GetBitmap(id, wxART_MENU)
-/// Convenience macro to get an appropriate toolbar bitmap for the input client
+/// Convenience macro to get an appropriate toolbar bitmap for the toolbar client.
 #define STE_ARTTOOL(id) wxArtProvider::GetBitmap(id, wxART_TOOLBAR)
 
 /// @}
@@ -113,7 +113,7 @@ public:
                                 const wxArtClient& client,
                                 const wxSize& size = wxDefaultSize);
 
-    /// Helper function to resize the input bitmap to have the given size
+    /// Helper function to resize the input bitmap to have the given size.
     static wxBitmap Resize(const wxBitmap& bmp, const wxSize& size);
 
     /// Get a wxIconBundle of the wxART_STEDIT_APP icon for wxSTEdit dialogs
