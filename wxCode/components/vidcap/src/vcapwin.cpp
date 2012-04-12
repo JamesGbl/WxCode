@@ -180,18 +180,18 @@ void wxVideoCaptureWindowBase::Reset(bool full)
 
     m_deviceIndex = -1;
 
-    m_previewing = false;
-    m_preview_wximage = false;
-    if (full) m_previewscaled = false;
+    m_previewing                  = false;
+    m_preview_wximage             = false;
+    if (full) m_previewscaled     = false;
     if (full) m_previewmsperframe = 66;             // 15fps
-    m_actualpreviewmsperframe = 0;
+    m_actualpreviewmsperframe     = 0;
 
     m_has_overlay = false;
-    m_overlaying = false;
+    m_overlaying  = false;
 
     if (full) m_framenumber = 0;
 
-    m_imageSize = wxSize(0, 0);
+    m_imageSize    = wxSize(0, 0);
     m_minImageSize = wxSize(32, 32);    // just a guess, VFW doesn't support this so...
     m_maxImageSize = wxSize(1024, 768); // just a guess, VFW doesn't support this so...
 }

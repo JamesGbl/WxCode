@@ -124,20 +124,20 @@ extern const char* FOURCCToString(FOURCC fourcc);
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureFormat
 {
 public :
-    wxVideoCaptureFormat() { m_fourcc = wxNullFOURCC; m_bpp = 0; m_v4l1_palette = -1; }
+    wxVideoCaptureFormat() : m_fourcc(wxNullFOURCC), m_bpp(0), m_v4l1_palette(-1) {}
 
     wxVideoCaptureFormat(const wxString &description, FOURCC fourcc, int bpp, int v4l1_palette)
     {
-        m_description = description;
-        m_fourcc = fourcc;
-        m_bpp = bpp;
+        m_description  = description;
+        m_fourcc       = fourcc;
+        m_bpp          = bpp;
         m_v4l1_palette = v4l1_palette;
     }
 
-    wxString m_description;// common name of the format
-    FOURCC m_fourcc;       // MMIO data type for BITMAPINFOHEADER->biCompression
-    int m_bpp;             // bits per pixel for BITMAPINFOHEADER->biBitCount
-    int m_v4l1_palette;    // the type the v4l1 thinks it is (v4l2 uses fourcc ?)
+    wxString m_description;  // common name of the format
+    FOURCC   m_fourcc;       // MMIO data type for BITMAPINFOHEADER->biCompression
+    int      m_bpp;          // bits per pixel for BITMAPINFOHEADER->biBitCount
+    int      m_v4l1_palette; // the type the v4l1 thinks it is (v4l2 uses fourcc ?)
 };
 
 #include <wx/dynarray.h>
@@ -147,8 +147,8 @@ WX_DECLARE_OBJARRAY(wxVideoCaptureFormat, wxArrayVideoCaptureFormat);
 // structure to hold the rest of the BITMAPINFOHEADER format parameters
 typedef struct wxvidcap_video_format_struct
 {
-    FOURCC fourcc;    // MMIO data type for BITMAPINFOHEADER->biCompression
-    int bpp;          // bits per pixel for BITMAPINFOHEADER->biBitCount
+    FOURCC      fourcc;      // MMIO data type for BITMAPINFOHEADER->biCompression
+    int         bpp;         // bits per pixel for BITMAPINFOHEADER->biBitCount
     const char *description; // common name of the format
 } wxvidcap_video_format_typedef;
 /*
@@ -550,7 +550,7 @@ protected :
     // resets the member vars to a disconnected state
     //   if !full then user settings are left alone
     //   call when disconnecting
-    virtual void Reset(bool full = false);
+    void Reset(bool full = false);
 
 
     void CreateVideoCaptureFormatArray(); // don't need to call, used internally

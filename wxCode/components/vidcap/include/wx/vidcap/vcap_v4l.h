@@ -24,6 +24,7 @@ class wxMoveEvent;
 class wxPaintEvent;
 
 #include <linux/videodev.h>
+#include <vector>
 
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow : window for viewing/recording streaming video or snapshots
@@ -31,7 +32,7 @@ class wxPaintEvent;
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowV4L: public wxVideoCaptureWindowBase
 {
 public:
-    wxVideoCaptureWindowV4L() : wxVideoCaptureWindowBase() {}
+    wxVideoCaptureWindowV4L() : wxVideoCaptureWindowBase() { Init(); }
     wxVideoCaptureWindowV4L( wxWindow *parent, wxWindowID id = -1,
                              const wxPoint &pos = wxDefaultPosition,
                              const wxSize &size = wxDefaultSize,
@@ -158,7 +159,8 @@ protected:
     // ----------------------------------------------------------------------
 
     // Generic variables
-    wxArrayString m_deviceFilenames; // all device files from EnumerateDevices
+    wxArrayString                 m_deviceFilenames; // all device files from EnumerateDevices
+    std::vector<video_capability> m_videoCapabilities;
 
     unsigned char *m_bmpdata;       // big 'ole temp storage for DIB
 
@@ -176,8 +178,8 @@ protected:
 
     // safe - open and close a device (can call w/o checks)
     int m_fd_device;      // the device m_fd_device = open("/dev/video",O_RDWR)
-    bool open_device(const wxString &filename);
-    bool close_device();
+    int open_device(const wxString &filename);
+    bool close_device(int fd_device);
 
     // safe - map and unmap the shared video memory (can call w/o checks)
     void *m_map;            // memory map of the
@@ -187,6 +189,8 @@ protected:
 
     // safe - ioctl function
     int xioctl(int fd, int request, void *arg) const;
+
+    void InitV4LStructs();
 
     // v4l structs
     struct video_mbuf       m_video_mbuf; //
@@ -201,29 +205,46 @@ protected:
     struct video_unit       m_video_unit;
     struct video_tuner      m_video_tuner;
 
+    struct v4l2_capability  m_v4l2_capability;
+    struct v4l2_fmtdesc     m_v4l2_fmtdesc;
+    struct v4l2_format      m_v4l2_format;
+
     // simple functions to set the v4l structs
-    inline int V4L_Set_video_buffer();
-    inline int V4L_Set_video_window();
-    inline int V4L_Set_videoSource(int);
-    inline int V4L_Set_video_picture();
-    inline int V4L_Set_video_tuner();
+    int Set_V4L_video_buffer();
+    int Set_V4L_video_window();
+    int Set_V4L_videoSource(int);
+    int Set_V4L_video_picture();
+    int Set_V4L_video_tuner();
 
     // simple functions to get the v4l structs
-    inline int V4L_Get_video_capability();
-    inline int V4L_Get_video_buffer();
-    inline int V4L_Get_video_window();
-    inline int V4L_Get_video_channel();
-    inline int V4L_Get_video_picture();
-    inline int V4L_Get_video_tuner();
-    inline int V4L_Get_video_mbuf();
+    int Get_V4L_video_capability();
+    int Get_V4L_video_buffer();
+    int Get_V4L_video_window();
+    int Get_V4L_video_channel();
+    int Get_V4L_video_picture();
+    int Get_V4L_video_tuner();
+    int Get_V4L_video_mbuf();
+
+    int Get_v4l2_capability();
+    int Get_v4l2_fmtdesc();
+    int Get_v4l2_format();
 
     // methods to display device information
-    void print_video_capability();
-    void print_video_window();
-    void print_video_channel();
-    void print_video_mbuf();
+    void print_V4L_video_mbuf();
+    void print_V4L_video_mmap();
+    void print_V4L_video_capability();
+    void print_V4L_video_window();
+    void print_V4L_video_picture();
+    void print_V4L_video_buffer();
+    void print_V4L_video_channel();
+
+    void print_v4l2_capability();
+    void print_v4l2_fmtdesc();
+    void print_v4l2_format();
+    void print_v4l2_pix_format(const v4l2_pix_format& v);
 
 private:
+    void Init();
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxVideoCaptureWindowV4L)
 };
