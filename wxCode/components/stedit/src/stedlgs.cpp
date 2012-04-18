@@ -2026,7 +2026,7 @@ void wxSTEditorBookmarkDialog::UpdateButtons()
             m_treeCtrl->SelectItem(selectedIds[n], false);
     }
 
-    FindWindow(ID_STEDLGS_BOOKMARKS_GOTO_BUTTON)->Enable((bool)id);
+    FindWindow(ID_STEDLGS_BOOKMARKS_GOTO_BUTTON)->Enable(id.IsOk());
     FindWindow(ID_STEDLGS_BOOKMARKS_DELETE_BUTTON)->Enable(can_delete);
 }
 
