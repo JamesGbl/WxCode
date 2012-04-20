@@ -1296,6 +1296,11 @@ void wxSTEditor::SetFileName(const wxFileName& fileName, bool send_event)
     if (GetSTERefData()->m_fileName != fileName)
     {
         GetSTERefData()->m_fileName = fileName;
+
+        // Cleanup the filename and make it absolute
+        if (fileName.FileExists())
+            GetSTERefData()->m_fileName.Normalize();
+
         if (send_event)
         {
             SendEvent(wxEVT_STEDITOR_STATE_CHANGED, STE_FILENAME, GetState(), GetFileName().GetFullPath());
@@ -1568,58 +1573,34 @@ bool wxSTEditor::SaveFile( wxOutputStream& stream, const wxString& encoding, boo
 
 bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
 {
-    wxFileName fileName = GetFileName();
-    wxString extensions = extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_;
-    wxString encoding = GetFileEncoding();
-    bool file_bom = GetFileBOM();
+    wxFileName selectedFileName;
+    wxString   selectedFileEncoding;
+    bool       selected_file_bom = false;
+
+    bool ok = SaveFileDialog(use_dialog, extensions_, &selectedFileName, &selectedFileEncoding, &selected_file_bom);
+
+    if (ok)
+    {
+        ok = SaveFile(selectedFileName, selectedFileEncoding, selected_file_bom);
+
+        // remember where they tried to save their file
+        if (use_dialog)
+            GetOptions().SetDefaultFilePath(selectedFileName.GetPath());
+    }
+
+    return ok;
+}
+
+bool wxSTEditor::SaveFile( const wxFileName& fileName,
+                           const wxString& fileEncoding,
+                           bool write_file_bom )
+{
     wxFile file;
-
-    // if not a valid filename or it wasn't loaded from disk - force dialog
-    if (!fileName.GetFullPath().IsEmpty())
-    {
-        if (!fileName.IsOk())
-            use_dialog = true;
-        // make them specify if file wasn't actually loaded from disk
-        else if (!IsFileFromDisk())
-            use_dialog = true;
-    }
-
-    if (fileName.GetFullPath().IsEmpty() || use_dialog)
-    {
-        wxString path = GetOptions().GetDefaultFilePath();
-
-        if (!fileName.GetFullPath().IsEmpty())
-        {
-            wxString fileNamePath = fileName.GetPath();
-
-            if (!fileNamePath.IsEmpty())
-                path = fileNamePath;
-        }
-
-        wxSTEditorFileDialog fileDialog( this, _("Save file"),
-                                 path,
-                                 extensions,
-                                 wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-
-        fileDialog.SetFilename(fileName.GetFullName());
-        fileDialog.m_file_bom = file_bom;
-        fileDialog.m_encoding = encoding;
-        if (fileDialog.ShowModal() == wxID_OK)
-        {
-            fileName = fileDialog.GetPath();
-            encoding = fileDialog.m_encoding;
-            file_bom = fileDialog.m_file_bom;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     // FIXME check for write permission wxAccess - access
     if (!file.Open(fileName.GetFullPath(), wxFile::write))
     {
-        wxMessageBox(wxString::Format(_("Error opening file :'%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
+        wxMessageBox(wxString::Format(_("Error opening file to save : '%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
         return false;
     }
@@ -1632,27 +1613,77 @@ bool wxSTEditor::SaveFile( bool use_dialog, const wxString &extensions_ )
             ConvertEOLs(GetEditorPrefs().GetPrefInt(STE_PREF_EOL_MODE));
     }
 
-    wxFileOutputStream out(file);
-    if (SaveFile(out, encoding, file_bom))
+    wxFileOutputStream outStream(file);
+
+    if (outStream.IsOk() && SaveFile(outStream, fileEncoding, write_file_bom))
     {
         file.Close();
 
         SetFileModificationTime(fileName.GetModificationTime());
-        if (use_dialog)
-            GetOptions().SetDefaultFilePath(fileName.GetPath());
 
         SetModified(false);
         SetFileName(fileName, true);
         UpdateCanDo(true);
-        SetFileEncoding(encoding);
-        SetFileBOM(file_bom);
+        SetFileEncoding(fileEncoding);
+        SetFileBOM(write_file_bom);
         return true;
     }
     else
     {
-        wxMessageBox(wxString::Format(_("Error saving file :'%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
+        wxMessageBox(wxString::Format(_("Error saving file : '%s'"), fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()).wx_str()),
                      _("Save file error"), wxOK|wxICON_ERROR , GetModalParent());
     }
+    return false;
+}
+
+bool wxSTEditor::SaveFileDialog( bool use_dialog, const wxString &extensions_,
+                                 wxFileName* selectedFileName,
+                                 wxString*   selectedFileEncoding,
+                                 bool*       selected_file_bom)
+{
+    wxFileName fileName = GetFileName();
+    wxString extensions = extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_;
+    wxString encoding   = GetFileEncoding();
+    bool file_bom       = GetFileBOM();
+
+    // if not a valid filename or it wasn't loaded from disk - force using dialog
+    if (fileName.GetFullPath().IsEmpty() || !fileName.IsOk() || !IsFileFromDisk())
+        use_dialog = true;
+
+    if (use_dialog)
+    {
+        wxString path = GetOptions().GetDefaultFilePath();
+        wxString fileNamePath = fileName.GetPath();
+
+        if (!fileNamePath.IsEmpty())
+            path = fileNamePath;
+
+        wxSTEditorFileDialog fileDialog( this, _("Save file"),
+                                         path,
+                                         extensions,
+                                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+        fileDialog.SetFilename(fileName.GetFullName());
+        fileDialog.m_encoding = encoding;
+        fileDialog.m_file_bom = file_bom;
+
+        if (fileDialog.ShowModal() == wxID_OK)
+        {
+            if (selectedFileName)     *selectedFileName     = fileDialog.GetPath();
+            if (selectedFileEncoding) *selectedFileEncoding = fileDialog.m_encoding;
+            if (selected_file_bom)    *selected_file_bom    = fileDialog.m_file_bom;
+            return true;
+        }
+    }
+    else
+    {
+        // use the current file info
+        if (selectedFileName)     *selectedFileName     = fileName;
+        if (selectedFileEncoding) *selectedFileEncoding = encoding;
+        if (selected_file_bom)    *selected_file_bom    = file_bom;
+        return true;
+    }
+
     return false;
 }
 

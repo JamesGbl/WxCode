@@ -263,7 +263,10 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     }
 
 #if wxUSE_DRAG_AND_DROP
-    SetDropTarget(new wxSTEditorFrameFileDropTarget(this));
+    if (GetOptions().HasFrameOption(STF_DO_DRAG_AND_DROP))
+    {
+        SetDropTarget(new wxSTEditorFileDropTarget(this));
+    }
 #endif //wxUSE_DRAG_AND_DROP
 
     if (GetOptions().HasConfigOption(STE_CONFIG_FINDREPLACE) && config)
@@ -542,7 +545,7 @@ void wxSTEditorFrame::OnDirCtrlItemActivation(wxTreeEvent &WXUNUSED(event))
         GetEditorNotebook()->LoadFiles(&files, wxEmptyString);
     }
     else
-        LoadFile(files[0], true);
+        LoadFile(files[0], true); // just load the first one
 }
 
 void wxSTEditorFrame::OnSTECreated(wxCommandEvent &event)
@@ -561,11 +564,13 @@ void wxSTEditorFrame::OnSTEPopupMenu(wxSTEditorEvent &event)
 
 wxString wxSTEditorFrame::MakeTitle(const wxSTEditor* editor) const
 {
-    wxFileName fileName = editor->GetFileName();
-    const wxString modified = editor->IsModified() ? wxMODIFIED_ASTERISK : wxEmptyString;
-    return wxString::Format(wxT("%s - %s"),
-        wxString(fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()) + modified).wx_str(),
-        m_titleBase.wx_str());
+    wxFileName fileName = editor ? editor->GetFileName() : wxFileName();
+
+    wxString title(fileName.GetFullPath(GetOptions().GetDisplayPathSeparator()));
+    if (editor->IsModified()) title += wxMODIFIED_ASTERISK;
+    title += wxT(" - ") + m_titleBase;
+
+    return title;
 }
 
 void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
@@ -575,9 +580,13 @@ void wxSTEditorFrame::OnSTEState(wxSTEditorEvent &event)
 
     if ( event.HasStateChange(STE_FILENAME | STE_MODIFIED | STE_EDITABLE) )
     {
-        SetTitle(MakeTitle(editor));
+        if (wxDynamicCast(editor, wxSTEditorFindResultsEditor) == NULL)
+        {
+            wxString title = MakeTitle(editor);
+            if (GetTitle() != title)
+                SetTitle(title);
+        }
 
-        //UpdateFileTreeCtrl();
         if (event.HasStateChange(STE_FILENAME) && GetOptions().GetFileHistory())
         {
             if (wxFileExists(event.GetString()))
@@ -593,11 +602,11 @@ void wxSTEditorFrame::OnSTCUpdateUI(wxStyledTextEvent &event)
         return;
 
     wxStyledTextCtrl* editor = wxStaticCast(event.GetEventObject(), wxStyledTextCtrl);
-    STE_TextPos pos   = editor->GetCurrentPos();
-    int line  = editor->GetCurrentLine() + 1; // start at 1
-    int lines = editor->GetLineCount();
-    int col   = editor->GetColumn(pos) + 1;   // start at 1
-    int chars = editor->GetLength();
+    STE_TextPos pos = editor->GetCurrentPos();
+    int line        = editor->GetCurrentLine() + 1; // start at 1
+    int lines       = editor->GetLineCount();
+    int col         = editor->GetColumn(pos) + 1;   // start at 1
+    int chars       = editor->GetLength();
 
     wxString txt = wxString::Format(wxT("Line %6d of %6d, Col %4d, Chars %6d  "), line, lines, col, chars);
     txt += editor->GetOvertype() ? wxT("[OVR]") : wxT("[INS]");
@@ -758,25 +767,80 @@ void wxSTEditorFrame::OnClose( wxCloseEvent &event )
 //-----------------------------------------------------------------------------
 #if wxUSE_DRAG_AND_DROP
 
-bool wxSTEditorFrameFileDropTarget::OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y),
-                                                const wxArrayString& filenames)
+bool wxSTEditorFileDropTarget::OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y),
+                                           const wxArrayString& filenames)
 {
-    wxCHECK_MSG(m_owner, false, wxT("Invalid drop target"));
+    wxCHECK_MSG(m_owner, false, wxT("Invalid file drop target"));
 
     const size_t count = filenames.GetCount();
     if (count == 0)
         return false;
 
-    // see if it has a notebook and use it to load the files
-    if (m_owner->GetEditorNotebook())
+    // Try to find the best window to use to load the files
+    wxSTEditorFrame*    stEditorFrame    = NULL;
+    wxSTEditorNotebook* stEditorNotebook = NULL;
+    wxSTEditorSplitter* stEditorSplitter = NULL;
+    wxSTEditor*         stEditor         = NULL;    
+
+    wxWindow* parent = m_owner;
+
+    while (parent)
+    {
+        if (wxDynamicCast(parent, wxSTEditorFrame) != NULL)
+        {
+            stEditorFrame = wxDynamicCast(parent, wxSTEditorFrame);
+            break;
+        }
+        else if (wxDynamicCast(parent, wxSTEditorNotebook) != NULL)
+        {
+            stEditorNotebook = wxDynamicCast(parent, wxSTEditorNotebook);
+            break; // once we find a notebook, we'll use it
+        }
+        else if (wxDynamicCast(parent, wxSTEditorSplitter) != NULL)
+        {
+            stEditorSplitter = wxDynamicCast(parent, wxSTEditorSplitter);
+        }
+        else if (wxDynamicCast(parent, wxSTEditor) != NULL)
+        {
+            stEditor = wxDynamicCast(parent, wxSTEditor);
+        }
+
+        parent = parent->GetParent();
+    }
+
+    // These are in order of preference to use to load the files
+
+    if (stEditorFrame != NULL)
+    {
+        // see if it has a notebook and use it to load the files
+        if (stEditorFrame->GetEditorNotebook())
+        {
+            wxArrayString files = filenames;
+            stEditorFrame->GetEditorNotebook()->LoadFiles(&files);
+        }
+        else if (stEditorFrame->GetEditor())
+            stEditorFrame->GetEditor()->LoadFile(filenames[0]);
+
+        return true;
+    }
+    else if (stEditorNotebook != NULL)
     {
         wxArrayString files = filenames;
-        m_owner->GetEditorNotebook()->LoadFiles(&files);
+        stEditorNotebook->LoadFiles(&files);
+        return true;
     }
-    else if (m_owner->GetEditor())
-        m_owner->GetEditor()->LoadFile(filenames[0]);
+    else if (stEditorSplitter != NULL)
+    {
+        stEditorSplitter->GetEditor()->LoadFile(filenames[0]);
+        return true;
+    }
+    else if (stEditor != NULL)
+    {
+        stEditor->LoadFile(filenames[0]);
+        return true;
+    }
 
-    return true;
+    return false;
 }
 
 #endif //wxUSE_DRAG_AND_DROP

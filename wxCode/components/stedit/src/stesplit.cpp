@@ -162,7 +162,16 @@ void wxSTEditorSplitter::CreateOptions(const wxSTEditorOptions& options)
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
     if (steMM && GetOptions().HasSplitterOption(STS_CREATE_POPUPMENU) &&
         !GetOptions().GetSplitterPopupMenu())
+    {
         GetOptions().SetSplitterPopupMenu(steMM->CreateSplitterPopupMenu(), false);
+    }
+
+#if wxUSE_DRAG_AND_DROP
+    if (GetOptions().HasSplitterOption(STS_DO_DRAG_AND_DROP))
+    {
+        SetDropTarget(new wxSTEditorFileDropTarget(this));
+    }
+#endif //wxUSE_DRAG_AND_DROP
 }
 
 wxSTEditorSplitter::~wxSTEditorSplitter()

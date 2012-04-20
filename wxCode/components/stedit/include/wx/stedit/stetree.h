@@ -117,7 +117,7 @@ public:
     /// How to display the filenames in the tree.
     /// For "c:\software\program\readme.txt", the tree will show the
     ///   values as described.
-    enum Display_Type
+    enum FileDisplay_Type
     {
         SHOW_FILENAME_ONLY,      ///< Nodes only with the filename, i.e. 'readme.txt'.
         SHOW_FILEPATH_ONLY,      ///< Nodes only with the full path, i.e. 'c:\software\program\readme.txt'.
@@ -126,7 +126,7 @@ public:
     };
 
     /// How to display the filename information in the tree.
-    void SetDisplayType(Display_Type display_type);
+    void SetDisplayType(FileDisplay_Type display_type);
 
     /// Update the treectrl from the set wxSTEditorNotebook.
     /// This should not need to be called by a user.
@@ -172,7 +172,7 @@ public:
 
     /// @name Event handlers
     /// @{
-    void OnRightUp( wxMouseEvent& event );
+    void OnContextMenu( wxContextMenuEvent& event );
     void OnMenu( wxCommandEvent& event );
     bool HandleMenuEvent(wxCommandEvent &event);
     void OnTreeCtrl(wxTreeEvent &event);
@@ -182,10 +182,11 @@ public:
     /// @}
 
 private:
-    Display_Type m_display_type;
-    wxMenu* m_popupMenu;
+    FileDisplay_Type    m_display_type;
+    wxMenu*             m_popupMenu;
     wxSTEditorNotebook* m_steNotebook;
     wxLongToLongHashMap m_windowToSTETreeItemDataMap;
+    wxLongToLongHashMap m_windowDestroyMap;
 
     void Init();
     DECLARE_DYNAMIC_CLASS(wxSTEditorTreeCtrl)

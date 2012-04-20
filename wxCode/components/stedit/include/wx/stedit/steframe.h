@@ -236,23 +236,27 @@ private:
 };
 
 //---------------------------------------------------------------------------
-/** @class wxSTEditorFrameFileDropTarget
-    @brief A wxFileDropTarget for the wxSTEditorFrame.
+/** @class wxSTEditorFileDropTarget
+    @brief A wxFileDropTarget for the wxSTEditorFrame, wxSTEditorNotebook, wxSTEditorSplitter, and wxSTEditor.
+    Note that by default the wxStyledTextCtrl handles text dropping so we
+    do not override it or allow dropping files on it.
 */ //------------------------------------------------------------------------
 
 #if wxUSE_DRAG_AND_DROP
 
-class WXDLLIMPEXP_STEDIT wxSTEditorFrameFileDropTarget : public wxFileDropTarget
+class WXDLLIMPEXP_STEDIT wxSTEditorFileDropTarget : public wxFileDropTarget
 {
 public:
-    wxSTEditorFrameFileDropTarget(wxSTEditorFrame *owner) : m_owner(owner) {}
+    /// Create this for any window and it will traverse up the parents 
+    /// until a suitable frame, notebook, splitter, editor to 
+    /// open the file is found.
+    wxSTEditorFileDropTarget(wxWindow *owner) : m_owner(owner) {}
 
     /// Overrides wxFileDropTarget::OnDropFiles() to open the file either in the
-    /// editor notebook or single page splitter depending on how the wxSTEditorFrame
-    /// is configured.
+    /// editor notebook or single page splitter depending on what window is found.
     virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames);
 
-    wxSTEditorFrame *m_owner;
+    wxWindow *m_owner;
 };
 
 #endif //wxUSE_DRAG_AND_DROP

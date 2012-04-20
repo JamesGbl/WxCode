@@ -107,7 +107,16 @@ void wxSTEditorNotebook::CreateOptions(const wxSTEditorOptions& options)
     wxSTEditorMenuManager *steMM = GetOptions().GetMenuManager();
     if (steMM && GetOptions().HasNotebookOption(STN_CREATE_POPUPMENU) &&
         !GetOptions().GetNotebookPopupMenu())
+    {
         GetOptions().SetNotebookPopupMenu(steMM->CreateNotebookPopupMenu(), false);
+    }
+
+#if wxUSE_DRAG_AND_DROP
+    if (GetOptions().HasNotebookOption(STN_DO_DRAG_AND_DROP))
+    {
+        SetDropTarget(new wxSTEditorFileDropTarget(this));
+    }
+#endif //wxUSE_DRAG_AND_DROP
 }
 
 wxString wxSTEditorNotebook::FileNameToTabName(const wxSTEditor* editor) const
@@ -589,14 +598,31 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
         case wxID_SAVEAS:
         {
             wxSTEditor *editor = GetEditor();
-            if (editor)
+            if (!editor) return true; // event handled, but we couldn't do anything with it.
+            
+            if (!editor->IsFileFromDisk())
             {
-                if (!editor->IsFileFromDisk())
+                editor->SaveFile(true);
+            }
+            else
+            {
+                wxFileName selectedFileName;
+                wxString   selectedFileEncoding;
+                bool       selected_file_bom = false;
+
+                bool ok = editor->SaveFileDialog(true, wxEmptyString, &selectedFileName, &selectedFileEncoding, &selected_file_bom);
+                if (!ok) return true; // they probably canceled the dialog
+
+                if (selectedFileName == editor->GetFileName())
                 {
-                    editor->SaveFile(true);
+                    // They want to save to the same filename, update current editor.
+                    editor->SaveFile(selectedFileName, selectedFileEncoding, selected_file_bom);
+                    return true;
                 }
                 else
                 {
+                    // Make a new editor for the new filename, leave the original editor as is.
+
                     wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
                     wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
                     wxSTEditor *newEditor = splitter->GetEditor();
@@ -617,18 +643,17 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                     newEditor->SetText(editor->GetText());
                     newEditor->ColouriseDocument();
 
-                    // if they really did save it and to a new file add it
-                    if (newEditor->SaveFile(true))
+                    newEditor->GotoPos(editor->GetCurrentPos());
+                    newEditor->ScrollToLine(editor->GetFirstVisibleLine());
+
+                    // if we can save it, then add it to the notebook
+                    if (newEditor->SaveFile(selectedFileName, selectedFileEncoding, selected_file_bom))
                     {
-                        // they saved it to the same filename so just update old editor
-                        if (newEditor->GetFileName() == editor->GetFileName())
-                        {
-                            editor->SetFileModificationTime(newEditor->GetFileModificationTime());
-                            delete splitter;
-                        }
-                        else if (!InsertEditorSplitter(-1, splitter, true))
-                            delete splitter;
+                        if (!InsertEditorSplitter(-1, splitter, true))
+                            splitter->Destroy();
                     }
+                    else
+                        splitter->Destroy(); // problem saving, delete new editor
                 }
             }
             return true;
@@ -678,7 +703,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
         }
         case ID_STN_WINDOWS:
         {
-            wxSTEditorWindowsDialog(this, _("Bookmarks"));
+            wxSTEditorWindowsDialog(this, _("Windows"));
             return true;
         }
         case ID_STE_PASTE_NEW:

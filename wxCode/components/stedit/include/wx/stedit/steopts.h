@@ -81,47 +81,51 @@ enum STE_EditorOptionsType
 /// Options for the wxSTEditorSplitter
 enum STE_SplitterOptionsType
 {
-    STS_CREATE_POPUPMENU = 0x0001, ///< Right-click menu for setting splitting
-                                   ///< only creates if one is not previously assigned.
-    STS_NO_EDITOR        = 0x0002, ///< Don't initialize with an editor (you'll need to create one).
+    STS_CREATE_POPUPMENU    = 0x0001, ///< Right-click menu for setting splitting
+                                      ///< only creates if one is not previously assigned.
+    STS_NO_EDITOR           = 0x0002, ///< Don't initialize with an editor (you'll need to create one).
+                                      ///< The code assumes that GetEditor() for the splitter returns a valid editor.
+    STS_SPLITBUTTONS        = 0x0004, ///< When there is a single editor, show splitter buttons
+                                      ///< above and to the side of the scrollbars.
+    STS_DO_DRAG_AND_DROP    = 0x0008, ///< Create a wxSTEditorFileDropTarget for the splitter.
+                                      ///< For read-only editors you probably don't want this.
 
-    STS_SPLITBUTTONS     = 0x0004, ///< When there is a single editor, show splitter buttons
-                                   ///< above and to the side of the scrollbars.
-
-    STS_DEFAULT_OPTIONS  = STS_CREATE_POPUPMENU|STS_SPLITBUTTONS
+    STS_DEFAULT_OPTIONS     = STS_CREATE_POPUPMENU|STS_SPLITBUTTONS|STS_DO_DRAG_AND_DROP
 };
 
 /// Options for the wxSTEditorNotebook
 enum STE_NotebookOptionsType
 {
-    STN_CREATE_POPUPMENU  = 0x0001, ///< Have a right-click tab menu
-                                    ///< only creates if one is not previously assigned.
-    STN_ALPHABETICAL_TABS = 0x0002, ///< Always sort tabs alphabetically.
-    STN_UPDATE_TITLES     = 0x0004, ///< Update the titles of the pages.
-    STN_ALLOW_NO_PAGES    = 0x0008, ///< Allow having no pages.
+    STN_CREATE_POPUPMENU    = 0x0001, ///< Have a right-click tab menu
+                                      ///< only creates if one is not previously assigned.
+    STN_ALPHABETICAL_TABS   = 0x0002, ///< Always sort tabs alphabetically.
+    STN_UPDATE_TITLES       = 0x0004, ///< Update the titles of the pages.
+    STN_ALLOW_NO_PAGES      = 0x0008, ///< Allow having no pages.
+    STN_DO_DRAG_AND_DROP    = 0x0010, ///< Create a wxSTEditorFileDropTarget for the notebook.
 
-    STN_DEFAULT_OPTIONS   = STN_CREATE_POPUPMENU|STN_UPDATE_TITLES|STN_ALPHABETICAL_TABS
+    STN_DEFAULT_OPTIONS     = STN_CREATE_POPUPMENU|STN_ALPHABETICAL_TABS|STN_UPDATE_TITLES|STN_DO_DRAG_AND_DROP
 };
 
 /// Options for the wxSTEditorFrame.
 /// If neither STF_CREATE_SINGLEPAGE|STF_CREATE_NOTEBOOK then don't create an editor, don't have both.
 enum STE_FrameOptionsType
 {
-    STF_CREATE_SINGLEPAGE  = 0x0001, ///< Create a single text editor.
-    STF_CREATE_NOTEBOOK    = 0x0002, ///< Create a wxSTEditorNotebook for editors.
-    STF_CREATE_SIDEBAR     = 0x0004, ///< Create a wxNotebook side panel.
-                                     ///< First page is a wxSTEditorTreeCtrl for listing files,
-                                     ///< you can add other pages in any order.
+    STF_CREATE_SINGLEPAGE   = 0x0001, ///< Create a single text editor.
+    STF_CREATE_NOTEBOOK     = 0x0002, ///< Create a wxSTEditorNotebook for editors.
+    STF_CREATE_SIDEBAR      = 0x0004, ///< Create a wxNotebook side panel.
+                                      ///< First page is a wxSTEditorTreeCtrl for listing files,
+                                      ///< you can add other pages in any order.
     STF_CREATE_RESULT_NOTEBOOK = 0x0008, ///< Create a wxNotebook bottom panel for results.
                                          ///< First page is a wxSTEditorFindResultsEditor for find results,
                                          ///< you can add other pages in any order.
-    STF_CREATE_TOOLBAR     = 0x0010, ///< Create and maintain a toolbar.
-    STF_CREATE_MENUBAR     = 0x0020, ///< Create and maintain a menubar.
-    STF_CREATE_STATUSBAR   = 0x0040, ///< Create and maintain a statusbar.
-    STF_CREATE_FILEHISTORY = 0x0080, ///< Create and maintain a wxFileHistory
-                                     ///< if one doesn't already exist and you have wxID_OPEN.
+    STF_CREATE_TOOLBAR      = 0x0010, ///< Create and maintain a toolbar.
+    STF_CREATE_MENUBAR      = 0x0020, ///< Create and maintain a menubar.
+    STF_CREATE_STATUSBAR    = 0x0040, ///< Create and maintain a statusbar.
+    STF_CREATE_FILEHISTORY  = 0x0080, ///< Create and maintain a wxFileHistory
+                                      ///< if one doesn't already exist and you have wxID_OPEN.
+    STF_DO_DRAG_AND_DROP    = 0x0100, ///< Create a wxSTEditorFileDropTarget for the frame.
 
-    STF_DEFAULT_OPTIONS    = STF_CREATE_NOTEBOOK|STF_CREATE_TOOLBAR|STF_CREATE_MENUBAR|STF_CREATE_STATUSBAR|STF_CREATE_FILEHISTORY
+    STF_DEFAULT_OPTIONS     = STF_CREATE_NOTEBOOK|STF_CREATE_TOOLBAR|STF_CREATE_MENUBAR|STF_CREATE_STATUSBAR|STF_CREATE_FILEHISTORY|STF_DO_DRAG_AND_DROP
 };
 
 /// Options for using wxConfig to save preferences.

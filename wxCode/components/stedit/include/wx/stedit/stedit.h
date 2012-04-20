@@ -672,7 +672,7 @@ public :
                            wxWindow* parent = NULL,
                            const wxString& encoding = wxEmptyString);
 
-    /// Save the text to wxOutputStream.
+    /// Save the text to wxOutputStream only, does not update editor.
     bool SaveFile( wxOutputStream& stream,
                    const wxString& encoding = wxEmptyString,
                    bool file_bom = false);
@@ -688,6 +688,19 @@ public :
     /// Save current file, if use_dialog or GetFileName() is empty use wxFileSelector.
     virtual bool SaveFile( bool use_dialog = true,
                            const wxString &extensions = wxEmptyString );
+    /// Save the file and update the editor settings.
+    virtual bool SaveFile( const wxFileName& fileName,
+                           const wxString& fileEncoding,
+                           bool write_file_bom );
+    
+    /// Helper function to create the dialog to ask the user if they want to save.
+    /// The selected* variables are only changed if the user presses Ok
+    /// and the the function returns true.
+    virtual bool SaveFileDialog( bool use_dialog,
+                                 const wxString &extensions,
+                                 wxFileName* selectedFileName,
+                                 wxString*   selectedFileEncoding,
+                                 bool*       selected_file_bom);
     /// Clear everything to a blank page.
     /// If title is empty then pop up a dialog to ask the user what name to use.
     virtual bool NewFile(const wxString &title = wxEmptyString);
@@ -762,10 +775,12 @@ public :
     /// Note: found_end_pos - found_start_pos might not be the string length for regexp.
     /// @returns Starting position of the found string.
     STE_TextPos FindString(const wxString &findString,
-                   STE_TextPos start_pos = -1, STE_TextPos end_pos = -1,
-                   int flags = -1,
-                   int action = STE_FINDSTRING_SELECT|STE_FINDSTRING_GOTO,
-                   STE_TextPos* found_start_pos = NULL, STE_TextPos* found_end_pos = NULL);
+                           STE_TextPos start_pos = -1, 
+                           STE_TextPos end_pos = -1,
+                           int flags = -1,
+                           int action = STE_FINDSTRING_SELECT|STE_FINDSTRING_GOTO,
+                           STE_TextPos* found_start_pos = NULL, 
+                           STE_TextPos* found_end_pos = NULL);
     /// Does the current selection match the findString using the flags.
     /// If flags = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
     bool SelectionIsFindString(const wxString &findString, int flags = -1);

@@ -44,7 +44,7 @@ wxSTETreeItemData::~wxSTETreeItemData()
 IMPLEMENT_DYNAMIC_CLASS(wxSTEditorTreeCtrl, wxTreeCtrl)
 
 BEGIN_EVENT_TABLE(wxSTEditorTreeCtrl, wxTreeCtrl)
-    EVT_RIGHT_UP                (wxSTEditorTreeCtrl::OnRightUp)
+    EVT_CONTEXT_MENU            (          wxSTEditorTreeCtrl::OnContextMenu)
     EVT_MENU                    (wxID_ANY, wxSTEditorTreeCtrl::OnMenu)
     EVT_TREE_ITEM_ACTIVATED     (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
     EVT_TREE_ITEM_GETTOOLTIP    (wxID_ANY, wxSTEditorTreeCtrl::OnTreeCtrl)
@@ -95,14 +95,22 @@ wxSTEditorTreeCtrl::~wxSTEditorTreeCtrl()
     SetSTENotebook(NULL);
 }
 
-void wxSTEditorTreeCtrl::OnRightUp( wxMouseEvent& event )
+void wxSTEditorTreeCtrl::OnContextMenu( wxContextMenuEvent& event )
 {
+    // In MSW the wxContextMenuEvent::GetPosition() is screen position
+    // and is not translated to the pos on the window.
+    wxPoint pt = event.GetPosition();
+    wxPoint mousePosition = wxGetMousePosition();
+
+    if (pt == mousePosition)
+        pt = ScreenToClient(pt);
+
     int flags = 0;
-    wxTreeItemId id = HitTest(event.GetPosition(), flags);
+    wxTreeItemId id = HitTest(pt, flags);
 
     wxSTETreeItemData* data = NULL;
     if (id)
-        data = (wxSTETreeItemData*)GetItemData(id);
+        data = dynamic_cast<wxSTETreeItemData*>(GetItemData(id));
 
     bool on_file = (data != NULL);
 
@@ -111,6 +119,7 @@ void wxSTEditorTreeCtrl::OnRightUp( wxMouseEvent& event )
 
     // Are we selecting an editor or some other wxWindow
     wxSTEditor* editor = NULL;
+
     if (data != NULL)
     {
         editor = wxDynamicCast(data->m_notePage, wxSTEditor);
@@ -120,7 +129,7 @@ void wxSTEditorTreeCtrl::OnRightUp( wxMouseEvent& event )
     }
     m_popupMenu->Enable(ID_STT_FILE_PROPERTIES, (editor != NULL));
 
-    PopupMenu(m_popupMenu, event.GetPosition());
+    PopupMenu(m_popupMenu);
 }
 
 void wxSTEditorTreeCtrl::OnMenu( wxCommandEvent& event )
@@ -192,7 +201,7 @@ bool wxSTEditorTreeCtrl::HandleMenuEvent(wxCommandEvent &event)
         case ID_STT_SHOW_PATH_THEN_FILENAME :
         case ID_STT_SHOW_ALL_PATHS :
         {
-            SetDisplayType((Display_Type)(win_id-ID_STT_SHOW_FILENAME_ONLY));
+            SetDisplayType((FileDisplay_Type)(win_id-ID_STT_SHOW_FILENAME_ONLY));
             return true;
         }
     }
@@ -253,14 +262,22 @@ void wxSTEditorTreeCtrl::OnWindowDestroy( wxWindowDestroyEvent& event )
         return;
     }
 
-    // Else this is a page in the notebook
-    wxLongToLongHashMap::iterator it = m_windowToSTETreeItemDataMap.find((long)event.GetEventObject());
+    wxLongToLongHashMap::iterator it;       
 
+    // Else this is a page in the notebook
+    it = m_windowToSTETreeItemDataMap.find((long)event.GetEventObject());
     if (it != m_windowToSTETreeItemDataMap.end())
     {
         wxSTETreeItemData* oldData = (wxSTETreeItemData*)it->second;
         DeleteItem(oldData->m_id, true, -1, GetRootItem());
-        m_windowToSTETreeItemDataMap.erase(it->first);
+        m_windowToSTETreeItemDataMap.erase(it);
+    }
+
+    // Remove the wxEVT_DESTROY tracker for notebook pages
+    it = m_windowDestroyMap.find((long)event.GetEventObject());
+    if (it != m_windowDestroyMap.end())
+    {
+        m_windowDestroyMap.erase(it);
     }
 }
 
@@ -300,7 +317,7 @@ void wxSTEditorTreeCtrl::SetSTENotebook(wxSTEditorNotebook* notebook)
     }
 }
 
-void wxSTEditorTreeCtrl::SetDisplayType(Display_Type display_type)
+void wxSTEditorTreeCtrl::SetDisplayType(FileDisplay_Type display_type)
 {
     m_display_type = display_type;
     SetSTENotebook(m_steNotebook);
@@ -367,8 +384,8 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
                 if ((steTreeItemData->m_notePage == notePage) &&
                     (steTreeItemData->m_fileName == editor->GetFileName()))
                 {
-                    // the page didn't page name
-                    steTreeItemData->m_page_num = n; // resync
+                    // the page didn't change name, but do resync page number
+                    steTreeItemData->m_page_num = n;
                     windowToSTETreeItemDataMap.erase((long)notePage);
                 }
                 else
@@ -396,9 +413,15 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
             // Create new data to add to the wxTreeItem
             steTreeItemData = new wxSTETreeItemData(n, notePage);
 
-            notePage->Connect(wxID_ANY, wxEVT_DESTROY,
-                              wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
-                              NULL, this);
+            // Only connect the destroy handler once
+            if (m_windowDestroyMap.find((long)notePage) == m_windowDestroyMap.end())
+            {
+                m_windowDestroyMap[(long)notePage] = 1;
+
+                notePage->Connect(wxID_ANY, wxEVT_DESTROY,
+                                  wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
+                                  NULL, this);
+            }
 
             if (editor)
             {
@@ -406,7 +429,9 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
                 steTreeItemData->m_root = _("Opened files");
                 steTreeItemData->m_fileName = editor->GetFileName();
                 wxFileName fn(steTreeItemData->m_fileName);
-                fn.Normalize();
+
+                // Don't need to Normalize() since it is done in wxSTEditor::SetFilename()
+                //if (fn.FileExists()) fn.Normalize();
 
                 switch (m_display_type)
                 {
@@ -433,7 +458,6 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
                     {
                         steTreeItemData->m_treePath.Add(steTreeItemData->m_root);
 
-                        //steTreeItemData.m_treePath.Add(fn.GetPath());
                         wxArrayString dirs = fn.GetDirs();
                         for (size_t i = 0; i < dirs.GetCount(); ++i)
                             steTreeItemData->m_treePath.Add(dirs[i]);
@@ -493,14 +517,14 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
         m_windowToSTETreeItemDataMap.erase(it->first);
     }
 
-    SortAllChildren(GetRootItem());
-    Thaw();
-
     if (selId)
     {
         SetItemBold(selId);
         SelectItem(selId);
     }
+
+    SortAllChildren(GetRootItem());
+    Thaw();
 }
 
 void wxSTEditorTreeCtrl::SortAllChildren(const wxTreeItemId& item_)
