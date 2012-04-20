@@ -104,7 +104,7 @@ extern const unsigned int wxVIDCAP_VIDEO_HEIGHTS[wxVIDCAP_VIDEO_HEIGHTS_COUNT];
 
 // Make a FOURCC (DWORD-32bit uint) from a string, STRING_TO_FOURCC("UYVV")
 //    MUST have four characters, even for "  Y8" for example
-//    this is NOT the preferred way, but used in struct above, see below
+//    this is NOT the preferred way, see below
 #define STRING_TO_FOURCC(f) (((f)[0])|((f)[1]<<8)|((f)[2]<<16)|((f)[3]<<24))
 // Make a FOURCC from 4 chars, Chars_To_FOURCC('U','Y','V','V')
 // #define CharsToFOURCC(a,b,c,d) ((a)|(b)<<8|(c)<<16|(d)<<24)
@@ -321,18 +321,19 @@ public:
     // Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
 
-    // Enumerate all available device names & versions
-    //   This is called at creation and shouldn't need to be called again
-    // void EnumerateDevices() = 0;
+    /// Enumerate all available device names & versions.
+    /// This is called at creation and shouldn't need to be called again.
+    virtual void EnumerateDevices() = 0;
 
-    // Get a single description of a device, -1 is current device
-    //   VFW - supports only [0..9]
-    virtual wxString GetDeviceName(int index = -1) const;
-    // Get a single device version, [0..9], -1 is current device
-    //   VFW - supports only [0..9]
-    virtual wxString GetDeviceVersion(int index = -1) const;
-    // how many devices were detected?
+    /// Returns how many devices were detected from EnumerateDevices().
+    /// VFW supports only [0..9].
     virtual int GetDeviceCount() const { return m_deviceNames.GetCount(); }
+    /// Get a string description of a device from 0 to GetDeviceCount()-1.
+    /// Returns an empty string for invalid device numbers, @see GetDeviceIndex().
+    virtual wxString GetDeviceName(int index) const;
+    /// Get a string version of a device from 0 to GetDeviceCount()-1.
+    /// Returns an empty string for invalid device numbers, @see GetDeviceIndex().
+    virtual wxString GetDeviceVersion(int index) const;
 
     // ----------------------------------------------------------------------
     // Connect or Disconnect to device
@@ -346,73 +347,74 @@ public:
     // FIXME : maybe there's some use to this? probably should just delete it
     virtual bool IsDeviceInitialized() { return IsDeviceConnected(); }
 
-    // index of this cap device
-    // returns -1 if not connected, so be sure to check IsDeviceConnected()
-    //   VFW - the devices [0..9] are listed in system.ini
+    // Index of the currently connected capture device.
+    // returns -1 if not connected, so be sure to check IsDeviceConnected().
+    // Note: VFW - the devices [0..9] are listed in system.ini
     virtual int GetDeviceIndex() { return m_deviceIndex; }
 
-    // Connect to one of the available devices, returns success
-    //    VFW supports only [0..9]
+    // Connect to one of the available devices from 0 to GetDeviceCount()-1, returns success.
     virtual bool DeviceConnect(int index) = 0;
-    // disconnect from the device, returns success
+    // Disconnect from the device, returns success.
     virtual bool DeviceDisconnect() = 0;
 
     // ----------------------------------------------------------------------
     // Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
 
-    // Dialog to adjust video contrast/intensity... and change source
-    //   VFW - driver supplies the dialog, also select source
-    //   V4L - custom dialog to change the source FIXME
-    virtual bool HasVideoSourceDialog() { return false; }
-    // Show the dialog
-    virtual void VideoSourceDialog() {}
+    /// Dialog to adjust video contrast/intensity... and change source
+    ///   VFW - driver supplies the dialog, also select source
+    ///   V4L - custom dialog to change the source FIXME
+    virtual bool HasVideoSourceDialog() = 0;
+    /// Show the dialog
+    virtual void ShowVideoSourceDialog() = 0;
 
-    // Dialog to display the format (size)
-    //  VFW - driver supplies the dialog
-    //  V4L - use the VideoCustomFormatDialog
-    virtual bool HasVideoFormatDialog() { return false; }
-    // Show the dialog
-    virtual void VideoFormatDialog() {}
-    // Dialog for setting the frame size, bpp, and compression "by hand"
-    //   VFW - WARNING: this can crash your system if you choose an unsupported format
-    //                  I'm pretty sure this is correct, but the driver itself fails
-    //   V4L - no problems :)
-    virtual void VideoCustomFormatDialog() = 0;
+    /// Dialog to display the format (size)
+    ///  VFW - driver supplies the dialog
+    ///  V4L - use the VideoCustomFormatDialog
+    virtual bool HasVideoFormatDialog() = 0;
+    /// Show the dialog
+    virtual void ShowVideoFormatDialog() = 0;
+    /// Dialog for setting the frame size, bpp, and compression "by hand"
+    ///   VFW - WARNING: this can crash your system if you choose an unsupported format
+    ///                  I'm pretty sure this is correct, but the driver itself fails
+    ///   V4L - no problems, but the number of formats is limited.
+    virtual void ShowVideoCustomFormatDialog() = 0;
 
-    // Dialog for redisplay of video from cap frame buffer? Huh? saturation, brightness...
-    //   VFW - driver supplies dialog, for overlay only?
-    //   V4L - not sure what to make of this FIXME
-    virtual bool HasVideoDisplayDialog() { return false; }
-    // Show the dialog
-    virtual void VideoDisplayDialog() {}
+    /// Dialog for redisplay of video from cap frame buffer? Huh? saturation, brightness...
+    ///   VFW - driver supplies dialog, for overlay only?
+    ///   V4L - not sure what to make of this FIXME
+    virtual bool HasVideoDisplayDialog() = 0;
+    /// Show the dialog
+    virtual void ShowVideoDisplayDialog() = 0;
 
-    // Dialog to display all know device characteristics
-    //   each system displays different things, basicly just a dump of all available settings
-    virtual void PropertiesDialog() = 0;
+    /// Dialog to display all know device characteristics.
+    /// Each system displays different things, basicly a wxTextCtrl 
+    /// showing the GetPropertiesString().
+    virtual void ShowPropertiesDialog();
 
-    // A formatted string of all know properties of the video system
-    //   this is the string that's printed in the PropertiesDialog
-    virtual wxString GetPropertiesString() = 0;
+    /// A formatted string of all know properties of the video system
+    ///  this is the string that's printed in the PropertiesDialog().
+    virtual wxString GetPropertiesString();
 
     // ----------------------------------------------------------------------
-    // Video characteristics and manipulation
+    // Video format and characteristics
     // ----------------------------------------------------------------------
 
     // the width of the capture image
-    virtual int GetImageWidth() { return m_imageSize.x; }
+    int GetImageWidth() const  { return m_imageSize.x; }
     // the height of the capture image
-    virtual int GetImageHeight() { return m_imageSize.y; }
+    int GetImageHeight() const { return m_imageSize.y; }
 
     // Get the Max/Min allowed video sizes
     //   VFW max size is 1024X768, min ???, no way to find these parameters
     //   V4L supports a method to get the Max/Min size
-    virtual wxSize GetMinImageSize() { return m_minImageSize; }
-    virtual wxSize GetMaxImageSize() { return m_maxImageSize; }
+    wxSize GetMinImageSize() const { return m_minImageSize; }
+    wxSize GetMaxImageSize() const { return m_maxImageSize; }
 
     // get the video format characteristics, returns success
     //   format is a 4 character string, "UYVY" or whatever comes out
-    virtual bool GetVideoFormat( int *width, int *height, int *bpp, FOURCC *fourcc ) = 0;
+    virtual bool GetVideoFormat( int *width, int *height, 
+                                 int *bpp, FOURCC *fourcc ) const = 0;
 
     //***********************************************************************
     // WARNING! - Video For Windows - (Video 4 Linux - works fine :)
@@ -424,7 +426,8 @@ public:
     // attempt to set the video format the device puts out, returns success
     //  -1 for width/height/bpp and format=-1 uses current value
     //  FOURCC is the 4 chararacter code "UYUV" or whatever
-    virtual bool SetVideoFormat( int width, int height, int bpp, FOURCC fourcc ) = 0;
+    virtual bool SetVideoFormat( int width, int height, 
+                                 int bpp, FOURCC fourcc ) = 0;
 
     // default driver palette being used, then true
     //   VFW - supported, but not sure what you would do with this
@@ -463,12 +466,15 @@ public:
     // this has NOTHING to do with how many you'll actually get
     // if > than hardware capability, default = 66ms or 15fps
     // bool SetPreviewRateMS( unsigned int msperframe = 66 );
-    bool DoSetPreviewRateMS( unsigned int msperframe = 66 ) { m_previewmsperframe = msperframe; return true; }
+    virtual bool SetPreviewRateMS( unsigned int msperframe = 66 ) { m_previewmsperframe = msperframe; return true; }
 
     // currently set PreviewRate, not necessarily correct if set too fast
     virtual unsigned int GetPreviewRateMS() const { return m_previewmsperframe; }
     // actual measured PreviewRate when previewing
     virtual unsigned int GetActualPreviewRateMS() const { return m_actualpreviewmsperframe; }
+
+    // Get the number of frames viewed since the device was connected.
+    virtual unsigned int GetFrameNumber() const { return m_framenumber; }
 
     // function stub YOU override to do image processing of the preview frames
     // when Previewing with wxImages, OnIdle/PreviewwxImageTimer grabs a frame
@@ -499,9 +505,10 @@ public:
     virtual bool SnapshotTowxImage( wxImage &image) = 0;
     // take a single snapshot and fill m_wximage see GetwxImage()
     virtual bool SnapshotTowxImage() = 0;
-    // get the m_wximage, can use in conjunction with SnapshotTowxImage()
-    //  or previewing w/ wxImages methods
-    virtual wxImage GetwxImage();
+    // Get either a ref of the internal wxImage or a full copy.
+    // Can use in conjunction with SnapshotTowxImage()
+    //  or previewing w/ wxImages methods.
+    virtual wxImage GetwxImage(bool full_copy) const;
 
     // ----------------------------------------------------------------------
     // Capture (append) single video frames to an AVI file
@@ -527,8 +534,12 @@ public:
 
     // NOTE : None of this is implemeted for V4L
 
+    // ----------------------------------------------------------------------
+    // Utility Functions
+    // ----------------------------------------------------------------------
 
-    long int GetFileSizeInKB( const wxString &filename );
+    // find the size of a file in KB
+    long int GetFileSizeInKB( const wxString &filename ) const;
 
     //-------------------------------------------------------------------------
     // wxVideoCaptureFormat manipulation - predefined list of FOURCCs and descriptions
@@ -574,17 +585,23 @@ protected :
     bool          m_has_overlay;             // can use hardware overlay for display
     bool          m_overlaying;              // currently overlaying
 
-    unsigned long int m_framenumber;  // # of frames, since preview start
+    bool          m_getting_wximage;         // true when filling the m_wximage
 
-    wxImage m_wximage;              // wximage to hold the streaming video
+    unsigned int  m_framenumber;             // # of frames, since preview start
 
-    wxSize m_imageSize;             // size of the video
-    wxSize m_maxImageSize;          // min available capture size
-    wxSize m_minImageSize;          // max available capture size
+    wxImage m_wximage;                       // wximage to hold the streaming video
+
+    wxSize m_imageSize;                      // size of the video
+    wxSize m_maxImageSize;                   // min available capture size
+    wxSize m_minImageSize;                   // max available capture size
 
 private:
     DECLARE_ABSTRACT_CLASS(wxVideoCaptureWindowBase);
 };
+
+// --------------------------------------------------------------------------
+// Include the platform specific implementation
+// --------------------------------------------------------------------------
 
 #if defined(WXVIDCAP_MSW_VFW)
     #include "wx/vidcap/vcap_vfw.h"

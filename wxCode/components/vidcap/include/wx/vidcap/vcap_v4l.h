@@ -23,7 +23,7 @@ class wxSizeEvent;
 class wxMoveEvent;
 class wxPaintEvent;
 
-#include <linux/videodev2.h>
+#include <linux/videodev2.h> // V4L2
 
 #include <vector>
 
@@ -52,51 +52,60 @@ public:
     // Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
 
-    void EnumerateDevices();
+    virtual void EnumerateDevices();
 
     // ----------------------------------------------------------------------
     // Connect or Disconnect to device
     // ----------------------------------------------------------------------
 
-    bool DeviceConnect(int index);
-    bool DeviceDisconnect();
+    virtual bool DeviceConnect(int index);
+    virtual bool DeviceDisconnect();
 
     // ----------------------------------------------------------------------
     // Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
 
-    void VideoCustomFormatDialog();
-    void PropertiesDialog();
-    wxString GetPropertiesString();
+    virtual bool HasVideoSourceDialog() { return false; }
+    virtual void ShowVideoSourceDialog() {}
+
+    virtual bool HasVideoFormatDialog() { return false; }
+    virtual void ShowVideoFormatDialog() {}
+    virtual void ShowVideoCustomFormatDialog();
+
+    virtual bool HasVideoDisplayDialog() { return false; }
+    virtual void ShowVideoDisplayDialog() {}
+
+    virtual wxString GetPropertiesString();
 
     // ----------------------------------------------------------------------
-    // Video characteristics and manipulation
+    // Video format and characteristics
     // ----------------------------------------------------------------------
 
-    bool GetVideoFormat( int *width, int *height, int *bpp, FOURCC *fourcc );
-    bool SetVideoFormat( int width, int height, int bpp, FOURCC fourcc );
+    virtual bool GetVideoFormat( int *width, int *height, 
+                                 int *bpp, FOURCC *fourcc ) const;
+    virtual bool SetVideoFormat( int width, int height, 
+                                 int bpp, FOURCC fourcc );
 
     // ----------------------------------------------------------------------
     // Capture Preview and Overlay
     // ----------------------------------------------------------------------
 
+    virtual bool Preview(bool onoff, bool wxpreview = false);
+    virtual bool Overlay(bool WXUNUSED(on)) { return false; }
+
+    //virtual bool SetPreviewRateMS( unsigned int msperframe = 66 );
+
     void OnPreviewwxImageTimer(wxTimerEvent& event); // get frames
-
-    bool Preview(bool onoff, bool wxpreview = false);
-    bool Overlay(bool WXUNUSED(on)) { return false; }
-
-    bool SetPreviewRateMS( unsigned int msperframe = 66 )
-	{ return DoSetPreviewRateMS( msperframe ); }
 
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video
     // ----------------------------------------------------------------------
 
-    bool SnapshotToWindow();
-    bool SnapshotToClipboard();
-    bool SnapshotToBMP( const wxString &filename );
-    bool SnapshotTowxImage( wxImage &image);
-    bool SnapshotTowxImage();
+    virtual bool SnapshotToWindow();
+    virtual bool SnapshotToClipboard();
+    virtual bool SnapshotToBMP( const wxString &filename );
+    virtual bool SnapshotTowxImage( wxImage &image);
+    virtual bool SnapshotTowxImage();
 
     // ----------------------------------------------------------------------
     // Capture (append) single video frames to an AVI file
@@ -160,19 +169,9 @@ protected:
     // ----------------------------------------------------------------------
 
     // Generic variables
-    wxArrayString                 m_deviceFilenames; // all device files from EnumerateDevices
+    wxArrayString  m_deviceFilenames; // all device files from EnumerateDevices
 
-    unsigned char *m_bmpdata;       // big 'ole temp storage for DIB
-
-    bool m_grab_wximage;            // grab a single frame into m_wximage
-    bool m_getting_wximage;         // true when filling the m_wximage
-
-    wxTimer m_preview_wximage_timer; // for preview rate adjustment
-
-    wxString m_capturefilename;
-
-    wxString m_statustext;          // MSW status messages
-    wxString m_errortext;           // MSW error messages
+    wxTimer        m_previewTimer;    // for preview rate adjustment
 
     // V4L specific variables
 
@@ -204,9 +203,9 @@ protected:
     void Init_V4L2_structs();
 
     // v4l2 structs
-    struct v4l2_capability  m_v4l2_capability;
-    struct v4l2_fmtdesc     m_v4l2_fmtdesc;
-    struct v4l2_format      m_v4l2_format;
+    struct v4l2_capability        m_v4l2_capability;
+    struct v4l2_fmtdesc           m_v4l2_fmtdesc;
+    struct v4l2_format            m_v4l2_format;
 
     std::vector<v4l2_capability>  m_v4l2_capability_vector;
     std::vector<v4l2_fmtdesc>     m_v4l2_fmtdesc_vector;

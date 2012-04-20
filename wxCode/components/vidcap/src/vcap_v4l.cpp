@@ -446,89 +446,21 @@ void wxVideoCaptureWindowV4L::VideoCustomFormatDialog()
     }
 }
 
-void wxVideoCaptureWindowV4L::PropertiesDialog()
-{
-    wxDialog *dialog = new wxDialog(this, -1, wxT("wxVideoCaptureWindow Properties"),
-                                    wxDefaultPosition, wxDefaultSize,
-                                    wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
-
-    wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
-    wxTextCtrl *textctrl = new wxTextCtrl( dialog, -1, wxT(""),
-                                           wxDefaultPosition, wxSize(300,400),
-                                           wxTE_MULTILINE|wxTE_READONLY);
-
-    dialogsizer->Add( textctrl, 1, wxEXPAND);
-
-    dialog->SetAutoLayout(true);
-    dialog->SetSizer(dialogsizer);
-    dialogsizer->Fit(dialog);
-    dialogsizer->SetSizeHints(dialog);
-
-    wxString wxstr;
-    int i;
-    textctrl->AppendText(wxT("Detected Devices:\n"));
-    textctrl->AppendText(wxString::Format(wxT("GetDeviceCount() : %d\n\n"), GetDeviceCount()));
-    for (i=0; i<GetDeviceCount(); i++)
-    {
-        textctrl->AppendText(GetDeviceName(i)+wxT("\n"));
-        textctrl->AppendText(GetDeviceVersion(i)+wxT("\n\n"));
-    }
-
-    textctrl->AppendText(wxT("Currently connected device:\n"));
-    textctrl->AppendText(wxString::Format(wxT("GetDeviceIndex(): %d\n\n"), GetDeviceIndex()));
-    textctrl->AppendText(GetDeviceName()+wxT("\n"));
-    textctrl->AppendText(GetDeviceVersion()+wxT("\n\n"));
-
-    textctrl->AppendText(wxString::Format(wxT("Video device properties:\n\n")));
-
-    textctrl->AppendText(wxString::Format(wxT("IsDeviceConnected() : %d\n"), IsDeviceConnected()));
-    textctrl->AppendText(wxString::Format(wxT("IsDeviceInitialized() : %d\n\n"), IsDeviceInitialized()));
-
-    textctrl->AppendText(wxString::Format(wxT("HasVideoSourceDialog() : %d\n"), HasVideoSourceDialog()));
-    textctrl->AppendText(wxString::Format(wxT("HasVideoFormatDialog() : %d\n"), HasVideoFormatDialog()));
-    textctrl->AppendText(wxString::Format(wxT("HasVideoDisplayDialog() : %d\n\n"), HasVideoDisplayDialog()));
-
-    textctrl->AppendText(wxString::Format(wxT("Video properties:\n\n")));
-
-    textctrl->AppendText(wxString::Format(wxT("GetImageWidth() x GetImageHeight() : %d x %d\n\n"), GetImageWidth(), GetImageHeight()));
-
-    int width, height, bpp;
-    FOURCC fourcc;
-    GetVideoFormat( &width, &height, &bpp, &fourcc );
-    wxString fourccStr(FOURCCTowxString(fourcc));
-
-    textctrl->AppendText(wxString::Format(wxT("GetVideoFormat() -> width x height : %d x %d\n"), width, height));
-    textctrl->AppendText(wxString::Format(wxT("GetVideoFormat() -> bits per pixel : %d \n"), bpp));
-    textctrl->AppendText(wxString::Format(wxT("GetVideoFormat() -> compression : %s \n\n"), fourccStr.c_str()));
-
-    textctrl->AppendText(wxString::Format(wxT("Video preview properties:\n\n")));
-
-    textctrl->AppendText(wxString::Format(wxT("IsPreviewing() : %d\n"), IsPreviewing()));
-    textctrl->AppendText(wxString::Format(wxT("IsPreviewScaled() : %d\n"), IsPreviewScaled()));
-    textctrl->AppendText(wxString::Format(wxT("GetPreviewRateMS() : %d\n"), GetPreviewRateMS()));
-
-    textctrl->AppendText(wxString::Format(wxT("HasOverlay() : %d\n"), HasOverlay()));
-    textctrl->AppendText(wxString::Format(wxT("IsOverlaying() : %d\n\n"), IsOverlaying()));
-
-    textctrl->AppendText(wxString::Format(wxT("Palette properties:\n\n")));
-
-    textctrl->AppendText(wxString::Format(wxT("DriverSuppliesPalettes() : %d\n"), DriverSuppliesPalettes()));
-    textctrl->AppendText(wxString::Format(wxT("IsUsingDefaultPalette() : %d\n"), IsUsingDefaultPalette()));
-
-    dialog->ShowModal();
-}
-
 wxString wxVideoCaptureWindowV4L::GetPropertiesString()
 {
-    return wxString();
+    wxString s = wxVideoCaptureWindowBase::GetPropertiesString();
+
+    // TODO add VL4 structs
+
+    return s;
 }
 
 // ----------------------------------------------------------------------
-// Video characteristics and manipulation
+// Video format and characteristics
 // ----------------------------------------------------------------------
 
 bool wxVideoCaptureWindowV4L::GetVideoFormat(int *width, int *height,
-                                             int *bpp, FOURCC *fourcc)
+                                             int *bpp, FOURCC *fourcc) const
 {
     if (IsDeviceConnected())
     {

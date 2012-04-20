@@ -19,6 +19,10 @@
 
 #if defined(__WXMSW__)
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif // WIN32_LEAN_AND_MEAN
+
 #include <windows.h>    // MSW headers
 #include <windowsx.h>   // for GlobalAllocPtr to set audio parameters
 #include <vfw.h>        // Video For Windows 1.1
@@ -48,50 +52,51 @@ public:
     // Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
 
-    void EnumerateDevices();
+    virtual void EnumerateDevices();
 
     // ----------------------------------------------------------------------
     // Connect or Disconnect to device
     // ----------------------------------------------------------------------
 
-    bool IsDeviceInitialized();
-    bool DeviceConnect(int index);
-    bool DeviceDisconnect();
+    virtual bool IsDeviceInitialized();
+    virtual bool DeviceConnect(int index);
+    virtual bool DeviceDisconnect();
 
     // ----------------------------------------------------------------------
     // Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
 
-    bool HasVideoSourceDialog();
-    void VideoSourceDialog();
+    virtual bool HasVideoSourceDialog();
+    virtual void ShowVideoSourceDialog();
 
-    bool HasVideoFormatDialog();
-    void VideoFormatDialog();
-    void VideoCustomFormatDialog();
+    virtual bool HasVideoFormatDialog();
+    virtual void ShowVideoFormatDialog();
+    virtual void ShowVideoCustomFormatDialog();
 
-    bool HasVideoDisplayDialog();
-    void VideoDisplayDialog();
+    virtual bool HasVideoDisplayDialog();
+    virtual void ShowVideoDisplayDialog();
 
     // Dialog to show the available compression codecs used for capture
     //   VFW - MSW system dialog
-    void VideoCompressionDialog();
+    void ShowVideoCompressionDialog();
 
     // Dialog to setup most of the capture preferences
     //   shows only whats available on each system
-    void CapturePreferencesDialog();
+    void ShowCapturePreferencesDialog();
 
     // Dialog to set the audio channels, bits/sample, samples/second
     //   VFW - works only if HasAudioHardware is true, ie you have a sound card
-    virtual void AudioFormatDialog();
+    void ShowAudioFormatDialog();
 
-    void PropertiesDialog();
-    wxString GetPropertiesString();
+    //virtual void PropertiesDialog();
+    virtual wxString GetPropertiesString();
 
     // ----------------------------------------------------------------------
-    // Video characteristics and manipulation
+    // Video format and characteristics
     // ----------------------------------------------------------------------
 
-    bool GetVideoFormat( int *width, int *height, int *bpp, FOURCC *fourcc );
+    virtual bool GetVideoFormat( int *width, int *height, 
+                                 int *bpp, FOURCC *fourcc ) const;
 
     //***********************************************************************
     // WARNING! - Video For Windows
@@ -100,31 +105,32 @@ public:
     // There doesn't seem to be a way to get supported values for a device.
     // This function lets you set them to anything, use the VideoFormatDialog
     // which the driver supplies to be on the safe side.
-    bool SetVideoFormat( int width, int height, int bpp, FOURCC fourcc );
+    virtual bool SetVideoFormat( int width, int height, 
+                                 int bpp, FOURCC fourcc );
 
-    bool IsUsingDefaultPalette();
-    bool DriverSuppliesPalettes();
+    virtual bool IsUsingDefaultPalette();
+    virtual bool DriverSuppliesPalettes();
 
     // ----------------------------------------------------------------------
     // Capture Preview and Overlay
     // ----------------------------------------------------------------------
 
-    void OnPreviewwxImageTimer(wxTimerEvent& event); // get frames
+    virtual bool Preview(bool on, bool wxpreview = false);
+    virtual bool PreviewScaled(bool on);
+    virtual bool SetPreviewRateMS( unsigned int msperframe = 66 );
+    virtual bool Overlay(bool on);
 
-    bool Preview(bool on, bool wxpreview = false);
-    bool PreviewScaled(bool on);
-    bool SetPreviewRateMS( unsigned int msperframe = 66 );
-    bool Overlay(bool on);
+    void OnPreviewwxImageTimer(wxTimerEvent& event); // get frames
 
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video
     // ----------------------------------------------------------------------
 
-    bool SnapshotToWindow();
-    bool SnapshotToClipboard();
-    bool SnapshotToBMP( const wxString &filename );
-    bool SnapshotTowxImage( wxImage &image);
-    bool SnapshotTowxImage();
+    virtual bool SnapshotToWindow();
+    virtual bool SnapshotToClipboard();
+    virtual bool SnapshotToBMP( const wxString &filename );
+    virtual bool SnapshotTowxImage( wxImage &image);
+    virtual bool SnapshotTowxImage();
 
     // ----------------------------------------------------------------------
     // Capture (append) single video frames to an AVI file
@@ -160,11 +166,20 @@ public:
     // starting/stopping controlled by setting up capture parameters
     bool CaptureVideoToFile();
 
-    // set microsecond/frame to record with, default = 66667us = 15fps
-    // not necessarily what you'll get if fps set too high
-    unsigned long int GetMicroSecPerFrameRequested();
-    void SetMicroSecPerFrameRequested( unsigned long int framespersec);
+    // these two must use capSetCallbackOnYield, I think?
+    // stop capturing video & audio to AVI file, close file and end
+    // UNTESTED
+    bool CaptureVideoToFileStop();
+    // abort capturing video to AVI file, "discard" data
+    // notes: capture operation must yield to use this macro
+    //        image data is retained, audio is not
+    // UNTESTED
+    bool CaptureVideoToFileAbort();
 
+    // capture in progress? then true
+    bool IsCapturingNow();
+    // time elapsed since the start of current/recent capture
+    unsigned long int GetCaptureTimeElapsedMS();
     // number of frames processed during current/recent capture
     //   includes dropped frames
     unsigned long int GetCapturedVideoFramesCount();
@@ -173,10 +188,10 @@ public:
     //      therefore does not affect syncronization, w/ audio & timing
     unsigned long int GetCapturedVideoFramesDropped();
 
-    // time elapsed since the start of current/recent capture
-    unsigned long int GetCaptureTimeElapsedMS();
-    // capture in progress? then true
-    bool IsCapturingNow();
+    // set microsecond/frame to record with, default = 66667us = 15fps
+    // not necessarily what you'll get if fps set too high
+    unsigned long int GetMicroSecPerFrameRequested();
+    void SetMicroSecPerFrameRequested( unsigned long int framespersec);
 
     // keycode to terminate streaming video, default = VK_ESCAPE
     // NOTE use RegisterHotKey() for system wide key, NOT IMPLEMENTED, NOT TESTED
@@ -204,16 +219,6 @@ public:
     // note: dropped frames are replaced by the last grabbed frame in AVI file
     unsigned int GetMaxAllowedFramesDropped();
     void SetMaxAllowedFramesDropped(unsigned int maxdrop );
-
-    // these two must use capSetCallbackOnYield, I think?
-    // stop capturing video & audio to AVI file, close file and end
-    // UNTESTED
-    bool CaptureVideoToFileStop();
-    // abort capturing video to AVI file, "discard" data
-    // notes: capture operation must yield to use this macro
-    //        image data is retained, audio is not
-    // UNTESTED
-    bool CaptureVideoToFileAbort();
 
     // The default values are probably fine, but who knows?
     // actual number of video buffers allocated in the memory heap
@@ -290,8 +295,9 @@ public:
     // dialog to preallocate space for video capture, returns success
     bool SetCaptureFileSizeDialog();
 
-    // extract actual data from the SetCaptureFilename(), save it to new file
-    // this is used to create a file that is correctly sized to the data size
+    // extract the actual data from the SetCaptureFilename and save it to a new file
+    // this is used to create a file that is correctly sized to the video data size
+    // if not enough space for this file then it's deleted
     bool SaveCapturedFileAs( const wxString &filename );
 
     // I guess that newer versions of wxWidgets will have these? 2.3?
@@ -351,6 +357,8 @@ public:
 
     bool VFW_SetCallbackOnError(bool on);
     // called when a nonfatal error occurs
+    // reports: no disk space, read-only file, can't access hardware,
+    //          too many frames dropped, and others?
     virtual bool VFW_CallbackOnError(const wxString &errortext, int errorid);
 
     bool VFW_SetCallbackOnStatus(bool on);
@@ -358,7 +366,8 @@ public:
     virtual bool VFW_CallbackOnStatus(const wxString &statustext, int statusid);
 
     bool VFW_SetCallbackFrame(bool on);
-    // called when preview frames are available, previewing or not
+    // called when preview frames are available for software previewing, 
+    // previewing or not, when rate is > 0 and streaming capture is not in progress.
     virtual bool VFW_CallbackOnFrame(LPVIDEOHDR lpVHdr);
 
     bool VFW_SetCallbackOnCaptureYield(bool on);
@@ -378,6 +387,14 @@ public:
     virtual bool VFW_CallbackOnWaveStream(LPWAVEHDR lpWHdr);
 
 protected:
+
+    // ----------------------------------------------------------------------
+    // Platform dependent video conversion
+    // ----------------------------------------------------------------------
+
+    // decompress a video frame into the m_wximage member variable, returns success
+    // Device Dependent Bitmap -> 24bpp Device Independent Bitmap -> m_wximage
+    bool VFW_DDBtoDIB(LPVIDEOHDR lpVHdr);
 
     // ----------------------------------------------------------------------
     // Implementation
@@ -411,14 +428,6 @@ protected:
     void OnDraw( wxPaintEvent &event );
 
     // ----------------------------------------------------------------------
-    // Platform dependent video conversion
-    // ----------------------------------------------------------------------
-
-    // decompress a video frame into the m_wximage member variable, returns success
-    // Device Dependent Bitmap -> 24bpp Device Independent Bitmap -> m_wximage
-    bool VFW_DDBtoDIB(LPVIDEOHDR lpVHdr);
-
-    // ----------------------------------------------------------------------
     // Member Variables
     // ----------------------------------------------------------------------
 
@@ -427,9 +436,8 @@ protected:
     unsigned char *m_bmpdata;       // big 'ole temp storage for DIB
 
     bool m_grab_wximage;            // grab a single frame into m_wximage
-    bool m_getting_wximage;         // true when filling the m_wximage
 
-    wxTimer m_preview_wximage_timer; // for preview rate adjustment
+    wxTimer m_previewTimer;         // for preview rate adjustment
 
     wxString m_capturefilename;
 
@@ -440,7 +448,7 @@ protected:
     wxString m_errortext;           // MSW error messages
 
     // MSW specific variables
-    HWND m_hWndC;       // this is the VFW vidcap HWND, it does everything
+    HWND m_hWndC;                   // this is the VFW vidcap HWND, it does everything
 
     HIC m_hic_compressor;           // handle to device (de)compressor
 

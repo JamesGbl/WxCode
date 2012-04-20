@@ -38,6 +38,7 @@ enum
 
     ID_VIDEOWIN,
 
+    ID_DEVICE_ENUMERATE,
     ID_DEVICENONE,
     ID_DEVICE0,
     ID_DEVICE1,
@@ -49,6 +50,7 @@ enum
     ID_DEVICE7,
     ID_DEVICE8,
     ID_DEVICE9,
+    ID_DEVICE__MAX, // not a menu item
 
 #ifdef WXVIDCAP_AUDIO_SUPPORT
     ID_SETCAPFILENAME,
@@ -157,24 +159,25 @@ public:
 
     void OnIdle( wxIdleEvent &event );
     void OnSize( wxSizeEvent &event );
-    void OnCloseWindow ( wxCloseEvent &event );
+    void OnCloseWindow( wxCloseEvent &event );
 
-    wxSplitterWindow *m_splitterWin;
-    MyVideoCaptureWindow *m_vidCapWin;
-    wxPanel *m_logPanel;
-    wxTextCtrl *m_logTextCtrl;
+    wxSplitterWindow*     m_splitterWin;
+    MyVideoCaptureWindow* m_vidCapWin;
+    wxPanel*              m_logPanel;
+    wxTextCtrl*           m_logTextCtrl;
 
-    void CreateMenus();     // initially create the menus
-    void SetupVideoMenus(); // enable/check items, toolbar too
-    wxMenuBar *m_menubar;
-    wxMenu *m_fileMenu;
-    wxMenu *m_videoMenu;
-    wxMenu *m_processMenu;
-    wxMenu *m_captureMenu;
-    wxMenu *m_helpMenu;
+    void EnumerateDevices(); // Enumerate and add the devices to the menu
+    void CreateMenus();      // initially create the menus
+    void SetupVideoMenus();  // enable/check items, toolbar too
+    wxMenuBar* m_menubar;
+    wxMenu*    m_fileMenu;
+    wxMenu*    m_videoMenu;
+    wxMenu*    m_processMenu;
+    wxMenu*    m_captureMenu;
+    wxMenu*    m_helpMenu;
 
     void CreateToolbar();
-    wxToolBar *m_toolBar;
+    wxToolBar* m_toolBar;
 
     int m_preview_state;    // remember last preview/overlay state
 

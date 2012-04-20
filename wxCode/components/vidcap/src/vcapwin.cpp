@@ -173,12 +173,10 @@ wxVideoCaptureWindowBase::~wxVideoCaptureWindowBase()
 
 void wxVideoCaptureWindowBase::Reset(bool full)
 {
-    //m_clientSize = GetClientSize();
-
     if (full) m_deviceNames.Clear();
     if (full) m_deviceVersions.Clear();
 
-    m_deviceIndex = -1;
+    m_deviceIndex                 = -1;
 
     m_previewing                  = false;
     m_preview_wximage             = false;
@@ -186,40 +184,195 @@ void wxVideoCaptureWindowBase::Reset(bool full)
     if (full) m_previewmsperframe = 66;             // 15fps
     m_actualpreviewmsperframe     = 0;
 
-    m_has_overlay = false;
-    m_overlaying  = false;
+    m_has_overlay                 = false;
+    m_overlaying                  = false;
 
-    if (full) m_framenumber = 0;
+    m_getting_wximage             = false;          // not filling the wximage now
 
-    m_imageSize    = wxSize(0, 0);
-    m_minImageSize = wxSize(32, 32);    // just a guess, VFW doesn't support this so...
-    m_maxImageSize = wxSize(1024, 768); // just a guess, VFW doesn't support this so...
-}
+    if (full) m_framenumber       = 0;
 
-// get the device description for a particular device
-wxString wxVideoCaptureWindowBase::GetDeviceName(int index) const
-{
-    if ((index >= 0) && (index < (int)m_deviceNames.GetCount()))
-        return wxString(m_deviceNames.Item(index));
-
-    return wxEmptyString;
-}
-
-// get the device version for a particular device
-wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
-{
-    if ((index >= 0) && (index < (int)m_deviceVersions.GetCount()))
-        return wxString(m_deviceVersions.Item(index));
-
-    return wxEmptyString;
+    m_imageSize                   = wxSize(0, 0);
+    m_minImageSize                = wxSize(32, 32);    // just a guess, VFW doesn't support this so...
+    m_maxImageSize                = wxSize(1024, 768); // just a guess, VFW doesn't support this so...
 }
 
 // ----------------------------------------------------------------------
-// Video characteristics and manipulation
+// Device descriptions & versions, get and enumerate
+// ----------------------------------------------------------------------
+
+wxString wxVideoCaptureWindowBase::GetDeviceName(int index) const
+{
+    wxCHECK_MSG((index >= 0) && (index < (int)m_deviceNames.GetCount()), wxEmptyString, wxT("Invalid video device index"));
+
+    return m_deviceNames.Item(index);
+}
+
+wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
+{
+    wxCHECK_MSG((index >= 0) && (index < (int)m_deviceNames.GetCount()), wxEmptyString, wxT("Invalid video device index"));
+
+    return m_deviceVersions.Item(index);
+}
+
+// ----------------------------------------------------------------------
+// Connect or Disconnect to device
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Display dialogs to set/get video characteristics
+// ----------------------------------------------------------------------
+
+void wxVideoCaptureWindowBase::ShowPropertiesDialog()
+{
+    wxDialog *dialog = new wxDialog(this, wxID_ANY, 
+                                    wxT("wxVideoCaptureWindow Properties"),
+                                    wxDefaultPosition, wxDefaultSize,
+                                    wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+
+    wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
+    wxTextCtrl *textctrl = new wxTextCtrl( dialog, wxID_ANY, 
+                                           wxT(""),
+                                           wxDefaultPosition, wxSize(400,400),
+                                           wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL);
+
+    textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL));
+    textctrl->AppendText(GetPropertiesString());
+
+    dialogsizer->Add( textctrl, 1, wxEXPAND);
+
+    dialog->SetAutoLayout(true);
+    dialog->SetSizer(dialogsizer);
+    dialogsizer->Fit(dialog);
+    dialogsizer->SetSizeHints(dialog);
+
+    dialog->Show(true);
+}
+
+wxString wxVideoCaptureWindowBase::GetPropertiesString()
+{
+    wxString s;
+    int i;
+    
+    s += wxT("=============================================\n");
+    s += wxT("Video Devices\n\n");
+    s += wxString::Format(wxT("Detected Number of Devices : %d\n"), GetDeviceCount());
+    for (i = 0; i < GetDeviceCount(); i++)
+    {
+        s += wxString::Format(wxT("%2d : Device Name    '%s'\n"), i, GetDeviceName(i).wx_str());
+        s += wxString::Format(wxT("     Device Version '%s'\n"), GetDeviceVersion(i).wx_str());
+    }
+    s += wxT("\n");
+
+    s += wxT("=============================================\n");
+    s += wxT("Video Device Properties\n\n");
+    s += wxString::Format(wxT("Currently Connected Device : %d\n"), GetDeviceIndex());
+    s += wxString::Format(wxT("IsDeviceConnected          : %d\n"), (int)IsDeviceConnected());
+    s += wxString::Format(wxT("IsDeviceInitialized        : %d\n"), (int)IsDeviceInitialized());
+    s += wxT("\n");
+
+    s += wxT("=============================================\n");
+    s += wxT("Video Dialogs\n\n");
+    s += wxString::Format(wxT("HasVideoSourceDialog  : %d\n"), (int)HasVideoSourceDialog());
+    s += wxString::Format(wxT("HasVideoFormatDialog  : %d\n"), (int)HasVideoFormatDialog());
+    s += wxString::Format(wxT("HasVideoDisplayDialog : %d\n"), (int)HasVideoDisplayDialog());
+    s += wxT("\n");
+
+    s += wxT("=============================================\n");
+    s += wxT("Video Format Properties\n\n");
+    s += wxString::Format(wxT("Image     width, height     : %4d, %4d\n"), GetImageWidth(), GetImageHeight());
+    s += wxString::Format(wxT("Image min width, height     : %4d, %4d\n"), GetMinImageSize().GetWidth(), GetMinImageSize().GetHeight());
+    s += wxString::Format(wxT("Image max width, height     : %4d, %4d\n"), GetMaxImageSize().GetWidth(), GetMaxImageSize().GetHeight());
+
+    int width = 0, height = 0, bpp = 0;
+    FOURCC fourcc = 0;
+    GetVideoFormat( &width, &height, &bpp, &fourcc );
+    wxString fourccStr(FOURCCTowxString(fourcc));
+
+    s += wxString::Format(wxT("Video format width, height  : %4d, %4d\n"), width, height);
+    s += wxString::Format(wxT("Video format bits per pixel : %d \n"), bpp);
+    s += wxString::Format(wxT("Video format compression    : %s \n"), fourccStr.c_str());
+    s += wxString::Format(wxT("DriverSuppliesPalettes      : %d\n"), (int)DriverSuppliesPalettes());
+    s += wxString::Format(wxT("IsUsingDefaultPalette       : %d\n"), (int)IsUsingDefaultPalette());
+    s += wxT("\n");
+
+    s += wxT("=============================================\n");
+    s += wxString::Format(wxT("Video Preview Properties\n\n"));
+    s += wxString::Format(wxT("IsPreviewing           : %d\n"), (int)IsPreviewing());
+    s += wxString::Format(wxT("IsPreviewingwxImage    : %d\n"), (int)IsPreviewingwxImage());
+    s += wxString::Format(wxT("IsPreviewScaled        : %d\n"), (int)IsPreviewScaled());
+    s += wxString::Format(wxT("GetPreviewRateMS       : %u\n"), GetPreviewRateMS());
+    s += wxString::Format(wxT("GetActualPreviewRateMS : %u\n"), GetActualPreviewRateMS());
+    s += wxString::Format(wxT("GetFrameNumber         : %u\n"), GetFrameNumber());
+    s += wxString::Format(wxT("HasOverlay             : %d\n"), (int)HasOverlay());
+    s += wxString::Format(wxT("IsOverlaying           : %d\n"), (int)IsOverlaying());
+    s += wxT("\n");
+
+    return s;
+}
+
+// ----------------------------------------------------------------------
+// Video format and characteristics
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Capture Preview and Overlay
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Capture single frames, take snapshots of streaming video
+// ----------------------------------------------------------------------
+
+wxImage wxVideoCaptureWindowBase::GetwxImage(bool full_copy) const
+{
+    if (!full_copy)
+        return m_wximage;
+
+    // Make a full copy of the image
+    if (m_wximage.Ok() && !m_getting_wximage)
+    {
+        int width  = m_wximage.GetWidth();
+        int height = m_wximage.GetHeight();
+        wxImage outimage(width, height);
+
+        unsigned char *m_wximgptr = m_wximage.GetData();
+        unsigned char *outimgptr  = outimage.GetData();
+
+        memcpy(outimgptr, m_wximgptr, width*height*3);
+        return outimage;
+    }
+
+    return wxImage();
+}
+
+// ----------------------------------------------------------------------
+// Capture (append) single video frames to an AVI file
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Capture streaming video to an AVI file
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Capture file settings, filename to capture video to
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Audio Setup
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
+// Utility Functions
 // ----------------------------------------------------------------------
 
 // find the size of a file in KB
-long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename )
+long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename ) const
 {
     if (!wxFileExists(filename)) return -1;
     wxFile file(filename, wxFile::read);
@@ -230,32 +383,10 @@ long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename )
     return filesize/1024L;
 }
 
-// ----------------------------------------------------------------------
-// Capture single frames, take snapshots of streaming video
-// ----------------------------------------------------------------------
-
-wxImage wxVideoCaptureWindowBase::GetwxImage()
-{
-    return m_wximage;
-/*
-    if (m_wximage.Ok() && !m_getting_wximage)
-    {
-        int width = m_wximage.GetWidth();
-        int height = m_wximage.GetHeight();
-        wxImage outimage( width, height);
-
-        unsigned char *m_wximgptr = m_wximage.GetData();
-        unsigned char *outimgptr = outimage.GetData();
-
-        memcpy(outimgptr, m_wximgptr, width*height*3);
-        return outimage;
-    }
-    return wxImage();
-*/
-}
-
 //-------------------------------------------------------------------------
 // wxVideoCaptureFormat manipulation
+//-------------------------------------------------------------------------
+
 int wxVideoCaptureWindowBase::GetVideoCaptureFormatCount()
 {
     CreateVideoCaptureFormatArray();
