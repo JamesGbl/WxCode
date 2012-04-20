@@ -65,14 +65,14 @@ public:
     // Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
 
-    virtual bool HasVideoSourceDialog() { return false; }
+    virtual bool HasVideoSourceDialog()  { return false; }
     virtual void ShowVideoSourceDialog() {}
 
-    virtual bool HasVideoFormatDialog() { return false; }
+    virtual bool HasVideoFormatDialog()  { return false; }
     virtual void ShowVideoFormatDialog() {}
     virtual void ShowVideoCustomFormatDialog();
 
-    virtual bool HasVideoDisplayDialog() { return false; }
+    virtual bool HasVideoDisplayDialog()  { return false; }
     virtual void ShowVideoDisplayDialog() {}
 
     virtual wxString GetPropertiesString();
@@ -81,9 +81,9 @@ public:
     // Video format and characteristics
     // ----------------------------------------------------------------------
 
-    virtual bool GetVideoFormat( int *width, int *height, 
+    virtual bool GetVideoFormat( int *width, int *height,
                                  int *bpp, FOURCC *fourcc ) const;
-    virtual bool SetVideoFormat( int width, int height, 
+    virtual bool SetVideoFormat( int width, int height,
                                  int bpp, FOURCC fourcc );
 
     // ----------------------------------------------------------------------
@@ -162,7 +162,7 @@ protected:
     // Platform dependent video conversion
     // ----------------------------------------------------------------------
 
-    // FIXME add conversion here!
+    bool GetMMapVideoFrame();
 
     // ----------------------------------------------------------------------
     // Member Variables

@@ -217,7 +217,8 @@ void wxVideoCaptureWindowV4L::OnIdle( wxIdleEvent &event )
                 m_wximage.Create(m_imageSize.GetWidth(), m_imageSize.GetHeight());
             }
             //Y8_to_RGB24((void*)m_map, (void*)m_wximage.GetData(), m_video_mmap.width, m_video_mmap.height);
-            memcpy( m_wximage.GetData(), m_mmap_buffers[buf.index].start, wxMin(m_mmap_buffers[buf.index].length, 3*m_imageSize.GetWidth()*m_imageSize.GetHeight()));
+            const int data_size = wxMin(m_mmap_buffers[buf.index].length, 3*m_imageSize.GetWidth()*m_imageSize.GetHeight());
+            memcpy(m_wximage.GetData(), m_mmap_buffers[buf.index].start, data_size);
         }
 
         Refresh(false);
@@ -434,7 +435,7 @@ bool wxVideoCaptureWindowV4L::DeviceDisconnect()
 // Display device's dialogs to set video characteristics
 // ----------------------------------------------------------------------
 
-void wxVideoCaptureWindowV4L::VideoCustomFormatDialog()
+void wxVideoCaptureWindowV4L::ShowVideoCustomFormatDialog()
 {
     if (IsDeviceConnected())
     {
@@ -537,7 +538,16 @@ bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview)
 
 void wxVideoCaptureWindowV4L::OnPreviewwxImageTimer(wxTimerEvent& event)
 {
-    event.Skip();
+    static unsigned long long last_frame = (unsigned long long)(-1);
+
+    if (m_preview_wximage)
+    {
+        // last message has to be processed before we call again
+        if (!m_getting_wximage && (last_frame != m_framenumber) && IsDeviceConnected())
+        {
+            last_frame = m_framenumber;
+        }
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -592,6 +602,73 @@ bool wxVideoCaptureWindowV4L::SnapshotTowxImage()
 // ----------------------------------------------------------------------
 
 // NOT IMPLEMENTED
+
+// ----------------------------------------------------------------------
+// Platform dependent video conversion
+// ----------------------------------------------------------------------
+
+bool wxVideoCaptureWindowV4L::GetMMapVideoFrame()
+{
+/*
+    if (m_mmap_buffers.size() == 0)
+        return false;
+
+
+    struct v4l2_buffer buf;
+    memset(&buf, 0, sizeof(v4l2_buffer));
+
+        buf.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory = V4L2_MEMORY_MMAP;
+
+        if (-1 == xioctl (m_fd_device, VIDIOC_DQBUF, &buf))
+        {
+            switch (errno)
+            {
+                case EAGAIN:
+                    // Resource unavailable, try again
+                    return;
+                case EIO:
+                    // Could ignore EIO, see spec.
+                    // fall through
+                default:
+                    perror ("VIDIOC_DQBUF");
+                    return;
+            }
+        }
+
+        //assert ();
+        wxCHECK_RET(buf.index < m_mmap_buffers.size(), wxT("Invalid buffer index."));
+
+        //process_image (buffers[buf.index].start);
+
+        if ( m_v4l2_fmtdesc.pixelformat == 1195724874) // FOURCC = "JPEG"
+        {
+            wxMemoryInputStream is(m_mmap_buffers[buf.index].start, m_mmap_buffers[buf.index].length);
+            m_wximage = wxImage(is, wxBITMAP_TYPE_JPEG);
+        }
+        else if ((m_imageSize.GetWidth() > 0) && (m_imageSize.GetHeight() > 0))
+        {
+            // Just show whatever garbage is in memory
+            if (!m_wximage.IsOk() ||
+                (m_wximage.GetWidth()  != m_imageSize.GetWidth()) ||
+                (m_wximage.GetHeight() != m_imageSize.GetHeight()))
+            {
+                m_wximage.Create(m_imageSize.GetWidth(), m_imageSize.GetHeight());
+            }
+            //Y8_to_RGB24((void*)m_map, (void*)m_wximage.GetData(), m_video_mmap.width, m_video_mmap.height);
+            const int data_size = wxMin(m_mmap_buffers[buf.index].length, 3*m_imageSize.GetWidth()*m_imageSize.GetHeight());
+            memcpy(m_wximage.GetData(), m_mmap_buffers[buf.index].start, data_size);
+        }
+
+        Refresh(false);
+
+        if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &buf))
+                perror("VIDIOC_QBUF");
+    }
+
+
+    */
+}
 
 // ----------------------------------------------------------------------------
 // Open/Close the /dev/video device

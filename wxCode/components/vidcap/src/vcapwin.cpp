@@ -225,16 +225,16 @@ wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
 
 void wxVideoCaptureWindowBase::ShowPropertiesDialog()
 {
-    wxDialog *dialog = new wxDialog(this, wxID_ANY, 
+    wxDialog *dialog = new wxDialog(this, wxID_ANY,
                                     wxT("wxVideoCaptureWindow Properties"),
                                     wxDefaultPosition, wxDefaultSize,
                                     wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
 
     wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
-    wxTextCtrl *textctrl = new wxTextCtrl( dialog, wxID_ANY, 
+    wxTextCtrl *textctrl = new wxTextCtrl( dialog, wxID_ANY,
                                            wxT(""),
                                            wxDefaultPosition, wxSize(400,400),
-                                           wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL);
+                                           wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH2|wxHSCROLL);
 
     textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL));
     textctrl->AppendText(GetPropertiesString());
@@ -253,7 +253,7 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
 {
     wxString s;
     int i;
-    
+
     s += wxT("=============================================\n");
     s += wxT("Video Devices\n\n");
     s += wxString::Format(wxT("Detected Number of Devices : %d\n"), GetDeviceCount());
