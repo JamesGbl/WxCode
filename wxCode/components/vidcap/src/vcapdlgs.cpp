@@ -521,16 +521,16 @@ wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoForm
     //------- Buttons -------------------------------------------------------
     wxSizer *buttonsizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton *m_applyButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_applyButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(-1,-1));
     m_applyButton->SetToolTip(wxT("Apply changes, controls may take only allowed values"));
     m_applyButton->SetDefault();
     buttonsizer->Add( m_applyButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *m_okButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_OK, wxT("OK"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_okButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_OK, wxT("OK"), wxDefaultPosition, wxSize(-1,-1));
     m_okButton->SetToolTip(wxT("Use apply changes to verify allowed values"));
     buttonsizer->Add( m_okButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *m_cancelButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_cancelButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(-1,-1));
     buttonsizer->Add( m_cancelButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     mainsizer->Add( buttonsizer, 0, wxALIGN_CENTRE|wxALL, 5 );

@@ -199,7 +199,7 @@ void wxVideoCaptureWindowBase::Reset(bool full)
 // get the device description for a particular device
 wxString wxVideoCaptureWindowBase::GetDeviceName(int index) const
 {
-    if (((unsigned int)index < m_deviceNames.GetCount()) && (index >= 0))
+    if ((index >= 0) && (index < (int)m_deviceNames.GetCount()))
         return wxString(m_deviceNames.Item(index));
 
     return wxEmptyString;
@@ -208,7 +208,7 @@ wxString wxVideoCaptureWindowBase::GetDeviceName(int index) const
 // get the device version for a particular device
 wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
 {
-    if ((index>=0) && (index < (int)m_deviceVersions.GetCount()))
+    if ((index >= 0) && (index < (int)m_deviceVersions.GetCount()))
         return wxString(m_deviceVersions.Item(index));
 
     return wxEmptyString;
@@ -269,7 +269,7 @@ wxArrayVideoCaptureFormat &wxVideoCaptureWindowBase::GetVideoCaptureFormatArray(
 wxVideoCaptureFormat wxVideoCaptureWindowBase::GetVideoCaptureFormat(int index)
 {
     CreateVideoCaptureFormatArray();
-    wxCHECK_MSG(index >= 0 && index < int(s_wxVideoCaptureFormats.GetCount()), wxVideoCaptureFormat(),
+    wxCHECK_MSG((index >= 0) && (index < int(s_wxVideoCaptureFormats.GetCount())), wxVideoCaptureFormat(),
                  wxT("invalid index in GetVideoCaptureFormat"));
     return s_wxVideoCaptureFormats[index];
 }

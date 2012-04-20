@@ -23,7 +23,8 @@ class wxSizeEvent;
 class wxMoveEvent;
 class wxPaintEvent;
 
-#include <linux/videodev.h>
+#include <linux/videodev2.h>
+
 #include <vector>
 
 //----------------------------------------------------------------------------
@@ -160,7 +161,6 @@ protected:
 
     // Generic variables
     wxArrayString                 m_deviceFilenames; // all device files from EnumerateDevices
-    std::vector<video_capability> m_videoCapabilities;
 
     unsigned char *m_bmpdata;       // big 'ole temp storage for DIB
 
@@ -178,70 +178,48 @@ protected:
 
     // safe - open and close a device (can call w/o checks)
     int m_fd_device;      // the device m_fd_device = open("/dev/video",O_RDWR)
-    int open_device(const wxString &filename);
-    bool close_device(int fd_device);
+
+    /// open() a device by filename and return the file descriptor or -1 on error.
+    /// If the errMsg string is provided, it will be filled on error, else
+    /// error messages will be shown in a wxMessageBox.
+    int open_device(const wxString &filename, wxString* errMsg = NULL) const;
+    /// Close the device by file descriptor, returns success.
+    bool close_device(int fd_device) const;
 
     // safe - map and unmap the shared video memory (can call w/o checks)
-    void *m_map;            // memory map of the
-    int m_map_size;         // size of memory map
     bool mmap_mem();        // mmap the memory to m_map
     bool munmap_mem();      // mumap the memory from m_map
+
+    typedef struct mmap_buffer
+    {
+        void * start;
+        size_t length;
+    } mmap_buffer;
+
+    std::vector<mmap_buffer>  m_mmap_buffers;
 
     // safe - ioctl function
     int xioctl(int fd, int request, void *arg) const;
 
-    void InitV4LStructs();
+    void Init_V4L2_structs();
 
-    // v4l structs
-    struct video_mbuf       m_video_mbuf; //
-    struct video_mmap       m_video_mmap;
-    struct video_capability m_video_capability;
-    struct video_window     m_video_window;
-    struct video_picture    m_video_picture;
-    struct video_buffer     m_video_buffer;
-    struct video_channel    m_video_channel;
-    struct video_clip       m_video_clip;
-    struct video_capture    m_video_capture;
-    struct video_unit       m_video_unit;
-    struct video_tuner      m_video_tuner;
-
+    // v4l2 structs
     struct v4l2_capability  m_v4l2_capability;
     struct v4l2_fmtdesc     m_v4l2_fmtdesc;
     struct v4l2_format      m_v4l2_format;
 
-    // simple functions to set the v4l structs
-    int Set_V4L_video_buffer();
-    int Set_V4L_video_window();
-    int Set_V4L_videoSource(int);
-    int Set_V4L_video_picture();
-    int Set_V4L_video_tuner();
-
-    // simple functions to get the v4l structs
-    int Get_V4L_video_capability();
-    int Get_V4L_video_buffer();
-    int Get_V4L_video_window();
-    int Get_V4L_video_channel();
-    int Get_V4L_video_picture();
-    int Get_V4L_video_tuner();
-    int Get_V4L_video_mbuf();
+    std::vector<v4l2_capability>  m_v4l2_capability_vector;
+    std::vector<v4l2_fmtdesc>     m_v4l2_fmtdesc_vector;
 
     int Get_v4l2_capability();
     int Get_v4l2_fmtdesc();
+    int Get_v4l2_fmtdesc_vector();
     int Get_v4l2_format();
 
-    // methods to display device information
-    void print_V4L_video_mbuf();
-    void print_V4L_video_mmap();
-    void print_V4L_video_capability();
-    void print_V4L_video_window();
-    void print_V4L_video_picture();
-    void print_V4L_video_buffer();
-    void print_V4L_video_channel();
-
-    void print_v4l2_capability();
-    void print_v4l2_fmtdesc();
-    void print_v4l2_format();
-    void print_v4l2_pix_format(const v4l2_pix_format& v);
+    void Print_v4l2_capability(const v4l2_capability& v4l2_capability_) const;
+    void Print_v4l2_fmtdesc(const v4l2_fmtdesc& v4l2_fmtdesc_) const;
+    void Print_v4l2_format(const v4l2_format& v4l2_format_) const;
+    void Print_v4l2_pix_format(const v4l2_pix_format& v4l2_pix_format_) const;
 
 private:
     void Init();

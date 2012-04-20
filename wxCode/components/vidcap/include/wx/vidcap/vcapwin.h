@@ -299,7 +299,7 @@ typedef void (wxEvtHandler::*wxVideoCaptureEventFunction)(wxVideoCaptureEvent&);
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindowBase : window for viewing/recording streaming video or snapshots
 //----------------------------------------------------------------------------
-class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowBase: public wxScrolledWindow
+class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowBase : public wxScrolledWindow
 {
 public:
     wxVideoCaptureWindowBase() : wxScrolledWindow() { Reset(true); }
@@ -447,7 +447,7 @@ public:
     virtual bool Preview(bool on, bool wxpreview = false) = 0;
 
     // true if displaying using software preview method
-    virtual bool IsPreviewing() { return m_previewing || m_preview_wximage; }
+    virtual bool IsPreviewing() const { return m_previewing || m_preview_wximage; }
 
     // true if previewing using wxImages & OnPaint
     virtual bool IsPreviewingwxImage() const { return m_preview_wximage; }
@@ -457,7 +457,7 @@ public:
     virtual bool PreviewScaled(bool fit_window) { m_previewscaled = fit_window; return true; }
 
     // video is scaled to the capture window size Preview, or centered Overlay
-    virtual bool IsPreviewScaled() { return m_previewscaled; }
+    virtual bool IsPreviewScaled() const { return m_previewscaled; }
 
     // set the number of milliseconds per frames to *try* to capture at, returns success
     // this has NOTHING to do with how many you'll actually get
@@ -478,12 +478,12 @@ public:
     virtual bool ProcesswxImageFrame() { return true; }
 
     // device supports hardware video overlay
-    virtual bool HasOverlay() { return m_has_overlay; }
+    virtual bool HasOverlay() const { return m_has_overlay; }
     // use video card hardware overlay, ie. pci framegrabbers, returns success
     // automatically turns off preview if necessary
     virtual bool Overlay(bool on) = 0;
     // true if displaying using hardware video overlay method
-    virtual bool IsOverlaying() { return m_overlaying; }
+    virtual bool IsOverlaying() const { return m_overlaying; }
 
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video
@@ -563,16 +563,16 @@ protected :
     wxArrayString m_deviceNames;    // device names from EnumerateDevices
     wxArrayString m_deviceVersions; // device versions from EnumerateDevices
 
-    int m_deviceIndex;              // current index of the device in use or -1
+    int           m_deviceIndex;    // current index of the device in use or -1
 
-    bool m_previewing;              // currently previewing
-    bool m_preview_wximage;         // m_previewing is true, but displaying using OnDraw w/ m_wximage
-    bool m_previewscaled;           // scale the preview window fullsize
-    unsigned int m_previewmsperframe;       // # milliseconds between preview frames
-    unsigned int m_actualpreviewmsperframe; // measured ms between preview frames
+    bool          m_previewing;              // currently previewing
+    bool          m_preview_wximage;         // m_previewing is true, but displaying using OnDraw w/ m_wximage
+    bool          m_previewscaled;           // scale the preview window fullsize
+    unsigned int  m_previewmsperframe;       // # milliseconds between preview frames
+    unsigned int  m_actualpreviewmsperframe; // measured ms between preview frames
 
-    bool m_has_overlay;             // can use hardware overlay for display
-    bool m_overlaying;              // currently overlaying
+    bool          m_has_overlay;             // can use hardware overlay for display
+    bool          m_overlaying;              // currently overlaying
 
     unsigned long int m_framenumber;  // # of frames, since preview start
 
