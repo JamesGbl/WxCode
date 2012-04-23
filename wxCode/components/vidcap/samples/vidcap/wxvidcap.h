@@ -200,11 +200,13 @@ public:
 
     virtual ~MyVideoCaptureWindow();
 
-    void OnVideoEvent( wxVideoCaptureEvent &event );
-    void OnVideoStatusEvent( wxVideoCaptureEvent &event );
-    void OnVideoFrameEvent( wxVideoCaptureEvent &event );
-    void OnVideoStreamEvent( wxVideoCaptureEvent &event );
-    void OnVideoErrorEvent( wxVideoCaptureEvent &event );
+    virtual void DoPaint( wxPaintDC& dc );
+
+    void OnVideoEvent      ( wxVideoCaptureEvent& event );
+    void OnVideoStatusEvent( wxVideoCaptureEvent& event );
+    void OnVideoFrameEvent ( wxVideoCaptureEvent& event );
+    void OnVideoStreamEvent( wxVideoCaptureEvent& event );
+    void OnVideoErrorEvent ( wxVideoCaptureEvent& event );
 
     bool ProcesswxImageFrame();
 

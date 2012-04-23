@@ -15,6 +15,8 @@
 #endif
 
 #include <wx/numdlg.h> // for wxGetNumberFromUser
+#include <wx/artprov.h>
+
 #include "wxvidcap.h"
 
 IMPLEMENT_APP(MyApp)
@@ -27,8 +29,8 @@ bool MyApp::OnInit()
     wxInitAllImageHandlers();
 
     // create the main application window
-    MyFrame *frame = new MyFrame(NULL, -1, wxT("wxVidCap"),
-                                 wxPoint(50, 50), wxSize(550, 400));
+    MyFrame *frame = new MyFrame(NULL, wxID_ANY, wxT("wxVidCap"),
+                                 wxDefaultPosition, wxSize(550, 400));
 
     frame->Show(true);
 
@@ -94,6 +96,8 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
     // set the frame icon
     SetIcon(wxICON(mondrian));
 
+    SetMinSize(wxSize(200, 200));
+
     // set-up the menu, toolbar, statusbar so we know what the client size will be
     m_menubar = new wxMenuBar();
     SetMenuBar(m_menubar);
@@ -101,22 +105,25 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
 
 #if wxUSE_STATUSBAR
     CreateStatusBar(2);
-    SetStatusText(wxT("wxWidgets Video Capture App - please select a device."));
 #endif // wxUSE_STATUSBAR
 
-    m_splitterWin = new wxSplitterWindow(this, -1);
+    m_splitterWin = new wxSplitterWindow(this, wxID_ANY);
     m_splitterWin->SetMinimumPaneSize(20);
 
-    m_logPanel = new wxPanel( m_splitterWin, -1 );
+    m_logPanel = new wxPanel( m_splitterWin, wxID_ANY );
     wxBoxSizer *logpanelsizer = new wxBoxSizer(wxVERTICAL);
-    m_logTextCtrl = new wxTextCtrl(m_logPanel, -1, wxT("Event Log for wxVideoCaptureWindow \n"), wxPoint(0,0), wxSize(500,100), wxTE_MULTILINE );
+    m_logTextCtrl = new wxTextCtrl(m_logPanel, wxID_ANY, 
+                                   wxT("Event Log for wxVideoCaptureWindow : \n"), 
+                                   wxDefaultPosition, wxDefaultSize, 
+                                   wxTE_MULTILINE|wxTE_RICH2|wxTE_READONLY );
     logpanelsizer->Add(m_logTextCtrl, 1, wxEXPAND);
     m_logPanel->SetAutoLayout( true );
     m_logPanel->SetSizer(logpanelsizer);
     logpanelsizer->Fit( m_logPanel );
     logpanelsizer->SetSizeHints( m_logPanel );
 
-    m_vidCapWin = new MyVideoCaptureWindow( m_splitterWin, ID_VIDEOWIN, wxPoint(0,0), wxSize(400,300));
+    m_vidCapWin = new MyVideoCaptureWindow( m_splitterWin, ID_VIDEOWIN, 
+                                            wxDefaultPosition, wxDefaultSize);
 
 #ifdef WXVIDCAP_AVI_SUPPORT
     SetTitle(wxT("wxVidCap - ") + m_vidCapWin->GetCaptureFilename());
@@ -474,7 +481,7 @@ void MyFrame::OnChangeDevice(wxCommandEvent &event)
 // toolbar button to preview/overlay video from menu selection
 void MyFrame::OnPreviewButton(wxCommandEvent &event)
 {
-    bool preview = (0!=event.GetExtraLong());
+    bool preview = event.IsChecked();
 
     switch (m_preview_state)
     {
@@ -721,22 +728,43 @@ void MyFrame::OnCaptureSingleFrames(wxCommandEvent &)
 
 BEGIN_EVENT_TABLE(MyVideoCaptureWindow,wxVideoCaptureWindow)
     EVT_VIDEO_STATUS( ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoStatusEvent )
-    EVT_VIDEO_FRAME(  ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoFrameEvent )
+    EVT_VIDEO_FRAME ( ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoFrameEvent )
     EVT_VIDEO_STREAM( ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoStreamEvent )
-    EVT_VIDEO_ERROR(  ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoErrorEvent )
-    EVT_VIDEO( ID_VIDEOWIN,         MyVideoCaptureWindow::OnVideoEvent )
+    EVT_VIDEO_ERROR ( ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoErrorEvent )
+    EVT_VIDEO       ( ID_VIDEOWIN,  MyVideoCaptureWindow::OnVideoEvent )
 END_EVENT_TABLE()
 
 MyVideoCaptureWindow::MyVideoCaptureWindow(wxWindow *parent, wxWindowID id,
-                             const wxPoint &pos, const wxSize &size,
-                             long style, const wxString &name)
-                             :wxVideoCaptureWindow(parent, id, pos, size, style, name)
+                                           const wxPoint &pos, const wxSize &size,
+                                           long style, const wxString &name)
+                     :wxVideoCaptureWindow(parent, id, pos, size, style, name)
 {
     m_frame = (MyFrame*)parent->GetParent();
 }
 
 MyVideoCaptureWindow::~MyVideoCaptureWindow()
 {
+}
+
+void MyVideoCaptureWindow::DoPaint( wxPaintDC& dc )
+{
+    wxVideoCaptureWindowBase::DoPaint(dc);   
+
+    if (!IsDeviceConnected())
+    {
+        // The window is blank when disconnected so we might as well
+        // give a hint to people that they need to connect first.
+        wxBitmap bmp = wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_OTHER, wxSize(32, 32));
+        wxSize clientSize(GetClientSize());
+        
+        wxString txt(wxT("Please select a capture device"));
+        wxSize txtSize = dc.GetTextExtent(txt);
+        
+        dc.DrawText(txt,   clientSize.GetWidth()/2  - txtSize.GetWidth()/2,
+                           clientSize.GetHeight()/2 - txtSize.GetHeight());
+        dc.DrawBitmap(bmp, clientSize.GetWidth()/2  - bmp.GetWidth()/2,
+                           clientSize.GetHeight()/2 + 4);
+    }
 }
 
 void MyVideoCaptureWindow::OnVideoEvent( wxVideoCaptureEvent &event )
@@ -747,7 +775,7 @@ void MyVideoCaptureWindow::OnVideoEvent( wxVideoCaptureEvent &event )
 void MyVideoCaptureWindow::OnVideoStatusEvent( wxVideoCaptureEvent &event )
 {
     wxString wxstr;
-    wxstr.Printf(wxT("EVT_VIDEO_STATUS: %s \n"), event.GetStatusText().c_str());
+    wxstr.Printf(wxT("wxEVT_VIDEO_STATUS: %s \n"), event.GetStatusText().c_str());
     m_frame->m_logTextCtrl->AppendText(wxstr);
 
     wxstr.Printf(wxT("%s"), event.GetStatusText().c_str());
@@ -778,7 +806,7 @@ void MyVideoCaptureWindow::OnVideoStreamEvent( wxVideoCaptureEvent &event )
 void MyVideoCaptureWindow::OnVideoErrorEvent( wxVideoCaptureEvent &event )
 {
     wxString wxstr;
-    wxstr.Printf(wxT("EVT_VIDEO_ERROR: %s \n"), event.GetErrorText().c_str());
+    wxstr.Printf(wxT("wxEVT_VIDEO_ERROR: %s \n"), event.GetErrorText().c_str());
 
     m_frame->m_logTextCtrl->AppendText(wxstr);
     event.Skip();
@@ -786,20 +814,22 @@ void MyVideoCaptureWindow::OnVideoErrorEvent( wxVideoCaptureEvent &event )
 
 bool MyVideoCaptureWindow::ProcesswxImageFrame()
 {
+    // This function is only called with a valid wxImage
+
     bool refresh = true; // return value
     int i, j, jj;
-    const int width  = m_wximage.GetWidth();
-    const int height = m_wximage.GetHeight();
-    const int width_x3 = width*3;
+    const int width        = m_wximage.GetWidth();
+    const int height       = m_wximage.GetHeight();
+    const int width_x3     = width*3;
+    const int imgdata_size = width*height*3;
     unsigned char *imgdata = m_wximage.GetData();
 
-    static wxImage lastimage(width,height); // for motion detector
+    static wxImage lastimage(width, height); // for motion detector
 
     // Invert the image - negative
     if (m_frame->m_processMenu->IsChecked(ID_IMGPROCESS_NEGATIVE))
     {
-        const int image_size = width*height*3;
-        for (i = 0; i < image_size; ++i) imgdata[i] = 255 - imgdata[i];
+        for (i = 0; i < imgdata_size; ++i) imgdata[i] = 255 - imgdata[i];
     }
 
     // Very basic edge detector
@@ -813,7 +843,7 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
 
             for (j = 0; j < height; ++j)
             {
-                jj = j*width_x3;
+                int jj = j*width_x3;
                 memcpy(imgrow, rowptr, width_x3);
 
                 for (i = 3; i < width_x3; i += 3)
@@ -835,8 +865,12 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
     if (m_frame->m_processMenu->IsChecked(ID_IMGPROCESS_MOTION))
     {
         // is the last image still good?
-        if (!lastimage.Ok() || (lastimage.GetWidth() != width) || (lastimage.GetHeight() != height))
+        if (!lastimage.Ok() || 
+            (lastimage.GetWidth() != width) || 
+            (lastimage.GetHeight() != height))
+        {
             lastimage.Create(width,height);
+        }
 
         unsigned char *lastdata = lastimage.GetData();
 
@@ -861,7 +895,7 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
 
         if (pixels_changed < pixels_changed_threshold) refresh = false;
 
-        memcpy(lastdata, imgdata, sizeof(unsigned char)*width*height*3);
+        memcpy(lastdata, imgdata, sizeof(unsigned char)*imgdata_size);
     }
 
     return refresh;

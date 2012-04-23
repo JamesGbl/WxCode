@@ -582,8 +582,6 @@ protected :
     // -----------------------------------------------------------------------
     // member vars
 
-    wxSize m_clientSize;            // from wxWindow::GetClientSize
-
     wxArrayString m_deviceNames;    // device names from EnumerateDevices
     wxArrayString m_deviceVersions; // device versions from EnumerateDevices
 

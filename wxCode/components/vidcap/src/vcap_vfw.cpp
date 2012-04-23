@@ -186,14 +186,14 @@ bool wxVideoCaptureWindowVFW::Create( wxWindow *parent, wxWindowID id,
     if (!wxVideoCaptureWindowBase::Create(parent, id, pos, size, style, name))
         return false;
 
-    m_clientSize = GetClientSize();
+    wxSize clientSize(GetClientSize());
 
     // this is the MSW VFW vidcap window
     m_hWndC = capCreateCaptureWindow(wxString(wxT("Capture Window")).fn_str(),
                                     WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS,
                                     pos.x, pos.y,
-                                    m_clientSize.GetWidth(),
-                                    m_clientSize.GetHeight(),
+                                    clientSize.GetWidth(),
+                                    clientSize.GetHeight(),
                                     (HWND)GetHWND(),      // parent
                                     id);                  // capwindow ID?
 
@@ -335,24 +335,13 @@ void wxVideoCaptureWindowVFW::DoSetSize(int x, int y, int width, int height,
 
 void wxVideoCaptureWindowVFW::DoSizeWindow()
 {
-    m_clientSize = GetClientSize();
-
-    int virtual_width, virtual_height;
-    GetVirtualSize( &virtual_width, &virtual_height );
-
-    // clear up backgound if necessary
-    if ((GetImageWidth() < virtual_width) || (GetImageHeight() < virtual_height))
-    {
-        //Refresh(true); // this doesn't cut it when using wxImages...
-        wxClientDC dc(this);
-        dc.Clear();
-    }
 
     if (IsPreviewScaled())
     {
         // the video will fill the extent of the window
         SetScrollbars(1, 1, 2, 2, 0, 0, true); // make them go away
-        MoveWindow(m_hWndC, 0, 0, m_clientSize.x, m_clientSize.y, true);
+        wxSize clientSize(GetClientSize());
+        MoveWindow(m_hWndC, 0, 0, clientSize.x, clientSize.y, true);
     }
     else
     {
@@ -360,6 +349,15 @@ void wxVideoCaptureWindowVFW::DoSizeWindow()
         SetScrollbars(1, 1, GetImageWidth(), GetImageHeight(), 0, 0, true);
         VFW_ScrollHWND( 0, 0 );
         MoveWindow(m_hWndC, 0, 0, GetImageWidth(), GetImageHeight(), false);
+    }
+
+    int virtual_width, virtual_height;
+    GetVirtualSize( &virtual_width, &virtual_height );
+
+    // clear up backgound if necessary
+    if ((GetImageWidth() < virtual_width) || (GetImageHeight() < virtual_height))
+    {
+        Refresh(true);
     }
 }
 
@@ -624,85 +622,83 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
     wxString s = wxVideoCaptureWindowBase::GetPropertiesString();
 
     s += wxT("=============================================\n");
-    s += wxString::Format(wxT("Video capture properties:\n\n"));
+    s += wxString::Format(wxT("Video capture properties\n\n"));
 
-    s += wxString::Format(wxT("GetMicroSecPerFrameRequested() : %ld\n\n"), GetMicroSecPerFrameRequested());
+    s += wxString::Format(wxT("GetMicroSecPerFrameRequested()         : %ld\n\n"), GetMicroSecPerFrameRequested());
 
-    s += wxString::Format(wxT("GetAbortKey()                    : %d\n"), GetAbortKey());
-    s += wxString::Format(wxT("GetAbortLeftMouse()              : %d\n"), GetAbortLeftMouse());
-    s += wxString::Format(wxT("GetAbortRightMouse()             : %d\n"), GetAbortRightMouse());
-    s += wxString::Format(wxT("GetTimeLimitedCapture()          : %d\n"), GetTimeLimitedCapture());
-    s += wxString::Format(wxT("GetCaptureTimeLimit()            : %d\n"), GetCaptureTimeLimit());
-    s += wxString::Format(wxT("GetDialogInitiatedCapture()      : %d\n"), GetDialogInitiatedCapture());
-    s += wxString::Format(wxT("GetMaxAllowedFramesDropped()     : %d\n\n"), GetMaxAllowedFramesDropped());
+    s += wxString::Format(wxT("GetAbortKey()                          : %d\n"), GetAbortKey());
+    s += wxString::Format(wxT("GetAbortLeftMouse()                    : %d\n"), GetAbortLeftMouse());
+    s += wxString::Format(wxT("GetAbortRightMouse()                   : %d\n"), GetAbortRightMouse());
+    s += wxString::Format(wxT("GetTimeLimitedCapture()                : %d\n"), GetTimeLimitedCapture());
+    s += wxString::Format(wxT("GetCaptureTimeLimit()                  : %d\n"), GetCaptureTimeLimit());
+    s += wxString::Format(wxT("GetDialogInitiatedCapture()            : %d\n"), GetDialogInitiatedCapture());
+    s += wxString::Format(wxT("GetMaxAllowedFramesDropped()           : %d\n\n"), GetMaxAllowedFramesDropped());
 
-    s += wxString::Format(wxT("GetNumVideoBuffersAllocated()    : %d\n"), GetNumVideoBuffersAllocated());
-    s += wxString::Format(wxT("GetNumVideoBuffers()             : %d\n"), GetNumVideoBuffers());
-    s += wxString::Format(wxT("GetUseThreadToCapture()          : %d\n"), GetUseThreadToCapture());
-    s += wxString::Format(wxT("GetStepCaptureAt2x()             : %d\n"), GetStepCaptureAt2x());
-    s += wxString::Format(wxT("GetStepCaptureAverageFrames()    : %d\n"), GetStepCaptureAverageFrames());
-    s += wxString::Format(wxT("GetAviMaxIndexEntries()          : %d\n"), GetAviMaxIndexEntries());
-    s += wxString::Format(wxT("GetChunkGranularity()            : %d\n"), GetChunkGranularity());
-    s += wxString::Format(wxT("GetCaptureTimeElapsedMS()        : %d\n"), GetCaptureTimeElapsedMS());
-    s += wxString::Format(wxT("IsCapturingNow()                 : %d\n"), IsCapturingNow());
-    s += wxString::Format(wxT("GetCapturedVideoFramesCount()    : %d\n"), GetCapturedVideoFramesCount());
-    s += wxString::Format(wxT("GetCapturedVideoFramesDropped()  : %d\n\n"), GetCapturedVideoFramesDropped());
+    s += wxString::Format(wxT("GetNumVideoBuffersAllocated()          : %d\n"), GetNumVideoBuffersAllocated());
+    s += wxString::Format(wxT("GetNumVideoBuffers()                   : %d\n"), GetNumVideoBuffers());
+    s += wxString::Format(wxT("GetUseThreadToCapture()                : %d\n"), GetUseThreadToCapture());
+    s += wxString::Format(wxT("GetStepCaptureAt2x()                   : %d\n"), GetStepCaptureAt2x());
+    s += wxString::Format(wxT("GetStepCaptureAverageFrames()          : %d\n"), GetStepCaptureAverageFrames());
+    s += wxString::Format(wxT("GetAviMaxIndexEntries()                : %d\n"), GetAviMaxIndexEntries());
+    s += wxString::Format(wxT("GetChunkGranularity()                  : %d\n"), GetChunkGranularity());
+    s += wxString::Format(wxT("GetCaptureTimeElapsedMS()              : %d\n"), GetCaptureTimeElapsedMS());
+    s += wxString::Format(wxT("IsCapturingNow()                       : %d\n"), IsCapturingNow());
+    s += wxString::Format(wxT("GetCapturedVideoFramesCount()          : %d\n"), GetCapturedVideoFramesCount());
+    s += wxString::Format(wxT("GetCapturedVideoFramesDropped()        : %d\n\n"), GetCapturedVideoFramesDropped());
 
-    s += wxString::Format(wxT("CaptureFileExists()              : %d\n"), CaptureFileExists());
-    s += wxString::Format(wxT("GetCaptureFilename()             : %s\n\n"), GetCaptureFilename().c_str());
-//  s += wxString::Format(wxT("GetFreeDiskSpaceInKB()           : %ld\n", GetFreeDiskSpaceInKB());
-//  s += wxString::Format(wxT("GetFileSizeInKB()                : %d\n\n", GetFileSizeInKB());
+    s += wxString::Format(wxT("CaptureFileExists()                    : %d\n"), CaptureFileExists());
+    s += wxString::Format(wxT("GetCaptureFilename()                   : %s\n\n"), GetCaptureFilename().c_str());
+//  s += wxString::Format(wxT("GetFreeDiskSpaceInKB()                 : %ld\n", GetFreeDiskSpaceInKB());
+//  s += wxString::Format(wxT("GetFileSizeInKB()                      : %d\n\n", GetFileSizeInKB());
 
     s += wxT("=============================================\n");
-    s += wxString::Format(wxT("Audio capture properties:\n\n"));
+    s += wxString::Format(wxT("Audio capture properties\n\n"));
 
-    s += wxString::Format(wxT("HasAudioHardware()               : %d\n"), HasAudioHardware());
-    s += wxString::Format(wxT("GetCaptureAudio()                : %d\n"), GetCaptureAudio());
-    s += wxString::Format(wxT("GetNumAudioBuffers()             : %d\n"), GetNumAudioBuffers());
-    s += wxString::Format(wxT("GetNumAudioBuffersAllocated()    : %d\n"), GetNumAudioBuffersAllocated());
-    s += wxString::Format(wxT("GetAudioBufferSize()             : %ld\n"), GetAudioBufferSize());
-    s += wxString::Format(wxT("GetAudioStreamMaster()           : %d\n"), GetAudioStreamMaster());
-    s += wxString::Format(wxT("GetCapturedWaveSamplesCount()    : %ld\n\n"), GetCapturedWaveSamplesCount());
+    s += wxString::Format(wxT("HasAudioHardware()                     : %d\n"), HasAudioHardware());
+    s += wxString::Format(wxT("GetCaptureAudio()                      : %d\n"), GetCaptureAudio());
+    s += wxString::Format(wxT("GetNumAudioBuffers()                   : %d\n"), GetNumAudioBuffers());
+    s += wxString::Format(wxT("GetNumAudioBuffersAllocated()          : %d\n"), GetNumAudioBuffersAllocated());
+    s += wxString::Format(wxT("GetAudioBufferSize()                   : %ld\n"), GetAudioBufferSize());
+    s += wxString::Format(wxT("GetAudioStreamMaster()                 : %d\n"), GetAudioStreamMaster());
+    s += wxString::Format(wxT("GetCapturedWaveSamplesCount()          : %ld\n\n"), GetCapturedWaveSamplesCount());
 
     s += wxT("\n");
 
     s += wxT("====================================================\n");
-    s += wxT("Video For Windows structs - zeros if not connected\n");
+    s += wxT("Video For Windows structs - zeros if not connected  \n");
     s += wxT("====================================================\n");
 
-    s += wxString::Format(wxT("CAPDRIVERCAPS.wDeviceIndex            : %d\n"), (unsigned int)m_CAPDRIVERCAPS.wDeviceIndex);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasOverlay             : %d\n"), (int)m_CAPDRIVERCAPS.fHasOverlay);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoSource      : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoSource);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoFormat      : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoFormat);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoDisplay     : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoDisplay);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fCaptureInitialized     : %d\n"), (int)m_CAPDRIVERCAPS.fCaptureInitialized);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.fDriverSuppliesPalettes : %d\n"), (int)m_CAPDRIVERCAPS.fDriverSuppliesPalettes);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoIn         !Win32 : %d\n"), (int)m_CAPDRIVERCAPS.hVideoIn);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoOut        !Win32 : %d\n"), (int)m_CAPDRIVERCAPS.hVideoOut);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoExtIn      !Win32 : %d\n"), (int)m_CAPDRIVERCAPS.hVideoExtIn);
-    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoExtOut     !Win32 : %d\n"), (int)m_CAPDRIVERCAPS.hVideoExtOut);
-
+    s += wxString::Format(wxT("CAPDRIVERCAPS.wDeviceIndex             : %d\n"), (unsigned int)m_CAPDRIVERCAPS.wDeviceIndex);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasOverlay              : %d\n"), (int)m_CAPDRIVERCAPS.fHasOverlay);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoSource       : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoSource);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoFormat       : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoFormat);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fHasDlgVideoDisplay      : %d\n"), (int)m_CAPDRIVERCAPS.fHasDlgVideoDisplay);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fCaptureInitialized      : %d\n"), (int)m_CAPDRIVERCAPS.fCaptureInitialized);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.fDriverSuppliesPalettes  : %d\n"), (int)m_CAPDRIVERCAPS.fDriverSuppliesPalettes);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoIn         !Win32  : %d\n"), (int)m_CAPDRIVERCAPS.hVideoIn);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoOut        !Win32  : %d\n"), (int)m_CAPDRIVERCAPS.hVideoOut);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoExtIn      !Win32  : %d\n"), (int)m_CAPDRIVERCAPS.hVideoExtIn);
+    s += wxString::Format(wxT("CAPDRIVERCAPS.hVideoExtOut     !Win32  : %d\n"), (int)m_CAPDRIVERCAPS.hVideoExtOut);
     s += wxT("\n");
 
-    s += wxString::Format(wxT("CAPSTATUS.uiImageWidth                : %d\n"), (unsigned int)m_CAPSTATUS.uiImageWidth);
-    s += wxString::Format(wxT("CAPSTATUS.uiImageHeight               : %d\n"), (unsigned int)m_CAPSTATUS.uiImageHeight);
-    s += wxString::Format(wxT("CAPSTATUS.fLiveWindow                 : %d\n"), (int)m_CAPSTATUS.fLiveWindow);
-    s += wxString::Format(wxT("CAPSTATUS.fOverlayWindow              : %d\n"), (int)m_CAPSTATUS.fOverlayWindow);
-    s += wxString::Format(wxT("CAPSTATUS.fScale                      : %d\n"), (int)m_CAPSTATUS.fScale);
-    s += wxString::Format(wxT("CAPSTATUS.ptScroll                    : %d %d\n"), (int)m_CAPSTATUS.ptScroll.x, (int)m_CAPSTATUS.ptScroll.y);
-    s += wxString::Format(wxT("CAPSTATUS.fUsingDefaultPalette        : %d\n"), (int)m_CAPSTATUS.fUsingDefaultPalette);
-    s += wxString::Format(wxT("CAPSTATUS.fAudioHardware              : %d\n"), (int)m_CAPSTATUS.fAudioHardware);
-    s += wxString::Format(wxT("CAPSTATUS.fCapFileExists              : %d\n"), (int)m_CAPSTATUS.fCapFileExists);
-    s += wxString::Format(wxT("CAPSTATUS.dwCurrentVideoFrame         : %ld\n"), (long)m_CAPSTATUS.dwCurrentVideoFrame);
-    s += wxString::Format(wxT("CAPSTATUS.dwCurrentVideoFramesDropped : %ld\n"), (long)m_CAPSTATUS.dwCurrentVideoFramesDropped);
-    s += wxString::Format(wxT("CAPSTATUS.dwCurrentWaveSamples        : %ld\n"), (long)m_CAPSTATUS.dwCurrentWaveSamples);
-    s += wxString::Format(wxT("CAPSTATUS.dwCurrentTimeElapsedMS      : %ld\n"), (long)m_CAPSTATUS.dwCurrentTimeElapsedMS);
-    s += wxString::Format(wxT("CAPSTATUS.hPalCurrent                 : Not printed\n"));
-    s += wxString::Format(wxT("CAPSTATUS.fCapturingNow               : %d\n"), (int)m_CAPSTATUS.fCapturingNow);
-    s += wxString::Format(wxT("CAPSTATUS.dwReturn                    : %ld\n"), (long)m_CAPSTATUS.dwReturn);
-    s += wxString::Format(wxT("CAPSTATUS.wNumVideoAllocated          : %d\n"), (unsigned int)m_CAPSTATUS.wNumVideoAllocated);
-    s += wxString::Format(wxT("CAPSTATUS.wNumAudioAllocated          : %d\n"), (unsigned int)m_CAPSTATUS.wNumAudioAllocated);
-
+    s += wxString::Format(wxT("CAPSTATUS.uiImageWidth                 : %d\n"), (unsigned int)m_CAPSTATUS.uiImageWidth);
+    s += wxString::Format(wxT("CAPSTATUS.uiImageHeight                : %d\n"), (unsigned int)m_CAPSTATUS.uiImageHeight);
+    s += wxString::Format(wxT("CAPSTATUS.fLiveWindow                  : %d\n"), (int)m_CAPSTATUS.fLiveWindow);
+    s += wxString::Format(wxT("CAPSTATUS.fOverlayWindow               : %d\n"), (int)m_CAPSTATUS.fOverlayWindow);
+    s += wxString::Format(wxT("CAPSTATUS.fScale                       : %d\n"), (int)m_CAPSTATUS.fScale);
+    s += wxString::Format(wxT("CAPSTATUS.ptScroll                     : %d %d\n"), (int)m_CAPSTATUS.ptScroll.x, (int)m_CAPSTATUS.ptScroll.y);
+    s += wxString::Format(wxT("CAPSTATUS.fUsingDefaultPalette         : %d\n"), (int)m_CAPSTATUS.fUsingDefaultPalette);
+    s += wxString::Format(wxT("CAPSTATUS.fAudioHardware               : %d\n"), (int)m_CAPSTATUS.fAudioHardware);
+    s += wxString::Format(wxT("CAPSTATUS.fCapFileExists               : %d\n"), (int)m_CAPSTATUS.fCapFileExists);
+    s += wxString::Format(wxT("CAPSTATUS.dwCurrentVideoFrame          : %ld\n"), (long)m_CAPSTATUS.dwCurrentVideoFrame);
+    s += wxString::Format(wxT("CAPSTATUS.dwCurrentVideoFramesDropped  : %ld\n"), (long)m_CAPSTATUS.dwCurrentVideoFramesDropped);
+    s += wxString::Format(wxT("CAPSTATUS.dwCurrentWaveSamples         : %ld\n"), (long)m_CAPSTATUS.dwCurrentWaveSamples);
+    s += wxString::Format(wxT("CAPSTATUS.dwCurrentTimeElapsedMS       : %ld\n"), (long)m_CAPSTATUS.dwCurrentTimeElapsedMS);
+    s += wxString::Format(wxT("CAPSTATUS.hPalCurrent                  : Not printed\n"));
+    s += wxString::Format(wxT("CAPSTATUS.fCapturingNow                : %d\n"), (int)m_CAPSTATUS.fCapturingNow);
+    s += wxString::Format(wxT("CAPSTATUS.dwReturn                     : %ld\n"), (long)m_CAPSTATUS.dwReturn);
+    s += wxString::Format(wxT("CAPSTATUS.wNumVideoAllocated           : %d\n"), (unsigned int)m_CAPSTATUS.wNumVideoAllocated);
+    s += wxString::Format(wxT("CAPSTATUS.wNumAudioAllocated           : %d\n"), (unsigned int)m_CAPSTATUS.wNumAudioAllocated);
     s += wxT("\n");
 
     s += wxString::Format(wxT("CAPTUREPARMS.dwRequestMicroSecPerFrame : %ld\n"), (long)m_CAPTUREPARMS.dwRequestMicroSecPerFrame);
@@ -748,9 +744,9 @@ bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height,
             BITMAPINFO *lpbmpinfo = (BITMAPINFO*)(new char[bmpformatsize]);
             bmpformatsize = capGetVideoFormat(m_hWndC, lpbmpinfo, (WORD)bmpformatsize);
 
-            if (width)  *width = lpbmpinfo->bmiHeader.biWidth;
+            if (width)  *width  = lpbmpinfo->bmiHeader.biWidth;
             if (height) *height = lpbmpinfo->bmiHeader.biHeight;
-            if (bpp)    *bpp = lpbmpinfo->bmiHeader.biBitCount;
+            if (bpp)    *bpp    = lpbmpinfo->bmiHeader.biBitCount;
             if (fourcc) *fourcc = lpbmpinfo->bmiHeader.biCompression;
 
             delete []lpbmpinfo;
@@ -759,9 +755,9 @@ bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height,
         }
     }
 
-    if (width)  *width = 0;
+    if (width)  *width  = 0;
     if (height) *height = 0;
-    if (bpp)    *bpp = 0;
+    if (bpp)    *bpp    = 0;
     if (fourcc) *fourcc = wxNullFOURCC;
     return false;
 }
@@ -769,15 +765,16 @@ bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height,
 bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
                                               int bpp, FOURCC format )
 {
+    wxCHECK_MSG(IsDeviceConnected(), false, wxT("wxVidCap no device to setting video format to."));
     // check for valid input, some heights can be negative, MS is
     //    wishy-washy on it, lets just say they're invalid
     if ((width < -1) || (height < -1) || (bpp < -1)) return false;
 
     // get current preview/overlay state so we can stop it for now
     // this really helps avoid crashes!
-    bool preview = IsPreviewing() && !m_preview_wximage;
+    bool preview         = IsPreviewing() && !m_preview_wximage;
     bool preview_wximage = m_preview_wximage;
-    bool overlay = IsOverlaying();
+    bool overlay         = IsOverlaying();
     Preview(false);
     Overlay(false);
 
@@ -786,7 +783,7 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     if (c_bmpformatsize == 0) return false;
 
     // info and values for current BITMAPINFO structure
-    int c_width, c_height, c_bpp;   // current values
+    int c_width = 0, c_height = 0, c_bpp = 0; // current values
     FOURCC c_fourcc = 0;
     GetVideoFormat( &c_width, &c_height, &c_bpp, &c_fourcc );
     wxString c_fourcc_str(FOURCCTowxString(c_fourcc));
@@ -795,25 +792,25 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     c_bmpformatsize = capGetVideoFormat(m_hWndC, c_bmpinfo, c_bmpformatsize);
 
     // data structures for a whole new BITMAPINFO strucure
-    BITMAPINFO *new_bmpinfo = NULL;     // new structure to create if needed
-    int new_rgbquad = 0;                // # of palette entries, NOT USED
+    BITMAPINFO *new_bmpinfo = NULL;   // new structure to create if needed
+    int new_rgbquad         = 0;      // # of palette entries, NOT USED
 
     // pointers and values of which of the two structures we'll actually use
-    BITMAPINFO *lpbmpinfo = NULL;     // pointer to bmpinfo structure to use
-    int lpbmpinfosize;                // size of used structure
+    BITMAPINFO *lpbmpinfo     = NULL; // pointer to bmpinfo structure to use
+    int lpbmpinfosize         = 0;    // size of used structure
     bool usecurrent_bmpheader = true; // use parts of the current header
 
     // if just changing the size then preserve the palette (if any)...
     if (((c_fourcc == format)&&(c_bpp == bpp))||((format == -1)&&(bpp == -1)))
     {
-        lpbmpinfo = c_bmpinfo;      // point to current header
-        lpbmpinfosize = c_bmpformatsize;
+        lpbmpinfo            = c_bmpinfo;      // point to current header
+        lpbmpinfosize        = c_bmpformatsize;
         usecurrent_bmpheader = true;
     }
     else
     {
         new_bmpinfo = (BITMAPINFO*)malloc(sizeof(BITMAPINFOHEADER) +
-                        new_rgbquad*sizeof(RGBQUAD));
+                                          new_rgbquad*sizeof(RGBQUAD));
         lpbmpinfo = new_bmpinfo;
         lpbmpinfosize = sizeof(BITMAPINFOHEADER) + new_rgbquad*sizeof(RGBQUAD);
         usecurrent_bmpheader = false;
@@ -828,16 +825,16 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     lpbmpinfo->bmiHeader.biHeight = height;
 
     // this needs to be set for Pinnacle TV cards, sometimes
-    lpbmpinfo->bmiHeader.biPlanes = 1;  // always 1
+    lpbmpinfo->bmiHeader.biPlanes        = 1;  // always 1
     // these might as well be set in case junk comes back
-    lpbmpinfo->bmiHeader.biClrUsed = 0; // all colors used
-    lpbmpinfo->bmiHeader.biClrImportant = 0; // all colors
+    lpbmpinfo->bmiHeader.biClrUsed       = 0; // all colors used
+    lpbmpinfo->bmiHeader.biClrImportant  = 0; // all colors
     lpbmpinfo->bmiHeader.biXPelsPerMeter = 72;
     lpbmpinfo->bmiHeader.biYPelsPerMeter = 72;
 
     if (!usecurrent_bmpheader)
     {
-        lpbmpinfo->bmiHeader.biBitCount = bpp;
+        lpbmpinfo->bmiHeader.biBitCount    = bpp;
         lpbmpinfo->bmiHeader.biCompression = format;
     }
 
@@ -858,9 +855,9 @@ bool wxVideoCaptureWindowVFW::SetVideoFormat( int width, int height,
     }   */
 
     bool formatset = 0!=capSetVideoFormat(m_hWndC, (LPBITMAPINFO)lpbmpinfo,
-                                             (WORD)lpbmpinfosize);
+                                          (WORD)lpbmpinfosize);
 
-    if (c_bmpinfo) free(c_bmpinfo);
+    if (c_bmpinfo)   free(c_bmpinfo);
     if (new_bmpinfo) free(new_bmpinfo);
 
     if (formatset) DoSizeWindow();
@@ -953,8 +950,8 @@ bool wxVideoCaptureWindowVFW::PreviewScaled(bool fit_window)
     {
         // Remove the scrollbars so the client size doesn't include the scrollbars
         SetScrollbars(1, 1, 2, 2, 0, 0, false);
-        m_clientSize = GetClientSize();
-        MoveWindow(m_hWndC, 0, 0, m_clientSize.x, m_clientSize.y, false);
+        wxSize clientSize(GetClientSize());
+        MoveWindow(m_hWndC, 0, 0, clientSize.x, clientSize.y, false);
     }
 
     scalingOK = (0 != capPreviewScale(m_hWndC, fit_window));
@@ -1011,7 +1008,16 @@ void wxVideoCaptureWindowVFW::OnPreviewwxImageTimer(wxTimerEvent& event)
             last_frame = m_framenumber;
             capGrabFrameNoStop(m_hWndC);
         }
+
+        // Use a one-shot to keep the frame rate constant and to not allow
+        // an overflow of timer requests that we can't get frames for
+        wxLongLong millis_now = wxGetLocalTimeMillis();
+        int remaining_ms = int(m_previewmsperframe) - int(millis_now.GetLo() - m_lastframetimemillis.GetLo());
+        remaining_ms = wxMax(remaining_ms, 1);
+        remaining_ms = wxMin(remaining_ms, m_previewmsperframe);
+        m_previewTimer.Start(remaining_ms, true);
     }
+
     event.Skip();
 }
 
@@ -1458,7 +1464,7 @@ bool wxVideoCaptureWindowVFW::SaveCapturedFileAs( const wxString &filename )
 long int wxVideoCaptureWindowVFW::GetFreeDiskSpaceInKB( const wxString &filepath )
 {
     DWORD freeclusters, bytespersector, sectorspercluster, clusters;
-    TCHAR rootdir[MAX_PATH+1];
+    TCHAR rootdir[MAX_PATH+1] = {0};
     TCHAR* tmp_str = 0;    //required arg, a temp variable
 
     // need to find path for root directory on drive containing this file.
@@ -1500,11 +1506,7 @@ long int wxVideoCaptureWindowVFW::GetFreeDiskSpaceInKB( const wxString &filepath
         *tmp_str = '\0';
     }
 
-    if (!GetDiskFreeSpace(rootdir,
-                            &sectorspercluster,
-                            &bytespersector,
-                            &freeclusters,
-                            &clusters))
+    if (!GetDiskFreeSpace(rootdir, &sectorspercluster, &bytespersector, &freeclusters, &clusters))
     {
             wxMessageBox(wxT("Error determining free disk space"),
                             wxT("wxVideoCaptureWindow Error"),

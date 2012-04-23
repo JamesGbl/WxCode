@@ -205,17 +205,6 @@ void wxVideoCaptureWindowV4L::DoSetSize(int x, int y, int width, int height,
 // do the window resizing, call whenever video format changes
 void wxVideoCaptureWindowV4L::DoSizeWindow()
 {
-    m_clientSize = GetClientSize();
-
-    int virtual_width, virtual_height;
-    GetVirtualSize( &virtual_width, &virtual_height );
-
-    // clear up backgound if necessary
-    if ((GetImageWidth() < virtual_width) || (GetImageHeight() < virtual_height))
-    {
-        Refresh(false);
-    }
-
     if (IsPreviewScaled())
     {
         // the video will fill the extent of the window
@@ -225,6 +214,15 @@ void wxVideoCaptureWindowV4L::DoSizeWindow()
     {
         // use scrollbars when video is larger than window size
         SetScrollbars(1, 1, GetImageWidth(), GetImageHeight(), 0, 0, true);
+    }
+
+    int virtual_width, virtual_height;
+    GetVirtualSize( &virtual_width, &virtual_height );
+
+    // clear up backgound if necessary
+    if ((GetImageWidth() < virtual_width) || (GetImageHeight() < virtual_height))
+    {
+        Refresh(false);
     }
 }
 

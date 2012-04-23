@@ -208,6 +208,7 @@ void wxVideoCaptureWindowBase::ShowPropertiesDialog()
 
     textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL));
     textctrl->AppendText(GetPropertiesString());
+    textctrl->SetInsertionPoint(0);
 
     dialogsizer->Add( textctrl, 1, wxEXPAND);
 
@@ -226,7 +227,7 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
 
     s += wxT("=============================================\n");
     s += wxT("Video Devices\n\n");
-    s += wxString::Format(wxT("Detected Number of Devices : %d\n"), GetDeviceCount());
+    s += wxString::Format(wxT("Detected Number of Devices  : %d\n\n"), GetDeviceCount());
     for (i = 0; i < GetDeviceCount(); i++)
     {
         s += wxString::Format(wxT("%2d : Device Name    '%s'\n"), i, GetDeviceName(i).wx_str());
@@ -236,16 +237,16 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
 
     s += wxT("=============================================\n");
     s += wxT("Video Device Properties\n\n");
-    s += wxString::Format(wxT("Currently Connected Device : %d\n"), GetDeviceIndex());
-    s += wxString::Format(wxT("IsDeviceConnected          : %d\n"), (int)IsDeviceConnected());
-    s += wxString::Format(wxT("IsDeviceInitialized        : %d\n"), (int)IsDeviceInitialized());
+    s += wxString::Format(wxT("Currently Connected Device  : %d\n"), GetDeviceIndex());
+    s += wxString::Format(wxT("IsDeviceConnected           : %d\n"), (int)IsDeviceConnected());
+    s += wxString::Format(wxT("IsDeviceInitialized         : %d\n"), (int)IsDeviceInitialized());
     s += wxT("\n");
 
     s += wxT("=============================================\n");
     s += wxT("Video Dialogs\n\n");
-    s += wxString::Format(wxT("HasVideoSourceDialog  : %d\n"), (int)HasVideoSourceDialog());
-    s += wxString::Format(wxT("HasVideoFormatDialog  : %d\n"), (int)HasVideoFormatDialog());
-    s += wxString::Format(wxT("HasVideoDisplayDialog : %d\n"), (int)HasVideoDisplayDialog());
+    s += wxString::Format(wxT("HasVideoSourceDialog        : %d\n"), (int)HasVideoSourceDialog());
+    s += wxString::Format(wxT("HasVideoFormatDialog        : %d\n"), (int)HasVideoFormatDialog());
+    s += wxString::Format(wxT("HasVideoDisplayDialog       : %d\n"), (int)HasVideoDisplayDialog());
     s += wxT("\n");
 
     s += wxT("=============================================\n");
@@ -257,25 +258,30 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
     int width = 0, height = 0, bpp = 0;
     FOURCC fourcc = 0;
     GetVideoFormat( &width, &height, &bpp, &fourcc );
+
     wxString fourccStr(FOURCCTowxString(fourcc));
+    if (fourcc == 0) 
+        fourccStr = wxT("0x0 (uncompressed)");
+    else if (fourcc == wxNullFOURCC)
+        fourccStr = wxT("-1 (invalid)");
 
     s += wxString::Format(wxT("Video format width, height  : %4d, %4d\n"), width, height);
-    s += wxString::Format(wxT("Video format bits per pixel : %d \n"), bpp);
-    s += wxString::Format(wxT("Video format compression    : %s \n"), fourccStr.c_str());
+    s += wxString::Format(wxT("Video format bits per pixel : %d\n"), bpp);
+    s += wxString::Format(wxT("Video format compression    : %s\n"), fourccStr.c_str());
     s += wxString::Format(wxT("DriverSuppliesPalettes      : %d\n"), (int)DriverSuppliesPalettes());
     s += wxString::Format(wxT("IsUsingDefaultPalette       : %d\n"), (int)IsUsingDefaultPalette());
     s += wxT("\n");
 
     s += wxT("=============================================\n");
     s += wxString::Format(wxT("Video Preview Properties\n\n"));
-    s += wxString::Format(wxT("IsPreviewing           : %d\n"), (int)IsPreviewing());
-    s += wxString::Format(wxT("IsPreviewingwxImage    : %d\n"), (int)IsPreviewingwxImage());
-    s += wxString::Format(wxT("IsPreviewScaled        : %d\n"), (int)IsPreviewScaled());
-    s += wxString::Format(wxT("GetPreviewRateMS       : %u\n"), GetPreviewRateMS());
-    s += wxString::Format(wxT("GetActualPreviewRateMS : %u\n"), GetActualPreviewRateMS());
-    s += wxString::Format(wxT("GetFrameNumber         : %u\n"), GetFrameNumber());
-    s += wxString::Format(wxT("HasOverlay             : %d\n"), (int)HasOverlay());
-    s += wxString::Format(wxT("IsOverlaying           : %d\n"), (int)IsOverlaying());
+    s += wxString::Format(wxT("IsPreviewing                : %d\n"), (int)IsPreviewing());
+    s += wxString::Format(wxT("IsPreviewingwxImage         : %d\n"), (int)IsPreviewingwxImage());
+    s += wxString::Format(wxT("IsPreviewScaled             : %d\n"), (int)IsPreviewScaled());
+    s += wxString::Format(wxT("GetPreviewRateMS            : %u\n"), GetPreviewRateMS());
+    s += wxString::Format(wxT("GetActualPreviewRateMS      : %u\n"), GetActualPreviewRateMS());
+    s += wxString::Format(wxT("GetFrameNumber              : %u\n"), GetFrameNumber());
+    s += wxString::Format(wxT("HasOverlay                  : %d\n"), (int)HasOverlay());
+    s += wxString::Format(wxT("IsOverlaying                : %d\n"), (int)IsOverlaying());
     s += wxT("\n");
 
     return s;
@@ -353,7 +359,7 @@ void wxVideoCaptureWindowBase::DoPaint(wxPaintDC& dc)
     if (m_wximage.Ok())// && !m_getting_wximage && m_preview_wximage)
     {
         if (m_previewscaled)
-            dc.DrawBitmap( wxBitmap(m_wximage.Scale(m_clientSize.x,m_clientSize.y)), 0, 0 );
+            dc.DrawBitmap( wxBitmap(m_wximage.Scale(clientSize.x, clientSize.y)), 0, 0 );
         else
             dc.DrawBitmap(wxBitmap(m_wximage), 0, 0);
     }
@@ -474,6 +480,8 @@ int wxVideoCaptureWindowBase::FindVideoCaptureFormatV4L2pixelformat(FOURCC v4l2_
 }
 
 #ifndef WXVIDCAP_LINUX_V4L
+
+#define v4l2_fourcc CHARS_TO_FOURCC
 
 // These FOURCCs are from Linux's <linux/videodev2.h>
 // They're copied here since one list is as good as another and we might as
