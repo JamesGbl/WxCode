@@ -137,9 +137,9 @@ void wxVideoCaptureWindowCaptureSingleFramesDialog::OnDone(wxCommandEvent &)
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowCapturePreferencesDialog, wxDialog)
     EVT_SPINCTRL( IDD_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN, wxVideoCaptureWindowCapturePreferencesDialog::OnMSFrameSpin )
-    EVT_BUTTON( IDD_wxVIDCAP_CAPPREFDLG_APPLY,  wxVideoCaptureWindowCapturePreferencesDialog::OnApply )
-    EVT_BUTTON( IDD_wxVIDCAP_CAPPREFDLG_OK,     wxVideoCaptureWindowCapturePreferencesDialog::OnOk )
-    EVT_BUTTON( IDD_wxVIDCAP_CAPPREFDLG_CANCEL, wxVideoCaptureWindowCapturePreferencesDialog::OnCancel )
+    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_APPLY,        wxVideoCaptureWindowCapturePreferencesDialog::OnApply )
+    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_OK,           wxVideoCaptureWindowCapturePreferencesDialog::OnOk )
+    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_CANCEL,       wxVideoCaptureWindowCapturePreferencesDialog::OnCancel )
 END_EVENT_TABLE()
 
 wxVideoCaptureWindowCapturePreferencesDialog::wxVideoCaptureWindowCapturePreferencesDialog(
@@ -435,8 +435,8 @@ void wxVideoCaptureWindowCapturePreferencesDialog::SetSetup()
 #define IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL  303
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowCustomVideoFormatDialog, wxDialog)
-    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY, wxVideoCaptureWindowCustomVideoFormatDialog::OnApply )
-    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_OK, wxVideoCaptureWindowCustomVideoFormatDialog::OnOk )
+    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY,  wxVideoCaptureWindowCustomVideoFormatDialog::OnApply )
+    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_OK,     wxVideoCaptureWindowCustomVideoFormatDialog::OnOk )
     EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxVideoCaptureWindowCustomVideoFormatDialog::OnCancel )
 END_EVENT_TABLE()
 
@@ -463,21 +463,26 @@ wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoForm
     // create strings to fill the control's selections
     int video_format_count = m_parent->GetVideoCaptureFormatCount();
     wxString *formats_str = new wxString[video_format_count];
-    for (i=0; i<video_format_count; i++)
-        formats_str[i] = m_parent->GetVideoCaptureFormat(i).m_description;
+    for (i = 0; i < video_format_count; ++i)
+    {
+        formats_str[i] = FOURCCTowxString(m_parent->GetVideoCaptureFormat(i).m_fourcc) + wxT(" - ") +
+                         m_parent->GetVideoCaptureFormat(i).m_description;
+    }
 
     wxString widths_str[wxVIDCAP_VIDEO_WIDTHS_COUNT];
-    for (i=0; i<wxVIDCAP_VIDEO_WIDTHS_COUNT; i++)
+    for (i = 0; i < wxVIDCAP_VIDEO_WIDTHS_COUNT; ++i)
         widths_str[i].Printf(wxT("%d"), wxVIDCAP_VIDEO_WIDTHS[i]);
 
     wxString heights_str[wxVIDCAP_VIDEO_HEIGHTS_COUNT];
-    for (i=0; i<wxVIDCAP_VIDEO_HEIGHTS_COUNT; i++)
+    for (i = 0; i < wxVIDCAP_VIDEO_HEIGHTS_COUNT; ++i)
         heights_str[i].Printf(wxT("%d"), wxVIDCAP_VIDEO_HEIGHTS[i]);
 
 
     wxSizer *mainsizer = new wxBoxSizer( wxVERTICAL );
 
+#ifdef WXVIDCAP_MSW_VFW
     mainsizer->Add(new wxStaticText(this, -1, wxT("Caution: This could crash your system!")), 0, wxALL, 5);
+#endif // WXVIDCAP_MSW_VFW
 
     //------- Current setting display ---------------------------------------
     wxStaticBox *currentstaticbox = new wxStaticBox( this, -1, wxT("Current Format"));
@@ -646,11 +651,11 @@ void wxVideoCaptureWindowCustomVideoFormatDialog::OnCancel(wxCommandEvent &)
 #define IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL      405
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowAudioFormatDialog, wxDialog)
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_APPLY,  wxVideoCaptureWindowAudioFormatDialog::OnApply )
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_OK,     wxVideoCaptureWindowAudioFormatDialog::OnOk )
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL, wxVideoCaptureWindowAudioFormatDialog::OnCancel )
-    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_SAMPLES, wxVideoCaptureWindowAudioFormatDialog::OnChoice )
-    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_BITS, wxVideoCaptureWindowAudioFormatDialog::OnChoice )
+    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_APPLY,    wxVideoCaptureWindowAudioFormatDialog::OnApply )
+    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_OK,       wxVideoCaptureWindowAudioFormatDialog::OnOk )
+    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL,   wxVideoCaptureWindowAudioFormatDialog::OnCancel )
+    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_SAMPLES,  wxVideoCaptureWindowAudioFormatDialog::OnChoice )
+    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_BITS,     wxVideoCaptureWindowAudioFormatDialog::OnChoice )
     EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_CHANNELS, wxVideoCaptureWindowAudioFormatDialog::OnChoice )
 END_EVENT_TABLE()
 
@@ -691,7 +696,7 @@ wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
     //formatsizer->Add( m_formatChoice, 0, wxGROW|wxALL, 5 );
 
     wxString samples_str[wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT];
-    for (i=0; i<wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; i++)
+    for (i = 0; i < wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; ++i)
         samples_str[i].Printf(wxT("%ld"), wxVIDCAP_AUDIO_SAMPLESPERSEC[i]);
 
     formatsizer->Add( new wxStaticText( this, -1, wxT("Samples per second (Hz):")), 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -760,15 +765,15 @@ wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
 
 void wxVideoCaptureWindowAudioFormatDialog::OnChoice(wxCommandEvent &)
 {
-    long int samplespersecond=8, channels=8, bitspersample=8;
+    int samplespersecond = 8, channels = 8, bitspersample = 8;
 
     (m_samplespersecondChoice->GetStringSelection()).ToLong(&samplespersecond);
     (m_bitspersampleChoice->GetStringSelection()).ToLong(&bitspersample);
     channels = m_channelsChoice->GetSelection() + 1;
 
-    long int datasize = samplespersecond * bitspersample * channels / 8;
+    int datasize = samplespersecond * bitspersample * channels / 8;
 
-    m_datasizeText->SetLabel(wxString::Format(wxT("Data size: %ld bytes/second"), datasize));
+    m_datasizeText->SetLabel(wxString::Format(wxT("Data size: %d bytes/second"), datasize));
 }
 
 void wxVideoCaptureWindowAudioFormatDialog::GetSetup()
@@ -779,7 +784,7 @@ void wxVideoCaptureWindowAudioFormatDialog::GetSetup()
     m_parent->GetAudioFormat( &channels, &bitspersample, &samplespersecond );
 
     int samples_selection = 0;
-    for (i=0; i<wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; i++)
+    for (i = 0; i < wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; ++i)
         if (samplespersecond == wxVIDCAP_AUDIO_SAMPLESPERSEC[i]) samples_selection = i;
     m_samplespersecondChoice->SetSelection(samples_selection);
 

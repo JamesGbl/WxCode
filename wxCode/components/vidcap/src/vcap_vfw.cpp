@@ -142,7 +142,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxVideoCaptureWindowVFW, wxVideoCaptureWindowBase)
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowVFW, wxVideoCaptureWindowBase)
     EVT_MOVE     (                                    wxVideoCaptureWindowVFW::OnMove)
-    EVT_PAINT    (                                    wxVideoCaptureWindowVFW::OnDraw)
+    EVT_PAINT    (                                    wxVideoCaptureWindowVFW::OnPaint)
     EVT_SCROLLWIN(                                    wxVideoCaptureWindowVFW::OnScrollWin)
     EVT_TIMER    (IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowVFW::OnPreviewwxImageTimer)
     EVT_IDLE     (                                    wxVideoCaptureWindowVFW::OnIdle)
@@ -396,20 +396,10 @@ void wxVideoCaptureWindowVFW::OnScrollWin( wxScrollWinEvent &event )
     event.Skip();
 }
 
-void wxVideoCaptureWindowVFW::OnDraw( wxPaintEvent &event )
+void wxVideoCaptureWindowVFW::OnPaint( wxPaintEvent &event )
 {
     wxPaintDC dc(this);
-    PrepareDC( dc );
-
-    if (m_preview_wximage && !m_getting_wximage && m_wximage.Ok())
-    {
-        if (m_previewscaled)
-            dc.DrawBitmap( wxBitmap(m_wximage.Scale(m_clientSize.x,m_clientSize.y)), 0, 0 );
-        else
-            dc.DrawBitmap(wxBitmap(m_wximage), 0, 0);
-    }
-
-    event.Skip();
+    DoPaint(dc);
 }
 
 // ----------------------------------------------------------------------
@@ -427,7 +417,7 @@ void wxVideoCaptureWindowVFW::EnumerateDevices()
     m_deviceNames.Clear();
     m_deviceVersions.Clear();
 
-    for (index = 0; index < max_devices; index++) 
+    for (index = 0; index < max_devices; index++)
     {
         bool ok = 0!=capGetDriverDescription( index,
                                               devicename,
@@ -623,7 +613,7 @@ void wxVideoCaptureWindowVFW::ShowAudioFormatDialog()
     }
     else if (!HasAudioHardware())
     {
-        wxMessageBox(wxT("No audio hardware detected"), 
+        wxMessageBox(wxT("No audio hardware detected"),
                      wxT("wxVideoCaptureWindow Error"),
                      wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
     }
@@ -747,7 +737,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
 // Video format and characteristics
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height, 
+bool wxVideoCaptureWindowVFW::GetVideoFormat(int *width, int *height,
                                              int *bpp, FOURCC *fourcc) const
 {
     if (IsDeviceConnected())
@@ -954,21 +944,22 @@ bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview)
     return previewingOK;
 }
 
-bool wxVideoCaptureWindowVFW::PreviewScaled(bool scale)
+bool wxVideoCaptureWindowVFW::PreviewScaled(bool fit_window)
 {
     bool scalingOK;
     VFW_GetCAPSTATUS();
 
-    // set the window up the way we want it first
-    if (scale)
+    if (fit_window)
     {
-        SetScrollbars(1, 1, 2, 2, 0, 0, false); // make them go away
+        // Remove the scrollbars so the client size doesn't include the scrollbars
+        SetScrollbars(1, 1, 2, 2, 0, 0, false);
         m_clientSize = GetClientSize();
         MoveWindow(m_hWndC, 0, 0, m_clientSize.x, m_clientSize.y, false);
     }
 
-    scalingOK = (0 != capPreviewScale(m_hWndC, scale));
-    m_previewscaled = scale;
+    scalingOK = (0 != capPreviewScale(m_hWndC, fit_window));
+
+    wxVideoCaptureWindowBase::PreviewScaled(fit_window);
 
     VFW_GetCAPSTATUS();
     DoSizeWindow();     // clean it up, readjust the scollbars
@@ -978,10 +969,10 @@ bool wxVideoCaptureWindowVFW::PreviewScaled(bool scale)
 
 bool wxVideoCaptureWindowVFW::SetPreviewRateMS( unsigned int msperframe )
 {
-    wxVideoCaptureWindowBase::SetPreviewRateMS(msperframe);
-
     bool setrateOK = (0 != capPreviewRate(m_hWndC, msperframe));
-    if (setrateOK) m_previewmsperframe = msperframe;
+
+    if (setrateOK)
+        wxVideoCaptureWindowBase::SetPreviewRateMS(msperframe);
 
 #if !USE_PREVIEW_wxIMAGE_TIMER
     if (m_preview_wximage)
@@ -1079,9 +1070,10 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage( wxImage &image )
         unsigned char *imgptr = image.GetData();
 
         memcpy(imgptr, m_wximgptr, width*height*3);
+        return true;
     }
 
-    return grabbedOK;
+    return false;
 }
 
 bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
@@ -1693,8 +1685,8 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnError(const wxString &errortext, int
     // show error id and text
     wxString errormessage;
     errormessage.Printf(wxT("wxVideoCaptureWindow Error# %d\n %s"), errorId, errortext.c_str());
-    wxMessageBox(errormessage, 
-                 wxT("wxVideoCaptureWindow Error"), 
+    wxMessageBox(errormessage,
+                 wxT("wxVideoCaptureWindow Error"),
                  wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
 
     return true;
@@ -1741,10 +1733,7 @@ bool wxVideoCaptureWindowVFW::VFW_SetCallbackFrame(bool on)
 }
 bool wxVideoCaptureWindowVFW::VFW_CallbackOnFrame(LPVIDEOHDR lpVHdr)
 {
-    static wxLongLong timenow = wxGetLocalTimeMillis();
-    static wxLongLong lasttime = wxGetLocalTimeMillis();
-
-    m_framenumber++;
+    OnFrame();
 
     if (m_preview_wximage || m_grab_wximage)
     {
@@ -1752,14 +1741,6 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnFrame(LPVIDEOHDR lpVHdr)
         if(ProcesswxImageFrame())       // Call the stub in case something is done here
             Refresh(false);             // draw image
         m_grab_wximage = false;         // got the frame
-    }
-
-    unsigned int timeave = (m_previewmsperframe > 500) ? 1 : 4; // get a nicer frame rate
-    if (m_framenumber%timeave == 0)
-    {
-        timenow = wxGetLocalTimeMillis();
-        m_actualpreviewmsperframe = (unsigned int)((timenow.GetLo() - lasttime.GetLo())/timeave);
-        lasttime = timenow;
     }
 
     wxVideoCaptureEvent event( wxEVT_VIDEO_FRAME, this, GetId() );
@@ -1889,7 +1870,7 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
     // again, unfortunately always need to do this, see above...
     bmpformatsize = capGetVideoFormat(m_hWndC, m_lpBmpInfo, bmpformatsize);
 
-    bmpwidth = m_lpBmpInfo->bmiHeader.biWidth;
+    bmpwidth  = m_lpBmpInfo->bmiHeader.biWidth;
     bmpheight = m_lpBmpInfo->bmiHeader.biHeight;
     // bmpdatasize = lpBmpInfo->bmiHeader.biSize;
     bmpdatasize = lpVHdr->dwBytesUsed;  // lets trust this size :)
@@ -1903,13 +1884,13 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         if (m_lpBmpInfo24bpp) delete []m_lpBmpInfo24bpp;
         m_lpBmpInfo24bpp = (BITMAPINFO*)(new char[bmpformatsize]);
         bmpformatsize = capGetVideoFormat(m_hWndC, m_lpBmpInfo24bpp, bmpformatsize);
-        m_lpBmpInfo24bpp->bmiHeader.biBitCount = 24;        // we like 24 bpp
-        m_lpBmpInfo24bpp->bmiHeader.biClrImportant = 0;     // all important
-        m_lpBmpInfo24bpp->bmiHeader.biClrUsed = 0;          // no colormap
-        m_lpBmpInfo24bpp->bmiHeader.biCompression = BI_RGB; // = 0
-        m_lpBmpInfo24bpp->bmiHeader.biPlanes = 1;           // always 1
-        m_lpBmpInfo24bpp->bmiHeader.biSizeImage = bmpwidth*bmpheight*3 +
-                                                  bmppadding24bpp*bmpheight;
+        m_lpBmpInfo24bpp->bmiHeader.biBitCount     = 24;     // we like 24 bpp
+        m_lpBmpInfo24bpp->bmiHeader.biClrImportant = 0;      // all important
+        m_lpBmpInfo24bpp->bmiHeader.biClrUsed      = 0;      // no colormap
+        m_lpBmpInfo24bpp->bmiHeader.biCompression  = BI_RGB; // = 0
+        m_lpBmpInfo24bpp->bmiHeader.biPlanes       = 1;      // always 1
+        m_lpBmpInfo24bpp->bmiHeader.biSizeImage    = bmpwidth*bmpheight*3 +
+                                                     bmppadding24bpp*bmpheight;
 
         // recreate the temp storage variable, tack on extra? sure...
         if (m_bmpdata) delete []m_bmpdata;
@@ -1917,7 +1898,7 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
                                       bmppadding24bpp*bmpheight + 1024];
 
         // setup the output structure
-        if (!m_wximage.Ok() || (m_wximage.GetWidth() != bmpwidth) ||
+        if (!m_wximage.Ok() || (m_wximage.GetWidth()  != bmpwidth) ||
                                (m_wximage.GetHeight() != bmpheight))
         {
             m_wximage.Create(bmpwidth, bmpheight);
@@ -1958,16 +1939,16 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
     if (m_bmpdata && m_wximage.Ok())
     {
         int rowpos, rowsize = 3*bmpwidth+bmppadding24bpp;
-        register int i, j;
+        int i, j, bmpwidth_x3 = bmpwidth*3;
         unsigned char *imgptr = m_wximage.GetData();
 
         // this format is not upside down
         if (m_lpBmpInfo->bmiHeader.biCompression == FOURCC(STRING_TO_FOURCC("Y41P")))
         {
-            for (j=0; j<bmpheight; j++)
+            for (j = 0; j < bmpheight; ++j)
             {
                 rowpos = j*rowsize;
-                for (i=0; i<bmpwidth*3; i+=3)
+                for (i = 0; i < bmpwidth_x3; i += 3)
                 {
                     *imgptr++ = m_bmpdata[rowpos + i+2];
                     *imgptr++ = m_bmpdata[rowpos + i+1];
@@ -1977,10 +1958,10 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         }
         else
         {
-            for (j=bmpheight-1; j>=0; j--)
+            for (j = bmpheight-1; j >= 0; j--)
             {
                 rowpos = j*rowsize;
-                for (i=0; i<bmpwidth*3; i+=3)
+                for (i = 0; i < bmpwidth_x3; i += 3)
                 {
                     *imgptr++ = m_bmpdata[rowpos + i+2];
                     *imgptr++ = m_bmpdata[rowpos + i+1];

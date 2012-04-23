@@ -10,9 +10,9 @@
 #ifndef __WX_VCAPCONV_H__
 #define __WX_VCAPCONV_H__
 
-//#include <linux/videodev.h>
-
 void Y8_to_RGB24(void *src, void *dst, int width, int height);
+
+bool wxVidCap_JPEG_to_wxImage(void* src, size_t src_length, wxImage& dstImage);
 
 
 #endif //__WX_VCAPCONV_H__

@@ -95,7 +95,7 @@ public:
     // Video format and characteristics
     // ----------------------------------------------------------------------
 
-    virtual bool GetVideoFormat( int *width, int *height, 
+    virtual bool GetVideoFormat( int *width, int *height,
                                  int *bpp, FOURCC *fourcc ) const;
 
     //***********************************************************************
@@ -105,7 +105,7 @@ public:
     // There doesn't seem to be a way to get supported values for a device.
     // This function lets you set them to anything, use the VideoFormatDialog
     // which the driver supplies to be on the safe side.
-    virtual bool SetVideoFormat( int width, int height, 
+    virtual bool SetVideoFormat( int width, int height,
                                  int bpp, FOURCC fourcc );
 
     virtual bool IsUsingDefaultPalette();
@@ -366,7 +366,7 @@ public:
     virtual bool VFW_CallbackOnStatus(const wxString &statustext, int statusid);
 
     bool VFW_SetCallbackFrame(bool on);
-    // called when preview frames are available for software previewing, 
+    // called when preview frames are available for software previewing,
     // previewing or not, when rate is > 0 and streaming capture is not in progress.
     virtual bool VFW_CallbackOnFrame(LPVIDEOHDR lpVHdr);
 
@@ -425,7 +425,7 @@ protected:
     void OnMove( wxMoveEvent &event );
 
     // draw the frames when using wxImages preview from EVT_PAINT
-    void OnDraw( wxPaintEvent &event );
+    void OnPaint( wxPaintEvent &event );
 
     // ----------------------------------------------------------------------
     // Member Variables

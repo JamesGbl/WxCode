@@ -21,26 +21,28 @@
 #include <wx/image.h>
 
 //-----------------------------------------------------------------------------
-// The version of wxVidCap
+/// @name wxVidCap version
 //-----------------------------------------------------------------------------
-
+/// @{
 #define wxVIDCAP_MAJOR_VERSION      0
 #define wxVIDCAP_MINOR_VERSION      9
 #define wxVIDCAP_RELEASE_VERSION    0
 #define wxVIDCAP_SUBRELEASE_VERSION 0
 #define wxVIDCAP_VERSION_STRING    wxT("wxVidCap 0.9.0")
 
-// For non-Unix systems (i.e. when building without a configure script),
-// users of this component can use the following macro to check if the
-// current version is at least major.minor.release
+/// For non-Unix systems (i.e. when building without a configure script),
+/// users of this component can use the following macro to check if the
+/// current version is at least major.minor.release
 #define wxCHECK_VIDCAP_VERSION(major,minor,release) \
     (wxVIDCAP_MAJOR_VERSION > (major) || \
     (wxVIDCAP_MAJOR_VERSION == (major) && wxVIDCAP_MINOR_VERSION > (minor)) || \
     (wxVIDCAP_MAJOR_VERSION == (major) && wxVIDCAP_MINOR_VERSION == (minor) && wxVIDCAP_RELEASE_VERSION >= (release)))
 
+/// @}
 //-----------------------------------------------------------------------------
-// These are our DLL macros (see the contrib libs like wxPlot)
+/// @name DLL Import and Export macros (see the contrib libs like wxPlot)
 //-----------------------------------------------------------------------------
+/// @{
 
 #ifdef WXMAKINGDLL_VIDCAP
     #define WXDLLIMPEXP_VIDCAP WXEXPORT
@@ -53,28 +55,18 @@
     #define WXDLLIMPEXP_DATA_VIDCAP(type) type
 #endif
 
-// Forward declare all wxVidcap classes with this macro
+/// Forward declare all wxVidcap classes with this macro
 #if defined(HAVE_VISIBILITY) || (defined(__WINDOWS__) && defined(__GNUC__))
     #define WXDLLIMPEXP_FWD_VIDCAP
 #else
     #define WXDLLIMPEXP_FWD_VIDCAP WXDLLIMPEXP_VIDCAP
 #endif
 
+/// @}
+//----------------------------------------------------------------------------
+// Forward declaration of classes used by the wxVideoCaptureWindow system
+//----------------------------------------------------------------------------
 
-#if defined(__WXMSW__)
-    #define WXVIDCAP_MSW_VFW
-    #define WXVIDCAP_AVI_SUPPORT
-    #define WXVIDCAP_AUDIO_SUPPORT
-#elif defined(__LINUX__)
-    #define WXVIDCAP_LINUX_V4L
-#endif
-
-#if defined(WXVIDCAP_LINUX_V4L)
-    typedef wxUint32 FOURCC;
-    #define BI_RGB 0
-#endif
-
-// classes used by the wxVideoCaptureWindow system
 class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowBase;
 class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureEvent;
 class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCaptureSingleFramesDialog;
@@ -85,76 +77,89 @@ class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCustomVideoFormatDialog;
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
 //----------------------------------------------------------------------------
-// use a timer to view the frames as wxImages, it kinda blocks the GUI
-// if set to 0 then use OnIdle to start the timer as a OneShot to get rate
-// if set to 1 then just set the timer to the preview rate, not so good
+
+#define wxVC_HASBIT(value, bit)      (((value) & (bit)) != 0)
+#define wxVC_SETBIT(value, bit, set) ((set) ? (value)|(bit) : (value)&(~(bit)))
+
+#if defined(__WXMSW__)
+    #define WXVIDCAP_MSW_VFW        ///< Using Video for Windows (VFW) on MSW.
+    #define WXVIDCAP_AVI_SUPPORT    ///< AVI writing is supported.
+    #define WXVIDCAP_AUDIO_SUPPORT  ///< Audio recording is supported.
+#elif defined(__LINUX__)
+    #define WXVIDCAP_LINUX_V4L      ///< Using Video 4 Linux (V4L).
+#endif
+
+#if defined(WXVIDCAP_LINUX_V4L)
+    typedef wxUint32 FOURCC;        ///< Video fourcc types are 4 bytes.
+    #define BI_RGB 0                ///< Windows Bitmap (bmp) simple RGB format.
+#endif
+
+
+/// Use a wxTimer to view the frames as wxImages.
+/// If set to 0 then use OnIdle to start the timer as a OneShot to get rate.
+/// if set to 1 then just set the timer to the preview rate, not so good.
 #define USE_PREVIEW_wxIMAGE_TIMER 0
 
-// array of some predefined "standard" video widths, max 1024
-// wxVideoCaptureWindow::SetVideoFormat( width...
+/// Array of some predefined "standard" video widths, max 1024.
+/// wxVideoCaptureWindow::SetVideoFormat( width...
+/// ={80,128,160,176,180,192,240,320,352,360,384,400,480,640,704,720,768,800,1024};
 #define wxVIDCAP_VIDEO_WIDTHS_COUNT 19
-extern const unsigned int wxVIDCAP_VIDEO_WIDTHS[wxVIDCAP_VIDEO_WIDTHS_COUNT];
-    //={80,128,160,176,180,192,240,320,352,360,384,400,480,640,704,720,768,800,1024};
+WXDLLIMPEXP_DATA_VIDCAP(extern const unsigned int) wxVIDCAP_VIDEO_WIDTHS[wxVIDCAP_VIDEO_WIDTHS_COUNT];
 
-// array of some predefined "standard" video heights, max 768
-// wxVideoCaptureWindow::SetVideoFormat( width, height...
+/// Array of some predefined "standard" video heights, max 768.
+/// wxVideoCaptureWindow::SetVideoFormat( width, height...
+/// ={60, 96, 120, 144, 180, 240, 288, 300, 360, 480, 576, 600, 768 };
 #define wxVIDCAP_VIDEO_HEIGHTS_COUNT 13
-extern const unsigned int wxVIDCAP_VIDEO_HEIGHTS[wxVIDCAP_VIDEO_HEIGHTS_COUNT];
-    //={60, 96, 120, 144, 180, 240, 288, 300, 360, 480, 576, 600, 768 };
+WXDLLIMPEXP_DATA_VIDCAP(extern const unsigned int) wxVIDCAP_VIDEO_HEIGHTS[wxVIDCAP_VIDEO_HEIGHTS_COUNT];
 
-// Make a FOURCC (DWORD-32bit uint) from a string, STRING_TO_FOURCC("UYVV")
-//    MUST have four characters, even for "  Y8" for example
-//    this is NOT the preferred way, see below
+/// Make a FOURCC (DWORD-32bit uint) from a string, STRING_TO_FOURCC("UYVV").
+/// MUST have four characters, even for "  Y8" for example.
+/// This is NOT the preferred way to do it, see below for better methods.
 #define STRING_TO_FOURCC(f) (((f)[0])|((f)[1]<<8)|((f)[2]<<16)|((f)[3]<<24))
-// Make a FOURCC from 4 chars, Chars_To_FOURCC('U','Y','V','V')
-// #define CharsToFOURCC(a,b,c,d) ((a)|(b)<<8|(c)<<16|(d)<<24)
+/// Make a FOURCC from 4 chars, Chars_To_FOURCC('U','Y','V','V')
+#define CHARS_TO_FOURCC(a,b,c,d) (((wxUint32)(a))|((wxUint32)(b)<<8)|((wxUint32)(c)<<16)|((wxUint32)(d)<<24))
 
-// Return a FOURCC given a wxString
-extern FOURCC wxStringToFOURCC(const wxString &string);
-// Return a FOURCC given a regular string of chars
-extern FOURCC StringToFOURCC( const char *s );
+/// Return a FOURCC given a wxString.
+WXDLLIMPEXP_VIDCAP FOURCC wxStringToFOURCC(const wxString &string);
+/// Return a FOURCC given a regular string of chars.
+WXDLLIMPEXP_VIDCAP FOURCC StringToFOURCC( const char *s );
 
-// Return a wxString given a FOURCC
-extern wxString FOURCCTowxString(FOURCC fourcc);
-// Return a string of chars given a FOURCC
-extern const char* FOURCCToString(FOURCC fourcc);
+/// Return a wxString given a FOURCC.
+WXDLLIMPEXP_VIDCAP wxString FOURCCTowxString(FOURCC fourcc);
+/// Return a string of chars given a FOURCC, uses a static buffer do this is not threadsafe.
+WXDLLIMPEXP_VIDCAP const char* FOURCCToString(FOURCC fourcc);
 
+/// Define an invalid FOURCC.
 #define wxNullFOURCC FOURCC(-1)
 
+//---------------------------------------------------------------------------
+/** @class wxVideoCaptureFormat
+    @brief Storage for a video format.
+*/ // -----------------------------------------------------------------------
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureFormat
 {
 public :
-    wxVideoCaptureFormat() : m_fourcc(wxNullFOURCC), m_bpp(0), m_v4l1_palette(-1) {}
+    wxVideoCaptureFormat() : m_fourcc(wxNullFOURCC), m_v4l2_pixelformat(-1), m_bpp(0) {}
 
-    wxVideoCaptureFormat(const wxString &description, FOURCC fourcc, int bpp, int v4l1_palette)
+    wxVideoCaptureFormat(const wxString &description, FOURCC fourcc, int v4l2_pixelformat, int bpp)
     {
-        m_description  = description;
-        m_fourcc       = fourcc;
-        m_bpp          = bpp;
-        m_v4l1_palette = v4l1_palette;
+        m_description      = description;
+        m_fourcc           = fourcc;
+        m_v4l2_pixelformat = v4l2_pixelformat;
+        m_bpp              = bpp;
     }
 
-    wxString m_description;  // common name of the format
-    FOURCC   m_fourcc;       // MMIO data type for BITMAPINFOHEADER->biCompression
-    int      m_bpp;          // bits per pixel for BITMAPINFOHEADER->biBitCount
-    int      m_v4l1_palette; // the type the v4l1 thinks it is (v4l2 uses fourcc ?)
+    wxString m_description;      ///< Common name of the format.
+    FOURCC   m_fourcc;           ///< MMIO data type for BITMAPINFOHEADER->biCompression.
+    FOURCC   m_v4l2_pixelformat; ///< The type the v4l1 thinks it is (v4l2 uses fourcc ?).
+    int      m_bpp;              ///< Bits per pixel for BITMAPINFOHEADER->biBitCount.
 };
 
 #include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY(wxVideoCaptureFormat, wxArrayVideoCaptureFormat);
 
 
-// structure to hold the rest of the BITMAPINFOHEADER format parameters
-typedef struct wxvidcap_video_format_struct
-{
-    FOURCC      fourcc;      // MMIO data type for BITMAPINFOHEADER->biCompression
-    int         bpp;         // bits per pixel for BITMAPINFOHEADER->biBitCount
-    const char *description; // common name of the format
-} wxvidcap_video_format_typedef;
 /*
-// array of some predefined "standard" video formats
-#define wxVIDCAP_VIDEO_FORMATS_COUNT 25
-extern const wxvidcap_video_format_typedef wxVIDCAP_VIDEO_FORMATS[wxVIDCAP_VIDEO_FORMATS_COUNT];
 
 // constants to specify video formats from wxVIDCAP_VIDEO_FORMATS[one below]
 // used in wxVideoCaptureWindow::[Get/Set]VideoFormat( width, height, format..
@@ -388,7 +393,7 @@ public:
     virtual void ShowVideoDisplayDialog() = 0;
 
     /// Dialog to display all know device characteristics.
-    /// Each system displays different things, basicly a wxTextCtrl 
+    /// Each system displays different things, basicly a wxTextCtrl
     /// showing the GetPropertiesString().
     virtual void ShowPropertiesDialog();
 
@@ -413,7 +418,7 @@ public:
 
     // get the video format characteristics, returns success
     //   format is a 4 character string, "UYVY" or whatever comes out
-    virtual bool GetVideoFormat( int *width, int *height, 
+    virtual bool GetVideoFormat( int *width, int *height,
                                  int *bpp, FOURCC *fourcc ) const = 0;
 
     //***********************************************************************
@@ -426,7 +431,7 @@ public:
     // attempt to set the video format the device puts out, returns success
     //  -1 for width/height/bpp and format=-1 uses current value
     //  FOURCC is the 4 chararacter code "UYUV" or whatever
-    virtual bool SetVideoFormat( int width, int height, 
+    virtual bool SetVideoFormat( int width, int height,
                                  int bpp, FOURCC fourcc ) = 0;
 
     // default driver palette being used, then true
@@ -483,6 +488,11 @@ public:
     // to show the frame
     virtual bool ProcesswxImageFrame() { return true; }
 
+    // This function is called for every frame.
+    // You can override it, but be sure to call the base class function to
+    // have actual frame rate calculated and wxEVT_VIDEO_FRAME sent.
+    virtual void OnFrame();
+
     // device supports hardware video overlay
     virtual bool HasOverlay() const { return m_has_overlay; }
     // use video card hardware overlay, ie. pci framegrabbers, returns success
@@ -490,6 +500,9 @@ public:
     virtual bool Overlay(bool on) = 0;
     // true if displaying using hardware video overlay method
     virtual bool IsOverlaying() const { return m_overlaying; }
+
+    /// Draw the wxImage for custom previewing
+    virtual void DoPaint(wxPaintDC& dc);
 
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video
@@ -549,11 +562,11 @@ public:
     //   V4L - seems like only a fixed number of formats are supported and that
     //         the FOURCC codes are "made up" so only those are provided
     //-------------------------------------------------------------------------
-    int GetVideoCaptureFormatCount();
+    int GetVideoCaptureFormatCount() const;
     wxArrayVideoCaptureFormat &GetVideoCaptureFormatArray();
-    wxVideoCaptureFormat GetVideoCaptureFormat(int index);
-    int FindVideoCaptureFormatFOURCC(FOURCC fourcc);
-    int FindVideoCaptureFormatV4Lpalette(int v4lpalette);
+    wxVideoCaptureFormat GetVideoCaptureFormat(int index) const;
+    int FindVideoCaptureFormatFOURCC(FOURCC fourcc) const;
+    int FindVideoCaptureFormatV4L2pixelformat(FOURCC v4l2_pixelformat) const;
     void RegisterVideoCaptureFormat(wxVideoCaptureFormat *new_VideoFormat);
 
 protected :
@@ -564,7 +577,7 @@ protected :
     void Reset(bool full = false);
 
 
-    void CreateVideoCaptureFormatArray(); // don't need to call, used internally
+    void CreateVideoCaptureFormatArray() const; // don't need to call, used internally
 
     // -----------------------------------------------------------------------
     // member vars
@@ -577,7 +590,7 @@ protected :
     int           m_deviceIndex;    // current index of the device in use or -1
 
     bool          m_previewing;              // currently previewing
-    bool          m_preview_wximage;         // m_previewing is true, but displaying using OnDraw w/ m_wximage
+    bool          m_preview_wximage;         // m_previewing is true, but displaying using OnPaint w/ m_wximage
     bool          m_previewscaled;           // scale the preview window fullsize
     unsigned int  m_previewmsperframe;       // # milliseconds between preview frames
     unsigned int  m_actualpreviewmsperframe; // measured ms between preview frames
@@ -588,12 +601,14 @@ protected :
     bool          m_getting_wximage;         // true when filling the m_wximage
 
     unsigned int  m_framenumber;             // # of frames, since preview start
+    wxLongLong    m_lastframetimemillis;     //
+    wxLongLong    m_actualpreviewtimemillis; //
 
-    wxImage m_wximage;                       // wximage to hold the streaming video
+    wxImage       m_wximage;                 // wximage to hold the streaming video
 
-    wxSize m_imageSize;                      // size of the video
-    wxSize m_maxImageSize;                   // min available capture size
-    wxSize m_minImageSize;                   // max available capture size
+    wxSize        m_imageSize;               // size of the video
+    wxSize        m_maxImageSize;            // min available capture size
+    wxSize        m_minImageSize;            // max available capture size
 
 private:
     DECLARE_ABSTRACT_CLASS(wxVideoCaptureWindowBase);

@@ -105,6 +105,7 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
 #endif // wxUSE_STATUSBAR
 
     m_splitterWin = new wxSplitterWindow(this, -1);
+    m_splitterWin->SetMinimumPaneSize(20);
 
     m_logPanel = new wxPanel( m_splitterWin, -1 );
     wxBoxSizer *logpanelsizer = new wxBoxSizer(wxVERTICAL);
@@ -180,7 +181,7 @@ void MyFrame::EnumerateDevices()
         wxMenuItem* menuItem = m_videoMenu->FindItem(i);
         if (menuItem != NULL)
             m_videoMenu->Delete(menuItem);
-    }  
+    }
 
     const size_t device_insert_pos = 3; // pos in the menu to insert ID_DEVICEX at
     int new_device_index = -1;
@@ -196,7 +197,7 @@ void MyFrame::EnumerateDevices()
             m_videoMenu->Insert(device_insert_pos+i, ID_DEVICE0+i, m_vidCapWin->GetDeviceName(i), wxString::Format(wxT("Video device #%d"),i), wxITEM_CHECK);
 
             // the numbers may have changed, find the same device
-            if ((oldDeviceName    == m_vidCapWin->GetDeviceName(i)) && 
+            if ((oldDeviceName    == m_vidCapWin->GetDeviceName(i)) &&
                 (oldDeviceVersion == m_vidCapWin->GetDeviceVersion(i)))
             {
                 new_device_index = i;
@@ -808,7 +809,7 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
 
         if (imgrow)
         {
-            unsigned char *rowptr = m_wximage.GetData();           
+            unsigned char *rowptr = m_wximage.GetData();
 
             for (j = 0; j < height; ++j)
             {
