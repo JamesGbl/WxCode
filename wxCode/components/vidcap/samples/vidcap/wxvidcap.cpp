@@ -112,9 +112,9 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
 
     m_logPanel = new wxPanel( m_splitterWin, wxID_ANY );
     wxBoxSizer *logpanelsizer = new wxBoxSizer(wxVERTICAL);
-    m_logTextCtrl = new wxTextCtrl(m_logPanel, wxID_ANY, 
-                                   wxT("Event Log for wxVideoCaptureWindow : \n"), 
-                                   wxDefaultPosition, wxDefaultSize, 
+    m_logTextCtrl = new wxTextCtrl(m_logPanel, wxID_ANY,
+                                   wxT("Event Log for wxVideoCaptureWindow : \n"),
+                                   wxDefaultPosition, wxDefaultSize,
                                    wxTE_MULTILINE|wxTE_RICH2|wxTE_READONLY );
     logpanelsizer->Add(m_logTextCtrl, 1, wxEXPAND);
     m_logPanel->SetAutoLayout( true );
@@ -122,7 +122,7 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
     logpanelsizer->Fit( m_logPanel );
     logpanelsizer->SetSizeHints( m_logPanel );
 
-    m_vidCapWin = new MyVideoCaptureWindow( m_splitterWin, ID_VIDEOWIN, 
+    m_vidCapWin = new MyVideoCaptureWindow( m_splitterWin, ID_VIDEOWIN,
                                             wxDefaultPosition, wxDefaultSize);
 
 #ifdef WXVIDCAP_AVI_SUPPORT
@@ -164,8 +164,8 @@ void MyFrame::EnumerateDevices()
 {
     // remember what was connected
     int old_device_index = m_vidCapWin->GetDeviceIndex();
-    wxString oldDeviceName("X");
-    wxString oldDeviceVersion("X");
+    wxString oldDeviceName(wxT("X"));
+    wxString oldDeviceVersion(wxT("X"));
 
     if (old_device_index >= 0)
     {
@@ -249,7 +249,7 @@ void MyFrame::CreateMenus()
     m_videoMenu->Append(ID_DEVICE_ENUMERATE, wxT("Sca&n for devices"), wxT("Enumerate devices found on the system"));
     m_videoMenu->AppendSeparator();
 
-    m_videoMenu->Append(ID_DEVICENONE,       wxT("&Disconnect"),       wxT("Disconnect from all devices"), wxITEM_CHECK );
+    m_videoMenu->Append(ID_DEVICENONE,      wxT("&Disconnect"),        wxT("Disconnect from all devices"), wxITEM_CHECK );
 
     EnumerateDevices();
 
@@ -272,13 +272,13 @@ void MyFrame::CreateMenus()
     //---- Capture menu ------------------------------------------------------
     m_captureMenu = new wxMenu;
 
-    m_captureMenu->Append(ID_SNAPTOWINDOW,    wxT("Snapshot to &window\tCtrl-W"), wxT("View the current frame"));
-    m_captureMenu->Append(ID_SNAPTOCLIPBOARD, wxT("Snapshot to &clipboard\tCtrl-C"), wxT("Capture a frame to the clipboard"));
-    m_captureMenu->Append(ID_SNAPTOFILE,      wxT("Snapshot to &file...\tCtrl-F"), wxT("Capture and save a frame to an image file"));
+    m_captureMenu->Append(ID_SNAPTOWINDOW,    wxT("Snapshot to &window\tCtrl-W"),      wxT("View the current frame"));
+    m_captureMenu->Append(ID_SNAPTOCLIPBOARD, wxT("Snapshot to &clipboard\tCtrl-C"),   wxT("Capture a frame to the clipboard"));
+    m_captureMenu->Append(ID_SNAPTOFILE,      wxT("Snapshot to &file...\tCtrl-F"),     wxT("Capture and save a frame to an image file"));
     m_captureMenu->Append(ID_SNAPTOBMP,       wxT("Snapshot to &BMP file...\tCtrl-B"), wxT("Capture and save a frame as a BMP file"));
 
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_captureMenu->Append(ID_CAPVIDEO,        wxT("Capture &video"), wxT("Capture video"));
+    m_captureMenu->Append(ID_CAPVIDEO,        wxT("Capture &video"),            wxT("Capture video"));
     m_captureMenu->Append(ID_CAPSINGLEFRAMES, wxT("Capture &single frames..."), wxT("Capture a series of single frames as video"));
 #endif // WXVIDCAP_AVI_SUPPORT
 
@@ -289,7 +289,7 @@ void MyFrame::CreateMenus()
 
 #ifdef WXVIDCAP_AVI_SUPPORT
     m_captureMenu->Append(ID_DLGCAPPREFERENCES, wxT("Capture &preferences..."), wxT("Capture preferences dialog"));
-    m_captureMenu->Append(ID_DLGCOMPRESSION,    wxT("&Compression..."), wxT("Set recorded video compression"));
+    m_captureMenu->Append(ID_DLGCOMPRESSION,    wxT("&Compression..."),         wxT("Set recorded video compression"));
 #endif // WXVIDCAP_AVI_SUPPORT
 
 #ifdef WXVIDCAP_AUDIO_SUPPORT
@@ -748,7 +748,7 @@ MyVideoCaptureWindow::~MyVideoCaptureWindow()
 
 void MyVideoCaptureWindow::DoPaint( wxPaintDC& dc )
 {
-    wxVideoCaptureWindowBase::DoPaint(dc);   
+    wxVideoCaptureWindowBase::DoPaint(dc);
 
     if (!IsDeviceConnected())
     {
@@ -756,10 +756,10 @@ void MyVideoCaptureWindow::DoPaint( wxPaintDC& dc )
         // give a hint to people that they need to connect first.
         wxBitmap bmp = wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_OTHER, wxSize(32, 32));
         wxSize clientSize(GetClientSize());
-        
+
         wxString txt(wxT("Please select a capture device"));
         wxSize txtSize = dc.GetTextExtent(txt);
-        
+
         dc.DrawText(txt,   clientSize.GetWidth()/2  - txtSize.GetWidth()/2,
                            clientSize.GetHeight()/2 - txtSize.GetHeight());
         dc.DrawBitmap(bmp, clientSize.GetWidth()/2  - bmp.GetWidth()/2,
@@ -865,8 +865,8 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
     if (m_frame->m_processMenu->IsChecked(ID_IMGPROCESS_MOTION))
     {
         // is the last image still good?
-        if (!lastimage.Ok() || 
-            (lastimage.GetWidth() != width) || 
+        if (!lastimage.Ok() ||
+            (lastimage.GetWidth() != width) ||
             (lastimage.GetHeight() != height))
         {
             lastimage.Create(width,height);

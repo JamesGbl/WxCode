@@ -39,6 +39,11 @@
 #include "wx/vidcap/vcapwin.h"
 #include <wx/file.h>
 
+#if !wxCHECK_VERSION(2,9,0)
+    #define wxPENSTYLE_SOLID   wxSOLID
+    #define wxBRUSHSTYLE_SOLID wxSOLID
+#endif
+
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
 //----------------------------------------------------------------------------
@@ -260,7 +265,7 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
     GetVideoFormat( &width, &height, &bpp, &fourcc );
 
     wxString fourccStr(FOURCCTowxString(fourcc));
-    if (fourcc == 0) 
+    if (fourcc == 0)
         fourccStr = wxT("0x0 (uncompressed)");
     else if (fourcc == wxNullFOURCC)
         fourccStr = wxT("-1 (invalid)");

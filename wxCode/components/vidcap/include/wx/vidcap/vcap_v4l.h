@@ -224,20 +224,26 @@ protected:
     /// Read a single frame into the buffer, see V4L2_IO_Methods_Type.
     bool read_frame();
 
+    bool init_read(unsigned int num_bytes);
+    bool uninit_read();
+
     /// mmap() the memory to mmap_buffer and initialize capture.
     bool init_mmap();
     /// mumap() the memory from mmap_buffer and uninitialize capture.
     bool uninit_mmap();
 
+    bool init_userp(unsigned int num_bytes);
+    bool uninit_userp();
+
     /// A buffer for mmaped data.
-    typedef struct mmap_buffer
+    typedef struct mem_buffer
     {
         void*  start;
         size_t length;
-    } mmap_buffer;
+    } mem_buffer;
 
-    std::vector<mmap_buffer> m_mmap_buffers; ///< mmap buffer storage.
-    int m_mmap_buffer_index;
+    std::vector<mem_buffer> m_mem_buffers; ///< read(), mmap(), userp buffer storage.
+    int m_mem_buffer_index;
 
     /// A safe ioctl function.
     int xioctl(int fd, int request, void *arg) const;
@@ -249,6 +255,7 @@ protected:
     struct v4l2_capability        m_v4l2_capability;
     struct v4l2_fmtdesc           m_v4l2_fmtdesc;
     struct v4l2_format            m_v4l2_format;
+    struct v4l2_buffer            m_v4l2_buffer;
 
     std::vector<v4l2_capability>  m_v4l2_capability_vector;
     std::vector<v4l2_fmtdesc>     m_v4l2_fmtdesc_vector;

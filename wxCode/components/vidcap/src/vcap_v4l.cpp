@@ -1,6 +1,3 @@
-//TODO:
-//
-
 /////////////////////////////////////////////////////////////////////////////
 // Name:        vcap_v4l.cpp - wxVideoCaptureWindow using Linux V4L2 API
 // Author:      John Labenski
@@ -9,22 +6,6 @@
 // Copyright:   John Labenski
 // License:     wxWidgets V2.0
 /////////////////////////////////////////////////////////////////////////////
-
-/*
-VIDEO_PALETTE_GREY
-VIDEO_PALETTE_HI240
-VIDEO_PALETTE_RGB565
-VIDEO_PALETTE_RGB24
-VIDEO_PALETTE_RGB32
-VIDEO_PALETTE_RGB555
-VIDEO_PALETTE_YUV422
-VIDEO_PALETTE_YUYV
-VIDEO_PALETTE_RAW
-VIDEO_PALETTE_YUV422P
-VIDEO_PALETTE_YUV411P
-VIDEO_PALETTE_YUV420P
-VIDEO_PALETTE_YUV410P
-*/
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -60,13 +41,13 @@ VIDEO_PALETTE_YUV410P
 //#include <stdlib.h>
 //#include <stdio.h>
 //#include <string.h>
+#include <malloc.h>
 
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <map>
-
 
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
@@ -105,7 +86,7 @@ void wxVideoCaptureWindowV4L::Init()
     m_v4l2_device_init  = wxV4L2_DEVICE_INIT_NONE;
     m_v4l2_io_method    = wxV4L2_IO_METHOD_NONE;
 
-    m_mmap_buffer_index = -1;
+    m_mem_buffer_index  = -1;
 
     Init_V4L2_structs();
 }
@@ -115,6 +96,7 @@ void wxVideoCaptureWindowV4L::Init_V4L2_structs()
     memset(&m_v4l2_capability, 0, sizeof(v4l2_capability));
     memset(&m_v4l2_fmtdesc,    0, sizeof(v4l2_fmtdesc));
     memset(&m_v4l2_format,     0, sizeof(v4l2_format));
+    memset(&m_v4l2_buffer,     0, sizeof(v4l2_buffer));
 
     m_v4l2_fmtdesc_vector.clear();
     m_v4l2_frmsizeenum_vector.clear();
@@ -160,10 +142,6 @@ bool wxVideoCaptureWindowV4L::Create( wxWindow *parent, wxWindowID id,
     if (GetDeviceCount() > 0)
         DeviceConnect(0);
 
-    std::cout << Get_v4l2_capability_String(m_v4l2_capability);
-    std::cout << Get_v4l2_fmtdesc_String(m_v4l2_fmtdesc);
-    std::cout << Get_v4l2_format_String(m_v4l2_format);
-
     // set up some generic useful parameters
     SetPreviewRateMS(100);              // 10 fps
 
@@ -183,7 +161,7 @@ void wxVideoCaptureWindowV4L::OnCloseWindow(wxCloseEvent &event)
 
 void wxVideoCaptureWindowV4L::OnIdle( wxIdleEvent &event )
 {
-    if (0 && m_preview_wximage && (m_mmap_buffers.size() > 0))
+    if (0 && m_preview_wximage && (m_mem_buffers.size() > 0))
     {
         event.RequestMore();
 
@@ -272,8 +250,9 @@ void wxVideoCaptureWindowV4L::EnumerateDevices()
     while (has_files)
     {
         wxString errMsg; // use this as a sink for the error messages
-        wxString video_filename(rootDir+filename);
-        int fd_device = open_device(rootDir+filename, &errMsg);
+        wxString deviceFilename(rootDir+filename);
+        wxString video_filename(deviceFilename);
+        int fd_device = open_device(deviceFilename, &errMsg);
 
         //wxPrintf(wxT("Enumerating [%s] %d\n"), video_filename.c_str(), fd_device); fflush(stdout);
 
@@ -293,8 +272,8 @@ void wxVideoCaptureWindowV4L::EnumerateDevices()
                 wxString deviceName = wxConvUTF8.cMB2WX((const char*)v4l2_capability_.card);
                 //printf("Enumerating [%s]\n", v4l2_capability_.card); fflush(stdout);
                 m_deviceNames.Add(deviceName);
-                m_deviceVersions.Add(wxT("Unknown version"));
-                m_deviceFilenames.Add(rootDir+filename);
+                m_deviceVersions.Add(wxString::Format(wxT("%u"), v4l2_capability_.version));
+                m_deviceFilenames.Add(deviceFilename);
             }
             //else
             //    perror("Error enumerating video device");
@@ -407,8 +386,6 @@ wxString wxVideoCaptureWindowV4L::GetPropertiesString()
         s += Get_v4l2_frmivalenum_String(m_v4l2_frmivalenum_vector[n]);
     }
 
-
-
     //count = (int)m_v4l2_capability_vector.size();
     //for (n = 0; n < count; ++n)
     //{
@@ -446,9 +423,7 @@ bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height,
                                               int bpp, FOURCC format )
 {
     v4l2_format v4l2_format_;
-
     memset(&v4l2_format_, 0, sizeof(v4l2_format));
-
     v4l2_format_.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
     int ret = ioctl(m_fd_device, VIDIOC_G_FMT, &v4l2_format_);
@@ -461,17 +436,12 @@ bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height,
     v4l2_format_.fmt.pix.bytesperline = 0;
     v4l2_format_.fmt.pix.sizeimage   = 0;
 
-
     bool previewing = IsPreviewing();
     if (previewing)
         Preview(false);
 
-    std::cout << Get_v4l2_format_String(v4l2_format_);
-
     ret = ioctl(m_fd_device, VIDIOC_TRY_FMT, &v4l2_format_);
     if (ret != 0) perror("wxVidCap::SetVideoFormat() VIDIOC_TRY_FMT ERROR : ");
-
-    std::cout << Get_v4l2_format_String(v4l2_format_);
 
     if (ret == 0)
     {
@@ -481,7 +451,6 @@ bool wxVideoCaptureWindowV4L::SetVideoFormat( int width, int height,
 
     Get_v4l2_fmtdesc();
     Get_v4l2_format();
-    std::cout << Get_v4l2_format_String(m_v4l2_format);
 
     if (previewing)
         Preview(true);
@@ -579,7 +548,7 @@ void wxVideoCaptureWindowV4L::OnPreviewwxImageTimer(wxTimerEvent& event)
         wxLongLong millis_now = wxGetLocalTimeMillis();
         int remaining_ms = int(m_previewmsperframe) - int(millis_now.GetLo() - m_lastframetimemillis.GetLo());
         remaining_ms = wxMax(remaining_ms, 1);
-        remaining_ms = wxMin(remaining_ms, m_previewmsperframe);
+        remaining_ms = wxMin(remaining_ms, (int)m_previewmsperframe);
         m_previewTimer.Start(remaining_ms, true);
     }
 }
@@ -713,25 +682,11 @@ bool wxVideoCaptureWindowV4L::GetMMapVideoFrame(wxImage& wximg, bool request_ano
 
     if (!read_frame()) return false;
 
-    void*  image_buf         = NULL;
-    size_t image_buf_length = 0;
+    if ((m_mem_buffer_index < 0) || (m_mem_buffer_index >= (int)m_mem_buffers.size()))
+        return false;
 
-    switch (m_v4l2_io_method)
-    {
-        //case wxV4L2_CAP_READWRITE     : return init_read(fmt.fmt.pix.sizeimage);
-        case wxV4L2_IO_METHOD_MMAP :
-        {
-            if ((m_mmap_buffer_index < 0) || (m_mmap_buffer_index >= (int)m_mmap_buffers.size()))
-                return false;
-            //wxCHECK_MSG(m_mmap_buffer_index < m_mmap_buffers.size(), false, wxT("Invalid buffer index."));
-
-            image_buf        = m_mmap_buffers[m_mmap_buffer_index].start;
-            image_buf_length = m_mmap_buffers[m_mmap_buffer_index].length;
-            break;
-        }
-        //case wxV4L2_IO_METHOD_USERPTR : return init_userp(fmt.fmt.pix.sizeimage);
-        default : break;
-    }
+    void*  image_buf        = m_mem_buffers[m_mem_buffer_index].start;
+    size_t image_buf_length = m_mem_buffers[m_mem_buffer_index].length;
 
     if (!image_buf) return false;
 
@@ -751,22 +706,16 @@ bool wxVideoCaptureWindowV4L::GetMMapVideoFrame(wxImage& wximg, bool request_ano
             wximg.Create(m_imageSize.GetWidth(), m_imageSize.GetHeight());
         }
 
-        const int data_size = wxMin(image_buf_length, 3*m_imageSize.GetWidth()*m_imageSize.GetHeight());
+        const int data_size = wxMin((int)image_buf_length, 3*m_imageSize.GetWidth()*m_imageSize.GetHeight());
         memcpy(wximg.GetData(), image_buf, data_size);
     }
 
     m_getting_wximage = false;
 
-    if (request_another)
+    if (request_another && (m_v4l2_io_method != wxV4L2_IO_METHOD_READ))
     {
-        struct v4l2_buffer buf;
-        memset(&buf, 0, sizeof(v4l2_buffer));
-
-        buf.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        buf.memory = V4L2_MEMORY_MMAP;
-        buf.index  = m_mmap_buffer_index;
-
-        if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &buf))
+        // m_v4l2_buffer should be setup correctly from the last call to VIDIOC_DQBUF
+        if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &m_v4l2_buffer))
             perror("VIDIOC_QBUF");
     }
 
@@ -848,7 +797,6 @@ bool wxVideoCaptureWindowV4L::close_device(int fd_device) const
 
     int ret = close(fd_device);
 
-    //printf("Closed device # %d : result %d\n", fd_device, ret);
     return ret == 0;
 }
 
@@ -921,8 +869,8 @@ bool wxVideoCaptureWindowV4L::init_device()
                 default:
                     // Errors ignored.
                     break;
-                }
             }
+        }
     }
     else
     {
@@ -936,10 +884,9 @@ bool wxVideoCaptureWindowV4L::uninit_device()
 {
     wxCHECK_MSG(wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_DEVICE), false, wxT("wxVidCap attempt to uninit non-initialized device"));
 
-    m_v4l2_device_init &= ~wxV4L2_DEVICE_INIT_DEVICE;
+    if (wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_IO)) uninit_io();
 
-    if (wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_CAPTURE)) uninit_capture();
-    if (wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_IO))      uninit_io();
+    m_v4l2_device_init &= ~wxV4L2_DEVICE_INIT_DEVICE;
 
     return true;
 }
@@ -949,12 +896,12 @@ bool wxVideoCaptureWindowV4L::init_io()
     wxCHECK_MSG(m_fd_device != -1, false, wxT("wxVidCap device not open for io initialization"));
     wxCHECK_MSG(!wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_IO), false, wxT("wxVidCap device already initialized for io"));
 
-    m_v4l2_io_method = wxV4L2_IO_METHOD_MMAP;
+    m_v4l2_io_method = wxV4L2_IO_METHOD_NONE;
 
     if ((m_v4l2_capability.capabilities & V4L2_CAP_STREAMING) != 0)
     {
         //fprintf (stderr, "%s does not support streaming i/o\n", dev_name);
-        // V4L2_IO_METHOD_MMAP or V4L2_IO_METHOD_USERPTR
+        // V4L2_IO_METHOD_MMAP or V4L2_IO_METHOD_USERPTR, MMAP seems more robust
         m_v4l2_io_method = wxV4L2_IO_METHOD_MMAP;
     }
     else if ((m_v4l2_capability.capabilities & V4L2_CAP_READWRITE) != 0)
@@ -963,13 +910,27 @@ bool wxVideoCaptureWindowV4L::init_io()
         m_v4l2_io_method = wxV4L2_IO_METHOD_READ;
     }
 
+    if (m_v4l2_io_method == wxV4L2_IO_METHOD_NONE)
+    {
+        // TODO - show error msg
+        return false;
+    }
+
     m_v4l2_device_init |= wxV4L2_DEVICE_INIT_IO;
+
+    //m_v4l2_io_method = wxV4L2_IO_METHOD_READ;
+    //m_v4l2_io_method = wxV4L2_IO_METHOD_MMAP;
+    //m_v4l2_io_method = wxV4L2_IO_METHOD_USERPTR;
+
+    unsigned int num_bytes = 2*m_v4l2_format.fmt.pix.width; // Buggy driver paranoia.
+    num_bytes = wxMax(num_bytes, m_v4l2_format.fmt.pix.bytesperline);
+    num_bytes = num_bytes * m_v4l2_format.fmt.pix.height;
 
     switch (m_v4l2_io_method)
     {
-        //case wxV4L2_CAP_READWRITE     : return init_read(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_READ    : return init_read(num_bytes);
         case wxV4L2_IO_METHOD_MMAP    : return init_mmap();
-        //case wxV4L2_IO_METHOD_USERPTR : return init_userp(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_USERPTR : return init_userp(num_bytes);
         default : break;
     }
 
@@ -986,9 +947,9 @@ bool wxVideoCaptureWindowV4L::uninit_io()
 
     switch (m_v4l2_io_method)
     {
-        //case wxV4L2_CAP_READWRITE     : return init_read(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_READ    : return uninit_read();
         case wxV4L2_IO_METHOD_MMAP    : return uninit_mmap();
-        //case wxV4L2_IO_METHOD_USERPTR : return init_userp(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_USERPTR : return uninit_userp();
         default : break;
     }
 
@@ -1009,18 +970,17 @@ bool wxVideoCaptureWindowV4L::init_capture()
 
         case wxV4L2_IO_METHOD_MMAP:
         {
-            size_t n, count = m_mmap_buffers.size();
+            size_t n, count = m_mem_buffers.size();
 
             for (n = 0; n < count; ++n)
             {
-                struct v4l2_buffer buf;
-                memset(&buf, 0, sizeof(v4l2_buffer));
+                memset(&m_v4l2_buffer, 0, sizeof(v4l2_buffer));
 
-                buf.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                buf.memory      = V4L2_MEMORY_MMAP;
-                buf.index       = n;
+                m_v4l2_buffer.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                m_v4l2_buffer.memory      = V4L2_MEMORY_MMAP;
+                m_v4l2_buffer.index       = n;
 
-                if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &buf))
+                if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &m_v4l2_buffer))
                     perror ("VIDIOC_QBUF");
             }
 
@@ -1038,20 +998,19 @@ bool wxVideoCaptureWindowV4L::init_capture()
         }
         case wxV4L2_IO_METHOD_USERPTR:
         {
-            size_t n, count = m_mmap_buffers.size();
+            size_t n, count = m_mem_buffers.size();
 
             for (n = 0; n < count; ++n)
             {
-                struct v4l2_buffer buf;
-                memset(&buf, 0, sizeof(v4l2_buffer));
+                memset(&m_v4l2_buffer, 0, sizeof(v4l2_buffer));
 
-                buf.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                buf.memory      = V4L2_MEMORY_USERPTR;
-                buf.index       = n;
-                buf.m.userptr   = (unsigned long) m_mmap_buffers[n].start;
-                buf.length      = m_mmap_buffers[n].length;
+                m_v4l2_buffer.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                m_v4l2_buffer.memory      = V4L2_MEMORY_USERPTR;
+                m_v4l2_buffer.index       = n;
+                m_v4l2_buffer.m.userptr   = (unsigned long) m_mem_buffers[n].start;
+                m_v4l2_buffer.length      = m_mem_buffers[n].length;
 
-                if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &buf))
+                if (-1 == xioctl (m_fd_device, VIDIOC_QBUF, &m_v4l2_buffer))
                     perror ("VIDIOC_QBUF");
             }
 
@@ -1090,10 +1049,10 @@ bool wxVideoCaptureWindowV4L::uninit_capture()
         case wxV4L2_IO_METHOD_MMAP :
         case wxV4L2_IO_METHOD_USERPTR :
         {
-            size_t n, count = m_mmap_buffers.size();
+            size_t n, count = m_mem_buffers.size();
 
             // dequeue all buffers
-            for (n = 0; (m_fd_device >= 0) && (n < count); ++n)
+            for (n = 0; n < count; ++n)
             {
                 struct v4l2_buffer buf;
                 memset(&buf, 0, sizeof(v4l2_buffer));
@@ -1163,28 +1122,49 @@ bool wxVideoCaptureWindowV4L::wait_for_frame(int secs)
 bool wxVideoCaptureWindowV4L::read_frame()
 {
     wxCHECK_MSG(wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_CAPTURE), false, wxT("wxVidCap attempt to read frame of non-initialized device"));
+    wxCHECK_MSG(m_mem_buffers.size() > 0, false, wxT("wxVidCap empty buffers for read_frame"));
+
+    m_mem_buffer_index = -1;
 
     switch (m_v4l2_io_method)
     {
-        //case wxV4L2_CAP_READWRITE     : return init_read(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_READ :
+        {
+            if (-1 == read(m_fd_device, m_mem_buffers[0].start, m_mem_buffers[0].length))
+            {
+                switch (errno)
+                {
+                    case EAGAIN :
+                        return false;
+
+                    case EIO:
+                        // Could ignore EIO, see spec.
+                        // fall through
+                    default:
+                        perror("read()");
+                        return false;
+                }
+            }
+
+            m_mem_buffer_index = 0; // only one buffer
+
+            return true;
+        }
         case wxV4L2_IO_METHOD_MMAP :
         {
-            wxCHECK_MSG(m_mmap_buffers.size() > 0, false, wxT("wxVidCap empty mmap buffers for reading"));
+            // Setup the buffer and VIDIOC_DQBUF, we need to save m_v4l2_buffer
+            // for the next time we call VIDIOC_QBUF
+            memset(&m_v4l2_buffer, 0, sizeof(v4l2_buffer));
 
-            struct v4l2_buffer buf;
-            memset(&buf, 0, sizeof(v4l2_buffer));
+            m_v4l2_buffer.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+            m_v4l2_buffer.memory = V4L2_MEMORY_MMAP;
 
-            buf.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-            buf.memory = V4L2_MEMORY_MMAP;
-
-            m_mmap_buffer_index = -1;
-
-            if (-1 == xioctl (m_fd_device, VIDIOC_DQBUF, &buf))
+            if (-1 == xioctl (m_fd_device, VIDIOC_DQBUF, &m_v4l2_buffer))
             {
                 switch (errno)
                 {
                     case EAGAIN:
-                        perror ("VIDIOC_DQBUF 1");
+                        //perror ("VIDIOC_DQBUF 1");
                         // Resource unavailable, try again
                         return false;
                     case EIO:
@@ -1196,19 +1176,91 @@ bool wxVideoCaptureWindowV4L::read_frame()
                 }
             }
 
-            m_mmap_buffer_index = buf.index;
+            m_mem_buffer_index = m_v4l2_buffer.index;
+
+            wxCHECK_MSG(m_mem_buffer_index < (int)m_mem_buffers.size(), false, wxT("Error in mmap buffer index"));
 
             return true;
         }
-        //case wxV4L2_IO_METHOD_USERPTR : return init_userp(fmt.fmt.pix.sizeimage);
+        case wxV4L2_IO_METHOD_USERPTR :
+        {
+            // Setup the buffer and VIDIOC_DQBUF, we need to save m_v4l2_buffer
+            // for the next time we call VIDIOC_QBUF
+            memset(&m_v4l2_buffer, 0, sizeof(v4l2_buffer));
+
+            m_v4l2_buffer.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+            m_v4l2_buffer.memory = V4L2_MEMORY_USERPTR;
+
+            if (-1 == xioctl (m_fd_device, VIDIOC_DQBUF, &m_v4l2_buffer))
+            {
+                switch (errno)
+                {
+                    case EAGAIN:
+                        return 0;
+                    case EIO:
+                        // Could ignore EIO, see spec.
+                        // fall through
+                    default:
+                        perror("VIDIOC_DQBUF");
+                        return false;
+                }
+            }
+
+            size_t n, count = m_mem_buffers.size();
+            for (n = 0; n < count; ++n)
+            {
+                if ((m_v4l2_buffer.m.userptr == (unsigned long) m_mem_buffers[n].start) &&
+                    (m_v4l2_buffer.length == m_mem_buffers[n].length))
+                {
+                    m_mem_buffer_index = n;
+                    break;
+                }
+            }
+
+            wxCHECK_MSG(n < count, false, wxT("Error finding user buffer"));
+
+            return true;
+        }
         default : break;
     }
 
     return false;
 }
 
+bool wxVideoCaptureWindowV4L::init_read(unsigned int num_bytes)
+{
+    wxCHECK_MSG(m_mem_buffers.size() == 0, false, wxT("Non-empty buffers in init_read"));
+
+    if (!num_bytes) return false;
+
+    m_mem_buffers.push_back(mem_buffer());
+
+    m_mem_buffers[0].length = num_bytes;
+    m_mem_buffers[0].start  = malloc(num_bytes);
+
+    if (!m_mem_buffers[0].start)
+    {
+        fprintf (stderr, "Out of memory\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool wxVideoCaptureWindowV4L::uninit_read()
+{
+    wxCHECK_MSG(m_mem_buffers.size() == 1, false, wxT("Empty buffers in uninit_read"));
+
+    free(m_mem_buffers[0].start);
+    m_mem_buffers.clear();
+
+    return true;
+}
+
 bool wxVideoCaptureWindowV4L::init_mmap()
 {
+    wxCHECK_MSG(m_mem_buffers.size() == 0, false, wxT("Non-empty buffers in init_mmap"));
+
     struct v4l2_requestbuffers requestbuffers;
     memset(&requestbuffers, 0, sizeof(v4l2_requestbuffers));
 
@@ -1252,42 +1304,45 @@ bool wxVideoCaptureWindowV4L::init_mmap()
             break;
         }
 
-        m_mmap_buffers.push_back(mmap_buffer());
+        m_mem_buffers.push_back(mem_buffer());
 
-        m_mmap_buffers[n].length = buf.length;
-        m_mmap_buffers[n].start =
+        m_mem_buffers[n].length = buf.length;
+        m_mem_buffers[n].start  =
                         mmap (NULL,                     // start anywhere
                               buf.length,
                               PROT_READ | PROT_WRITE,   // required
                               MAP_SHARED,               // recommended
                               m_fd_device, buf.m.offset);
 
-        if (MAP_FAILED == m_mmap_buffers[n].start)
+        if (MAP_FAILED == m_mem_buffers[n].start)
         {
             perror("mmap");
             break;
         }
     }
 
-    return m_mmap_buffers.size() > 0;
+    return m_mem_buffers.size() > 0;
 }
 
 bool wxVideoCaptureWindowV4L::uninit_mmap()
 {
-    bool ok = true;
-    size_t n, count = m_mmap_buffers.size();
+    wxCHECK_MSG(m_mem_buffers.size() > 0, false, wxT("Empty buffers in uninit_mmap"));
 
-    for (n = 0; (m_fd_device >= 0) && (n < count); ++n)
+    bool ok = true;
+    size_t n, count = m_mem_buffers.size();
+
+    for (n = 0; n < count; ++n)
     {
-        if (-1 == munmap (m_mmap_buffers[n].start, m_mmap_buffers[n].length))
+        if (-1 == munmap (m_mem_buffers[n].start, m_mem_buffers[n].length))
         {
             ok = false;
             perror ("wxVidCap::munmap_mem() ERROR : ");
         }
     }
 
-    m_mmap_buffers.clear();
+    m_mem_buffers.clear();
 
+    // Free all buffers when count == 0
     struct v4l2_requestbuffers requestbuffers;
     memset(&requestbuffers, 0, sizeof(v4l2_requestbuffers));
 
@@ -1295,7 +1350,7 @@ bool wxVideoCaptureWindowV4L::uninit_mmap()
     requestbuffers.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     requestbuffers.memory = V4L2_MEMORY_MMAP;
 
-    if ((m_fd_device >= 0) && (-1 == xioctl (m_fd_device, VIDIOC_REQBUFS, &requestbuffers)))
+    if (-1 == xioctl (m_fd_device, VIDIOC_REQBUFS, &requestbuffers))
     {
         if (EINVAL == errno)
         {
@@ -1310,6 +1365,84 @@ bool wxVideoCaptureWindowV4L::uninit_mmap()
     }
 
     return ok;
+}
+
+bool wxVideoCaptureWindowV4L::init_userp(unsigned int num_bytes0)
+{
+    wxCHECK_MSG(m_mem_buffers.size() == 0, false, wxT("Non-empty buffers in init_userp"));
+
+    struct v4l2_requestbuffers v4l2_requestbuffers_;
+    memset(&v4l2_requestbuffers_, 0, sizeof(v4l2_requestbuffers));
+
+    v4l2_requestbuffers_.count  = 4;
+    v4l2_requestbuffers_.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    v4l2_requestbuffers_.memory = V4L2_MEMORY_USERPTR;
+
+    if (-1 == xioctl (m_fd_device, VIDIOC_REQBUFS, &v4l2_requestbuffers_))
+    {
+        if (EINVAL == errno)
+        {
+            fprintf (stderr, "%s does not support user pointer i/o\n", "device"); //dev_name);
+            return false;
+        }
+        else
+        {
+            perror ("VIDIOC_REQBUFS init_userp()");
+            return false;
+        }
+    }
+
+    unsigned int page_size = getpagesize ();
+    unsigned int num_bytes = (num_bytes0 + page_size - 1) & ~(page_size - 1);
+
+    for (size_t n = 0; n < 4; ++n)
+    {
+        m_mem_buffers.push_back(mem_buffer());
+
+        m_mem_buffers[n].length = num_bytes;
+        m_mem_buffers[n].start  = memalign (/* boundary */ page_size, num_bytes);
+
+        if (!m_mem_buffers[n].start)
+        {
+            fprintf (stderr, "Out of memory\n");
+        }
+    }
+
+    return true;
+}
+
+bool wxVideoCaptureWindowV4L::uninit_userp()
+{
+    wxCHECK_MSG(m_mem_buffers.size() > 0, false, wxT("Empty buffers in uninit_userp"));
+
+    for (size_t n = 0; n < m_mem_buffers.size(); ++n)
+        free (m_mem_buffers[n].start);
+
+    m_mem_buffers.clear();
+
+    // Free all buffers when count == 0
+    struct v4l2_requestbuffers requestbuffers;
+    memset(&requestbuffers, 0, sizeof(v4l2_requestbuffers));
+
+    requestbuffers.count  = 0;
+    requestbuffers.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    requestbuffers.memory = V4L2_MEMORY_USERPTR;
+
+    if (-1 == xioctl (m_fd_device, VIDIOC_REQBUFS, &requestbuffers))
+    {
+        if (EINVAL == errno)
+        {
+            perror("VIDIOC_REQBUFS no mem mapping");
+            //fprintf (stderr, "%s does not support "
+            //                "memory mapping\n", dev_name);
+        }
+        else
+            perror("VIDIOC_REQBUFS munmap_mem");
+
+        return false;
+    }
+
+    return true;
 }
 
 int wxVideoCaptureWindowV4L::xioctl(int fd, int request, void *arg) const
@@ -1385,7 +1518,6 @@ int wxVideoCaptureWindowV4L::Get_v4l2_fmtdesc_vector()
         {
             m_v4l2_fmtdesc_vector.push_back(v4l2_fmtdesc_);
             memcpy(&m_v4l2_fmtdesc_vector[index], &v4l2_fmtdesc_, sizeof(v4l2_fmtdesc));
-            std::cout << Get_v4l2_fmtdesc_String(m_v4l2_fmtdesc_vector[index]);
         }
 
         index++;
@@ -1414,7 +1546,6 @@ int wxVideoCaptureWindowV4L::Get_v4l2_frmsizeenum_vector()
         {
             m_v4l2_frmsizeenum_vector.push_back(v4l2_frmsizeenum_);
             memcpy(&m_v4l2_frmsizeenum_vector[index], &v4l2_frmsizeenum_, sizeof(v4l2_frmsizeenum));
-            std::cout << Get_v4l2_frmsizeenum_String(m_v4l2_frmsizeenum_vector[index]);
         }
 
         index++;
@@ -1439,8 +1570,6 @@ int wxVideoCaptureWindowV4L::Get_v4l2_frmivalenum_vector()
         v4l2_frmivalenum_.width        = m_v4l2_format.fmt.pix.width;
         v4l2_frmivalenum_.height       = m_v4l2_format.fmt.pix.height;
 
-        std::cout << Get_v4l2_frmivalenum_String(v4l2_frmivalenum_);
-
         ret = ioctl(m_fd_device, VIDIOC_ENUM_FRAMEINTERVALS, &v4l2_frmivalenum_);
         //perror("VIDIOC_ENUM_FRAMEINTERVALS");
 
@@ -1448,7 +1577,6 @@ int wxVideoCaptureWindowV4L::Get_v4l2_frmivalenum_vector()
         {
             m_v4l2_frmivalenum_vector.push_back(v4l2_frmivalenum_);
             memcpy(&m_v4l2_frmivalenum_vector[index], &v4l2_frmivalenum_, sizeof(v4l2_frmivalenum));
-            std::cout << Get_v4l2_frmivalenum_String(m_v4l2_frmivalenum_vector[index]);
         }
 
         index++;
@@ -1461,17 +1589,24 @@ int wxVideoCaptureWindowV4L::Get_v4l2_frmivalenum_vector()
 // print methods for ioctl structs
 // --------------------------------------------------------------------------
 
+#if wxCHECK_VERSION(2,9,0)
+    #define STDSTR_TO_WXSTR(s) s
+#else
+    #define STDSTR_TO_WXSTR(s) wxString(s.c_str(), wxConvUTF8)
+#endif
+
+
 wxString wxVideoCaptureWindowV4L::Get_v4l2_capability_String(const v4l2_capability& v4l2_capability_) const
 {
     std::stringstream ss;
 
-    ss << "v4l2_capability  : " << std::endl;
+    ss << "v4l2_capability              : " << std::endl;
 
-    ss << "  driver         : " << v4l2_capability_.driver       << std::endl;
-    ss << "  card           : " << v4l2_capability_.card         << std::endl;
-    ss << "  bus_info       : " << v4l2_capability_.bus_info     << std::endl;
-    ss << "  version        : " << v4l2_capability_.version      << std::endl;
-    ss << "  capabilities   : " << v4l2_capability_.capabilities << std::endl;
+    ss << "  driver                     : " << v4l2_capability_.driver       << std::endl;
+    ss << "  card                       : " << v4l2_capability_.card         << std::endl;
+    ss << "  bus_info                   : " << v4l2_capability_.bus_info     << std::endl;
+    ss << "  version                    : " << v4l2_capability_.version      << std::endl;
+    ss << "  capabilities               : " << v4l2_capability_.capabilities << std::endl;
 
     ss << "    [ Is a video capture device:      | " << ((v4l2_capability_.capabilities & V4L2_CAP_VIDEO_CAPTURE)       ? "X" : " ") << " ]" << std::endl;
     ss << "    [ Is a video output device:       | " << ((v4l2_capability_.capabilities & V4L2_CAP_VIDEO_OUTPUT)        ? "X" : " ") << " ]" << std::endl;
@@ -1494,37 +1629,37 @@ wxString wxVideoCaptureWindowV4L::Get_v4l2_capability_String(const v4l2_capabili
 
     //ss << "  reserved  : " << v4l2_capability_.reserved  << std::endl;
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 wxString wxVideoCaptureWindowV4L::Get_v4l2_fmtdesc_String(const v4l2_fmtdesc& v4l2_fmtdesc_) const
 {
     std::stringstream ss;
 
-    ss << "v4l2_fmtdesc     :" << std::endl;
+    ss << "v4l2_fmtdesc                 :" << std::endl;
 
-    ss << "  index          : " << v4l2_fmtdesc_.index        << std::endl;
-    ss << "  type           : " << v4l2_fmtdesc_.type         << std::endl;
-    ss << "  flags          : " << v4l2_fmtdesc_.flags        << std::endl;
-    ss << "  description    : " << v4l2_fmtdesc_.description  << std::endl;
-    ss << "  pixelformat    : " << v4l2_fmtdesc_.pixelformat  << " FOURCC = " << FOURCCTowxString(v4l2_fmtdesc_.pixelformat) << std::endl;
-    //ss << "  reserved     : " << v4l2_fmtdesc_.reserved  << std::endl;
+    ss << "  index                      : " << v4l2_fmtdesc_.index        << std::endl;
+    ss << "  type                       : " << v4l2_fmtdesc_.type         << std::endl;
+    ss << "  flags                      : " << v4l2_fmtdesc_.flags        << std::endl;
+    ss << "  description                : " << v4l2_fmtdesc_.description  << std::endl;
+    ss << "  pixelformat                : " << v4l2_fmtdesc_.pixelformat  << " FOURCC = " << FOURCCTowxString(v4l2_fmtdesc_.pixelformat) << std::endl;
+    //ss << "  reserved                 : " << v4l2_fmtdesc_.reserved  << std::endl;
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 wxString wxVideoCaptureWindowV4L::Get_v4l2_format_String(const v4l2_format& v4l2_format_) const
 {
     std::stringstream ss;
 
-    ss << "v4l2_format      :" << std::endl;
+    ss << "v4l2_format                  : " << std::endl;
 
-    ss << "  type           : " << v4l2_format_.type          << std::endl;
+    ss << "  type                       : " << v4l2_format_.type          << std::endl;
 
     if (v4l2_format_.type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
         ss << Get_v4l2_pix_format_String(v4l2_format_.fmt.pix);
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 wxString wxVideoCaptureWindowV4L::Get_v4l2_pix_format_String(const v4l2_pix_format& v4l2_pix_format_) const
@@ -1533,68 +1668,68 @@ wxString wxVideoCaptureWindowV4L::Get_v4l2_pix_format_String(const v4l2_pix_form
 
     ss << "v4l2_pix_format  :" << std::endl;
 
-    ss << "  width,height   : " << v4l2_pix_format_.width << ", " << v4l2_pix_format_.height << std::endl;
-    ss << "  pixelformat    : " << v4l2_pix_format_.pixelformat  << " FOURCC = " << FOURCCTowxString(v4l2_pix_format_.pixelformat) << std::endl;
-    ss << "  field          : " << v4l2_pix_format_.field        << std::endl;
-    ss << "  bytesperline   : " << v4l2_pix_format_.bytesperline << std::endl;
-    ss << "  sizeimage      : " << v4l2_pix_format_.sizeimage    << std::endl;
-    ss << "  colorspace     : " << v4l2_pix_format_.colorspace   << std::endl;
-    ss << "  priv           : " << v4l2_pix_format_.priv         << std::endl;
+    ss << "  width,height               : " << v4l2_pix_format_.width << ", " << v4l2_pix_format_.height << std::endl;
+    ss << "  pixelformat                : " << v4l2_pix_format_.pixelformat  << " FOURCC = " << FOURCCTowxString(v4l2_pix_format_.pixelformat) << std::endl;
+    ss << "  field                      : " << v4l2_pix_format_.field        << std::endl;
+    ss << "  bytesperline               : " << v4l2_pix_format_.bytesperline << std::endl;
+    ss << "  sizeimage                  : " << v4l2_pix_format_.sizeimage    << std::endl;
+    ss << "  colorspace                 : " << v4l2_pix_format_.colorspace   << std::endl;
+    ss << "  priv                       : " << v4l2_pix_format_.priv         << std::endl;
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 wxString wxVideoCaptureWindowV4L::Get_v4l2_frmsizeenum_String(const v4l2_frmsizeenum& v4l2_frmsizeenum_) const
 {
     std::stringstream ss;
 
-    ss << "v4l2_frmsizeenum           :" << std::endl;
+    ss << "v4l2_frmsizeenum             :" << std::endl;
 
-    ss << "  index                    : " << v4l2_frmsizeenum_.index << std::endl;
-    ss << "  pixel_format             : " << v4l2_frmsizeenum_.pixel_format  << " FOURCC = " << FOURCCTowxString(v4l2_frmsizeenum_.pixel_format) << std::endl;
-    ss << "  type                     : " << v4l2_frmsizeenum_.type          << std::endl;
+    ss << "  index                      : " << v4l2_frmsizeenum_.index << std::endl;
+    ss << "  pixel_format               : " << v4l2_frmsizeenum_.pixel_format  << " FOURCC = " << FOURCCTowxString(v4l2_frmsizeenum_.pixel_format) << std::endl;
+    ss << "  type                       : " << v4l2_frmsizeenum_.type          << std::endl;
 
     if (v4l2_frmsizeenum_.type == V4L2_FRMSIZE_TYPE_DISCRETE)
     {
-    ss << "  v4l2_frmsize_discrete      " << std::endl;
-    ss << "    width,height           : " << v4l2_frmsizeenum_.discrete.width << ", " << v4l2_frmsizeenum_.discrete.height << std::endl;
+    ss << "  v4l2_frmsize_discrete        " << std::endl;
+    ss << "    width,height             : " << v4l2_frmsizeenum_.discrete.width << ", " << v4l2_frmsizeenum_.discrete.height << std::endl;
     }
     else //if (v4l2_frmsizeenum_.type == V4L2_FRMSIZE_TYPE_STEPWISE) ? V4L2_FRMSIZE_TYPE_CONTINUOUS
     {
-    ss << "  v4l2_frmsize_stepwise      " << std::endl;
-    ss << "    min_width,min_height   : " << v4l2_frmsizeenum_.stepwise.min_width  << ", " << v4l2_frmsizeenum_.stepwise.min_height  << std::endl;
-    ss << "    max_width,max_height   : " << v4l2_frmsizeenum_.stepwise.max_width  << ", " << v4l2_frmsizeenum_.stepwise.max_height  << std::endl;
-    ss << "    step_width,step_height : " << v4l2_frmsizeenum_.stepwise.step_width << ", " << v4l2_frmsizeenum_.stepwise.step_height << std::endl;
+    ss << "  v4l2_frmsize_stepwise        " << std::endl;
+    ss << "    min_width,min_height     : " << v4l2_frmsizeenum_.stepwise.min_width  << ", " << v4l2_frmsizeenum_.stepwise.min_height  << std::endl;
+    ss << "    max_width,max_height     : " << v4l2_frmsizeenum_.stepwise.max_width  << ", " << v4l2_frmsizeenum_.stepwise.max_height  << std::endl;
+    ss << "    step_width,step_height   : " << v4l2_frmsizeenum_.stepwise.step_width << ", " << v4l2_frmsizeenum_.stepwise.step_height << std::endl;
     }
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 wxString wxVideoCaptureWindowV4L::Get_v4l2_frmivalenum_String(const v4l2_frmivalenum& v4l2_frmivalenum_) const
 {
     std::stringstream ss;
 
-    ss << "v4l2_frmivalenum            : " << std::endl;
+    ss << "v4l2_frmivalenum             : " << std::endl;
 
-    ss << "  index                     : " << v4l2_frmivalenum_.index << std::endl;
-    ss << "  pixel_format              : " << v4l2_frmivalenum_.pixel_format  << " FOURCC = " << FOURCCTowxString(v4l2_frmivalenum_.pixel_format) << std::endl;
-    ss << "  width,height              : " << v4l2_frmivalenum_.width << ", " << v4l2_frmivalenum_.height << std::endl;
-    ss << "  type                      : " << v4l2_frmivalenum_.type          << std::endl;
+    ss << "  index                      : " << v4l2_frmivalenum_.index << std::endl;
+    ss << "  pixel_format               : " << v4l2_frmivalenum_.pixel_format  << " FOURCC = " << FOURCCTowxString(v4l2_frmivalenum_.pixel_format) << std::endl;
+    ss << "  width,height               : " << v4l2_frmivalenum_.width << ", " << v4l2_frmivalenum_.height << std::endl;
+    ss << "  type                       : " << v4l2_frmivalenum_.type          << std::endl;
 
     if (v4l2_frmivalenum_.type == V4L2_FRMIVAL_TYPE_DISCRETE)
     {
-    ss << "  v4l2_fract discrete         " << std::endl;
-    ss << "  interval a/b (sec)        : " << v4l2_frmivalenum_.discrete.numerator  << ", " << v4l2_frmivalenum_.discrete.denominator << std::endl;
+    ss << "  v4l2_fract discrete          " << std::endl;
+    ss << "  interval a/b (sec)         : " << v4l2_frmivalenum_.discrete.numerator  << ", " << v4l2_frmivalenum_.discrete.denominator << std::endl;
     }
     else //if (v4l2_frmivalenum_.type == V4L2_FRMIVAL_TYPE_STEPWISE) ? V4L2_FRMIVAL_TYPE_CONTINUOUS
     {
-    ss << "  v4l2_frmival_stepwise       " << std::endl;
-    ss << "    min  interval a/b (sec) : " << v4l2_frmivalenum_.stepwise.min.numerator  << ", " << v4l2_frmivalenum_.stepwise.min.denominator << std::endl;
-    ss << "    max  interval a/b (sec) : " << v4l2_frmivalenum_.stepwise.max.numerator  << ", " << v4l2_frmivalenum_.stepwise.max.denominator << std::endl;
-    ss << "    step interval a/b (sec) : " << v4l2_frmivalenum_.stepwise.step.numerator << ", " << v4l2_frmivalenum_.stepwise.step.denominator << std::endl;
+    ss << "  v4l2_frmival_stepwise        " << std::endl;
+    ss << "    min  interval a/b (sec)  : " << v4l2_frmivalenum_.stepwise.min.numerator  << ", " << v4l2_frmivalenum_.stepwise.min.denominator << std::endl;
+    ss << "    max  interval a/b (sec)  : " << v4l2_frmivalenum_.stepwise.max.numerator  << ", " << v4l2_frmivalenum_.stepwise.max.denominator << std::endl;
+    ss << "    step interval a/b (sec)  : " << v4l2_frmivalenum_.stepwise.step.numerator << ", " << v4l2_frmivalenum_.stepwise.step.denominator << std::endl;
     }
 
-    return ss.str();
+    return STDSTR_TO_WXSTR(ss.str());
 }
 
 #endif // !defined(__WXMSW__)
