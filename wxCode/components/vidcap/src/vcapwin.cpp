@@ -200,10 +200,10 @@ wxString wxVideoCaptureWindowBase::GetDeviceVersion(int index) const
 
 void wxVideoCaptureWindowBase::ShowPropertiesDialog()
 {
-    wxDialog *dialog = new wxDialog(this, wxID_ANY,
-                                    wxT("wxVideoCaptureWindow Properties"),
-                                    wxDefaultPosition, wxDefaultSize,
-                                    wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+    wxFrame *dialog = new wxFrame(this, wxID_ANY,
+                                  wxT("wxVideoCaptureWindow Properties"),
+                                  wxDefaultPosition, wxDefaultSize,
+                                  wxDEFAULT_FRAME_STYLE);
 
     wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
     wxTextCtrl *textctrl = new wxTextCtrl( dialog, wxID_ANY,
@@ -211,7 +211,7 @@ void wxVideoCaptureWindowBase::ShowPropertiesDialog()
                                            wxDefaultPosition, wxSize(400,400),
                                            wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH2|wxHSCROLL);
 
-    textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL));
+    textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL)); // want monospace
     textctrl->AppendText(GetPropertiesString());
     textctrl->SetInsertionPoint(0);
 
@@ -230,7 +230,7 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
     wxString s;
     int i;
 
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxT("Video Devices\n\n");
     s += wxString::Format(wxT("Detected Number of Devices  : %d\n\n"), GetDeviceCount());
     for (i = 0; i < GetDeviceCount(); i++)
@@ -239,22 +239,19 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
         s += wxString::Format(wxT("     Device Version '%s'\n"), GetDeviceVersion(i).wx_str());
     }
     s += wxT("\n");
-
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxT("Video Device Properties\n\n");
     s += wxString::Format(wxT("Currently Connected Device  : %d\n"), GetDeviceIndex());
     s += wxString::Format(wxT("IsDeviceConnected           : %d\n"), (int)IsDeviceConnected());
     s += wxString::Format(wxT("IsDeviceInitialized         : %d\n"), (int)IsDeviceInitialized());
     s += wxT("\n");
-
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxT("Video Dialogs\n\n");
     s += wxString::Format(wxT("HasVideoSourceDialog        : %d\n"), (int)HasVideoSourceDialog());
     s += wxString::Format(wxT("HasVideoFormatDialog        : %d\n"), (int)HasVideoFormatDialog());
     s += wxString::Format(wxT("HasVideoDisplayDialog       : %d\n"), (int)HasVideoDisplayDialog());
     s += wxT("\n");
-
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxT("Video Format Properties\n\n");
     s += wxString::Format(wxT("Image     width, height     : %4d, %4d\n"), GetImageWidth(), GetImageHeight());
     s += wxString::Format(wxT("Image min width, height     : %4d, %4d\n"), GetMinImageSize().GetWidth(), GetMinImageSize().GetHeight());
@@ -276,8 +273,7 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
     s += wxString::Format(wxT("DriverSuppliesPalettes      : %d\n"), (int)DriverSuppliesPalettes());
     s += wxString::Format(wxT("IsUsingDefaultPalette       : %d\n"), (int)IsUsingDefaultPalette());
     s += wxT("\n");
-
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxString::Format(wxT("Video Preview Properties\n\n"));
     s += wxString::Format(wxT("IsPreviewing                : %d\n"), (int)IsPreviewing());
     s += wxString::Format(wxT("IsPreviewingwxImage         : %d\n"), (int)IsPreviewingwxImage());

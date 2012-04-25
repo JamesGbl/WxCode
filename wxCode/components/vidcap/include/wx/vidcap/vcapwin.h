@@ -596,7 +596,10 @@ protected :
     bool          m_has_overlay;             // can use hardware overlay for display
     bool          m_overlaying;              // currently overlaying
 
-    bool          m_getting_wximage;         // true when filling the m_wximage
+    bool          m_getting_wximage;         // simple atomic block when filling the m_wximage
+                                             // We could use a mutex, but instead of
+                                             // blocking we usually want to skip the frame
+                                             // and just get the next one.
 
     unsigned int  m_framenumber;             // # of frames, since preview start
     wxLongLong    m_lastframetimemillis;     //

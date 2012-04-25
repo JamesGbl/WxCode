@@ -120,7 +120,7 @@ public:
     virtual bool SetPreviewRateMS( unsigned int msperframe = 66 );
     virtual bool Overlay(bool on);
 
-    void OnPreviewwxImageTimer(wxTimerEvent& event); // get frames
+    void OnPreviewTimer(wxTimerEvent& event); // get frames
 
     // ----------------------------------------------------------------------
     // Capture single frames, take snapshots of streaming video

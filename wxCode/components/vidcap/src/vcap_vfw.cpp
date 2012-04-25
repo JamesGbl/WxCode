@@ -144,7 +144,7 @@ BEGIN_EVENT_TABLE(wxVideoCaptureWindowVFW, wxVideoCaptureWindowBase)
     EVT_MOVE     (                                    wxVideoCaptureWindowVFW::OnMove)
     EVT_PAINT    (                                    wxVideoCaptureWindowVFW::OnPaint)
     EVT_SCROLLWIN(                                    wxVideoCaptureWindowVFW::OnScrollWin)
-    EVT_TIMER    (IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowVFW::OnPreviewwxImageTimer)
+    EVT_TIMER    (IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowVFW::OnPreviewTimer)
     EVT_IDLE     (                                    wxVideoCaptureWindowVFW::OnIdle)
     EVT_CLOSE    (                                    wxVideoCaptureWindowVFW::OnCloseWindow)
 END_EVENT_TABLE()
@@ -621,7 +621,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
 {
     wxString s = wxVideoCaptureWindowBase::GetPropertiesString();
 
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxString::Format(wxT("Video capture properties\n\n"));
 
     s += wxString::Format(wxT("GetMicroSecPerFrameRequested()         : %ld\n\n"), GetMicroSecPerFrameRequested());
@@ -651,7 +651,7 @@ wxString wxVideoCaptureWindowVFW::GetPropertiesString()
 //  s += wxString::Format(wxT("GetFreeDiskSpaceInKB()                 : %ld\n", GetFreeDiskSpaceInKB());
 //  s += wxString::Format(wxT("GetFileSizeInKB()                      : %d\n\n", GetFileSizeInKB());
 
-    s += wxT("=============================================\n");
+    s += wxT("---------------------------------------------\n");
     s += wxString::Format(wxT("Audio capture properties\n\n"));
 
     s += wxString::Format(wxT("HasAudioHardware()                     : %d\n"), HasAudioHardware());
@@ -996,7 +996,7 @@ bool wxVideoCaptureWindowVFW::Overlay(bool on)
     return overlayingOK;
 }
 
-void wxVideoCaptureWindowVFW::OnPreviewwxImageTimer(wxTimerEvent& event)
+void wxVideoCaptureWindowVFW::OnPreviewTimer(wxTimerEvent& event)
 {
     static unsigned long long last_frame = (unsigned long long)(-1);
 
