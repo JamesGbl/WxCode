@@ -445,7 +445,6 @@ protected:
                                     // -1 when closed, >= 0 if open
 
     wxString m_statustext;          // MSW status messages
-    wxString m_errortext;           // MSW error messages
 
     // MSW specific variables
     HWND m_hWndC;                   // this is the VFW vidcap HWND, it does everything

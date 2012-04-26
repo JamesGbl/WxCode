@@ -223,7 +223,7 @@ enum wxVIDCAP_AUDIO_SAMPLES_Type
 
 // array of the above "standard" audio rates, in same order
 #define wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT 8
-extern const long int wxVIDCAP_AUDIO_SAMPLESPERSEC[wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT];
+WXDLLIMPEXP_DATA_VIDCAP(extern const long int) wxVIDCAP_AUDIO_SAMPLESPERSEC[wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT];
     // = { 8000, 11025, 16000, 22050, 24000, 32000, 44100, 48000 };
 
 //----------------------------------------------------------------------------
@@ -247,28 +247,28 @@ class WXDLLIMPEXP_VIDCAP wxVideoCaptureEvent : public wxEvent
 public:
     wxVideoCaptureEvent( wxEventType commandType = wxEVT_NULL,
                          wxVideoCaptureWindowBase *vidCapWin = NULL,
-                         int Id = -1 );
+                         int win_id = wxID_ANY );
 
     virtual ~wxVideoCaptureEvent() {}
 
     virtual wxEvent *Clone() const { return new wxVideoCaptureEvent(*this); }
 
-    // wxEVT_VIDEO_STATUS uses this
-    // for capSetCallbackOnStatus, anytime the status changes
-    wxString GetStatusText() { return m_statustext; }
+    /// wxEVT_VIDEO_STATUS uses this.
+    /// VFW capSetCallbackOnStatus() callback sends this event anytime the status changes.
+    wxString GetStatusText() const { return m_statustext; }
     void SetStatusText( const wxString &statustext ) { m_statustext = statustext; }
 
-    // wxEVT_VIDEO_ERROR uses this
-    // for capSetCallbackOnError, anytime nonfatal errors are generated
-    wxString GetErrorText() { return m_errortext; }
+    /// wxEVT_VIDEO_ERROR uses this.
+    /// VFW capSetCallbackOnError() callback sends this event anytime nonfatal errors are generated.
+    wxString GetErrorText() const { return m_errortext; }
     void SetErrorText( const wxString &errortext ) { m_errortext = errortext; }
 
-    // wxEVT_VIDEO_FRAME uses this
-    // for capSetCallbackOnFrame, generated whenever previewing
-    unsigned long int GetFrameNumber() { return m_framenumber; }
+    /// wxEVT_VIDEO_FRAME uses this.
+    /// VFW capSetCallbackOnFrame() callback sends this event when previewing.
+    unsigned long int GetFrameNumber() const { return m_framenumber; }
     void SetFrameNumber( unsigned long int num ) { m_framenumber = num; }
 
-    unsigned int GetFramerateMS() { return m_frameratems; }
+    unsigned int GetFramerateMS() const { return m_frameratems; }
     void SetFrameRateMS( unsigned int num ) { m_frameratems = num; }
 
     wxString m_statustext;
@@ -481,17 +481,21 @@ public:
     // Get the number of frames viewed since the device was connected.
     virtual unsigned int GetFrameNumber() const { return m_framenumber; }
 
+    // This function is called for every frame, immediately after it was captured.
+    // You can override it, but be sure to call the base class function to
+    // have actual frame rate calculated and wxEVT_VIDEO_FRAME sent.
+    virtual void OnPreFrame();
+
     // function stub YOU override to do image processing of the preview frames
     // when Previewing with wxImages, OnIdle/PreviewwxImageTimer grabs a frame
     // which calls the MSW callback which calls CallbackOnFrame which fills the
     // m_wximage and then calls this and if it returns true it calls Refresh()
     // to show the frame
-    virtual bool ProcesswxImageFrame() { return true; }
+    virtual bool OnProcessFrame() { return true; }
 
-    // This function is called for every frame.
     // You can override it, but be sure to call the base class function to
-    // have actual frame rate calculated and wxEVT_VIDEO_FRAME sent.
-    virtual void OnFrame();
+    // send a wxEVT_VIDEO_FRAME.
+    virtual void OnPostFrame();
 
     // device supports hardware video overlay
     virtual bool HasOverlay() const { return m_has_overlay; }
@@ -551,6 +555,14 @@ public:
     // Utility Functions
     // ----------------------------------------------------------------------
 
+    /// Get the error number, either VFW or errno.
+    int GetLastErrorNumber() const       { return m_last_error_num; }
+    /// Get the last error message.
+    wxString GetLastErrorMessage() const { return m_last_errorString; }
+
+    /// Send a wxEVT_VIDEO_ERROR, returns the result of wxEvtHandler::ProcessEvent().
+    bool SendErrorEvent();
+
     // find the size of a file in KB
     long int GetFileSizeInKB( const wxString &filename ) const;
 
@@ -582,34 +594,37 @@ protected :
     // -----------------------------------------------------------------------
     // member vars
 
-    wxArrayString m_deviceNames;    // device names from EnumerateDevices
-    wxArrayString m_deviceVersions; // device versions from EnumerateDevices
+    wxArrayString m_deviceNames;    ///< device names from EnumerateDevices
+    wxArrayString m_deviceVersions; ///< device versions from EnumerateDevices
 
-    int           m_deviceIndex;    // current index of the device in use or -1
+    int           m_deviceIndex;    ///< current index of the device in use or -1
 
-    bool          m_previewing;              // currently previewing
-    bool          m_preview_wximage;         // m_previewing is true, but displaying using OnPaint w/ m_wximage
-    bool          m_previewscaled;           // scale the preview window fullsize
-    unsigned int  m_previewmsperframe;       // # milliseconds between preview frames
-    unsigned int  m_actualpreviewmsperframe; // measured ms between preview frames
+    bool          m_previewing;              ///< Currently previewing.
+    bool          m_preview_wximage;         ///< m_previewing is true, but displaying using OnPaint w/ m_wximage.
+    bool          m_previewscaled;           ///< Ccale the preview window fullsize.
+    unsigned int  m_previewmsperframe;       ///< # milliseconds between preview frames.
+    unsigned int  m_actualpreviewmsperframe; ///< Measured ms between preview frames.
 
-    bool          m_has_overlay;             // can use hardware overlay for display
-    bool          m_overlaying;              // currently overlaying
+    bool          m_has_overlay;             ///< Can use hardware overlay for display.
+    bool          m_overlaying;              ///< Currently overlaying.
 
-    bool          m_getting_wximage;         // simple atomic block when filling the m_wximage
-                                             // We could use a mutex, but instead of
-                                             // blocking we usually want to skip the frame
-                                             // and just get the next one.
+    bool          m_getting_wximage;         ///< Simple atomic block when filling the m_wximage.
+                                             ///< We could use a mutex, but instead of
+                                             ///< blocking we usually want to skip the frame
+                                             ///< and just get the next one.
 
-    unsigned int  m_framenumber;             // # of frames, since preview start
-    wxLongLong    m_lastframetimemillis;     //
-    wxLongLong    m_actualpreviewtimemillis; //
+    unsigned int  m_framenumber;             ///< # of frames, since preview start.
+    wxLongLong    m_lastframetimemillis;     ///< Time of the last frame.
+    wxLongLong    m_actualpreviewtimemillis; ///< Milliseconds between frames, 1/(frame rate).
 
-    wxImage       m_wximage;                 // wximage to hold the streaming video
+    wxImage       m_wximage;                 ///< wximage to hold the streaming video.
 
-    wxSize        m_imageSize;               // size of the video
-    wxSize        m_maxImageSize;            // min available capture size
-    wxSize        m_minImageSize;            // max available capture size
+    wxSize        m_imageSize;               ///< Size of the video.
+    wxSize        m_maxImageSize;            ///< Min available capture size.
+    wxSize        m_minImageSize;            ///< Max available capture size.
+
+    int           m_last_error_num;          ///< The last error number or 0.
+    wxString      m_last_errorString;        ///< The last error string.
 
 private:
     DECLARE_ABSTRACT_CLASS(wxVideoCaptureWindowBase);

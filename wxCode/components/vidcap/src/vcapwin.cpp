@@ -169,6 +169,8 @@ void wxVideoCaptureWindowBase::Reset(bool full)
     m_imageSize                   = wxSize(0, 0);
     m_minImageSize                = wxSize(32, 32);    // just a guess, VFW doesn't support this so...
     m_maxImageSize                = wxSize(1024, 768); // just a guess, VFW doesn't support this so...
+
+    m_last_error_num              = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -297,19 +299,28 @@ wxString wxVideoCaptureWindowBase::GetPropertiesString()
 // Capture Preview and Overlay
 // ----------------------------------------------------------------------
 
-void wxVideoCaptureWindowBase::OnFrame()
+void wxVideoCaptureWindowBase::OnPreFrame()
 {
-    m_lastframetimemillis = wxGetLocalTimeMillis();
-    m_framenumber++;
+    wxLongLong millis_now = wxGetLocalTimeMillis();
 
-    unsigned int frame_ave = (m_previewmsperframe > 500) ? 1 : 4; // get a nicer frame rate
+    m_framenumber++;
+    m_lastframetimemillis = millis_now;
+
+    unsigned int frame_ave = (m_previewmsperframe > 500) ? 1 : 4; // get a nicer frame rate by averaging
 
     if (m_framenumber % frame_ave == 0)
     {
-        wxLongLong millis_now = wxGetLocalTimeMillis();
         m_actualpreviewmsperframe = (unsigned int)((millis_now.GetLo() - m_actualpreviewtimemillis.GetLo())/frame_ave);
         m_actualpreviewtimemillis = millis_now;
     }
+}
+
+void wxVideoCaptureWindowBase::OnPostFrame()
+{
+    wxVideoCaptureEvent event( wxEVT_VIDEO_FRAME, this, GetId() );
+    event.SetFrameNumber( m_framenumber );
+    event.SetFrameRateMS( m_actualpreviewmsperframe );
+    GetEventHandler()->ProcessEvent(event);
 }
 
 void wxVideoCaptureWindowBase::DoPaint(wxPaintDC& dc)
@@ -415,6 +426,13 @@ wxImage wxVideoCaptureWindowBase::GetwxImage(bool full_copy) const
 // ----------------------------------------------------------------------
 // Utility Functions
 // ----------------------------------------------------------------------
+
+bool wxVideoCaptureWindowBase::SendErrorEvent()
+{
+    wxVideoCaptureEvent event( wxEVT_VIDEO_ERROR, this, GetId() );
+    event.SetErrorText(m_last_errorString);
+    return GetEventHandler()->ProcessEvent(event);
+}
 
 // find the size of a file in KB
 long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename ) const

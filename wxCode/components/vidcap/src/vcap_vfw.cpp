@@ -1679,14 +1679,14 @@ bool wxVideoCaptureWindowVFW::VFW_CallbackOnError(const wxString &errortext, int
     // starting new major function, clear out old errors, this is NOT an error
     if (errorId == 0) return true;
 
-    m_errortext = errortext;
-    wxVideoCaptureEvent event( wxEVT_VIDEO_ERROR, this, GetId() );
-    event.SetErrorText(m_errortext);
-    GetEventHandler()->ProcessEvent(event);
+    m_last_error_num   = errorId;
+    m_last_errorString = errortext;
+
+    SendErrorEvent();
 
     // show error id and text
     wxString errormessage;
-    errormessage.Printf(wxT("wxVideoCaptureWindow Error# %d\n %s"), errorId, errortext.c_str());
+    errormessage.Printf(wxT("wxVideoCaptureWindow Error# %d\n%s"), errorId, errortext.c_str());
     wxMessageBox(errormessage,
                  wxT("wxVideoCaptureWindow Error"),
                  wxOK|wxICON_EXCLAMATION|wxCENTRE, this);
@@ -1735,20 +1735,17 @@ bool wxVideoCaptureWindowVFW::VFW_SetCallbackFrame(bool on)
 }
 bool wxVideoCaptureWindowVFW::VFW_CallbackOnFrame(LPVIDEOHDR lpVHdr)
 {
-    OnFrame();
+    OnPreFrame();
 
     if (m_preview_wximage || m_grab_wximage)
     {
         VFW_DDBtoDIB(lpVHdr);           // fill m_wximage
-        if(ProcesswxImageFrame())       // Call the stub in case something is done here
+        if(OnProcessFrame())       // Call the stub in case something is done here
             Refresh(false);             // draw image
         m_grab_wximage = false;         // got the frame
     }
 
-    wxVideoCaptureEvent event( wxEVT_VIDEO_FRAME, this, GetId() );
-    event.SetFrameNumber( m_framenumber );
-    event.SetFrameRateMS( m_actualpreviewmsperframe );
-    GetEventHandler()->ProcessEvent(event);
+    OnPostFrame();
 
     return true;
 }

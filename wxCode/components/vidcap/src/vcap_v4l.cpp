@@ -74,7 +74,7 @@ BEGIN_EVENT_TABLE(wxVideoCaptureWindowV4L, wxVideoCaptureWindowBase)
     EVT_PAINT(                                    wxVideoCaptureWindowV4L::OnPaint)
     EVT_SCROLLWIN(                                wxVideoCaptureWindowV4L::OnScrollWin)
     EVT_TIMER(IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowV4L::OnPreviewTimer)
-    EVT_IDLE(                                     wxVideoCaptureWindowV4L::OnIdle)
+    //EVT_IDLE(                                     wxVideoCaptureWindowV4L::OnIdle)
     EVT_CLOSE(                                    wxVideoCaptureWindowV4L::OnCloseWindow)
 END_EVENT_TABLE()
 
@@ -181,7 +181,6 @@ void wxVideoCaptureWindowV4L::DoSetSize(int x, int y, int width, int height,
     DoSizeWindow();
 }
 
-// do the window resizing, call whenever video format changes
 void wxVideoCaptureWindowV4L::DoSizeWindow()
 {
     if (IsPreviewScaled())
@@ -491,7 +490,7 @@ bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview)
         if (!wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_CAPTURE)) init_capture();
 
 #if !USE_PREVIEW_wxIMAGE_TIMER
-        m_previewTimer.Start(m_previewmsperframe);
+        m_previewTimer.Start(1, true);
 #endif
     }
 
@@ -521,7 +520,7 @@ bool wxVideoCaptureWindowV4L::SetPreviewRateMS( unsigned int msperframe )
     if (m_preview_wximage)
     {
         m_previewTimer.Stop();
-        m_previewTimer.Start(m_previewmsperframe);
+        m_previewTimer.Start(1, true);
     }
 #endif
 
@@ -530,31 +529,25 @@ bool wxVideoCaptureWindowV4L::SetPreviewRateMS( unsigned int msperframe )
 
 void wxVideoCaptureWindowV4L::OnPreviewTimer(wxTimerEvent& event)
 {
-    if (m_preview_wximage)
+    if (!m_preview_wximage || !IsDeviceConnected()) return;
+
+    if (!m_getting_wximage && GetVideoFrame(m_wximage, true))
     {
-        if (!m_getting_wximage && IsDeviceConnected())
-        {
-            if (GetVideoFrame(m_wximage, true))
-            {
-                OnFrame();
-                if (ProcesswxImageFrame()) // Call the stub in case something is done here
-                    Refresh(false);       // draw image
+        OnPreFrame();
 
-                wxVideoCaptureEvent event( wxEVT_VIDEO_FRAME, this, GetId() );
-                event.SetFrameNumber( m_framenumber );
-                event.SetFrameRateMS( m_actualpreviewmsperframe );
-                GetEventHandler()->ProcessEvent(event);
-            }
-        }
+        if (OnProcessFrame()) // Call the stub in case something is done here
+            Refresh(false);   // draw image
 
-        // Use a one-shot to keep the frame rate constant and to not allow
-        // an overflow of timer requests that we can't get frames for
-        wxLongLong millis_now = wxGetLocalTimeMillis();
-        int remaining_ms = int(m_previewmsperframe) - int(millis_now.GetLo() - m_lastframetimemillis.GetLo());
-        remaining_ms = wxMax(remaining_ms, 1);
-        remaining_ms = wxMin(remaining_ms, (int)m_previewmsperframe);
-        m_previewTimer.Start(remaining_ms, true);
+        OnPostFrame();
     }
+
+    // Use a one-shot to keep the frame rate constant and to not allow
+    // an overflow of timer requests that we can't get frames for
+    wxLongLong millis_now = wxGetLocalTimeMillis();
+    int remaining_ms = int(m_previewmsperframe) - int(wxLongLong(millis_now - m_lastframetimemillis).GetLo());
+    remaining_ms = wxMax(remaining_ms, 1);
+    remaining_ms = wxMin(remaining_ms, (int)m_previewmsperframe);
+    m_previewTimer.Start(remaining_ms, true);
 }
 
 // ----------------------------------------------------------------------
