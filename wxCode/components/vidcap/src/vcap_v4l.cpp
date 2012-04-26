@@ -74,7 +74,6 @@ BEGIN_EVENT_TABLE(wxVideoCaptureWindowV4L, wxVideoCaptureWindowBase)
     EVT_PAINT(                                    wxVideoCaptureWindowV4L::OnPaint)
     EVT_SCROLLWIN(                                wxVideoCaptureWindowV4L::OnScrollWin)
     EVT_TIMER(IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowV4L::OnPreviewTimer)
-    //EVT_IDLE(                                     wxVideoCaptureWindowV4L::OnIdle)
     EVT_CLOSE(                                    wxVideoCaptureWindowV4L::OnCloseWindow)
 END_EVENT_TABLE()
 
@@ -157,20 +156,6 @@ wxVideoCaptureWindowV4L::~wxVideoCaptureWindowV4L()
 
 void wxVideoCaptureWindowV4L::OnCloseWindow(wxCloseEvent &event)
 {
-    event.Skip();
-}
-
-void wxVideoCaptureWindowV4L::OnIdle( wxIdleEvent &event )
-{
-    if (0 && m_preview_wximage && (m_mem_buffers.size() > 0))
-    {
-        event.RequestMore();
-
-        GetVideoFrame(m_wximage, true);
-
-        Refresh(false);
-    }
-
     event.Skip();
 }
 
@@ -489,9 +474,7 @@ bool wxVideoCaptureWindowV4L::Preview(bool onoff, bool wxpreview)
         if (!wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_IO))      init_io();
         if (!wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_CAPTURE)) init_capture();
 
-#if !USE_PREVIEW_wxIMAGE_TIMER
         m_previewTimer.Start(1, true);
-#endif
     }
 
     return true;
@@ -516,13 +499,11 @@ bool wxVideoCaptureWindowV4L::SetPreviewRateMS( unsigned int msperframe )
 {
     wxVideoCaptureWindowBase::SetPreviewRateMS(msperframe);
 
-#if !USE_PREVIEW_wxIMAGE_TIMER
     if (m_preview_wximage)
     {
         m_previewTimer.Stop();
         m_previewTimer.Start(1, true);
     }
-#endif
 
     return true;
 }

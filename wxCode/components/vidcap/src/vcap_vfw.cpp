@@ -145,7 +145,6 @@ BEGIN_EVENT_TABLE(wxVideoCaptureWindowVFW, wxVideoCaptureWindowBase)
     EVT_PAINT    (                                    wxVideoCaptureWindowVFW::OnPaint)
     EVT_SCROLLWIN(                                    wxVideoCaptureWindowVFW::OnScrollWin)
     EVT_TIMER    (IDD_wxVIDCAP_PREVIEW_WXIMAGE_TIMER, wxVideoCaptureWindowVFW::OnPreviewTimer)
-    EVT_IDLE     (                                    wxVideoCaptureWindowVFW::OnIdle)
     EVT_CLOSE    (                                    wxVideoCaptureWindowVFW::OnCloseWindow)
 END_EVENT_TABLE()
 
@@ -294,35 +293,6 @@ void wxVideoCaptureWindowVFW::OnCloseWindow(wxCloseEvent &)
         delete []m_lpBmpInfoLast;
         m_lpBmpInfoLast = NULL;
     }
-}
-
-void wxVideoCaptureWindowVFW::OnIdle( wxIdleEvent &event )
-{
-#if USE_PREVIEW_wxIMAGE_TIMER
-    static unsigned long int last_frame = -1;
-    static unsigned int delaytime = 0;
-    static wxLongLong timenow = wxGetLocalTimeMillis();
-    static wxLongLong lasttime = wxGetLocalTimeMillis();
-
-    if (m_preview_wximage)
-    {
-        // last message has to be processed before we call again
-        if (!m_getting_wximage && (last_frame != m_framenumber) && IsDeviceConnected())
-        {
-            last_frame = m_framenumber; // at least wait for the frame to process
-
-            timenow = wxGetLocalTimeMillis();
-            delaytime = (unsigned int)(timenow.GetLo() - lasttime.GetLo());
-            lasttime = timenow;
-
-            delaytime = (delaytime > m_previewmsperframe) ? 0 : m_previewmsperframe - delaytime;
-
-            m_previewTimer.Start(delaytime, true); // one shot
-        }
-    }
-#endif
-
-    event.Skip();
 }
 
 void wxVideoCaptureWindowVFW::DoSetSize(int x, int y, int width, int height,
@@ -926,14 +896,12 @@ bool wxVideoCaptureWindowVFW::Preview(bool on, bool wxpreview)
     }
     else
     {
-        // use the callback and OnIdle/OnPreviewxImageTimer to preview using wxImages
+        // use the callback and OnPrevieTimer() to preview using wxImages
         m_preview_wximage = true;
         ShowWindow(m_hWndC, SW_HIDE);
         DoSizeWindow();
         previewingOK = true; // sure why wouldn't it :)
-#if !USE_PREVIEW_wxIMAGE_TIMER
-        m_previewTimer.Start(m_previewmsperframe);
-#endif
+        m_previewTimer.Start(1, true);
     }
 
     VFW_GetCAPSTATUS();
@@ -971,13 +939,11 @@ bool wxVideoCaptureWindowVFW::SetPreviewRateMS( unsigned int msperframe )
     if (setrateOK)
         wxVideoCaptureWindowBase::SetPreviewRateMS(msperframe);
 
-#if !USE_PREVIEW_wxIMAGE_TIMER
     if (m_preview_wximage)
     {
         m_previewTimer.Stop();
         m_previewTimer.Start(m_previewmsperframe);
     }
-#endif
 
     VFW_GetCAPSTATUS();
     return setrateOK;

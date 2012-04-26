@@ -131,8 +131,6 @@ protected:
 
     void OnCloseWindow(wxCloseEvent &event);
 
-    void OnIdle( wxIdleEvent &event );
-
     // ----------------------------------------------------------------------
     // Size & Position functions
     // ----------------------------------------------------------------------

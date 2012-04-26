@@ -95,11 +95,6 @@ class WXDLLIMPEXP_FWD_VIDCAP wxVideoCaptureWindowCustomVideoFormatDialog;
 #endif
 
 
-/// Use a wxTimer to view the frames as wxImages.
-/// If set to 0 then use OnIdle to start the timer as a OneShot to get rate.
-/// if set to 1 then just set the timer to the preview rate, not so good.
-#define USE_PREVIEW_wxIMAGE_TIMER 0
-
 /// Array of some predefined "standard" video widths, max 1024.
 /// wxVideoCaptureWindow::SetVideoFormat( width...
 /// ={80,128,160,176,180,192,240,320,352,360,384,400,480,640,704,720,768,800,1024};
