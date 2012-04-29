@@ -32,9 +32,10 @@ class MyVideoCaptureWindow;
 enum
 {
     // menu items
-    ID_QUIT = 1,
-    ID_ABOUT,
-    ID_SHOWLOG,
+    //wxID_OPEN,
+    //wxID_EXIT,
+    //wxID_ABOUT,
+    ID_SHOWLOG = wxID_LAST + 100,
 
     ID_VIDEOWIN,
 
@@ -129,6 +130,7 @@ public:
     virtual ~MyFrame();
 
     // event handlers (these functions should _not_ be virtual)
+    void OnOpen(wxCommandEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnShowLog(wxCommandEvent& event);
@@ -200,15 +202,20 @@ public:
 
     virtual ~MyVideoCaptureWindow();
 
+    // Get a string suitable to display in the status bar of the frame
+    static wxString GetStatusText(unsigned int frame_num, unsigned int ms_per_frame);
+
+    // Override base class paint function
     virtual void DoPaint( wxPaintDC& dc );
 
+    // wxWidgets event handler functions
     void OnVideoEvent      ( wxVideoCaptureEvent& event );
     void OnVideoStatusEvent( wxVideoCaptureEvent& event );
     void OnVideoFrameEvent ( wxVideoCaptureEvent& event );
     void OnVideoStreamEvent( wxVideoCaptureEvent& event );
     void OnVideoErrorEvent ( wxVideoCaptureEvent& event );
 
-    bool ProcesswxImageFrame();
+    bool OnProcessFrame(wxImage& wximg);
 
     MyFrame *m_frame;
 

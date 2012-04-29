@@ -6,34 +6,33 @@
 // Copyright:   John Labenski
 // License:     wxWidgets V2.0
 /////////////////////////////////////////////////////////////////////////////
-//
-// Usage notes:
 
 #ifndef __WX_VCAP_V4L_H__
 #define __WX_VCAP_V4L_H__
 
 #include <wx/defs.h>
-#include <wx/timer.h>
 
 #if !defined(__WXMSW__)
 
 #include <linux/videodev2.h> // V4L2
 #include <vector>
 
-//----------------------------------------------------------------------------
-// wxVideoCaptureWindow : window for viewing/recording streaming video or snapshots
-//----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+/** @class wxVideoCaptureWindowV4L
+    @brief A wxVideoCaptureWindow for Linux using V4L2 to view
+    streaming video or take snapshots.
+*/ // -----------------------------------------------------------------------
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowV4L : public wxVideoCaptureWindowBase
 {
 public:
     wxVideoCaptureWindowV4L() : wxVideoCaptureWindowBase() { Init(); }
-    wxVideoCaptureWindowV4L( wxWindow *parent, wxWindowID id = -1,
+    wxVideoCaptureWindowV4L( wxWindow *parent, wxWindowID id = wxID_ANY,
                              const wxPoint &pos = wxDefaultPosition,
                              const wxSize &size = wxDefaultSize,
                              long style = wxSIMPLE_BORDER,
                              const wxString &name = wxT("wxVideoCaptureWindow"));
 
-    bool Create( wxWindow *parent, wxWindowID id = -1,
+    bool Create( wxWindow *parent, wxWindowID id = wxID_ANY,
                  const wxPoint &pos = wxDefaultPosition,
                  const wxSize &size = wxDefaultSize,
                  long style = wxSIMPLE_BORDER,
@@ -42,21 +41,33 @@ public:
     virtual ~wxVideoCaptureWindowV4L();
 
     // ----------------------------------------------------------------------
-    // Device descriptions & versions, get and enumerate
+    /// @name Device descriptions & versions, get and enumerate
     // ----------------------------------------------------------------------
+    /// @{
 
-    virtual void EnumerateDevices();
+    virtual bool EnumerateDevices();               ///< Enumerates /dev/video*
 
+    ///< Enumerate a single device "/dev/video0", returns index for device or wxNOT_FOUND on error.
+    int EnumerateDevice(const wxString& fileName);
+
+    /// @}
     // ----------------------------------------------------------------------
-    // Connect or Disconnect to device
+    /// @name Connect or Disconnect to device
     // ----------------------------------------------------------------------
+    /// @{
+
+    /// Connect to a device by filename, returns success.
+    /// If it connected you can call GetDeviceIndex() to get the device index.
+    bool DeviceConnect(const wxString& fileName);
 
     virtual bool DeviceConnect(int index);
     virtual bool DeviceDisconnect();
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Display dialogs to set/get video characteristics
+    /// @name Display dialogs to set/get video characteristics
     // ----------------------------------------------------------------------
+    /// @{
 
     virtual bool HasVideoSourceDialog()  { return false; }
     virtual void ShowVideoSourceDialog() {}
@@ -70,29 +81,36 @@ public:
 
     virtual wxString GetPropertiesString();
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Video format and characteristics
+    /// @name Video format and characteristics
     // ----------------------------------------------------------------------
+    /// @{
 
     virtual bool GetVideoFormat( int *width, int *height,
                                  int *bpp, FOURCC *fourcc ) const;
     virtual bool SetVideoFormat( int width, int height,
                                  int bpp, FOURCC fourcc );
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Capture Preview and Overlay
+    /// @name Capture Preview and Overlay
     // ----------------------------------------------------------------------
+    /// @{
 
     virtual bool Preview(bool onoff, bool wxpreview = false);
     virtual bool PreviewScaled(bool fit_window);
     virtual bool SetPreviewRateMS( unsigned int msperframe = 66 );
     virtual bool Overlay(bool WXUNUSED(on)) { return false; }
 
-    void OnPreviewTimer(wxTimerEvent& event); // get frames
+    void OnPreviewTimer(wxTimerEvent& event);
+    void OnFrameRequest(wxVideoCaptureEvent& event);
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Capture single frames, take snapshots of streaming video
+    /// @name Capture single frames, take snapshots of streaming video
     // ----------------------------------------------------------------------
+    /// @{
 
     virtual bool SnapshotToWindow();
     virtual bool SnapshotToClipboard();
@@ -100,31 +118,58 @@ public:
     virtual bool SnapshotTowxImage( wxImage &image );
     virtual bool SnapshotTowxImage();
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Capture (append) single video frames to an AVI file
+    /// @name Capture (append) single video frames to an AVI file
     // ----------------------------------------------------------------------
+    /// @{
 
     // NOT IMPLEMENTED
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Capture streaming video to an AVI file
+    /// @name Capture streaming video to an AVI file
     // ----------------------------------------------------------------------
+    /// @{
 
     // NOT IMPLEMENTED
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Capture file settings, filename to capture video to
+    /// @name Capture file settings, filename to capture video to
     // ----------------------------------------------------------------------
+    /// @{
 
     // NOT IMPLEMENTED
 
+    /// @}
     // ----------------------------------------------------------------------
-    // Audio Setup
+    /// @name Audio Setup
     // ----------------------------------------------------------------------
+    /// @{
 
     // NOT IMPLEMENTED
 
+    /// @}
+    // ----------------------------------------------------------------------
+    /// @name Utility Functions
+    // ----------------------------------------------------------------------
+    /// @{
+
+    // nothing to do
+
+    /// @}
 protected:
+
+    // ----------------------------------------------------------------------
+    /// @name Platform dependent video conversion
+    // ----------------------------------------------------------------------
+    /// @{
+
+    /// Safely get a wxImage from the already opened and initialized video device.
+    bool GetVideoFrame(wxImage& wximg, bool request_another);
+
+    /// @}
     // ----------------------------------------------------------------------
     // Implementation
     // ----------------------------------------------------------------------
@@ -132,35 +177,29 @@ protected:
     void OnCloseWindow(wxCloseEvent &event);
 
     // ----------------------------------------------------------------------
-    // Size & Position functions
+    /// @name Size & Position functions
     // ----------------------------------------------------------------------
+    /// @{
 
+    /// Override wxWindow::DoSetSize(...).
     virtual void DoSetSize(int x, int y, int width, int height,
                            int sizeFlags = wxSIZE_AUTO);
-    // adjust the scrollbars, use to generally refresh too
+    /// Adjust the scrollbars, use to generally refresh too.
     void DoSizeWindow();
 
-    // move when EVT_SCROLLWIN occurs when Overlaying
+    /// Move when EVT_SCROLLWIN occurs when Overlaying.
     void OnScrollWin( wxScrollWinEvent& event );
 
-    // called by wxWindow's EVT_MOVE, make Overlay window follow
+    /// Called by wxWindow's EVT_MOVE, make Overlay window follow.
     void OnMove( wxMoveEvent& event );
 
-    // draw the frames when using wxImages preview from EVT_PAINT
+    /// Draw the frames when using wxImages preview from EVT_PAINT.
     void OnPaint( wxPaintEvent& event );
 
-    // ----------------------------------------------------------------------
-    // Platform dependent video conversion
-    // ----------------------------------------------------------------------
-
-    /// Safely get a wxImage from the already opened and initialized video device.
-    bool GetVideoFrame(wxImage& wximg, bool request_another);
-
+    /// @}
     // ----------------------------------------------------------------------
     // Member Variables
     // ----------------------------------------------------------------------
-
-    wxTimer m_previewTimer; ///< For preview rate adjustment.
 
     // V4L specific variables
 
@@ -168,6 +207,7 @@ protected:
 
     int m_fd_device; ///< The video device m_fd_device = open("/dev/video",O_RDWR).
 
+    /// Bit masks of how the device has been initialized.
     enum V4L2_Device_Init_Type
     {
         wxV4L2_DEVICE_INIT_NONE    = 0x0000, ///< Device has not been initialized, check m_fd_device != 1 to see if it's opened.
@@ -190,6 +230,7 @@ protected:
     /// Uninitialize the device from the init_device() call, returns success.
     bool uninit_device();
 
+    /// What method is being used for init_io().
     enum V4L2_IO_Methods_Type
     {
         wxV4L2_IO_METHOD_NONE,   ///< No io method chosen.

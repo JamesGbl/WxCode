@@ -12,11 +12,11 @@
 #endif
 
 #include "precomp.h"
-
 #include "vcapconv.h"
 
 #include <wx/mstream.h>
 
+// this function is junk...
 void Y8_to_RGB24(void *src, void *dst, int width, int height)
 {
     int i, length = width*height;

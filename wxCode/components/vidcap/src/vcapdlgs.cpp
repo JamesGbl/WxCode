@@ -14,11 +14,11 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
+//#include <wx/wxprec.h>
 
 // Include wxWidgets' headers
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+    //#include <wx/wx.h>
 #endif
 
 #include "wx/vidcap/vcapwin.h"
@@ -31,19 +31,21 @@
 //      NEVER call this, use wxVideoCaptureWindow::CaptureSingleFramesToFileDialog
 // --------------------------------------------------------------------------
 
-#define IDD_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE    100
-#define IDD_wxVIDCAP_CAPSNGFRAMESDLG_DONE       101
+#define ID_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE    100
+#define ID_wxVIDCAP_CAPSNGFRAMESDLG_DONE       101
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowCaptureSingleFramesDialog, wxDialog)
-    EVT_BUTTON( IDD_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE, wxVideoCaptureWindowCaptureSingleFramesDialog::OnCapture )
-    EVT_BUTTON( IDD_wxVIDCAP_CAPSNGFRAMESDLG_DONE, wxVideoCaptureWindowCaptureSingleFramesDialog::OnDone )
+    EVT_BUTTON( ID_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE, wxVideoCaptureWindowCaptureSingleFramesDialog::OnCapture )
+    EVT_BUTTON( ID_wxVIDCAP_CAPSNGFRAMESDLG_DONE, wxVideoCaptureWindowCaptureSingleFramesDialog::OnDone )
     EVT_CLOSE(wxVideoCaptureWindowCaptureSingleFramesDialog::OnCloseDialog)
 END_EVENT_TABLE()
 
 wxVideoCaptureWindowCaptureSingleFramesDialog::wxVideoCaptureWindowCaptureSingleFramesDialog(
-                        wxVideoCaptureWindowVFW *parent, wxWindowID id, const wxString &title,
-                        const wxPoint &position, const wxSize &size, long style)
-                        :wxDialog( parent, id, title, position, size, style )
+                                                    wxVideoCaptureWindowVFW *parent, wxWindowID id,
+                                                    const wxString &title,
+                                                    const wxPoint &position, const wxSize &size,
+                                                    long style)
+                                              :wxDialog( parent, id, title, position, size, style )
 {
     wxASSERT(parent);
     m_parent = parent;
@@ -74,13 +76,13 @@ wxVideoCaptureWindowCaptureSingleFramesDialog::wxVideoCaptureWindowCaptureSingle
 
     wxSizer *buttonsizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_captureButton = new wxButton( this, IDD_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE, wxT("Capture"), wxDefaultPosition, wxSize(60,-1));
+    m_captureButton = new wxButton( this, ID_wxVIDCAP_CAPSNGFRAMESDLG_CAPTURE, wxT("Capture"), wxDefaultPosition, wxSize(60,-1));
     m_captureButton->SetDefault();
     buttonsizer->Add( m_captureButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     if (!ok) m_captureButton->Enable(false);
 
-    m_doneButton = new wxButton( this, IDD_wxVIDCAP_CAPSNGFRAMESDLG_DONE, wxT("Done"), wxDefaultPosition, wxSize(60,-1));
+    m_doneButton = new wxButton( this, ID_wxVIDCAP_CAPSNGFRAMESDLG_DONE, wxT("Done"), wxDefaultPosition, wxSize(60,-1));
     buttonsizer->Add( m_doneButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     mainsizer->Add( buttonsizer, 0, wxALIGN_CENTRE|wxALL, 5 );
@@ -130,24 +132,24 @@ void wxVideoCaptureWindowCaptureSingleFramesDialog::OnDone(wxCommandEvent &)
 // wxVideoCaptureWindowCapturePreferencesDialog
 //      NEVER call this, use wxVideoCaptureWindow::CapturePreferencesDialog()
 // --------------------------------------------------------------------------
-#define IDD_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN    200
-#define IDD_wxVIDCAP_CAPPREFDLG_APPLY           201
-#define IDD_wxVIDCAP_CAPPREFDLG_OK              202
-#define IDD_wxVIDCAP_CAPPREFDLG_CANCEL          203
+#define ID_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN    200
+#define ID_wxVIDCAP_CAPPREFDLG_APPLY           201
+#define ID_wxVIDCAP_CAPPREFDLG_OK              202
+#define ID_wxVIDCAP_CAPPREFDLG_CANCEL          203
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowCapturePreferencesDialog, wxDialog)
-    EVT_SPINCTRL( IDD_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN, wxVideoCaptureWindowCapturePreferencesDialog::OnMSFrameSpin )
-    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_APPLY,        wxVideoCaptureWindowCapturePreferencesDialog::OnApply )
-    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_OK,           wxVideoCaptureWindowCapturePreferencesDialog::OnOk )
-    EVT_BUTTON(   IDD_wxVIDCAP_CAPPREFDLG_CANCEL,       wxVideoCaptureWindowCapturePreferencesDialog::OnCancel )
+    EVT_SPINCTRL( ID_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN, wxVideoCaptureWindowCapturePreferencesDialog::OnMSFrameSpin )
+    EVT_BUTTON(   ID_wxVIDCAP_CAPPREFDLG_APPLY,        wxVideoCaptureWindowCapturePreferencesDialog::OnApply )
+    EVT_BUTTON(   ID_wxVIDCAP_CAPPREFDLG_OK,           wxVideoCaptureWindowCapturePreferencesDialog::OnOk )
+    EVT_BUTTON(   ID_wxVIDCAP_CAPPREFDLG_CANCEL,       wxVideoCaptureWindowCapturePreferencesDialog::OnCancel )
 END_EVENT_TABLE()
 
 wxVideoCaptureWindowCapturePreferencesDialog::wxVideoCaptureWindowCapturePreferencesDialog(
-                                        wxVideoCaptureWindowVFW *parent, wxWindowID id,
-                                        const wxString &title,
-                                        const wxPoint &position,
-                                        const wxSize &size, long style)
-                                        :wxDialog( parent, id, title, position, size, style )
+                                                    wxVideoCaptureWindowVFW *parent, wxWindowID id,
+                                                    const wxString &title,
+                                                    const wxPoint &position, const wxSize &size,
+                                                    long style)
+                                             :wxDialog( parent, id, title, position, size, style )
 {
     m_parent = parent;
 
@@ -168,7 +170,7 @@ wxVideoCaptureWindowCapturePreferencesDialog::wxVideoCaptureWindowCapturePrefere
 
     wxFlexGridSizer *capture_flexgridsizer = new wxFlexGridSizer( 2, 0, 0 );
 
-    m_msframeSpinCtrl = new wxSpinCtrl( this, IDD_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN, wxT("0"), wxDefaultPosition, wxSize(100,-1), 0, 0, 32000, 0 );
+    m_msframeSpinCtrl = new wxSpinCtrl( this, ID_wxVIDCAP_CAPPREFDLG_MSFRAME_SPIN, wxT("0"), wxDefaultPosition, wxSize(100,-1), 0, 0, 32000, 0 );
     capture_flexgridsizer->Add( m_msframeSpinCtrl, 0, wxALIGN_CENTER_VERTICAL, 0 );
 
     m_msframeText = new wxStaticText( this, wxID_ANY, wxT("ms/frame = 0 fps"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -286,16 +288,16 @@ wxVideoCaptureWindowCapturePreferencesDialog::wxVideoCaptureWindowCapturePrefere
 
     wxGridSizer *button_gridsizer = new wxGridSizer( 3, 0, 0 );
 
-    m_applyButton = new wxButton( this, IDD_wxVIDCAP_CAPPREFDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(60,-1));
+    m_applyButton = new wxButton( this, ID_wxVIDCAP_CAPPREFDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(60,-1));
     m_applyButton->SetToolTip(wxT("Apply changes, controls may take only allowed values"));
     button_gridsizer->Add( m_applyButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    m_okButton = new wxButton( this, IDD_wxVIDCAP_CAPPREFDLG_OK, wxT("Ok"), wxDefaultPosition, wxSize(60,-1));
+    m_okButton = new wxButton( this, ID_wxVIDCAP_CAPPREFDLG_OK, wxT("Ok"), wxDefaultPosition, wxSize(60,-1));
     m_okButton->SetToolTip(wxT("Use apply changes to verify allowed values"));
     m_okButton->SetDefault();
     button_gridsizer->Add( m_okButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    m_cancelButton = new wxButton( this, IDD_wxVIDCAP_CAPPREFDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(60,-1));
+    m_cancelButton = new wxButton( this, ID_wxVIDCAP_CAPPREFDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(60,-1));
     button_gridsizer->Add( m_cancelButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     mainsizer->Add( button_gridsizer, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -430,21 +432,22 @@ void wxVideoCaptureWindowCapturePreferencesDialog::SetSetup()
 //      NEVER call this, use wxVideoCaptureWindow::VideoCustomFormatDialog
 // --------------------------------------------------------------------------
 
-#define IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY   301
-#define IDD_wxVIDCAP_VIDEOFORMATDLG_OK      302
-#define IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL  303
+#define ID_wxVIDCAP_VIDEOFORMATDLG_APPLY   301
+#define ID_wxVIDCAP_VIDEOFORMATDLG_OK      302
+#define ID_wxVIDCAP_VIDEOFORMATDLG_CANCEL  303
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowCustomVideoFormatDialog, wxDialog)
-    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY,  wxVideoCaptureWindowCustomVideoFormatDialog::OnApply )
-    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_OK,     wxVideoCaptureWindowCustomVideoFormatDialog::OnOk )
-    EVT_BUTTON( IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxVideoCaptureWindowCustomVideoFormatDialog::OnCancel )
+    EVT_BUTTON( ID_wxVIDCAP_VIDEOFORMATDLG_APPLY,  wxVideoCaptureWindowCustomVideoFormatDialog::OnApply )
+    EVT_BUTTON( ID_wxVIDCAP_VIDEOFORMATDLG_OK,     wxVideoCaptureWindowCustomVideoFormatDialog::OnOk )
+    EVT_BUTTON( ID_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxVideoCaptureWindowCustomVideoFormatDialog::OnCancel )
 END_EVENT_TABLE()
 
 wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoFormatDialog(
-                                   wxVideoCaptureWindowBase *parent,
-                                   wxWindowID id, const wxString &title,
-                                   const wxPoint &position, const wxSize &size, long style)
-                                   :wxDialog( parent, id, title, position, size, style )
+                                                    wxVideoCaptureWindowBase *parent,
+                                                    wxWindowID id, const wxString &title,
+                                                    const wxPoint &position, const wxSize &size,
+                                                    long style)
+                                            :wxDialog( parent, id, title, position, size, style )
 {
     m_parent = parent;
 
@@ -465,7 +468,8 @@ wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoForm
     wxArrayString formatArray;
     for (i = 0; i < video_format_count; ++i)
     {
-        formatArray.Add(FOURCCTowxString(m_parent->GetVideoCaptureFormat(i).m_fourcc) + wxT(" - ") +
+        formatArray.Add(FOURCCTowxString(m_parent->GetVideoCaptureFormat(i).m_fourcc) +
+                        wxT(" - ") +
                         m_parent->GetVideoCaptureFormat(i).m_description);
     }
 
@@ -524,16 +528,16 @@ wxVideoCaptureWindowCustomVideoFormatDialog::wxVideoCaptureWindowCustomVideoForm
     //------- Buttons -------------------------------------------------------
     wxSizer *buttonsizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton *m_applyButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxDefaultSize);
+    wxButton *m_applyButton = new wxButton( this, ID_wxVIDCAP_VIDEOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxDefaultSize);
     m_applyButton->SetToolTip(wxT("Apply changes, controls may take only allowed values"));
     m_applyButton->SetDefault();
     buttonsizer->Add( m_applyButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *m_okButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize);
+    wxButton *m_okButton = new wxButton( this, ID_wxVIDCAP_VIDEOFORMATDLG_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize);
     m_okButton->SetToolTip(wxT("Use apply changes to verify allowed values"));
     buttonsizer->Add( m_okButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *m_cancelButton = new wxButton( this, IDD_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize);
+    wxButton *m_cancelButton = new wxButton( this, ID_wxVIDCAP_VIDEOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize);
     buttonsizer->Add( m_cancelButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     mainsizer->Add( buttonsizer, 0, wxALIGN_CENTRE|wxALL, 5 );
@@ -585,7 +589,7 @@ void wxVideoCaptureWindowCustomVideoFormatDialog::GetSetup()
         wxString unknownDescription = wxString::Format(wxT("%s %d-bits Unknown Format"), fourccStr.c_str(), c_bpp);
 
         m_parent->RegisterVideoCaptureFormat(
-                      new wxVideoCaptureFormat(unknownDescription, fourcc, c_bpp, -1));
+                      wxVideoCaptureFormat(unknownDescription, fourcc, c_bpp, -1));
 
         m_formatChoice->Append(unknownDescription);
         format_selection = m_formatChoice->GetCount() - 1;
@@ -639,27 +643,28 @@ void wxVideoCaptureWindowCustomVideoFormatDialog::OnCancel(wxCommandEvent &)
 //      NEVER call this, use wxVideoCaptureWindow::AudioFormatDialog
 // --------------------------------------------------------------------------
 
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_SAMPLES     400
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_BITS        401
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_CHANNELS    402
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_APPLY       403
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_OK          404
-#define IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL      405
+#define ID_wxVIDCAP_AUDIOFORMATDLG_SAMPLES     400
+#define ID_wxVIDCAP_AUDIOFORMATDLG_BITS        401
+#define ID_wxVIDCAP_AUDIOFORMATDLG_CHANNELS    402
+#define ID_wxVIDCAP_AUDIOFORMATDLG_APPLY       403
+#define ID_wxVIDCAP_AUDIOFORMATDLG_OK          404
+#define ID_wxVIDCAP_AUDIOFORMATDLG_CANCEL      405
 
 BEGIN_EVENT_TABLE(wxVideoCaptureWindowAudioFormatDialog, wxDialog)
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_APPLY,    wxVideoCaptureWindowAudioFormatDialog::OnApply )
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_OK,       wxVideoCaptureWindowAudioFormatDialog::OnOk )
-    EVT_BUTTON( IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL,   wxVideoCaptureWindowAudioFormatDialog::OnCancel )
-    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_SAMPLES,  wxVideoCaptureWindowAudioFormatDialog::OnChoice )
-    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_BITS,     wxVideoCaptureWindowAudioFormatDialog::OnChoice )
-    EVT_CHOICE( IDD_wxVIDCAP_AUDIOFORMATDLG_CHANNELS, wxVideoCaptureWindowAudioFormatDialog::OnChoice )
+    EVT_BUTTON( ID_wxVIDCAP_AUDIOFORMATDLG_APPLY,    wxVideoCaptureWindowAudioFormatDialog::OnApply )
+    EVT_BUTTON( ID_wxVIDCAP_AUDIOFORMATDLG_OK,       wxVideoCaptureWindowAudioFormatDialog::OnOk )
+    EVT_BUTTON( ID_wxVIDCAP_AUDIOFORMATDLG_CANCEL,   wxVideoCaptureWindowAudioFormatDialog::OnCancel )
+    EVT_CHOICE( ID_wxVIDCAP_AUDIOFORMATDLG_SAMPLES,  wxVideoCaptureWindowAudioFormatDialog::OnChoice )
+    EVT_CHOICE( ID_wxVIDCAP_AUDIOFORMATDLG_BITS,     wxVideoCaptureWindowAudioFormatDialog::OnChoice )
+    EVT_CHOICE( ID_wxVIDCAP_AUDIOFORMATDLG_CHANNELS, wxVideoCaptureWindowAudioFormatDialog::OnChoice )
 END_EVENT_TABLE()
 
 wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
-                                   wxVideoCaptureWindowVFW *parent,
-                                   wxWindowID id, const wxString &title,
-                                   const wxPoint &position, const wxSize &size, long style)
-                                   :wxDialog( parent, id, title, position, size, style )
+                                            wxVideoCaptureWindowVFW *parent,
+                                            wxWindowID id, const wxString &title,
+                                            const wxPoint &position, const wxSize &size,
+                                            long style)
+                                      :wxDialog( parent, id, title, position, size, style )
 {
     int i;
     m_parent = parent;
@@ -696,17 +701,17 @@ wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
         samplesArray.Add(wxString::Format(wxT("%ld"), wxVIDCAP_AUDIO_SAMPLESPERSEC[i]));
 
     formatsizer->Add( new wxStaticText( this, wxID_ANY, wxT("Samples per second (Hz):")), 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    m_samplespersecondChoice = new wxChoice( this, IDD_wxVIDCAP_AUDIOFORMATDLG_SAMPLES, wxDefaultPosition, wxDefaultSize, samplesArray);
+    m_samplespersecondChoice = new wxChoice( this, ID_wxVIDCAP_AUDIOFORMATDLG_SAMPLES, wxDefaultPosition, wxDefaultSize, samplesArray);
     formatsizer->Add( m_samplespersecondChoice, 0, wxGROW|wxALL, 5 );
 
     wxString bits_str[2] = { wxT("8"), wxT("16") };
     formatsizer->Add( new wxStaticText( this, wxID_ANY, wxT("Bits per sample:")), 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    m_bitspersampleChoice = new wxChoice( this, IDD_wxVIDCAP_AUDIOFORMATDLG_BITS, wxDefaultPosition, wxDefaultSize, 2, bits_str);
+    m_bitspersampleChoice = new wxChoice( this, ID_wxVIDCAP_AUDIOFORMATDLG_BITS, wxDefaultPosition, wxDefaultSize, 2, bits_str);
     formatsizer->Add( m_bitspersampleChoice, 0, wxGROW|wxALL, 5 );
 
     wxString channels_str[2] = { wxT("Mono"), wxT("Stereo") };
     formatsizer->Add( new wxStaticText( this, wxID_ANY, wxT("Channels:")), 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    m_channelsChoice = new wxChoice( this, IDD_wxVIDCAP_AUDIOFORMATDLG_CHANNELS, wxDefaultPosition, wxDefaultSize, 2, channels_str);
+    m_channelsChoice = new wxChoice( this, ID_wxVIDCAP_AUDIOFORMATDLG_CHANNELS, wxDefaultPosition, wxDefaultSize, 2, channels_str);
     formatsizer->Add( m_channelsChoice, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     formatstaticsizer->Add( formatsizer, 0, wxGROW|wxALL, 0 );
@@ -734,17 +739,17 @@ wxVideoCaptureWindowAudioFormatDialog::wxVideoCaptureWindowAudioFormatDialog(
 
     wxSizer *buttonsizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxButton *m_applyButton = new wxButton( this, IDD_wxVIDCAP_AUDIOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_applyButton = new wxButton( this, ID_wxVIDCAP_AUDIOFORMATDLG_APPLY, wxT("Apply"), wxDefaultPosition, wxSize(60,-1));
     m_applyButton->SetToolTip(wxT("Apply changes, controls may take only allowed values"));
     m_applyButton->SetDefault();
     buttonsizer->Add( m_applyButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
 
-    wxButton *m_okButton = new wxButton( this, IDD_wxVIDCAP_AUDIOFORMATDLG_OK, wxT("Ok"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_okButton = new wxButton( this, ID_wxVIDCAP_AUDIOFORMATDLG_OK, wxT("Ok"), wxDefaultPosition, wxSize(60,-1));
     m_okButton->SetToolTip(wxT("Use apply changes to verify allowed values"));
     buttonsizer->Add( m_okButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
-    wxButton *m_cancelButton = new wxButton( this, IDD_wxVIDCAP_AUDIOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(60,-1));
+    wxButton *m_cancelButton = new wxButton( this, ID_wxVIDCAP_AUDIOFORMATDLG_CANCEL, wxT("Cancel"), wxDefaultPosition, wxSize(60,-1));
     buttonsizer->Add( m_cancelButton, 0, wxALIGN_CENTRE|wxALL, 5 );
 
     mainsizer->Add( buttonsizer, 0, wxALIGN_CENTRE|wxALL, 5 );
@@ -774,14 +779,19 @@ void wxVideoCaptureWindowAudioFormatDialog::OnChoice(wxCommandEvent &)
 
 void wxVideoCaptureWindowAudioFormatDialog::GetSetup()
 {
-    int channels, bitspersample, i;
-    long int samplespersecond;
+    int i, channels = 0, bitspersample = 0, samplespersecond = 0;
 
     m_parent->GetAudioFormat( &channels, &bitspersample, &samplespersecond );
 
     int samples_selection = 0;
     for (i = 0; i < wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT; ++i)
-        if (samplespersecond == wxVIDCAP_AUDIO_SAMPLESPERSEC[i]) samples_selection = i;
+    {
+        if (samplespersecond == (int)wxVIDCAP_AUDIO_SAMPLESPERSEC[i])
+        {
+            samples_selection = i;
+            break;
+        }
+    }
     m_samplespersecondChoice->SetSelection(samples_selection);
 
     int bits_selection = ((bitspersample == 8) ? 0 : 1);
@@ -805,7 +815,7 @@ void wxVideoCaptureWindowAudioFormatDialog::SetSetup()
 
     channels = m_channelsChoice->GetSelection() + 1; // mono = 1, stereo = 2
 
-    m_parent->SetAudioFormat( channels, (int)bitspersample, samplespersecond );
+    m_parent->SetAudioFormat( channels, (int)bitspersample, (int)samplespersecond );
 }
 
 void wxVideoCaptureWindowAudioFormatDialog::OnApply(wxCommandEvent &)

@@ -46,9 +46,9 @@ set( wxVidCap_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxVid
 
 if (NOT TARGET wxVidCapLib)
 
-set( wxVidCap_VERSION         "0.9.0" )
-set( wxVidCap_MAJOR_VERSION   "0" )
-set( wxVidCap_MINOR_VERSION   "9" )
+set( wxVidCap_VERSION         "1.0.0" )
+set( wxVidCap_MAJOR_VERSION   "1" )
+set( wxVidCap_MINOR_VERSION   "0" )
 set( wxVidCap_RELEASE_VERSION "0" )
 
 # ---------------------------------------------------------------------------

@@ -46,7 +46,8 @@ BEGIN_EVENT_TABLE(MyFrame,wxFrame)
     //EVT_IDLE( MyFrame::OnIdle )
     EVT_CLOSE(MyFrame::OnCloseWindow )
 
-    EVT_MENU(ID_QUIT,  MyFrame::OnQuit)
+    EVT_MENU(wxID_OPEN,  MyFrame::OnOpen)
+    EVT_MENU(wxID_EXIT,  MyFrame::OnQuit)
 
     EVT_MENU_RANGE(ID_DEVICE_ENUMERATE, ID_DEVICE9, MyFrame::OnChangeDevice)
 
@@ -83,7 +84,7 @@ BEGIN_EVENT_TABLE(MyFrame,wxFrame)
     EVT_MENU(ID_DLGCAPPREFERENCES,  MyFrame::OnVideoDialogs)
 #endif // WXVIDCAP_AVI_SUPPORT
 
-    EVT_MENU(ID_ABOUT, MyFrame::OnAbout)
+    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
     EVT_MENU(ID_SHOWLOG, MyFrame::OnShowLog)
 END_EVENT_TABLE()
 
@@ -105,6 +106,9 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
 
 #if wxUSE_STATUSBAR
     CreateStatusBar(2);
+    wxSize frameStatusTextExtent = GetStatusBar()->GetTextExtent(MyVideoCaptureWindow::GetStatusText(999999, 9999));
+    int status_widths[2] = {-1, frameStatusTextExtent.GetWidth()};
+    SetStatusWidths(2, status_widths);
 #endif // wxUSE_STATUSBAR
 
     m_splitterWin = new wxSplitterWindow(this, wxID_ANY);
@@ -201,7 +205,8 @@ void MyFrame::EnumerateDevices()
 
         for (i = 0; i < count; i++)
         {
-            m_videoMenu->Insert(device_insert_pos+i, ID_DEVICE0+i, m_vidCapWin->GetDeviceName(i), wxString::Format(wxT("Video device #%d"),i), wxITEM_CHECK);
+            m_videoMenu->Insert(device_insert_pos+i, ID_DEVICE0+i,
+                                m_vidCapWin->GetDeviceName(i), wxString::Format(wxT("Video device #%d"),i), wxITEM_CHECK);
 
             // the numbers may have changed, find the same device
             if ((oldDeviceName    == m_vidCapWin->GetDeviceName(i)) &&
@@ -234,19 +239,23 @@ void MyFrame::CreateMenus()
     m_fileMenu->AppendSeparator();
 #endif // WXVIDCAP_AVI_SUPPORT
 
-    m_fileMenu->Append(ID_QUIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
+#ifdef WXVIDCAP_LINUX_V4L
+    m_fileMenu->Append(wxID_OPEN, wxT("&Open video device...\tAlt-O"), wxT("Open a video device by filename..."));
+    m_fileMenu->AppendSeparator();
+#endif //WXVIDCAP_LINUX_V4L
+    m_fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
 
     //---- Image Processing menu ---------------------------------------------
     m_processMenu = new wxMenu;
 
-    m_processMenu->Append(ID_IMGPROCESS_NEGATIVE, wxT("&Negative"), wxT("Invert intensities"), wxITEM_CHECK);
+    m_processMenu->Append(ID_IMGPROCESS_NEGATIVE, wxT("&Negative"),      wxT("Invert intensities"), wxITEM_CHECK);
     m_processMenu->Append(ID_IMGPROCESS_EDGE,     wxT("&Edge detector"), wxT("Very simple edge detector"), wxITEM_CHECK);
-    m_processMenu->Append(ID_IMGPROCESS_MOTION,   wxT("&Motion"), wxT("Simple motion detector"), wxITEM_CHECK);
+    m_processMenu->Append(ID_IMGPROCESS_MOTION,   wxT("&Motion"),        wxT("Simple motion detector"), wxITEM_CHECK);
 
     //---- Video menu -------------------------------------------------------
     m_videoMenu = new wxMenu;
 
-    m_videoMenu->Append(ID_DEVICE_ENUMERATE, wxT("Sca&n for devices"), wxT("Enumerate devices found on the system"));
+    m_videoMenu->Append(ID_DEVICE_ENUMERATE, wxT("Resca&n for devices"), wxT("Enumerate devices found on the system"));
     m_videoMenu->AppendSeparator();
 
     m_videoMenu->Append(ID_DEVICENONE,      wxT("&Disconnect"),        wxT("Disconnect from all devices"), wxITEM_CHECK );
@@ -298,7 +307,7 @@ void MyFrame::CreateMenus()
 
     //---- Help menu --------------------------------------------------------
     m_helpMenu = new wxMenu;
-    m_helpMenu->Append(ID_ABOUT,   wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
+    m_helpMenu->Append(wxID_ABOUT, wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
     m_helpMenu->Append(ID_SHOWLOG, wxT("&Show log\tCtrl-L"), wxT("Show log window"), wxITEM_CHECK);
 
     // now append the freshly created menu to the menu bar...
@@ -332,7 +341,7 @@ void MyFrame::CreateToolbar()
 
 void MyFrame::SetupVideoMenus()
 {
-    int i;
+    int i, count;
 
     bool connected          = m_vidCapWin->IsDeviceConnected();
     bool previewing         = m_vidCapWin->IsPreviewing();
@@ -340,8 +349,12 @@ void MyFrame::SetupVideoMenus()
     bool previewing_scaled  = m_vidCapWin->IsPreviewScaled();
 
     // uncheck the other device
-    for (i = 0; i < m_vidCapWin->GetDeviceCount(); i++)
-        m_videoMenu->Check(ID_DEVICE0+i, false);
+    count = m_vidCapWin->GetDeviceCount();
+    for (i = 0; i < count; ++i)
+    {
+        wxMenuItem* menuItem = m_videoMenu->FindItem(ID_DEVICE0+i);
+        if (menuItem) menuItem->Check(false);
+    }
 
     if (connected)
     {
@@ -366,10 +379,10 @@ void MyFrame::SetupVideoMenus()
     }
     else
     {
-        m_videoMenu->Enable(ID_OVERLAY,               false);
-        m_videoMenu->Enable(ID_DLGSOURCE,             false);
-        m_videoMenu->Enable(ID_DLGFORMAT,             false);
-        m_videoMenu->Enable(ID_DLGDISPLAY,            false);
+        m_videoMenu->Enable(ID_OVERLAY,    false);
+        m_videoMenu->Enable(ID_DLGSOURCE,  false);
+        m_videoMenu->Enable(ID_DLGFORMAT,  false);
+        m_videoMenu->Enable(ID_DLGDISPLAY, false);
 
 #ifdef WXVIDCAP_AUDIO_SUPPORT
         m_captureMenu->Enable(ID_DLGAUDIO, false);
@@ -421,6 +434,26 @@ void MyFrame::SetupVideoMenus()
 
 // event handlers
 
+void MyFrame::OnOpen(wxCommandEvent& WXUNUSED(event))
+{
+#ifdef WXVIDCAP_LINUX_V4L
+    wxString deviceFileName = wxFileSelector(wxT("Open video device"),
+                                             wxT(""), wxT(""), wxT(""), wxT("*"),
+                                             wxFD_OPEN|wxFD_FILE_MUST_EXIST, this);
+    if (!deviceFileName.IsEmpty())
+    {
+        if (!m_vidCapWin->DeviceConnect(deviceFileName))
+        {
+            wxMessageBox(wxT("Unable to open video device :\n") + deviceFileName,
+                         wxT("Error opening video device"),
+                         wxOK|wxICON_ERROR|wxCENTRE, this);
+        }
+    }
+
+    SetupVideoMenus();
+#endif //WXVIDCAP_LINUX_V4L
+}
+
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     m_vidCapWin->Preview(false);
@@ -434,7 +467,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
                 _T("Written by John Labenski.\n")
                 _T("Welcome to %s"), wxVERSION_STRING);
 
-    wxMessageBox(msg, wxT("About wxVidCap"), wxOK | wxICON_INFORMATION, this);
+    wxMessageBox(msg, wxT("About wxVidCap"), wxOK | wxICON_INFORMATION | wxCENTRE, this);
 }
 
 void MyFrame::OnShowLog(wxCommandEvent& event)
@@ -680,7 +713,7 @@ void MyFrame::OnSetCaptureFilename(wxCommandEvent &)
 
 void MyFrame::OnSetCaptureFilesize(wxCommandEvent &)
 {
-    m_vidCapWin->SetCaptureFileSizeDialog();
+    m_vidCapWin->ShowCaptureFileSizeDialog();
 }
 
 void MyFrame::OnCaptureVideo(wxCommandEvent &)
@@ -775,25 +808,29 @@ void MyVideoCaptureWindow::OnVideoEvent( wxVideoCaptureEvent &event )
 void MyVideoCaptureWindow::OnVideoStatusEvent( wxVideoCaptureEvent &event )
 {
     wxString wxstr;
-    wxstr.Printf(wxT("wxEVT_VIDEO_STATUS: %s \n"), event.GetStatusText().c_str());
+    wxstr.Printf(wxT("wxEVT_VIDEO_STATUS: %s \n"), event.GetStatusMessage().c_str());
     m_frame->m_logTextCtrl->AppendText(wxstr);
 
-    wxstr.Printf(wxT("%s"), event.GetStatusText().c_str());
+    wxstr.Printf(wxT("%s"), event.GetStatusMessage().c_str());
     m_frame->SetStatusText(wxstr, 1);
 
     event.Skip();
 }
 
-void MyVideoCaptureWindow::OnVideoFrameEvent( wxVideoCaptureEvent &event )
+// static
+wxString MyVideoCaptureWindow::GetStatusText(unsigned int frame_num, unsigned int ms_per_frame)
 {
     wxString wxstr;
-    unsigned int msperframe = event.GetFramerateMS();
-    if (msperframe == 0) msperframe = 1000;
+    double frame_rate = (ms_per_frame == 0) ? 0 : 1000.0/ms_per_frame; // don't divide by 0
 
-    wxstr.Printf(wxT("Frame #: %ld, ms/frame: %d, fps: %2.2f"),
-                    event.GetFrameNumber(), msperframe, 1000.0/msperframe);
+    wxstr.Printf(wxT("Frame #: %u, %u ms/frame, %2.2f fps"),
+                    frame_num, ms_per_frame, frame_rate);
+    return wxstr;
+}
 
-    m_frame->SetStatusText(wxstr, 1);
+void MyVideoCaptureWindow::OnVideoFrameEvent( wxVideoCaptureEvent &event )
+{
+    m_frame->SetStatusText(GetStatusText(event.GetFrameNumber(), event.GetFramerateMS()), 1);
     event.Skip();
 }
 
@@ -806,23 +843,24 @@ void MyVideoCaptureWindow::OnVideoStreamEvent( wxVideoCaptureEvent &event )
 void MyVideoCaptureWindow::OnVideoErrorEvent( wxVideoCaptureEvent &event )
 {
     wxString wxstr;
-    wxstr.Printf(wxT("wxEVT_VIDEO_ERROR: %s \n"), event.GetErrorText().c_str());
+    wxstr.Printf(wxT("wxEVT_VIDEO_ERROR: %s \n"), event.GetErrorMessage().c_str());
 
     m_frame->m_logTextCtrl->AppendText(wxstr);
     event.Skip();
 }
 
-bool MyVideoCaptureWindow::ProcesswxImageFrame()
+bool MyVideoCaptureWindow::OnProcessFrame(wxImage& wximg)
 {
-    // This function is only called with a valid wxImage
+    // This function is only called with a valid wxImage, but for this sample we'll verify that.
+    wxCHECK_MSG(wximg.IsOk(), false, wxT("Invalid image to process"));
 
     bool refresh = true; // return value
     int i, j, jj;
-    const int width        = m_wximage.GetWidth();
-    const int height       = m_wximage.GetHeight();
+    const int width        = wximg.GetWidth();
+    const int height       = wximg.GetHeight();
     const int width_x3     = width*3;
     const int imgdata_size = width*height*3;
-    unsigned char *imgdata = m_wximage.GetData();
+    unsigned char *imgdata = wximg.GetData();
 
     static wxImage lastimage(width, height); // for motion detector
 
@@ -839,7 +877,7 @@ bool MyVideoCaptureWindow::ProcesswxImageFrame()
 
         if (imgrow)
         {
-            unsigned char *rowptr = m_wximage.GetData();
+            unsigned char *rowptr = wximg.GetData();
 
             for (j = 0; j < height; ++j)
             {

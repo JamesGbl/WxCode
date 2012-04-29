@@ -3,12 +3,12 @@
 // What is the MSW capture window's ID? it's 125 now...
 // EVT_USER + 101? set to a real value...
 // What the heck is an MCI device? vcr/videodisc? do/did they really exist?
-// Audio volume and maybe device? mine's on the mic input :(
+// Audio volume and maybe device? mine's on the mic input.
 // Allow for centering of hWnd, when no scrollbars on the window, maybe
 // RegisterHotKey to use SetAbortKey
 // Pinnacle Studio PCTV flashes GUI when device is disconnected and reconnected
 //      and then preview is set on, all video programs do it, if Overlay
-//      first then preview it's OK, hummm... see DeviceConnect
+//      first then preview it's OK, hummm... see DeviceConnect()
 // Deal with status callback in a more sensible way
 // Deal with the Yield callback, NOT TESTED
 // Allow for image processing of the captured frames before saving
@@ -30,14 +30,15 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
+//#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+    //#include <wx/wx.h>
 #endif
 
 #include "wx/vidcap/vcapwin.h"
 #include <wx/file.h>
+#include <wx/arrimpl.cpp> // for wxArrayVideoCaptureFormat
 
 #if !wxCHECK_VERSION(2,9,0)
     #define wxPENSTYLE_SOLID   wxSOLID
@@ -75,7 +76,7 @@ const char* FOURCCToString(FOURCC fourcc)
 
     static char s4[5] = "    ";
     char *s = (char*)(&fourcc);
-    for (unsigned int i=0; i<4; i++) s4[i] = s[i];
+    for (unsigned int i = 0; i < 4; ++i) s4[i] = s[i];
     s4[4] = 0;
     return s4;
 }
@@ -87,19 +88,34 @@ FOURCC StringToFOURCC( const char *s )
     unsigned int len = strlen(s);
     if (len < 1) return FOURCC(0); // for BI_RGB = 0
 
-    for (unsigned int i=0; i<len; i++) s4[i] = s[i];
+    for (unsigned int i = 0; i < len; ++i) s4[i] = s[i];
     return FOURCC((s4[0])|(s4[1]<<8)|(s4[2]<<16)|(s4[3]<<24));
 }
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(wxArrayVideoCaptureFormat);
-
-static wxArrayVideoCaptureFormat s_wxVideoCaptureFormats;
-
+//---------------------------------------------------------------------------
+// Audio
+//---------------------------------------------------------------------------
 
 // array of "standard" audio rates
-const long int wxVIDCAP_AUDIO_SAMPLESPERSEC[wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT]=
+const unsigned int wxVIDCAP_AUDIO_SAMPLESPERSEC[wxVIDCAP_AUDIO_SAMPLESPERSEC_COUNT]=
     { 8000, 11025, 16000, 22050, 24000, 32000, 44100, 48000 };
+
+//------------------------------------------------------------------------------
+// wxVideoCaptureFormat
+//------------------------------------------------------------------------------
+
+const wxVideoCaptureFormat wxNullVideoCaptureFormat(wxT("Invalid Video Format"), wxNullFOURCC, wxNullFOURCC, 0);
+
+WX_DEFINE_OBJARRAY(wxArrayVideoCaptureFormat);
+
+wxVideoCaptureFormat::wxVideoCaptureFormat(const wxString &description, FOURCC fourcc,
+                                           int v4l2_pixelformat, int bpp)
+                     : m_description(description),
+                       m_fourcc(fourcc),
+                       m_v4l2_pixelformat(v4l2_pixelformat),
+                       m_bpp(bpp)
+{
+}
 
 //------------------------------------------------------------------------------
 // wxVideoCaptureEvent, events for the wxVideoCaptureWindow
@@ -108,13 +124,23 @@ DEFINE_EVENT_TYPE(wxEVT_VIDEO_STATUS)
 DEFINE_EVENT_TYPE(wxEVT_VIDEO_FRAME)
 DEFINE_EVENT_TYPE(wxEVT_VIDEO_STREAM)
 DEFINE_EVENT_TYPE(wxEVT_VIDEO_ERROR)
+DEFINE_EVENT_TYPE(wxEVT_VIDEO_FRAME_REQ)
 
 IMPLEMENT_DYNAMIC_CLASS(wxVideoCaptureEvent, wxEvent)
 
+wxVideoCaptureEvent::wxVideoCaptureEvent(const wxVideoCaptureEvent& event)
+                    :wxEvent(event)
+{
+    m_statusMessage = event.m_statusMessage;
+    m_errorMessage  = event.m_errorMessage;
+    m_framenumber   = event.m_framenumber;
+    m_frameratems   = event.m_frameratems;
+}
+
 wxVideoCaptureEvent::wxVideoCaptureEvent(wxEventType commandType,
                                          wxVideoCaptureWindowBase *vidCapWin,
-                                         int Id)
-                    :wxEvent(Id, commandType)
+                                         int win_id)
+                    :wxEvent(win_id, commandType)
 {
     SetEventObject( vidCapWin );
 }
@@ -123,6 +149,9 @@ wxVideoCaptureEvent::wxVideoCaptureEvent(wxEventType commandType,
 // wxVideoCaptureWindowBase : window for viewing/recording streaming video or snapshots
 //----------------------------------------------------------------------------
 IMPLEMENT_ABSTRACT_CLASS(wxVideoCaptureWindowBase, wxScrolledWindow);
+
+// static
+wxArrayVideoCaptureFormat wxVideoCaptureWindowBase::sm_wxVideoCaptureFormats;
 
 wxVideoCaptureWindowBase::wxVideoCaptureWindowBase( wxWindow *parent, wxWindowID id,
                                                     const wxPoint &pos, const wxSize &size,
@@ -137,11 +166,15 @@ bool wxVideoCaptureWindowBase::Create( wxWindow *parent, wxWindowID id,
                                        const wxPoint &pos, const wxSize &size,
                                        long style, const wxString &name)
 {
+    // setup the timer for previewing w/ wxImages
+    m_previewTimer.SetOwner(this, ID_wxVIDCAP_PREVIEW_WXIMAGE_TIMER);
+
     return wxScrolledWindow::Create(parent, id, pos, size, style, name);
 }
 
 wxVideoCaptureWindowBase::~wxVideoCaptureWindowBase()
 {
+    m_previewTimer.Stop(); // just to be sure
 }
 
 void wxVideoCaptureWindowBase::Reset(bool full)
@@ -210,7 +243,7 @@ void wxVideoCaptureWindowBase::ShowPropertiesDialog()
     wxBoxSizer *dialogsizer = new wxBoxSizer( wxVERTICAL );
     wxTextCtrl *textctrl = new wxTextCtrl( dialog, wxID_ANY,
                                            wxT(""),
-                                           wxDefaultPosition, wxSize(400,400),
+                                           wxDefaultPosition, wxSize(600,600),
                                            wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH2|wxHSCROLL);
 
     textctrl->SetFont(wxFont(10, wxMODERN, wxNORMAL, wxNORMAL)); // want monospace
@@ -306,7 +339,8 @@ void wxVideoCaptureWindowBase::OnPreFrame()
     m_framenumber++;
     m_lastframetimemillis = millis_now;
 
-    unsigned int frame_ave = (m_previewmsperframe > 500) ? 1 : 4; // get a nicer frame rate by averaging
+    // get a nicer frame rate by averaging a few frames
+    unsigned int frame_ave = (m_previewmsperframe > 500) ? 1 : 4;
 
     if (m_framenumber % frame_ave == 0)
     {
@@ -427,10 +461,13 @@ wxImage wxVideoCaptureWindowBase::GetwxImage(bool full_copy) const
 // Utility Functions
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowBase::SendErrorEvent()
+bool wxVideoCaptureWindowBase::SendErrorEvent(int error_num, const wxString& errorMessage)
 {
+    m_last_error_num    = error_num;
+    m_last_errorMessage = errorMessage;
+
     wxVideoCaptureEvent event( wxEVT_VIDEO_ERROR, this, GetId() );
-    event.SetErrorText(m_last_errorString);
+    event.SetErrorMessage(m_last_errorMessage);
     return GetEventHandler()->ProcessEvent(event);
 }
 
@@ -441,7 +478,7 @@ long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename ) c
     wxFile file(filename, wxFile::read);
     if (!file.IsOpened()) return -1; // file doesn't exist ?
 
-    long int filesize = file.Length();
+    wxFileOffset filesize = file.Length();
     file.Close();
     return filesize/1024L;
 }
@@ -453,49 +490,51 @@ long int wxVideoCaptureWindowBase::GetFileSizeInKB( const wxString &filename ) c
 int wxVideoCaptureWindowBase::GetVideoCaptureFormatCount() const
 {
     CreateVideoCaptureFormatArray();
-    return s_wxVideoCaptureFormats.GetCount();
+    return sm_wxVideoCaptureFormats.GetCount();
 }
-wxArrayVideoCaptureFormat &wxVideoCaptureWindowBase::GetVideoCaptureFormatArray()
+
+const wxArrayVideoCaptureFormat &wxVideoCaptureWindowBase::GetVideoCaptureFormatArray() const
 {
     CreateVideoCaptureFormatArray();
-    return s_wxVideoCaptureFormats;
+    return sm_wxVideoCaptureFormats;
 }
-wxVideoCaptureFormat wxVideoCaptureWindowBase::GetVideoCaptureFormat(int index) const
+
+const wxVideoCaptureFormat& wxVideoCaptureWindowBase::GetVideoCaptureFormat(int index) const
 {
     CreateVideoCaptureFormatArray();
-    wxCHECK_MSG((index >= 0) && (index < int(s_wxVideoCaptureFormats.GetCount())), wxVideoCaptureFormat(),
+    wxCHECK_MSG((index >= 0) && (index < int(sm_wxVideoCaptureFormats.GetCount())), wxNullVideoCaptureFormat,
                  wxT("invalid index in GetVideoCaptureFormat"));
-    return s_wxVideoCaptureFormats[index];
+    return sm_wxVideoCaptureFormats[index];
 }
-void wxVideoCaptureWindowBase::RegisterVideoCaptureFormat(wxVideoCaptureFormat *new_VideoFormat)
+
+void wxVideoCaptureWindowBase::RegisterVideoCaptureFormat(const wxVideoCaptureFormat& videoCaptureFormat)
 {
     CreateVideoCaptureFormatArray();
-    wxCHECK_RET(new_VideoFormat, wxT("invalid format"));
-    s_wxVideoCaptureFormats.Add(new_VideoFormat);
+    sm_wxVideoCaptureFormats.Add(videoCaptureFormat);
 }
 
 int wxVideoCaptureWindowBase::FindVideoCaptureFormatFOURCC(FOURCC fourcc) const
 {
     CreateVideoCaptureFormatArray();
-    int i, count = s_wxVideoCaptureFormats.GetCount();
+    int i, count = sm_wxVideoCaptureFormats.GetCount();
     for (i = 0; i < count; ++i)
     {
-        if (s_wxVideoCaptureFormats[i].m_fourcc == fourcc)
+        if (sm_wxVideoCaptureFormats[i].m_fourcc == fourcc)
             return i;
     }
-    return -1;
+    return wxNOT_FOUND;
 }
 
 int wxVideoCaptureWindowBase::FindVideoCaptureFormatV4L2pixelformat(FOURCC v4l2_pixelformat) const
 {
     CreateVideoCaptureFormatArray();
-    int i, count = s_wxVideoCaptureFormats.GetCount();
+    int i, count = sm_wxVideoCaptureFormats.GetCount();
     for (i = 0; i < count; ++i)
     {
-        if (s_wxVideoCaptureFormats[i].m_v4l2_pixelformat == v4l2_pixelformat)
+        if (sm_wxVideoCaptureFormats[i].m_v4l2_pixelformat == v4l2_pixelformat)
             return i;
     }
-    return -1;
+    return wxNOT_FOUND;
 }
 
 #ifndef WXVIDCAP_LINUX_V4L
@@ -605,11 +644,11 @@ int wxVideoCaptureWindowBase::FindVideoCaptureFormatV4L2pixelformat(FOURCC v4l2_
 
 #endif // WXVIDCAP_LINUX_V4L
 
-#define ADD_VCF(a,b,c,d) s_wxVideoCaptureFormats.Add(new wxVideoCaptureFormat(a,b,c,d));
+#define ADD_VCF(a,b,c,d) sm_wxVideoCaptureFormats.Add(wxVideoCaptureFormat(a,b,c,d));
 
 void wxVideoCaptureWindowBase::CreateVideoCaptureFormatArray() const
 {
-    if (int(s_wxVideoCaptureFormats.GetCount()) > 0) return;
+    if (sm_wxVideoCaptureFormats.GetCount() > 0u) return;
 
 //.name  .palette .fourcc    .depth .flags .hshift .vshift
 //"8 bpp, gray", VIDEO_PALETTE_GREY, V4L2_PIX_FMT_GREY, 8, FORMAT_FLAGS_PACKED,
@@ -631,6 +670,11 @@ void wxVideoCaptureWindowBase::CreateVideoCaptureFormatArray() const
 //"4:1:0, planar, Y-Cb-Cr", VIDEO_PALETTE_YUV410P, V4L2_PIX_FMT_YUV410, BT848_COLOR_FMT_YCrCb411, 9, FORMAT_FLAGS_PLANAR, 2, 2,
 //"4:1:0, planar, Y-Cr-Cb", -1, V4L2_PIX_FMT_YVU410, BT848_COLOR_FMT_YCrCb411, 9, FORMAT_FLAGS_PLANAR | FORMAT_FLAGS_CrCb, 2, 2,
 //"raw scanlines", VIDEO_PALETTE_RAW, -1, BT848_COLOR_FMT_RAW, 8, FORMAT_FLAGS_RAW,
+
+    // The formats added below are the ones that are thought to be used.
+    // Other ones should be added as needed, but the wxVideoCaptureWindowCustomVideoFormatDialog
+    // will actually call RegisterVideoCaptureFormat() to add any unknown ones
+    // so, hopefully, we don't have to declare every possible format ever.
 
     // RGB formats
     ADD_VCF(wxT("DIB Uncompressed"),                v4l2_fourcc('D', 'I', 'B', ' '), wxNullFOURCC,          24) // MSW

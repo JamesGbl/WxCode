@@ -1,16 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        vcapdlgs.h, the MSW header for wxVideoCaptureWindow using VFW 1.1 API
+// Name:        vcapdlgs.h, dialogs for wxVideoCaptureWindow
 // Author:      John Labenski
 // Created:     7/06/2001
 // Modified:    01/14/03
 // Copyright:   John Labenski
 // License:     wxWidgets V2.0
 /////////////////////////////////////////////////////////////////////////////
-//
-// Usage notes:
-// Link against vfw.lib
-// Read the header and the cpp file to figure out what something does
-// Test "problems" against MSW vidcap.exe to see if the same problem occurs
 
 #ifndef __WX_VCAPDLGS_H__
 #define __WX_VCAPDLGS_H__
@@ -18,9 +13,7 @@
 class WXDLLIMPEXP_FWD_CORE wxSpinCtrl;
 class WXDLLIMPEXP_FWD_CORE wxSpinEvent;
 
-
 #ifdef WXVIDCAP_AVI_SUPPORT
-
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindowCaptureSingleFramesDialog - a dialog to capture singles frames
 //      NEVER call this, use wxVideoCaptureWindow::CaptureSingleFramesToFileDialog
@@ -29,7 +22,7 @@ class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCaptureSingleFramesDialog: public w
 {
 public:
     wxVideoCaptureWindowCaptureSingleFramesDialog( wxVideoCaptureWindowVFW *parent = NULL,
-                                                   wxWindowID id = -1,
+                                                   wxWindowID id = wxID_ANY,
                                                    const wxString &title = wxT("Capture single frames"),
                                                    const wxPoint& pos = wxDefaultPosition,
                                                    const wxSize& size = wxDefaultSize,
@@ -52,7 +45,9 @@ private:
 
     DECLARE_EVENT_TABLE()
 };
+#endif // WXVIDCAP_AVI_SUPPORT
 
+#ifdef WXVIDCAP_AVI_SUPPORT
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindowCapturePreferencesDialog - a dialog to adjust the capture preferences
 //      NEVER call this, use wxVideoCaptureWindow::CapturePreferencesDialog()
@@ -60,11 +55,12 @@ private:
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCapturePreferencesDialog: public wxDialog
 {
 public:
-    wxVideoCaptureWindowCapturePreferencesDialog( wxVideoCaptureWindowVFW *parent = NULL,
-            wxWindowID id = -1, const wxString &title = wxT("Capture Preferences"),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = wxDEFAULT_DIALOG_STYLE );
+    wxVideoCaptureWindowCapturePreferencesDialog(wxVideoCaptureWindowVFW *parent = NULL,
+                                                 wxWindowID id = wxID_ANY,
+                                                 const wxString &title = wxT("Capture Preferences"),
+                                                 const wxPoint& pos = wxDefaultPosition,
+                                                 const wxSize& size = wxDefaultSize,
+                                                 long style = wxDEFAULT_DIALOG_STYLE );
 
     void GetSetup();    // get the current wxVideoCaptureWindow settings
     void SetSetup();    // set capture settings to wxVideoCaptureWindow
@@ -113,7 +109,6 @@ public:
 private:
     DECLARE_EVENT_TABLE()
 };
-
 #endif // WXVIDCAP_AVI_SUPPORT
 
 //----------------------------------------------------------------------------
@@ -123,13 +118,12 @@ private:
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowCustomVideoFormatDialog: public wxDialog
 {
 public:
-    wxVideoCaptureWindowCustomVideoFormatDialog( wxVideoCaptureWindowBase *parent = NULL,
-                    wxWindowID id = -1,
-                    const wxString &title = wxT("Video Format Setup"),
-                    const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxDefaultSize,
-                    long style = wxDEFAULT_DIALOG_STYLE );
-
+    wxVideoCaptureWindowCustomVideoFormatDialog(wxVideoCaptureWindowBase *parent = NULL,
+                                                wxWindowID id = wxID_ANY,
+                                                const wxString &title = wxT("Video Format Setup"),
+                                                const wxPoint& pos = wxDefaultPosition,
+                                                const wxSize& size = wxDefaultSize,
+                                                long style = wxDEFAULT_DIALOG_STYLE );
     void GetSetup();
     void SetSetup();
 
@@ -151,20 +145,20 @@ private:
 };
 
 #ifdef WXVIDCAP_AUDIO_SUPPORT
-
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindowAudioFormatDialog - a dialog to easily adjust the audio properties
 //      NEVER call this, use wxVideoCaptureWindow::AudioFormatDialog
 //----------------------------------------------------------------------------
+
 class WXDLLIMPEXP_VIDCAP wxVideoCaptureWindowAudioFormatDialog: public wxDialog
 {
 public:
     wxVideoCaptureWindowAudioFormatDialog( wxVideoCaptureWindowVFW *parent = NULL,
-                    wxWindowID id = -1, const wxString &title = wxT("Sound Setup"),
-                    const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxDefaultSize,
-                    long style = wxDEFAULT_DIALOG_STYLE );
-
+                                           wxWindowID id = wxID_ANY, const
+                                           wxString &title = wxT("Sound Setup"),
+                                           const wxPoint& pos = wxDefaultPosition,
+                                           const wxSize& size = wxDefaultSize,
+                                           long style = wxDEFAULT_DIALOG_STYLE );
     void GetSetup();
     void SetSetup();
 
@@ -188,8 +182,6 @@ private:
 
     DECLARE_EVENT_TABLE()
 };
-
 #endif // WXVIDCAP_AUDIO_SUPPORT
-
 
 #endif //__WX_VCAPDLGS_H__
