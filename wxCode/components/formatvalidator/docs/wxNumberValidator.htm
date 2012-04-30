@@ -1,0 +1,644 @@
+<HTML>
+<head>
+	<title>wxNumberValidator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<BODY BGCOLOR=#FFFFFF>
+<BODY>
+
+<H2>wxNumberValidator</H2>
+<P>
+
+<B><FONT COLOR="#FF0000">ABOUT VALIDATING NUMBERS</FONT></B><P>
+<P>It's really a good thing having something that avoids problems with numbers. There are mainly
+two kind of problems: a) making mistakes when typing (i.e. "123r5") and b) with large numbers,
+type more or less digits than desired. How many zeros are in "1000000000"? If this is an amount of
+money, perhaps you want to review it before pressing 'enter' key.</P>
+
+Validation can be done in two ways: "while typing" and "after typing". You can find people for and against
+either. I'll discuss them a bit:
+
+<P>So, you think the feature "validate while typing" is needed. Fortunately, we have "On Char" event to
+deal with it. We can avoid "typos" vetoing unwanted characters. If we use a "formatter" working while
+user types, we can also set automatically the proper thousands separators: "1,000,000,000". These are really
+good reasons to use this kind of validation. But it is not always a good idea. I'll explain why.</P>
+
+<P>Another very useful feature is allowing only values inside (or outside) a range. However, this should
+not be done at OnChar event. Let's see why: Suppose you only allow values between 10 and 20. The user
+begins to type the value pressing '1' key. And just now, the validator complains because '1' is not in
+range 10-20. This kind of validation should be done after the user finishes his input. "After" means
+when he presses the typical keys 'ENTER' or 'TAB' or makes 'click' on other control; or when the app wants
+to know if the value is valid. Our validator must be aware of these special keys ('enter' 'tab') and,
+perhaps, also of "kill focus" event.</P>
+
+<P>Internationalization (i18) is another feature. Different regions, different ways of writing numbers.
+The main differences are decimal separator and thousands separator. Some countries group digits their
+own way, not the most used 3-digits grouping. The "formatter" must work accordingly. Somewhere in
+your app the string at the control may be converted to a "real" number (int, float...), and the converter
+must know the 'locale' used to format that string. Well, if an only 'locale' is used everywhere, no problem.
+But if your app uses several 'locales' (i.e. in different simultaneous controls), spurious things may occur.</P>
+
+<P>What about "copy and paste" from another control?. We can not guess if all pasted characters are going
+to be used, or if just some of them. If we treat "paste" event and use the formatter, user may get confused.
+I think it's better not to handle "paste" event.</P>
+
+<P>You would think "validate while typimg" should work as if you were using a very simple calculator,
+accepting only meaningful characters. This way, at any time the control has a "valid" number. Well, it
+has a number, yes. But, is it really "valid"?. Suppose you want a fixed amount of decimal digits, say two,
+no one, no three. We can instruct the formatter to form numbers with two decimal digits, adding the needed
+ones, same as it does with thousand separators. If we are using "OnChar event" validating, things can go this
+way: User types the first decimal digit. The formatter obeys the "two digits rule" and adds a "0". Hey, if the
+user wants a different digit, he must first erase that "0" and then type the digit he really wants. We can also
+instruct the formatter not to add automatically this digit, but then control hasn't a "valid" number. Like range
+checking, it seems this rule must be validated not at "OnChar", but only when input is finished.</P>
+
+<P>Expanding formatter features, we may use prefixes (i.e. "$5,000") suffixes (i.e. "14 kg") or different
+"styles" for different values. For example, negative numbers are sometimes written as "12-" or "(12)" instead
+of "-12". How to validate these strings when they are not fully finished? These are more reasons for not to
+use "OnChar" validation.</P>
+
+<P>Some people may think a meaningless character between two digits is an error, an so validation must ask
+the user to fix it. Other people may think it's just a "typo", so easy to fix even for the validator itself.
+After pasting, the string may be not fully formatted (lack or excess of thousand separators, etc.). Again, this
+can be considered as an error or as something the validator can cope with. In this sense, we can do a "strict
+validation", or we can be "tolerant".</P>
+
+
+<P><B><U><FONT COLOR="#FF0000">On-Kill-Focus validation and retaining focus</FONT></U></B><P>
+Validation can also me made when the control loses focus. If the control's value is wrong (validation fails), we
+may retain focus. Or, even better, we may not.<P>
+
+This kind of behavior, retaining focus when On-Kill-Focus validation fails, should be used only in exceptional cases.
+It forces the user to a fixed behaviour, breaking his own flow, upsetting him. And it can also hang your app.<P>
+
+<P>If the user changes focus to other window (i.e. because he is going to "copy and paste" from it) leaving in the
+while a wrong value, the validator would not accept this situation and would complain showing an "error message" or
+even vetoing killing focus and so avoiding to get out of that control. Or perhaps the user wants to abort his input,
+but the control has a not-in-range value, and the validator is uselessly forcing him to type a valid one before
+aborting.</P>
+
+<P>Suppose you have two controls with different validators, but both with this "retain focus until value is right"
+behaviour. Now suppose that both controls have currently wrong values, perhaps because they have been not typed, but
+just set. The cursor is in one of these controls 'A' and you click on the other 'B'. The cursor goes to 'B' control,
+so 'A' loses it and run its validating code. The value is wrong, so validating fails and SetFocus() is called back
+to 'A'. Because of this, 'B' loses focus, its validation fails too, and reclaims focus back. So 'A' again loses focus,
+validation fails, etc. This is a never ending "race condition", a fight for focus. It's easy to get into this situation
+when you set this behavior for a whole column in a grid.</P>
+
+This kind of validation is allowed in wxNumberValidator even it's so risky. Use it carefully.<BR>
+You should think twice before using it. Alternatively, if your app needs only verified values, gather them in a wxDialog.
+It will do validation on each control when the user press 'OK' button, retaining focus if any of them fails.
+
+
+<P><U>So, what to do with all these issues?</U></P>
+
+<P>wxNumberValidator lets you define the "style" you want for formatting the value. You can also choose it's
+behaviour using several flags. You can do many combinations to achieve what you need. Since version 2, you can
+also define a special "style" for validating while typing. The other, "normal style", will be used in the rest of
+validation cases. This way, you can use a simple formatting for input, and a complex manner when this input is
+finished.</P>
+
+<P>Validating may be really tricky even for a human. No one can fully guess what the user really wants to write.
+wxNumberValidator has many features, but nothing is perfect.</P>
+
+
+<BR>
+<H3><B><FONT COLOR="#FF0000">wxNumberValidator</FONT></B></H3><P>
+
+This is a validator used for numbers. You define a 'style' (or 'mask' or 'pattern' or whatever you like to name it)
+to tell the validator the way you will enter data and it will check it all.</P>
+
+To learn about this 'style' please see <a href="wxFormatStringAsNumber.htm">wxFormatStringAsNumber</a>.<P>
+
+For more information, please see Validator overview.<P>
+
+Since version 2 this validator not only works with wxTextCtrl (but not multi-line) but also with wxComboBox.<BR>
+It requires wxWidgets 2.9</P>
+
+<P>There are several behaviors you can set for this validator, specially <B>when</B> and <B>how</B> to validate. 
+See <A HREF="#wxNVNumberValidator">wxNumberValidator constructor</A> for details. In addition, This validator has
+<U>other features</U>, like range checking, empty check or replace, colouring, and allowing other strings.</P>
+
+Note this validator does not work with CPU types (int, float, etc.), but just with strings. This means you can type
+a many digits number or a very big exponent. If you try to convert this string into a CPU type, it may be out of limits.
+If you are concerned about overflowing, you may get limits with std::numeric_limits and use them with SetMin/SetMax.
+The validator will check the string to be in the range.<P>
+
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><P>
+wxValidator<BR><P>
+
+<B><FONT COLOR="#FF0000">Include files</FONT></B><P>
+fvalnum.h<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+Validator overview, wxValidator, wxGenericValidator, wxTextValidator<P>
+
+<B><FONT COLOR="#FF0000">Members</FONT></B><P>
+<A HREF="#wxNVNumberValidator">wxNumberValidator::wxNumberValidator</A><BR>
+<A HREF="#wxNVdestructor">wxNumberValidator::~wxNumberValidator</A><BR>
+<A HREF="#wxNVcheckminmax">wxNumberValidator::CheckMinMax</A><BR>
+<A HREF="#wxNVclone">wxNumberValidator::Clone</A><BR>
+<A HREF="#wxNVgetalsovalid">wxNumberValidator::GetAlsoValid</A><BR>
+<A HREF="#wxNVgetbehavior">wxNumberValidator::GetBehavior</A><BR>
+<A HREF="#wxNVgetcolors">wxNumberValidator::GetColors</A><BR>
+<A HREF="#wxNVgetdecsep">wxNumberValidator::GetDecSep</A><BR>
+<A HREF="#wxNVgetemptysurrogate">wxNumberValidator::GetEmptySurrogate</A><BR>
+<A HREF="#wxNVgetformatted">wxNumberValidator::GetFormatted</A><BR>
+<A HREF="#wxNVgetlasterror">wxNumberValidator::GetLastError</A><BR>
+<A HREF="#wxNVgetmax">wxNumberValidator::GetMax</A><BR>
+<A HREF="#wxNVgetmin">wxNumberValidator::GetMin</A><BR>
+<A HREF="#wxNVgetnormalstyle">wxNumberValidator::GetNormalStyle</A><BR>
+<A HREF="#wxNVgettypingstyle">wxNumberValidator::GetTypingStyle</A><BR>
+<A HREF="#wxNVgetstyle">wxNumberValidator::GetStyle</A><BR>
+<A HREF="#wxNVisemptyallowed">wxNumberValidator::IsEmptyAllowed</A><BR>
+<A HREF="#wxNVismaxlimited">wxNumberValidator::IsMaxLimited</A><BR>
+<A HREF="#wxNVisminlimited">wxNumberValidator::IsMinLimited</A><BR>
+<A HREF="#wxNVmsgorsound">wxNumberValidator::MsgOrSound</A><BR>
+<A HREF="#wxNVresesc">wxNumberValidator::RestoreWithEsc</A><BR>
+<A HREF="#wxNVsetalsovalid">wxNumberValidator::SetAlsoValid</A><BR>
+<A HREF="#wxNVsetbehavior">wxNumberValidator::SetBehavior</A><BR>
+<A HREF="#wxNVsetcolors">wxNumberValidator::SetColors</A><BR>
+<A HREF="#wxNVsetemptyas">wxNumberValidator::SetEmptyAs</A><BR>
+<A HREF="#wxNVsetformatted">wxNumberValidator::SetFormatted</A><BR>
+<A HREF="#wxNVsetmax">wxNumberValidator::SetMax</A><BR>
+<A HREF="#wxNVsetmin">wxNumberValidator::SetMin</A><BR>
+<A HREF="#wxNVsetstyle">wxNumberValidator::SetStyle</A><BR>
+<A HREF="#wxNVsetstylefortypingr">wxNumberValidator::SetStyleForTyping</A><BR>
+<A HREF="#wxNVtransferfromwindow">wxNumberValidator::TransferFromWindow</A><BR>
+<A HREF="#wxNVtransfertowindow">wxNumberValidator::TransferToWindow</A><BR>
+<A HREF="#wxNVvalidate">wxNumberValidator::Validate</A><BR>
+<A HREF="#wxNVvalidatequiet">wxNumberValidator::ValidateQuiet</A><BR>
+<P>
+
+<HR>
+<A NAME="wxNVNumberValidator"></A>
+<H3>wxNumberValidator::wxNumberValidator</H3><P>
+<B>wxNumberValidator</B>(<B>const wxNumberValidator&amp;</B><I> validator</I>)<P>
+Copy constructor.<P>
+<B>wxNumberValidator</B>(<B>const wxString&amp; </B><I>valStyle = wxT("-[#].'.'*E-###")</I>,
+ <B>int </B><I>behavior = wxVAL_DEFAULT</I>, <B>wxString* </B><I>valPtr = NULL</I>)<P>
+Constructor, taking a style, behavior and optional pointer to a wxString variable.<P>
+<B><FONT COLOR="#FF0000">Parameters</FONT></B><P>
+<I>valStyle</I><UL>
+This is how you expect the string will be written.
+ See <a href="wxFormatStringAsNumber.htm">wxFormatStringAsNumber</a>.</P>
+</UL>
+<P>
+
+<I>behavior</I><UL>
+You can combine any of this flags:<P>
+
+<TABLE cellspacing="7">
+
+<TR valign="top"><TD><B>wxUF_ROUND</B></TD>
+<TD>Do rounding off, according to indicated at the sub-style.</TD></TR>
+
+<TR valign="top"><TD><B>wxUF_BESTRICT</B></TD>
+<TD>Strict validation. The whole string must be correctly formatted.
+It also allows the use of more that one sub-style for positive/negative/zero values.</TD></TR>
+
+<TR valign="top"><TD><B>wxUF_NOSTRICT</B></TD>
+<TD>Tolerant validation. Most typographical errors will be dismissed.</TD></TR>
+
+<TR valign="top"><TD><B>wxTZ_LEFT</B></TD>
+<TD>Trims zeroes at left when transfer and wxTRANSFER_UNFORMATTED flag is set.</TD></TR>
+
+<TR valign="top"><TD><B>wxTZ_RIGHT</B></TD>
+<TD>Trims zeroes at right when transfer and wxTRANSFER_UNFORMATTED flag is set.</TD></TR>
+
+<TR valign="top"><TD><B>wxTZ_BOTH</B></TD>
+<TD>Defined as wxTZ_LEFT | wxTZ_RIGHT.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_ON_CHAR</B></TD>
+<TD>This flag activates "validating while typing". Tests if the char may be written. If the event's
+key-code is WXK_DECIMAL or WXK_NUMPAD_DECIMAL, the whole decimal separator (may be several characters
+long) is written.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_ON_ENTER_TAB</B></TD>
+<TD>The string at text control is tested if user presses ENTER or TAB.<BR>
+If the control hasn't wxTE_PROCESS_ENTER or wxTE_PROCESS_TAB style, this flag is inactive.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_ON_KILL_FOCUS</B></TD>
+<TD>The string at text control is tested when the control loses focus.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_RETAIN_FOCUS</B></TD>
+<TD>If validation fails and focus has been lost, it returns to the control.</TD></TR>
+
+<TR valign="top"><TD><B>wxTRANSFER_UNFORMATTED</B></TD>
+<TD>When the string is transferred from/to variable, format/unformat is done.</TD></TR>
+
+<TR valign="top"><TD><B>wxTRANSFER_UNFORMATTED_NO_ZEROS</B></TD>
+<TD>Defined as wxTRANSFER_UNFORMATTED | wxTZ_BOTH.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_NO_MSG_SHOWN</B></TD>
+<TD>Normally, when validation fails a message is shown. Use this flag to avoid it.<BR>
+If this flag is active, a sound replaces the message. You can also avoid this sound using the
+wxValidator::SuppressBellOnError() function.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_DEFAULT</B></TD>
+<TD>Defined as wxUF_BESTRICT | wxVAL_ON_ENTER_TAB.</TD></TR>
+
+<TR valign="top"><TD><B>wxVAL_ON_EDIT</B></TD>
+<TD>Defined as wxUF_NOSTRICT | wxVAL_ON_CHAR | wxVAL_ON_ENTER_TAB.</TD></TR>
+
+</TABLE>
+
+</UL>
+<P>
+<I>valPtr</I><UL>
+A pointer to a wxString variable that contains the value. This variable
+should have a lifetime equal to or longer than the validator lifetime (which is usually
+determined by the lifetime of the window). If NULL, the validator uses its own internal
+storage for the value, but then you can not use TransferTo/FromWindow.</UL>
+<P>
+
+<B><FONT COLOR="#FF0000">Remarks</FONT></B><P>
+As you can try on the sample, wxVAL_ON_CHAR and (possibly) wxVAL_RETAIN_FOCUS are only useful
+if <I>valStyle</I> doesn't use 'forced' digits, 'forced' signs, nor digits that are really chars (1,2...),
+and wxUF_NOSTRICT is set. Otherwise copy and paste may help to get a valid number.<P>
+On the other hand, a simple style (with thousands separator) helps you in writting large numbers.<P>
+
+For a even more flexible validation, you may consider using <A HREF="#wxNVsetstylefortypingr">SetStyleForTyping</A><P>
+
+
+<HR>
+<A NAME="wxNVdestructor"></A>
+<H3>wxNumberValidator::~wxNumberValidator</H3><P>
+<B>~wxNumberValidator</B>()<P>
+Destructor.<P>
+
+
+<HR>
+<A NAME="wxNVclone"></A>
+<H3>wxNumberValidator::Clone</H3><P>
+<B>virtual wxValidator*</B> <B>Clone</B>() <B>const</B><P>
+Clones the number validator using the copy constructor.<P>
+wxWindow uses it when the validator is associated with the control.<P>
+
+<HR>
+<A NAME="wxNVcheckminmax"></A>
+<H3>wxNumberValidator::CheckMinMax</H3><P>
+<B>bool</B> <B> CheckMinMax</B>(<B>const wxString&amp;</B> <I>unformatted</I>, <B>wxString&amp;</B> <I>sRes</I>)<P>
+This function performs range checks. It tests <I>unformatted</I> to be inside or outside the range.<BR>
+You set a range with <A HREF="#wxNVsetmin">SetMin()</A> and <A HREF="#wxNVsetmax">SetMax()</A>.<P>
+
+Checks are done without using any CPU number (int, float, etc) comparison. So, there are no limits for the values.
+You can check 100-digit numbers, with long exponential part, or whatever you want.<P>
+
+Min and Max are first formatted with "normal style" and then unformatted again. This is necessary because formatting
+can change the value due to truncating or rounding. It is supposed that <I>unformatted</I> has already passed this
+process.<P>
+
+Returns false if any format process fails or if checks fail.<P>
+An error message is returned in <I>sRes</I> or wxEmptyString if no errors.<P>
+
+This member is automatically called from <A HREF="#wxNVvalidate">Validate()</A>, but not while the value is being typed.<P>
+
+
+<HR>
+<A NAME="wxNVgetalsovalid"></A>
+<H3>wxNumberValidator::GetAlsoValid</H3><P>
+<B>wxArrayString&amp;</B> <B>GetAlsoValid</B>()<P>
+Returns the other strings defined to be accepted as also valid values.<P>
+
+See <A HREF="#wxNVsetalsovalid">SetAlsoValid</A>.<P>
+
+<HR>
+<A NAME="wxNVgetbehavior"></A>
+<H3>wxNumberValidator::GetBehavior</H3><P>
+<B>int</B> <B>GetBehavior</B>() <B>const</B><P>
+Returns the validator behavior.<P>
+
+
+<HR>
+<A NAME="wxNVgetcolors"></A>
+<H3>wxNumberValidator::GetColors</H3><P>
+<B>wxFValNumColors&amp;</B> <B>GetColors</B>()<P>
+The structure returned has four wxColor members.<P>
+
+See <A HREF="#wxNVsetcolors">SetColors</A>.<P>
+
+
+<HR>
+<A NAME="wxNVgetdecsep"></A>
+<H3>wxNumberValidator::GetDecSep</H3><P>
+<B>wxString</B> <B>GetDecSep</B>()<P>
+Returns the decimal separator stored in the current first sub-style. (You may have two different styles, both of them with
+different sub-styles for positive, negative and zero values).<P>
+
+
+<HR>
+<A NAME="wxNVgetemptysurrogate"></A>
+<H3>wxNumberValidator::GetEmptySurrogate</H3><P>
+<B>wxString</B> <B>GetEmptySurrogate</B>()<P>
+Returns the string used for replacing an empty value.<P>
+
+See <A HREF="#wxNVsetemptyas">SetEmptyAs</A>.<P>
+
+
+<HR>
+<A NAME="wxNVgetformatted"></A>
+<H3>wxNumberValidator::GetFormatted</H3><P>
+<B>wxString</B> <B>GetFormatted</B>(<B>int</B> <I>formatType = fVALFORMAT_CURRENT</I>)<P>
+This is the function used internally at <A HREF="#wxNVtransferfromwindow">TransferFromWindow()</A> to get the string to
+transfer. So, it is assumed that the control has a <U>validated</U> value.<P>
+
+The string returned depends on:
+<PRE>
+<I>fVALFORMAT_NONE</I>     unformatted (C-locale) value
+<I>fVALFORMAT_NORMAL</I>   the normal style
+<I>fVALFORMAT_TYPING</I>   the style for typing
+<I>fVALFORMAT_CURRENT</I>  the last used style
+</PRE>
+<P>
+
+After the string at the control has been validated, it may be replaced because of:<BR>
+a) It is a "limited" value. See <A HREF="#wxNVsetmin">SetMin</A> and <A HREF="#wxNVsetmax">SetMax</A>.<BR>
+b) It is an empty string, and it is meant to be replaced. See <A HREF="#wxNVsetemptyas">SetEmptyAs</A>.<BR>
+c) It is an incomplete "also-valid" string. See <A HREF="#wxNVsetalsovalid">SetAlsoValid</A>.<BR>
+If b) and c) are false, the string is considered to be a number, and then it will be formatted as indicated
+with <I>formatType</I>.<P>
+
+
+<HR>
+<A NAME="wxNVgetlasterror"></A>
+<H3>wxNumberValidator::GetLastError</H3><P>
+<B>wxString</B> <B>GetLastError</B>()<P>
+Returns the last error message, wxEmptyString if none.<P>
+
+
+<HR>
+<A NAME="wxNVgetmax"></A>
+<H3>wxNumberValidator::GetMax</H3><P>
+<B>wxString</B> <B>GetMax</B>()<P>
+Returns the current stored max-string.<P>
+
+
+<HR>
+<A NAME="wxNVgetmin"></A>
+<H3>wxNumberValidator::GetMin</H3><P>
+<B>wxString</B> <B>GetMin</B>()<P>
+Returns the current stored min-string.<P>
+
+
+<HR>
+<A NAME="wxNVgetnormalstyle"></A>
+<H3>wxNumberValidator::GetNormalStyle</H3><P>
+<B>wxString</B> <B>GetNormalStyle</B>()<P>
+Returns the style that was set at constructor or using <A HREF="#wxNVsetstyle">SetStyle</A>.<P>
+
+
+<HR>
+<A NAME="wxNVgetstyle"></A>
+<H3>wxNumberValidator::GetStyle</H3><P>
+<B>wxString</B> <B>GetStyle</B>()<P>
+Returns the currently used style.<P>
+
+
+<HR>
+<A NAME="wxNVgettypingstyle"></A>
+<H3>wxNumberValidator::GetTypingStyle</H3><P>
+<B>wxString</B> <B>GetTypingStyle</B>()<P>
+Returns the style that was set using <A HREF="#wxNVsetstylefortypingr">SetStyleForTyping</A>.<P>
+
+
+<HR>
+<A NAME="wxNVisemptyallowed"></A>
+<H3>wxNumberValidator::IsEmptyAllowed</H3><P>
+<B>bool</B> <B>IsEmptyAllowed</B>() <B>const</B><P>
+Returns 'true' if leaving an empty value at control is allowed. But remeber that in this case it can be replaced.<P>
+
+See <A HREF="#wxNVsetemptyas">SetEmptyAs</A>.<P>
+
+
+<HR>
+<A NAME="wxNVismaxlimited"></A>
+<H3>wxNumberValidator::IsMaxLimited</H3><P>
+<B>bool</B> <B>IsMaxLimited</B>() <B>const</B><P>
+
+<A NAME="wxNVisminlimited"></A>
+<H3>wxNumberValidator::IsMinLimited</H3><P>
+<B>bool</B> <B>IsMinLimited</B>() <B>const</B><P>
+These functions provide access for the corresponding parameters set.<P>
+
+See <A HREF="#wxNVsetmax">SetMax</A> and <A HREF="#wxNVsetmin">SetMin</A>.<P>
+
+
+<HR>
+<A NAME="wxNVmsgorsound"></A>
+<H3>wxNumberValidator::MsgOrSound</H3><P>
+<B>void</B> <B>MsgOrSound</B>(<B>wxWindow*</B><I> parent</I>)<P>
+Shows a wxMessageBox with the last error, even if it is empty.<BR>
+The wxVAL_NO_MSG_SHOWN can be set to replace this message with a sound.<P>
+
+Normally, you would use it after a failed <A HREF="#wxNVvalidatequiet">ValidateQuiet</A> call.<P>
+
+
+<HR>
+<A NAME="wxNVresesc"></A>
+<H3>wxNumberValidator::RestoreWithEsc</H3><P>
+<B>void</B> <B>RestoreWithEsc</B>(<B>bool </B><I>toUse = true</I>)<P>
+If <I>toUse</I> is 'true', when "key down event" is received with WXK_ESCAPE or WXK_CANCEL TransferToWindow() is called,
+and the string stored at <I>valPtr</I> replaces current window's value. In other words, discards changes. Consecutive
+'Esc' events are not handled in this validator, they are 'Skipped()'.<P>
+This is the default behavior. Use this function to change it.<P>
+
+In my opinion, the behavior of 'Esc' key is, by now (Apr-12), not fully defined in wxWidgets. It's not clear to me if
+this event should dismiss the whole dialog (wxDialog does this) or if it just first should discard changes in the control
+(wxGrid does this). And it's also not clear where this event should be handled (validator, control, etc). So, what I do
+here is that first 'Esc' event discard changes and, if this is already done, the second consecutive 'Esc' event does
+nothig but call event.Skip(true) to let default processing for this event be done. In a future this feature may get
+away from wxNumberValidator.<P>
+
+
+<HR>
+<A NAME="wxNVsetalsovalid"></A>
+<H3>wxNumberValidator::SetAlsoValid</H3><P>
+<B>void</B> <B>SetAlsoValid</B>(<B>wxArrayString&amp; </B><I>aOther</I>)<P>
+
+In some cases, you may allow not only a number, but also other string. For example, in a wxComboBox you may offer some
+typical options and a special one called "Auto". Other example is allowing "PI" or "Infinite" as valid 'values'.<BR>
+You can set these also valid strings with this function.<P>
+
+If <I>aOther</I> contains empty strings, they are not used.<P>
+
+Validation on this strings is done before assuming the control's value is a number. It takes precedence, but not over
+a replaced empty value.<P>
+
+In "strict" mode the whole string at control is tested case-sensitive against any of the <I>aOther</I> entries. In "tolerant"
+mode, the control's value is tested to be the left-part, case-insensitive, of any of the entries.<P>
+
+
+<HR>
+<A NAME="wxNVsetbehavior"></A>
+<H3>wxNumberValidator::SetBehavior</H3><P>
+<B>void</B> <B>SetBehavior</B>(<B>int </B><I>behavior</I>)<P>
+Sets the validator behavior, replacing the one given at construction.<P>
+
+
+<HR>
+<A NAME="wxNVsetcolors"></A>
+<H3>wxNumberValidator::SetColors</H3><P>
+<B>void</B> <B>SetColors</B>(<B>const wxFValNumColors&amp; </B><I>valColors</I>)<P>
+Sets the colors to use when the control loses focus and is validated. This means you need to set the proper flags
+(like wxVAL_ON_KILL_FOCUS) or use <A HREF="#wxNVsetstylefortypingr">SetStyleForTyping</A>.<P>
+
+<I>valColors</I> is an struct with four wxColor members:<BR>
+<PRE>
+colOKForegn :  the foreground color when string is valid.
+colOKBackgn :  the background color when string is valid.
+colFaForegn :  the foreground color when string is not valid.
+colFaBackgn :  the background color when string is not valid.
+</PRE>
+
+If a color is wxNullColour its respective control::SetxxxColour() is not called.<P>
+
+<HR>
+<A NAME="wxNVsetemptyas"></A>
+<H3>wxNumberValidator::SetEmptyAs</H3><P>
+<B>bool</B> <B>SetEmptyAs</B>(<B>bool</B> <I>allowIt = true</I>, <B>const wxString&amp;</B> <I>emptyAs = wxT("0")</I>)<P>
+With this function you set what to do when the control has an empty value.<P>
+
+If <I>allowIt</I> is 'false' an empty value is not allowed and the proper message is shown at validation.<P>
+
+If <I>allowIt</I> is 'true', validation succeeds. And the empty value is replaced with <I>emptyAs</I> when
+<A HREF="#wxNVgetformatted">GetFormatted</A> or <A HREF="#wxNVtransferfromwindow">TransferFromWindow</A> are called.<P>
+
+Please, note that <I>emptyAs</I> must be either an empty string, a valid entry of <A HREF="#wxNVsetalsovalid">SetAlsoValid</A>,
+or an unformatted (C-locale) number. In this last case, its value is <U>not checked</U> against a range.<P>
+
+Returns 'false' if <I>allowIt</I> is 'true' but <I>emptyAs</I> is not a valid string.<P>
+
+
+<HR>
+<A NAME="wxNVsetformatted"></A>
+<H3>wxNumberValidator::SetFormatted</H3><P>
+<B>void</B> <B>SetFormatted</B>(<B>int</B> <I>formatType = fVALFORMAT_CURRENT</I>)<P>
+The current control's value is taken and changed accordingly with <I>formatType</I>:<P>
+<PRE>
+<I>fVALFORMAT_NONE</I>     unformatted (C-locale) value
+<I>fVALFORMAT_NORMAL</I>   the normal style
+<I>fVALFORMAT_TYPING</I>   the style for typing
+<I>fVALFORMAT_CURRENT</I>  the last used style
+</PRE>
+<P>
+Be aware you should first validate it. Otherwise, the string remains unmodified, which means you don't know
+really if it is what you want.<BR>
+Anyhow, validated or not, the validator is told to use <I>formatType</I>.<P>
+
+This function is used internally. If you use it (i.e. after the validator's handling) you should, before
+execution runs again inside validator's code, set a currently formatted value into the control.<P>
+
+See <A HREF="#wxNVgetformatted">GetFormatted</A>.<P>
+
+
+<HR>
+<A NAME="wxNVsetmax"></A>
+<H3>wxNumberValidator::SetMax</H3><P>
+<B>bool</B> <B>SetMax</B>(<B>const wxString&amp; </B><I>smax</I>, <B>bool</B> <I>asLimit = false</I>)<P>
+
+<A NAME="wxNVsetmin"></A>
+<H3>wxNumberValidator::SetMin</H3><P>
+<B>bool</B> <B>SetMin</B>(<B>const wxString&amp; </B><I>smin</I>, <B>bool</B> <I>asLimit = false</I>)<P>
+
+With these two functions you can set a range for the value. The value will be checked in
+<A HREF="#wxNVcheckminmax">CheckMinMax</A>.<P>
+<I>smin</I> or <I>smax</I> is tested to be either an empty string, or a C-locale string (unformatted) representing a number.
+If this test fails, the function returns false, otherwise returns true.<P>
+
+Initially, Min and Max are empty strings.<P>
+
+Let's say the range is [ra - rb]. We may have different cases for 'ra' and 'rb':<BR>
+If 'ra' is an empty string, the condition <B><I>value</I> &gt;= ra</B> is not checked.<BR>
+If 'rb' is an empty string, the condition <B><I>value</I> &lt;= rb</B> is not checked.<BR>
+If <B>ra &lt; rb</B> <I>value</I> is checked to be a number inside this range.<BR>
+If <B>ra &gt; rb</B> <I>value</I> is checked to be a number outside this range.<P>
+
+The range [Min=10 - Max=20] means you allow a number between 10 and 20, both of them are also valid.<BR>
+On the contrary, if you only allow numbers less/equal than 10 or greater/equal than 20 use the excluded range [20 - 10].<P>
+
+<I>asLimit</I> has different meaning depending on if an excluded range is set or not.<BR>
+If you set an excluded range, <I>asLimit</I> = 'true' means that a value at that range-extreme (Min or Max) is also valid,
+not excluded.<BR>
+When no excluded range is set, <I>asLimit</I> tells if value will be replaced with limits. So, <I>asLimit</I> = 'true' used
+at SetMin() means that if the value is less than <I>smin</I> it will replaced with <I>smin</I>.<P>
+
+Setting <B>ra = rb</B> and both <I>asLimit</I> = 'false' means you allow any value except <B>ra</B>.<P>
+
+Be aware that when <A HREF="#wxNVcheckminmax">CheckMinMax</A> is called, Min and Max are first formatted with "normal style"
+and then unformatted again. This is necessary because formatting can change the value due to truncating or rounding.<P>
+
+
+<HR>
+<A NAME="wxNVsetstyle"></A>
+<H3>wxNumberValidator::SetStyle</H3><P>
+<B>int</B> <B>SetStyle</B>(<B>const wxString&amp; </B><I>valstyle</I>)<P>
+Sets the validator style. This style is used when the focus is not in the control or if it is the only style.<P>
+Returns -1 if no errors in <I>valstyle</I>, or the position (0-based) where first error.<P>
+See <a href="wxFormatStringAsNumber.htm">wxFormatStringAsNumber</a> for defining the style.<P>
+
+
+<HR>
+<A NAME="wxNVsetstylefortypingr"></A>
+<H3>wxNumberValidator::SetStyleForTyping</H3><P>
+<B>int</B> <B>SetStyleForTyping</B>(<B>const wxString&amp; </B><I>valstyle</I>)<P>
+Sets the validator style to use when the control has the focus. If this function is not called, or called with an empty
+<I>valstyle</I>, the style defined at constructor or with <A HREF="#wxNVsetstyle">SetStyle</A> is used instead.<P>
+The control's value will be formatted with this style until it loses focus. Then, the "normal" style will be used for
+formatting and validating.<P>
+
+Is strongly advised to use <U>simple</U> styles, like "-[,###].'.'*E-###", and reserve complex styles (with SetSyle())
+for formatting the number after the input is finished.<BR>
+Styles that use 'forced' digits may do input really hard. For example, using "[#].'.'0#". If you start in an empty control,
+any typed char will be refused because a decimal digit is required and accordingly the decimal dot too. This means two
+characters, and we have just typed one.<BR>
+As you see, a common use would be "-[#].'.'00" for normal style and "-[#].'.'##" style in this funcion. So user can get
+validation while typing and, when focus is lost, the number will be formatted with just and only two decimal digits.<P>
+Using scientific or engineering notation is also "not simple".<P>
+
+While using this special style, the behavior is the same as with wxVAL_ON_EDIT | wxVAL_ON_KILL_FOCUS flags active.<P>
+
+Returns -1 if no errors in <I>valstyle</I>, or the position (0-based) where first error.<P>
+See <a href="wxFormatStringAsNumber.htm">wxFormatStringAsNumber</a> for defining the style.<P>
+
+<HR>
+<A NAME="wxNVtransferfromwindow"></A>
+<H3>wxNumberValidator::TransferFromWindow</H3><P>
+<B>virtual bool</B> <B>TransferFromWindow</B>()<P>
+Transfers the control's value to the string at <I>valPtr</I>.<P>
+If <I>behavior</I> has the flag <I>wxTRANSFER_UNFORMATTED</I>, it will be previously unformatted. So be aware of "strict"
+behavior. In other words, if unformatting fails <I>valPtr</I> may be empty or an invalid "number", depending on
+strict/tolerant behavior.<P>
+
+See <A HREF="#wxNVgetformatted">GetFormatted</A> for additional information of the value transferred.<P>
+
+
+<HR>
+<A NAME="wxNVtransfertowindow"></A>
+<H3>wxNumberValidator::TransferToWindow</H3><P>
+<B>virtual bool</B> <B>TransferToWindow</B>()<P>
+Transfers the string value at <I>valPtr</I> to the control.<P>
+If <I>behavior</I> has the flag <I>wxTRANSFER_UNFORMATTED</I>, it will be previously formatted with current style and
+"strict/tolerant" mode. If this formatting fails control's value will be replaced with the string at var "as is".<P>
+
+
+<HR>
+<A NAME="wxNVvalidate"></A>
+<H3>wxNumberValidator::Validate</H3><P>
+<B>virtual bool</B> <B>Validate</B>(<B>wxWindow*</B><I> parent</I>)<P>
+Validates the window contents against the validator style and behavior.<P>
+
+It also performs <A HREF="#wxNVcheckminmax">CheckMinMax</A>.<P>
+
+
+<HR>
+<A NAME="wxNVvalidatequiet"></A>
+<H3>wxNumberValidator::ValidateQuiet</H3><P>
+<B>int</B> <B>ValidateQuiet</B>()<P>
+Another call for validation. Just as <A HREF="#wxNVvalidate">Validate</A>, but without messages or sounds.<P>
+
+Returns -1 or the position where an error is found.<P>
+
+<HR>
+
+</BODY></HTML>
