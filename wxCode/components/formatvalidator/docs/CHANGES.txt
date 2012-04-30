@@ -1,0 +1,55 @@
+wxFormatValidator
+=================
+
+CHANGES
+
+2.0   Apr 2012
+---
+* A deep revision of code has fixed some issues and allowed more features.
+* Use wxTextEntry (from wx29) and using this validator with wxComboBox is now allowed.
+* valnum.x renamed to fvalnum.x to avoid same names as wx29 ones.
+* Added '*' for style, meaning 'all remaining digits'. It adds this feature in exponential
+  part. It replaces '#' meaning in decimal part. Please, update your code.
+* Max and Min values are now C-locale strings, not formatted. Please, update your code.
+* Max and Min values can force (limit) value to them.
+* CkeckMinMax() allows any human represented number (i.e. a 100-digits one).
+* CkeckMinMax() allows also excluded range, not only included one.
+* SetFormatted() acepts a parameter with the type of format to do.
+* Added Scientific and Engineering notations.
+* Added rounding off option.
+* Added a special style for validating while typing.
+* Added wxVAL_RETAIN_FOCUS flag. Now, wxVAL_ON_KILL_FOCUS flag does validation, but does
+  not retain focus on error.
+* Added wxVAL_NO_MSG_SHOWN flag, to avoid showing error messages.
+* Added RestoreWithEsc(). It defines if 'Esc' key is used to discard changes.
+* Added SetAlsoValid() wich allow other values (not needed to be a number) as valid.
+* Added SetColors() for colouring the control.
+* Added SetEmptyAs() for telling what to do with an empty value.
+* Added ValidateQuiet() with works without showing an error message.
+* Added MsgOrSound() to show the error message.
+* Added GetFormatted()
+* Added "inspectors" for members.
+* Added a grid and a dialog to sample.
+
+1.2   Jan 2011
+---
+* Adapted to wxWidgets 2.9.1 (use wxString::FromCDouble() in fvaltest.cpp and valnum.cpp)
+* Changed TRUE->true  FALSE->false
+* Fixed some compiler warnings
+
+1.1   Jun 2007
+---
+* Bug fixed: a string can be unformatted as "1E" or "1E-". Now it is "1"
+* Unicode compilation
+* Added min and max checking
+* Sample renamed to "fvaltest"
+* wxNumberValidator::SetFormatted now is public
+
+1.0   May 2005
+---
+* Bug fixed: exponential sign
+
+
+1.0   Mar 2003
+----
+First release
