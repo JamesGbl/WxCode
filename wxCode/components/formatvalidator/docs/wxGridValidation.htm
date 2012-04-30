@@ -1,0 +1,101 @@
+<HTML>
+<head>
+	<title>Validation in wxGrid</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<BODY BGCOLOR=#FFFFFF>
+<BODY>
+
+<H2>wxNumberValidator and validation within a wxGrid</H2>
+<P>
+
+wxGrid is a very good and featured grid control. Among its features, you can set different types
+for different cells. For example, you can set a cell to receive an int, or a double, or a bool, or a
+string, etc. And these types can be validated.<P>
+
+A way for validating cell's values may be that the user types whatever he wants in each cell. Later,
+outside the grid, you get each value and validate it. This approach is similar to what wxDialog does
+when you press OK button.<P>
+
+Another approach is that validation is made while user types, or just when the cell loses focus. This
+means that if the cell's value is invalid, it is dismissed, and the old value is restored.<P>
+
+wxNumberValidator offers also a third approach: user can be assisted while he types. But even with this
+while typing validation, the final string can be still invalid, perhaps because it is out of range.<BR>
+The good news is that what the user has written does not necessary gets dismissed.
+
+<P><B><U><FONT COLOR="#FF0000">Some internals information</FONT></U></B><P>
+Perhaps you already know how wxGrid works. Cells are not a group of controls. You see them arranged
+with vertical and horizontal lines. When a cell is going to be edited, a proper control is shown, filled with
+current cell's value and showed. User edits the value; and when he ends (Enter/Tab/Navigation/KillFocus...)
+the value is perhaps validated and copied to the GridTable that holds all cell's values. And the control is
+hidden.<P>
+
+In both moments, when the editor was shown and when it was hidden, wxGrid sends a wxGridEvent. You can
+handle these events, and between them get the editor and analyze its value, i.e. associating a validator to that
+short-shown control.<P>
+
+But if you have different validators for different cells, the code for these handlers may bloat. Instead, you can
+use some of the specialized wxGridCellxxxxEditor and assign them to some cells/columns/rows and they do
+the work. Note these type-editors are designed to set a valid input. They don't allow to leave an invalid value.<P>
+
+
+<BR>
+<H3><B><FONT COLOR="#FF0000">wxGridCellFormattedNumEditor<BR>
+wxGridCellFormattedChoiceEditor</FONT></B></H3><P>
+These are cell editors that use a wxNumberValidator. Or in other words, how to get wxNumberValidator's features
+inside a wxGrid.<P>
+
+You can use all flags and Setxx() functions except two (they have no effect): wxVAL_ON_ENTER_TAB and RestoreWithEsc().
+This is due to wxGrid design. 'Enter' and 'Tab' keys do default navigation, so KillFocus event is sent and you can set
+the editor to handle it. 'Esc' key always restore the previous (before entering the editor) value.
+
+As explained in wxNumberValidator documentation, you can also use wxVAL_RETAIN_FOCUS. But remember it is dangerous,
+specially if values are set to the control without a previous validation.<P>
+
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><BR>
+wxGridCellFormattedNumEditorBase and wxGridCellTextEditor or wxGridCellChoiceEditor<P>
+
+<B><FONT COLOR="#FF0000">Include files</FONT></B><BR>
+fvalgred.h<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><BR>
+Validator overview, wxValidator, wxGenericValidator, wxTextValidator<BR>
+wxFormatStringAsNumber, wxNumberValidator, wxGrid editors.<P>
+
+
+<HR>
+<H3>wxGridCellFormattedNumEditor and wxGridCellFormattedChoiceEditor constructors</H3><P>
+wxGridCellFormattedNumEditor uses a wxTextCtrl as the editor. wxGridCellFormattedChoiceEditor uses a wxComboBox.<P>
+<B>wxGridCellFormattedNumEditor</B>(<B>const wxNumberValidator&amp;</B> <I>numValidator</I>, <B>bool</B> <I>allowInvalid</I>)<P>
+
+<TABLE>
+<TR><TD><B>wxGridCellFormattedChoiceEditor</B>(</TD><TD><B>const wxNumberValidator&amp;</B> <I>numValidator</I>,</TD></TR>
+<TR><TD></TD><TD><B>bool</B> <I>allowInvalid</I>,</TD></TR>
+<TR><TD></TD><TD><B>const wxArrayString&amp;</B> <I>choices</I>)</TD></TR>
+</TABLE>
+<P>
+
+<TABLE>
+<TR><TD><B>wxGridCellFormattedChoiceEditor</B>(</TD><TD><B>const wxNumberValidator&amp;</B> <I>numValidator</I>,</TD></TR>
+<TR><TD></TD><TD><B>bool</B> <I>allowInvalid</I>,</TD></TR>
+<TR><TD></TD><TD><B>size_t</B> <I>count = 0</I>,</TD></TR>
+<TR><TD></TD><TD><B>const wxString</B> <I>choices[] = NULL</I>)</TD></TR>
+</TABLE>
+<P>
+Read the documentation for wxNumberValidator to learn about flags and styles you may use.<P>
+
+<I>allowInvalid</I> tells if, after the validation, you allow an invalid value to be set to the cell. Setting it to 'true'
+means it is allowed, perhaps because you are going to do other validation outside the grid. Or perhaps because you want
+the user to come again to that cell and fix that wrong value.<BR>
+Setting it to 'false' means that the invalid value is dismissed and the old one is restored.<P>
+
+<I>choices</I> is the array to fill the wxComboBox used in this ChoiceEditor.<BR>
+Remember you can add not only numeric entries that will be valid using wxNumberValidator::SetAlsoValid(). The array passed
+to SetAlsoValid() does not need to be the same as <I>choices</I>.<P>
+
+<I>count</I> is the number of elements in <I>choices[]</I>.<P>
+
+<HR>
+
+</BODY></HTML>
