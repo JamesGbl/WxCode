@@ -1,0 +1,353 @@
+<HTML>
+<head>
+	<title>wxFormatStringAsNumber</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<BODY BGCOLOR=#FFFFFF>
+<BODY>
+
+<H2>wxFormatStringAsNumber</H2>
+<H3> version  2.0</H3>
+<P>
+This class takes a wxString as input and formats it as if it was a number, storing the result in another wxString. You
+can also do the backwards process, unformatting.<BR>
+It does <U>not</U> use CPU types (int, double, etc.). So, it doesn't suffer the typical hardware limitations.
+</P>
+
+<P>The formatting rules -let's call them &quot;style&quot;-, include sub-styles for positive, negative and zero numbers.</P>
+
+<P>This class is also used in <a href="wxNumberValidator.htm">wxNumberValidator</a></P>
+
+<A NAME="wxFSANthestyle"></A><H3>The style</H3>
+<P>You must specify a style to use. You do this by special characters, meaning:</P>
+<PRE>
+   b     Sets next character in style (typically blank ' ') if no digit.
+         So, bX means &quot;Put the digit. If there's no digit, put a forced 'X'&quot;.
+
+   0     Sets a forced '0' (zero) if no digit, or the digit if any.
+         It is a short form of "b0".
+
+   #     Sets the digit if any.
+
+   *     Sets all remaining decimal or exponential digits.
+	 This char is not allowed for the integer part. Instead, you can use a group [].
+         In exponential part, it is not allowed after (at right of) digit-char (*#0b).
+
+   .     This one (a dot) is used for the decimal separator, which can be several characters long.
+         Next character marks the beginning of the decimal separator. The same char marks end of
+         this separator. So, you must use two 'next char' to define the decimal separator.
+	 Easily, this char would be "'". But it can be anyone.
+         Example, typical: (just a dot) .'.'
+         Example, exotic: (cents=) .Xcents=X
+         The decimal-part is used if both number and style have decimal separator, or if there
+         are 'forced digits' to show in this decimal part.
+
+   [     Beginning of a group to repeat in the integer part. Only one group is allowed.
+         Example: [,###] will produce 12,345,678,901...
+         No digits (#0b) are allowed before (at left of) group.
+         No sign is allowed inside group.
+         No decimal separator is allowed inside group.
+	 No exponential is allowed inside group.
+         Groups are not allowed in decimal or exponential parts.
+
+   ]     End of group.
+
+   +     Sets always the sign. Only one sign for number and another for exponent is allowed.
+         You can place the sign almost wherever you want.
+
+   -     Sets the sign if the number is negative.
+
+   @     Next char is literal; useful for showing a command-character, such as '#'.
+
+   E     Exponential.
+   e     Same. Use lower case letter 'e' instead of  'E'.
+         One digit needed at least before exponential.
+         Groups not allowed after exponential.
+         Exponential is only used if both number and style have it, or if there are 'forced digits'
+	 to show in this exponential part.
+
+   S     Scientific notation.
+   s     Same. Use lower case letter 'e' instead of  'E'.
+
+   N     Engineering notation.
+   n     Same. Use lower case letter 'e' instead of  'E'.
+
+   ;     Sub-styles separator. May be sub-styles for positive, negative and zero values
+         (in this order). If only one sub-style is provided, it is used for all numbers.
+         If two sub-styles, the first is used for positive and zero, the second for negative.
+</PRE>
+
+<H3>Some samples</H3>
+<PRE>
+   input                    style                            output
+
+1234567890.1234        [,###].'.'*                      1,234,567,890.1234
+12345678.1234          [mM000].'d'*                     012mM345mM678d1234
+-1234.56e98            -#0.','*E-###                    -34,56E98
+-1234.5678             @num i@s= [#].' and '00+         num is= 1234 and 56-
+12345678E+98           @#[bT0 ]@-000e+b bxby0+@#        #T1 23 45 -678e+ x98+#
+12.3                   +[#].'.'*;(000.','00)            +12.3
+-12.3                  +[#].'.'*;(000.','00)            (012,30)
+</PRE>
+
+<H3>NOTES:</H3>
+<P>- Rounding off can be done. See below.
+<P>- No sign is allowed inside a group, but you can use it as a literal character (@+ or @-).
+<P>- If number (well, the string) has more decimal digits than style, they will be TRUNCATED at formatting.
+An error will be returned at unformatting.
+<P>- Similary, if number has more digits before decimal than style, they will be TRUNCATED (or unformat error), as in
+the third example above.
+<P>- If number has more digits at exponential-part than style, an error is returned. Note there's no truncation here.
+<P>- If all digits at integer part in input are done and the last (right to left) of them was processed in a 
+group, the rest (left) of the group will be skipped, unless a required digit (0b) is found.
+<P>- If the style has '+' (required sign) and you try to unformat a number like "12.3" (no sign), an error will raise.
+<P>- If style has two signs, after 'E' or 'e', first sign is intended for exponential and second for number.
+<P>- Internally character positions are handled using 'int' type. So, the number of characters is limited
+to 2147483647 (on a 32 bit machine). I presume that should be enough. You may also need to know that in some cases
+the exponential part is converted into a 'long'. I think this exponential value is a far limit too.
+
+<P>CHARACTERS BETWEEN DIGITS
+<P>The rules are:
+<P>- Any char at left of the left-most digit (#, b, 0) is a prefix, so it is written.
+<P>- Any char at right of the right-most digit (*, #, b, 0) is a suffix, so it is written.
+<P>- A char between digits is written if more digits (given at input or forced by style) will be written.
+<P>e.g. with "aa###c#0d##f" "5" becomes "aa0d5f" and "123456" becomes "aa12c34d56f".
+<P><U>Other sample</U>
+<PRE> With the style "xx1x[2bL03#]4##" the number '5' gets formatted into "xx1xL0345" Let's see why:
+</PRE>
+The right-most '#' is used with '5'. There are no more digits in input, so next '#' is skipped. Now, pay attention
+with that '0' inside the group. It's a 'forced' digit, so to reach it '4' and '3' must also be used. After this, 
+'0' is used. The char 'L' is also forced (because of it's 'b'), so use it. Next '2' is not needed because we have
+no more digits to format using again the group. The left chars 'xx1x' are a prefix, so they are used. 
+Unformatting back, we get "05".
+<P>
+
+<P>THE DECIMAL PART:
+<P>Like exponential, the decimal part is used if BOTH style and number must have decimal separator, or if the
+style has 'forced digits' (0 b) in this part.
+<P>'*'   means 'all decimal digits'.
+<P>'00'  means 'just and only two digits'.
+<P>'0*'  means 'at least one digit'.
+<P>'0##' means 'one, two or three digits'
+<P>Once '*' is used, no '*' '#' 'b' or '0' is allowed. So, *0  is not allowed. If you need an extra 0, use *@0
+<P>'b' or '0' after '#' has no sense, so it is not allowed.
+<P>
+
+<H3>Scientific and Engineering notations</H3>
+These notations use always the exponential part, even it is zero.<BR>
+Scientific notation is like "-1.2345E+78" where there is just one and always just one digit (1-9) in the integer part.<BR>
+Engineering notation is like "-123.45E+9" where the exponent is multiple of 3. The integer part is a number
+between 1 and 999.<P>
+The string to format can have any notation. So, "12345.67" will be transformed to "1.234567E4" or "12.34567E3"
+(depending on S or N at style) before being fully formatted with the style.
+<P>
+
+<A NAME="wxFSANrounding"></A><H3>Rounding off</H3>
+Rounding off can be done at format time. See the proper parameter at <A HREF="#wxFSANformatstr">FormatStr</A>. <P>
+Roundig is done to the nearest number that fits in the style and keeps its representation.<BR>
+"Nearest" means that '1.25' may be rounded to '1.3'; '1.24' to '1.2'; '-1.28' to '-1.3' and '-1.24' to '-1.2'.<P>
+
+The sub-style 'forced' or 'desired' chars in decimal part define the rounded part. If the sub-style decimal part is
+"'.'0#" two digits remain, the third digit decides round-up or round-down, and the rest of decimal digits are dismissed.
+So, '12.375111' rounded with this style is '12.38' and '12.37499' is '12.37'.<P>
+
+Note that "'.'0*" will <U>not</U> do rounding, because this style means "at least one (i.e. but can be more) decimal
+digit".<P>
+
+A sub-style without decimal separator or without decimal digits (like "[#].'.' kg") will still round off the number,
+if it has decimal part. "123.5" will be rounded to "124."<P>
+
+The "representation" is taken account too. With scientific/engineering notation the number will be first transformed
+into its proper representation and after this rounded depending on the style. With the style "#.'.'0S-##" the number
+"175.3" is first transformed into "1.753E2" and then rounded to "1.8E2".<P>
+
+
+<A NAME="wxFSANtunformatting"></A><H3>Unformatting</H3>
+<P>Well, first at all, you must know this is not as exact as formatting. We must find some topics in order to
+construct the number: sign, integer part, decimal part, exponential sign and exponential digits.<P>
+
+Sign is achieved proving all sub-styles and getting the one that matches the best. If there's only one sub-style,
+we'll get the sign directly.<BR>
+The essential parts are extracted searching for their delimitiers, specified in style. But, the string may have
+several 'e'. So, wich one is exponential?<P>
+
+An example with several 'e' is this exotic and tricky situation:
+<PRE>
+     formatted                                   style
+dist.=1,234,567.89e+12 kilometres       di@st@.=[,###].'.'*e+### kilom@etr@e@s
+</PRE>
+Or even worse, with some 'e' and '.' between digits.<BR>
+Another trick-increasing factor is whether we want to allow and bypass some "typos" or not. 
+<A HREF="#wxFSANunformatstr">UnFormatStr</A> takes this into consideration, using the flag <I>beStrict</I>.
+
+<P>To cope with all of this, by now (Mar-03) I have not a better idea than getting the first 'e' at left of the
+first digit, searching in formatted input from finish to beginning (right to left). 
+If in not strict mode, just get the first 'e' from the right. 
+To find decimal separator (in 'strict' and 'not strict' modes) we just get its first occurrence (from left to right).<BR>
+I know this can't cope with all cases, but 90% (100% of "normal", no exotic).
+</P>
+<P>PAY ATTENTION, PLEASE:
+<P>Digits (1,2,...) and command-characters (#,+,e,...) used as chars in style must be considered carefully,
+because unformatting may get confused.<BR>
+This is specially true with <I>non-strict</I> mode. This mode should be used only with simple styles.
+
+<P>See <A HREF="#wxFSANunformatstr">UnFormatStr</A> for additional information.
+</P>
+
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><P>
+No base class<P>
+<B><FONT COLOR="#FF0000">Include files</FONT></B><P>
+&lt;forstrnu.h&gt;<P>
+<B><FONT COLOR="#FF0000">Members</FONT></B><P>
+<A HREF="#wxFSANconstr1">wxFormatStringAsNumber::wxFormatStringAsNumber</A><BR>
+<A HREF="#wxFSANformatstr">wxFormatStringAsNumber::FormatStr</A><BR>
+<A HREF="#wxFSANgetdecsep">wxFormatStringAsNumber::GetDecSep</A><BR>
+<A HREF="#wxFSANgetlasterror">wxFormatStringAsNumber::GetLastError</A><BR>
+<A HREF="#wxFSANgetstyle">wxFormatStringAsNumber::GetStyle</A><BR>
+<A HREF="#wxFSANqcheck">wxFormatStringAsNumber::QCheck</A><BR>
+<A HREF="#wxFSANsetstyle">wxFormatStringAsNumber::SetStyle</A><BR>
+<A HREF="#wxFSANstringtoparts">wxFormatStringAsNumber::StringToParts</A><BR>
+<A HREF="#wxFSANtrimzeros">wxFormatStringAsNumber::TrimZeros</A><BR>
+<A HREF="#wxFSANunformatstr">wxFormatStringAsNumber::UnFormatStr</A><BR>
+<P>
+
+<HR>
+<A NAME="wxFSANconstr1"></A>
+<H3>wxFormatStringAsNumber::wxFormatStringAsNumber</H3><P>
+<B>wxFormatStringAsNumber</B>()<P>
+Default constructor<P>
+
+<B>wxFormatStringAsNumber</B>(<B>const wxString&amp; </B><I>formatStyle</I>)<P>
+Constructor, setting <I>formatStyle</I><P>
+See <A HREF="#wxFSANsetstyle">SetStyle</A>.<P>
+
+<HR>
+<A NAME="wxFSANformatstr"></A>
+<H3>wxFormatStringAsNumber::FormatStr</H3><P>
+<B>int</B> <B>FormatStr</B>(<B>const wxString&amp; </B><I>strNumIn</I>, <B>wxString&amp; </B><I>strNumOut</I>,
+<B>int</B> <I>beStrict = wxUF_BESTRICT</I>, <B>bool </B><I>doRound = false</I>)<P>
+Formats <I>strNumIn</I> into <I>strNumOut</I>. Returns -1 if no errors or the position (0-based) where first error.<P>
+
+The error is due exponential: Either the style has no exponential, but <I>strNumIn</I> does; or the style has not
+enough space at exponential for all these digits at <I>strNumIn</I>.<P>
+
+<I>beStrict=wxUF_BESTRICT</I> (default) calls <A HREF="#wxFSANqcheck">QCheck</A> before formatting. So, <I>strNumIn</I>
+must be a valid C-locale number.<P>
+
+<I>beStrict=wxUF_BESTRICT</I> is needed if more than one sub-style is used. Otherwise, the string is formatted using
+the first sub-style.<P>
+
+Although you should not use it, you may know that <I>beStrict=wxUF_NOSTRICT</I> is used internally by
+<a href="wxNumberValidator.htm">wxNumberValidator</a>. In this "tolerant" behavior, <I>strNumIn</I> is not checked and
+it's formatted even if it is incomplete. <I>strNumOut</I> will also be incomplete.<P>
+
+<I>doRound</I> = true will do rounding off. See explanations at <A HREF="#wxFSANrounding">Rounding</A>
+
+<HR>
+<A NAME="wxFSANgetdecsep"></A>
+<H3>wxFormatStringAsNumber::GetDecSep</H3><P>
+<B>wxString</B> <B>GetDecSep</B>()<P>
+Returns the decimal separator stored in the first sub-style.<P>
+
+<HR>
+<A NAME="wxFSANgetlasterror"></A>
+<H3>wxFormatStringAsNumber::GetLastError</H3><P>
+<B>wxString</B> <B>GetLastError</B>()<P>
+Returns the last error message, wxEmptyString if none.<P>
+
+<HR>
+<A NAME="wxFSANgetstyle"></A>
+<H3>wxFormatStringAsNumber::GetStyle</H3><P>
+<B>wxString</B> <B>GetStyle</B>()<P>
+Returns the current stored style.<P>
+
+<HR>
+<A NAME="wxFSANqcheck"></A>
+<H3>wxFormatStringAsNumber::QCheck</H3><P>
+<B>int</B> <B>QCheck</B>(<B>const wxString&amp; </B><I>strNum</I>)<P>
+Analyse strNum to be a computer-style number (read "C-locale"). 
+Because ther's no format, it is quick.<P>
+Before using it, be sure <I>strNum</I> has no tabs, blanks, etc.<P>
+Returns '-1' if no errors or the position (0-based) where first error.<P>
+<P>NOTES:<BR>
+"E5" is not allowed, because there are no digits before exponential.<BR>
+"1E" is not allowed, because there are no digits after exponential.<BR>
+"." and "-" are not allowed because there are no digits.<BR>
+<P>
+
+<HR>
+<A NAME="wxFSANsetstyle"></A>
+<H3>wxFormatStringAsNumber::SetStyle</H3><P>
+<B>int</B> <B>SetStyle</B>(<B>const wxString&amp; </B><I>formatStyle</I>)<P>
+Sets a new style, formed with at most three substyles.
+<PRE>Example with tree sub-styles: "+[#].'.'#;(000.','00);z@ero"</PRE> 
+If the [sub]style[s] are OK, current stored style is replaced with <I>formatStyle</I>.<P> 
+Returns -1 if no errors are found in <I>formatStyle</I> or the position (0-based) where first error.<P>
+If compiled in 'debug mode' and an error is found, a message is also shown.<P>
+See <A HREF="#wxFSANthestyle">The style</A> for details.<P>
+
+
+<HR>
+<A NAME="wxFSANstringtoparts"></A>
+<H3>wxFormatStringAsNumber::StringToParts</H3><P>
+<B>void</B> <B>StringToParts</B>(<B>stringParts* </B><I>sP</I>)<P>
+stringParts is a struct with these members:<BR>
+wxString sDigits<BR>
+bool sSign<BR>
+long sExp<BR>
+You can think of this function as a moreless "scientific notation breaker"<P>
+
+You pass the number to this function copying it to sP.sDigits. An example: "-1234.56" will be broken into<BR>
+sDigits = "123456"<BR>
+sSign = false<BR>
+sExp = 3
+<P>
+
+<HR>
+<A NAME="wxFSANtrimzeros"></A>
+<H3>wxFormatStringAsNumber::TrimZeros</H3><P>
+<B>void</B> <B>TrimZeros</B>(<B>wxString&amp; </B><I>strNum</I>, <B>int</B> <I>atside = wxTZ_LEFT</I>)<P>
+As a result from unformatting, you can get something like "-002.45000E+089" <P>
+This function changes <I>strNum</I> <P>
+<PRE>
+<I>atside = wxTZ_LEFT</I>  (default)  to get "-2.45000E+089"
+<I>atside = wxTZ_RIGHT</I>            to get "-002.45E+089"
+<I>atside = wxTZ_BOTH</I>             to get "-2.45E+089"
+</PRE>
+NOTES:<P>
+- The exponential part is not modified.<P>
+- If any of the three indicated <I>atside</I> values is set and the number is a real zero (i.e. -0.0000E+12)
+<I>strNum</I> becomes "0".<P>
+- When trimming at left, one '0' is set before decimal separator (e.g. "0000.12" becomes "0.12" and "-.1" becomes "-0.1").<P>
+- <I>strNum</I> is supposed to be a C-locale number. You can test it using <A HREF="#wxFSANqcheck">QCheck</A>.<P>
+
+<HR>
+<A NAME="wxFSANunformatstr"></A>
+<H3>wxFormatStringAsNumber::UnFormatStr</H3><P>
+<B>int</B> <B>UnFormatStr</B>(<B>const wxString&amp; </B><I>strIn</I>, <B>wxString&amp; </B><I>strOut</I>, <B>int</B> <I>beStrict = wxUF_BESTRICT</I>)<P>
+Unformats <I>strIn</I> into <I>strOut</I>. Returns -1 if no errors or the position (0-based) where first error.<P>
+Use <I>beStrict=wxUF_BESTRICT</I> (default) if <I>strIn</I> is supposed to be <I>perfectly well formatted according to
+the style</I>.<BR><P>
+
+<I>beStrict=wxUF_NOSTRICT</I> is more tolerant. It will try to retrieve most of <I>strIn</I> information (i.e. sign, digits,
+decimal, exponential, etc.). But this "information" must agree with the style also in this 'tolerant' mode. So, it's just
+not a matter of dismissing 'typos' and take the rest, because those 'typos' must be discovered comparing positions: Consider
+"-12x3+" with the style "[#]-". The 'x' will be told as a typo. But there are two signs and only the right-most agrees with
+the style. The '-' (at left) is another typo, and this fact can only be proved using the style and not just by discarding
+no-digits.<BR>
+The same applies for "forced" digits/signs. "12" will fail for a style like "000" because it needs three digits and "12"
+has only two. "12" will fail for a style like "[#]+" because it requires the sign and "12" hasn't. These two samples are
+considered "critical" fails, they don't agree with style.<BR>
+Another "critical" fail is when the style requires scientific or engineering notation and <I>strIn</I> has no exponential
+part.<P>
+
+If there are no "critical" fails, but just 'typos', the return will still be the position for the error. In this case the
+difference with <I>beStrict=wxUF_BESTRICT</I> is that <I>strOut</I> will be filled with relevant retrieved information,
+althoug incomplete, like "-1.2e" or ".e+" or "-." etc.<P>
+
+This flag exists because <a href="wxNumberValidator.htm">wxNumberValidator</a>. You may find another use for it.
+<P><I>beStrict=wxUF_NOSTRICT</I> only uses the first sub-style.<P>
+See <A HREF="#wxFSANtunformatting">Unformatting</A> for special precautions.<P>
+
+</BODY></HTML>
