@@ -59,7 +59,7 @@ bool wxSTEditorTreeCtrl::Create(wxWindow *parent, wxWindowID id,
         return false;
 
     wxImageList* imageList = new wxImageList(16, 16, true, 3);
-    imageList->Add(wxArtProvider::GetBitmap(wxART_FOLDER, wxART_MENU, wxSize(16, 16)));
+    imageList->Add(wxArtProvider::GetBitmap(wxART_FOLDER,      wxART_MENU, wxSize(16, 16)));
     imageList->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_MENU, wxSize(16, 16)));
     imageList->Add(wxArtProvider::GetBitmap(wxART_REPORT_VIEW, wxART_MENU, wxSize(16, 16)));
     AssignImageList(imageList);
@@ -93,6 +93,17 @@ wxSTEditorTreeCtrl::~wxSTEditorTreeCtrl()
 {
     delete m_popupMenu;
     SetSTENotebook(NULL);
+
+    // Remove the wxEVT_DESTROY tracker for notebook pages so they don't call us when we're gone.
+    wxLongToLongHashMap::iterator it;
+    for (it = m_windowDestroyMap.begin(); it != m_windowDestroyMap.end(); it++)
+    {
+        wxWindow* win = (wxWindow*)it->first;
+        win->Disconnect(wxID_ANY, wxEVT_DESTROY,
+                        wxWindowDestroyEventHandler(wxSTEditorTreeCtrl::OnWindowDestroy),
+                        NULL, this);
+    }
+    m_windowDestroyMap.clear();
 }
 
 void wxSTEditorTreeCtrl::OnContextMenu( wxContextMenuEvent& event )
@@ -262,7 +273,7 @@ void wxSTEditorTreeCtrl::OnWindowDestroy( wxWindowDestroyEvent& event )
         return;
     }
 
-    wxLongToLongHashMap::iterator it;       
+    wxLongToLongHashMap::iterator it;
 
     // Else this is a page in the notebook
     it = m_windowToSTETreeItemDataMap.find((long)event.GetEventObject());
@@ -339,6 +350,9 @@ static int Find_wxArrayTreeItemId(const wxArrayTreeItemIds& arrayIds, const wxTr
 
 void wxSTEditorTreeCtrl::UpdateFromNotebook()
 {
+    wxSTERecursionGuard guard(m_rGuard_UpdateFromNotebook);
+    if (guard.IsInside()) return;
+
     wxSTEditorNotebook *noteBook = GetSTEditorNotebook();
     if (!noteBook)
         return;

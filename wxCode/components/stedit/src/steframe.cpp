@@ -464,7 +464,7 @@ void wxSTEditorFrame::OnNotebookPageChanged(wxNotebookEvent &WXUNUSED(event))
     SetTitle(title);
 }
 
-void wxSTEditorFrame::OnFindAllResults(wxCommandEvent& event)
+void wxSTEditorFrame::OnFindAllResults(wxCommandEvent& )
 {
     // nothing to do
     if (!m_findResultsEditor)
@@ -780,7 +780,7 @@ bool wxSTEditorFileDropTarget::OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED
     wxSTEditorFrame*    stEditorFrame    = NULL;
     wxSTEditorNotebook* stEditorNotebook = NULL;
     wxSTEditorSplitter* stEditorSplitter = NULL;
-    wxSTEditor*         stEditor         = NULL;    
+    wxSTEditor*         stEditor         = NULL;
 
     wxWindow* parent = m_owner;
 

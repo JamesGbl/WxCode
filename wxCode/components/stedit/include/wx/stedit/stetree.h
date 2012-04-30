@@ -181,13 +181,16 @@ public:
     void OnWindowDestroy( wxWindowDestroyEvent& event );
     /// @}
 
-private:
+protected:
     FileDisplay_Type    m_display_type;
     wxMenu*             m_popupMenu;
     wxSTEditorNotebook* m_steNotebook;
     wxLongToLongHashMap m_windowToSTETreeItemDataMap;
     wxLongToLongHashMap m_windowDestroyMap;
 
+    wxSTERecursionGuardFlag m_rGuard_UpdateFromNotebook;
+
+private:
     void Init();
     DECLARE_DYNAMIC_CLASS(wxSTEditorTreeCtrl)
     DECLARE_EVENT_TABLE()
