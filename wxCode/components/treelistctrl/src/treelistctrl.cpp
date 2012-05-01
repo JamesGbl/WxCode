@@ -803,7 +803,6 @@ public:
         m_image = NO_IMAGE;
     };
     ~wxTreeListItemCellAttr() {
-wxLogMessage("~wxTReeListItemCellAttr() called: this=%X m_data=%X", this, m_data);
         if (m_ownsAttr) delete m_attr;
     }
 
@@ -1746,7 +1745,6 @@ wxTreeListItem::wxTreeListItem (wxTreeListMainWindow *owner,
 }
 
 wxTreeListItem::~wxTreeListItem() {
-wxLogMessage("~wxTreeListItem() called: this=%X", this);
     if (m_toolTip) delete m_toolTip;
 
     wxTreeListItemCellAttrHash::iterator entry = m_props_cell.begin();
@@ -2071,7 +2069,6 @@ bool wxTreeListMainWindow::Create (wxTreeListCtrl *parent,
 }
 
 wxTreeListMainWindow::~wxTreeListMainWindow() {
-wxLogMessage("~wxTreeListMainWindow() called: this=%X", this);
     delete m_hilightBrush;
     delete m_hilightUnfocusedBrush;
 
