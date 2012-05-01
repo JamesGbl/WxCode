@@ -31,14 +31,25 @@ class MyVideoCaptureWindow;
 // IDs for the controls and the menu commands
 enum
 {
-    // menu items
+    ID_WXVIDCAP__FIRST = wxID_HIGHEST + 100,
+
+    //---- File menu --------------------------------------------------------
     //wxID_OPEN,
+
+#ifdef WXVIDCAP_AVI_SUPPORT
+    ID_SETCAPFILENAME,
+    ID_SETCAPFILESIZE,
+    ID_SAVECAPTUREDVIDEOAS,
+#endif // WXVIDCAP_AVI_SUPPORT
+
     //wxID_EXIT,
-    //wxID_ABOUT,
-    ID_SHOWLOG = wxID_LAST + 100,
 
-    ID_VIDEOWIN,
+    //---- Image Processing menu ---------------------------------------------
+    ID_IMGPROCESS_NEGATIVE,
+    ID_IMGPROCESS_EDGE,
+    ID_IMGPROCESS_MOTION,
 
+    //---- Video menu -------------------------------------------------------
     ID_DEVICE_ENUMERATE,
     ID_DEVICENONE,
     ID_DEVICE0,
@@ -53,23 +64,12 @@ enum
     ID_DEVICE9,
     ID_DEVICE__MAX, // not a menu item
 
-#ifdef WXVIDCAP_AUDIO_SUPPORT
-    ID_SETCAPFILENAME,
-    ID_SETCAPFILESIZE,
-    ID_SAVECAPTUREDVIDEOAS,
-#endif // WXVIDCAP_AUDIO_SUPPORT
-
-    ID_PREVIEWBUTTON,
     ID_PREVIEW,
-    ID_PREVIEWRATE,
-    ID_PREVIEWSCALED,
     ID_PREVIEWIMAGE,
-    ID_OVERLAY,
-
     ID_IMGPROCESS_MENU,
-    ID_IMGPROCESS_NEGATIVE,
-    ID_IMGPROCESS_EDGE,
-    ID_IMGPROCESS_MOTION,
+    ID_PREVIEWSCALED,
+    ID_PREVIEWRATE,
+    ID_OVERLAY,
 
     ID_DLGSOURCE,
     ID_DLGFORMAT,
@@ -77,6 +77,7 @@ enum
     ID_DLGDISPLAY,
     ID_DLGPROPERTIES,
 
+    //---- Capture menu ------------------------------------------------------
     ID_SNAPTOWINDOW,
     ID_SNAPTOCLIPBOARD,
     ID_SNAPTOFILE,
@@ -89,21 +90,38 @@ enum
     ID_DLGCOMPRESSION,
 #endif // WXVIDCAP_AVI_SUPPORT
 
+    ID_NOPREVIEWONCAP,
+
 #ifdef WXVIDCAP_AUDIO_SUPPORT
     ID_DLGAUDIO,
 #endif // WXVIDCAP_AUDIO_SUPPORT
 
-    ID_NOPREVIEWONCAP
+    //---- Help menu --------------------------------------------------------
+    //wxID_ABOUT,
+    ID_SHOWLOG,
 
+    // Toolbar --------------------------------------------------------------
+
+    ID_PREVIEWBUTTON,
+    //ID_PREVIEWSCALED
+    //ID_SNAPTOCLIPBOARD
+    //ID_SNAPTOFILE
+    //ID_CAPSINGLEFRAMES
+    //ID_CAPVIDEO
+    //ID_SETCAPFILENAME
+    //ID_DLGCAPPREFERENCES
+
+    // ----------------------------------------------------------------------
+
+    ID_VIDEOWIN, // ID of the wxVideoCaptureWindow
+
+
+    ID_WXVIDCAP__LAST
 };
 
 // ----------------------------------------------------------------------------
-// resources
+// The application class
 // ----------------------------------------------------------------------------
-// the application icon
-#if defined(__WXGTK__) || defined(__WXMOTIF__)
-    #include "mondrian.xpm"
-#endif
 
 // Define a new application type, each program should derive a class from wxApp
 class MyApp : public wxApp
@@ -113,12 +131,11 @@ public:
     virtual bool OnInit();
 };
 
-
 //----------------------------------------------------------------------------
 // MyFrame
 //----------------------------------------------------------------------------
 
-class MyFrame: public wxFrame
+class MyFrame : public wxFrame
 {
 public:
     // constructors and destructors
@@ -194,11 +211,11 @@ private:
 class MyVideoCaptureWindow: public wxVideoCaptureWindow
 {
 public:
-    MyVideoCaptureWindow( wxWindow *parent, wxWindowID id = -1,
-                    const wxPoint &pos = wxDefaultPosition,
-                    const wxSize &size = wxDefaultSize,
-                    long style = wxSIMPLE_BORDER,
-                    const wxString &name = wxT("wxvidcap"));
+    MyVideoCaptureWindow( wxWindow *parent, wxWindowID id = wxID_ANY,
+                          const wxPoint &pos = wxDefaultPosition,
+                          const wxSize &size = wxDefaultSize,
+                          long style = wxSIMPLE_BORDER,
+                          const wxString &name = wxT("wxvidcap"));
 
     virtual ~MyVideoCaptureWindow();
 
@@ -223,4 +240,4 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-#endif
+#endif //__wxvidcap_H__

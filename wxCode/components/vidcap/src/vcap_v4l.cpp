@@ -238,9 +238,10 @@ int wxVideoCaptureWindowV4L::EnumerateDevice(const wxString& deviceFilename)
 {
     int device_idx = wxNOT_FOUND;
 
-    wxFileName fileName(deviceFilename);
-    if (!fileName.Exists())
+#if wxCHECK_VERSION(2,9,0)
+    if (!wxFileName::Exists(deviceFilename)) // use FileExists() in 2.8 only works for files, not devices
         return device_idx;
+#endif //wxCHECK_VERSION(2,9,0)
 
     wxString errMsg; // use this as a sink for the error messages
     int fd_device = open_device(deviceFilename, &errMsg);
@@ -287,16 +288,13 @@ int wxVideoCaptureWindowV4L::EnumerateDevice(const wxString& deviceFilename)
 // Connect and Disconnect to device
 // ----------------------------------------------------------------------
 
-bool wxVideoCaptureWindowV4L::DeviceConnect(const wxString& fileNameString)
+bool wxVideoCaptureWindowV4L::DeviceConnect(const wxString& fileName)
 {
     // Close whatever was open and (re)open the new one
     DeviceDisconnect();
 
-    wxFileName fileName(fileNameString);
-    if (!fileName.Exists()) return false;
-
     // Add this device to our list if it's valid.
-    int device_idx = EnumerateDevice(fileNameString);
+    int device_idx = EnumerateDevice(fileName);
     // if we got an invalid index, there was a problem with it
     if (device_idx == wxNOT_FOUND) return false;
 
@@ -328,6 +326,7 @@ bool wxVideoCaptureWindowV4L::DeviceDisconnect()
 {
     m_preview_wximage = false;
     m_imageSize       = wxSize(0, 0);
+    m_wximage.Destroy();
 
     if (wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_CAPTURE)) uninit_capture();
     if (wxVC_HASBIT(m_v4l2_device_init, wxV4L2_DEVICE_INIT_IO))      uninit_io();

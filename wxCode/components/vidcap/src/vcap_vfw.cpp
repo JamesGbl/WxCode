@@ -461,6 +461,7 @@ bool wxVideoCaptureWindowVFW::DeviceDisconnect()
     VFW_GetCAPSTATUS();
 
     Reset();
+    m_wximage.Destroy();
 
     return ok;
 }

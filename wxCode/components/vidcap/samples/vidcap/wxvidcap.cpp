@@ -19,11 +19,16 @@
 
 #include "wxvidcap.h"
 
-IMPLEMENT_APP(MyApp)
+// the application icon
+#if defined(__WXGTK__) || defined(__WXMOTIF__)
+    #include "mondrian.xpm"
+#endif
 
 // ----------------------------------------------------------------------------
-// the application class
+// The application class
 // ----------------------------------------------------------------------------
+IMPLEMENT_APP(MyApp)
+
 bool MyApp::OnInit()
 {
     wxInitAllImageHandlers();
@@ -106,8 +111,10 @@ MyFrame::MyFrame( wxWindow *parent, wxWindowID id, const wxString &title,
 
 #if wxUSE_STATUSBAR
     CreateStatusBar(2);
-    wxSize frameStatusTextExtent = GetStatusBar()->GetTextExtent(MyVideoCaptureWindow::GetStatusText(999999, 9999));
-    int status_widths[2] = {-1, frameStatusTextExtent.GetWidth()};
+    int status_text_width = 0, status_text_height = 0;
+    GetStatusBar()->GetTextExtent(MyVideoCaptureWindow::GetStatusText(999999, 9999),
+                                  &status_text_width, &status_text_height);
+    int status_widths[2] = {-1, status_text_width};
     SetStatusWidths(2, status_widths);
 #endif // wxUSE_STATUSBAR
 
@@ -181,7 +188,6 @@ void MyFrame::EnumerateDevices()
     if (was_connected)
         m_vidCapWin->DeviceDisconnect();
 
-
     m_vidCapWin->EnumerateDevices();
 
     unsigned int i, count = m_vidCapWin->GetDeviceCount();
@@ -206,7 +212,9 @@ void MyFrame::EnumerateDevices()
         for (i = 0; i < count; i++)
         {
             m_videoMenu->Insert(device_insert_pos+i, ID_DEVICE0+i,
-                                m_vidCapWin->GetDeviceName(i), wxString::Format(wxT("Video device #%d"),i), wxITEM_CHECK);
+                                m_vidCapWin->GetDeviceName(i),
+                                wxString::Format(wxT("Video device #%u"), i),
+                                wxITEM_CHECK);
 
             // the numbers may have changed, find the same device
             if ((oldDeviceName    == m_vidCapWin->GetDeviceName(i)) &&
@@ -218,7 +226,11 @@ void MyFrame::EnumerateDevices()
     }
     else
     {
-        m_videoMenu->Insert(device_insert_pos, ID_DEVICE0, wxT("No Video Devices found"), wxT("No compatible video devices found"));
+        m_videoMenu->Insert(device_insert_pos, ID_DEVICE0,
+                            wxT("No Video Devices found"),
+                            wxT("No compatible video devices found"),
+                            wxITEM_CHECK);
+
         m_videoMenu->Enable(ID_DEVICE0, false);
     }
 
@@ -258,7 +270,7 @@ void MyFrame::CreateMenus()
     m_videoMenu->Append(ID_DEVICE_ENUMERATE, wxT("Resca&n for devices"), wxT("Enumerate devices found on the system"));
     m_videoMenu->AppendSeparator();
 
-    m_videoMenu->Append(ID_DEVICENONE,      wxT("&Disconnect"),        wxT("Disconnect from all devices"), wxITEM_CHECK );
+    m_videoMenu->Append(ID_DEVICENONE,      wxT("&Disconnect"),          wxT("Disconnect from all devices"), wxITEM_CHECK );
 
     EnumerateDevices();
 
@@ -268,7 +280,6 @@ void MyFrame::CreateMenus()
     m_videoMenu->Append(ID_IMGPROCESS_MENU, wxT("P&rocess wxImage"), m_processMenu, wxT("Simple image processing of wxImages"));
     m_videoMenu->Append(ID_PREVIEWSCALED,   wxT("Preview &Scaling\tCtrl-U"), wxT("Fit video size to window"), wxITEM_CHECK);
     m_videoMenu->Append(ID_PREVIEWRATE,     wxT("Preview &Rate...\tCtrl-R"), wxT("Set preview rate"));
-
     m_videoMenu->Append(ID_OVERLAY,         wxT("&Overlay\tCtrl-O"),  wxT("Preview using hardware overlay"), wxITEM_CHECK);
 
     m_videoMenu->AppendSeparator();
@@ -294,7 +305,7 @@ void MyFrame::CreateMenus()
     m_captureMenu->AppendSeparator();
 
     m_captureMenu->Append(ID_NOPREVIEWONCAP, wxT("&Stop preview on capture"), wxT("Stop previewing for any capture"), wxITEM_CHECK);
-    m_captureMenu->Check(ID_NOPREVIEWONCAP, true);
+    m_captureMenu->Check( ID_NOPREVIEWONCAP, true);
 
 #ifdef WXVIDCAP_AVI_SUPPORT
     m_captureMenu->Append(ID_DLGCAPPREFERENCES, wxT("Capture &preferences..."), wxT("Capture preferences dialog"));
@@ -310,6 +321,7 @@ void MyFrame::CreateMenus()
     m_helpMenu->Append(wxID_ABOUT, wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
     m_helpMenu->Append(ID_SHOWLOG, wxT("&Show log\tCtrl-L"), wxT("Show log window"), wxITEM_CHECK);
 
+
     // now append the freshly created menu to the menu bar...
     m_menubar->Append(m_fileMenu,    wxT("&File"));
     m_menubar->Append(m_videoMenu,   wxT("&Video"));
@@ -320,20 +332,20 @@ void MyFrame::CreateMenus()
 void MyFrame::CreateToolbar()
 {
     m_toolBar->AddCheckTool(ID_PREVIEWBUTTON, wxT("Preview"),        ToolBarBitmaps(0), wxNullBitmap, wxT("Preview"));
-    m_toolBar->AddCheckTool(ID_PREVIEWSCALED, wxT("Preview scaled"), ToolBarBitmaps(1), ToolBarBitmaps(2), wxT("Preview scaled"));
+    m_toolBar->AddCheckTool(ID_PREVIEWSCALED, wxT("Preview scaled"), ToolBarBitmaps(1), wxNullBitmap, wxT("Preview scaled"));
 
     m_toolBar->AddSeparator();
 
-    m_toolBar->AddTool(ID_SNAPTOCLIPBOARD, wxT("Snap to clipboard"), ToolBarBitmaps(3), wxT("Capture image to clipboard"));
-    m_toolBar->AddTool(ID_SNAPTOFILE,      wxT("Snap to file"),      ToolBarBitmaps(4), wxT("Capture single image to file"));
+    m_toolBar->AddTool(ID_SNAPTOCLIPBOARD,    wxT("Snap to clipboard"), ToolBarBitmaps(3), wxT("Capture image to clipboard"));
+    m_toolBar->AddTool(ID_SNAPTOFILE,         wxT("Snap to file"),      ToolBarBitmaps(4), wxT("Capture single image to file"));
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_toolBar->AddTool(ID_CAPSINGLEFRAMES, wxT("Cap Frame"), ToolBarBitmaps(5), wxT("Capture single frames to AVI file"));
-    m_toolBar->AddTool(ID_CAPVIDEO,        wxT("Cap Video"), ToolBarBitmaps(6), wxT("Capture video to AVI file"));
+    m_toolBar->AddTool(ID_CAPSINGLEFRAMES,    wxT("Cap Frame"), ToolBarBitmaps(5), wxT("Capture single frames to AVI file"));
+    m_toolBar->AddTool(ID_CAPVIDEO,           wxT("Cap Video"), ToolBarBitmaps(6), wxT("Capture video to AVI file"));
 
     m_toolBar->AddSeparator();
 
-    m_toolBar->AddTool(ID_SETCAPFILENAME,    wxT("Set filename"), ToolBarBitmaps(7), wxT("Set capture filename"));
-    m_toolBar->AddTool(ID_DLGCAPPREFERENCES, wxT("Preferences"),  ToolBarBitmaps(8), wxT("Capture preferences..."));
+    m_toolBar->AddTool(ID_SETCAPFILENAME,     wxT("Set filename"), ToolBarBitmaps(7), wxT("Set capture filename"));
+    m_toolBar->AddTool(ID_DLGCAPPREFERENCES,  wxT("Preferences"),  ToolBarBitmaps(8), wxT("Capture preferences..."));
 #endif // WXVIDCAP_AVI_SUPPORT
 
     m_toolBar->Realize();
@@ -343,12 +355,22 @@ void MyFrame::SetupVideoMenus()
 {
     int i, count;
 
-    bool connected          = m_vidCapWin->IsDeviceConnected();
-    bool previewing         = m_vidCapWin->IsPreviewing();
-    bool previewing_wximage = m_vidCapWin->IsPreviewingwxImage();
-    bool previewing_scaled  = m_vidCapWin->IsPreviewScaled();
+    bool is_connected          = m_vidCapWin->IsDeviceConnected();
+    bool is_previewing         = m_vidCapWin->IsPreviewing();
+    bool is_previewing_wximage = m_vidCapWin->IsPreviewingwxImage();
+    bool is_previewing_scaled  = m_vidCapWin->IsPreviewScaled();
 
-    // uncheck the other device
+    //---- File menu --------------------------------------------------------
+
+#ifdef WXVIDCAP_AVI_SUPPORT
+    m_fileMenu->Enable(ID_SETCAPFILENAME,       is_connected);
+    m_fileMenu->Enable(ID_SETCAPFILESIZE,       is_connected);
+    m_fileMenu->Enable(ID_SAVECAPTUREDVIDEOAS,  is_connected);
+#endif // WXVIDCAP_AVI_SUPPORT
+
+    //---- Video menu -------------------------------------------------------
+
+    // uncheck the other devices
     count = m_vidCapWin->GetDeviceCount();
     for (i = 0; i < count; ++i)
     {
@@ -356,80 +378,62 @@ void MyFrame::SetupVideoMenus()
         if (menuItem) menuItem->Check(false);
     }
 
-    if (connected)
+    if (is_connected)
     {
         m_videoMenu->Check(ID_DEVICE0+m_vidCapWin->GetDeviceIndex(), true);
-
-        m_toolBar->ToggleTool(ID_PREVIEWBUTTON, previewing || m_vidCapWin->IsOverlaying());
-        m_videoMenu->Check(ID_PREVIEW,          previewing && !previewing_wximage);
-        m_videoMenu->Check(ID_PREVIEWIMAGE,     previewing_wximage);
-        m_videoMenu->Check(ID_PREVIEWSCALED,    previewing_scaled);
-        m_toolBar->ToggleTool(ID_PREVIEWSCALED, previewing_scaled);
-
-        m_videoMenu->Check( ID_OVERLAY, m_vidCapWin->IsOverlaying());
-        m_videoMenu->Enable(ID_OVERLAY, m_vidCapWin->HasOverlay());
-
-        m_videoMenu->Enable(ID_DLGSOURCE,  m_vidCapWin->HasVideoSourceDialog());
-        m_videoMenu->Enable(ID_DLGFORMAT,  m_vidCapWin->HasVideoFormatDialog());
-        m_videoMenu->Enable(ID_DLGDISPLAY, m_vidCapWin->HasVideoDisplayDialog());
-
-#ifdef WXVIDCAP_AUDIO_SUPPORT
-        m_captureMenu->Enable(ID_DLGAUDIO, m_vidCapWin->HasAudioHardware());
-#endif // WXVIDCAP_AUDIO_SUPPORT
-    }
-    else
-    {
-        m_videoMenu->Enable(ID_OVERLAY,    false);
-        m_videoMenu->Enable(ID_DLGSOURCE,  false);
-        m_videoMenu->Enable(ID_DLGFORMAT,  false);
-        m_videoMenu->Enable(ID_DLGDISPLAY, false);
-
-#ifdef WXVIDCAP_AUDIO_SUPPORT
-        m_captureMenu->Enable(ID_DLGAUDIO, false);
-#endif // WXVIDCAP_AUDIO_SUPPORT
     }
 
-    m_videoMenu->Check(ID_DEVICENONE,           !connected);
+    m_videoMenu->Check(   ID_DEVICENONE,    !is_connected);
 
-    m_videoMenu->Enable(  ID_IMGPROCESS_MENU,     previewing_wximage);
-    m_processMenu->Enable(ID_IMGPROCESS_NEGATIVE, previewing_wximage);
-    m_processMenu->Enable(ID_IMGPROCESS_EDGE,     previewing_wximage);
-    m_processMenu->Enable(ID_IMGPROCESS_MOTION,   previewing_wximage);
+    m_toolBar->ToggleTool(ID_PREVIEWBUTTON, is_connected && (is_previewing || m_vidCapWin->IsOverlaying()));
+    m_videoMenu->Check(   ID_PREVIEW,       is_connected && is_previewing && !is_previewing_wximage);
+    m_videoMenu->Check(   ID_PREVIEWIMAGE,  is_connected && is_previewing_wximage);
+    m_videoMenu->Check(   ID_PREVIEWSCALED, is_connected && is_previewing_scaled);
+    m_toolBar->ToggleTool(ID_PREVIEWSCALED, is_connected && is_previewing_scaled);
+    m_videoMenu->Check(   ID_OVERLAY,       is_connected && m_vidCapWin->IsOverlaying());
 
-    // enable/disable the rest of the stuff
-#ifdef WXVIDCAP_AUDIO_SUPPORT
-    m_fileMenu->Enable(ID_SETCAPFILENAME,       connected);
-    m_fileMenu->Enable(ID_SETCAPFILESIZE,       connected);
-    m_fileMenu->Enable(ID_SAVECAPTUREDVIDEOAS,  connected);
-#endif // WXVIDCAP_AUDIO_SUPPORT
+    m_toolBar->EnableTool(ID_PREVIEWBUTTON, is_connected);
+    m_videoMenu->Enable(  ID_PREVIEW,       is_connected);
+    m_videoMenu->Enable(  ID_PREVIEWIMAGE,  is_connected);
+    m_videoMenu->Enable(  ID_PREVIEWSCALED, is_connected);
+    m_toolBar->EnableTool(ID_PREVIEWSCALED, is_connected);
+    m_videoMenu->Enable(  ID_PREVIEWRATE,   is_connected);
+    m_videoMenu->Enable(  ID_OVERLAY,       is_connected && m_vidCapWin->HasOverlay());
 
-    m_videoMenu->Enable(  ID_PREVIEW,           connected);
-    m_toolBar->EnableTool(ID_PREVIEWBUTTON,     connected);
-    m_videoMenu->Enable(  ID_PREVIEWIMAGE,      connected);
-    m_videoMenu->Enable(  ID_PREVIEWSCALED,     connected);
-    m_toolBar->EnableTool(ID_PREVIEWSCALED,     connected);
-    m_videoMenu->Enable(  ID_PREVIEWRATE,       connected);
+    m_videoMenu->Enable(  ID_IMGPROCESS_MENU,     is_previewing_wximage);
+    m_processMenu->Enable(ID_IMGPROCESS_NEGATIVE, is_previewing_wximage);
+    m_processMenu->Enable(ID_IMGPROCESS_EDGE,     is_previewing_wximage);
+    m_processMenu->Enable(ID_IMGPROCESS_MOTION,   is_previewing_wximage);
 
-    m_videoMenu->Enable(  ID_DLGCUSTOMFORMAT,   connected);
+    m_videoMenu->Enable(ID_DLGSOURCE,       is_connected && m_vidCapWin->HasVideoSourceDialog());
+    m_videoMenu->Enable(ID_DLGFORMAT,       is_connected && m_vidCapWin->HasVideoFormatDialog());
+    m_videoMenu->Enable(ID_DLGCUSTOMFORMAT, is_connected);
+    m_videoMenu->Enable(ID_DLGDISPLAY,      is_connected && m_vidCapWin->HasVideoDisplayDialog());
 
-    m_captureMenu->Enable(ID_SNAPTOWINDOW,      connected);
-    m_captureMenu->Enable(ID_SNAPTOCLIPBOARD,   connected);
-    m_toolBar->EnableTool(ID_SNAPTOCLIPBOARD,   connected);
-    m_captureMenu->Enable(ID_SNAPTOFILE,        connected);
-    m_toolBar->EnableTool(ID_SNAPTOFILE,        connected);
-    m_captureMenu->Enable(ID_SNAPTOBMP,         connected);
+    //---- Capture menu ------------------------------------------------------
+
+    m_captureMenu->Enable(ID_SNAPTOWINDOW,      is_connected);
+    m_captureMenu->Enable(ID_SNAPTOCLIPBOARD,   is_connected);
+    m_toolBar->EnableTool(ID_SNAPTOCLIPBOARD,   is_connected);
+    m_captureMenu->Enable(ID_SNAPTOFILE,        is_connected);
+    m_toolBar->EnableTool(ID_SNAPTOFILE,        is_connected);
+    m_captureMenu->Enable(ID_SNAPTOBMP,         is_connected);
 
 #ifdef WXVIDCAP_AVI_SUPPORT
-    m_captureMenu->Enable(ID_CAPVIDEO,          connected);
-    m_toolBar->EnableTool(ID_CAPVIDEO,          connected);
-    m_captureMenu->Enable(ID_CAPSINGLEFRAMES,   connected);
-    m_toolBar->EnableTool(ID_CAPSINGLEFRAMES,   connected);
-    m_captureMenu->Enable(ID_DLGCAPPREFERENCES, connected);
-    m_toolBar->EnableTool(ID_DLGCAPPREFERENCES, connected);
-    m_captureMenu->Enable(ID_DLGCOMPRESSION,    connected);
-
-    m_captureMenu->Enable(ID_NOPREVIEWONCAP,    connected);
+    m_captureMenu->Enable(ID_CAPVIDEO,          is_connected);
+    m_toolBar->EnableTool(ID_CAPVIDEO,          is_connected);
+    m_captureMenu->Enable(ID_CAPSINGLEFRAMES,   is_connected);
+    m_toolBar->EnableTool(ID_CAPSINGLEFRAMES,   is_connected);
+    m_captureMenu->Enable(ID_DLGCAPPREFERENCES, is_connected);
+    m_toolBar->EnableTool(ID_DLGCAPPREFERENCES, is_connected);
+    m_captureMenu->Enable(ID_DLGCOMPRESSION,    is_connected);
 #endif // WXVIDCAP_AVI_SUPPORT
+
+    m_captureMenu->Enable(ID_NOPREVIEWONCAP,    is_connected);
+
+#ifdef WXVIDCAP_AUDIO_SUPPORT
+    m_captureMenu->Enable(ID_DLGAUDIO,          is_connected && m_vidCapWin->HasAudioHardware());
+#endif // WXVIDCAP_AUDIO_SUPPORT
 }
 
 // event handlers
@@ -904,7 +908,7 @@ bool MyVideoCaptureWindow::OnProcessFrame(wxImage& wximg)
     {
         // is the last image still good?
         if (!lastimage.Ok() ||
-            (lastimage.GetWidth() != width) ||
+            (lastimage.GetWidth()  != width) ||
             (lastimage.GetHeight() != height))
         {
             lastimage.Create(width,height);
