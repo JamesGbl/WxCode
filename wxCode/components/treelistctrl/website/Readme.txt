@@ -23,6 +23,7 @@ Release History:
 * next release
   - Fixed: HitTest() was not working [#3093531 --thanks Yogesh]
   - Fixed: click events now return position (Point) in all cases
+  - Fixed: include item in event EVT_COMMAND_TREE_ITEM_MENU [#3522228 --thanks T. Modes]
   - Changed: by default FindItem() searches all columns (instead of main) [#3246444]
   - Added: resource files / XRC support [#3103099 --thanks Pascal Potvin]
   - Added: sample program now shows HitTest() output on middle-click

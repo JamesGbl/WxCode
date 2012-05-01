@@ -803,6 +803,7 @@ public:
         m_image = NO_IMAGE;
     };
     ~wxTreeListItemCellAttr() {
+wxLogMessage("~wxTReeListItemCellAttr() called: this=%X m_data=%X", this, m_data);
         if (m_ownsAttr) delete m_attr;
     }
 
@@ -1745,6 +1746,7 @@ wxTreeListItem::wxTreeListItem (wxTreeListMainWindow *owner,
 }
 
 wxTreeListItem::~wxTreeListItem() {
+wxLogMessage("~wxTreeListItem() called: this=%X", this);
     if (m_toolTip) delete m_toolTip;
 
     wxTreeListItemCellAttrHash::iterator entry = m_props_cell.begin();
@@ -2069,6 +2071,7 @@ bool wxTreeListMainWindow::Create (wxTreeListCtrl *parent,
 }
 
 wxTreeListMainWindow::~wxTreeListMainWindow() {
+wxLogMessage("~wxTreeListMainWindow() called: this=%X", this);
     delete m_hilightBrush;
     delete m_hilightUnfocusedBrush;
 
@@ -4317,7 +4320,7 @@ wxLogMessage("OnMouse: LMR down=<%d, %d, %d> up=<%d, %d, %d> LDblClick=<%d> drag
             wxTreeEvent nevent(0, 0);
             nevent.SetPoint(p);
             nevent.SetInt(m_curColumn);
-            SendEvent(wxEVT_COMMAND_TREE_ITEM_MENU, 0, &nevent);
+            SendEvent(wxEVT_COMMAND_TREE_ITEM_MENU, item, &nevent);
         }
 
         // if 2nd left click finishes on same item, will edit it
