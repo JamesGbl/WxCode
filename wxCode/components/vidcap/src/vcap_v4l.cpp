@@ -238,10 +238,10 @@ int wxVideoCaptureWindowV4L::EnumerateDevice(const wxString& deviceFilename)
 {
     int device_idx = wxNOT_FOUND;
 
-#if wxCHECK_VERSION(2,9,0)
+#if wxCHECK_VERSION(2,9,4)
     if (!wxFileName::Exists(deviceFilename)) // use FileExists() in 2.8 only works for files, not devices
         return device_idx;
-#endif //wxCHECK_VERSION(2,9,0)
+#endif //wxCHECK_VERSION(2,9,4)
 
     wxString errMsg; // use this as a sink for the error messages
     int fd_device = open_device(deviceFilename, &errMsg);
