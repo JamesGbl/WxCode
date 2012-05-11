@@ -80,7 +80,6 @@ void wxSTEditorMenuManager::InitAcceleratorArray() const
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL,                 'L', ID_STE_LINE_CUT));
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'T', ID_STE_LINE_COPY));
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'C', ID_STE_COPYPATH));
-        m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_SHIFT,                WXK_NUMPAD_ADD, ID_STE_COPYPATH));
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL | wxACCEL_SHIFT, 'L', ID_STE_LINE_DELETE));
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL,                 ' ', ID_STE_COMPLETEWORD));
         m_accelEntryArray->Add(wxAcceleratorEntry(wxACCEL_CTRL,                 'T', ID_STE_LINE_TRANSPOSE));

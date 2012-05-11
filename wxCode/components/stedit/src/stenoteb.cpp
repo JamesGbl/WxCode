@@ -820,6 +820,7 @@ bool wxSTEditorNotebook::LoadFile( const wxFileName &fileName_,
         int page = FindEditorPageByFileName(fileName);
         if (page != wxNOT_FOUND)
         {
+            ok = GetEditor(page)->LoadFile(fileName, wxEmptyString, true, encoding);
             SetSelection(page);
         }
         else if ( (GetEditor() == NULL) || GetEditor()->IsModified() || GetEditor()->IsFileFromDisk()) // non-empty editor?

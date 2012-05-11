@@ -181,22 +181,28 @@ public:
 #endif
 
     // char -> wxString method. Specify wxMBConv conversion class
-    static bool CharToString(wxString*, const char*, const wxMBConv&, size_t len);
+    static bool CharToString(wxString* dst_wxstr, const char* src_str, 
+                             const wxMBConv& conv, size_t len);
 
     // wxString -> char method. Specify wxMBConv conversion class
-    static wxCharBuffer StringToChar(const wxString&, const wxMBConv&);
+    static wxCharBuffer StringToChar(const wxString& src_wxstr, const wxMBConv& conv);
 
-    // wxString -> char method. Specify TextEncoding_Type conversion; creates wxMBConv instance and calls StringToChar(wxMBConv) above
-    static wxCharBuffer StringToChar(const wxString&, TextEncoding_Type, size_t* size_ptr);
+    // wxString -> char method. Specify TextEncoding_Type conversion; 
+    // Creates wxMBConv instance and calls StringToChar(wxMBConv) above.
+    // The size of the returned buffer is optionally returned in buffer_size.
+    static wxCharBuffer StringToChar(const wxString& src_wxstr, TextEncoding_Type encoding_type, 
+                                     size_t* buffer_size);
 
     // enum -> string representation (eg TextEncoding_Type::UTF8 -> "utf-8")
-    static wxString TypeToString(TextEncoding_Type);
+    static wxString TypeToString(TextEncoding_Type encoding_type);
 
     // String representation -> enum (eg "utf-8" -> TextEncoding_Type::UTF8)
-    static TextEncoding_Type TypeFromString(const wxString&);
+    static TextEncoding_Type TypeFromString(const wxString& encoding_name);
 
     // Search the provided string for encoding specification (eg "utf-8")
-    static bool TypeFromString(TextEncoding_Type*, const char* str, const char* identifier, const char* strpbrk_ctrl);
+    static bool TypeFromString(TextEncoding_Type* encoding_type, 
+                               const char* str, 
+                               const char* identifier, const char* strpbrk_ctrl);
 
 #ifdef _WX_XML_H_
     inline static TextEncoding_Type TypeFromString(const wxXmlDocument& xml)

@@ -1405,20 +1405,29 @@ bool wxSTEditor::LoadFileToString( wxString* str,
     wxCHECK_MSG(str, false, wxS("string pointer must be provided") );
 
     wxTextEncoding::TextEncoding_Type encoding = wxTextEncoding::TypeFromString(strEncoding);
-    bool noerrdlg = STE_HASBIT(flags, STE_LOAD_NOERRDLG);
+    bool show_errdlg = !STE_HASBIT(flags, STE_LOAD_NOERRDLG);
     flags = flags & (~STE_LOAD_NOERRDLG); // strip this to match flag
 
     const wxFileOffset stream_len = stream.GetLength();
     bool ok = (stream_len <= STE_MaxFileSize);
 
-    if (ok)
+    if (!ok)
+    {
+        if (show_errdlg)
+        {
+            wxMessageBox(_("This file is too large for this editor, sorry."),
+                         _("Error loading file"),
+                         wxOK|wxICON_EXCLAMATION, parent);
+        }
+
+        return false;
+    }
     {
         bool want_lang = GetEditorPrefs().IsOk() && GetEditorPrefs().GetPrefBool(STE_PREF_LOAD_INIT_LANG);
         wxCharBuffer charBuf(stream_len);
         wxBOM file_bom = wxBOM_None;
 
-        if (  (encoding == wxTextEncoding::Ascii)
-            && dynamic_cast<wxStringInputStream*>(&stream))
+        if ((encoding == wxTextEncoding::Ascii) && dynamic_cast<wxStringInputStream*>(&stream))
         {
             // wxStringInputStream is utf8 always
             encoding = wxTextEncoding::UTF8;
@@ -1555,12 +1564,6 @@ bool wxSTEditor::LoadFileToString( wxString* str,
             SetFileModificationTime(fileName.GetModificationTime());
             SetFileName(fileName, false);
         }
-    }
-    else if (!noerrdlg)
-    {
-        wxMessageBox(_("This file is too large for this editor, sorry."),
-                     _("Error loading file"),
-                     wxOK|wxICON_EXCLAMATION, parent);
     }
 
     return ok;

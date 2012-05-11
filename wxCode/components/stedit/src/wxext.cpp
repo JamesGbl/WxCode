@@ -869,7 +869,8 @@ wxBOM wxConvAuto_DetectBOM(const char *src, size_t srcLen)
 
 // annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
 /*static*/
-bool wxTextEncoding::CharToString(wxString* str_ptr, const char* src, const wxMBConv& conv, size_t len)
+bool wxTextEncoding::CharToString(wxString* dst_wxstr, const char* src, 
+                                  const wxMBConv& conv, size_t len)
 {
     wxString str;
 
@@ -884,35 +885,38 @@ bool wxTextEncoding::CharToString(wxString* str_ptr, const char* src, const wxMB
             return false;
     }
 
-    if (str_ptr) *str_ptr = str;
+    if (dst_wxstr) *dst_wxstr = str;
     return true;
 }
 
 // annoying method only here because the wxString ctor conv argument is WXUNUSED in some build types
 /*static*/
-wxCharBuffer wxTextEncoding::StringToChar(const wxString& src, const wxMBConv& conv)
+wxCharBuffer wxTextEncoding::StringToChar(const wxString& src_wxstr, const wxMBConv& conv)
 {
-    wxWCharBuffer wbuf(src.wc_str(wxConvLibc /*WXUNUSED*/));
+    wxWCharBuffer wbuf(src_wxstr.wc_str(wxConvLibc /*WXUNUSED*/));
     wxCharBuffer buf(conv.cWC2MB(wbuf));
 
     return buf;
 }
 
 /*static*/
-wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, TextEncoding_Type encoding, size_t* size_ptr)
+wxCharBuffer wxTextEncoding::StringToChar(const wxString& src_wxstr, TextEncoding_Type encoding_type, 
+                                          size_t* buffer_size)
 {
     wxCharBuffer buf;
     size_t size;
 
-    switch (encoding)
+    switch (encoding_type)
     {
         case Ascii:
-            buf = s.mb_str(*wxConvCurrent);
+        {
+            buf = src_wxstr.mb_str(*wxConvCurrent);
             size = wxBuffer_length(buf);
             break;
+        }
         case Unicode_LE:
         {
-            const wxWCharBuffer temp = s.wc_str(*wxConvCurrent);
+            const wxWCharBuffer temp = src_wxstr.wc_str(*wxConvCurrent);
             size = wxBuffer_length(temp) * sizeof(wchar_t);
 
             buf.extend(size);
@@ -920,27 +924,34 @@ wxCharBuffer wxTextEncoding::StringToChar(const wxString& s, TextEncoding_Type e
             break;
         }
         case UTF8:
-            buf = StringToChar(s, wxConvUTF8);
+        {
+            buf = StringToChar(src_wxstr, wxConvUTF8);
             size = wxBuffer_length(buf);
             break;
+        }
         case ISO8859_1:
-            buf = StringToChar(s, wxConvISO8859_1);
+        {
+            buf = StringToChar(src_wxstr, wxConvISO8859_1);
             size = wxBuffer_length(buf);
             break;
+        }
     #ifdef __WXMSW__
         case OEM:
-            buf = StringToChar(s, wxMBConvOEM());
+        {
+            buf = StringToChar(src_wxstr, wxMBConvOEM());
             size = wxBuffer_length(buf);
             break;
-    #endif
+        }
+    #endif // __WXMSW__
         default:
+        {
             size = 0;
             break;
+        }
     }
-    if (size_ptr)
-    {
-        *size_ptr = size;
-    }
+    
+    if (buffer_size) *buffer_size = size;
+
     return buf;
 }
 
@@ -1084,15 +1095,16 @@ wxTextEncoding::TextEncoding_Type wxTextEncoding::TypeFromString(const wxString&
 }
 
 /*static*/
-wxString wxTextEncoding::TypeToString(TextEncoding_Type encoding)
+wxString wxTextEncoding::TypeToString(TextEncoding_Type encoding_type)
 {
-    return (encoding < wxTextEncoding::TextEncoding__Count)
-                ? s_textencoding_text[encoding]
+    return (encoding_type < wxTextEncoding::TextEncoding__Count)
+                ? s_textencoding_text[encoding_type]
                 : wxEmptyString;
 }
 
 /*static*/
-bool wxTextEncoding::TypeFromString(TextEncoding_Type* encoding, const char* str,
+bool wxTextEncoding::TypeFromString(TextEncoding_Type* encoding_type, 
+                                    const char* str,
                                     const char* identifier, const char* strpbrk_ctrl)
 {
     const char* p = strstr(str, identifier);
@@ -1104,9 +1116,9 @@ bool wxTextEncoding::TypeFromString(TextEncoding_Type* encoding, const char* str
 
         if (begin && end)
         {
-            if (encoding)
+            if (encoding_type)
             {
-                *encoding = TypeFromString(wxString::From8BitData(begin, end - begin));
+                *encoding_type = TypeFromString(wxString::From8BitData(begin, end - begin));
             }
             return true;
         }
