@@ -15,22 +15,22 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
 #endif // WX_PRECOMP
 
-#include "wx/image.h"
+#include <wx/image.h>
 
 #include "wx/plotctrl/plotmark.h"
 #include "wx/plotctrl/plotctrl.h"
 
-#include "wx/arrimpl.cpp"
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY( wxArrayPlotMarker );
 
 //-----------------------------------------------------------------------------

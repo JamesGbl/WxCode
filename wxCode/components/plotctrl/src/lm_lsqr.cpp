@@ -15,18 +15,18 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/dynarray.h"
-    #include "wx/log.h"
+    #include <wx/dynarray.h>
+    #include <wx/log.h>
 #endif // WX_PRECOMP
 
-#include "wx/math.h"
+#include <wx/math.h>
 
 #include "wx/plotctrl/lm_lsqr.h"
 #include "wx/plotctrl/plotdata.h"

@@ -15,7 +15,7 @@
     #pragma interface "plotprnt.h"
 #endif
 
-#include "wx/print.h"
+#include <wx/print.h>
 #include "wx/plotctrl/plotdefs.h"
 
 class WXDLLIMPEXP_FWD_PLOTCTRL wxPlotCtrl;

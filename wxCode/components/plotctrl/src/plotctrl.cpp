@@ -15,28 +15,28 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/panel.h"
-    #include "wx/scrolbar.h"
-    #include "wx/event.h"
-    #include "wx/timer.h"
-    #include "wx/dcmemory.h"
-    #include "wx/msgdlg.h"
-    #include "wx/geometry.h"
-    #include "wx/sizer.h"
-    #include "wx/dcscreen.h"
-    #include "wx/textctrl.h"
+    #include <wx/panel.h>
+    #include <wx/scrolbar.h>
+    #include <wx/event.h>
+    #include <wx/timer.h>
+    #include <wx/dcmemory.h>
+    #include <wx/msgdlg.h>
+    #include <wx/geometry.h>
+    #include <wx/sizer.h>
+    #include <wx/dcscreen.h>
+    #include <wx/textctrl.h>
 #endif // WX_PRECOMP
 
-#include "wx/splitter.h"
-#include "wx/math.h"
-#include "wx/image.h"
+#include <wx/splitter.h>
+#include <wx/math.h>
+#include <wx/image.h>
 
 #include "wx/plotctrl/plotctrl.h"
 #include "wx/plotctrl/plotdraw.h"

@@ -15,23 +15,23 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/bitmap.h"
-    #include "wx/textdlg.h"
-    #include "wx/msgdlg.h"
-    #include "wx/dcmemory.h"
+    #include <wx/bitmap.h>
+    #include <wx/textdlg.h>
+    #include <wx/msgdlg.h>
+    #include <wx/dcmemory.h>
 #endif // WX_PRECOMP
 
-#include "wx/file.h"
-#include "wx/wfstream.h"
-#include "wx/textfile.h"
-#include "wx/math.h"
+#include <wx/file.h>
+#include <wx/wfstream.h>
+#include <wx/textfile.h>
+#include <wx/math.h>
 
 #include "wx/plotctrl/plotdata.h"
 #include "wx/plotctrl/fourier.h"
@@ -613,7 +613,7 @@ int NumberParse(double *nums, const wxString &string, int max_nums)
                     return n;
             }
         }
-        else if (start_word == -1) 
+        else if (start_word == -1)
             start_word = (int)i;
 
         if (c == d4 || c == d5) return n;
@@ -2981,7 +2981,7 @@ wxBitmap wxPlotData::CreateSymbol( wxPlotSymbol_Type type, wxPlotPen_Type colour
 // ----------------------------------------------------------------------------
 // Functions for the wxClipboard
 // ----------------------------------------------------------------------------
-#include "wx/clipbrd.h"
+#include <wx/clipbrd.h>
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 
 const wxChar* wxDF_wxPlotData     = wxT("wxDF_wxPlotData");
@@ -3001,7 +3001,7 @@ static wxString s_clipboardwxPlotData_data; // holds wxNow() to match clipboard 
 //#7  0x4061c43c in ~wxPlotData (this=0x40630ef4) at plotcurve.h:297
 //#8  0x4061c247 in __tcf_7 () at plotcurve.cpp:3044
 
-#include "wx/module.h"
+#include <wx/module.h>
 class wxPlotDataModule: public wxModule
 {
 DECLARE_DYNAMIC_CLASS(wxPlotDataModule)

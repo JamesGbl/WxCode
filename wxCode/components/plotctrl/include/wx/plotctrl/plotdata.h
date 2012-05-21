@@ -15,7 +15,7 @@
     #pragma interface "plotdata.h"
 #endif
 
-#include "wx/txtstrm.h"            // for wxEOL
+#include <wx/txtstrm.h>            // for wxEOL
 #include "wx/plotctrl/plotcurv.h"  // includes plotdefs.h
 #include "wx/plotctrl/plotfunc.h"
 
@@ -443,7 +443,7 @@ WXDLLIMPEXP_PLOTCTRL bool wxClipboardSetPlotData(const wxPlotData& plotData);
 // ----------------------------------------------------------------------------
 // wxPlotDataObject - a wxClipboard object
 // ----------------------------------------------------------------------------
-#include "wx/dataobj.h"
+#include <wx/dataobj.h>
 
 //#define wxDF_wxPlotData (wxDF_MAX+1010)  // works w/ GTK 1.2 non unicode
 extern WXDLLIMPEXP_DATA_PLOTCTRL(const wxChar*) wxDF_wxPlotData;      // wxT("wxDF_wxPlotData");

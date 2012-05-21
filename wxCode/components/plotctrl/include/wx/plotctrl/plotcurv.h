@@ -15,7 +15,7 @@
     #pragma interface "plotcurv.h"
 #endif
 
-#include "wx/clntdata.h"
+#include <wx/clntdata.h>
 #include "wx/things/genergdi.h"
 #include "wx/plotctrl/plotdefs.h"
 

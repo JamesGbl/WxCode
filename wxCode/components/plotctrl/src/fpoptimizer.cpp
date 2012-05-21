@@ -15,7 +15,7 @@
 
 #include "precomp.h"
 
-#include "wx/defs.h" // get __VISUALC__ defined
+#include <wx/defs.h> // get __VISUALC__ defined
 
 #if defined(__VISUALC__)
     #pragma warning(disable: 4127)  // conditional expression is constant (for EAT macro)
@@ -25,7 +25,7 @@
         #pragma warning(disable: 4786)  // identifier was truncated to '255' characters in the debug information
         #pragma warning(disable: 4284)  // return type for 'std::list.. Will produce errors if applied using infix notation)
         #pragma warning(disable: 4018)  // std::vector '<' : signed/unsigned mismatch
-    #endif 
+    #endif
 #endif // defined(__VISUALC__)
 
 #include "fpconfig.hh"

@@ -15,15 +15,15 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/bitmap.h"
-    #include "wx/dcmemory.h"
+    #include <wx/bitmap.h>
+    #include <wx/dcmemory.h>
 #endif // WX_PRECOMP
 
 #include "wx/plotctrl/plotcurv.h"

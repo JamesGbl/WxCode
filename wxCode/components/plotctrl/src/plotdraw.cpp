@@ -15,17 +15,17 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/dcmemory.h"
+    #include <wx/dcmemory.h>
 #endif // WX_PRECOMP
 
-#include "wx/math.h"
+#include <wx/math.h>
 
 #include "wx/plotctrl/plotdraw.h"
 #include "wx/plotctrl/plotctrl.h"
@@ -109,7 +109,7 @@ extern "C" {
             dc->DrawEllipse(x0, y0, w, h);
 
 #elif defined(__WXMSW__) && wxPLOTCTRL_FAST_GRAPHICS
-    #include "wx/msw/private.h" // include <windows.h> but also undef MSW's junk
+    #include <wx/msw/private.h> // include <windows.h> but also undef MSW's junk
 
     #define INITIALIZE_FAST_GRAPHICS \
         double dc_scale_x = 1, dc_scale_y = 1; \

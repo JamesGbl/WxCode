@@ -15,18 +15,18 @@
 #include "precomp.h"
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifndef WX_PRECOMP
-    #include "wx/bitmap.h"
-    #include "wx/textdlg.h"
-    #include "wx/msgdlg.h"
-    #include "wx/dcmemory.h"
-    #include "wx/dataobj.h"
+    #include <wx/bitmap.h>
+    #include <wx/textdlg.h>
+    #include <wx/msgdlg.h>
+    #include <wx/dcmemory.h>
+    #include <wx/dataobj.h>
 #endif // WX_PRECOMP
 
 #include "wx/plotctrl/plotfunc.h"
@@ -172,7 +172,7 @@ bool wxPlotFunction::AddConstant(const wxString& name, double value)
 // wxClipboardGet/SetPlotFunction
 //-----------------------------------------------------------------------------
 
-#include "wx/clipbrd.h"
+#include <wx/clipbrd.h>
 #if wxUSE_DATAOBJ && wxUSE_CLIPBOARD
 
 wxPlotFunction wxClipboardGetPlotFunction()

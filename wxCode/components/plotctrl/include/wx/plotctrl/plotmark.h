@@ -15,8 +15,8 @@
     #pragma interface "plotmark.h"
 #endif
 
-#include "wx/bitmap.h"
-#include "wx/geometry.h"
+#include <wx/bitmap.h>
+#include <wx/geometry.h>
 #include "wx/plotctrl/plotdefs.h"
 #include "wx/things/genergdi.h"
 
