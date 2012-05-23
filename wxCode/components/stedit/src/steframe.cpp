@@ -659,7 +659,6 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
     if (guard.IsInside()) return false;
 
     int win_id  = event.GetId();
-    wxSTEditor *editor = GetEditor();
 
     // menu items that the frame handles before children
     switch (win_id)
@@ -678,8 +677,17 @@ bool wxSTEditorFrame::HandleMenuEvent(wxCommandEvent &event)
         }
     }
 
+    wxWindow*           focusWin = FindFocus();
+    wxSTEditor*         editor   = GetEditor();
+    wxSTEditorNotebook* notebook = GetEditorNotebook();
+
+    if (focusWin && wxDynamicCast(focusWin, wxSTEditorNotebook))
+        notebook = wxDynamicCast(focusWin, wxSTEditorNotebook);
+    else if (focusWin && wxDynamicCast(focusWin, wxSTEditor))
+        editor = wxDynamicCast(focusWin, wxSTEditor);
+
     // Try the children to see if they'll handle the event first
-    if (GetEditorNotebook() && GetEditorNotebook()->HandleMenuEvent(event))
+    if (notebook && notebook->HandleMenuEvent(event))
         return true;
 
     if (editor)
