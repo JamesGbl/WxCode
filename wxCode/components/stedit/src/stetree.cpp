@@ -608,7 +608,6 @@ int wxSTEditorTreeCtrl::DeleteItem(const wxTreeItemId& id_, bool delete_empty,
 {
     int n = 0;
     wxTreeItemId id = id_;
-    wxTreeItemId rootId = GetRootItem();
 
     if (!id)
         return 0;

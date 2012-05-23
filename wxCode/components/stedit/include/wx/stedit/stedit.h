@@ -692,7 +692,7 @@ public :
     virtual bool SaveFile( const wxFileName& fileName,
                            const wxString& fileEncoding,
                            bool write_file_bom );
-    
+
     /// Helper function to create the dialog to ask the user if they want to save.
     /// The selected* variables are only changed if the user presses Ok
     /// and the the function returns true.
@@ -775,11 +775,11 @@ public :
     /// Note: found_end_pos - found_start_pos might not be the string length for regexp.
     /// @returns Starting position of the found string.
     STE_TextPos FindString(const wxString &findString,
-                           STE_TextPos start_pos = -1, 
+                           STE_TextPos start_pos = -1,
                            STE_TextPos end_pos = -1,
                            int flags = -1,
                            int action = STE_FINDSTRING_SELECT|STE_FINDSTRING_GOTO,
-                           STE_TextPos* found_start_pos = NULL, 
+                           STE_TextPos* found_start_pos = NULL,
                            STE_TextPos* found_end_pos = NULL);
     /// Does the current selection match the findString using the flags.
     /// If flags = -1 uses GetFindFlags(), else use ored values of STEFindReplaceFlags.
@@ -875,8 +875,9 @@ public :
     /// Get keywords as a space separated list from the langs that begin with root
     virtual wxString GetAutoCompleteKeyWords(const wxString& root);
     /// Add the matching keywords from the langs to the array string.
-    /// @returns The number added.
-    size_t DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString& words);
+    /// You may override this function to provide additional words if desired.
+    /// @returns The number of words added.
+    virtual size_t DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString& words);
 
     /// Show the autocompletion box if any keywords from the langs match the start
     /// of the current word.
