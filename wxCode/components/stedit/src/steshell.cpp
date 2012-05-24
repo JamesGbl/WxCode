@@ -277,6 +277,13 @@ bool wxSTEditorShell::SetMaxLines(int max_lines, int overflow_lines)
 
 void wxSTEditorShell::OnKeyDown(wxKeyEvent &event)
 {
+    // don't steal any keys from the autocomplete dropdown
+    if (AutoCompActive())
+    {
+        event.Skip(true);
+        return;
+    }
+
     event.Skip(false);
     CheckReadOnly(true);
 

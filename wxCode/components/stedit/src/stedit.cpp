@@ -65,6 +65,10 @@ OR PERFORMANCE OF THIS SOFTWARE.
 //-----------------------------------------------------------------------------
 // Global data
 
+wxString calltipWordCharacters(wxT("_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+wxString autoCompleteStartCharacters(calltipWordCharacters);
+wxString wordCharacters(wxT("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_#")); // FIXME add to langs
+
 // These are strings to match wxStyledTextCtrl::GetEOLMode();
 static const int wxSTC_EOL_Strings_count = 3;
 static const wxString wxSTC_EOL_Strings[wxSTC_EOL_Strings_count] =
@@ -473,6 +477,25 @@ bool wxSTEditor::TranslateLines(int  top_line,       int  bottom_line,
     if (trans_bottom_line) *trans_bottom_line = wxMax(top_line, bottom_line);
 
     return top_line < bottom_line;
+}
+
+bool wxSTEditor::TextRangeIsWord(STE_TextPos start_pos, STE_TextPos end_pos) const
+{
+    STE_TextPos len = GetLength();
+
+    if ((start_pos >= end_pos) || (start_pos < 0) || (end_pos > len))
+        return false;
+
+    wxString text = GetTextRange(wxMax(0, start_pos-1), wxMin(end_pos+1, len));
+    if (text.IsEmpty()) return false;
+
+    if ((start_pos == 0) || (wordCharacters.Find(text[0]) == wxNOT_FOUND))
+    {
+        if ((end_pos == len) || (wordCharacters.Find(text[text.size()-1]) == wxNOT_FOUND))
+            return true;
+    }
+
+    return false;
 }
 
 wxString wxSTEditor::GetTargetText() const
@@ -2735,9 +2758,6 @@ size_t wxSTEditor::DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString
     return count;
 }
 
-wxString calltipWordCharacters(wxT("_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-wxString autoCompleteStartCharacters(calltipWordCharacters);
-wxString wordCharacters(wxT("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_#")); // FIXME add to langs
 
 // This code copied from SciTEBase.cxx (though it bears no resemblance to the original)
 // Copyright 1998-2011 by Neil Hodgson <neilh@scintilla.org>
@@ -3624,14 +3644,14 @@ void wxSTEditor::OnSTEState(wxSTEditorEvent &event)
         STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_CUT, event.GetStateValue(STE_CANCUT));
     if (event.HasStateChange(STE_CANCOPY))
     {
-        STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY, event.GetStateValue(STE_CANCOPY));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_COPY,           event.GetStateValue(STE_CANCOPY));
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_PRIMARY, event.GetStateValue(STE_CANCOPY));
-        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML, event.GetStateValue(STE_CANCOPY));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_COPY_HTML,    event.GetStateValue(STE_CANCOPY));
     }
     if (event.HasStateChange(STE_CANPASTE))
     {
-        STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE, event.GetStateValue(STE_CANPASTE));
-        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW, IsClipboardTextAvailable());
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, wxID_PASTE,        event.GetStateValue(STE_CANPASTE));
+        STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_NEW,  IsClipboardTextAvailable());
         STE_MM::DoEnableItem(menu, menuBar, toolBar, ID_STE_PASTE_RECT, event.GetStateValue(STE_CANPASTE));
     }
     if (event.HasStateChange(STE_CANUNDO))
@@ -3970,6 +3990,34 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
         if (GetEditorPrefs().GetPrefBool(STE_PREF_HIGHLIGHT_BRACES))
             DoBraceMatch();
     }
+
+    // todo add pref for this
+    if (1)
+    {
+        STE_TextPos start_pos = 0, end_pos = 0;
+        GetSelection(&start_pos, &end_pos);
+
+        if (start_pos + 3 < end_pos)
+        {
+            if (TextRangeIsWord(start_pos, end_pos))
+            {
+                wxString text = GetTextRange(start_pos, end_pos);
+                if (GetSTERefData()->m_hilighted_word != text)
+                    ClearAllIndicators(wxSTC_INDIC1_MASK);
+
+                GetSTERefData()->m_hilighted_word = text;
+                IndicateAllStrings(GetSelectedText(), STE_FR_WHOLEWORD|STE_FR_MATCHCASE, wxSTC_INDIC1_MASK);
+                Refresh(false);
+            }
+        }
+        else if (!GetSTERefData()->m_hilighted_word.IsEmpty())
+        {
+            GetSTERefData()->m_hilighted_word.Clear();
+            ClearAllIndicators(wxSTC_INDIC1_MASK);
+            Refresh(false);
+        }
+    }
+
 
     UpdateCanDo(true);
     event.Skip(true);

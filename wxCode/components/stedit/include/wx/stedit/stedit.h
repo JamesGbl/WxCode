@@ -250,6 +250,7 @@ protected:
     long    m_state;                // what state does this editor have, enum STE_StateType
     bool    m_dirty_flag;           // set if file format is changed by the user, in the properties dialog
                                     // There is no opposite of SCI_SETSAVEPOINT
+    wxString m_hilighted_word;      // The last selected word that has been indicated.
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -473,6 +474,9 @@ public :
     bool TranslateLines(int  top_line,       int  bottom_line,
                         int* trans_top_line, int* trans_bottom_line,
                         STE_TranslatePosType type = STE_TRANSLATE_SELECTION);
+
+    /// Returns true if the text range is a complete word.
+    bool TextRangeIsWord(STE_TextPos start_pos, STE_TextPos end_pos) const;
 
     // ------------------------------------------------------------------------
 
