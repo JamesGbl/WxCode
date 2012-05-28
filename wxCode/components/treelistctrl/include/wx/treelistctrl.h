@@ -81,7 +81,7 @@ public:
     wxString GetText() const { return m_text; }
     wxTreeListColumnInfo& SetText (const wxString& text) { m_text = text; return *this; }
 
-    int GetWidth() const { return m_width; }
+    int GetWidth() const { return m_shown ? m_width : 0; }
     wxTreeListColumnInfo& SetWidth (int width) { m_width = width; return *this; }
 
     int GetAlignment() const { return m_flag; }
@@ -246,7 +246,7 @@ public:
     int GetMainColumn() const;
 
     void SetColumn (int column, const wxTreeListColumnInfo& colInfo);
-    wxTreeListColumnInfo& GetColumn (int column);
+    wxTreeListColumnInfo GetColumn (int column);
     const wxTreeListColumnInfo& GetColumn (int column) const;
 
     void SetColumnText (int column, const wxString& text);

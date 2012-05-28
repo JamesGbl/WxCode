@@ -67,10 +67,10 @@
 
 const wxString APP_NAME = _("wxTreeListCtrl");
 const wxString APP_VENDOR = _("wxCode");
-const wxString APP_VERSION = _("1104");
+const wxString APP_VERSION = _("12xx");
 const wxString APP_MAINT = _("Ronan Chartois");
 const wxString APP_LICENCE = _("wxWidgets");
-const wxString APP_COPYRIGTH = _("(C) 2005-2011 Otto Wyss && others");
+const wxString APP_COPYRIGTH = _("(C) 2005-2012 Otto Wyss && others");
 
 const wxString APP_DESCR = _("\
 A tree list control presents information as a hierarchy, with \n\
@@ -641,6 +641,7 @@ void AppFrame::OnDeleteTree (wxCommandEvent &WXUNUSED(event)) {
 void AppFrame::OnRebuildTree (wxCommandEvent &WXUNUSED(event)) {
     m_treelist->DeleteRoot();
     FillTree();
+    m_treelist->SetColumnShown(1, FALSE);  // hide column on rebuild
 }
 
 void AppFrame::OnAddItem (wxCommandEvent &WXUNUSED(event)) {
