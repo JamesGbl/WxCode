@@ -89,6 +89,7 @@ bool MyApp::OnInit(void)
     menu->Append(wxID_REDO);
     menu->AppendSeparator();
     menu->Append(wxID_CUT);
+    menu->Append(wxID_CLEAR);
     menu->AppendSeparator();
     menu->Append(OGLEDIT_CHANGE_BACKGROUND_COLOUR, _("Change &background colour"));
     menu->Append(OGLEDIT_EDIT_LABEL, _("Edit &label"));
@@ -121,7 +122,7 @@ wxDocManager* MyApp::CreateDocManager()
    wxDocManager* docManager = new wxDocManager();
     //// Create a template relating drawing documents to their views
    (void) new wxDocTemplate(docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
-          CLASSINFO(DiagramDocument), CLASSINFO(DiagramView));
+          wxCLASSINFO(DiagramDocument), wxCLASSINFO(DiagramView));
 
     // If we've only got one window, we only get to edit
     // one document at a time.

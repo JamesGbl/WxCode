@@ -339,7 +339,7 @@ void wxCompositeShape::Copy(wxShape& copy)
 {
   wxRectangleShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxCompositeShape)) ) ;
+  wxASSERT(wxDynamicCast(&copy, wxCompositeShape));
 
   wxCompositeShape& compositeCopy = (wxCompositeShape&) copy;
 
@@ -482,7 +482,8 @@ wxOGLConstraint *wxCompositeShape::FindConstraint(long cId, wxCompositeShape **a
        it++)
   {
     wxShape* child = wxStaticCast(*it, wxShape);
-    if (child->IsKindOf(CLASSINFO(wxCompositeShape)))
+
+    if (wxDynamicCast(child, wxCompositeShape))
     {
       wxOGLConstraint* constraint = wxStaticCast(child, wxCompositeShape)->FindConstraint(cId, actualComposite);
       if (constraint)
@@ -777,7 +778,8 @@ bool wxCompositeShape::ContainsDivision(wxDivisionShape *division)
        it++)
   {
     wxShape* child = wxStaticCast(*it, wxShape);
-    if (child->IsKindOf(CLASSINFO(wxCompositeShape)))
+
+    if (wxDynamicCast(child, wxCompositeShape))
     {
       bool ans = wxStaticCast(child, wxCompositeShape)->ContainsDivision(division);
       if (ans)
@@ -948,7 +950,7 @@ void wxDivisionShape::Copy(wxShape& copy)
 {
   wxCompositeShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxDivisionShape)) ) ;
+  wxASSERT(wxDynamicCast(&copy, wxDivisionShape));
 
   wxDivisionShape& divisionCopy = (wxDivisionShape&) copy;
 

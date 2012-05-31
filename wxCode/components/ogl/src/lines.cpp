@@ -1549,7 +1549,7 @@ void wxLineShape::Copy(wxShape& copy)
 {
   wxShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxLineShape)) );
+  wxASSERT(wxDynamicCast(&copy, wxLineShape));
 
   wxLineShape& lineCopy = (wxLineShape&) copy;
 

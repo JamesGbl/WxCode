@@ -255,7 +255,7 @@ void wxDrawnShape::Copy(wxShape& copy)
 {
   wxRectangleShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxDrawnShape)) ) ;
+  wxASSERT(wxDynamicCast(&copy, wxDrawnShape));
 
   wxDrawnShape& drawnCopy = (wxDrawnShape&) copy;
 
@@ -1460,7 +1460,7 @@ void wxPseudoMetaFile::WriteAttributes(wxExpr *clause, int whichAngle)
     wxExpr *expr = NULL;
     if (obj)
     {
-      if (obj->IsKindOf(CLASSINFO(wxPen)))
+      if (wxDynamicCast(obj, wxPen))
       {
         wxPen *thePen = (wxPen *)obj;
         expr = new wxExpr(wxExprList);
@@ -1471,7 +1471,7 @@ void wxPseudoMetaFile::WriteAttributes(wxExpr *clause, int whichAngle)
         expr->Append(new wxExpr((long)thePen->GetColour().Green()));
         expr->Append(new wxExpr((long)thePen->GetColour().Blue()));
       }
-      else if (obj->IsKindOf(CLASSINFO(wxBrush)))
+      else if (wxDynamicCast(obj, wxBrush))
       {
         wxBrush *theBrush = (wxBrush *)obj;
         expr = new wxExpr(wxExprList);
@@ -1481,7 +1481,7 @@ void wxPseudoMetaFile::WriteAttributes(wxExpr *clause, int whichAngle)
         expr->Append(new wxExpr((long)theBrush->GetColour().Green()));
         expr->Append(new wxExpr((long)theBrush->GetColour().Blue()));
       }
-      else if (obj->IsKindOf(CLASSINFO(wxFont)))
+      else if (wxDynamicCast(obj, wxFont))
       {
         wxFont *theFont = (wxFont *)obj;
         expr = new wxExpr(wxExprList);
@@ -1999,17 +1999,18 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
           if (gdiRec && (gdiRec->param1 != 0))
           {
             wxObject *obj = (wxObject *)gdiRec->param1;
-            if (obj->IsKindOf(CLASSINFO(wxPen)))
+
+            if (wxDynamicCast(obj, wxPen))
             {
               wxOpSetGDI *op = new wxOpSetGDI(DRAWOP_SET_PEN, this, (int)record->param2);
               m_ops.Append(op);
             }
-            else if (obj->IsKindOf(CLASSINFO(wxBrush)))
+            else if (wxDynamicCast(obj, wxBrush))
             {
               wxOpSetGDI *op = new wxOpSetGDI(DRAWOP_SET_BRUSH, this, (int)record->param2);
               m_ops.Append(op);
             }
-            else if (obj->IsKindOf(CLASSINFO(wxFont)))
+            else if (wxDynamicCast(obj, wxFont))
             {
               wxOpSetGDI *op = new wxOpSetGDI(DRAWOP_SET_FONT, this, (int)record->param2);
               m_ops.Append(op);

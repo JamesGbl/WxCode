@@ -85,7 +85,7 @@ csSettingsDialog::csSettingsDialog(wxWindow* parent):
 
     m_generalSettings = new wxPanel;
 
-    #ifdef  __WXDEBUG__
+    #ifdef  _DEBUG
     //bool success =
     #endif
     //               wxLoadFromResource(m_generalSettings, m_notebook, wxT("general_settings_dialog"));
@@ -94,7 +94,7 @@ csSettingsDialog::csSettingsDialog(wxWindow* parent):
 
     m_diagramSettings = new wxPanel;
 
-    #ifdef  __WXDEBUG__
+    #ifdef  _DEBUG
     //success =
     #endif
     //          wxLoadFromResource(m_diagramSettings, m_notebook, wxT("diagram_settings_dialog"));
@@ -195,7 +195,7 @@ bool csSettingsDialog::TransferDataFromWindow()
          node = node->GetNext())
     {
         wxDocument* doc = wxStaticCast(node->GetData(), wxDocument);
-        if (doc->IsKindOf(CLASSINFO(csDiagramDocument)))
+        if (wxDynamicCast(doc, csDiagramDocument))
         {
             csDiagramDocument* diagramDoc = wxStaticCast(doc, csDiagramDocument);
             wxDiagram* diagram = diagramDoc->GetDiagram();
@@ -253,7 +253,7 @@ csShapePropertiesDialog::csShapePropertiesDialog(wxWindow* parent, const wxStrin
          wxPoint(2, 2), wxSize(SHAPE_PROPERTY_DIALOG_WIDTH - 4, SHAPE_PROPERTY_DIALOG_HEIGHT - 4));
 
     m_generalPropertiesDialog = new csGeneralShapePropertiesDialog;
-    #ifdef  __WXDEBUG__
+    #ifdef  _DEBUG
     //bool success =
     #endif
     //               wxLoadFromResource(m_generalPropertiesDialog, m_notebook, wxT("general_shape_properties_dialog"));
@@ -356,7 +356,8 @@ void csShapePropertiesDialog::SetDefaults()
          node = node->GetNext())
     {
         wxWindow* child = wxStaticCast(node->GetData(), wxWindow);
-        if (child->IsKindOf(CLASSINFO(wxChoice)))
+
+        if (wxDynamicCast(child, wxChoice))
         {
             wxChoice* choice = wxStaticCast(child, wxChoice);
             choice->SetSelection(0);
@@ -371,7 +372,8 @@ void csShapePropertiesDialog::SetDefaults()
          node = node->GetNext())
     {
         wxWindow* child = wxStaticCast(node->GetData(), wxWindow);
-        if (child->IsKindOf(CLASSINFO(wxChoice)))
+
+        if (wxDynamicCast(child, wxChoice))
         {
             wxChoice* choice = wxStaticCast(child, wxChoice);
             choice->SetSelection(0);

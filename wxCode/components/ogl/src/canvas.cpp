@@ -383,7 +383,7 @@ wxShape *wxShapeCanvas::FindShape(double x, double y, int *attachment, wxClassIn
     // could fail if we clickout side a line, so then we'll
     // try other shapes.
     if (object->IsShown() &&
-        object->IsKindOf(CLASSINFO(wxLineShape)) &&
+        wxDynamicCast(object, wxLineShape) &&
         object->HitTest(x, y, &temp_attachment, &dist) &&
         ((info == NULL) || object->IsKindOf(info)) &&
         (!notObject || !notObject->HasDescendant(object)))
@@ -415,16 +415,16 @@ wxShape *wxShapeCanvas::FindShape(double x, double y, int *attachment, wxClassIn
 
     // On second pass, only ever consider non-composites or divisions. If children want to pass
     // up control to the composite, that's up to them.
-    if (object->IsShown() && (object->IsKindOf(CLASSINFO(wxDivisionShape)) || !object->IsKindOf(CLASSINFO(wxCompositeShape)))
+    if (object->IsShown() && (wxDynamicCast(object, wxDivisionShape) || !wxDynamicCast(object, wxCompositeShape))
         && object->HitTest(x, y, &temp_attachment, &dist) && ((info == NULL) || object->IsKindOf(info)) &&
         (!notObject || !notObject->HasDescendant(object)))
     {
-      if (!object->IsKindOf(CLASSINFO(wxLineShape)))
+      if (!wxDynamicCast(object, wxLineShape))
       {
         // If we've hit a container, and we have already found a line in the
         // first pass, then ignore the container in case the line is in the container.
         // Check for division in case line straddles divisions (i.e. is not wholly contained).
-        if (!nearest_object || !(object->IsKindOf(CLASSINFO(wxDivisionShape)) || WhollyContains(object, nearest_object)))
+        if (!nearest_object || !(wxDynamicCast(object, wxDivisionShape) || WhollyContains(object, nearest_object)))
         {
           nearest_object = object;
           nearest_attachment = temp_attachment;

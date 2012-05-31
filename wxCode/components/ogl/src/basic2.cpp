@@ -684,7 +684,7 @@ void wxPolygonShape::Copy(wxShape& copy)
 {
   wxShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxPolygonShape)) );
+  wxASSERT( wxDynamicCast(&copy, wxPolygonShape));
 
   wxPolygonShape& polyCopy = (wxPolygonShape&) copy;
 
@@ -919,7 +919,7 @@ void wxRectangleShape::Copy(wxShape& copy)
 {
   wxShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxRectangleShape)) );
+  wxASSERT( wxDynamicCast(&copy, wxRectangleShape));
 
   wxRectangleShape& rectCopy = (wxRectangleShape&) copy;
   rectCopy.m_width = m_width;
@@ -1052,7 +1052,7 @@ void wxEllipseShape::Copy(wxShape& copy)
 {
   wxShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxEllipseShape)) );
+  wxASSERT(wxDynamicCast(&copy, wxEllipseShape));
 
   wxEllipseShape& ellipseCopy = (wxEllipseShape&) copy;
 

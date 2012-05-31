@@ -195,7 +195,7 @@ bool DiagramCommand::Do(void)
         RemoveLines(shape);
 
         doc->GetDiagram()->RemoveShape(shape);
-        if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(shape, wxLineShape))
         {
           wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
           fromShape = lineShape->GetFrom();
@@ -336,7 +336,7 @@ bool DiagramCommand::Undo(void)
         doc->GetDiagram()->AddShape(shape);
         shape->Show(true);
 
-        if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(shape, wxLineShape))
         {
           wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
 
@@ -521,10 +521,10 @@ void MyEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int WX
   int new_attachment;
   wxShape *otherShape = canvas->FindFirstSensitiveShape(x, y, &new_attachment, OP_DRAG_RIGHT);
 
-  if (otherShape && !otherShape->IsKindOf(CLASSINFO(wxLineShape)))
+  if (otherShape && !wxDynamicCast(otherShape, wxLineShape))
   {
     canvas->GetDocument()->GetCommandProcessor()->Submit(
-      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, wxStaticCast(canvas->GetDocument(), DiagramDocument), CLASSINFO(wxLineShape),
+      new DiagramCommand(wxT("wxLineShape"), OGLEDIT_ADD_LINE, wxStaticCast(canvas->GetDocument(), DiagramDocument), wxCLASSINFO(wxLineShape),
       0.0, 0.0, false, NULL, GetShape(), otherShape));
   }
 }

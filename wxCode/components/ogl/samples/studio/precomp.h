@@ -16,6 +16,10 @@
 #include <wx/fs_zip.h>
 #include <wx/xrc/xmlres.h>
 
+#ifndef wxCLASSINFO
+    #define wxCLASSINFO CLASSINFO
+#endif
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>

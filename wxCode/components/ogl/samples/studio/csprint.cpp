@@ -62,7 +62,7 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (((diagramFrom == this) || shape->Selected()) && !shape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (((diagramFrom == this) || shape->Selected()) && !wxDynamicCast(shape, wxLineShape))
         {
             wxShape* newShape = shape->CreateNewCopy();
             newShape->GetLines().Clear();
@@ -85,7 +85,7 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (((diagramFrom == this) || shape->Selected()) && shape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (((diagramFrom == this) || shape->Selected()) && wxDynamicCast(shape, wxLineShape))
         {
             wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
             // Only copy a line if its ends are selected too.
@@ -118,7 +118,7 @@ bool wxDiagramClipboard::DoCopy(wxDiagram* diagramFrom, wxDiagram* diagramTo, bo
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (((diagramFrom == this) || shape->Selected()) && !shape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (((diagramFrom == this) || shape->Selected()) && !wxDynamicCast(shape, wxLineShape))
         {
             wxShape* newShape = wxStaticCast(mapping.Get((long) shape), wxShape);
 
@@ -301,7 +301,7 @@ bool csDiagramClipboard::OnAddShape(wxDiagram* diagramTo, wxShape* newShape, wxD
         csDiagram* diagram = wxStaticCast(diagramTo, csDiagram);
         /* csDiagramDocument* doc = */ diagram->GetDocument();
 
-        if (newShape->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(newShape, wxLineShape))
             m_currentCmd->AddState(new csCommandState(ID_CS_ADD_LINE_SELECT, newShape, NULL));
         else
             m_currentCmd->AddState(new csCommandState(ID_CS_ADD_SHAPE_SELECT, newShape, NULL));

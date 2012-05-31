@@ -72,7 +72,7 @@ void csEvtHandler::OnLeftClick(double WXUNUSED(x), double WXUNUSED(y), int keys,
   csDiagramView* view = wxStaticCast(GetShape()->GetCanvas(), csCanvas)->GetView();
   view->ReflectPointSize(GetShape()->GetFont()->GetPointSize());
 
-  if (GetShape()->IsKindOf(CLASSINFO(wxLineShape)))
+  if (wxDynamicCast(GetShape(), wxLineShape))
       view->ReflectArrowState(wxStaticCast(GetShape(), wxLineShape));
 
   csEditorToolPalette *palette = wxGetApp().GetDiagramPalette();
@@ -161,8 +161,8 @@ void csEvtHandler::OnRightClick(double x, double y, int WXUNUSED(keys), int WXUN
     int menuY = (int) (y1 - (viewStartY * unitY));
 
     wxGetApp().GetShapeEditMenu()->SetClientData((char*) GetShape());
-    wxGetApp().GetShapeEditMenu()->Enable(ID_CS_ROTATE_CLOCKWISE, !GetShape()->IsKindOf(CLASSINFO(wxLineShape)));
-    wxGetApp().GetShapeEditMenu()->Enable(ID_CS_ROTATE_ANTICLOCKWISE, !GetShape()->IsKindOf(CLASSINFO(wxLineShape)));
+    wxGetApp().GetShapeEditMenu()->Enable(ID_CS_ROTATE_CLOCKWISE, !wxDynamicCast(GetShape(), wxLineShape));
+    wxGetApp().GetShapeEditMenu()->Enable(ID_CS_ROTATE_ANTICLOCKWISE, !wxDynamicCast(GetShape(), wxLineShape));
 
     GetShape()->GetCanvas()->PopupMenu(wxGetApp().GetShapeEditMenu(), menuX, menuY);
 }
@@ -207,7 +207,7 @@ void csEvtHandler::OnEndDragRight(double x, double y, int WXUNUSED(keys), int at
   int new_attachment;
   wxShape *otherShape = canvas->FindFirstSensitiveShape(x, y, &new_attachment, OP_DRAG_RIGHT);
 
-  if (otherShape && !otherShape->IsKindOf(CLASSINFO(wxLineShape)))
+  if (otherShape && !wxDynamicCast(otherShape, wxLineShape))
   {
         wxLineShape* theShape = new csLineShape;
 
@@ -286,7 +286,7 @@ void csEvtHandler::OnDragLeft(bool draw, double x, double y, int keys, int attac
        node = node->GetNext())
   {
      wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-     if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
+     if (shape->Selected() && !wxDynamicCast(shape, wxLineShape) && (shape != GetShape()))
      {
         shape->GetBoundingBoxMax(&w, &h);
         shape->OnDrawOutline(dc, shape->GetX() + offsetX, shape->GetY() + offsetY, w, h);
@@ -345,7 +345,8 @@ void csEvtHandler::OnBeginDragLeft(double x, double y, int keys, int attachment)
        node = node->GetNext())
   {
      wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-     if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
+
+     if (shape->Selected() && !wxDynamicCast(shape, wxLineShape) && (shape != GetShape()))
      {
         shape->GetBoundingBoxMax(&w, &h);
         shape->OnDrawOutline(dc, shape->GetX() + offsetX, shape->GetY() + offsetY, w, h);
@@ -401,7 +402,7 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
   {
      wxShape* shape = wxStaticCast(node->GetData(), wxShape);
      // Only move the line point(s) if both ends move too
-     if (shape->IsKindOf(CLASSINFO(wxLineShape)) &&
+     if (wxDynamicCast(shape, wxLineShape) &&
            wxStaticCast(shape, wxLineShape)->GetTo()->Selected() && wxStaticCast(shape, wxLineShape)->GetFrom()->Selected())
      {
         wxLineShape* lineShape = wxStaticCast(shape, wxLineShape);
@@ -430,7 +431,8 @@ void csEvtHandler::OnEndDragLeft(double x, double y, int keys, int attachment)
        node = node->GetNext())
   {
      wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-     if (shape->Selected() && !shape->IsKindOf(CLASSINFO(wxLineShape)) && (shape != GetShape()))
+
+     if (shape->Selected() && !wxDynamicCast(shape, wxLineShape) && (shape != GetShape()))
      {
         wxShape* newShape2 = shape->CreateNewCopy();
         newShape2->SetX(shape->GetX() + offsetX);
@@ -446,7 +448,7 @@ void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, i
   wxShape* shape = GetShape();
   csCanvas *canvas = wxStaticCast(GetShape()->GetCanvas(), csCanvas);
 
-  if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+  if (wxDynamicCast(shape, wxLineShape))
   {
     // TODO: Do/Undo support for line operations
     wxStaticCast(shape, wxLineShape)->wxLineShape::OnSizingEndDragLeft(pt, x, y, keys, attachment);
@@ -515,7 +517,7 @@ void csEvtHandler::OnSizingEndDragLeft(wxControlPoint* pt, double x, double y, i
 
   wxShape* newShape = shape->CreateNewCopy();
 
-  if (newShape->IsKindOf(CLASSINFO(wxPolygonShape)))
+  if (wxDynamicCast(newShape, wxPolygonShape))
   {
     wxPolygonControlPoint* ppt = wxStaticCast(pt, wxPolygonControlPoint);
     newShape->SetSize(ppt->GetNewSize().x, ppt->GetNewSize().y);
@@ -592,7 +594,7 @@ bool csEvtHandler::EditProperties()
     wxShape* shape = GetShape();
 
     // For now, no line property editing
-    if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+    if (wxDynamicCast(shape, wxLineShape))
         return false;
 
     csDiagramView* view = wxStaticCast(shape->GetCanvas(), csCanvas)->GetView();
@@ -601,55 +603,55 @@ bool csEvtHandler::EditProperties()
     wxString attributeDialogName;
     wxString title;
 
-    if (shape->IsKindOf(CLASSINFO(csThinRectangleShape)))
+    if (wxDynamicCast(shape, csThinRectangleShape))
     {
         attributeDialog = new csThinRectangleDialog;
         attributeDialogName = wxT("thin_rectangle");
         title = _("Thin Rectangle Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csWideRectangleShape)))
+    else if (wxDynamicCast(shape, csWideRectangleShape))
     {
         attributeDialog = new csWideRectangleDialog;
         attributeDialogName = wxT("wide_rectangle");
         title = _("Wide Rectangle Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csTriangleShape)))
+    else if (wxDynamicCast(shape, csTriangleShape))
     {
         attributeDialog = new csTriangleDialog;
         attributeDialogName = wxT("triangle");
         title = _("Triangle Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csSemiCircleShape)))
+    else if (wxDynamicCast(shape, csSemiCircleShape))
     {
         attributeDialog = new csSemiCircleDialog;
         attributeDialogName = wxT("semi_circle");
         title = _("Semicircle Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csCircleShape)))
+    else if (wxDynamicCast(shape, csCircleShape))
     {
         attributeDialog = new csCircleDialog;
         attributeDialogName = wxT("circle");
         title = _("Circle Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csCircleShadowShape)))
+    else if (wxDynamicCast(shape, csCircleShadowShape))
     {
         attributeDialog = new csCircleShadowDialog;
         attributeDialogName = wxT("circle_shadow");
         title = _("Circle Shadow Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csTextBoxShape)))
+    else if (wxDynamicCast(shape, csTextBoxShape))
     {
         attributeDialog = new csTextBoxDialog;
         attributeDialogName = wxT("text_box");
         title = _("Text Box Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csGroupShape)))
+    else if (wxDynamicCast(shape, csGroupShape))
     {
         attributeDialog = new csGroupDialog;
         attributeDialogName = wxT("group");
         title = _("Group Properties");
     }
-    else if (shape->IsKindOf(CLASSINFO(csOctagonShape)))
+    else if (wxDynamicCast(shape, csOctagonShape))
     {
         attributeDialog = new csOctagonDialog;
         attributeDialogName = wxT("octagon");
@@ -1136,7 +1138,7 @@ void studioShapeEditProc(wxMenu& menu, wxCommandEvent& event)
         case ID_CS_ROTATE_CLOCKWISE:
         case ID_CS_ROTATE_ANTICLOCKWISE:
         {
-            if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+            if (wxDynamicCast(shape, wxLineShape))
                 break;
 
             double theta = shape->GetRotation();

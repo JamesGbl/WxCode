@@ -24,16 +24,15 @@ bool wxGetDevFolder(wxFileName* filename)
 
 bool wxInitXRC()
 {
-   wxXmlResource::Get()->InitAllHandlers();
-
    const wxString fullname = wxTheApp->GetAppName().Lower() + wxT(".xrc");
-
    wxFileName filename;
+
    wxGetExeFolder(&filename);
    filename.SetFullName(fullname);
    if (!filename.FileExists())
    {
       wxFileName dev;
+
       ::wxGetDevFolder(&dev);
       dev.AppendDir(wxT("src"));
       dev.AppendDir(wxT("res"));
@@ -43,5 +42,6 @@ bool wxInitXRC()
          filename = dev;
       }
    }
+   wxXmlResource::Get()->InitAllHandlers();
    return wxXmlResource::Get()->Load(filename.GetFullPath());
 }

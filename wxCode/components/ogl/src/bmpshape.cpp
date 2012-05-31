@@ -76,7 +76,7 @@ void wxBitmapShape::Copy(wxShape& copy)
 {
   wxRectangleShape::Copy(copy);
 
-  wxASSERT( copy.IsKindOf(CLASSINFO(wxBitmapShape)) ) ;
+  wxASSERT(wxDynamicCast(&copy, wxBitmapShape));
 
   wxBitmapShape& bitmapCopy = (wxBitmapShape&) copy;
 

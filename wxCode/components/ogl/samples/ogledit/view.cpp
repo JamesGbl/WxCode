@@ -266,22 +266,22 @@ void MyCanvas::OnLeftClick(double x, double y, int WXUNUSED(keys))
   {
     case PALETTE_TOOL1:
     {
-      info = CLASSINFO(wxRectangleShape);
+      info = wxCLASSINFO(wxRectangleShape);
       break;
     }
     case PALETTE_TOOL2:
     {
-      info = CLASSINFO(wxRoundedRectangleShape);
+      info = wxCLASSINFO(wxRoundedRectangleShape);
       break;
     }
     case PALETTE_TOOL3:
     {
-      info = CLASSINFO(wxEllipseShape);
+      info = wxCLASSINFO(wxEllipseShape);
       break;
     }
     case PALETTE_TOOL4:
     {
-      info = CLASSINFO(wxDiamondShape);
+      info = wxCLASSINFO(wxDiamondShape);
       break;
     }
     default:

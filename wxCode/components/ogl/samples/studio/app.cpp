@@ -103,7 +103,7 @@ bool csApp::OnInit(void)
 
     //// Create a template relating drawing documents to their views
     (void) new wxDocTemplate(docManager, wxT("Diagram"), wxT("*.dia"), wxEmptyString, wxT("dia"), wxT("Diagram Doc"), wxT("Diagram View"),
-            CLASSINFO(csDiagramDocument), CLASSINFO(csDiagramView));
+            wxCLASSINFO(csDiagramDocument), wxCLASSINFO(csDiagramView));
 
     // Create the main frame window.
     // Note that we use a frame style that doesn't have wxCLIP_CHILDREN in it

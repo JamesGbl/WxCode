@@ -1,5 +1,5 @@
 // link.cpp
-// Copyright (c) 2009-2010 by Troels K. All rights reserved.
+// Copyright (c) 2009-2012 by Troels K. All rights reserved.
 // License: wxWindows
 
 #if defined(_MSC_VER) && defined(WXMAKINGDLL_OGL)
@@ -8,7 +8,7 @@
 
 #if (wxVERSION_NUMBER >= 2900)
    #if wxUSE_UNICODE
-      #ifdef __WXDEBUG__
+      #ifdef _DEBUG
          #pragma comment(lib, "wxbase29ud.lib")
          #pragma comment(lib, "wxbase29ud_xml.lib")
          #pragma comment(lib, "wxmsw29ud_core.lib")
@@ -22,7 +22,7 @@
          #pragma comment(lib, "wxpng.lib")
       #endif
    #else
-      #ifdef __WXDEBUG__
+      #ifdef _DEBUG
          #pragma comment(lib, "wxbase29d.lib")
          #pragma comment(lib, "wxmsw29d_core.lib")
       #else
@@ -37,7 +37,7 @@
    #endif
 #elif (wxVERSION_NUMBER >= 2800)
    #if wxUSE_UNICODE
-      #ifdef __WXDEBUG__
+      #ifdef _DEBUG
          #pragma comment(lib, "wxbase28ud.lib")
          #pragma comment(lib, "wxmsw28ud_core.lib")
          #pragma comment(lib, "wxbase28ud_xml.lib")
@@ -51,7 +51,7 @@
          #pragma comment(lib, "wxpng.lib")
       #endif
    #else
-      #ifdef __WXDEBUG__
+      #ifdef _DEBUG
          #pragma comment(lib, "wxbase28d.lib")
          #pragma comment(lib, "wxmsw28d_core.lib")
          #pragma comment(lib, "wxbase28d_xml.lib")

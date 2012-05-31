@@ -174,7 +174,7 @@ wxShape *csDiagramView::FindFirstSelectedShape(void)
        )
   {
     wxShape* eachShape = wxStaticCast(node->GetData(), wxShape);
-    if ((eachShape->GetParent() == NULL) && !eachShape->IsKindOf(CLASSINFO(wxLabelShape)) && eachShape->Selected())
+    if ((eachShape->GetParent() == NULL) && !wxDynamicCast(eachShape, wxLabelShape) && eachShape->Selected())
     {
       return eachShape;
     }
@@ -194,7 +194,7 @@ void csDiagramView::FindSelectedShapes(wxList& selections, wxClassInfo* toFind)
        node = node->GetNext())
   {
     wxShape* eachShape = wxStaticCast(node->GetData(), wxShape);
-    if ((eachShape->GetParent() == NULL) && !eachShape->IsKindOf(CLASSINFO(wxLabelShape)) && eachShape->Selected() && ((toFind == NULL) || (eachShape->IsKindOf(toFind))))
+    if ((eachShape->GetParent() == NULL) && !wxDynamicCast(eachShape, wxLabelShape) && eachShape->Selected() && ((toFind == NULL) || (eachShape->IsKindOf(toFind))))
     {
       selections.Append(eachShape);
     }
@@ -302,7 +302,7 @@ void csDiagramView::DoCut(wxList& shapes)
             // Insert lines at the front, so they are cut first.
             // Otherwise we may try to remove a shape with a line still
             // attached.
-            if (theShape->IsKindOf(CLASSINFO(wxLineShape)))
+            if (wxDynamicCast(theShape, wxLineShape))
                 cmd->InsertState(state);
             else
                 cmd->AddState(state);
@@ -506,8 +506,8 @@ void csDiagramView::SelectAll(bool select)
         {
             wxShape* eachShape = wxStaticCast(node->GetData(), wxShape);
             if (eachShape->GetParent() == NULL &&
-                !eachShape->IsKindOf(CLASSINFO(wxControlPoint)) &&
-                !eachShape->IsKindOf(CLASSINFO(wxLabelShape)))
+                !wxDynamicCast(eachShape, wxControlPoint) &&
+                !wxDynamicCast(eachShape, wxLabelShape))
             {
                 eachShape->Select(true, &dc);
                 SelectShape(eachShape, true);
@@ -529,7 +529,7 @@ void csDiagramView::OnToggleArrowTool(wxCommandEvent& WXUNUSED(event))
         stateName = wxT("Arrow off");
 
     wxList selections;
-    FindSelectedShapes(selections, CLASSINFO(wxLineShape));
+    FindSelectedShapes(selections, wxCLASSINFO(wxLineShape));
 
     if (selections.GetCount() > 0)
     {
@@ -574,7 +574,8 @@ void csDiagramView::OnToggleArrowTool(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnToggleArrowToolUpdate(wxUpdateUIEvent& event)
 {
     wxList selections;
-    FindSelectedShapes(selections, CLASSINFO(wxLineShape));
+
+    FindSelectedShapes(selections, wxCLASSINFO(wxLineShape));
     event.Enable( (selections.GetCount() > 0) );
 }
 
@@ -589,6 +590,7 @@ void csDiagramView::ReflectPointSize(int pointSize)
 void csDiagramView::ReflectArrowState(wxLineShape* lineShape)
 {
     bool haveArrow = false;
+
     for (wxObjectList::compatibility_iterator node = lineShape->GetArrows().GetFirst();
          node;
          node = node->GetNext())
@@ -608,12 +610,14 @@ void csDiagramView::OnAlign(wxCommandEvent& event)
     // that are top-level non-line shapes.
     wxList selections;
     wxObjectList::compatibility_iterator node;
+
     for (node = GetSelectionList().GetFirst();
          node;
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if ((shape->GetParent() == NULL) && (!shape->IsKindOf(CLASSINFO(wxLineShape))))
+
+        if ((shape->GetParent() == NULL) && !wxDynamicCast(shape, wxLineShape))
         {
             selections.Append(shape);
         }
@@ -713,9 +717,11 @@ void csDiagramView::OnNewLinePoint(wxCommandEvent& WXUNUSED(event))
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+
+        if (wxDynamicCast(shape, wxLineShape))
         {
             wxShape* newShape = shape->CreateNewCopy();
+
             wxStaticCast(newShape, wxLineShape)->InsertLineControlPoint(NULL);
             csCommandState* state = new csCommandState(ID_CS_NEW_POINT, newShape, shape);
             cmd->AddState(state);
@@ -734,7 +740,8 @@ void csDiagramView::OnCutLinePoint(wxCommandEvent& WXUNUSED(event))
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+
+        if (wxDynamicCast(shape, wxLineShape))
         {
             wxShape* newShape = shape->CreateNewCopy();
             wxStaticCast(newShape, wxLineShape)->DeleteLineControlPoint();
@@ -755,7 +762,8 @@ void csDiagramView::OnStraightenLines(wxCommandEvent& WXUNUSED(event))
          node = node->GetNext())
     {
         wxShape* shape = wxStaticCast(node->GetData(), wxShape);
-        if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+
+        if (wxDynamicCast(shape, wxLineShape))
         {
             wxShape* newShape = shape->CreateNewCopy();
             wxStaticCast(newShape, wxLineShape)->Straighten();
@@ -769,21 +777,24 @@ void csDiagramView::OnStraightenLines(wxCommandEvent& WXUNUSED(event))
 void csDiagramView::OnNewLinePointUpdate(wxUpdateUIEvent& event)
 {
     wxList selections;
-    FindSelectedShapes(selections, CLASSINFO(wxLineShape));
+
+    FindSelectedShapes(selections, wxCLASSINFO(wxLineShape));
     event.Enable( (selections.GetCount() > 0) );
 }
 
 void csDiagramView::OnCutLinePointUpdate(wxUpdateUIEvent& event)
 {
     wxList selections;
-    FindSelectedShapes(selections, CLASSINFO(wxLineShape));
+
+    FindSelectedShapes(selections, wxCLASSINFO(wxLineShape));
     event.Enable( (selections.GetCount() > 0) );
 }
 
 void csDiagramView::OnStraightenLinesUpdate(wxUpdateUIEvent& event)
 {
     wxList selections;
-    FindSelectedShapes(selections, CLASSINFO(wxLineShape));
+
+    FindSelectedShapes(selections, wxCLASSINFO(wxLineShape));
     event.Enable( (selections.GetCount() > 0) );
 }
 
@@ -964,7 +975,8 @@ void csCanvas::OnEndDragLeft(double x, double y, int WXUNUSED(keys))
          node = node->GetNext())
     {
         wxShape *shape = wxStaticCast(node->GetData(), wxShape);
-        if (shape->GetParent() == NULL && !shape->IsKindOf(CLASSINFO(wxControlPoint)))
+
+        if (shape->GetParent() == NULL && !wxDynamicCast(shape, wxControlPoint))
         {
             float image_x = shape->GetX();
             float image_y = shape->GetY();

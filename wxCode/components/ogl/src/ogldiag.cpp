@@ -200,10 +200,10 @@ bool wxDiagram::SaveFile(const wxString& filename)
   {
     wxShape* shape = wxStaticCast(*it, wxShape);
 
-    if (!shape->IsKindOf(CLASSINFO(wxControlPoint)))
+    if (!wxDynamicCast(shape, wxControlPoint))
     {
       wxString expr;
-      if (shape->IsKindOf(CLASSINFO(wxLineShape)))
+      if (wxDynamicCast(shape, wxLineShape))
         expr = wxT("line");
        else
         expr = wxT("shape");
@@ -347,7 +347,8 @@ void wxDiagram::ReadContainerGeometry(wxXmlNode* node)
        clause = clause->GetNext())
   {
     wxShape *image = NULL;//(wxShape *)clause->GetClientData();
-    if (image && image->IsKindOf(CLASSINFO(wxCompositeShape)))
+
+    if (wxDynamicCast(image, wxCompositeShape))
     {
       //wxCompositeShape *composite = (wxCompositeShape *)image;
 
@@ -426,7 +427,7 @@ bool wxDiagram::OnShapeSave(wxXmlNode*expr, const wxShape& shape)
 {
   shape.WriteAttributes(expr);
 
-  if (shape.IsKindOf(CLASSINFO(wxCompositeShape)))
+  if (wxDynamicCast(&shape, wxCompositeShape))
   {
     for (wxObjectList::const_iterator it = shape.GetChildren().begin();
          it != shape.GetChildren().end();
@@ -488,7 +489,8 @@ void wxLineCrossings::FindCrossings(wxDiagram& diagram)
          it1++)
     {
         wxShape* shape1 = wxStaticCast(*it1, wxShape);
-        if (shape1->IsKindOf(CLASSINFO(wxLineShape)))
+
+        if (wxDynamicCast(shape1, wxLineShape))
         {
             wxLineShape* lineShape1 = wxStaticCast(shape1, wxLineShape);
             // Iterate through the segments
@@ -508,7 +510,7 @@ void wxLineCrossings::FindCrossings(wxDiagram& diagram)
                     wxShape* shape2 = wxStaticCast(*it2, wxShape);
 
                     // Assume that the same line doesn't cross itself
-                    if (shape2->IsKindOf(CLASSINFO(wxLineShape)) && (shape1 != shape2))
+                    if (wxDynamicCast(shape2, wxLineShape) && (shape1 != shape2))
                     {
                         wxLineShape* lineShape2 = wxStaticCast(shape2, wxLineShape);
                         // Iterate through the segments

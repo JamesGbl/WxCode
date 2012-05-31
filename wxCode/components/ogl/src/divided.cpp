@@ -367,7 +367,8 @@ void wxDividedShape::ResetMandatoryControlPoints()
        it++)
   {
     wxControlPoint* controlPoint = wxStaticCast(*it, wxControlPoint);
-    if (controlPoint->IsKindOf(CLASSINFO(wxDividedShapeControlPoint)))
+
+    if (wxDynamicCast(controlPoint, wxDividedShapeControlPoint))
     {
       wxObjectList::compatibility_iterator node1 = GetRegions().Item(i);
       wxShapeRegion* region = wxStaticCast(node1->GetData(), wxShapeRegion);

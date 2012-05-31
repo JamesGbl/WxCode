@@ -240,7 +240,7 @@ bool csCommandState::Do()
         wxShape* lineTo = NULL;
         int attachmentFrom = 0, attachmentTo = 0;
 
-        if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(m_shapeOnCanvas, wxLineShape))
         {
             // Store the from/to info to save in the line shape
             wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
@@ -262,7 +262,7 @@ bool csCommandState::Do()
 
         m_savedState = m_shapeOnCanvas;
 
-        if (m_savedState->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(m_savedState, wxLineShape))
         {
             // Restore the from/to info for future reference
             wxLineShape* lineShape = wxStaticCast(m_savedState, wxLineShape);
@@ -487,7 +487,7 @@ bool csCommandState::Undo()
         m_shapeOnCanvas = m_savedState;
         m_savedState = NULL;
 
-        if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(m_shapeOnCanvas, wxLineShape))
         {
             wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
             lineShape->GetFrom()->AddLine(lineShape, lineShape->GetTo(),
@@ -523,7 +523,7 @@ bool csCommandState::Undo()
         wxShape* lineTo = NULL;
         int attachmentFrom = 0, attachmentTo = 0;
 
-        if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(m_shapeOnCanvas, wxLineShape))
         {
             // Store the from/to info to save in the line shape
             wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);
@@ -541,7 +541,7 @@ bool csCommandState::Undo()
         m_doc->GetDiagram()->RemoveShape(m_shapeOnCanvas);
         m_shapeOnCanvas->Unlink(); // Unlinks the line, if it is a line
 
-        if (m_shapeOnCanvas->IsKindOf(CLASSINFO(wxLineShape)))
+        if (wxDynamicCast(m_shapeOnCanvas, wxLineShape))
         {
             // Restore the from/to info for future reference
             wxLineShape* lineShape = wxStaticCast(m_shapeOnCanvas, wxLineShape);

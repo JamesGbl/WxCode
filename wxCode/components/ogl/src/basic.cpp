@@ -54,7 +54,7 @@ wxShapeEvtHandler* wxShapeEvtHandler::CreateNewCopy()
   wxShapeEvtHandler* newObject = wxStaticCast(GetClassInfo()->CreateObject(), wxShapeEvtHandler);
 
   wxASSERT(newObject);
-  wxASSERT(newObject->IsKindOf(CLASSINFO(wxShapeEvtHandler)));
+  wxASSERT(wxDynamicCast(newObject, wxShapeEvtHandler));
 
   newObject->m_previousHandler = newObject;
 
@@ -676,7 +676,7 @@ wxShape *wxShape::GetTopAncestor()
   if (!GetParent())
     return this;
 
-  if (GetParent()->IsKindOf(CLASSINFO(wxDivisionShape)))
+  if (wxDynamicCast(GetParent(), wxDivisionShape))
     return this;
   else return GetParent()->GetTopAncestor();
 }
@@ -1760,7 +1760,7 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
   if (m_rotation != 0.0)
     clause->AddAttribute(wxT("rotation"), wxString::Format(wxT("%g"), m_rotation));
 
-  if (!this->IsKindOf(CLASSINFO(wxLineShape)))
+  if (!wxDynamicCast(this, wxLineShape))
   {
     clause->AddAttribute(wxT("neck_length"), wxString::Format(wxT("%d"), m_branchNeckLength));
     clause->AddAttribute(wxT("stem_length"), wxString::Format(wxT("%d"), m_branchStemLength));
@@ -2127,8 +2127,8 @@ void wxShape::ReadRegions(wxXmlNode*clause)
   // Lines and divided rectangles must deal with this compatibility
   // theirselves. Composites _may_ not have any regions anyway.
   if ((m_regions.GetCount() == 0) &&
-      !this->IsKindOf(CLASSINFO(wxLineShape)) && !this->IsKindOf(CLASSINFO(wxDividedShape)) &&
-      !this->IsKindOf(CLASSINFO(wxCompositeShape)))
+      !wxDynamicCast(this, wxLineShape) && !wxDynamicCast(this, wxDividedShape) &&
+      !wxDynamicCast(this, wxCompositeShape))
   {
     wxShapeRegion* newRegion = new wxShapeRegion();
     newRegion->SetName(wxT("0"));
@@ -2230,7 +2230,7 @@ wxShape *wxShape::CreateNewCopy(bool resetMapping, bool recompute)
   wxShape* newObject = wxStaticCast(GetClassInfo()->CreateObject(),wxShape);
 
   wxASSERT(newObject);
-  wxASSERT(newObject->IsKindOf(CLASSINFO(wxShape)));
+  wxASSERT(wxDynamicCast(newObject, wxShape));
 
   Copy(*newObject);
 
@@ -2411,7 +2411,7 @@ void wxShape::DeleteControlPoints(wxDC *dc)
   }
   // Children of divisions are contained objects,
   // so stop here
-  if (!IsKindOf(CLASSINFO(wxDivisionShape)))
+  if (!wxDynamicCast(this, wxDivisionShape))
   {
     for (it = m_children.begin();
          it != m_children.end();
@@ -2443,7 +2443,7 @@ void wxShape::OnDrawControlPoints(wxDC& dc)
   // so stop here.
   // This test bypasses the type facility for speed
   // (critical when drawing)
-  if (!IsKindOf(CLASSINFO(wxDivisionShape)))
+  if (!wxDynamicCast(this, wxDivisionShape))
   {
     for (it = m_children.begin();
          it != m_children.end();
@@ -2465,7 +2465,7 @@ void wxShape::OnEraseControlPoints(wxDC& dc)
     wxControlPoint* control = wxStaticCast(*it, wxControlPoint);
     control->Erase(dc);
   }
-  if (!IsKindOf(CLASSINFO(wxDivisionShape)))
+  if (!wxDynamicCast(this, wxDivisionShape))
   {
     for (it = m_children.begin();
          it != m_children.end();
@@ -2485,7 +2485,7 @@ void wxShape::Select(bool select, wxDC* dc)
     MakeControlPoints();
     // Children of divisions are contained objects,
     // so stop here
-    if (!IsKindOf(CLASSINFO(wxDivisionShape)))
+    if (!wxDynamicCast(this, wxDivisionShape))
     {
       for (wxObjectList::iterator it = m_children.begin();
            it != m_children.end();
@@ -2501,7 +2501,7 @@ void wxShape::Select(bool select, wxDC* dc)
   if (!select)
   {
     DeleteControlPoints(dc);
-    if (!IsKindOf(CLASSINFO(wxDivisionShape)))
+    if (!wxDynamicCast(this, wxDivisionShape))
     {
       for (wxObjectList::iterator it = m_children.begin();
            it != m_children.end();

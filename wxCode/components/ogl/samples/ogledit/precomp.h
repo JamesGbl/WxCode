@@ -11,6 +11,10 @@
 #include <wx/docview.h>
 #include <wx/cmdproc.h>
 
+#ifndef wxCLASSINFO
+    #define wxCLASSINFO CLASSINFO
+#endif
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
