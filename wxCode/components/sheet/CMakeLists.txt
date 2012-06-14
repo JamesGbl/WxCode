@@ -121,6 +121,22 @@ install(FILES
         ${wxSheet_ROOT_DIR}/docs/readme.htm
         DESTINATION "doc")
 
+install(FILES
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/pairarr.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheet.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetatr.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetdef.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetedg.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetedt.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetren.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetsel.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetspt.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheettbl.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetval.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/srtobjar.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/wx24defs.h
+        DESTINATION "include/wx/sheet")
+
 # ---------------------------------------------------------------------------
 # CMake build file for wxSheet sample
 # ---------------------------------------------------------------------------

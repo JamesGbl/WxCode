@@ -94,7 +94,7 @@ include_directories(${wxStEdit_ROOT_DIR}/include/ ${wxStEdit_SETUP_INCLUDE_PATH}
 
 ADD_LIBRARY_FULL(wxStEditLib
     HEADERS
-        ${CMAKE_BINARY_DIR}/include/wx/stedit/setup.h
+        ${wxStEdit_SETUP_INCLUDE_PATH}/wx/stedit/setup.h
 
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/pairarr.h
         ${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
@@ -161,6 +161,31 @@ install(FILES
         ${wxStEdit_ROOT_DIR}/docs/readme.htm
         ${wxStEdit_ROOT_DIR}/docs/wxstedit.htm
         DESTINATION "doc")
+
+install(FILES
+        ${wxStEdit_SETUP_INCLUDE_PATH}/wx/stedit/setup.h
+
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/pairarr.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/setup0.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steart.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedefs.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedit.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stedlgs.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steevent.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steexprt.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stefindr.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steframe.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stelangs.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stemenum.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stenoteb.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steopts.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steprefs.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steprint.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/steshell.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stesplit.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stestyls.h
+        ${wxStEdit_ROOT_DIR}/include/wx/stedit/stetree.h
+        DESTINATION "include/wx/stedit")
 
 # ---------------------------------------------------------------------------
 # CMake build file for wxStEdit sample

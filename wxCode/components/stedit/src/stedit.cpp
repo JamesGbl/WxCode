@@ -3997,7 +3997,7 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
         STE_TextPos start_pos = 0, end_pos = 0;
         GetSelection(&start_pos, &end_pos);
 
-        if (start_pos + 3 < end_pos)
+        if ((start_pos + 3 < end_pos) && (start_pos + 25  > end_pos))
         {
             if (TextRangeIsWord(start_pos, end_pos))
             {

@@ -40,6 +40,7 @@
 #include "wx/sheet/sheetedt.h"
 #include <wx/tokenzr.h>
 #include <wx/spinctrl.h>
+#include <wx/apptrait.h>
 // Required for wxIs... functions
 #include <ctype.h>
 
@@ -332,7 +333,14 @@ bool wxSheetCellEditorRefData::DestroyControl()
         if (win != win->GetEventHandler())
             win->PopEventHandler(true);
 
-        win->Destroy();
+        //win->Destroy();
+        
+#if wxCHECK_VERSION(2,9,1)
+        wxTheApp->ScheduleForDestruction(win);
+#else
+        wxTheApp->GetTraits()->ScheduleForDestroy(win);
+#endif
+
         return true;
     }
 

@@ -191,6 +191,20 @@ install(FILES
     ${wxPlotCtrl_ROOT_DIR}/src/fourier.txt
     DESTINATION "doc")
 
+install(FILES
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fourier.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fparser.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/lm_lsqr.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotctrl.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotcurv.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdata.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdefs.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotdraw.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotfunc.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotmark.h
+        ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/plotprnt.h
+        DESTINATION "include/wx/plotctrl")
+
 # ---------------------------------------------------------------------------
 # CMake build file for wxPlotCtrl sample
 # ---------------------------------------------------------------------------

@@ -111,8 +111,14 @@ export( TARGETS wxVidCapLib
         FILE "${CMAKE_BINARY_DIR}/build/wxVidCap-config.cmake")
 
 install(FILES
-    ${wxVidCap_ROOT_DIR}/docs/README.txt
-    DESTINATION "doc")
+        ${wxVidCap_ROOT_DIR}/docs/README.txt
+        DESTINATION "doc")
+
+install(FILES
+        ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_v4l.h
+        ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcap_vfw.h
+        ${wxVidCap_ROOT_DIR}/include/wx/vidcap/vcapwin.h
+        DESTINATION "include/wx/vidcap")
 
 # ---------------------------------------------------------------------------
 # CMake build file for wxVidCap sample
