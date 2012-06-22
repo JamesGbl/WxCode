@@ -180,6 +180,16 @@ WXLIKE_LIBRARY_NAMES( wxPlotCtrlLib wxplotctrl "${wxPlotCtrl_VERSION}")
 
 # ---------------------------------------------------------------------------
 
+install(TARGETS wxPlotCtrlLib
+        #EXPORT  wxPlotCtrl_export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+#install(EXPORT wxPlotCtrl_export
+#        DESTINATION share/wxplotctrl/
+#        FILE wxPlotCtrl-config.cmake)
+
 export( TARGETS wxPlotCtrlLib wxThingsLib
         FILE "${CMAKE_BINARY_DIR}/build/wxPlotCtrl-config.cmake")
 

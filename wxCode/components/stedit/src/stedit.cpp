@@ -4018,7 +4018,6 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
         }
     }
 
-
     UpdateCanDo(true);
     event.Skip(true);
 }

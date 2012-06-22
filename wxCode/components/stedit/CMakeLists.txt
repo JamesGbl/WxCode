@@ -152,6 +152,16 @@ WXLIKE_LIBRARY_NAMES( wxStEditLib wxstedit "${wxStEdit_VERSION}")
 
 # ---------------------------------------------------------------------------
 
+install(TARGETS wxStEditLib
+        EXPORT  wxStEdit_export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(EXPORT wxStEdit_export
+        DESTINATION share/wxstedit/
+        FILE wxStEdit-config.cmake)
+
 export( TARGETS wxStEditLib
         FILE "${CMAKE_BINARY_DIR}/build/wxStEdit-config.cmake")
 

@@ -112,6 +112,16 @@ WXLIKE_LIBRARY_NAMES( wxSheetLib wxsheet "${wxSheet_VERSION}")
 
 # ---------------------------------------------------------------------------
 
+install(TARGETS wxSheetLib
+        EXPORT  wxSheet_export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(EXPORT wxSheet_export
+        DESTINATION share/wxsheet/
+        FILE wxSheet-config.cmake)
+
 export( TARGETS wxSheetLib
         FILE "${CMAKE_BINARY_DIR}/build/wxSheet-config.cmake")
 

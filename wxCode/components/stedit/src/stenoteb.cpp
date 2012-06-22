@@ -599,7 +599,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
         {
             wxSTEditor *editor = GetEditor();
             if (!editor) return true; // event handled, but we couldn't do anything with it.
-            
+
             if (!editor->IsFileFromDisk())
             {
                 editor->SaveFile(true);
@@ -622,7 +622,6 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
                 else
                 {
                     // Make a new editor for the new filename, leave the original editor as is.
-
                     wxSTEditorSplitter *splitter = CreateSplitter(wxID_ANY);
                     wxCHECK_MSG(splitter, true, wxT("Invalid splitter"));
                     wxSTEditor *newEditor = splitter->GetEditor();
@@ -642,7 +641,7 @@ bool wxSTEditorNotebook::HandleMenuEvent(wxCommandEvent &event)
 
                     newEditor->SetText(editor->GetText());
                     newEditor->ColouriseDocument();
-
+                    newEditor->GotoPos(editor->PositionFromLine(editor->LineFromPosition(editor->GetCurrentPos())));
                     newEditor->GotoPos(editor->GetCurrentPos());
                     newEditor->ScrollToLine(editor->GetFirstVisibleLine());
 

@@ -257,6 +257,16 @@ WXLIKE_LIBRARY_NAMES( wxThingsLib wxthings "${wxThings_VERSION}")
 
 # ---------------------------------------------------------------------------
 
+install(TARGETS wxThingsLib
+        EXPORT  wxThings_export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(EXPORT wxThings_export
+        DESTINATION share/wxthings/
+        FILE wxThings-config.cmake)
+
 export( TARGETS wxThingsLib
         FILE "${CMAKE_BINARY_DIR}/build/wxThings-config.cmake")
 

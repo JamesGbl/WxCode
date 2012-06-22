@@ -46,6 +46,8 @@ class WXDLLIMPEXP_FWD_STEDIT wxSTETreeItemData;
 /// This can be used as an alternative to tracking wxWindows by connecting to
 ///   wxEVT_DESTROY for each of them.
 /// This class is NOT threadsafe for simplicity.
+/// In wxWidgets 2.9 there are MUCH better classes, wxTrackable and wxWeakRef,
+/// and this exists in a basic form for compatibility with wx2.8.
 //-----------------------------------------------------------------------------
 
 template <class T>
@@ -82,30 +84,30 @@ public:
     virtual ~wxSTEPointerLocker() { }
 
     /// Returns true if the pointer is valid.
-    bool IsOk() const { return (GetPointer() != NULL); }
+    bool IsOk() const { return (get() != NULL); }
 
     /// Get the pointer, which may be NULL.
-    T*       GetPointer()       { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
+    T*       get()       { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
     /// Get the pointer, which may be NULL.
-    const T* GetPointer() const { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
+    const T* get() const { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
 
     /// Set the pointer, clearing the reference to the previous one.
-    void     SetPointer(T* ptr, bool is_static) { UnRef(); m_refData = new wxSTEPointerLockerRefData<T>(ptr, is_static); }
+    void     set(T* ptr, bool is_static) { UnRef(); m_refData = new wxSTEPointerLockerRefData<T>(ptr, is_static); }
 
     // ------------------------------------------------------------------------
     /// @name std/boost::shared_ptr compatibility functions.
     /// @{
 
-    T*     get()       const { return m_refData ? dynamic_cast<wxSTEPointerLockerRefData<T> >(m_refData)->m_pointer : NULL; }
-    void   reset(T* ptr, bool is_static) { SetPointer(ptr, is_static); }
+    void   reset()           { set(NULL, false); }
     size_t use_count() const { return m_refData ? m_refData->GetRefCount() : 0; }
-    size_t unique()    const { return use_count() == 0; }
+    bool   unique()    const { return use_count() == 1; }
+    bool   expired()   const { return !IsOk(); }
 
     /// @}
     // ------------------------------------------------------------------------
     /// @name Operators
     /// @{
-    wxSTEditorPrefs& operator = (const wxSTEPointerLocker& locker)
+    wxSTEPointerLocker& operator = (const wxSTEPointerLocker& locker)
     {
         if ( (*this) != locker )
             Ref(locker);
@@ -117,7 +119,7 @@ public:
     bool operator != (const wxSTEPointerLocker& locker) const
         { return m_refData != locker.m_refData; }
 
-    operator bool() const { return unique(); }
+    operator bool() const { return IsOk(); }
     /// @}
 };
 
@@ -304,7 +306,7 @@ public :
     /// Override if you need to create your own type for the wxSTEditorSplitter to use in
     ///   wxSTEditorSplitter::CreateEditor().
     /// Be sure to use DECLARE_DYNAMIC_CLASS() and IMPLEMENT_DYNAMIC_CLASS()
-    /// in you derived editor.
+    /// in your derived editor.
     virtual wxSTEditor* Clone(wxWindow *parent, wxWindowID id = wxID_ANY,
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,

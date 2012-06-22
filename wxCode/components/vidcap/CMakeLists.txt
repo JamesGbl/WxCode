@@ -107,6 +107,16 @@ WXLIKE_LIBRARY_NAMES( wxVidCapLib wxvidcap "${wxVidCap_VERSION}")
 
 # ---------------------------------------------------------------------------
 
+install(TARGETS wxVidCapLib
+        EXPORT  wxVidCap_export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(EXPORT wxVidCap_export
+        DESTINATION share/wxvidcap/
+        FILE wxVidCap-config.cmake)
+
 export( TARGETS wxVidCapLib
         FILE "${CMAKE_BINARY_DIR}/build/wxVidCap-config.cmake")
 

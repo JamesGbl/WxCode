@@ -2208,13 +2208,15 @@ wxSTEditorInsertTextDialog::wxSTEditorInsertTextDialog(wxSTEditor* editor,
     wxStaticCast(FindWindow(ID_STEDLG_INSERT_COLUMN_SPINCTRL), wxSpinCtrl)->SetValue(m_column);
     wxStaticCast(FindWindow(sm_radioID), wxRadioButton)->SetValue(true);
 
-    UpdateControls();
+    InitFromEditor();
 
     Fit();
     GetSizer()->SetSizeHints(this);
     Centre();
 
     m_created = true;  // now we can handle events
+
+    UpdateControls();
 }
 
 wxSTEditorInsertTextDialog::~wxSTEditorInsertTextDialog()
