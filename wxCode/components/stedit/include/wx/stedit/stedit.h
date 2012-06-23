@@ -252,7 +252,8 @@ protected:
     long    m_state;                // what state does this editor have, enum STE_StateType
     bool    m_dirty_flag;           // set if file format is changed by the user, in the properties dialog
                                     // There is no opposite of SCI_SETSAVEPOINT
-    wxString m_hilighted_word;      // The last selected word that has been indicated.
+    wxString   m_hilighted_word;    // The last selected word that has been indicated.
+    wxArrayInt m_hilightedArray;    // Start pos of each hilighted word
 
     wxSTEditorOptions m_options;    // options, always created
 
@@ -836,16 +837,18 @@ public :
     /// @name Set/ClearIndicator methods
     /// @{
 
-    /// Indicate a section of text starting at pos of length len, of indic type wxSTC_INDIC(0,1,2)_MASK.
+    /// Indicate a section of text starting at pos of length len with indic type wxSTC_INDIC(0,1,2)_MASK.
     void SetIndicator(STE_TextPos pos, int len, int indic);
     /// Indicates all strings using indic type wxSTC_INDIC(0,1,2)_MASK.
-    /// If str = wxEmptyString use GetFindString(), if flags = -1 use GetFindFlags()|STE_FR_WHOLEDOC.
-    bool IndicateAllStrings(const wxString &str = wxEmptyString, int flags = -1, int indic = wxSTC_INDIC0_MASK);
+    /// If str = wxEmptyString use GetFindString(), if find_flags = -1 use GetFindFlags()|STE_FR_WHOLEDOC.
+    /// The optional arrays will be filled with start and or end positions that were indicated.
+    bool IndicateAllStrings(const wxString &str = wxEmptyString, int find_flags = -1, int indic = wxSTC_INDIC0_MASK,
+                            wxArrayInt* startPositions = NULL, wxArrayInt* endPositions = NULL);
     /// Clear a single character of indicated text of indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
     bool ClearIndicator(int pos, int indic = wxSTC_INDIC0_MASK);
     /// Clear an indicator starting at any position within the indicated text of
     ///   Indic type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
-    /// @returns The position after last indicated text or -1 if nothing done.
+    /// @return The position after last indicated text or -1 if nothing done.
     int ClearIndication(int pos, int indic = wxSTC_INDIC0_MASK);
     /// Clears all the indicators of type wxSTC_INDIC(0,1,2)_MASK or -1 for all.
     void ClearAllIndicators(int indic = -1);

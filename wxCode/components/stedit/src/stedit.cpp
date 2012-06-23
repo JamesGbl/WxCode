@@ -2350,20 +2350,26 @@ void wxSTEditor::SetIndicator(STE_TextPos pos, int len, int indic)
 }
 
 bool wxSTEditor::IndicateAllStrings(const wxString &str,
-                                    int flags, int indic)
+                                    int find_flags, int indic,
+                                    wxArrayInt* startPositions1, wxArrayInt* endPositions1)
 {
     wxString findString = str.IsEmpty() ? GetFindString() : str;
-    if (flags == -1) flags = GetFindFlags();
+    if (find_flags == -1) find_flags = GetFindFlags();
 
-    wxArrayInt startPositions;
-    wxArrayInt endPositions;
-    size_t n, count = FindAllStrings(findString, flags,
-                                     &startPositions, &endPositions);
+    wxArrayInt startPositions2;
+    wxArrayInt endPositions2;
+
+    wxArrayInt* startPositions = startPositions1 ? startPositions1 : &startPositions2;
+    wxArrayInt* endPositions   = endPositions1   ? endPositions1   : &endPositions2;
+
+
+    size_t n, count = FindAllStrings(findString, find_flags,
+                                     startPositions, endPositions);
 
     for (n = 0; n < count; n++)
     {
-        SetIndicator(startPositions[n],
-                     endPositions[n] - startPositions[n], indic);
+        SetIndicator(startPositions->Item(n),
+                     endPositions->Item(n) - startPositions->Item(n), indic);
     }
 
     return count != 0;
@@ -2395,7 +2401,7 @@ int wxSTEditor::ClearIndication(int pos, int indic)
             break;
     }
 
-    for (n = pos; n < len; n++)
+    for (n = pos+1; n < len; ++n)
     {
         if (!ClearIndicator(n, indic))
             break;
@@ -2407,7 +2413,7 @@ int wxSTEditor::ClearIndication(int pos, int indic)
 void wxSTEditor::ClearAllIndicators(int indic)
 {
     int n, len = GetLength();
-    for (n = 0; n < len; n++)
+    for (n = 0; n < len; ++n)
         ClearIndicator(n, indic);
 }
 
@@ -3985,6 +3991,8 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
 {
     STE_INITRETURN;
 
+    event.Skip(true);
+
     if (GetEditorPrefs().IsOk())
     {
         if (GetEditorPrefs().GetPrefBool(STE_PREF_HIGHLIGHT_BRACES))
@@ -3997,29 +4005,45 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
         STE_TextPos start_pos = 0, end_pos = 0;
         GetSelection(&start_pos, &end_pos);
 
-        if ((start_pos + 3 < end_pos) && (start_pos + 25  > end_pos))
+        if ((start_pos + 3   < end_pos) &&
+            (start_pos + 30  > end_pos) &&
+            TextRangeIsWord(start_pos, end_pos))
         {
-            if (TextRangeIsWord(start_pos, end_pos))
+            wxString text(GetTextRange(start_pos, end_pos));
+
+            if (GetSTERefData()->m_hilighted_word != text)
             {
-                wxString text = GetTextRange(start_pos, end_pos);
-                if (GetSTERefData()->m_hilighted_word != text)
-                    ClearAllIndicators(wxSTC_INDIC1_MASK);
+                if (!GetSTERefData()->m_hilighted_word.IsEmpty())
+                {
+                    wxArrayInt& startPositions = GetSTERefData()->m_hilightedArray;
+                    int n, count = (int)startPositions.GetCount();
+                    for (n = 0; n < count; ++n)
+                        ClearIndication(startPositions[n], wxSTC_INDIC1_MASK);
+
+                    startPositions.Clear();
+                }
 
                 GetSTERefData()->m_hilighted_word = text;
-                IndicateAllStrings(GetSelectedText(), STE_FR_WHOLEWORD|STE_FR_MATCHCASE, wxSTC_INDIC1_MASK);
+
+                IndicateAllStrings(text, STE_FR_WHOLEWORD|STE_FR_MATCHCASE, wxSTC_INDIC1_MASK,
+                                   &GetSTERefData()->m_hilightedArray);
                 Refresh(false);
             }
         }
         else if (!GetSTERefData()->m_hilighted_word.IsEmpty())
         {
             GetSTERefData()->m_hilighted_word.Clear();
-            ClearAllIndicators(wxSTC_INDIC1_MASK);
+            wxArrayInt& startPositions = GetSTERefData()->m_hilightedArray;
+            int n, count = (int)startPositions.GetCount();
+            for (n = 0; n < count; ++n)
+                ClearIndication(startPositions[n], wxSTC_INDIC1_MASK);
+
+            startPositions.Clear();
             Refresh(false);
         }
     }
 
     UpdateCanDo(true);
-    event.Skip(true);
 }
 
 void wxSTEditor::OnMouseWheel(wxMouseEvent& event)
