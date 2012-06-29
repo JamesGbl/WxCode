@@ -279,6 +279,10 @@ void wxSTEditorFrame::CreateOptions( const wxSTEditorOptions& options )
     if (config)
         LoadConfig(*config);
 
+    // The config may change the frame size so relayout the splitters
+    if (m_mainSplitter && m_mainSplitter->IsSplit()) //m_mainSplitterWin1 && m_resultsNotebook)
+        m_mainSplitter->SetSashPosition(GetClientSize().GetHeight()*2/3);
+
     UpdateAllItems();
 
     // if we've got an editor let it update gui

@@ -170,7 +170,7 @@ install(FILES
         ${wxStEdit_ROOT_DIR}/docs/readme.txt
         ${wxStEdit_ROOT_DIR}/docs/readme.htm
         ${wxStEdit_ROOT_DIR}/docs/wxstedit.htm
-        DESTINATION "doc")
+        DESTINATION "doc/wxStEdit")
 
 install(FILES
         ${wxStEdit_SETUP_INCLUDE_PATH}/wx/stedit/setup.h
