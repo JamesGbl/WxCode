@@ -471,6 +471,7 @@ bool wxStEditApp::OnInit()
     //frame->ShowSidebar(false);
     //wxSTEditorOptions::m_path_display_format = wxPATH_UNIX; // trac.wxwidgets.org/ticket/11947
     m_frame->Show();
+    m_frame->GetEditor()->SetFocus();
 
     // filenames had *, ? or other junk so we didn't load them
     if (badFileNames.GetCount())

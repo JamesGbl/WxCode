@@ -1778,7 +1778,7 @@ void wxSTEditor::SetTextAndInitialize(const wxString& str)
                        // otherwise scrolled halfway thru 1st char
 
     SetLanguage(GetSTERefData()->m_steLang_id); // -> Colourise();
-    UpdateCanDo(true);
+    UpdateCanDo(IsShown());
 }
 
 int wxSTEditor::QuerySaveIfModified(bool save_file, int style)
@@ -2010,6 +2010,13 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
     wxString findString   = event.GetFindString();
     long flags            = event.GetFlags();
 
+    // For this event we only go to the previously found location.
+    if (eventType == wxEVT_STEFIND_GOTO)
+    {
+        wxSTEditorFindReplaceData::GotoFindAllString(findString, this);
+        return;
+    }
+
     SetStateSingle(STE_CANFIND, !findString.IsEmpty());
     SetFindString(findString, true);
     SetFindFlags(flags, true);
@@ -2027,12 +2034,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
                 pos -= (STE_TextPos)findString.Length() + 1; // doesn't matter if it matches or not, skip it
     }
 
-    if (eventType == wxEVT_STEFIND_GOTO)
-    {
-        wxString findAllString(event.GetString());
-        wxSTEditorFindReplaceData::GotoFindAllString(findAllString, this);
-    }
-    else if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
+    if ((eventType == wxEVT_COMMAND_FIND) || (eventType == wxEVT_COMMAND_FIND_NEXT))
     {
         if (STE_HASBIT(flags, STE_FR_FINDALL|STE_FR_BOOKMARKALL))
         {
@@ -3593,7 +3595,7 @@ long wxSTEditor::UpdateCanDo(bool send_event)
         // This is why we override CanPaste() to simply return IsEditable() for GTK.
         // wxWidgets/src/stc/ScintillaWX.cpp - CanPaste() calls Editor::CanPaste() and checks for empty clipboard.
         // wxWidgets/src/stc/scintilla/src/Editor.cxx - bool Editor::CanPaste() does the SelectionContainsProtected code.
-        //printf("Paste %d %d %d\n", (int)HasState(STE_CANPASTE), (int)CanPaste(), (int)GetReadOnly());
+        //printf("Paste %d %d %d %d\n", (int)HasState(STE_CANPASTE), (int)CanPaste(), (int)GetReadOnly(), (int)IsEditable());
 
         SetStateSingle(STE_CANPASTE, !HasState(STE_CANPASTE));
         state_change |= STE_CANPASTE;

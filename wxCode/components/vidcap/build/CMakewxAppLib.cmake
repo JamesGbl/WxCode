@@ -37,6 +37,11 @@ endif()
 
 set_property(GLOBAL PROPERTY CMAKEWXAPPLIB_RUN_ONCE TRUE)
 
+set(CMakewxAppLib_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+# Load the helper file with additional functions
+include( "${CMAKE_CURRENT_LIST_DIR}/CMakeFunctions.txt" )
+
 # ===========================================================================
 # Display to the caller what the options are that may be passed to
 # CMake to control the build before we do anything.
@@ -113,7 +118,7 @@ if (UNIX)
 else()
     file(WRITE "${CMAKE_BINARY_DIR}/cmake-gui.bat"
          "cd /D \"${CMAKE_BINARY_DIR}\"\n"
-         "\"${CMAKE_EDIT_COMMAND}\" \"${CMAKE_HOME_DIRECTORY}\"\n" )
+         "start \"Title\" \"${CMAKE_EDIT_COMMAND}\" \"${CMAKE_HOME_DIRECTORY}\"\n" )
 endif()
 
 # ===========================================================================
@@ -157,22 +162,6 @@ endif()
 # Just show our own variable and hide theirs to smooth over the inconsistencies.
 set( BUILD_INSTALL_PREFIX ${BUILD_INSTALL_PREFIX} CACHE PATH     "Install Directory prefix for INSTALL target" FORCE)
 set( CMAKE_INSTALL_PREFIX ${BUILD_INSTALL_PREFIX} CACHE INTERNAL "Install Directory prefix for INSTALL target" FORCE)
-
-# ---------------------------------------------------------------------------
-# Set bool variables IS_32_BIT and IS_64_BIT
-# ---------------------------------------------------------------------------
-
-if ((CMAKE_SIZEOF_VOID_P MATCHES 4) OR (CMAKE_CL_64 MATCHES 0))
-    set(IS_32_BIT TRUE  CACHE INTERNAL "Set to TRUE if the compiler is 32 bit")
-    set(IS_64_BIT FALSE CACHE INTERNAL "Set to TRUE if the compiler is 64 bit")
-elseif((CMAKE_SIZEOF_VOID_P MATCHES 8) OR (CMAKE_CL_64 MATCHES 1))
-    set(IS_32_BIT FALSE CACHE INTERNAL "Set to TRUE if the compiler is 32 bit")
-    set(IS_64_BIT TRUE  CACHE INTERNAL "Set to TRUE if the compiler is 64 bit")
-elseif(NOT DEFINED IS_32_BIT)
-    # Sometimes CMake doesn't set CMAKE_SIZEOF_VOID_P, so we remember the last good value.
-    # http://www.cmake.org/pipermail/cmake/2011-January/042058.html
-    MESSAGE(WARNING "Oops, unable to determine if using 32 or 64 bit compilation, please rerun CMake.")
-endif()
 
 # ---------------------------------------------------------------------------
 # Default build is Debug, change on the command line with
@@ -434,11 +423,11 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
     # call this function without ${} around wxWidgets_COMPONENTS_
     set(wxWidgets_COMPONENTS ${${wxWidgets_COMPONENTS_}})
 
-    # The wxWidgets_CONFIGURATION should never be mswd since then 
+    # The wxWidgets_CONFIGURATION should never be mswd since then
     # wxWidgets_USE_REL_AND_DBG can't be set since mswdd will never exist.
     string(REGEX MATCH "([a-zA-Z]+)d$" wxWidgets_CONFIGURATION_is_debug "${wxWidgets_CONFIGURATION}")
     if (wxWidgets_CONFIGURATION_is_debug)
-        set(wxWidgets_CONFIGURATION ${CMAKE_MATCH_1} CACHE STRING "Set wxWidgets configuration (${WX_CONFIGURATION_LIST})" FORCE)
+        #set(wxWidgets_CONFIGURATION ${CMAKE_MATCH_1} CACHE STRING "Set wxWidgets configuration (${WX_CONFIGURATION_LIST})" FORCE)
     endif()
     unset(wxWidgets_CONFIGURATION_is_debug)
 
@@ -529,9 +518,23 @@ macro( FIND_WXWIDGETS wxWidgets_COMPONENTS_)
 
     message(STATUS "* Using these wxWidgets components: ${wxWidgets_COMPONENTS}")
 
-    # Note: it is essential that 'core' is mentioned before 'base'.
-    # Don't use REQUIRED since it only gives a useless error message on failure.
-    find_package( wxWidgets COMPONENTS ${wxWidgets_COMPONENTS})
+    if (EXISTS "${CMakewxAppLib_LIST_DIR}/FindwxWidgets.cmake")
+        # Use our own copy of FindwxWidgets.cmake that has some fixes
+        set(CMAKE_MODULE_PATH_old ${CMAKE_MODULE_PATH})
+        set(CMAKE_MODULE_PATH     ${CMakewxAppLib_LIST_DIR})
+
+        # Note: it is essential that 'core' is mentioned before 'base'.
+        # Don't use REQUIRED since it only gives a useless error message on failure.
+        find_package( wxWidgets COMPONENTS ${wxWidgets_COMPONENTS})
+
+        set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH_old})
+        unset(CMAKE_MODULE_PATH_old)
+    else()
+        # Use the default CMake FindwxWidgets.cmake
+        # Note: it is essential that 'core' is mentioned before 'base'.
+        # Don't use REQUIRED since it only gives a useless error message on failure.
+        find_package( wxWidgets COMPONENTS ${wxWidgets_COMPONENTS})
+    endif()
 
     # Set the variables FindwxWidgets.cmake uses so they show up in cmake-gui
     # so people will actually have a chance of finding wxWidgets...
@@ -704,6 +707,19 @@ function( PARSE_WXWIDGETS_LIB_NAMES )
     # wxWidgets monolithic DLL build using nmake MSVC : lib/vc_amd64_dll/wxmsw29ud.lib and wxmsw294ud_vc_custom.dll
     if ("${wxWidgets_PORTNAME}" STREQUAL "")
         string(REGEX MATCH "wx(msw)(univ)?([0-9][0-9])(u)?(d)?\\.lib" _match_msw_mono "${wxWidgets_LIBRARIES}")
+
+        if (NOT "${_match_msw_mono}" STREQUAL "")
+            set(wxWidgets_PORTNAME    "${CMAKE_MATCH_1}" )
+            set(wxWidgets_UNIVNAME    "${CMAKE_MATCH_2}" )
+            #set(wxWidgets_LIB_VERSION "${CMAKE_MATCH_3}" )
+            set(wxWidgets_UNICODEFLAG "${CMAKE_MATCH_4}" )
+            set(wxWidgets_DEBUGFLAG   "${CMAKE_MATCH_5}" )
+        endif()
+    endif()
+
+    # wxWidgets monolithic DLL build using mingw : lib/gcc_dll/libwxmsw29ud.a and libwxmsw294ud_gcc_custom.dll
+    if ("${wxWidgets_PORTNAME}" STREQUAL "")
+        string(REGEX MATCH "libwx(msw)(univ)?([0-9][0-9])(u)?(d)?\\.a" _match_msw_mono "${wxWidgets_LIBRARIES}")
 
         if (NOT "${_match_msw_mono}" STREQUAL "")
             set(wxWidgets_PORTNAME    "${CMAKE_MATCH_1}" )

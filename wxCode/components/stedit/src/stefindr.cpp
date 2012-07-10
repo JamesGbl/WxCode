@@ -221,7 +221,7 @@ bool wxSTEditorFindReplaceData::GotoFindAllString(const wxString& findAllString,
                                                             string_start_pos, string_length,
                                                             lineText);
 
-    // sanity check, maybe just go to the end if the doc is now shorter?
+    // sanity check, maybe just go to the end if the doc if now shorter?
     if (ok && (wxFileName(fileName) == editor->GetFileName()) &&
         (string_start_pos+string_length <= editor->GetLength()))
     {
