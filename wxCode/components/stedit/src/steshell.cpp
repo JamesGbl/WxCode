@@ -86,7 +86,11 @@ void wxSTEditorShell::SetPromptText(const wxString& text)
 wxString wxSTEditorShell::GetPromptText()
 {
     int prompt_line = GetPromptLine();
-    wxString text = GetTextRange(PositionFromLine(prompt_line), GetLength());
+    int start_pos = PositionFromLine(prompt_line);
+    int end_pos   = GetLength();
+    wxString value = GetValue();
+    end_pos = value.Length();
+    wxString text = GetTextRange(start_pos, end_pos);
     return text;
 }
 
