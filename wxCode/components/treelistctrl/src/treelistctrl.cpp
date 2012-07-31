@@ -41,12 +41,14 @@
 #include <wx/scrolwin.h>
 #include <wx/dcmemory.h>
 #if wxCHECK_VERSION(2, 7, 0)
-#include <wx/renderer.h>
+   #include <wx/renderer.h>
 #endif
 #include <wx/apptrait.h>
 #include <wx/dcbuffer.h>
 #include <wx/tooltip.h>
 #include <wx/hashmap.h>
+#include <wx/dynarray.h>
+#include <wx/arrimpl.cpp>
 
 #ifdef __WXMAC__
 #include "wx/mac/private.h"
@@ -56,6 +58,11 @@
 
 #include <wx/log.h>  // only required for debugging purpose
 #include <wx/msgdlg.h>  // only required for debugging purpose
+
+
+#if wxCHECK_VERSION(2,9,0)
+namespace wxcode {
+#endif
 
 // ---------------------------------------------------------------------------
 // array types
@@ -70,9 +77,7 @@ WX_DEFINE_ARRAY(wxTreeListItem *, wxArrayTreeListItems);
 WX_DEFINE_ARRAY_PTR(wxTreeListItem *, wxArrayTreeListItems);
 #endif
 
-#include <wx/dynarray.h>
 WX_DECLARE_OBJARRAY(wxTreeListColumnInfo, wxArrayTreeListColumnInfo);
-#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayTreeListColumnInfo);
 
 
@@ -1157,7 +1162,11 @@ void wxEditTextCtrl::EndEdit(bool isCancelled) {
 
 bool wxEditTextCtrl::Destroy() {
     Hide();
+#if wxCHECK_VERSION(2,9,0)
+    wxTheApp->ScheduleForDestruction(this);
+#else
     wxTheApp->GetTraits()->ScheduleForDestroy(this);
+#endif
     return true;
 }
 
@@ -5421,3 +5430,6 @@ bool wxTreeListCtrlXmlHandler::CanHandle(wxXmlNode * node) {
 
 #endif  // wxUSE_XRC
 
+#if wxCHECK_VERSION(2,9,0)
+} // namespace wxcode
+#endif

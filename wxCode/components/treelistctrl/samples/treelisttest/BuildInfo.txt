@@ -11,7 +11,7 @@ Generel building rules:
   Use "make" for the release version, "make debug" for the debug version,
   "make univdebug" for the univ debug version.
 - There is also a CodeBlock project file, requiring the global variable 'wx' to
-  be set (Menu "Settings / Global Variables", 'base' is enough)
+  Be set (Menu "Settings / Global Variables"; 'base' is enough)
 
 
 Building on Unix (wxGTK, wxUniv)
@@ -29,5 +29,5 @@ Building on Windows (wxMSW, wxUniv)
 
 Building on other ports
 =======================
-- There is currently no support to build on other ports. If you are able to deduct
-  how to build on your platform it would be nice if you submit them to the project.
+- There is currently no support to build on other ports. If you are able to 
+  build on your platform it would be nice to send the details to the project

@@ -1,7 +1,8 @@
 Latest information:
 ===================
 
-* 1104 : new release (eye candies: colors, fonts & more!)
+* 2012-08-01 : new release 1208 (support for wxWidgets 2.9, minor improvements)
+* 2011-04-04 : new release 1104 (eye candies: colors, fonts & more!)
 * 2010-06-26 : new release (tooltips support, page-up/down, minor changes & bug fixes)
 * 2009-07-19 : new release (maintenance release)
 * 2008-12-05 : new release (fixed several crashes)
@@ -20,7 +21,7 @@ Known problems:
 
 Release History:
 ================
-* treelistctrl_12xx.zip
+* treelistctrl_1208.zip
   - Fixed: HitTest() was not working [#3093531 --thanks Yogesh]
   - Fixed: click events now return position (Point) in all cases
   - Fixed: include item in event EVT_COMMAND_TREE_ITEM_MENU [#3522228 --thanks T. Modes]
@@ -29,6 +30,7 @@ Release History:
   - Added: resource files / XRC support [#3103099 --thanks Pascal Potvin]
   - Added: sample program now shows HitTest() output on middle-click
   - Added: can now change parent with SetItemParent(), sample demonstrates this with drag&drop [feature#3429784]
+  - Added: support for wxWidgets 2.9 with separate 'wxCode' namespace
 
 * treelistctrl_1104.zip
   - Fixed: position of editor when a column is hidden [wxPack]

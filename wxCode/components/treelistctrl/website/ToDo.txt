@@ -8,7 +8,10 @@ TO DO:
 Future enhancements:
 ====================
 - does wxDataViewCtrl not offer similar functionality ?
-- long term: wxTreeListCtrl is mostly a wrapper around wxTreeListMainWindow (a glorified wxScrolledWindow), would it make sense to use wxTreeListMainWindow directly ?
+- long term: wxTreeListCtrl is mostly a wrapper around wxTreeListMainWindow (a
+  glorified wxScrolledWindow), would it make sense to use wxTreeListMainWindow
+  directly ?
     - avoid having to propagate events in OnMouse, OnScroll
     - by default wxScrolledWindow methods are available
-- very very long term: unification between wxTreeListCtrl, wxGrid / wxDataViewCtrl, wxTreeCtrl / wxTreeMultiCtrl (now in wxWidgets), ....
+- very very long term: unification between wxTreeListCtrl, wxGrid /
+  wxDataViewCtrl, wxTreeCtrl / wxTreeMultiCtrl (now in wxWidgets), ....

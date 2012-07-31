@@ -9,6 +9,7 @@
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
+
 //----------------------------------------------------------------------------
 // headers
 //----------------------------------------------------------------------------
@@ -37,11 +38,15 @@
 
 //! wxCode headers
 #include "wx/treelistctrl.h" // wxTreeListCtrl control
+#if wxCHECK_VERSION(2,9,0)
+   using namespace wxcode;
+#endif
 
 // detecting memory leaks on Windows Visual C++ with _CrtSetBreakAlloc (<memory_number>)
 #if defined(__MSVC__)
 #include <crtdbg.h>
 #endif
+
 
 //----------------------------------------------------------------------------
 // resources
@@ -67,7 +72,7 @@
 
 const wxString APP_NAME = _("wxTreeListCtrl");
 const wxString APP_VENDOR = _("wxCode");
-const wxString APP_VERSION = _("12xx");
+const wxString APP_VERSION = _("1208");
 const wxString APP_MAINT = _("Ronan Chartois");
 const wxString APP_LICENCE = _("wxWidgets");
 const wxString APP_COPYRIGTH = _("(C) 2005-2012 Otto Wyss && others");
@@ -1070,7 +1075,6 @@ const wxChar *name;
         name, event.GetEventType(),
         event.GetX(), event.GetY()
     );
-
     event.Skip();
 }
 
@@ -1186,8 +1190,8 @@ void AppFrame::FillTree () {
     int m = 0;
     // initialize tree
     wxTreeItemId root = m_treelist->AddRoot (_("Root"));
-    m_treelist->SetItemText (root, 1, wxString::Format (_("TOP-LEVEL"), 0));
-    m_treelist->SetItemText (root, 2, wxString::Format (_("TOP-LEVEL"), 0));
+    m_treelist->SetItemText (root, 1, wxString::Format (_("TOP-LEVEL")));
+    m_treelist->SetItemText (root, 2, wxString::Format (_("TOP-LEVEL")));
     m_treelist->SetItemFont(root, wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD));
     m_treelist->SetItemTextColour(root, 1, wxColour(_("#ff4040")));
     m_treelist->SetItemBackgroundColour(root, wxColour(_("#c0c0f0")));
@@ -1283,7 +1287,6 @@ END_EVENT_TABLE();
 
 void MyTreeListCtrl::OnMouseGeneric(wxMouseEvent &event) {
 const char *name;
-wxString message = "";
 
     if (event.GetEventType() == wxEVT_LEFT_DOWN) {
         name = _("wxEVT_LEFT_DOWN");
@@ -1328,15 +1331,10 @@ wxString message = "";
     } else {
         name = _("BUG,unexpected");
     }
-
     wxLogMessage(_("CHILDMOUSE    type=<%s (%d)>    point=(%d, %d)"),
         name, event.GetEventType(),
         event.GetX(), event.GetY()
     );
-    if (message.length() > 0) {
-        wxLogMessage(message);
-    }
-
     event.Skip();
 }
 
@@ -1372,9 +1370,7 @@ const wxChar *name;
     {
         name = _("BUG,unexpected");
     }
-    wxLogMessage(_("SCROLL WIN type=<%s (%d)>"),
-        name, event.GetEventType()
-    );
+    wxLogMessage(_("SCROLL WIN type=<%s (%d)>"), name, event.GetEventType());
 
     event.Skip();
 }
