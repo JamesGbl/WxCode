@@ -297,7 +297,7 @@ void wxSheetCellStringRendererRefData::DoDraw(wxSheet& sheet,
     int align = attr.GetAlignment();
     int orient = attr.GetOrientation();
 
-    wxString value = sheet.GetCellValue(coords);
+    wxString value( sheet.GetCellValue(coords) );
     int best_width = DoGetBestSize(sheet, attr, dc, value).GetWidth();
     wxSheetCoords cellSpan(sheet.GetCellSpan(coords)); // shouldn't get here if <=0
     int cell_rows = cellSpan.m_row;
@@ -452,7 +452,7 @@ wxSheetCellAutoWrapStringRendererRefData::GetTextLines(wxSheet& sheet,
                                                        const wxRect& rect,
                                                        const wxSheetCoords& coords)
 {
-    wxString data = sheet.GetCellValue(coords);
+    wxString data( sheet.GetCellValue(coords) );
 
     wxArrayString lines;
     dc.SetFont(attr.GetFont());
@@ -466,7 +466,7 @@ wxSheetCellAutoWrapStringRendererRefData::GetTextLines(wxSheet& sheet,
 
     while ( tk.HasMoreTokens() )
     {
-        wxString tok = tk.GetNextToken();
+        wxString tok( tk.GetNextToken() );
         //FIXME: this causes us to print an extra unnecesary
         //       space at the end of the line. But it
         //       is invisible , simplifies the size calculation
@@ -633,7 +633,7 @@ void wxSheetCellFloatRendererRefData::SetParameters(const wxString& params)
     }
     else
     {
-        wxString tmp = params.BeforeFirst(_T(','));
+        wxString tmp( params.BeforeFirst(_T(',')) );
         if ( !tmp.IsEmpty() )
         {
             long width;
@@ -1108,7 +1108,7 @@ void wxSheetCellRolColLabelRendererRefData::Draw(wxSheet& sheet,
 
     SetTextColoursAndFont(sheet, attr, dc, isSelected);
 
-    wxString value = sheet.GetCellValue(coords);
+    wxString value( sheet.GetCellValue(coords) );
 
     if (!value.IsEmpty())
     {

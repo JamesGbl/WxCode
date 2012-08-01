@@ -274,7 +274,7 @@ int wxSheetTypeRegistry::FindOrCloneDataType(const wxString& typeName)
     wxSheetCellEditor editor(GetEditor(index).Copy());
 
     // do it even if there are no parameters to reset them to defaults
-    wxString params = typeName.AfterFirst(_T(':'));
+    wxString params(typeName.AfterFirst(_T(':')));
     renderer.SetParameters(params);
     editor.SetParameters(params);
 
@@ -1897,7 +1897,7 @@ void wxSheet::SetAttrEditor( const wxSheetCoords& coords, const wxSheetCellEdito
 
 void wxSheet::SetColFormatFloat(int col, int width, int precision)
 {
-    wxString typeName = wxSHEET_VALUE_FLOAT;
+    wxString typeName(wxSHEET_VALUE_FLOAT);
     if ( (width != -1) || (precision != -1) )
         typeName << _T(':') << width << _T(',') << precision;
 
@@ -7379,7 +7379,7 @@ wxString Joint(const wxArrayString& a)
 {
     if (a.GetCount() == 0u) return wxEmptyString;
 
-    wxString s = wxT("'")+ a[0] + wxT("'\t ");
+    wxString s(wxT("'")+ a[0] + wxT("'\t "));
     for (size_t n = 1u; n < a.GetCount(); n++) s += wxT("'")+ a[n] + wxT("'\t ");
     return s;
 }
