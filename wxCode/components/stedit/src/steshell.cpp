@@ -74,9 +74,10 @@ void wxSTEditorShell::AppendText(const wxString &text)
 void wxSTEditorShell::SetPromptText(const wxString& text)
 {
     BeginWriteable();
-    int length = GetLength();
-    wxString promptText = GetPromptText();
-    SetTargetStart(length - (STE_TextPos)promptText.Length());
+    int length      = GetLength();
+    int prompt_line = GetPromptLine();
+    int start_pos   = PositionFromLine(prompt_line);
+    SetTargetStart(start_pos);
     SetTargetEnd(length);
     ReplaceTarget(text);
     GotoPos(GetLength());
@@ -86,11 +87,9 @@ void wxSTEditorShell::SetPromptText(const wxString& text)
 wxString wxSTEditorShell::GetPromptText()
 {
     int prompt_line = GetPromptLine();
-    int start_pos = PositionFromLine(prompt_line);
-    int end_pos   = GetLength();
-    wxString value = GetValue();
-    end_pos = value.Length();
-    wxString text = GetTextRange(start_pos, end_pos);
+    int start_pos   = PositionFromLine(prompt_line);
+    int end_pos     = GetLength();
+    wxString text(GetTextRange(start_pos, end_pos));
     return text;
 }
 
