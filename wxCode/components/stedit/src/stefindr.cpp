@@ -296,8 +296,6 @@ bool wxSTEditorFindResultsEditor::Create(wxWindow *parent, wxWindowID winid,
     //SetEdgeColumn(7);
 
     SetReadOnly(true);
-    RegisterStyles(wxSTEditorStyles::GetGlobalEditorStyles());
-    RegisterLangs(wxSTEditorLangs::GetGlobalEditorLangs());
 
     SetLanguage(STE_LANG_NULL);
 
@@ -306,12 +304,17 @@ bool wxSTEditorFindResultsEditor::Create(wxWindow *parent, wxWindowID winid,
 
 wxSTEditorFindResultsEditor::~wxSTEditorFindResultsEditor()
 {
+    if (wxSTEditorFindReplacePanel::GetFindResultsEditor() == this)
+        wxSTEditorFindReplacePanel::SetFindResultsEditor(NULL);
 }
 
 void wxSTEditorFindResultsEditor::CreateOptions(const wxSTEditorOptions& options)
 {
     // fixme - need this for the notebook
-    SetOptions(options);
+    //SetOptions(options);
+
+    RegisterStyles(options.GetEditorStyles());
+    RegisterLangs(options.GetEditorLangs());
 }
 
 void wxSTEditorFindResultsEditor::SetResults(const wxSTEditorFindReplaceData& findReplaceData)

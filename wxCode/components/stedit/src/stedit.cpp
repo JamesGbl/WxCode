@@ -486,7 +486,7 @@ bool wxSTEditor::TextRangeIsWord(STE_TextPos start_pos, STE_TextPos end_pos) con
     if ((start_pos >= end_pos) || (start_pos < 0) || (end_pos > len))
         return false;
 
-    wxString text = GetTextRange(wxMax(0, start_pos-1), wxMin(end_pos+1, len));
+    wxString text( GetTextRange(wxMax(0, start_pos-1), wxMin(end_pos+1, len)) );
     if (text.IsEmpty()) return false;
 
     if ((start_pos == 0) || (wordCharacters.Find(text[0]) == wxNOT_FOUND))
@@ -572,7 +572,7 @@ void wxSTEditor::PasteRectangular(const wxString& str, STE_TextPos pos)
     STE_TextPos line_end_pos   = GetLineEndPosition(line);
     STE_TextPos line_pos       = pos - line_start_pos;
 
-    wxString eolStr = GetEOLString();
+    wxString eolStr(GetEOLString());
 
     wxStringTokenizer tkz(str, wxT("\r\n"), wxTOKEN_STRTOK);
     for ( ; tkz.HasMoreTokens(); line++)
@@ -583,7 +583,7 @@ void wxSTEditor::PasteRectangular(const wxString& str, STE_TextPos pos)
         line_start_pos = PositionFromLine(line);
         line_end_pos   = GetLineEndPosition(line);
 
-        wxString token = tkz.GetNextToken();
+        wxString token(tkz.GetNextToken());
         if (line_end_pos < line_start_pos + line_pos)
             InsertText(line_end_pos, wxString(wxT(' '), line_start_pos + line_pos - line_end_pos));
 
@@ -649,7 +649,7 @@ int wxSTEditor::GetLineLength(int line) const
 // it is implemented in wx trunk, but is wrong, see trac.wxwidgets.org/ticket/13646
 wxString wxSTEditor::GetLineText(int line) const
 {
-    wxString lineText = GetLine(line);
+    wxString lineText(GetLine(line));
     size_t len = lineText.Length();
 
     if (len > 0)
@@ -676,7 +676,7 @@ void wxSTEditor::SetLineText(int line, const wxString& text, bool inc_newline)
     // add lines if necessary
     if (line >= line_count)
     {
-        wxString eolStr = GetEOLString();
+        wxString eolStr(GetEOLString());
         size_t n, count = line - line_count;
         for (n = 0; n <= count; n++)
             prepend += eolStr;
@@ -772,7 +772,7 @@ size_t wxSTEditor::GetWordArrayCount(const wxString& text,
 void wxSTEditor::GetEOLCount(int *crlf_, int *cr_, int *lf_, int *tabs_)
 {
     int crlf = 0, cr = 0, lf = 0, tabs = 0;
-    const wxString text = GetText();
+    const wxString text(GetText());
     const wxChar *c = text.GetData();
     size_t n, len = text.Length();
 
@@ -831,8 +831,8 @@ size_t wxSTEditor::ConvertTabsToSpaces(bool to_spaces,
     SetTargetEnd(end_pos);
     wxString spaceString;
     if (GetTabWidth() > 0) spaceString = wxString(wxT(' '), GetTabWidth());
-    wxString findString    = !to_spaces ? spaceString : wxString(wxT("\t"));
-    wxString replaceString =  to_spaces ? spaceString : wxString(wxT("\t"));
+    wxString findString(   !to_spaces ? spaceString : wxString(wxT("\t")));
+    wxString replaceString( to_spaces ? spaceString : wxString(wxT("\t")));
     int diff = (int)replaceString.Length() - (int)findString.Length();
 
     SetSearchFlags(0);
@@ -1016,16 +1016,16 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
         return false;
 
     // fix up the splitBefore/After by removing any extra whitespace
-    wxString splitBefore = splitBefore_;
+    wxString splitBefore(splitBefore_);
     splitBefore.Replace(wxT(" "),  wxEmptyString, true);
     splitBefore.Replace(wxT("\t"), wxEmptyString, true);
     splitBefore += wxT(" \t");
 
-    wxString splitAfter = splitAfter_;
+    wxString splitAfter(splitAfter_);
     splitAfter.Replace(wxT(" "),  wxEmptyString, true);
     splitAfter.Replace(wxT("\t"), wxEmptyString, true);
 
-    wxString ignoreAfterChars = ignoreAfterChars_;
+    wxString ignoreAfterChars(ignoreAfterChars_);
     ignoreAfterChars.Replace(wxT(" "),  wxEmptyString, true);
     ignoreAfterChars.Replace(wxT("\t"), wxEmptyString, true);
 
@@ -1040,7 +1040,7 @@ bool wxSTEditor::Columnize(int top_line, int bottom_line,
          tkz.HasMoreTokens();
          )
     {
-        wxString token = tkz.GetNextToken();
+        wxString token(tkz.GetNextToken());
         preserveStart += token[0];
         preserveEndArray.Add((token.Length() < 2) ? token : token.Mid(1));
     }
@@ -1181,7 +1181,7 @@ bool wxSTEditor::ShowInsertTextDialog()
 
 bool wxSTEditor::ShowColumnizeDialog()
 {
-    wxString text = GetSelectedText();
+    wxString text(GetSelectedText());
     if (text.IsEmpty()) return false;
 
     wxSTEditorColumnizeDialog dialog(GetModalParent());
@@ -1241,7 +1241,7 @@ bool wxSTEditor::ShowSetZoomDialog()
 
 bool wxSTEditor::ShowGotoLineDialog()
 {
-    wxString msg = wxString::Format(_("Line number : 1...%d"), GetLineCount());
+    wxString msg(wxString::Format(_("Line number : 1...%d"), GetLineCount()));
     long line = wxGetNumberFromUser(msg, wxEmptyString, _("Goto line"),
                                     GetCurrentLine()+1, 1, GetLineCount(), GetModalParent());
 
@@ -1375,7 +1375,7 @@ bool wxSTEditor::LoadFile( const wxFileName &fileName_,
     }
 
     wxFileName fileName = fileName_;
-    wxString extensions = extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions();
+    wxString extensions(extensions_.Length() ? extensions_ : GetOptions().GetDefaultFileExtensions());
 
     if (fileName.GetFullPath().IsEmpty())
     {
@@ -1667,9 +1667,9 @@ bool wxSTEditor::SaveFileDialog( bool use_dialog, const wxString &extensions_,
                                  wxString*   selectedFileEncoding,
                                  bool*       selected_file_bom)
 {
-    wxFileName fileName = GetFileName();
-    wxString extensions = extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_;
-    wxString encoding   = GetFileEncoding();
+    wxFileName fileName(GetFileName());
+    wxString extensions(extensions_.IsEmpty() ? GetOptions().GetDefaultFileExtensions() : extensions_);
+    wxString encoding  (GetFileEncoding());
     bool file_bom       = GetFileBOM();
 
     // if not a valid filename or it wasn't loaded from disk - force using dialog
@@ -1678,8 +1678,8 @@ bool wxSTEditor::SaveFileDialog( bool use_dialog, const wxString &extensions_,
 
     if (use_dialog)
     {
-        wxString path = GetOptions().GetDefaultFilePath();
-        wxString fileNamePath = fileName.GetPath();
+        wxString path(GetOptions().GetDefaultFilePath());
+        wxString fileNamePath(fileName.GetPath());
 
         if (!fileNamePath.IsEmpty())
             path = fileNamePath;
@@ -1719,7 +1719,7 @@ bool wxSTEditor::NewFile( const wxString &title_ )
          (QuerySaveIfModified(true) == wxCANCEL))
         return false;
 
-    wxString title = title_;
+    wxString title(title_);
 
     while (title.IsEmpty())
     {
@@ -1978,7 +1978,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
         //style |= wxSTAY_ON_TOP; // it's annoying when it gets hidden
         SetStateSingle(STE_CANFIND, !GetFindString().IsEmpty());
 
-        wxString selectedText = GetSelectedText();
+        wxString selectedText(GetSelectedText());
         if (!selectedText.IsEmpty() && (selectedText.Length() < 100u))
             SetFindString(selectedText, true);
 
@@ -2044,7 +2044,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
             size_t n, count = FindAllStrings(findString, flags,
                                              &startPositions, &endPositions);
 
-            wxString name = GetFileName().GetFullName();
+            wxString name(GetFileName().GetFullName());
 
             for (n = 0; n < count; n++)
             {
@@ -2101,7 +2101,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
         }
 
         pos = GetSelectionStart();
-        wxString replaceString = event.GetReplaceString();
+        wxString replaceString(event.GetReplaceString());
         ReplaceSelection(replaceString);
         GotoPos(pos); // makes first part of selection visible
         SetSelection(pos, pos + (STE_TextPos)replaceString.Length());
@@ -2109,7 +2109,7 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
     }
     else if (eventType == wxEVT_COMMAND_FIND_REPLACE_ALL)
     {
-        wxString replaceString = event.GetReplaceString();
+        wxString replaceString(event.GetReplaceString());
         if (findString == replaceString)
             return;
 
@@ -2120,8 +2120,8 @@ void wxSTEditor::HandleFindDialogEvent(wxFindDialogEvent& event)
             count = ReplaceAllStrings(findString, replaceString, flags);
         }
 
-        wxString msg = wxString::Format(_("Replaced %d occurances of\n'%s' with '%s'."),
-                             count, findString.wx_str(), replaceString.wx_str());
+        wxString msg(wxString::Format(_("Replaced %d occurances of\n'%s' with '%s'."),
+                                      count, findString.wx_str(), replaceString.wx_str()));
 
         wxWindow* parent = wxDynamicCast(event.GetEventObject(), wxWindow);
         wxMessageBox( msg, _("Finished replacing"),
@@ -2162,10 +2162,10 @@ void wxSTEditor::SetFindFlags(long flags, bool send_evt)
 }
 
 STE_TextPos wxSTEditor::FindString(const wxString &findString,
-                           STE_TextPos start_pos, STE_TextPos end_pos,
-                           int flags,
-                           int action,
-                           STE_TextPos* found_start_pos, STE_TextPos* found_end_pos)
+                                   STE_TextPos start_pos, STE_TextPos end_pos,
+                                   int flags,
+                                   int action,
+                                   STE_TextPos* found_start_pos, STE_TextPos* found_end_pos)
 {
     if (findString.IsEmpty())
         return wxNOT_FOUND;
@@ -2355,7 +2355,7 @@ bool wxSTEditor::IndicateAllStrings(const wxString &str,
                                     int find_flags, int indic,
                                     wxArrayInt* startPositions1, wxArrayInt* endPositions1)
 {
-    wxString findString = str.IsEmpty() ? GetFindString() : str;
+    wxString findString(str.IsEmpty() ? GetFindString() : str);
     if (find_flags == -1) find_flags = GetFindFlags();
 
     wxArrayInt startPositions2;
@@ -2753,7 +2753,7 @@ size_t wxSTEditor::DoGetAutoCompleteKeyWords(const wxString& root, wxArrayString
         wxStringTokenizer tkz(langs.GetKeyWords(lang_n, n));
         while ( tkz.HasMoreTokens() )
         {
-            wxString token = tkz.GetNextToken();
+            wxString token(tkz.GetNextToken());
 
             if (token.StartsWith(root) && (wordArray.Index(token) == wxNOT_FOUND))
             {
@@ -2777,8 +2777,8 @@ wxString wxSTEditor::EliminateDuplicateWords(const wxString& words0) const {
     wxStringTokenizer tokenizer(words0, wxT(" "));
     while ( tokenizer.HasMoreTokens() )
     {
-        wxString token = tokenizer.GetNextToken();
-        wordHashMap[token] = &words; // value doesn't matter
+        wxString token(tokenizer.GetNextToken());
+        wordHashMap[token] = 0; // value doesn't matter
     }
 
     wxShadowObjectFields::const_iterator it = wordHashMap.begin(),
@@ -3213,7 +3213,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         case ID_STE_COPY_HTML :
         {
             wxSTEditorExporter steExport(this);
-            wxString text = steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd());
+            wxString text(steExport.RenderAsHTML(GetSelectionStart(), GetSelectionEnd()));
 
         #ifdef __WXMSW__
             text.Replace(wxT("\n"), wxTextBuffer::GetEOL(wxTextFileType_Dos)); // to make Notepad happy
@@ -3271,7 +3271,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
         {
             if (win_id == ID_STE_TOOLBAR_FIND_CTRL)
             {
-                wxString findString = event.GetString();
+                wxString findString(event.GetString());
                 if (GetFindString() != findString)
                     SetFindString(findString, true);
                 // call our find next processing code
@@ -3908,7 +3908,7 @@ static void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n) // FI
 
     if (line_len > edge_col)
     {
-        wxString s = editor->GetLineText(line_n);
+        wxString s(editor->GetLineText(line_n));
         size_t n, len = s.Length();
 
         //wxPrintf(wxT("%d %d '%s'\n"), line_n, len, s.wx_str());
@@ -3917,8 +3917,8 @@ static void wxSTEditor_SplitLines(wxSTEditor* editor, int pos, int line_n) // FI
         {
             if ((s[n] == wxT(' ')) || (s[n] == wxT('\t')))
             {
-                wxString keep = s.Mid(0, n);
-                wxString split = s.Mid(n+1, len-1);
+                wxString keep(s.Mid(0, n));
+                wxString split(s.Mid(n+1, len-1));
                 //wxPrintf(wxT("'%s' '%s'\n"), keep.wx_str(), split.wx_str());
                 editor->SetLineText(line_n, keep);
                 editor->MarkerAdd(line_n, STE_MARKER_BOOKMARK);
@@ -4343,7 +4343,7 @@ bool wxSTEditor::ResetLastAutoIndentLine()
         return false;
     }
 
-    wxString lineString = GetLine(last_autoindent_line);
+    wxString lineString(GetLine(last_autoindent_line));
     if (lineString.Mid(last_autoindent_len).Strip(wxString::both).IsEmpty())
     {
         int line_start = PositionFromLine(last_autoindent_line);
