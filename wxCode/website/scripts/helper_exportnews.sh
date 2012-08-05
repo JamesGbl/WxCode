@@ -9,7 +9,11 @@
 destdir=/home/project-web/wxcode/htdocs
 
 # get the exported HTML
-/usr/bin/wget -q -O $destdir/news.inc.html 'http://sourceforge.net/export/projnews.php?group_id=51305&limit=4&flat=0&show_summaries=1'  > /dev/null
+/usr/bin/wget -q -O $destdir/news.inc.html.tmp 'http://sourceforge.net/export/projnews.php?group_id=51305&limit=4&flat=0&show_summaries=1'  > /dev/null
+
+# set group_id in links
+sed 's/\/forum\/forum.php?forum_id=0/\/news?group_id=51305/' $destdir/news.inc.html.tmp  > $destdir/news.inc.html
+
 
 #
 # NOTE: since 2006 (I don't know exactly the month/day) SF exports news directly in XHTML,

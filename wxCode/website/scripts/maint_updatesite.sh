@@ -28,7 +28,7 @@ function restorepermissions
 
 # little fix for a dummy error msg that otherwise occurs from time to time
 # (even if it's not clear to me why it does)
-#chmod a+x /home/groups/w/wx/wxcode/htdocs/backup/CVS
+#chmod a+x /home/project-web/wxcode/htdocs/backup/CVS
 
 # update the global site
 echo "Updating wxCode website..."

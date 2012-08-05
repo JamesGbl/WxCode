@@ -55,12 +55,8 @@
             echo "   ...ops: $weblocation does not exist - checking it out...\n";
 
             // checkout this component website into the relative folder
-            if ($row['inCVS'] == '1')
-                exec("cvs -q -d" . CVSROOT .
-                     " checkout -d $row[location] wxCode/components/$row[location]/website");
-            else
-                exec("svn -q checkout -q --non-interactive " . SVNROOT .
-                     "/components/$row[location]/website $row[location]");
+            exec("svn -q checkout -q --non-interactive " . SVNROOT .
+                 "/components/$row[location]/website $row[location]");
 
         } else {
 
@@ -68,10 +64,7 @@
             chdir($weblocation);
 
             // checkout this component website into the relative folder
-            if ($row['inCVS'] == '1')
-                exec("cvs -q update -C");
-            else
-                exec("svn -q update -q");
+            exec("svn -q update -q");
         }
 
         $count++;

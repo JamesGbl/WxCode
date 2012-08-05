@@ -13,7 +13,7 @@
 # really too slow (on SF it hangs forever) because of wxCode CVS tarball size (> 17 mb)
 
 # where backup will be saved
-# backupdir=/home/groups/w/wx/wxcode/htdocs/backup
+# backupdir=/home/project-web/wxcode/htdocs/backup
 
 # SF makes automatically the "nightly CVS tarballs"; we just
 # need to link them in our backup dir
@@ -34,7 +34,7 @@
 # wikidir=/tmp/persistent/wxcode/pmwiki.d/wiki.d
 #
 # where backup will be saved
-# backupdir=/home/groups/w/wx/wxcode/htdocs/backup
+# backupdir=/home/project-web/wxcode/htdocs/backup
 #
 # save the wiki pages
 # today="$(date +%Y_%m_%d)"
