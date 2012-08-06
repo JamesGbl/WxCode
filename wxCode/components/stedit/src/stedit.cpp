@@ -1932,12 +1932,13 @@ wxSTEditorFindReplaceDialog* wxSTEditor::GetCurrentFindReplaceDialog()
 
 void wxSTEditor::ShowFindReplaceDialog(bool find)
 {
-    wxCHECK_RET(GetFindReplaceData(), wxT("Invalid find/replace data"));
+    wxSTEditorFindReplaceData* steFindReplaceData = GetFindReplaceData();
+    wxCHECK_RET(steFindReplaceData != NULL, wxT("Invalid find/replace data"));
     wxSTEditorFindReplaceDialog* dialog = GetCurrentFindReplaceDialog();
 
     bool create = true;
 
-    if (dialog)
+    if (dialog != NULL)
     {
         if ((  find  && !(dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) ||
             ((!find) &&  (dialog->GetWindowStyle() & wxFR_REPLACEDIALOG)) )
@@ -1951,6 +1952,8 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
             dialog = NULL;
         }
     }
+
+    bool is_results_editor = (wxDynamicCast(this, wxSTEditorFindResultsEditor) != NULL);
 
     if (create)
     {
@@ -1975,6 +1978,17 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
                 parent = this;
         }
 
+        if (is_results_editor)
+        {
+            style = STE_SETBIT(style, STE_FR_NOALLDOCS,     true);
+            style = STE_SETBIT(style, STE_FR_NOFINDALL,     true);
+            style = STE_SETBIT(style, STE_FR_NOBOOKMARKALL, true);
+
+            steFindReplaceData->SetFlag(STE_FR_ALLDOCS,     false);
+            steFindReplaceData->SetFlag(STE_FR_FINDALL,     false);
+            steFindReplaceData->SetFlag(STE_FR_BOOKMARKALL, false);
+        }
+
         //style |= wxSTAY_ON_TOP; // it's annoying when it gets hidden
         SetStateSingle(STE_CANFIND, !GetFindString().IsEmpty());
 
@@ -1983,7 +1997,7 @@ void wxSTEditor::ShowFindReplaceDialog(bool find)
             SetFindString(selectedText, true);
 
         dialog = new wxSTEditorFindReplaceDialog(parent,
-                                                 GetFindReplaceData(),
+                                                 steFindReplaceData,
                                                  wxGetStockLabelEx(find ? wxID_FIND : wxID_REPLACE, wxSTOCK_PLAINTEXT),
                                                  style | (find ? 0 : wxFR_REPLACEDIALOG));
         dialog->Show();
