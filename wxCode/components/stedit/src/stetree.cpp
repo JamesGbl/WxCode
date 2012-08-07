@@ -398,7 +398,7 @@ void wxSTEditorTreeCtrl::UpdateFromNotebook()
     // Check for and add a hidden root item to the treectrl
     wxTreeItemId rootId = GetRootItem();
     if (!rootId)
-        rootId = AddRoot("Root", -1, -1, NULL);
+        rootId = AddRoot(wxT("Root"), -1, -1, NULL);
 
     // Check for and add a "Opened files" item to the treectrl
     wxArrayString openedfilesPath; openedfilesPath.Add(_("Opened files"));
@@ -709,7 +709,7 @@ wxTreeItemId wxSTEditorTreeCtrl::FindOrInsertItem(const wxArrayString& treePath,
         if (find_type == STE_TREECTRL_FIND)
             return wxTreeItemId();
 
-        parentId = AddRoot("Root", -1, -1, NULL);
+        parentId = AddRoot(wxT("Root"), -1, -1, NULL);
     }
 
     wxTreeItemIdValue rootCookie;
