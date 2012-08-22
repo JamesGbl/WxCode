@@ -865,6 +865,19 @@ void wxSTEditorFindReplacePanel::Send(wxFindDialogEvent& event)
         resultsEditor->SetResults(*m_findReplaceData);
     }
 
+    wxWindow* focusWin = FindFocus();
+
+    // restore the focus to the text editor, not the find results editor
+    if (resultsEditor && (resultsEditor == focusWin) && (GetTargetWindow() != NULL))
+    {
+        wxSTEditorNotebook* steNotebook = wxDynamicCast(GetTargetWindow(), wxSTEditorNotebook);
+
+        if (steNotebook && steNotebook->GetEditor())
+            steNotebook->GetEditor()->SetFocus();
+        else
+            GetTargetWindow()->SetFocus();
+    }
+
     UpdateButtons();
 }
 

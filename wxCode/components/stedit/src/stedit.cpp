@@ -2361,8 +2361,13 @@ size_t wxSTEditor::FindAllStrings(const wxString &str, int flags,
 
 void wxSTEditor::SetIndicator(STE_TextPos pos, int len, int indic)
 {
-    StartStyling(pos, wxSTC_INDICS_MASK);
-    SetStyling(len, indic);
+    STE_TextPos n, n_end = pos+len;
+    for (n = pos; n < n_end; ++n)
+    {
+        int sty = GetStyleAt(n);
+        StartStyling(n, wxSTC_INDICS_MASK);
+        SetStyling(1, sty|indic);
+    }
 }
 
 bool wxSTEditor::IndicateAllStrings(const wxString &str,
@@ -2395,6 +2400,8 @@ bool wxSTEditor::ClearIndicator(int pos, int indic)
 {
     int sty = GetStyleAt(pos);
 
+    printf("CLEAR %d - %x - %x\n", pos, indic, sty); fflush(stdout);
+
     if (STE_HASBIT(sty, indic))
     {
         sty &= (~indic);
@@ -2411,7 +2418,7 @@ int wxSTEditor::ClearIndication(int pos, int indic)
     int len = GetLength();
     int n = pos;
 
-    for (n = pos; n > 0; n--)
+    for (n = pos; n >= 0; n--)
     {
         if (!ClearIndicator(n, indic))
             break;
@@ -4022,7 +4029,7 @@ void wxSTEditor::OnSTCUpdateUI(wxStyledTextEvent &event)
         GetSelection(&start_pos, &end_pos);
 
         if ((start_pos + 3   < end_pos) &&
-            (start_pos + 30  > end_pos) &&
+            (start_pos + 40  > end_pos) &&
             TextRangeIsWord(start_pos, end_pos))
         {
             wxString text(GetTextRange(start_pos, end_pos));
