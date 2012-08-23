@@ -533,7 +533,7 @@ void wxSTEditorNotebook::OnLeftUp(wxMouseEvent &event)
 
     if (page != wxNOT_FOUND)
     {
-        GetEditor(page)->SetFocus();
+        GetPage(page)->SetFocus();
     }
     event.Skip();
 }
