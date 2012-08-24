@@ -2184,8 +2184,6 @@ STE_TextPos wxSTEditor::FindString(const wxString &findString,
     if (findString.IsEmpty())
         return wxNOT_FOUND;
 
-    SetFindString(findString, true);
-
     if (flags == -1) flags = GetFindFlags();
     int sci_flags = wxSTEditorFindReplaceData::STEToScintillaFindFlags(flags);
     SetSearchFlags(sci_flags);
@@ -2271,8 +2269,9 @@ bool wxSTEditor::SelectionIsFindString(const wxString &findString, int flags)
     STE_TextPos found_start_pos = 0;
     STE_TextPos found_end_pos   = 0;
 
-    STE_TextPos find_pos = FindString(findString, sel_start, sel_end, flags, STE_FINDSTRING_NOTHING,
-                              &found_start_pos, &found_end_pos);
+    STE_TextPos find_pos = FindString(findString, sel_start, sel_end,
+                                      flags, STE_FINDSTRING_NOTHING,
+                                      &found_start_pos, &found_end_pos);
 
     if ((find_pos != -1) && (found_start_pos == sel_start) && (found_end_pos == sel_end))
         is_found = true;
