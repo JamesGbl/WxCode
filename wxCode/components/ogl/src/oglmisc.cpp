@@ -110,7 +110,7 @@ int FontSizeDialog(wxFrame *parent, int old_size)
   wxString buf;
   buf << old_size;
   wxString ans = wxGetTextFromUser(_("Enter point size"), _("Font size"), buf, parent);
-  if (ans.Length() == 0)
+  if (ans.empty())
     return 0;
 
   long new_size = 0;
@@ -401,14 +401,14 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
     if (s.empty())
     {
       // FORCE NEW LINE
-      if (buffer.Length() > 0)
+      if (!buffer.empty())
         string_list->Add(buffer);
 
       buffer.Empty();
     }
     else
     {
-      if (buffer.Length() != 0)
+      if (!buffer.empty())
         buffer += wxT(" ");
 
       buffer += s;
@@ -418,7 +418,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
       if ((x > width) && !(formatMode & FORMAT_SIZE_TO_CONTENTS))
       {
         // Deal with first word being wider than box
-        if (oldBuffer.Length() > 0)
+        if (!oldBuffer.empty())
           string_list->Add(oldBuffer);
 
         buffer.Empty();
@@ -426,7 +426,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
       }
     }
   }
-  if (buffer.Length() != 0)
+  if (!buffer.empty())
     string_list->Add(buffer);
 
   return string_list;

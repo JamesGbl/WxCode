@@ -187,7 +187,7 @@ void wxLineShape::FormatText(wxDC& dc, const wxString& s, int i)
 
   region->GetSize(&w, &h);
   // Initialize the size if zero
-  if (((w == 0) || (h == 0)) && (s.Length() > 0))
+  if (((w == 0) || (h == 0)) && !s.empty())
   {
     w = 100; h = 50;
     region->SetSize(w, h);
@@ -2464,7 +2464,7 @@ bool wxLineShape::OnLabelMovePre(wxDC& dc, wxLabelShape* labelShape, double x, d
   labelShape->SetY(y);
 
   // Need to reformat to fit region.
-  if (labelShape->m_shapeRegion->GetText().Length())
+  if (!labelShape->m_shapeRegion->GetText().empty())
   {
 
     wxString s(labelShape->m_shapeRegion->GetText());

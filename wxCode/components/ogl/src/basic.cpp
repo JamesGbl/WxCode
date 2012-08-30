@@ -782,7 +782,7 @@ void wxShape::NameRegions(const wxString& parentName)
   wxString buff;
   for (int i = 0; i < n; i++)
   {
-    if (parentName.Length() > 0)
+    if (!parentName.empty())
       buff << parentName << wxT(".") << i;
     else
       buff << i;
@@ -795,7 +795,7 @@ void wxShape::NameRegions(const wxString& parentName)
   {
     buff.Empty();
     wxShape* child = wxStaticCast(*it, wxShape);
-    if (parentName.Length() > 0)
+    if (!parentName.empty())
       buff << parentName << wxT(".") << j;
     else
       buff << j;
@@ -2110,7 +2110,7 @@ void wxShape::ReadRegions(wxXmlNode*clause)
         m_formatted = string_expr->GetAttribute(wxT("x"), wxEmptyString).ToDouble(&the_x)
                    && string_expr->GetAttribute(wxT("y"), wxEmptyString).ToDouble(&the_y);
 
-        if (the_string.Length())
+        if (!the_string.empty())
         {
           wxShapeTextLine *line = new wxShapeTextLine(the_x, the_y, the_string);
           region->m_formattedText.Append(line);
