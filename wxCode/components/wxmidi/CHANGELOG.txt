@@ -13,7 +13,7 @@ Changes between versions
 wxMidi 1.5  (2011/Dec/02)
     * Portmidi latest version (217) has changed the definition of PmTimestamp
       from 'long' to 'int'. This causes some compilation problems in wxMidi 
-      that has been fixed. Code reviewed to ensure compatibility.
+      that have been fixed. Code reviewed to ensure compatibility.
     * Fixed a couple of compilation errors due to changes introduced by
       wxWidgets 2.8.12
     * Added optional parameter to method wxMidiDatabaseGM::PopulateWithInstruments
