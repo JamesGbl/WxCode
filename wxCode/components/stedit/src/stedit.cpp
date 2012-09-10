@@ -2399,8 +2399,6 @@ bool wxSTEditor::ClearIndicator(int pos, int indic)
 {
     int sty = GetStyleAt(pos);
 
-    printf("CLEAR %d - %x - %x\n", pos, indic, sty); fflush(stdout);
-
     if (STE_HASBIT(sty, indic))
     {
         sty &= (~indic);
