@@ -7,7 +7,7 @@
 
 \mainpage 
 
-<center><em>libxml2 wrappers for wxWidgets<br/>written by Francesco Montorsi (c) 2005 - 2007</em></center>
+<center><em>libxml2 wrappers for wxWidgets<br/>written by Francesco Montorsi (c) 2005 - 2012</em></center>
 
 This is the reference guide for wxXml2 component.
 wxXml2 are C++ wrappers of libxml2 for the wxWidgets cross-platform GUI toolkit.
