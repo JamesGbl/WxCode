@@ -21,6 +21,10 @@ Known problems:
 
 Release History:
 ================
+* next release
+  - Fixed: FindItem() not working on specific column [#3571007 --thanks Robert Majewski]
+  - Fixed: keyboard search not considering items above current one
+
 * treelistctrl_1208.zip
   - Fixed: HitTest() was not working [#3093531 --thanks Yogesh]
   - Fixed: click events now return position (Point) in all cases
