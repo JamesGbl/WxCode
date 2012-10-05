@@ -35,6 +35,7 @@
 // Include wxWidgets' headers
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
+    #include <wx/msw/private.h> // For GetHwndOf()
 #endif
 
 #if defined(__WXMSW__)
@@ -46,7 +47,33 @@
 #include "wx/vidcap/vcapwin.h"
 #include "vcapdlgs.h"
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif //WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
+
+// For MingW some things are not defined... add them
+
+#ifndef AVSTREAMMASTER_AUDIO
+    #define AVSTREAMMASTER_AUDIO            0 /* Audio master (VFW 1.0, 1.1) */
+    #define AVSTREAMMASTER_NONE             1 /* No master */
+#endif //AVSTREAMMASTER_AUDIO
+
+#ifndef IDS_CAP_END
+    #define IDS_CAP_END                 301  /* "Capture End" */
+    #define IDS_CAP_STAT_VIDEOAUDIO     511  /* "Captured %d.%03d sec.  %ld frames (%ld dropped) (%d.%03d fps).  %ld audio bytes (%d,%03d sps)" */
+    #define IDS_CAP_STAT_VIDEOONLY      512  /* "Captured %d.%03d sec.  %ld frames (%ld dropped) (%d.%03d fps)" */
+#endif //IDS_CAP_END
+
+#ifndef VHDR_DONE
+    /* dwFlags field of VIDEOHDR */
+    #define VHDR_DONE       0x00000001  /* Done bit */
+    #define VHDR_PREPARED   0x00000002  /* Set if this header has been prepared */
+    #define VHDR_INQUEUE    0x00000004  /* Reserved for driver */
+    #define VHDR_KEYFRAME   0x00000008  /* Key Frame */
+    #define VHDR_VALID      0x0000000F  /* valid flags */     /* ;Internal */
+#endif //VHDR_DONE
 
 //----------------------------------------------------------------------------
 // wxVideoCaptureWindow #defines and globals
@@ -1855,7 +1882,8 @@ bool wxVideoCaptureWindowVFW::VFW_DDBtoDIB(LPVIDEOHDR lpVHdr)
         // get a handle to an appropriate video (de)compressor
         if (m_hic_compressor) ICClose(m_hic_compressor);
         // first param of ICLocate is ICTYPE_VIDEO or ('VIDC' in docs)
-        m_hic_compressor = ICLocate(ICTYPE_VIDEO, NULL,
+        m_hic_compressor = ICLocate(ICTYPE_VIDEO, 
+                                    0,
                                     (LPBITMAPINFOHEADER)m_lpBmpInfo,
                                     (LPBITMAPINFOHEADER)m_lpBmpInfo24bpp,
                                     ICMODE_DECOMPRESS );
