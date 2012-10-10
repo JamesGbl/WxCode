@@ -35,11 +35,11 @@
 // Include wxWidgets' headers
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
-    #include <wx/msw/private.h> // For GetHwndOf()
 #endif
 
 #if defined(__WXMSW__)
 
+#include <wx/msw/private.h> // For GetHwndOf()
 #include <wx/clipbrd.h>
 #include <wx/file.h>
 #include <wx/numdlg.h>
