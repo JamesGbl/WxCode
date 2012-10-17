@@ -120,10 +120,10 @@ install(TARGETS wxSheetLib
 
 install(EXPORT wxSheet_export
         DESTINATION share/wxsheet/
-        FILE wxSheet-config.cmake)
+        FILE wxSheetConfig.cmake)
 
 export( TARGETS wxSheetLib
-        FILE "${CMAKE_BINARY_DIR}/build/wxSheet-config.cmake")
+        FILE "${CMAKE_BINARY_DIR}/build/wxSheetConfig.cmake")
 
 install(FILES
         ${wxSheet_ROOT_DIR}/docs/ChangeLog.txt

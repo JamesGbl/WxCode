@@ -183,9 +183,10 @@ bool wxStEditApp::OnCmdLineParsed(wxCmdLineParser& parser)
         }
 
         // use the specified config file, if it's still set
-        if ( configFile.Length() )
+        if ( !configFile.IsEmpty() )
         {
-            wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, wxT("wxWidgets"),
+            wxFileConfig *config = new wxFileConfig(STE_APPDISPLAYNAME, 
+                                                    wxT("wxWidgets"),
                                                     configFile, wxEmptyString,
                                                     wxCONFIG_USE_RELATIVE_PATH);
             wxConfigBase::Set((wxConfigBase*)config);
@@ -260,7 +261,7 @@ wxSTEditorFrame* wxStEditApp::CreateMainFrame()
     frame->Connect(ID_SHOW_README, wxEVT_COMMAND_MENU_SELECTED,
                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 #if (wxVERSION_NUMBER >= 2900) || defined(__WXMSW__)
-    menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), wxString::Format(_("Show command line help")));
+    menu->Append(ID_SHOW_USAGE, _("C&ommand line usage..."), _("Show command line help"));
     frame->Connect(ID_SHOW_USAGE, wxEVT_COMMAND_MENU_SELECTED,
                     wxCommandEventHandler(wxStEditApp::OnMenuEvent), NULL, this);
 #endif
@@ -385,7 +386,7 @@ bool wxStEditApp::OnInit()
     //  it's generally useful, but good for debugging.
     m_steOptions.GetMenuManager()->SetMenuItemType(STE_MENU_EDIT_MENU, STE_MENU_EDIT_READONLY, true);
     m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_PRINT, true);
-    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_FIND_CTRL, true);
+    m_steOptions.GetMenuManager()->SetToolbarToolType(STE_TOOLBAR_EDIT_SEARCH_CTRL, true);
     m_steOptions.SetNotebookOption(STN_ALPHABETICAL_TABS, false); // Ctrl+N -> append tabs to the right always
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorEntry(wxACCEL_NORMAL, WXK_HELP, ID_SHOW_HELP)); // adding 'custom' accelerator
     m_steOptions.GetMenuManager()->GetAcceleratorArray()->Add(wxAcceleratorHelper::GetStockAccelerator(wxID_ABOUT)); // adding 'custom' accelerator

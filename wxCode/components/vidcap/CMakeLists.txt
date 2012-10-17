@@ -115,10 +115,10 @@ install(TARGETS wxVidCapLib
 
 install(EXPORT wxVidCap_export
         DESTINATION share/wxvidcap/
-        FILE wxVidCap-config.cmake)
+        FILE wxVidCapConfig.cmake)
 
 export( TARGETS wxVidCapLib
-        FILE "${CMAKE_BINARY_DIR}/build/wxVidCap-config.cmake")
+        FILE "${CMAKE_BINARY_DIR}/build/wxVidCapConfig.cmake")
 
 install(FILES
         ${wxVidCap_ROOT_DIR}/docs/README.txt

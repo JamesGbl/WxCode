@@ -160,10 +160,10 @@ install(TARGETS wxStEditLib
 
 install(EXPORT wxStEdit_export
         DESTINATION share/wxstedit/
-        FILE wxStEdit-config.cmake)
+        FILE wxStEditConfig.cmake)
 
 export( TARGETS wxStEditLib
-        FILE "${CMAKE_BINARY_DIR}/build/wxStEdit-config.cmake")
+        FILE "${CMAKE_BINARY_DIR}/build/wxStEditConfig.cmake")
 
 install(FILES
         ${wxStEdit_ROOT_DIR}/docs/ChangeLog.txt

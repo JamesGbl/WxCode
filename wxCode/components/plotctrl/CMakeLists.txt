@@ -188,10 +188,10 @@ install(TARGETS wxPlotCtrlLib
 
 #install(EXPORT wxPlotCtrl_export
 #        DESTINATION share/wxplotctrl/
-#        FILE wxPlotCtrl-config.cmake)
+#        FILE wxPlotCtrlConfig.cmake)
 
 export( TARGETS wxPlotCtrlLib wxThingsLib
-        FILE "${CMAKE_BINARY_DIR}/build/wxPlotCtrl-config.cmake")
+        FILE "${CMAKE_BINARY_DIR}/build/wxPlotCtrlConfig.cmake")
 
 install(FILES
     ${wxPlotCtrl_ROOT_DIR}/docs/changelog.txt
