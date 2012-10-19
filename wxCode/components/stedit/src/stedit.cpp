@@ -3297,7 +3297,7 @@ bool wxSTEditor::HandleMenuEvent(wxCommandEvent& event)
             else if (event.GetEventType() == wxEVT_COMMAND_SEARCHCTRL_SEARCH_BTN)
             {
                 // popup menu is shown
-                return true;
+                //return true;
             }
 
             wxString findString(event.GetString());
