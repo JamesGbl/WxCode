@@ -127,9 +127,11 @@ public:
     //void  SetFindString(const wxString& str) { m_FindWhat = str; }
     //void  SetReplaceString(const wxString& str) { m_ReplaceWith = str; }
 
-#if !wxCHECK_VERSION(2,9,0)
+#if !wxCHECK_VERSION(2,9,5)
+    // Add the const version of these
     const wxString& GetFindString() const { return ((wxFindReplaceData*)this)->GetFindString(); }
-#endif //!wxCHECK_VERSION(2,9,0)
+    const wxString& GetReplaceString() const { return ((wxFindReplaceData*)this)->GetReplaceString(); }
+#endif //!wxCHECK_VERSION(2,9,5)
 
     bool HasFlag(int flag) const { return (GetFlags() & flag) != 0; }
 
