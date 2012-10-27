@@ -1263,7 +1263,7 @@ void wxSTEditorNotebook::OnFindDialog(wxFindDialogEvent &event)
     }
     else if (eventType == wxEVT_COMMAND_FIND_REPLACE)
     {
-        if (!editor->GetFindReplaceData()->StringCmp(findString, editor->GetSelectedText(), flags))
+        if (!editor->SelectionIsFindString(findString, flags))
         {
             wxBell();
             return;
