@@ -80,6 +80,7 @@ csApp::~csApp()
 // Initialise this in OnInit, not statically
 bool csApp::OnInit(void)
 {
+    //CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "program");
     SetAppName(wxT("oglstudio"));
     SetAppDisplayName(wxT("OGL Studio"));
     wxFileSystem::AddHandler(new wxZipFSHandler());

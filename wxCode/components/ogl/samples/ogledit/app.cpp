@@ -38,7 +38,8 @@ MyApp::~MyApp(void)
 // main frame
 bool MyApp::OnInit(void)
 {
-   ::wxOGLInitialize();
+    // CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "program");
+    ::wxOGLInitialize();
 
     SetAppName(wxT("ogledit"));
     SetAppDisplayName(wxT("OGLEdit Demo"));

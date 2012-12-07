@@ -75,7 +75,7 @@ wxMetaRecord::~wxMetaRecord(void)
   if (stringParam) delete[] stringParam;
 }
 
-wxXMetaFile::wxXMetaFile(const wxChar *file)
+wxXMetaFile::wxXMetaFile(const wxFileName& fileName)
 {
   ok = false;
   top = 0.0;
@@ -83,8 +83,8 @@ wxXMetaFile::wxXMetaFile(const wxChar *file)
   left = 0.0;
   right = 0.0;
 
-  if (file)
-    ok = ReadFile(file);
+  if (fileName.IsOk())
+    ok = ReadFile(fileName);
 }
 
 /*
@@ -139,11 +139,11 @@ int AddMetaRecordHandle(wxMetaRecord *record)
   return (HandleTableSize - 1);
 }
 
-bool wxXMetaFile::ReadFile(const wxChar *file)
+bool wxXMetaFile::ReadFile(const wxFileName& fileName)
 {
   HandleTableSize = 0;
 
-  FILE *handle = wxFopen(file, wxT("rb"));
+  FILE *handle = wxFopen(fileName.GetFullPath(), wxT("rb"));
   if (!handle) return false;
 
   // Read placeable metafile header, if any

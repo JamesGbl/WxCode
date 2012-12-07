@@ -402,7 +402,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
     {
       // FORCE NEW LINE
       if (!buffer.empty())
-        string_list->Add(buffer);
+        string_list->Add(buffer.wx_str());
 
       buffer.Empty();
     }
@@ -419,7 +419,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
       {
         // Deal with first word being wider than box
         if (!oldBuffer.empty())
-          string_list->Add(oldBuffer);
+          string_list->Add(oldBuffer.wx_str());
 
         buffer.Empty();
         buffer += s;
@@ -427,7 +427,7 @@ wxStringList *oglFormatText(wxDC& dc, const wxString& text, double width, double
     }
   }
   if (!buffer.empty())
-    string_list->Add(buffer);
+    string_list->Add(buffer.wx_str());
 
   return string_list;
 }

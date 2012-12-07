@@ -198,7 +198,7 @@ void wxLineShape::FormatText(wxDC& dc, const wxString& s, int i)
        it != string_list->end();
        it++)
   {
-    const wxChar *s = *it;
+    wxString s = *it;
     wxShapeTextLine *line = new wxShapeTextLine(0.0, 0.0, s);
     region->GetFormattedText().Append((wxObject *)line);
   }

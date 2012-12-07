@@ -110,7 +110,7 @@ bool csApp::CreatePalette(wxFrame *parent)
   palette->AddCheckTool(PALETTE_ARROW, wxEmptyString, PaletteArrow, wxNullBitmap, _("Pointer"));
   palette->AddCheckTool(PALETTE_TEXT_TOOL, wxEmptyString, TextTool, wxNullBitmap, _("Text"));
 
-  wxChar const * * symbols = new wxChar const *[20];
+  wxString* symbols = new wxString[20];
   int noSymbols = 0;
 
   symbols[noSymbols] = _("Wide Rectangle");

@@ -462,7 +462,7 @@ wxOGLConstraint *wxCompositeShape::AddConstraint(int type, wxShape *constraining
 wxOGLConstraint *wxCompositeShape::FindConstraint(long cId, wxCompositeShape **actualComposite)
 {
   wxObjectList::iterator it;
-  
+
   for (it = m_constraints.begin();
        it != m_constraints.end();
        it++)

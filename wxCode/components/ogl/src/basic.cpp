@@ -580,7 +580,7 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
        it != stringList->end();
        it++)
   {
-    const wxChar *s = (const wxChar *)*it;
+    wxString s = *it;
     wxShapeTextLine* line = new wxShapeTextLine(0.0, 0.0, s);
     region->GetFormattedText().Append((wxObject*)line);
   }
@@ -834,7 +834,7 @@ void wxShape::FindRegionNames(wxStringList& list)
   for (int i = 0; i < n; i++)
   {
     wxString name(GetRegionName(i));
-    list.Add(name);
+    list.Add(name.wx_str());
   }
 
   for (wxObjectList::iterator it = m_children.begin();

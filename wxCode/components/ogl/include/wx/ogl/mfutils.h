@@ -15,6 +15,7 @@
 
 
 #include <wx/metafile.h>
+#include <wx/filename.h>
 
 #ifndef GetRValue
 #define GetRValue(rgb) ((unsigned char)(rgb))
@@ -398,7 +399,7 @@ class WXDLLIMPEXP_OGL wxXMetaFile: public wxObject
   wxList metaRecords;
   wxList gdiObjects; // List of wxMetaRecord objects created with Create...,
                      // referenced by position in list by SelectObject
-  wxXMetaFile(const wxChar* file = NULL);
+  wxXMetaFile(const wxFileName& file = wxFileName());
   virtual ~wxXMetaFile(void);
 
   // After this is called, the metafile cannot be used for anything
@@ -407,7 +408,7 @@ class WXDLLIMPEXP_OGL wxXMetaFile: public wxObject
 
   bool Play(wxDC*);
   inline bool IsOk(void) const { return ok; }
-  bool ReadFile(const wxChar *file);
+  bool ReadFile(const wxFileName&);
 };
 
 #endif
