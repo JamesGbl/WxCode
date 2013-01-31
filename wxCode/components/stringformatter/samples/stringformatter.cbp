@@ -3,24 +3,28 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="stringformatter" />
-		<Option execution_dir="/home/nathan/Source/stringformatter_/" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/stringformatter" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="../lib/libstringformatterd.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/stringformatter" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -31,7 +35,17 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="`/usr/local/bin/wx-config --cflags`" />
+			<Add directory="../include" />
 		</Compiler>
+		<Linker>
+			<Add option="`/usr/local/bin/wx-config --libs`" />
+			<Add directory="../lib" />
+		</Linker>
+		<Unit filename="stringformatterapp.cpp" />
+		<Unit filename="stringformatterapp.h" />
+		<Unit filename="stringformatterframe.cpp" />
+		<Unit filename="stringformatterframe.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
