@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
+  // Author: Nathan Shaffer
+  // Creation date: 30/january/2013
   // RCS-ID: $Id: index.php 505 2007-03-31 10:31:46Z frm $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "wxStringFormatter";
+      $subdir = "wxStringFormatter";
       require("compwebsite.inc.php");
   ?>
 
@@ -43,7 +43,7 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+    <?php writeScreenshotLink("", ""); ?>
   </div>
 
 
@@ -53,15 +53,31 @@
        docs, bugs & feature requests... -->
   <br/><?php write_h1("Usage sample"); ?>
   <?php writeSnippet('
-// sample CPP snippet which shows how to use this component:
-myComp *newcomp = new myComp();
-newcomp->SetAAAA("aaa");
-newcomp->SetBBBB("bbb");
+//wxFormatFunction create new inherited classes of wxFormatFunction to provide custom functionality. ...
+//example:
 
-// inside this section we can use any character we want except
-// for the single quote char: if you need to use it you should
-// escape it in this way: \'
-newcomp->Show();
+	class expandNumberFunc : public wxFormatFunction
+	{
+	public:
+		expandNumberFunc();
+		~expandNumberFunc();
+		wxString Parse(wxString input)
+		{
+			...
+			change numerals to written numbers
+			...
+		}
+	};
+
+	wxStringFormatter SF;
+	SF.AddFormatFunction("EXPAND", new expandNumberFunc());
+
+	wxString sample = "I have EXPAND(1) apple."
+
+	SF.Parse(sample);
+
+	output = I have one apple.
+
 '); ?>
 
 
