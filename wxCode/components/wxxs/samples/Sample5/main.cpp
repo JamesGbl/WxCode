@@ -121,6 +121,15 @@ int main( int argc, char ** argv )
 		node = node->GetNext();
 	}
 	
+	// alternativelly, all data managed by serializer can be inserted into serializable list
+	SerializableList lst;
+	Serializer2 >> lst;
+	
+	for( SerializableList::iterator it = lst.begin(); it != lst.end(); ++it )
+	{
+		wxPrintf( wxT("Data: %s\n"), ((SerializableObject*)*it)->m_sTextData.c_str() );
+	}
+	
 	// wait at application's termination
 	pause;
 	
