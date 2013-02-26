@@ -1,0 +1,15 @@
+/**
+\page layouts-generator Layouts Generator
+This sample application contains the generating of the two sample reports.
+The first reports demostrating the formatting of the texts to the texts blocks
+and the second shows the simple report with the table broken to the multiple pages.
+\n
+\image html "layouts-generator.png"
+\n
+Printing, preview showing or storing reports to the XML file are also available.
+\n
+\image html "layouts-generator-preview.png"
+\n
+The source codes for this sample are available in the folder: /samples/LayoutGeneratorGUI/
+*/
+    

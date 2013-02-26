@@ -1,0 +1,54 @@
+
+/**
+
+@mainpage
+
+    The wxReportDocument is a cross-platform software library written in C++ programming language based 
+    on wxWidgets which offers a functionality needed for creation of a print reports and forms. The created
+    forms could be printed with librarie's internal printing support based on the wxWidget's printing
+    framework or it can be saved to an output xml file to later use in other applications.\n\n
+        
+    <b>Main features:</b>
+    <ul>
+      <li>Supported page elements:</li>
+      <br><br>
+      <ul>
+        <li>Text
+          <ul>
+            <li>Various possibilities of the text formatting: font, text color, text indent on the line, height of the line.</li>
+            <li>Text could be placed to the multi-lined boxes with specified width and column.</li>
+            <li>Different style of the text formatting is allowed within the one text box.</li>
+            <li>Text values could be dynamically filled form the data objects.</li>
+          </ul>
+        <li>Images
+          <ul>
+            <li>All image formats supported by wxImage class</li>
+          </ul>
+        <li>Tables
+          <ul>
+            <li>Tables could be filled for rows or columns from whole arrays</li>
+            <li>Dimension of table is automatically changed according the sizes of source arrays</li>
+            <li>Automatic page break</li>
+          </ul>
+        <li>Graphic shapes
+          <ul>
+            <li>line
+            <li>rectangle
+            <li>circle
+          </ul>
+      </ul>
+      <br>                
+      <li>Settings of page size, margin, header and footer with elements, page numbering</li>
+      <li>Predefined styles of formatting for all page elements</li>
+      <li>Printing and previewing support</li>
+      <li>Storing and retrieving the report schemas to or from output XML file</li>
+      <li>Prepared file handler class for adding a new output file formats</li>
+    </ul>
+    <br>
+    <b>For understanding how to work with the library there are available some examples:</b>
+      - \subpage layouts-generator "Layouts Generator"
+      - \subpage table-demo "Table Demo"
+      - \subpage template-viewer "Template Viewer"        
+
+*/
+

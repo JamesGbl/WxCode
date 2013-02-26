@@ -1,0 +1,9 @@
+/**
+\page template-viewer Template Viewer
+For a previewing or a printing of the created templates in the XML files a simple
+template viewer is available:
+\n
+\image html "template-viewer.png"
+\n
+The source codes for this sample are available in the folder: /samples/TemplateViewer/
+*/

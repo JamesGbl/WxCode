@@ -1,0 +1,15 @@
+/**
+\page table-demo Table Demo
+In this sample application the table's braking to the multiple pages are demonstrated.
+Columns of the table in this sample are filled from the arrays. You can change the number
+of values in the arrays by moving with the pickers and pressing the button 'Change Count'.
+The output could be printed by pressing the 'Print' button.
+\n
+\image html "table-demo.png"
+\n
+And the output could be looks like this:
+\n
+\image html "table-demo-out.png"
+\n
+The source codes for this sample are available in the folder: /samples/TableDemo/
+*/
