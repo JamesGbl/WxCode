@@ -1,0 +1,120 @@
+<?xml version="1.0" ?>
+
+<!-- RCS-ID: $Id: mycomp.bkl 550 2007-04-22 13:14:49Z frm $ -->
+
+
+<makefile>
+
+    <!-- the following line tells Bakefile that this component uses the wxCode presets
+         (internally wxCode presets use in turn the wxWidgets presets) 
+    -->
+    <include file="presets/wxcode.bkl"/> 
+
+    <!-- sets the name of the folder which contains this component and thus
+         should always be in lowercase, wxCode/component/MYCOMPONENT_NAME 
+    -->
+    <set-comp-name>wxrp</set-comp-name>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Library settings                                                  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- NOTE: you won't need to specify a list of source and headers files
+               for this component: wxcode.bkl (included above) will automatically
+               look into the 'src' and 'include/wx' folders of your component to
+               build such lists and set the COMP_SRC and COMP_HDR variables,
+               which will then be used as sources / headers for the <lib> and <dll>
+               targets below.
+
+               In case however you don't have the sources/headers in those
+               folders, you'll want to 'manually' set the list. E.g. use
+
+                <set var="COMP_SRC">$(fileList('my_src_dir/*.cpp'))</set>
+                <set var="COMP_HDR">$(fileList('my_header_dir/*.h'))</set>
+
+               if you have the sources in wxCode/components/yourcomp/my_src_dir
+               and the headers in wxCode/components/yourcomp/my_header_dir
+
+               This is because the folders you reference are always referred to 
+               the root of your component and must always be relative paths.
+    -->
+
+    <lib id="wxrp_lib" template="wxcode-lib" cond="WX_SHARED=='0'">
+        <!-- here you can use any standard Bakefile tag. E.g. you may want to
+             use <include> tag to add additional compiler include paths.
+             <set var="xslib" scope="global">wxxs_lib</set>
+        -->
+    </lib>
+    <dll id="wxrp_dll" template="wxcode-dll" cond="WX_SHARED=='1'">
+        <!-- Remove the libraries which are not required by your project.
+             Note : the linking order may be important for static objects
+                    to be initialized correctly and even more important for
+                    some linkers like GNU's linker. 
+                    <set var="xslib" scope="global">wxxs_dll</set>
+    	-->        
+
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
+    </dll>
+
+    <!-- This makes the MSVC6 project files much nicer... -->
+    <set var="MSVC6PRJ_MERGED_TARGETS">
+        wxrp=wxrp_lib+wxrp_dll
+    </set>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Sample(s) settings                                                -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- For wxCode samples, don't use a simple <exe> tag but rather the more
+         specific <wxcode-sample> tag: -->
+
+     <!-- <wxcode-sample id="layoutgeneratorgui">
+        <dir>samples/LayoutGeneratorGUI</dir>
+
+        <library>wxrp_lib</library>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> 
+    </wxcode-sample>
+
+    <wxcode-sample id="tabledemo">
+        <dir>samples/TableDemo</dir>
+
+        <library>wxrp_lib</library>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </wxcode-sample>
+
+    <wxcode-sample id="templateviewer">
+        <dir>samples/TemplateViewer</dir>
+
+        <library>wxrp_lib</library>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> 
+    </wxcode-sample> -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Additional utilities                                              -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- Put here one or more of the following tags if you need them:
+
+            <make-tarball/>    => for adding a "tarball" target on your Unix
+                                  makefiles. Very very useful to make clean tarballs
+                                  of your component at release-time.
+
+            <make-zip>         => for adding a "zip" target on your Win makefiles.
+                                  Very very useful  to make clean zip archives
+                                  of your component at release-time.
+
+            <make-docs>        => for adding a "docs" target on your makefiles
+                                  which runs "doxygen" in yourCompFolder/docs
+    -->
+
+</makefile>
