@@ -725,8 +725,10 @@ wxSheet* wxSheet::Clone(wxWindow *parent, wxWindowID id,
                         const wxPoint& pos, const wxSize& size,
                         long style, const wxString& name)
 {
+    wxCHECK_MSG(GetClassInfo()->IsDynamic(), NULL, wxT("wxSheet::Clone() requires derived classed to use DECLARE_DYNAMIC_CLASS()"));
     wxSheet *sheet = (wxSheet*)GetClassInfo()->CreateObject();
-    sheet->Create(parent, id, pos, size, style, name);
+    if (sheet != NULL)
+        sheet->Create(parent, id, pos, size, style, name);
     return sheet;
 }
 
