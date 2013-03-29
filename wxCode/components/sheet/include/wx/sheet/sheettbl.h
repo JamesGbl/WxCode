@@ -40,14 +40,14 @@ public:
     virtual int GetNumberRows();
     virtual int GetNumberCols();
     // determine if row/col/coords is in 0 to GetNumberRows/Cols-1
-    bool ContainsGridRow( int row ) { return (row >= 0) && (row < GetNumberRows()); }
-    bool ContainsGridCol( int col ) { return (col >= 0) && (col < GetNumberCols()); }
-    bool ContainsGridCell(const wxSheetCoords& coords)
+    inline bool ContainsGridRow( int row ) { return (row >= 0) && (row < GetNumberRows()); }
+    inline bool ContainsGridCol( int col ) { return (col >= 0) && (col < GetNumberCols()); }
+    inline bool ContainsGridCell(const wxSheetCoords& coords)
         { return ContainsGridRow(coords.m_row) && ContainsGridCol(coords.m_col); }
     // returns true if the coords are within the row/col label cells
-    bool ContainsRowLabelCell( const wxSheetCoords& coords )
+    inline bool ContainsRowLabelCell( const wxSheetCoords& coords )
         { return (coords.m_col == -1) && ContainsGridRow(coords.m_row); }
-    bool ContainsColLabelCell( const wxSheetCoords& coords )
+    inline bool ContainsColLabelCell( const wxSheetCoords& coords )
         { return (coords.m_row == -1) && ContainsGridCol(coords.m_col); }
 
     // ------------------------------------------------------------------------

@@ -668,7 +668,7 @@ bool wxSheet::Create( wxWindow *parent, wxWindowID id,
 #if wxCHECK_VERSION(2,8,0)
     SetInitialSize(size);
 #else
-	SetBestFittingSize(size);
+    SetBestFittingSize(size);
 #endif // wxCHECK_VERSION(2,9,0)
 
     return true;
@@ -722,7 +722,7 @@ void wxSheet::RefSheet(wxSheet* sheet)
 }
 
 wxSheet* wxSheet::Clone(wxWindow *parent, wxWindowID id,
-						const wxPoint& pos, const wxSize& size,
+                        const wxPoint& pos, const wxSize& size,
                         long style, const wxString& name)
 {
     wxSheet *sheet = (wxSheet*)GetClassInfo()->CreateObject();
@@ -733,12 +733,12 @@ wxSheet* wxSheet::Clone(wxWindow *parent, wxWindowID id,
 bool wxSheet::Enable(bool enable)
 {
     if ( !wxWindow::Enable(enable) )
-  	    return false;
+        return false;
 
-  	// redraw in the new state
-  	Refresh();
+    // redraw in the new state
+    Refresh();
 
-  	return true;
+    return true;
 }
 
 // ------------------------------------------------------------------------
@@ -2980,11 +2980,11 @@ void wxSheet::SetAreaEditable( int cell_type )
     if ( cell_type != GetSheetRefData()->m_editable )
     {
         if (IsCellEditControlCreated())
-		{
-			int edit_cell_type = GetEditControlCoords().GetCellCoordsType();
-			if ((cell_type & edit_cell_type) == 0)
-				DisableCellEditControl(true);
-		}
+        {
+            int edit_cell_type = GetEditControlCoords().GetCellCoordsType();
+            if ((cell_type & edit_cell_type) == 0)
+                DisableCellEditControl(true);
+        }
 
         GetSheetRefData()->m_editable = cell_type;
     }
@@ -5462,7 +5462,7 @@ void wxSheet::ProcessRowLabelMouseEvent( wxMouseEvent& event )
             DisableCellEditControl(true);
 
         if ( ContainsRowLabelCell(coords) &&
-	        (SendEvent(wxEVT_SHEET_LABEL_RIGHT_DOWN, coords, &event) == EVT_SKIPPED))
+            (SendEvent(wxEVT_SHEET_LABEL_RIGHT_DOWN, coords, &event) == EVT_SKIPPED))
         {
             // no default action at the moment
         }
@@ -5473,7 +5473,7 @@ void wxSheet::ProcessRowLabelMouseEvent( wxMouseEvent& event )
             DisableCellEditControl(true);
 
         if ( ContainsRowLabelCell(coords) &&
-	        (SendEvent(wxEVT_SHEET_LABEL_RIGHT_DCLICK, coords, &event) == EVT_SKIPPED))
+            (SendEvent(wxEVT_SHEET_LABEL_RIGHT_DCLICK, coords, &event) == EVT_SKIPPED))
         {
             // no default action at the moment
         }
@@ -5484,7 +5484,7 @@ void wxSheet::ProcessRowLabelMouseEvent( wxMouseEvent& event )
             DisableCellEditControl(true);
 
         if ( ContainsRowLabelCell(coords) &&
-	        (SendEvent(wxEVT_SHEET_LABEL_RIGHT_UP, coords, &event) == EVT_SKIPPED))
+            (SendEvent(wxEVT_SHEET_LABEL_RIGHT_UP, coords, &event) == EVT_SKIPPED))
         {
             // no default action at the moment
         }

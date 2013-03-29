@@ -194,8 +194,8 @@ enum wxSheetCell_Type
     wxSHEET_CELL_COLLABEL	 = 0x04, // A col label cell row == -1 && col >= 0
     wxSHEET_CELL_CORNERLABEL = 0x08, // The corner label row == -1 && col == -1
 
-	wxSHEET_CELL_NONE        = 0x00, // An invalid cell coords
-	wxSHEET_CELL_ANY         = 0x0F  // Any cell
+    wxSHEET_CELL_NONE        = 0x00, // An invalid cell coords
+    wxSHEET_CELL_ANY         = 0x0F  // Any cell
 };
 
 // ----------------------------------------------------------------------------

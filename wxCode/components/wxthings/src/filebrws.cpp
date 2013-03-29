@@ -103,32 +103,34 @@ enum
 int wxFileBrowser::FBStyleToLCStyle(int s) const // wxFileBrowserStyles_Type to wxLC_XXX
 {
     return
-        (s)&wxFILEBROWSER_TREE       ? wxLC_REPORT :
-        (s)&wxFILEBROWSER_LIST       ? wxLC_LIST :
-        (s)&wxFILEBROWSER_DETAILS    ? wxLC_REPORT :
-        (s)&wxFILEBROWSER_SMALL_ICON ? wxLC_SMALL_ICON :
-        (s)&wxFILEBROWSER_LARGE_ICON ? wxLC_ICON :
-        (s)&wxFILEBROWSER_PREVIEW    ? wxLC_ICON : wxLC_REPORT;
+       ((s)&wxFILEBROWSER_SINGLE_SELECTION ? wxLC_SINGLE_SEL  : 0 ) |
+       ((s)&wxFILEBROWSER_RENAME_INPLACE   ? wxLC_EDIT_LABELS : 0 ) |
+       ((s)&wxFILEBROWSER_TREE             ? wxLC_REPORT      :
+        (s)&wxFILEBROWSER_LIST             ? wxLC_LIST        :
+        (s)&wxFILEBROWSER_DETAILS          ? wxLC_REPORT      :
+        (s)&wxFILEBROWSER_SMALL_ICON       ? wxLC_SMALL_ICON  :
+        (s)&wxFILEBROWSER_LARGE_ICON       ? wxLC_ICON        :
+        (s)&wxFILEBROWSER_PREVIEW          ? wxLC_ICON        : wxLC_REPORT);
 }
 int wxFileBrowser::FBStyleToMenuID(int s) const // wxFileBrowserStyles_Type menu id
 {
     return
-        (s)&wxFILEBROWSER_TREE       ? ID_wxFILEBROWSER_VIEW_TREE :
-        (s)&wxFILEBROWSER_LIST       ? ID_wxFILEBROWSER_VIEW_LIST :
-        (s)&wxFILEBROWSER_DETAILS    ? ID_wxFILEBROWSER_VIEW_DETAILS :
+        (s)&wxFILEBROWSER_TREE       ? ID_wxFILEBROWSER_VIEW_TREE       :
+        (s)&wxFILEBROWSER_LIST       ? ID_wxFILEBROWSER_VIEW_LIST       :
+        (s)&wxFILEBROWSER_DETAILS    ? ID_wxFILEBROWSER_VIEW_DETAILS    :
         (s)&wxFILEBROWSER_SMALL_ICON ? ID_wxFILEBROWSER_VIEW_SMALL_ICON :
         (s)&wxFILEBROWSER_LARGE_ICON ? ID_wxFILEBROWSER_VIEW_LARGE_ICON :
-        (s)&wxFILEBROWSER_PREVIEW    ? ID_wxFILEBROWSER_VIEW_PREVIEW : ID_wxFILEBROWSER_VIEW_DETAILS;
+        (s)&wxFILEBROWSER_PREVIEW    ? ID_wxFILEBROWSER_VIEW_PREVIEW    : ID_wxFILEBROWSER_VIEW_DETAILS;
 }
 int wxFileBrowser::MenuIDToFBStyle(int id) const    // menu id to wxFileBrowserStyles_Type
 {
     return
-        (id)==ID_wxFILEBROWSER_VIEW_TREE       ? wxFILEBROWSER_TREE :
-        (id)==ID_wxFILEBROWSER_VIEW_LIST       ? wxFILEBROWSER_LIST :
-        (id)==ID_wxFILEBROWSER_VIEW_DETAILS    ? wxFILEBROWSER_DETAILS :
+        (id)==ID_wxFILEBROWSER_VIEW_TREE       ? wxFILEBROWSER_TREE       :
+        (id)==ID_wxFILEBROWSER_VIEW_LIST       ? wxFILEBROWSER_LIST       :
+        (id)==ID_wxFILEBROWSER_VIEW_DETAILS    ? wxFILEBROWSER_DETAILS    :
         (id)==ID_wxFILEBROWSER_VIEW_SMALL_ICON ? wxFILEBROWSER_SMALL_ICON :
         (id)==ID_wxFILEBROWSER_VIEW_LARGE_ICON ? wxFILEBROWSER_LARGE_ICON :
-        (id)==ID_wxFILEBROWSER_VIEW_PREVIEW    ? wxFILEBROWSER_PREVIEW : wxFILEBROWSER_DETAILS;
+        (id)==ID_wxFILEBROWSER_VIEW_PREVIEW    ? wxFILEBROWSER_PREVIEW    : wxFILEBROWSER_DETAILS;
 }
 
 //============================================================================
@@ -329,7 +331,7 @@ static const char *hidden_xpm_data[] = {
 "                "};
 */
 
-wxBitmap GetBitmapFromIconId(int imageId)
+static wxBitmap GetBitmapFromIconId(int imageId)
 {
     return wxTheFileIconsTable->GetSmallImageList()->GetBitmap(imageId);
 }
@@ -396,7 +398,8 @@ MultilineTextDialog::MultilineTextDialog(wxWindow *parent,
                                          long style,
                                          const wxPoint& pos)
                     :wxTextEntryDialog(parent, message, caption, value,
-                          style|wxTextEntryDialogStyle|wxTE_MULTILINE, pos)
+                                       style|wxTextEntryDialogStyle|wxTE_MULTILINE,
+                                       pos)
 {
     int height = m_textctrl->GetSize().y;
     m_textctrl->SetSize(300, 100);
@@ -426,6 +429,7 @@ public:
         m_textCtrl = NULL;
         Create(parent, winId, fileData, caption, openCommand, style, pos);
     }
+
     bool Create(wxWindow* parent, wxWindowID winId,
                 const wxFileData& fileData,
                 const wxString& caption = wxT("Open With"),
@@ -438,9 +442,10 @@ public:
 protected:
     void OnButton(wxCommandEvent& event);
 
-    wxString m_command;
-    wxFileData m_fileData;
+    wxString    m_command;
+    wxFileData  m_fileData;
     wxTextCtrl *m_textCtrl;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -718,7 +723,8 @@ DEFINE_EVENT_TYPE(wxEVT_FILEBROWSER_DIR_ACTIVATED)
 IMPLEMENT_ABSTRACT_CLASS(wxFileBrowserEvent, wxCommandEvent)
 
 wxFileBrowserEvent::wxFileBrowserEvent(wxEventType commandType,
-                                       wxFileBrowser *fileBrowser, wxWindowID win_id)
+                                       wxFileBrowser *fileBrowser, 
+                                       wxWindowID win_id)
                    :wxCommandEvent(commandType, win_id)
 {
     SetEventObject( fileBrowser );
@@ -776,9 +782,9 @@ BEGIN_EVENT_TABLE(wxFileBrowser, wxControl)
     EVT_MENU      (ID_wxFILEBROWSER_COMBOSETFILTER, wxFileBrowser::OnSetFilter)
 
     // TreeCtrl
-    EVT_TREE_SEL_CHANGED     (wxID_ANY, wxFileBrowser::OnTreeItemSelection)
-    EVT_TREE_ITEM_ACTIVATED  (wxID_ANY, wxFileBrowser::OnTreeItemActivation)
-    EVT_TREE_ITEM_RIGHT_CLICK(wxID_ANY, wxFileBrowser::OnTreeRightClick)
+    EVT_TREE_SEL_CHANGED      (wxID_ANY, wxFileBrowser::OnTreeItemSelection)
+    EVT_TREE_ITEM_ACTIVATED   (wxID_ANY, wxFileBrowser::OnTreeItemActivation)
+    EVT_TREE_ITEM_RIGHT_CLICK (wxID_ANY, wxFileBrowser::OnTreeRightClick)
 
     // ListCtrl
     EVT_LIST_ITEM_ACTIVATED   (wxID_ANY, wxFileBrowser::OnListItemActivated)
@@ -792,8 +798,8 @@ END_EVENT_TABLE()
 void wxFileBrowser::Init()
 {
     m_ignore_tree_event = true;  // turned off after Create
-    m_init_filters = 0;
-    m_browser_style = wxFILEBROWSER_LIST;
+    m_init_filters      = 0;
+    m_browser_style     = wxFILEBROWSER_LIST;
 
     m_path_history_index = 0;
 
@@ -811,7 +817,7 @@ void wxFileBrowser::Init()
     m_viewMenu      = NULL;
 
     m_filterComboSelection = 0;
-    m_pathComboSelection = 0;
+    m_pathComboSelection   = 0;
 
     m_show_hidden = false;
 }
@@ -860,8 +866,8 @@ bool wxFileBrowser::Create( wxWindow *parent, const wxWindowID id,
     m_treeMenu->Append(ID_wxFILEBROWSER_TREE_MENU_PROPERITES, wxT("P&roperties"));
 
     wxMenu *optionsMenu = new wxMenu(wxEmptyString);
-    optionsMenu->AppendCheckItem(ID_wxFILEBROWSER_SHOW_HIDDEN, wxT("Show Hidden Files"));
-    optionsMenu->AppendCheckItem(ID_wxFILEBROWSER_SHOW_FOLDERS, wxT("Show Folders"));
+    optionsMenu->AppendCheckItem(ID_wxFILEBROWSER_SHOW_HIDDEN,    wxT("Show Hidden Files"));
+    optionsMenu->AppendCheckItem(ID_wxFILEBROWSER_SHOW_FOLDERS,   wxT("Show Folders"));
     optionsMenu->AppendCheckItem(ID_wxFILEBROWSER_SPLIT_VERTICAL, wxT("Split Vertically"));
     m_listMenu->Append(ID_wxFILEBROWSER_LIST_MENU_OPTIONS, wxT("Optio&ns"), optionsMenu);
 
@@ -979,7 +985,7 @@ bool wxFileBrowser::Create( wxWindow *parent, const wxWindowID id,
 
     // ------------------------------------------------------------------------
     // Create the splitter window and children
-    int dirCtrlStyle = style & wxFILEBROWSER_TREE ? wxDIRCTRL_DIR_ONLY : 0;
+    int dirCtrlStyle = (style & wxFILEBROWSER_TREE) ? wxDIRCTRL_DIR_ONLY : 0;
     m_splitterWin = new wxSplitterWindow(this, wxID_ANY,
                                          wxDefaultPosition, wxDefaultSize,
                                          wxSP_BORDER|wxSP_3D|wxCLIP_CHILDREN);
@@ -994,13 +1000,16 @@ bool wxFileBrowser::Create( wxWindow *parent, const wxWindowID id,
 
 #if wxCHECK_VERSION(2, 9, 0)
     m_fileCtrl = new wxFileListCtrl(m_splitterWin, wxID_ANY, GetWild(), false,
-                                wxDefaultPosition, wxSize(50,50),
-                                wxNO_BORDER|wxLC_SINGLE_SEL|FBStyleToLCStyle(style));
+                                    wxDefaultPosition, wxSize(50,50),
+                                    wxNO_BORDER|wxLC_EDIT_LABELS|FBStyleToLCStyle(style));
 #else
     m_fileCtrl = new wxFileCtrl(m_splitterWin, wxID_ANY, GetWild(), false,
                                 wxDefaultPosition, wxSize(50,50),
-                                wxNO_BORDER|wxLC_SINGLE_SEL|FBStyleToLCStyle(style));
+                                wxNO_BORDER|FBStyleToLCStyle(style));
 #endif // wxCHECK_VERSION(2, 9, 0)
+
+    m_fileCtrl->Connect(wxID_ANY, wxID_ANY, wxEVT_COMMAND_LIST_END_LABEL_EDIT, 
+                        wxListEventHandler(wxFileBrowser::OnListEndLabelEdit));
 
     m_fileCtrl->GoToDir(m_path);
     m_fileCtrl->Show(true);
@@ -1020,14 +1029,6 @@ bool wxFileBrowser::Create( wxWindow *parent, const wxWindowID id,
 wxFileBrowser::~wxFileBrowser()
 {
     m_ignore_tree_event = true;
-
-    // delete all the attached data
-    int n, count = m_filterCombo->GetCount();
-    for ( n = 0; n < count; n++ )
-    {
-        wxString *data = (wxString*)m_filterCombo->GetClientData(n);
-        delete data;
-    }
 
     delete m_listMenu;
     delete m_treeMenu;
@@ -1074,8 +1075,6 @@ void wxFileBrowser::OnSize( wxSizeEvent &event )
         if (GTK_WIDGET_VISIBLE(widget))
             gtk_widget_queue_resize(widget);
     }
-#else
-    void GtkToolbarResizeWindow(wxWindow* , const wxSize& ) {}
 #endif //__WXGTK__
 
 void wxFileBrowser::DoSize()
@@ -1440,9 +1439,9 @@ void wxFileBrowser::UpdateMenu( wxMenu* menu )
 
     // Update options menu ---------------------------
 
-    CheckMenuItem(menu,  ID_wxFILEBROWSER_SHOW_HIDDEN, GetShowHidden());
-    EnableMenuItem(menu, ID_wxFILEBROWSER_SHOW_FOLDERS, !HasBrowserStyle(wxFILEBROWSER_TREE));
-    CheckMenuItem(menu,  ID_wxFILEBROWSER_SHOW_FOLDERS, GetShowFolders());
+    CheckMenuItem(menu,  ID_wxFILEBROWSER_SHOW_HIDDEN,    GetShowHidden());
+    EnableMenuItem(menu, ID_wxFILEBROWSER_SHOW_FOLDERS,  !HasBrowserStyle(wxFILEBROWSER_TREE));
+    CheckMenuItem(menu,  ID_wxFILEBROWSER_SHOW_FOLDERS,   GetShowFolders());
     CheckMenuItem(menu,  ID_wxFILEBROWSER_SPLIT_VERTICAL, GetSplitVertical());
 
     // Update go items ---------------------------
@@ -1479,7 +1478,7 @@ void wxFileBrowser::UpdateMenu( wxMenu* menu )
     if (GetPath(false).IsEmpty()) is_top = true;
 #endif //__UNIX__
 
-    EnableMenuItem(menu, wxID_OPEN, (is_file || is_dir) && can_read);
+    EnableMenuItem(menu, wxID_OPEN,                            (is_file || is_dir) && can_read);
     EnableMenuItem(menu, ID_wxFILEBROWSER_LIST_MENU_VIEW_FILE, is_file && can_read);
     EnableMenuItem(menu, ID_wxFILEBROWSER_LIST_MENU_OPEN_WITH, is_file && can_read);
 
@@ -1586,11 +1585,12 @@ wxString wxFileBrowser::GetPath(bool add_wxFILE_SEP_PATH) const
     return AddDelete_wxFILE_SEP_PATH(m_path, add_wxFILE_SEP_PATH);
 }
 
-bool wxFileBrowser::SetPath(const wxString &dirname)
+bool wxFileBrowser::SetPath(const wxString &dirname, bool refresh)
 {
-    wxString path = dirname;
+    wxString path(dirname);
+    wxString lastPath(m_path);
 
-    if (dirname.IsEmpty())
+    if (dirname.IsEmpty() || (dirname == "\\"))
     {
 #ifdef __UNIX__
         path = wxFILE_SEP_PATH;
@@ -1603,24 +1603,28 @@ bool wxFileBrowser::SetPath(const wxString &dirname)
     }
 
     m_path = AddDelete_wxFILE_SEP_PATH(path, true);
+    path   = AddDelete_wxFILE_SEP_PATH(path, true);
 
     m_ignore_tree_event = true;
-    m_dirCtrl->SetPath(GetPath(false)); // doesn't like trailing wxFILE_SEP_PATH - segfault
+    if (refresh || (m_dirCtrl->GetPath() != GetPath(false)))
+        m_dirCtrl->SetPath(GetPath(false)); // dirctrl doesn't like trailing wxFILE_SEP_PATH - segfault
     m_ignore_tree_event = false;
 
     if (!HasBrowserStyle(wxFILEBROWSER_TREE)) // don't care otherwise
     {
 #if defined(__WINDOWS__)
-        if (dirname.IsEmpty())
+        if (dirname.IsEmpty() || (dirname == wxT("\\")))
         {
-            wxFileName filename(m_path);
-            m_fileCtrl->GoToDir(filename.GetVolume());
+            wxFileName filename(lastPath);
+            wxString volume(filename.GetVolume());
+            m_fileCtrl->GoToDir(volume + wxFileName::GetVolumeSeparator());
             m_fileCtrl->GoToParentDir();
         }
-        else
+        else if (refresh || (m_fileCtrl->GetDir() != m_path))
             m_fileCtrl->GoToDir(m_path);
 #else
-        m_fileCtrl->GoToDir(m_path);
+        if (refresh || (m_fileCtrl->GetDir() != m_path))
+            m_fileCtrl->GoToDir(m_path);
 #endif
     }
 
@@ -1633,14 +1637,21 @@ bool wxFileBrowser::SetPath(const wxString &dirname)
 
 bool wxFileBrowser::CanGoUpDir() const
 {
+#ifdef __WXMSW__
+    wxString path = GetPath(false); //.BeforeLast(wxFILE_SEP_PATH);
+    return !path.IsEmpty(); //&& (wxDirExists(path)
+#else
     wxString path = GetPath(false).BeforeLast(wxFILE_SEP_PATH);
     return !path.IsEmpty() && wxDirExists(path);
+#endif
 }
 bool wxFileBrowser::GoUpDir()
 {
-    wxString path = GetPath(false).BeforeLast(wxFILE_SEP_PATH);
-    if (!path.IsEmpty() && wxDirExists(path))
+    if (CanGoUpDir())
+    {
+        wxString path = GetPath(false).BeforeLast(wxFILE_SEP_PATH);
         return SetPath(path);
+    }
 
     return false;
 }
@@ -1763,6 +1774,8 @@ void wxFileBrowser::OnTreeItemActivation(wxTreeEvent &event)
     m_path = path;
     if (m_dirCtrl->GetFilePath().IsEmpty())
     {
+        event.Skip(true); // let the dirctrl expand the directory
+
         fbEvent.SetEventType(wxEVT_FILEBROWSER_DIR_ACTIVATED);
 
         if (!HasBrowserStyle(wxFILEBROWSER_TREE))
@@ -1823,6 +1836,18 @@ void wxFileBrowser::OnListRightClick(wxListEvent &event)
     m_fileCtrl->PopupMenu(m_listMenu, event.GetPoint());
 }
 
+void wxFileBrowser::OnListEndLabelEdit(wxListEvent& event)
+{
+    event.Skip(true);
+
+    wxFileData *fd = (wxFileData*)event.m_item.m_data;
+    wxASSERT( fd );
+
+    // The wxFileListCtrl's handler gives a error dialog if you don't change the filename.
+    if (event.GetLabel() == fd->GetFileName())
+        event.Skip(false);
+}
+
 wxFileData* wxFileBrowser::GetFocusedListItem() const
 {
     long item = m_fileCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
@@ -1869,13 +1894,13 @@ wxArrayFileData wxFileBrowser::GetSelectedListFileData() const
 
 wxFileData wxFileBrowser::CreateFileData(const wxFileName& fileName) const
 {
-    if (fileName.DirExists())
+    if (fileName.FileExists())
+    {
+        return wxFileData(fileName.GetFullPath(), fileName.GetFullName(), wxFileData::is_file, wxFileIconsTable::file);
+    }
+    else if (fileName.DirExists())
     {
         return wxFileData(fileName.GetPath(), fileName.GetName(), wxFileData::is_dir, wxFileIconsTable::folder);
-    }
-    else if (fileName.FileExists())
-    {
-        return wxFileData(fileName.GetPath(), fileName.GetName(), wxFileData::is_file, wxFileIconsTable::file);
     }
 #if defined(__WINDOWS__) || defined(__DOS__) || defined(__WXMAC__) || defined(__OS2__)
     else
@@ -2167,7 +2192,7 @@ void wxFileBrowser::OnListMenu(wxCommandEvent &event)
         case ID_wxFILEBROWSER_LIST_MENU_NEW_FOLDER :
         {
             m_fileCtrl->MakeDir();
-            SetPath(GetPath(true));
+            //SetPath(GetPath(true));
             break;
         }
         case wxID_CUT :
@@ -2264,6 +2289,8 @@ void wxFileBrowser::OnListMenu(wxCommandEvent &event)
                 }
 
                 textCtrl->AppendText(s);
+                textCtrl->SetInsertionPoint(0);
+                textCtrl->ShowPosition(0);
                 frame->Show(true);
 
 /*
@@ -2364,9 +2391,15 @@ void wxFileBrowser::OnSetPath( wxCommandEvent &event )
     m_pathComboSelection = m_pathCombo->GetSelection();
 }
 
-bool wxFileBrowser::OpenFilePath(const wxString &filePath)
+bool wxFileBrowser::OpenFilePath(const wxString &filePath, bool send_event)
 {
     wxString path = filePath;
+
+#ifdef __WXMSW__
+    // This is how you can get to the root to see drive letters
+    if (path.IsEmpty())
+        SetPath("\\");
+#endif // __WXMSW__
 
     if (path.IsEmpty() || (path.Find(wxT('|')) != wxNOT_FOUND))
         return false;
@@ -2407,8 +2440,9 @@ bool wxFileBrowser::OpenFilePath(const wxString &filePath)
 
     // Use static DirExists() since member functions doesn't use GetFullPath(),
     // but only the GetPath() part of the filename.
-    if (filename.DirExists())
+    if (wxFileName::DirExists(filename.GetFullPath()))
     {
+        // the input was a dir, not a file
         SetPath(filename.GetFullPath());
         return true;
     }
@@ -2422,19 +2456,241 @@ bool wxFileBrowser::OpenFilePath(const wxString &filePath)
     {
         //SetPath(filename.GetPath());
 
-        long item = m_fileCtrl->FindItem(-1, filename.GetName(), false);
+        long item = m_fileCtrl->FindItem(-1, filename.GetFullName(), false);
         if (item >= 0)
         {
+            // Deselect everything else
+            int n, count = m_fileCtrl->GetItemCount();
+            for (n = 0; n < count; ++n)
+                m_fileCtrl->SetItemState(n, 0, wxLIST_STATE_SELECTED);
+
             m_fileCtrl->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
             m_fileCtrl->EnsureVisible( item );
         }
+        else
+            return false;
 
-        wxFileBrowserEvent fbEvent(wxEVT_FILEBROWSER_FILE_ACTIVATED, this, GetId());
-        fbEvent.SetFilePath(path);
-        DoSendEvent(fbEvent);
+        if (send_event)
+        {
+            wxFileBrowserEvent fbEvent(wxEVT_FILEBROWSER_FILE_ACTIVATED, this, GetId());
+            fbEvent.SetFilePath(path);
+            DoSendEvent(fbEvent);
+        }
     }
 
     return true;
+}
+
+wxString wxFileBrowser::GetCurrentFile() const
+{
+    wxFileName fileName;
+
+    if (HasBrowserStyle(wxFILEBROWSER_TREE))
+    {
+        // Can return dir or file, we just want file
+        fileName = m_dirCtrl->GetPath();
+    }
+    else
+    {
+        wxListItem item;
+        item.m_itemId = m_fileCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if (item.m_itemId >= 0)
+        {
+            item.SetMask(wxLIST_MASK_TEXT);
+            m_fileCtrl->GetItem(item);
+            fileName.Assign(m_fileCtrl->GetDir(), item.m_text);
+        }
+    }
+
+    if (!fileName.FileExists())
+         return wxEmptyString;
+
+    return fileName.GetFullPath();
+}
+
+wxString wxFileBrowser::GetFirstFile() const
+{
+    if (HasBrowserStyle(wxFILEBROWSER_TREE))
+    {
+        wxTreeItemId selectedId = m_dirCtrl->GetTreeCtrl()->GetSelection();
+        if (!selectedId.IsOk())
+            return wxEmptyString;
+
+        wxTreeItemId id = m_dirCtrl->GetTreeCtrl()->GetItemParent(selectedId);
+        wxTreeItemIdValue cookie;
+        id = m_dirCtrl->GetTreeCtrl()->GetFirstChild(id, cookie);
+        while (id.IsOk())
+        {
+            // skip over directories
+            if (m_dirCtrl->GetTreeCtrl()->ItemHasChildren(id))
+            {
+                id = m_dirCtrl->GetTreeCtrl()->GetNextSibling(id);
+                continue;
+            }
+
+            wxDirItemData* data = (wxDirItemData*) m_dirCtrl->GetTreeCtrl()->GetItemData(id);
+            if (data != NULL)
+                return data->m_path;
+            else
+                return wxEmptyString; // problem
+        }
+
+        return wxEmptyString;
+    }
+
+    // else use m_fileCtrl --------------------------------------------------
+
+    int n, count = m_fileCtrl->GetItemCount();
+
+    for (n = 0; n < count; ++n)
+    {
+        wxFileData* fd = (wxFileData*)m_fileCtrl->GetItemData(n);
+
+        if ((fd != NULL) && fd->IsFile())
+        {
+            return fd->GetFilePath();
+        }
+    }
+
+    return wxEmptyString;
+}
+
+wxString wxFileBrowser::GetPreviousFile() const
+{
+    if (HasBrowserStyle(wxFILEBROWSER_TREE))
+    {
+        wxTreeItemId selectedId = m_dirCtrl->GetTreeCtrl()->GetSelection();
+        if (!selectedId.IsOk())
+            return wxEmptyString;
+
+        wxTreeItemId id = m_dirCtrl->GetTreeCtrl()->GetPrevSibling(selectedId);
+        while (id.IsOk())
+        {
+            // skip over directories
+            if (m_dirCtrl->GetTreeCtrl()->ItemHasChildren(id))
+            {
+                id = m_dirCtrl->GetTreeCtrl()->GetPrevSibling(id);
+                continue;
+            }
+
+            wxDirItemData* data = (wxDirItemData*) m_dirCtrl->GetTreeCtrl()->GetItemData(id);
+            if (data != NULL)
+                return data->m_path;
+            else
+                return wxEmptyString; // problem
+        }
+
+        return wxEmptyString;
+    }
+
+    // else use m_fileCtrl --------------------------------------------------
+
+    long n, count = m_fileCtrl->GetItemCount();
+    long item     = m_fileCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+
+    for (n = item-1; n >= 0; --n)
+    {
+        wxFileData* fd = (wxFileData*)m_fileCtrl->GetItemData(n);
+
+        if ((fd != NULL) && fd->IsFile())
+        {
+            return fd->GetFilePath();
+        }
+    }
+
+    return wxEmptyString;
+}
+
+wxString wxFileBrowser::GetNextFile() const
+{
+    if (HasBrowserStyle(wxFILEBROWSER_TREE))
+    {
+        wxTreeItemId selectedId = m_dirCtrl->GetTreeCtrl()->GetSelection();
+        if (!selectedId.IsOk())
+            return wxEmptyString;
+
+        wxTreeItemId id = m_dirCtrl->GetTreeCtrl()->GetNextSibling(selectedId);
+        while (id.IsOk())
+        {
+            // skip over directories
+            if (m_dirCtrl->GetTreeCtrl()->ItemHasChildren(id))
+            {
+                id = m_dirCtrl->GetTreeCtrl()->GetNextSibling(id);
+                continue;
+            }
+
+            wxDirItemData* data = (wxDirItemData*) m_dirCtrl->GetTreeCtrl()->GetItemData(id);
+            if (data != NULL)
+                return data->m_path;
+            else
+                return wxEmptyString; // problem
+        }
+
+        return wxEmptyString;
+    }
+
+    // else use m_fileCtrl --------------------------------------------------
+
+    long n, count = m_fileCtrl->GetItemCount();
+    long item     = m_fileCtrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+
+    for (n = item+1; n < count; ++n)
+    {
+        wxFileData* fd = (wxFileData*)m_fileCtrl->GetItemData(n);
+
+        if ((fd != NULL) && fd->IsFile())
+        {
+            return fd->GetFilePath();
+        }
+    }
+
+    return wxEmptyString;
+}
+
+wxString wxFileBrowser::GetLastFile() const
+{
+    if (HasBrowserStyle(wxFILEBROWSER_TREE))
+    {
+        wxTreeItemId selectedId = m_dirCtrl->GetTreeCtrl()->GetSelection();
+        if (!selectedId.IsOk())
+            return wxEmptyString;
+
+        wxTreeItemId id = m_dirCtrl->GetTreeCtrl()->GetItemParent(selectedId);
+        id = m_dirCtrl->GetTreeCtrl()->GetLastChild(id);
+        while (id.IsOk())
+        {
+            // skip over directories
+            if (m_dirCtrl->GetTreeCtrl()->ItemHasChildren(id))
+            {
+                id = m_dirCtrl->GetTreeCtrl()->GetPrevSibling(id);
+                continue;
+            }
+
+            wxDirItemData* data = (wxDirItemData*) m_dirCtrl->GetTreeCtrl()->GetItemData(id);
+            if (data != NULL)
+                return data->m_path;
+            else
+                return wxEmptyString; // problem
+        }
+
+        return wxEmptyString;
+    }
+
+    // else use m_fileCtrl --------------------------------------------------
+
+    int n, count = m_fileCtrl->GetItemCount();
+
+    for (n = count-1; n >= 0; --n)
+    {
+        wxFileData* fd = (wxFileData*)m_fileCtrl->GetItemData(n);
+
+        if ((fd != NULL) && fd->IsFile())
+        {
+            return fd->GetFilePath();
+        }
+    }
+
+    return wxEmptyString;
 }
 
 bool wxFileBrowser::InsertComboItem(wxComboBox *combo, const wxString &item, int pos) const
@@ -2442,14 +2698,28 @@ bool wxFileBrowser::InsertComboItem(wxComboBox *combo, const wxString &item, int
     int combo_index = combo->FindString(item);
 
     if (combo_index == wxNOT_FOUND)
-        combo->Insert(item, pos, (void*)NULL);
+        combo->Insert(item, pos);
     else if ((combo_index == pos) || (combo_index < pos))
         return true;
     else if (combo_index > pos)
     {
-        wxString *data = (wxString*) combo->GetClientData(combo_index);
-        combo->Delete(combo_index);
-        combo->Insert(item, pos, (void*)data);
+        wxStringClientData* clientData = NULL;
+        
+        if (combo->HasClientObjectData())
+            clientData = (wxStringClientData*) combo->GetClientObject(combo_index);
+
+        if (clientData)
+        {
+            // NOTE: 2.9 has DetachClientObject(int n), we just copy it for simplicity
+            wxStringClientData* clientData2 = new wxStringClientData(clientData->GetData());
+            combo->Delete(combo_index); // clientData is deleted here
+            combo->Insert(item, pos, clientData2);
+        }
+        else
+        {
+            combo->Delete(combo_index);
+            combo->Insert(item, pos);
+        }
     }
 
     if (combo->GetSelection() != pos)
@@ -2462,10 +2732,12 @@ bool wxFileBrowser::SetFilter( int n )
 {
     wxCHECK_MSG((n>=0) && (n<int(m_filterCombo->GetCount())), false, wxT("Invalid filter item"));
 
+    // Use the client data string if available since the one shown may be "human readable"
     wxString filter = m_filterCombo->GetString(n);
-    wxString *data = (wxString*)m_filterCombo->GetClientData(n);
-    if (data && !data->IsEmpty())
-        filter += wxT("|") + (*data);
+    wxStringClientData *clientData = (wxStringClientData*)m_filterCombo->GetClientObject(n);
+
+    if (clientData && !clientData->GetData().IsEmpty())
+        filter += wxT("|") + clientData->GetData();
     else
         filter += wxT("|") + filter;
 
@@ -2516,16 +2788,10 @@ bool wxFileBrowser::SetFilters(const wxString &filter, int select)
     m_filter = filterNames[select] + wxT("|") + filterArray[select];
     m_init_filters = filterArray.GetCount();
 
-    // delete old filters if any
-    int n, count = m_filterCombo->GetCount();
-    for ( n = 0; n < count; n++ )
-    {
-        wxString *data = (wxString*)m_filterCombo->GetClientData(n);
-        delete data;
-    }
+    m_filterCombo->Clear();
 
-    for ( n = 0; n < m_init_filters; n++ )
-        m_filterCombo->Append(filterNames[n], (void*)new wxString(filterArray[n]));
+    for ( int n = 0; n < m_init_filters; n++ )
+        m_filterCombo->Append(filterNames[n], new wxStringClientData(filterArray[n]));
 
     m_filterCombo->SetSelection(select);
     m_filterComboSelection = select;
@@ -2550,16 +2816,17 @@ void wxFileBrowser::OnFilterCombo(wxCommandEvent &event)
     m_filterComboSelection = sel;
 
     wxString filter = event.GetString();
-    wxString *data = (wxString*)m_filterCombo->GetClientData(sel);
-    if (data && !data->IsEmpty())
-        filter += wxT("|") + (*data);
+    wxStringClientData *clientData = (wxStringClientData*)m_filterCombo->GetClientObject(sel);
+
+    if (clientData && !clientData->GetData().IsEmpty())
+        filter += wxT("|") + clientData->GetData();
     else
         filter += wxT("|") + filter;
 
     // see OnPathCombo for why it's done this way
     wxCommandEvent setevent( wxEVT_COMMAND_MENU_SELECTED, ID_wxFILEBROWSER_COMBOSETFILTER );
     setevent.SetString(filter);
-    setevent.SetInt(data && !data->IsEmpty() ? sel : -1);
+    setevent.SetInt(clientData && !clientData->GetData().IsEmpty() ? sel : -1);
     GetEventHandler()->AddPendingEvent(setevent);
 }
 void wxFileBrowser::OnSetFilter( wxCommandEvent &event )
@@ -2622,7 +2889,7 @@ void wxFileBrowser::LoadConfig(wxConfigBase& config, bool paths, bool filters,
             if (!value.IsEmpty())
             {
                 if (m_filterCombo->FindString(value) == wxNOT_FOUND)
-                    m_filterCombo->Append(value, (void*)NULL);
+                    m_filterCombo->Append(value); // no client data needed
             }
             n++;
             key = configPath + wxString::Format(wxT("/filter%d"), 1+n);
@@ -2656,8 +2923,8 @@ void wxFileBrowser::SaveConfig(wxConfigBase& config, int n_paths, int n_filters,
         for (n = 0; (n < count) && (item < n_filters); n++)
         {
             // don't save the initial filters since they are programmed in
-            wxString *data = (wxString*)m_filterCombo->GetClientData(n);
-            if (data) continue;
+            wxStringClientData *clientData = (wxStringClientData*)m_filterCombo->GetClientObject(n);
+            if (clientData) continue;
 
             value = m_filterCombo->GetString(n);
             if (!value.IsEmpty())

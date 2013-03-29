@@ -67,7 +67,7 @@ public:
     //   note: If you change the size you must alert the sheet - see wxSheetTable::UpdateSheetXXX()
     virtual int GetNumberRows() const { return m_numRows; }
     virtual int GetNumberCols() const { return m_numCols; }
-    bool ContainsCell(const wxSheetCoords& coords) const
+    inline bool ContainsCell(const wxSheetCoords& coords) const
         { return (coords.m_row >= 0) && (coords.m_col >= 0) &&
                  (coords.m_row < GetNumberRows()) &&
                  (coords.m_col < GetNumberCols()); }

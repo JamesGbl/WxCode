@@ -905,7 +905,7 @@ void GridFrame::ToggleColLabels( wxCommandEvent& WXUNUSED(ev) )
 void GridFrame::ToggleEditing( wxCommandEvent& WXUNUSED(ev) )
 {
     grid->SetAreaEditable( GetMenuBar()->IsChecked( ID_TOGGLEEDIT ) ?
-		wxSHEET_CELL_ANY : wxSHEET_CELL_NONE );
+                           wxSHEET_CELL_ANY : wxSHEET_CELL_NONE );
 }
 
 
