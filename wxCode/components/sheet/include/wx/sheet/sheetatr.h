@@ -186,10 +186,10 @@ public:
 WX_DECLARE_OBJARRAY_WITH_DECL(wxSheetCellAttr, wxArraySheetCellAttr,
                               class WXDLLIMPEXP_SHEET);
 // Create the paired array of attrs for row/col labels
-typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxSheetCellAttr, wxArraySheetCellAttr> wxPairArrayIntSheetCellAttr;
+typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxSheetCellAttr, wxArraySheetCellAttr> wxPairArrayIntSheetCellAttr;
 
 // Create wxPairArraySheetCoordsCellAttr for storing coords keys and attr values.
-typedef class WXDLLIMPEXP_SHEET SortedPairArraySheetCoordsKey<wxSheetCellAttr, wxArraySheetCellAttr> wxPairArraySheetCoordsCellAttr;
+typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArraySheetCoordsKey<wxSheetCellAttr, wxArraySheetCellAttr> wxPairArraySheetCoordsCellAttr;
 
 // ----------------------------------------------------------------------------
 // wxSheetCellAttrProvider : for wxSheetTable to retrieve/store cell attr

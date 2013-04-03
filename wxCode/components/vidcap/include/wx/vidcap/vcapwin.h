@@ -198,7 +198,7 @@ public :
 WXDLLIMPEXP_DATA_VIDCAP(extern const wxVideoCaptureFormat) wxNullVideoCaptureFormat;
 
 #include <wx/dynarray.h>
-WX_DECLARE_OBJARRAY(wxVideoCaptureFormat, wxArrayVideoCaptureFormat);
+WX_DECLARE_OBJARRAY_WITH_DECL(wxVideoCaptureFormat, wxArrayVideoCaptureFormat, class WXDLLIMPEXP_VIDCAP);
 
 /*
 

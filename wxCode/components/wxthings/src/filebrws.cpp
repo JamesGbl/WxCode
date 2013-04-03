@@ -1590,7 +1590,7 @@ bool wxFileBrowser::SetPath(const wxString &dirname, bool refresh)
     wxString path(dirname);
     wxString lastPath(m_path);
 
-    if (dirname.IsEmpty() || (dirname == "\\"))
+    if (dirname.IsEmpty() || (dirname == wxT("\\")))
     {
 #ifdef __UNIX__
         path = wxFILE_SEP_PATH;
@@ -2398,7 +2398,7 @@ bool wxFileBrowser::OpenFilePath(const wxString &filePath, bool send_event)
 #ifdef __WXMSW__
     // This is how you can get to the root to see drive letters
     if (path.IsEmpty())
-        SetPath("\\");
+        SetPath(wxT("\\"));
 #endif // __WXMSW__
 
     if (path.IsEmpty() || (path.Find(wxT('|')) != wxNOT_FOUND))

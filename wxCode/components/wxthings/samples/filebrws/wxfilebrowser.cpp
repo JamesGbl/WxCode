@@ -26,8 +26,8 @@
 #include <wx/image.h>
 #include <wx/splitter.h>
 #include <wx/notebook.h>
-#include <wx/generic/filedlgg.h>
 #include "wx/things/filebrws.h"
+#include <wx/generic/filedlgg.h>
 
 /* XPM */
 static const char *mondrian_xpm[] = {

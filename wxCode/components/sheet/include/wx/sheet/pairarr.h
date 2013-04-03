@@ -103,7 +103,7 @@ public:
     /// @{
 
     /// Remove all key, value pairs.
-    inline void   clear() const { Clear(); }
+    inline void   clear()       { Clear(); }
     /// Returns true if the array is empty.
     inline size_t empty() const { return GetCount() == 0; }
     /// Returns the number of key, value pairs.

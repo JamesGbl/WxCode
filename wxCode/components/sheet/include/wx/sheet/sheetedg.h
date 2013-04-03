@@ -24,7 +24,7 @@
 
 #include "wx/sheet/pairarr.h"
 
-typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, int, wxArrayInt> wxPairArrayIntInt;
+typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArrayNumberKey<int, wxArrayInt, int, wxArrayInt> wxPairArrayIntInt;
 
 // ----------------------------------------------------------------------------
 // wxSheetArrayEdge - a wxArrayInt container that sums its values, starts at 0

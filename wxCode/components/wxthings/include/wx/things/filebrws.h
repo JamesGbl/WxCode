@@ -16,7 +16,12 @@
 #include <wx/dirctrl.h>
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
-#include <wx/generic/filectrlg.h>
+
+#if wxCHECK_VERSION(2, 9, 0)
+    #include <wx/generic/filectrlg.h>
+#else // 2.8
+    #include <wx/generic/filedlgg.h>
+#endif
 
 class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 class WXDLLIMPEXP_FWD_CORE wxCheckBox;

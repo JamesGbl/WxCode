@@ -46,12 +46,15 @@
 #ifdef WXMAKINGDLL_SHEET
     #define WXDLLIMPEXP_SHEET WXEXPORT
     #define WXDLLIMPEXP_DATA_SHEET(type) WXEXPORT type
+    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET class WXEXPORT
 #elif defined(WXUSINGDLL)
     #define WXDLLIMPEXP_SHEET WXIMPORT
     #define WXDLLIMPEXP_DATA_SHEET(type) WXIMPORT type
+    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET class WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_SHEET
     #define WXDLLIMPEXP_DATA_SHEET(type) type
+    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET
 #endif
 
 // Forward declare all wxSheet classes with this macro

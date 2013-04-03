@@ -81,7 +81,7 @@ public:
 #include "wx/stedit/pairarr.h"
 WX_DECLARE_OBJARRAY_WITH_DECL(wxSTEditorStyle, wxArraySTEditorStyle, class WXDLLIMPEXP_STEDIT);
 
-typedef class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxSTEditorStyle, wxArraySTEditorStyle> wxSTEPairArrayIntSTEStyle;
+typedef WXDLLIMPEXP_TYPEDEF_CLASS_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxSTEditorStyle, wxArraySTEditorStyle> wxSTEPairArrayIntSTEStyle;
 
 //----------------------------------------------------------------------------
 /// @class wxSTEditorStyles

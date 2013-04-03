@@ -996,7 +996,7 @@ void wxVideoCaptureWindowVFW::OnPreviewTimer(wxTimerEvent& event)
         wxLongLong millis_now = wxGetLocalTimeMillis();
         int remaining_ms = int(m_previewmsperframe) - int(millis_now.GetLo() - m_lastframetimemillis.GetLo());
         remaining_ms = wxMax(remaining_ms, 1);
-        remaining_ms = wxMin(remaining_ms, m_previewmsperframe);
+        remaining_ms = wxMin(remaining_ms, (int)m_previewmsperframe);
         m_previewTimer.Start(remaining_ms, true);
     }
 
