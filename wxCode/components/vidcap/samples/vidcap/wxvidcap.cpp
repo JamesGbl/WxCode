@@ -644,6 +644,8 @@ void MyFrame::OnSnapshotToFile(wxCommandEvent &)
         wxMessageBox(wxT("Error grabbing frame"),
                      wxT("wxVideoCaptureWindow Error"),
                      wxOK|wxCENTRE, this);
+
+        SetupVideoMenus();
         return;
     }
 
@@ -654,7 +656,11 @@ void MyFrame::OnSnapshotToFile(wxCommandEvent &)
                                      wxT("BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPEG files (*.jpg)|*.jpg|GIF files (*.gif)|*.gif|TIFF files (*.tif)|*.tif|PCX files (*.pcx)|*.pcx"),
                                      wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
 
-    if (filename == wxEmptyString)  return;
+    if (filename == wxEmptyString) 
+    {
+        SetupVideoMenus();
+        return;
+    }
 
     bool saved = false;
 
@@ -677,7 +683,10 @@ void MyFrame::OnSnapshotToFile(wxCommandEvent &)
                      wxT("Unknown file type"),
                       wxOK|wxCENTRE, this);
 
-    if (saved) m_image_filename = filename;
+    if (saved)
+        m_image_filename = filename;
+
+    SetupVideoMenus();
 }
 
 void MyFrame::OnSnapshotToBMP(wxCommandEvent &)
@@ -689,7 +698,11 @@ void MyFrame::OnSnapshotToBMP(wxCommandEvent &)
                                         wxT("BMP files (*.bmp)|*.bmp"),
                                         wxFD_SAVE|wxFD_OVERWRITE_PROMPT, this);
 
-    if (filename == wxEmptyString)  return;
+    if (filename == wxEmptyString) 
+    {
+        SetupVideoMenus();
+        return;
+    }
 
     wxString extension = filename.AfterLast('.').Lower();
 
@@ -704,7 +717,10 @@ void MyFrame::OnSnapshotToBMP(wxCommandEvent &)
     if (extension == wxT("bmp"))
         saved = m_vidCapWin->SnapshotToBMP( filename );
 
-    if (saved) m_bmp_filename = filename;
+    if (saved) 
+        m_bmp_filename = filename;
+
+    SetupVideoMenus();
 }
 
 #ifdef WXVIDCAP_AVI_SUPPORT

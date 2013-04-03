@@ -1082,7 +1082,7 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
                                         (WPARAM)0, (LPARAM)0L,
                                         SMTO_BLOCK, 4000,
 #if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
-                                        (PDWORD_PTR)0 ); // (LPDWORD)0 );
+                                        (PDWORD_PTR)0 );
 #else
                                         (LPDWORD)0 );
 #endif
@@ -1095,7 +1095,7 @@ bool wxVideoCaptureWindowVFW::SnapshotTowxImage()
                                         (WPARAM)0, (LPARAM)0L,
                                         SMTO_BLOCK, 4000,
 #if _MSC_VER > 1200 // works in 2008, but I'm guessing it was around earlier
-                                        (PDWORD_PTR)0 ); // (LPDWORD)0 );
+                                        (PDWORD_PTR)0 );
 #else
                                         (LPDWORD)0 );
 #endif
