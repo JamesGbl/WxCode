@@ -12,8 +12,6 @@
 #include "wx/stedit/stelangs.h"
 #include "wx/stedit/stedit.h"
 
-DEFINE_PAIRARRAY_INTKEY(wxString, wxSTEPairArrayIntString)
-
 extern wxSTEditorLangs  s_wxSTEditorLangs;
 
 //----------------------------------------------------------------------------

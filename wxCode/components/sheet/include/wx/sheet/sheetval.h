@@ -4,7 +4,6 @@
 // Author:      John Labenski
 // Modified by:
 // Created:     1/08/1999
-// RCS-ID:      $Id: sheetval.h,v 1.4 2007/12/11 04:37:00 jrl1 Exp $
 // Copyright:   (c) John Labenski
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +34,7 @@ bool wxArrayStringUpdatePos(wxArrayString& arr, size_t pos, int num, bool no_err
 
 #if wxUSE_GRID
     #include <wx/grid.h>           // get wxGridStringArray from grid
-    typedef wxGridStringArray wxSheetStringArray;
+    typedef class WXDLLIMPEXP_SHEET wxGridStringArray wxSheetStringArray;
 #else // !wxUSE_GRID
     WX_DECLARE_OBJARRAY_WITH_DECL(wxArrayString, wxSheetStringArray,
                                   class WXDLLIMPEXP_SHEET);
@@ -159,8 +158,7 @@ protected:
 //   stores the strings for the sparse table
 // ----------------------------------------------------------------------------
 
-DECLARE_PAIRARRAY_INTKEY( wxString, wxArrayString,
-                          wxPairArrayIntSheetString, class WXDLLIMPEXP_SHEET)
+typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxPairArrayIntSheetString;
 
 // ----------------------------------------------------------------------------
 
@@ -168,8 +166,8 @@ WX_DECLARE_OBJARRAY_WITH_DECL(wxPairArrayIntSheetString, wxArrayPairArrayIntShee
                               class WXDLLIMPEXP_SHEET);
 
 // ----------------------------------------------------------------------------
-DECLARE_PAIRARRAY_INTKEY( wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString,
-                          wxPairArrayIntPairArraySheetString, class WXDLLIMPEXP_SHEET)
+
+typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString> wxPairArrayIntPairArraySheetString;
 
 // ----------------------------------------------------------------------------
 // wxSheetValueProviderSparseString - a sparse wxString data container class

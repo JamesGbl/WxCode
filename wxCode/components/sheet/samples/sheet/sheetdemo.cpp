@@ -88,7 +88,7 @@ void TestwxSheetValueProvider_SetValue(int numRows, int numCols, wxSheetValuePro
     wxString v(wxT("1")), val;
     PsuedoRandom rnd(0, wxMin(numRows, numCols));
     int n, count = numRows * numCols * 3;
-    wxPrintf(wxT("Start TestwxSheetValueProvider_SetValue\n"));
+    wxLogDebug(wxT("Start TestwxSheetValueProvider_SetValue\n"));
     wxStopWatch sw;
 
 #if 1
@@ -111,7 +111,7 @@ void TestwxSheetValueProvider_SetValue(int numRows, int numCols, wxSheetValuePro
     for (n = 0; n < count; n++)
         val = values->GetValue(wxSheetCoords(rnd.Get(numRows),rnd.Get(numCols)));
 #endif
-    wxPrintf(wxT("End TestwxSheetValueProvider_SetValue Time %ld\n"), sw.Time());
+    wxLogDebug(wxT("End TestwxSheetValueProvider_SetValue Time %ld\n"), sw.Time());
     fflush(stdout); fflush(stderr);
 }
 
@@ -121,35 +121,35 @@ void TestwxSheetValueProvider()
     PsuedoRandom rnd(0, wxMin(numRows, numCols));
 
     wxStopWatch sw;
-    wxPrintf(wxT("Start TestwxSheetValueProvider\n"));
+    wxLogDebug(wxT("Start TestwxSheetValueProvider\n"));
     {
-        wxPrintf(wxT("Start wxSheetValueProviderString\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderString\n"));
         wxSheetValueProviderString values(numRows, numCols, 0);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
     {
-        wxPrintf(wxT("Start wxSheetValueProviderSparseString\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderSparseString\n"));
         wxSheetValueProviderSparseString values(numRows, numCols, 0);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
     {
-        wxPrintf(wxT("Start wxSheetValueProviderSparseStringTest\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderSparseStringTest\n"));
         wxSheetValueProviderSparseStringTest values(numRows, numCols, 0);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
 
     {
-        wxPrintf(wxT("Start wxSheetValueProviderString col preference\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderString col preference\n"));
         wxSheetValueProviderString values(numRows, numCols, wxSHEET_ValueProviderColPref);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
     {
-        wxPrintf(wxT("Start wxSheetValueProviderSparseString col preference\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderSparseString col preference\n"));
         wxSheetValueProviderSparseString values(numRows, numCols, wxSHEET_ValueProviderColPref);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
     {
-        wxPrintf(wxT("Start wxSheetValueProviderSparseStringTest col preference\n"));
+        wxLogDebug(wxT("Start wxSheetValueProviderSparseStringTest col preference\n"));
         wxSheetValueProviderSparseStringTest values(numRows, numCols, wxSHEET_ValueProviderColPref);
         TestwxSheetValueProvider_SetValue(numRows, numCols, &values);
     }
@@ -167,7 +167,7 @@ void TestwxSheetValueProvider()
 
 //
 
-    wxPrintf(wxT("TestwxSheetValueProvider Time %ld\n"), sw.Time()); fflush(stdout);
+    wxLogDebug(wxT("TestwxSheetValueProvider Time %ld\n"), sw.Time()); fflush(stdout);
 }
 
 void TestFullRedrawSpeed(wxSheet* sheet, int count)
@@ -219,7 +219,7 @@ bool GridApp::OnInit()
 {
     //_CrtSetBreakAlloc(2061);
 
-    // TestwxSheetValueProvider();
+    //TestwxSheetValueProvider();
 
     GridFrame *frame = new GridFrame;
     frame->SetSize(800, 600);

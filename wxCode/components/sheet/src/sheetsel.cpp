@@ -4,7 +4,6 @@
 // Author:      John Labenski
 // Modified by:
 // Created:     20/02/1999
-// RCS-ID:      $Id: sheetsel.cpp,v 1.8 2007/12/12 05:22:39 jrl1 Exp $
 // Copyright:   (c) John Labenski, Stefan Neis (Stefan.Neis@t-online.de)
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////

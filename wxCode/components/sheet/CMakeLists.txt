@@ -46,9 +46,9 @@ set( wxSheet_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root dir of wxShee
 
 if (NOT TARGET wxSheetLib)
 
-set( wxSheet_VERSION         "1.1.0" )
+set( wxSheet_VERSION         "1.2.0" )
 set( wxSheet_MAJOR_VERSION   "1" )
-set( wxSheet_MINOR_VERSION   "1" )
+set( wxSheet_MINOR_VERSION   "2" )
 set( wxSheet_RELEASE_VERSION "0" )
 
 # ---------------------------------------------------------------------------
@@ -81,6 +81,7 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetdef.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetedg.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetedt.h
+        ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetevt.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetren.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetsel.h
         ${wxSheet_ROOT_DIR}/include/wx/sheet/sheetspt.h
@@ -95,6 +96,7 @@ ADD_LIBRARY_FULL(wxSheetLib
         ${wxSheet_ROOT_DIR}/src/sheetatr.cpp
         ${wxSheet_ROOT_DIR}/src/sheetedg.cpp
         ${wxSheet_ROOT_DIR}/src/sheetedt.cpp
+        ${wxSheet_ROOT_DIR}/src/sheetevt.cpp
         ${wxSheet_ROOT_DIR}/src/sheetren.cpp
         ${wxSheet_ROOT_DIR}/src/sheetsel.cpp
         ${wxSheet_ROOT_DIR}/src/sheetspt.cpp

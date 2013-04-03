@@ -4,7 +4,6 @@
 // Author:      John Labenski
 // Modified by:
 // Created:     20/02/2000
-// RCS-ID:      $$
 // Copyright:   (c) John Labenski, Stefan Neis
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
