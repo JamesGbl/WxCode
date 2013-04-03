@@ -397,8 +397,6 @@ void wxPlotCtrlFrame::OnMenu(wxCommandEvent& event)
     }
 }
 
-extern wxString wxPlotCtrl_GetEventName(wxEventType eventType);
-
 void wxPlotCtrlFrame::OnPlotCtrl(wxPlotCtrlEvent& event)
 {
     event.Skip();

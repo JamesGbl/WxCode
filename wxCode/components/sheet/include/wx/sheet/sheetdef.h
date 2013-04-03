@@ -18,7 +18,6 @@
 #if wxCHECK_VERSION(2,5,0)
     #include <wx/arrstr.h>
 #endif // wxCHECK_VERSION(2,5,0)
-#include "wx/sheet/pairarr.h"
 
 //-----------------------------------------------------------------------------
 // The version of wxSheet
@@ -46,15 +45,12 @@
 #ifdef WXMAKINGDLL_SHEET
     #define WXDLLIMPEXP_SHEET WXEXPORT
     #define WXDLLIMPEXP_DATA_SHEET(type) WXEXPORT type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET class WXEXPORT
 #elif defined(WXUSINGDLL)
     #define WXDLLIMPEXP_SHEET WXIMPORT
     #define WXDLLIMPEXP_DATA_SHEET(type) WXIMPORT type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET class WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_SHEET
     #define WXDLLIMPEXP_DATA_SHEET(type) type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_SHEET
 #endif
 
 // Forward declare all wxSheet classes with this macro
@@ -82,6 +78,8 @@
 // ----------------------------------------------------------------------------
 // Complete list of classes implemented by wxSheet
 // ----------------------------------------------------------------------------
+
+#include "wx/sheet/pairarr.h"
 
 // Windows
 class WXDLLIMPEXP_FWD_SHEET wxSheet;                    // the spreadsheet widget
@@ -391,7 +389,7 @@ enum wxSheetAttrShowEditor_Type
 // --------------------------------------------------------------------------
 
 template <typename Tval, typename TvalArray>
-class SortedPairArraySheetCoordsKey : public SortedPairArray<wxSheetCoords, wxArraySheetCoords, Tval, TvalArray>
+class WXDLLIMPEXP_SHEET SortedPairArraySheetCoordsKey : public SortedPairArray<wxSheetCoords, wxArraySheetCoords, Tval, TvalArray>
 {
 public:
     SortedPairArraySheetCoordsKey() : SortedPairArray<wxSheetCoords, wxArraySheetCoords, Tval, TvalArray>() {}
@@ -399,25 +397,25 @@ public:
     SortedPairArraySheetCoordsKey(const SortedPairArraySheetCoordsKey& other) : SortedPairArray<wxSheetCoords, wxArraySheetCoords, Tval, TvalArray>() { Copy(other); }
     virtual ~SortedPairArraySheetCoordsKey() {}
 
-    bool UpdateRows( size_t pos_, int numRows );
-    bool UpdateCols( size_t pos_, int numCols );
+    inline bool UpdateRows( size_t pos_, int numRows );
+    inline bool UpdateCols( size_t pos_, int numCols );
 };
 
 template <typename Tval, typename TvalArray>
-bool SortedPairArraySheetCoordsKey<Tval, TvalArray>::UpdateRows( size_t pos_, int numRows )
+inline bool SortedPairArraySheetCoordsKey<Tval, TvalArray>::UpdateRows( size_t pos_, int numRows )
 {
     if (numRows == 0) return false;
-    int n, count = GetCount(), pos = pos_;
+    int n, count = this->GetCount(), pos = pos_;
     bool done = false, remove = numRows < 0;
     for ( n = 0; n < count; ++n )
     {
-        wxSheetCoords& coords = ItemKey(n);
+        wxSheetCoords& coords = this->ItemKey(n);
         if (coords.m_row >= pos)
         {
             if (remove && (coords.m_row < pos - numRows))
             { 
                 done = true; 
-                RemoveAt(n); 
+                this->RemoveAt(n); 
                 --count; 
                 --n; 
             }
@@ -432,20 +430,20 @@ bool SortedPairArraySheetCoordsKey<Tval, TvalArray>::UpdateRows( size_t pos_, in
 }
 
 template <typename Tval, typename TvalArray>
-bool SortedPairArraySheetCoordsKey<Tval, TvalArray>::UpdateCols( size_t pos_, int numCols )
+inline bool SortedPairArraySheetCoordsKey<Tval, TvalArray>::UpdateCols( size_t pos_, int numCols )
 {
     if (numCols == 0) return false;
-    int n, count = GetCount(), pos = pos_;
+    int n, count = this->GetCount(), pos = pos_;
     bool done = false, remove = numCols < 0;
     for ( n = 0; n < count; ++n )
     {
-        wxSheetCoords& coords = ItemKey(n);
+        wxSheetCoords& coords = this->ItemKey(n);
         if (coords.m_col >= pos)
         {
             if (remove && (coords.m_col < pos - numCols))
             { 
                 done = true; 
-                RemoveAt(n); 
+                this->RemoveAt(n); 
                 --count; 
                 --n; 
             }

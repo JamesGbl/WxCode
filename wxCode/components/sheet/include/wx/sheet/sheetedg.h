@@ -22,9 +22,8 @@
 //   used to store the min col widths for rows and cols
 // ----------------------------------------------------------------------------
 
-#include "wx/sheet/pairarr.h"
-
-typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArrayNumberKey<int, wxArrayInt, int, wxArrayInt> wxPairArrayIntInt;
+template class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, int, wxArrayInt>;
+typedef SortedPairArrayNumberKey<int, wxArrayInt, int, wxArrayInt> wxPairArrayIntInt;
 
 // ----------------------------------------------------------------------------
 // wxSheetArrayEdge - a wxArrayInt container that sums its values, starts at 0

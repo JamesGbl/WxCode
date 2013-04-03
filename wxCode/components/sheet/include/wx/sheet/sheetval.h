@@ -34,7 +34,7 @@ bool wxArrayStringUpdatePos(wxArrayString& arr, size_t pos, int num, bool no_err
 
 #if wxUSE_GRID
     #include <wx/grid.h>           // get wxGridStringArray from grid
-    typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET wxGridStringArray wxSheetStringArray;
+    typedef wxGridStringArray wxSheetStringArray;
 #else // !wxUSE_GRID
     WX_DECLARE_OBJARRAY_WITH_DECL(wxArrayString, wxSheetStringArray,
                                   class WXDLLIMPEXP_SHEET);
@@ -158,7 +158,8 @@ protected:
 //   stores the strings for the sparse table
 // ----------------------------------------------------------------------------
 
-typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxPairArrayIntSheetString;
+template class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString>;
+typedef SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxPairArrayIntSheetString;
 
 // ----------------------------------------------------------------------------
 
@@ -167,7 +168,8 @@ WX_DECLARE_OBJARRAY_WITH_DECL(wxPairArrayIntSheetString, wxArrayPairArrayIntShee
 
 // ----------------------------------------------------------------------------
 
-typedef WXDLLIMPEXP_TYPEDEF_CLASS_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString> wxPairArrayIntPairArraySheetString;
+template class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString>;
+typedef SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString> wxPairArrayIntPairArraySheetString;
 
 // ----------------------------------------------------------------------------
 // wxSheetValueProviderSparseString - a sparse wxString data container class

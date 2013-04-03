@@ -15,6 +15,16 @@
 /// class SortedPairArray - A sorted key, value pair array.
 /// Values are added in sorted order by key and can be manipulated using
 /// the keys or their numerical indexes.
+///
+/// NOTE: All functions are inlined and these header only classes dll "exported"
+///       to avoid warning C4251 and then error C2491 when you "fix" the warning.
+///       In other words, MSVC 2008 complains when you don't use dllexport,
+///       then errors when you do if not every function is inlined.
+///       More sane compilers will probably simply ignore inlining the larger functions.
+///
+/// To properly instantiate and forward declare these template classes use: \n
+/// template class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString>; \n
+/// typedef SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxSTEPairArrayIntString; \n
 // --------------------------------------------------------------------------
 
 template <typename Tkey, typename TkeyArray, typename Tval, typename TvalArray>
@@ -318,13 +328,13 @@ void SortedPairArray<Tkey, TkeyArray, Tval, TvalArray>::q_sort(int left, int rig
 template <typename Tkey, typename TkeyArray, typename Tval, typename TvalArray>
 bool SortedPairArrayNumberKey<Tkey, TkeyArray, Tval, TvalArray>::UpdatePos( Tkey pos, Tkey numPos )
 {
-    int n, count = m_keys.GetCount(), start_idx = IndexForInsert(pos);
+    int n, count = this->m_keys.GetCount(), start_idx = this->IndexForInsert(pos);
     if ((numPos == 0) || (start_idx >= count)) return false;
 
     if ( numPos > 0 )
     {
         for (n = start_idx; n < count; ++n)
-            m_keys[n] += numPos;
+            this->m_keys[n] += numPos;
     }
     else if ( numPos < 0 )
     {
@@ -332,10 +342,10 @@ bool SortedPairArrayNumberKey<Tkey, TkeyArray, Tval, TvalArray>::UpdatePos( Tkey
 
         for (n = start_idx; n < count; ++n)
         {
-            Tkey &k = m_keys[n];
+            Tkey &k = this->m_keys[n];
             if (k < pos_right)  
             { 
-                RemoveAt(n); 
+                this->RemoveAt(n); 
                 --n; 
                 --count; 
             }

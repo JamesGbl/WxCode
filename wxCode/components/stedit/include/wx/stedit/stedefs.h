@@ -73,15 +73,12 @@
 #ifdef WXMAKINGDLL_STEDIT
     #define WXDLLIMPEXP_STEDIT WXEXPORT
     #define WXDLLIMPEXP_DATA_STEDIT(type) WXEXPORT type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_STEDIT class WXEXPORT
 #elif defined(WXUSINGDLL_STEDIT)
     #define WXDLLIMPEXP_STEDIT WXIMPORT
     #define WXDLLIMPEXP_DATA_STEDIT(type) WXIMPORT type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_STEDIT class WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_STEDIT
     #define WXDLLIMPEXP_DATA_STEDIT(type) type
-    #define WXDLLIMPEXP_TYPEDEF_CLASS_STEDIT
 #endif
 
 /// Forward declare all wxStEdit classes with this macro
