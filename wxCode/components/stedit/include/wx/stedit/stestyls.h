@@ -15,6 +15,7 @@
 
 #include "wx/stedit/stedefs.h"
 #include "wx/stedit/steprefs.h"
+#include "wx/stedit/pairarr.h"
 
 /// The colours used to be hex BBGGRR as wxColour(int) uses,
 ///  however HTML, Scintilla and others use RRGGBB so this has been changed.
@@ -78,11 +79,8 @@ public:
         { return !(*this == style); }
 };
 
-#include "wx/stedit/pairarr.h"
 WX_DECLARE_OBJARRAY_WITH_DECL(wxSTEditorStyle, wxArraySTEditorStyle, class WXDLLIMPEXP_STEDIT);
-
-template class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxSTEditorStyle, wxArraySTEditorStyle>;
-typedef SortedPairArrayNumberKey<int, wxArrayInt, wxSTEditorStyle, wxArraySTEditorStyle> wxSTEPairArrayIntSTEStyle;
+typedef class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxSTEditorStyle, wxArraySTEditorStyle> wxSTEPairArrayIntSTEStyle;
 
 //----------------------------------------------------------------------------
 /// @class wxSTEditorStyles

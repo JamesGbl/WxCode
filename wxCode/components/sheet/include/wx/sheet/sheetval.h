@@ -158,8 +158,7 @@ protected:
 //   stores the strings for the sparse table
 // ----------------------------------------------------------------------------
 
-template class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString>;
-typedef SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxPairArrayIntSheetString;
+typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxPairArrayIntSheetString;
 
 // ----------------------------------------------------------------------------
 
@@ -168,8 +167,7 @@ WX_DECLARE_OBJARRAY_WITH_DECL(wxPairArrayIntSheetString, wxArrayPairArrayIntShee
 
 // ----------------------------------------------------------------------------
 
-template class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString>;
-typedef SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString> wxPairArrayIntPairArraySheetString;
+typedef class WXDLLIMPEXP_SHEET SortedPairArrayNumberKey<int, wxArrayInt, wxPairArrayIntSheetString, wxArrayPairArrayIntSheetString> wxPairArrayIntPairArraySheetString;
 
 // ----------------------------------------------------------------------------
 // wxSheetValueProviderSparseString - a sparse wxString data container class

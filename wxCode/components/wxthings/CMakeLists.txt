@@ -98,7 +98,7 @@ endif()
 # For MSW DLLs we need to replace WXDLLEXPORT with WXDLLIMPEXP_THINGS in
 # wx/include/wx/generic/filedlgg.h
 
-if (BUILDING_DLLS)
+if (BUILD_SHARED_LIBS_WIN_DLLS)
 
     # Use configure since it'll create the dirs for us too.
     configure_file(${wxWidgets_ROOT_DIR}/include/wx/generic/filedlgg.h
@@ -151,7 +151,7 @@ endif()
 # and paste it into our code to get it.
 # If this breaks we can resort to some other means, but this works for wx 2.8 and 2.9
 
-if (BUILDING_DLLS)
+if (BUILD_SHARED_LIBS_WIN_DLLS)
 
     file(READ ${wxWidgets_ROOT_DIR}/src/generic/dirctrlg.cpp WXDIRCTRLG_CPP_STRING)
 

@@ -23,8 +23,7 @@
 ///       More sane compilers will probably simply ignore inlining the larger functions.
 ///
 /// To properly instantiate and forward declare these template classes use: \n
-/// template class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString>; \n
-/// typedef SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxSTEPairArrayIntString; \n
+/// typedef class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxSTEPairArrayIntString; \n
 // --------------------------------------------------------------------------
 
 template <typename Tkey, typename TkeyArray, typename Tval, typename TvalArray>

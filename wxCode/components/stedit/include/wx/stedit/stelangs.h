@@ -20,8 +20,7 @@ class WXDLLIMPEXP_FWD_BASE wxConfigBase;
 
 #include "wx/stedit/pairarr.h"
 
-template class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString>;
-typedef SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxSTEPairArrayIntString;
+typedef class WXDLLIMPEXP_STEDIT SortedPairArrayNumberKey<int, wxArrayInt, wxString, wxArrayString> wxSTEPairArrayIntString;
 
 struct WXDLLIMPEXP_STEDIT STE_Language;
 
