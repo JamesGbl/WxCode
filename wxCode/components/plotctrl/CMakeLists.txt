@@ -123,6 +123,11 @@ elseif ("${wxWidgets_PORTNAME}" STREQUAL "gtk")
     include_directories( ${GTK_INCLUDE_DIRS} )
 endif()
 
+set( WXPLOTCTRL_PROPERTIES_DEFINE_SYMBOL )
+if ( BUILD_SHARED_LIBS_WIN_DLL )
+    set( WXPLOTCTRL_PROPERTIES_DEFINE_SYMBOL "PROPERTIES DEFINE_SYMBOL WXMAKINGDLL_PLOTCTRL")
+endif()
+
 ADD_LIBRARY_FULL(wxPlotCtrlLib
     HEADERS
         ${wxPlotCtrl_ROOT_DIR}/include/wx/plotctrl/fourier.h
@@ -173,7 +178,7 @@ ADD_LIBRARY_FULL(wxPlotCtrlLib
     LINK_LIBRARIES
         wxThingsLib
         ${wxWidgets_LIBRARIES}
-    PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_PLOTCTRL"
+    ${WXPLOTCTRL_PROPERTIES_DEFINE_SYMBOL}
     PROPERTIES FOLDER "wxPlotCtrl")
 
 WXLIKE_LIBRARY_NAMES( wxPlotCtrlLib wxplotctrl "${wxPlotCtrl_VERSION}")

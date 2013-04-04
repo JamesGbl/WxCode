@@ -206,6 +206,11 @@ configure_file(${wxThings_ROOT_DIR}/src/precomp.h
 
 # ---------------------------------------------------------------------------
 
+set( WXTHINGS_PROPERTIES_DEFINE_SYMBOL )
+if ( BUILD_SHARED_LIBS_WIN_DLL )
+    set( WXTHINGS_PROPERTIES_DEFINE_SYMBOL "PROPERTIES DEFINE_SYMBOL WXMAKINGDLL_THINGS")
+endif()
+
 ADD_LIBRARY_FULL(wxThingsLib
     HEADERS
         ${wxThings_ROOT_DIR}/include/wx/things/block.h
@@ -248,7 +253,7 @@ ADD_LIBRARY_FULL(wxThingsLib
     PRECOMPILED_SOURCE  ${wxThings_ROOT_DIR}/src/precomp.cpp
     LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
-    PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_THINGS"
+    ${WXTHINGS_PROPERTIES_DEFINE_SYMBOL}
     PROPERTIES FOLDER "wxThings")
 
 ADD_TARGET_INCLUDE_PATHS(wxThingsLib ${CMAKE_CURRENT_BINARY_DIR}/include/)

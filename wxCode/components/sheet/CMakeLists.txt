@@ -73,6 +73,11 @@ ADD_DOXYGEN( wxSheet_doxygen
 
 include_directories(${wxSheet_ROOT_DIR}/include/)
 
+set( WXSHEET_PROPERTIES_DEFINE_SYMBOL )
+if ( BUILD_SHARED_LIBS_WIN_DLL )
+    set( WXSHEET_PROPERTIES_DEFINE_SYMBOL "PROPERTIES DEFINE_SYMBOL WXMAKINGDLL_SHEET")
+endif()
+
 ADD_LIBRARY_FULL(wxSheetLib
     HEADERS
         ${wxSheet_ROOT_DIR}/include/wx/sheet/pairarr.h
@@ -107,7 +112,7 @@ ADD_LIBRARY_FULL(wxSheetLib
     PRECOMPILED_SOURCE  ${wxSheet_ROOT_DIR}/src/precomp.cpp
     LINK_LIBRARIES
         ${wxWidgets_LIBRARIES}
-    PROPERTIES DEFINE_SYMBOL "WXMAKINGDLL_SHEET"
+    ${WXSHEET_PROPERTIES_DEFINE_SYMBOL}
     PROPERTIES FOLDER "wxSheet")
 
 WXLIKE_LIBRARY_NAMES( wxSheetLib wxsheet "${wxSheet_VERSION}")
