@@ -1031,26 +1031,29 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 				
 				for(int td=tDrawn; td<t; ++td) //td = Text to Draw, draw strings to the line
 				{
+					wxSize tSize = strSizes[td];
+					
 					wxReportTextValue Td = pPar->GetWord(td);
 					dc->SetFont(Td.m_style.GetFont());
 					dc->SetTextForeground(Td.m_style.GetTextColor());
 					
 					wxColour bgColor = Td.m_style.GetBackgroundColor();
 					if(bgColor != wxNullColour)
-						dc->SetTextBackground(bgColor);					
-					
-					dc->DrawText(Td.m_sValue, tx, ty);
-					wxSize tSize = strSizes[td];
-					
+						dc->SetTextBackground(bgColor);		
+
 					if(Td.m_style.GetBorder() > 0)
 					{
 						wxColour borderColor = Td.m_style.GetBorderColor();
 						int borderWidth = MM2PX(Td.m_style.GetBorderThickness(), dc, toScreen);
 						wxPen pen(borderColor, borderWidth);
+						wxBrush brush(bgColor);
 						pen.SetCap(wxCAP_BUTT);
 						dc->SetPen(pen);
+						if( bgColor != wxNullColour) dc->SetBrush(brush);
 						dc->DrawRectangle(tx, ty, tSize.x, tSize.y);
-					}
+					}			
+					
+					dc->DrawText(Td.m_sValue, tx, ty);
 					
 					/*double fontHeight = heightConst * Td.m_style.GetFontSize() * (wxReportUnit::GetUnitsRatio() / 72.); // check line height from font size
 					if(fontHeight > lineHeight)
@@ -1110,6 +1113,4 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 		if(p != (int)(this->m_arParagraphs.GetCount()) - 1)
 			totalHeight += MM2PX(pPar->m_style.GetParagraphsSpace(), dc, toScreen);
 	}
-	
-		
 }
