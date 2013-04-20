@@ -5,6 +5,7 @@
 #include "wx/report/filehandlers.h"
 #include "wx/report/printout.h"
 #include "wx/print.h"
+#include <wx/stream.h>
 
 //////////// wxReportDocument class
 
@@ -26,6 +27,7 @@ protected:
 	int m_iDPI;
 	wxReportTextItem m_pageNumberFormat;
 	wxPrintData m_printData;
+	wxString m_sVersion;
 	
 	template<class T> bool DoSetVariable(const wxString& name, int pageIndex, const T& var, int varType);
 	template<class T> bool DoSetVariableForTable(const wxString& name, bool toRow, int index, const T& array);
@@ -101,58 +103,58 @@ public:
 	void SetActivePage(int pageIndex);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const short& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const int& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const long& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
 	 * \param name identification name of the item
-	 * \param pageIndex index of the page where the item is situated
 	 * \param var source data object to connect with item
-	 * \return 
+	 * \param pageIndex index of the page where the item is situated
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const float& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const double& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const char& var, const wxString& name, int pageIndex = -1);
 	/**
 	 * \brief Set data object for specified page item.
+	 * \param var source data object to connect with item
 	 * \param name identification name of the item
 	 * \param pageIndex index of the page where the item is situated
-	 * \param var source data object to connect with item
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariable(const wxString& var, const wxString& name, int pageIndex = -1);
 	/**
@@ -160,7 +162,7 @@ public:
 	 * \param name identification name of the table
 	 * \param columnIndex index of the column in the table
 	 * \param array source data array to connect with column
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const wxArrayShort& array);
 	/**
@@ -168,7 +170,7 @@ public:
 	 * \param name identification name of the table
 	 * \param columnIndex index of the column in the table
 	 * \param array source data array to connect with column
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const wxArrayInt& array);
 	/**
@@ -176,7 +178,7 @@ public:
 	 * \param name identification name of the table
 	 * \param columnIndex index of the column in the table
 	 * \param array source data array to connect with column
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const wxArrayLong& array);
 	/**
@@ -184,7 +186,7 @@ public:
 	 * \param name identification name of the table
 	 * \param columnIndex index of the column in the table
 	 * \param array source data array to connect with column
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const wxArrayDouble& array);
 	/**
@@ -192,47 +194,15 @@ public:
 	 * \param name identification name of the table
 	 * \param columnIndex index of the column in the table
 	 * \param array source data array to connect with column
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const wxArrayString& array);
-	/**
-	 * \brief Set source data array for column in specified table item.
-	 * \param name identification name of the table
-	 * \param columnIndex index of the column in the table
-	 * \param array source data array to connect with column
-	 * \return 
-	 */
-	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const short* array, int cellsCount);
-	/**
-	 * \brief Set source data array for column in specified table item.
-	 * \param name identification name of the table
-	 * \param columnIndex index of the column in the table
-	 * \param array source data array to connect with column
-	 * \return 
-	 */
-	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const int* array, int cellsCount);
-	/**
-	 * \brief Set source data array for column in specified table item.
-	 * \param name identification name of the table
-	 * \param columnIndex index of the column in the table
-	 * \param array source data array to connect with column
-	 * \return 
-	 */
-	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const long* array, int cellsCount);
-	/**
-	 * \brief Set source data array for column in specified table item.
-	 * \param name identification name of the table
-	 * \param columnIndex index of the column in the table
-	 * \param array source data array to connect with column
-	 * \return 
-	 */
-	bool SetVariableForTableColumn(const wxString& name, int columnIndex, const double* array, int cellsCount);
 	/**
 	 * \brief Set source data array for the row in the specified table item.
 	 * \param name identification name of the table
 	 * \param rowIndex index of the row in the table
 	 * \param array source data array to connect with row
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableRow(const wxString& name, int rowIndex, const wxArrayShort& array);
 	/**
@@ -240,7 +210,7 @@ public:
 	 * \param name identification name of the table
 	 * \param rowIndex index of the row in the table
 	 * \param array source data array to connect with row
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableRow(const wxString& name, int rowIndex, const wxArrayInt& array);
 	/**
@@ -248,7 +218,7 @@ public:
 	 * \param name identification name of the table
 	 * \param rowIndex index of the row in the table
 	 * \param array source data array to connect with row
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableRow(const wxString& name, int rowIndex, const wxArrayLong& array);
 	/**
@@ -256,7 +226,7 @@ public:
 	 * \param name identification name of the table
 	 * \param rowIndex index of the row in the table
 	 * \param array source data array to connect with row
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableRow(const wxString& name, int rowIndex, const wxArrayDouble& array);
 	/**
@@ -264,41 +234,9 @@ public:
 	 * \param name identification name of the table
 	 * \param rowIndex index of the row in the table
 	 * \param array source data array to connect with row
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool SetVariableForTableRow(const wxString& name, int rowIndex, const wxArrayString& array);
-	/**
-	 * \brief Set source data array for the row in the specified table item.
-	 * \param name identification name of the table
-	 * \param rowIndex index of the row in the table
-	 * \param array source data array to connect with row
-	 * \return 
-	 */
-	bool SetVariableForTableRow(const wxString& name, int rowIndex, const short* array, int cellsCount);
-	/**
-	 * \brief Set source data array for the row in the specified table item.
-	 * \param name identification name of the table
-	 * \param rowIndex index of the row in the table
-	 * \param array source data array to connect with row
-	 * \return 
-	 */
-	bool SetVariableForTableRow(const wxString& name, int rowIndex, const int* array, int cellsCount);
-	/**
-	 * \brief Set source data array for the row in the specified table item.
-	 * \param name identification name of the table
-	 * \param rowIndex index of the row in the table
-	 * \param array source data array to connect with row
-	 * \return 
-	 */
-	bool SetVariableForTableRow(const wxString& name, int rowIndex, const long* array, int cellsCount);
-	/**
-	 * \brief Set source data array for the row in the specified table item.
-	 * \param name identification name of the table
-	 * \param rowIndex index of the row in the table
-	 * \param array source data array to connect with row
-	 * \return 
-	 */
-	bool SetVariableForTableRow(const wxString& name, int rowIndex, const double* array, int cellsCount);
 	/**
 	 * \brief Append new empty pages to the document.
 	 * \param count count of pages to insert
@@ -318,7 +256,7 @@ public:
 	/**
 	 * \brief Insert new page defined by passed page layout at the specified index.
 	 * \param layout page to insert
-	 * \param position position where the page will be inserted
+	 * \param index position where the page will be inserted
 	 */	
 	void AddPageAt(const wxReportPage& layout, int index);
 	/**
@@ -335,12 +273,12 @@ public:
 	/**
 	 * \brief Remove all pages form the document.
 	 */	
-	void DeleteAllPages(); // smaze vsechno
+	void DeleteAllPages();
 	/**
 	 * \brief Remove page at specified index.
 	 * \param index index of the page to delete
 	 */	
-	void DeletePages(int index);
+	void DeletePage(int index);
 	/**
 	 * \brief Remove specified range of pages.
 	 * \param indexFrom start of the range
@@ -379,21 +317,27 @@ public:
 	void AddItem(const wxReportCircleShape& circleShape);
 	/**
 	 * \brief Insert item to the active page.
-	 * \param item pointer to item to insert
+	 * \param item pointer to added item
 	 */
 	void AddItem(wxReportPageItem *item);
 	/**
 	 * \brief Add specified item to all pages in the document.
+	 * \param item pointer to added item
 	 */	
-	void AddItemToAllPages(wxReportPageItem *item); // do vsech stranek
+	void AddItemToAllPages(wxReportPageItem *item);
 	/**
 	 * \brief Add specified item to the specified page.
+	 * \param item pointer to added item
+	 * \param pageNumber number of page where the item will be added
 	 */	
-	void AddItemToPage(wxReportPageItem *item, int pageNumber); // do stranky pageNumber
+	void AddItemToPage(wxReportPageItem *item, int pageNumber);
 	/**
 	 * \brief Add item to specified range of pages.
+	 * \param item pointer to added item
+	 * \param indexFrom index of starting page
+	 * \param indexTo index of ending page
 	 */	
-	void AddItemToPages(wxReportPageItem *item, int indexFrom, int indexTo); // do rozsahu stranek
+	void AddItemToPages(wxReportPageItem *item, int indexFrom, int indexTo);
 	/**
 	 * \brief Insert item to the active page.
 	 * \param textItem item to insert
@@ -456,55 +400,89 @@ public:
 	void AddItemToFooter(const wxReportCircleShape& circleShape);
 	/**
 	 * \brief Replace item specified by its name on all pages in the document.
+	 * \param replacedItemName name of replaced item
+	 * \param newItem pointer of new item
 	 */	
 	void ReplaceItemByName(const wxString& replacedItemName, wxReportPageItem *newItem);
 	/**
-	 * \brief Replace item specified by its name on the specified page..
+	 * \brief Replace item specified by its name on the specified page.
+	 * \param replacedItemName name of replaced item
+	 * \param newItem pointer of new item
+	 * \param pageNumber number of page on which the specified item will be replaced
 	 */	
 	void ReplaceItemByName(const wxString& replacedItemName, wxReportPageItem *newItem, int pageNumber);
 	/**
-	 * \brief Replace item specified by its name on the spicified range of pages.
+	 * \brief Replace item specified by its name on the specified range of pages.
+	 * \param replacedItemName name of replaced item
+	 * \param newItem pointer of new item
+	 * \param indexFrom index of starting page
+	 * \param indexTo index of ending page
 	 */	
 	void ReplaceItemByName(const wxString& replacedItemName, wxReportPageItem *newItem, int indexFrom, int indexTo);
+	/**
+	 * \brief Replace item specified by its position on all pages.
+	 * \param positionIndex position index of replaced item
+	 * \param newItem pointer of new item
+	 */	
 	void ReplaceItemByPosition(int positionIndex, wxReportPageItem *newItem);
+	/**
+	 * \brief Replace item specified by its position on the specified page.
+	 * \param positionIndex position index of replaced item
+	 * \param newItem pointer of new item
+	 * \param pageNumber number of page on which the specified item will be replaced
+	 * \param indexTo number of ending page
+	 */	
 	void ReplaceItemByPosition(int positionIndex, wxReportPageItem *newItem, int pageNumber);
+	/**
+	 * \brief Replace item specified by its position on the spicified range of pages.
+	 * \param positionIndex position index of replaced item
+	 * \param newItem pointer of new item
+	 * \param indexFrom index of starting page
+	 * \param indexTo index of ending page
+	 */	
 	void ReplaceItemByPosition(int positionIndex, wxReportPageItem *newItem, int indexFrom, int indexTo);
 	/**
 	 * \brief Remove items from all pages in the document.
+	 * \param itemName name of removed item
 	 */	
 	void DeleteItemByName(const wxString& itemName);
 	/**
 	 * \brief Remove item from specified page.
+	 * \param itemName name of removed item
+	 * \param pageNumber number of page from which the item will bew removed
 	 */	
 	void DeleteItemByName(const wxString& itemName, int pageNumber);
 	/**
 	 * \brief Remove item from specified range of pages.
+	 * \param itemName name of removed item
+	 * \param indexFrom index of starting page
+	 * \param indexTo index of ending page
 	 */	
 	void DeleteItemByName(const wxString& itemName, int indexFrom, int indexTo);
 	/**
 	 * \brief Inserts page numbering to all apges.
 	 * \param format text string with the format of the numbering, e. g. "Page No. %d" where %d means the number of the page 
 	 * \param textStyle text style of the numbering
-	 * \param posX x-position of the number
-	 * \param posY y-position of the number
-	 * \param fromPage page from which the numbering begins
-	 * \param startNumber initial number of the page numbering
+	 * \param posX horizontal position of the number
+	 * \param posY vertical position of the number
+	 * \param atPlace document section on which the number will be located
+	 * \param fromPage page at which the numbering begins
 	 */
 	void InsertPageNumbering(const wxString& format, const wxReportTextStyle& textStyle, double posX, double posY, int atPlace = wxRP_FOOTER, int fromPage = 0);
-	/**
-	 * \brief Remove page numbering from all pages.
-	 */
+	///**
+	// * \brief Remove page numbering from all pages.
+	// */
 	//void RemovePageNumbering();
-	/**
-	 * \brief Removes page numbering from the specified range of pages.
-	 * \param pageFrom index of the first page in range 
-	 * \param pageTo index of the last page in range
-	 */
+	///**
+	// * \brief Removes page numbering from the specified range of pages.
+	// * \param pageFrom index of the first page in range 
+	// * \param pageTo index of the last page in range
+	// */
 	//void RemovePageNumbering(int pageFrom, int pageTo);
 	/**
-	 * \brief Returns constant pointer the specified page.
+	 * \brief Returns pointer to specified document page.
 	 * \param pageNumber index of the page
-	 * \return constant pointer to page
+	 * \return pointer to document page
 	 */
 	wxReportPage* GetPage(int pageNumber);
 	/**
@@ -529,7 +507,7 @@ public:
 	 */
 	void RefreshVariables();
 	/**
-	 * \brief Activate or deactiavte automatic refreshing of items connected with data sources.
+	 * \brief Activate or deactivate automatic refreshing of items connected with data sources.
 	 * \param refresh TRUE to enable, FALSE to disable
 	 */
 	void SetAutoRefresh(bool refresh);
@@ -561,8 +539,11 @@ public:
 	/**
 	 * \brief Shows the print preview window.
 	 * \param parent pointer to parent window to show print preview window
+	 * \param size size of the previes frame
+	 * \param zoom preview zoom in percents
+	 * \param maximized show preview frame maximized
 	 */
-	void ShowPrintPreview(wxWindow *parent);
+	void ShowPrintPreview(wxWindow *parent, const wxSize& size = wxDefaultSize, int zoom = 100, bool maximized = false);
 	/**
 	 * \brief Save report to output file. Tries to find handler in handlers array identified by the suffix of specified file name or foramat ID. If the suitable handler isn't found than false value is returned.
 	 * \param fileName output file name to save
@@ -577,12 +558,29 @@ public:
 	 */
 	bool SaveLayoutToXML(const wxString& path);
 	/**
+	 * \brief Save the current document layout.
+	 * \param out output stream into which the layout will be save
+	 * \return TRUE on succes, FALSE if fails
+	 */
+	bool SaveLayoutToXML(wxOutputStream& out);
+	/**
 	 * \brief Retrieve document from the specified XML file.
 	 * \param path file name to load
 	 * \return TRUE on succes, FALSE if fails
 	 */
 	bool LoadLayoutFromXML(const wxString& path);
-			
+	/**
+	 * \brief Retrieve document from the specified XML file.
+	 * \param in input stream from which the layout will be loaded
+	 * \return TRUE on succes, FALSE if fails
+	 */
+	bool LoadLayoutFromXML(wxInputStream& in);
+	
+	/*!
+	 * \brief Get the library's version.
+	 * \return Current wxReportDocument library's version string
+	 */
+	const wxString& GetVersion();
 };
 
 #endif // WXREPORTDOCUMENT_H

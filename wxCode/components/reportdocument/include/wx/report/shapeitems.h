@@ -7,7 +7,7 @@
 //////////////////////////////// wxReportShapeItem
 
 /**
- * \brief Base class for the graphics shape items.
+ * \brief Base class for graphics shape items.
  */
 class WXDLLIMPEXP_RP wxReportShapeItem : public wxReportPageItem
 {
@@ -38,7 +38,7 @@ public:
 	void SetLineColor(const wxColour &lineColor);
 	/**
 	 * \brief Sets the style of the shape's drawing line.
-	 * \param lineStyle
+	 * \param lineStyle line style
 	 */
 	void SetLineStyle(int lineStyle = wxSOLID);
 	/**
@@ -71,7 +71,7 @@ public:
 //////////////////////////////// wxReportLineShape
 
 /**
- * \brief Representing the straight line with specified color.
+ * \brief Represents the straight line with specified color.
  */
 class WXDLLIMPEXP_RP wxReportLineShape : public wxReportShapeItem
 {
@@ -86,13 +86,13 @@ public:
 	wxReportLineShape();
 	/**
 	 * \brief Constructor.
-	 * \param x1 x-position of the starting point
-	 * \param y1 y-position of the starting point
-	 * \param x2 x-position of the ending point
-	 * \param y2 y-position of the ending point
+	 * \param x1 horizontal position of the starting point
+	 * \param y1 vertical position of the starting point
+	 * \param x2 horizontal position of the ending point
+	 * \param y2 vertical position of the ending point
 	 * \param lineThickness width of the shape's line
 	 * \param lineColor color of the shape's line
-	 * \param lineStyle style of the shape's line - wxPenStyle enumeration values
+	 * \param lineStyle style of the shape's line (wxPenStyle enumeration values are used)
 	 */
 	wxReportLineShape(double x1, double y1, double x2, double y2, double lineThickness = 0.5,
 						const wxColour &lineColor = *wxBLACK, int lineStyle = wxSOLID);
@@ -102,23 +102,27 @@ public:
 	 * \param point2 ending point of the line
 	 * \param lineThickness width of the shape's line
 	 * \param lineColor color of the shape's line
-	 * \param lineStyle style of the shape's line - wxPenStyle enumeration values
+	 * \param lineStyle style of the shape's line (wxPenStyle enumeration values)
 	 */
 	wxReportLineShape(const wxRealPoint& point1, const wxRealPoint& point2, double lineThickness = 0.5,
 				const wxColour &lineColor = *wxBLACK, int lineStyle = wxSOLID);
+				
+	/*!
+	 * \brief Default destructor.
+	 */
 	~wxReportLineShape() {;}
 	/**
 	 * \brief Sets the coordinates of the line.
-	 * \param x1
-	 * \param y1
-	 * \param x2
-	 * \param y2
+	 * \param x1 horizontal position of the starting point
+	 * \param y1 vertical position of the starting point
+	 * \param x2 horizontal position of the ending point
+	 * \param y2 vertical position of the ending point
 	 */
 	void SetPoints(double x1, double y1, double x2, double y2);
 	/**
 	 * \brief Sets the coordinates of the line. Coordinates defined by the wxRealPoint objects.
-	 * \param point1
-	 * \param point2
+	 * \param point1 starting point of the line
+	 * \param point2 ending point of the line
 	 */
 	void SetPoints(const wxRealPoint& point1, const wxRealPoint& point2);
 	/**
@@ -139,12 +143,12 @@ public:
 	/**
 	 * \brief Retrieves the shape from the XML node.
 	 * \param node XML node to retrieve
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool RetrieveFromXmlNode(const wxXmlNode* node);
 	/**
 	 * \brief Draws the shape to the given device context.
-	 * \param dc devicew context to drawing
+	 * \param dc device context to drawing
 	 * \param toScreen tells if the sahe will be drawn to the screen or to the printer
 	 * \param pageStyle style of the page where the shape will be drawned
 	 */
@@ -154,7 +158,7 @@ public:
 //////////////////////////////// wxReportRectangleShape
 
 /**
- * \brief Representing the rectangle shape item.
+ * \brief Represents the rectangle shape item.
  */
 class WXDLLIMPEXP_RP wxReportRectangleShape : public wxReportShapeItem
 {
@@ -170,8 +174,8 @@ public:
 	wxReportRectangleShape();
 	/**
 	 * \brief Constructor.
-	 * \param x x-position of the left top corner
-	 * \param y y-position of the left top corner
+	 * \param x horizontal position of the left top corner
+	 * \param y vertical position of the left top corner
 	 * \param width width of the rectangle
 	 * \param height height of the rectangle
 	 * \param lineThickness width of the shape's line
@@ -201,8 +205,8 @@ public:
 	~wxReportRectangleShape() {;}
 	/**
 	 * \brief Sets the coordinates of the top left corner of the rectangle.
-	 * \param x x-position of the left top corner
-	 * \param y y-position of the left top corner
+	 * \param x horizontal position of the left top corner
+	 * \param y vertical position of the left top corner
 	 */
 	void SetTopLeftCorner(double x, double y);
 	/**
@@ -243,7 +247,7 @@ public:
 	/**
 	 * \brief Retrieves the shape from the XML node.
 	 * \param node XML node to retrieve
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool RetrieveFromXmlNode(const wxXmlNode* node);
 	/**
@@ -256,7 +260,7 @@ public:
 };
 
 /**
- * \brief Representong the circle shape item.
+ * \brief Represents the circle shape item.
  */
 class WXDLLIMPEXP_RP wxReportCircleShape : public wxReportShapeItem
 {
@@ -271,8 +275,8 @@ public:
 	wxReportCircleShape();
 	/**
 	 * \brief Constructor.
-	 * \param centreX x-position of circle's center
-	 * \param centreY y-position of circle's center
+	 * \param centreX horizontal position of circle's center
+	 * \param centreY vertical position of circle's center
 	 * \param radius radius of the circle
 	 * \param lineThickness width of the shape's line
 	 * \param lineColor color of the shape's line
@@ -300,8 +304,8 @@ public:
 	~wxReportCircleShape() {;} 
 	/**
 	 * \brief Sets the position of the circle's center
-	 * \param coordX x-position
-	 * \param coordY y-position
+	 * \param coordX horizontal position
+	 * \param coordY vertical position
 	 */
 	void SetCentreCoord(double coordX, double coordY);
 	/**
@@ -310,17 +314,13 @@ public:
 	 */
 	void SetRadius(double r);
 	/**
-	 * \brief 
-	 * \return 
-	 */
-	/**
 	 * \brief Returns the coordinates of the circle's center
 	 * \return wxRealPoint object with the coordinates
 	 */
 	const wxRealPoint& GetCentreCoord();
 	/**
 	 * \brief Return the circle's radius.
-	 * \return radius
+	 * \return circle radius
 	 */
 	const double& GetRadius();
 	/**
@@ -331,7 +331,7 @@ public:
 	/**
 	 * \brief Retrieves the shape from the XML node.
 	 * \param node XML node to retrieve
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool RetrieveFromXmlNode(const wxXmlNode* node);
 	/**

@@ -12,7 +12,6 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxArraySizes);
 
 wxReportTextValue::wxReportTextValue()
 {
-	this->m_sName = wxT("");
 	this->m_iType = wxRP_TEXTVALUE;
 	this->m_sValue = wxT("");
 }
@@ -756,10 +755,10 @@ const wxReportTextParagraph* wxReportTextItem::GetParagraph(int index) const
 		return NULL;
 }
 
-double wxReportTextItem::CalculateWidth(wxDC* dc, int pxLeftBorder, int pxRightBorder, int pxPageWidth)
+/*double wxReportTextItem::CalculateWidth(wxDC* dc, int pxLeftBorder, int pxRightBorder, int pxPageWidth)
 {
 	
-}
+}*/
 
 double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, double itemWidth, double &itemHeight, int pxTopBorder, int pxBottomBorder, int pxPageHeight, int pxPageWidth)
 {
@@ -781,7 +780,7 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 	{
 		pPar = this->m_arParagraphs.Item(p);
 		int nTexts = pPar->GetCount();
-		int newLines = 0;
+		//int newLines = 0;
 		double parWidth = 0;
 		int parLines = 0;
 		int pxLineHeight = MM2PX(pPar->GetStyle().GetLineHeight(), dc, toScreen);
@@ -964,7 +963,7 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 		int tDrawn = 0; // count of drawed text values
 		int lineWidth = 0; // width of the line
 		bool drawLine = false; // flag, true when the line has to be drawn
-		int heightConst = pPar->m_style.GetLineHeight();
+		//int heightConst = pPar->m_style.GetLineHeight();
 		double parHeight = 0.;
 		double lineHeight = pPar->m_style.GetLineHeight(); //0.;
 		//int lineHeight = MM2PX(pPar->m_style.GetLineHeight(), dc, toScreen);

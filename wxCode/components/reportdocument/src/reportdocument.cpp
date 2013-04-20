@@ -1,5 +1,6 @@
 #include "wx/report/reportdocument.h"
 #include "wx/arrimpl.cpp"
+#include <wx/wfstream.h>
 
 #define BAD_VALUE(item) {delete item; return false;}
 
@@ -8,13 +9,13 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(HandlersArray);
 wxReportDocument::wxReportDocument()
 {
 	this->m_fAutoRefresh = true;
-	//this->m_arrPages.Add(new wxReportPage());
 	this->m_iActivePageIndex = -1;
 	this->AddPage();
 	this->m_pActivePage = this->m_arrPages.Last();
 	//this->m_iUnitType = wxRP_MM;
 	this->m_printData.SetPaperId(wxPAPER_A4);
 	this->m_iDPI = 600;
+	this->m_sVersion = wxT("1.1.0 Beta");
 	
 	/*wxLocale locale;
 	locale.Init();*/
@@ -558,7 +559,7 @@ void wxReportDocument::DeleteAllPages()
 	this->m_iActivePageIndex = -1;
 }
 
-void wxReportDocument::DeletePages(int index)
+void wxReportDocument::DeletePage(int index)
 {
 	if( index >= 0 && index < (int)(this->m_arrPages.GetCount()) )
 	{
@@ -937,7 +938,7 @@ void wxReportDocument::Print(wxWindow *parent)
 	printer.Print(parent, &printout, true);
 }
 
-void wxReportDocument::ShowPrintPreview(wxWindow *parent)
+void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxSize& size, int zoom, bool maximized)
 {
 	if(this->m_fAutoRefresh)
 		this->RefreshVariables();
@@ -954,17 +955,20 @@ void wxReportDocument::ShowPrintPreview(wxWindow *parent)
 	data.SetToPage(this->m_arrPages.GetCount());
 	
 	wxPrintPreview *preview = new wxPrintPreview(printout1, printout2, &data);
-	if (!preview->Ok())
+	if (!preview->IsOk())
 	{
 		delete preview;
-		wxMessageBox(wxT("There was a problem previewing.\nPerhaps your	current printer is not set correctly?"), wxT("Previewing"), wxOK);
+		wxMessageBox(wxT("There was a problem with previewing.\nPerhaps your current printer is not set correctly?"), wxT("Previewing"), wxOK);
 		return;
 	} 
+	preview->SetZoom( zoom );
 	
 	wxPreviewFrame *frame = new wxPreviewFrame(preview, parent, wxT("Print Preview"));
-	frame->Centre(wxBOTH);
+	if( size.IsFullySpecified() ) frame->SetSize( size );
+	frame->Centre( wxBOTH );
+	frame->Maximize( maximized );
 	frame->Initialize();
-	frame->Show(true);
+	frame->Show();
 }
 
 bool wxReportDocument::SaveReport(const wxString& fileName, int formatId)
@@ -995,6 +999,8 @@ void wxReportDocument::RefreshVariables()
 	for(int p=0; p<(int)(m_arrPages.GetCount()); ++p)
 	{	
 		wxReportPage *pPage = this->m_arrPages.Item(p);
+		
+		this->m_pActivePage = pPage;
 		pPage->RefreshVariables();
 		
 		if(pPage->m_fDelete) // delete page if it's marked to delete
@@ -1043,7 +1049,7 @@ void wxReportDocument::SetAutoRefresh(bool refresh)
 	this->m_fAutoRefresh = refresh;
 }
 
-bool wxReportDocument::SaveLayoutToXML(const wxString& path)
+bool wxReportDocument::SaveLayoutToXML(wxOutputStream& out)
 {
 	if(this->m_fAutoRefresh)
 		this->RefreshVariables();
@@ -1085,15 +1091,15 @@ bool wxReportDocument::SaveLayoutToXML(const wxString& path)
 	
 	rootNode->AddChild(pagesNode);
 	xmlDoc.SetRoot(rootNode);
-	return xmlDoc.Save(path);
+	return xmlDoc.Save(out);
 }
 
-bool wxReportDocument::LoadLayoutFromXML(const wxString& path)
+bool wxReportDocument::LoadLayoutFromXML(wxInputStream& in)
 {
 	this->DoDestroy();
 	
 	wxXmlDocument xmlDoc;
-	if(!xmlDoc.Load(path)) return false;
+	if( !xmlDoc.Load(in) ) return false;
 
 	wxXmlNode *rootNode = xmlDoc.GetRoot();
 	
@@ -1214,4 +1220,27 @@ bool wxReportDocument::LoadLayoutFromXML(const wxString& path)
 	}
 
 	return true;
+}
+
+bool wxReportDocument::SaveLayoutToXML(const wxString& path)
+{
+	wxFileOutputStream fout( path );
+	if( fout.IsOk() ) {
+		return SaveLayoutToXML( fout );
+	} else 
+		return false;
+}
+
+bool wxReportDocument::LoadLayoutFromXML(const wxString& path)
+{
+	wxFileInputStream fin( path );
+	if( fin.IsOk() ) {
+		return LoadLayoutFromXML( fin );
+	} else
+		return false;
+}
+
+const wxString& wxReportDocument::GetVersion()
+{
+	return m_sVersion;
 }

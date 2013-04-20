@@ -539,8 +539,8 @@ bool wxReportPage::RetrieveFromXmlNode(const wxXmlNode* node)
 
 void wxReportPage::DrawToDC(wxDC* dc, bool toScreen)
 {
-	wxSize pageSize = dc->GetSizeMM();
-	wxSize pxSize = dc->GetSize();
+	/*wxSize pageSize = dc->GetSizeMM();
+	wxSize pxSize = dc->GetSize();*/
 		
 	if(this->m_style.GetBorder() > 0)
 	{

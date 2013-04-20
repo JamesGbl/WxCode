@@ -45,8 +45,8 @@ public:
 	 * \li wxRP_TOPBORDER: top border line
 	 * \li wxRP_BOTTOMBORDER: bottom border line
 	 * \li wxRP_ALLBORDER: bottom border line
-	 * \param color
-	 * \param thickness
+	 * \param color color of the border lines
+	 * \param thickness thickness of the border lines
 	 */
 	virtual void SetBorder(int borderValue, wxColour color = *wxBLACK, double thickness = 0.5);
 	/**
@@ -92,7 +92,7 @@ public:
 };
 
 /**
- * \brief Representing the style of the page.
+ * \brief Represents the style of the page.
  */
 class WXDLLIMPEXP_RP wxReportPageStyle : public wxReportStyle
 {
@@ -120,58 +120,63 @@ public:
 	~wxReportPageStyle() {;}
 	/**
 	 * \brief Sets the margins of the page.
-	 * \param left
-	 * \param right
-	 * \param top
-	 * \param bottom
+	 * \param left left margin
+	 * \param right right margin
+	 * \param top top margin
+	 * \param bottom bottom margin
 	 */
 	void SetMargins(double left, double right, double top, double bottom);
 	/**
 	 * \brief Seth the width if the page.
-	 * \param width
+	 * \param width page width
 	 */
 	void SetWidth(double width);
 	/**
 	 * \brief Sets the height of the page.
-	 * \param height
+	 * \param height page height
 	 */
 	void SetHeight(double height);
-	/**
-	 * \brief Gets the left margin of the page.
-	 * \return 
+
+	/*!
+	 * \brief Get page size.
+	 * \return  page size
 	 */
 	wxRealPoint GetSize() const;
+	/**
+	 * \brief Gets the left margin of the page.
+	 * \return left margin
+	 */
 	double GetLeftMargin() const;
 	/**
-	 * \brief Gest the roght margin of the page.
-	 * \return 
+	 * \brief Gest the right margin of the page.
+	 * \return righ margin
 	 */
 	double GetRightMargin() const;
 	/**
 	 * \brief Gest the top margin of the page.
-	 * \return 
+	 * \return top margin
 	 */
 	double GetTopMargin() const;
 	/**
 	 * \brief Gets the bootm margin of the page.
-	 * \return 
+	 * \return bottom margin
 	 */
 	double GetBottomMargin() const;
 	/**
 	 * \brief Create the XML node of the page style.
-	 * \return 
+	 * \return xml node
 	 */
 	wxXmlNode* CreateXmlNode();
 	/**
-	 * \brief Retrieve the page stzle of the specified XML node.
+	 * \brief Retrieve the page style of the specified XML node.
 	 * \param node
-	 * \return 
+	 * \return TRUE on success, otherwise FALSE
 	 */
 	bool RetrieveFromXmlNode(const wxXmlNode *node);
 };
 
 /**
- * \brief Representing the style of the text paragraph.
+ * \brief Represents the style of the text paragraph.
  */
 class WXDLLIMPEXP_RP wxReportParagraphStyle : public wxReportStyle
 {
@@ -219,7 +224,7 @@ public:
 	void SetLineHeight(double lineHeight);
 	/**
 	 * \brief Sets the space between paragraphs.
-	 * \param space
+	 * \param space space between paragraphs
 	 */
 	void SetParagraphsSpace(double space);
 	/**
@@ -263,7 +268,7 @@ public:
 };
 
 /**
- * \brief Representing the style of the text - the font and the color of the font.
+ * \brief Represents the style of the text, i.e. font and color of the font.
  */
 class WXDLLIMPEXP_RP wxReportTextStyle : public wxReportStyle
 {
@@ -334,7 +339,7 @@ public:
 };
 
 /**
- * \brief Representing the style of the image
+ * \brief Represents the style of the image
  */
 class WXDLLIMPEXP_RP wxReportImageStyle : public wxReportStyle
 {
@@ -404,7 +409,7 @@ public:
 };
 
 /**
- * \brief Representing the style of the table.
+ * \brief Represents the style of the table.
  */
 class WXDLLIMPEXP_RP wxReportTableStyle : public wxReportStyle
 {

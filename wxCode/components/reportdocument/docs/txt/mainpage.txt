@@ -5,8 +5,9 @@
 
     The wxReportDocument is a cross-platform software library written in C++ programming language based 
     on wxWidgets which offers a functionality needed for creation of a print reports and forms. The created
-    forms could be printed with librarie's internal printing support based on the wxWidget's printing
-    framework or it can be saved to an output xml file to later use in other applications.\n\n
+    forms can be printed with library's internal printing backend based on the wxWidget's printing
+    framework or it can be saved to an output xml file (or any available output stream) for later use in other
+	applications.\n\n
         
     <b>Main features:</b>
     <ul>

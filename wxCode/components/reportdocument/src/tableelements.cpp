@@ -169,6 +169,11 @@ bool wxReportTableCell::RetrieveFromXmlNode(const wxXmlNode* node, const wxRepor
 
 wxReportTableItem::wxReportTableItem()
 {
+	// set default name here because noname tables cannot be spread over multiple pages
+	// if needed
+	static int counter = 0;
+	this->m_sName = wxString::Format( wxT("TableItem_%d"), ++counter );
+	
 	this->m_iType = wxRP_TABLE;
 	this->m_textAlign = wxRP_LEFTALIGN;
 	this->m_nColumns = 0;

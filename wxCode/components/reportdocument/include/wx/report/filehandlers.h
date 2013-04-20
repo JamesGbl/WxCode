@@ -6,7 +6,7 @@
 /////////// wxReportFileHandler class
 
 /**
- * \brief Base class for output file-handlers.
+ * \brief Base class for output file handlers.
  */
 class WXDLLIMPEXP_RP wxReportFileHandler
 {

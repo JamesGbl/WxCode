@@ -6,7 +6,7 @@
 #include "wx/hashmap.h"
 
 /**
- * \brief Representing the layout of the single page. Encapsulates the items on the page.
+ * \brief Represents the layout of the single page. The class encapsulates the items on the page.
  */
 class WXDLLIMPEXP_RP wxReportPage
 {

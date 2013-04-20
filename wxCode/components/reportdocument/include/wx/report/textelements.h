@@ -108,7 +108,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxReportTextValue*, TextValuesArray, WXDLLIMPE
 /////////////// wxReportTextParagraph class declaration
 
 /**
- * \brief Representing the single text paragraph. Encapsulates the text value's objects
+ * \brief Represents the single text paragraph. Encapsulates the text value's objects
  */
 class WXDLLIMPEXP_RP wxReportTextParagraph : public wxReportPageItem
 {
@@ -169,6 +169,10 @@ public:
 	 * \param style paragraph style object
 	 */
 	void SetStyle(const wxReportParagraphStyle& style);
+	/*!
+	 * \brief Set line height from font size
+	 * \param fontPointSize line height size
+	 */
 	void SetLineHeightFromFontSize(int fontPointSize);
 	/**
 	 * \brief Returns the reference to the style object associated with the paragraph.
@@ -221,7 +225,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxReportTextParagraph*, ParagraphsArray, WXDLL
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * \brief Representing the block of the text. It contains the text values arranged to the paragraph's objects.
+ * \brief Represents the block of the text. It contains the text values arranged to the paragraph's objects.
  */
 class WXDLLIMPEXP_RP wxReportTextItem : public wxReportPositionedItem
 {
@@ -242,6 +246,12 @@ public:
 	 * \brief Default constructor.
 	 */
 	wxReportTextItem();
+	/*!
+	 * \brief Constructor.
+	 * \param name item's name
+	 * \param x horizontal position of the text item
+	 * \param y vertical position of the text item
+	 */
 	wxReportTextItem(const wxString& name, double x, double y);
 	/**
 	 * \brief Retrieve new text item form the specified XML node.
@@ -291,46 +301,54 @@ public:
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const short& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const int& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const long& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const float& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const double& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const char& value, const wxString& name);
 	/**
 	 * \brief Adds new text value object filled from the specified variable or object.
 	 * \param value constant reference to source object or variable
-	 * \name identificaton name of the text value object
+	 * \param name identificaton name of the text value object
 	 */
 	void AddVariable(const wxString& value, const wxString& name);
+	/*!
+	 * \brief Set item's style
+	 * \param style style
+	 */
 	void SetStyle(const wxReportStyle& style);
+	/*!
+	 * \brief Get used style
+	 * \return used style
+	 */
 	wxReportStyle GetStyle();
 	/**
 	 * \brief Set the style of the active text paragraph.
@@ -414,7 +432,8 @@ public:
 	 */
 	void RemoveLast();
 	/**
-	 * \brief 
+	 * \brief Remove text at specified index
+	 * \param index of removed text
 	 */
 	void RemoveText(int index);
 	/**
@@ -435,7 +454,7 @@ public:
 	 * \return constant pointer to the paragraph
 	 */
 	const wxReportTextParagraph* GetParagraph(int index) const;
-	double CalculateWidth(wxDC *dc, int pxLeftBorder, int pxRightBorder, int pxPageWidth);
+	//double CalculateWidth(wxDC *dc, int pxLeftBorder, int pxRightBorder, int pxPageWidth);
 	double CalculateTopLeftPosition(wxDC *dc, bool toScreen, double itemWidth, double &itemHeight, int pxTopBorder, int pxBottomBorder, int pxPageHeight, int pxPageWidth);
 	/**
 	 * \brief Create XML node of the text item.

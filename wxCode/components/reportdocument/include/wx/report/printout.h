@@ -18,11 +18,11 @@ protected:
 public:
 	/**
 	 * \brief Constructor. 
-	 * \param title
+	 * \param title printout title
 	 */
 	wxReportPrintout(const wxString& title) : wxPrintout(title) {m_pages = NULL;}
 	/**
-	 * \brief Default dectructor. 
+	 * \brief Default destructor. 
 	 */
 	~wxReportPrintout() {;}
 	/**
@@ -32,28 +32,28 @@ public:
 	void SetPages(PagesArray *pagesArray);
 	/**
 	 * \brief Called automatically by print framework before the printing of the each copy will started.
-	 * \param startPage
-	 * \param endPage
+	 * \param startPage starting page to print
+	 * \param endPage ending page to print
 	 * \return TRUE on succes, otherwise returns FALSE
 	 */
 	bool OnBeginDocument(int startPage, int endPage);
 	/**
 	 * \brief Called automatically by print framework before the printing of the each page will started
-	 * \param pageNum
+	 * \param pageNum number of printed page
 	 * \return TRUE on succes, otherwise returns FALSE
 	 */
 	bool OnPrintPage(int pageNum);
 	/**
 	 * \brief Called automatically by print framework. Sets the print range.
-	 * \param minPage
-	 * \param maxPage
-	 * \param pageFrom
-	 * \param pageTo
+	 * \param minPage pointer to value where 'min' page number will be stored
+	 * \param maxPage pointer to value where 'max' page number will be stored
+	 * \param pageFrom pointer to value where 'from' page number will be stored
+	 * \param pageTo pointer to value where 'to' page number will be stored
 	 */
 	void GetPageInfo(int *minPage, int *maxPage, int *pageFrom, int *pageTo);
 	/**
 	 * \brief Called automatically by print framework. Checks if there is still some page to print.
-	 * \param pageNum
+	 * \param pageNum page number
 	 * \return FALSE when the all pages have been printed.
 	 */
 	bool HasPage(int pageNum);

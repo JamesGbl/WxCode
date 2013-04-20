@@ -6,7 +6,7 @@
 #include "wx/dynarray.h"
 
 /**
- * \brief Converts the size in milimeters to size in pixels considering to the device context's PPI.
+ * \brief Converts the size in milimeters to size in pixels in accordance to the device context's PPI.
  * \param mm size in milimeters
  * \param dc currently used device context
  * \param toScreen tells if the current drawing task is to the screen or to the printer
@@ -23,9 +23,20 @@ inline int MM2PX(double mm, wxDC *dc, bool toScreen)
 	return wxRound((((double)(dc->GetPPI().x) / 25.4) * mm) / sx);
 }
 
+/*!
+ * \brief Draw border around specified rectangle.
+ * \param dc output DC
+ * \param border combination of border types
+ * \param x top-left corner's x position
+ * \param y top left corner's y position
+ * \param w rectangle width
+ * \param h rectangle height
+ * \sa SidesValues
+ */
 inline void DrawBorder(wxDC *dc, int border, int x, int y, int w, int h)
 {
 	int x1, y1, x2, y2;
+	x1 = y1 = x2 = y2 = 0;
 	
 	if(border <= 0b1111 && border > 0)
 	{
@@ -83,7 +94,7 @@ wxPoint CalcNegPos(const wxRealPoint& origPos, const wxPoint& pxPos, int w, int 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * \brief Representing the items on the page - base class.  
+ * \brief Base class representing the items on the page
  */
 class WXDLLIMPEXP_RP wxReportPageItem
 {
@@ -103,7 +114,7 @@ public:
 	/**
 	 * \brief Constructor.
 	 * \param name name of the item
-	 * \param isVariable tells if the item will be connected with data source object
+	 * \param isVariable tells whether the item will be connected with data source object
 	 */
 	wxReportPageItem(const wxString& name, bool isVariable = false);
 	/**
@@ -115,10 +126,6 @@ public:
 	 * \param name name of the item
 	 */
 	void SetName(const wxString& name);
-	/**
-	 * \brief Virtual function. Do nothing for this class.
-	 */
-	virtual void SetVariable() {;}
 	/**
 	 * \brief Sets if the item will be filled from data.
 	 * \param isVariable TRUE to enable, FALSE to disable
@@ -139,26 +146,27 @@ public:
 	 */
 	bool IsVariable();
 	/**
-	 * \brief Refresh item's value if it is filled from data object, virtual function - do nothing for this class.
+	 * \brief Refresh item's value if it is filled from data source object.
 	 */
 	virtual void RefreshVariable() {;}
 	/**
-	 * \brief Remove content of the item - virtual function - do nothing for this class.
+	 * \brief Remove content of the item.
 	 */
 	virtual void Clear() {;}
 	/**
-	 * \brief Create XML node of the item - virtual function - ever returns NULL for this class.
+	 * \brief Create XML node of the item - returns NULL for this class.
 	 * \return ever returns NULL
 	 */
 	virtual wxXmlNode* CreateXmlNode() {return NULL;}
 	/**
-	 * \brief Retrieve item from the specified node - virtual function - ever returns FALSE for this class.
+	 * \brief Retrieve item from the specified node - returns FALSE for this class.
 	 */
 	virtual bool RetrieveFromXmlNode(const wxXmlNode* node) {return false;}
 	/**
-	 * \brief Draw item to the specified device context - virtual function - ever do nothing for this class.
+	 * \brief Draw item to the specified device context - does nothing for this class.
 	 * \param dc device context to draw
 	 * \param toScreen tells if the drawing will be on the screnn or on the printer.
+	 * \param pageStyle used page style.
 	 */
 	virtual void DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle& pageStyle) {;}
 	
@@ -173,7 +181,8 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxReportPageItem*, ItemsArray, WXDLLIMPEXP_RP)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * \brief Representing the items with specified position on the page.
+ * \brief Represents items with specified position on the page. The position
+ * must be specified in millimeters.
  */
 class WXDLLIMPEXP_RP wxReportPositionedItem : public wxReportPageItem
 {
@@ -181,16 +190,34 @@ protected:
 	wxRealPoint m_position;
 	
 public:
+	/*!
+	 * \brief Default construstor.
+	 */
 	wxReportPositionedItem();
+	/*!
+	 * \brief Constructor.
+	 * \param name Item's name
+	 * \param x horizontal position of the item
+	 * \param y vertical position of the item
+	 * \param isVariable tells whether the item will be connected with data source object
+	 */
 	wxReportPositionedItem(const wxString& name, double x, double y, bool isVariable);
 	virtual ~wxReportPositionedItem() {;}
 	/**
 	 * \brief Sets the position of the item.
-	 * \param posX
-	 * \param posY
+	 * \param posX horizontal position of the item
+	 * \param posY vertical position of the item
 	 */
 	void SetPosition(double posX, double posY);
+	/*!
+	 * \brief Sets the position of the item.
+	 * \param position item's position
+	 */
 	void SetPosition(const wxRealPoint& position);
+	/*!
+	 * \brief Get the position of the item
+	 * \return current item's position
+	 */
 	const wxRealPoint& GetPosition();
 };
 
@@ -199,7 +226,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * \brief Representing the image items.
+ * \brief Represents the image items.
  */
 class WXDLLIMPEXP_RP wxReportImageItem : public wxReportPositionedItem
 {
@@ -218,10 +245,10 @@ public:
 	 * \brief Constructor.
 	 * \param name name of the image item
 	 * \param path path to the image file
-	 * \param x x-position of the image
-	 * \param y y-position of the image
+	 * \param x horizontal position of the image
+	 * \param y vertical position of the image
 	 * \param PPI pixels per inch value of the image
-	 * \param isVariable tells if the path of the image file will be loaded from the wxString source object
+	 * \param isVariable tells whether the path of the image file will be loaded from the wxString source object
 	 */
 	wxReportImageItem(const wxString& name, const wxString& path, double x, double y, int PPI = 72, bool isVariable = false);
 	/**

@@ -42,7 +42,7 @@ public:
 	{m_pArrSource = pArraySource; m_iArrSourceType = ArraySourceType; m_iStartPos = startPos; m_count = count;}
 	/**
 	 * \brief Returns the actual count of values in the array.
-	 * \return caunt of values in the array
+	 * \return count of values in the array
 	 */
 	int GetActualArrayCount();
 	/**
@@ -56,7 +56,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxReportTableCellsSource, wxReportTableCellsSo
 //////////////// wxReportTableCell class
 
 /**
- * \brief Representing the single cell in the table.
+ * \brief Represents the single cell in the table.
  */
 class WXDLLIMPEXP_RP wxReportTableCell : public wxReportTextValue
 {
@@ -76,12 +76,12 @@ public:
 	~wxReportTableCell() {;}
 	/**
 	 * \brief Sets the width of the cell.
-	 * \param width to set
+	 * \param cellWidth width to set
 	 */
 	void SetWidth(double cellWidth);
 	/**
 	 * \brief Sets the height of the cell.
-	 * \param height to set
+	 * \param cellHeight height to set
 	 */
 	void SetHeight(double cellHeight);
 	/**
@@ -133,7 +133,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(CellsArray*, ArrayOfCellsArrays, WXDLLIMPEXP_R
 //////////////// wxReportTableItem class
 
 /**
- * \brief Representing the table page item. Encapsulates the signle cell objects.
+ * \brief Represents the table page item. Encapsulates the signle cell objects.
  */
 class WXDLLIMPEXP_RP wxReportTableItem : public wxReportPositionedItem
 {
@@ -294,7 +294,8 @@ public:
 	wxReportTableItem();
 	/**
 	 * \brief Constructor.
-	 * \param name identification name of the item - must be set
+	 * \param name identification name of the item (must be set otherwise the table will not
+	 * be able to spread over several pages if needed).
 	 */
 	wxReportTableItem(const wxString& name);
 	/**
@@ -392,6 +393,9 @@ public:
 	 */
 	void AddRow(const wxArrayString& array, const wxString& header = wxT(""), int position = wxRP_AT_LAST, bool isVariable = false);
 	
+	/*!
+	 * \brief Add new empty cell.
+	 */
 	void AddCell();
 	/**
 	 * \brief Add new cell to the column and fill them with values from the source object.
