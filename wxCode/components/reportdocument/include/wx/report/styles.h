@@ -38,7 +38,7 @@ public:
 	void SetName(const wxString& name);
 	/**
 	 * \brief Sets a border around the item.
-	 * \param borderValue Sets the sides of border lines. Could be set bz summing of border sides identificators. Possible values:
+	 * \param borderValue Sets the sides of border lines. Could be set by summing of border sides identificators. Possible values:
 	 * \li wxRP_NOBORDER: no border line
 	 * \li wxRP_LEFTBORDER: left border line
 	 * \li wxRP_RIGHTBORDER: right border line
@@ -48,7 +48,7 @@ public:
 	 * \param color color of the border lines
 	 * \param thickness thickness of the border lines
 	 */
-	virtual void SetBorder(int borderValue, wxColour color = *wxBLACK, double thickness = 0.5);
+	void SetBorder(int borderValue, wxColour color = *wxBLACK, double thickness = 0.5);
 	/**
 	 * \brief Sets the color of the border.
 	 * \param color border color to ser
@@ -58,7 +58,7 @@ public:
 	 * \brief Sets the color of the background.
 	 * \param color background color to set
 	 */
-	virtual void SetBackgroundColor(const wxColour& color);
+	void SetBackgroundColor(const wxColour& color);
 	/**
 	 * \brief Sets the width of the border line.
 	 * \param thickness width of the line
@@ -115,7 +115,7 @@ public:
 	 */
 	wxReportPageStyle(const wxString& name);
 	/**
-	 * \brief Default descructor.
+	 * \brief Default destructor.
 	 */
 	~wxReportPageStyle() {;}
 	/**
