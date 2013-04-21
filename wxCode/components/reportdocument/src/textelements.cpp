@@ -6,7 +6,8 @@
 
 WX_DEFINE_USER_EXPORTED_OBJARRAY(TextValuesArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(ParagraphsArray);
-WX_DEFINE_USER_EXPORTED_OBJARRAY(wxArraySizes);
+WX_DEFINE_OBJARRAY(wxArraySizes);
+WX_DEFINE_OBJARRAY(wxArrayRects);
 
 /////////////// wxReportTextValue class
 
@@ -968,6 +969,8 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 		double lineHeight = pPar->m_style.GetLineHeight(); //0.;
 		//int lineHeight = MM2PX(pPar->m_style.GetLineHeight(), dc, toScreen);
 		wxArraySizes strSizes;
+		wxArrayRects strRects;
+		wxArrayInt arrParIndexes;
 		int textsCount = pPar->GetWordsCount();
 		
 		int t = 0;
@@ -1029,37 +1032,12 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 						break;
 				}
 				
-				for(int td=tDrawn; td<t; ++td) //td = Text to Draw, draw strings to the line
+				// calculate text position for defered rendering
+				for(int td=tDrawn; td<t; ++td)
 				{
-					wxSize tSize = strSizes[td];
-					
-					wxReportTextValue Td = pPar->GetWord(td);
-					dc->SetFont(Td.m_style.GetFont());
-					dc->SetTextForeground(Td.m_style.GetTextColor());
-					
-					wxColour bgColor = Td.m_style.GetBackgroundColor();
-					if(bgColor != wxNullColour)
-						dc->SetTextBackground(bgColor);		
-
-					if(Td.m_style.GetBorder() > 0)
-					{
-						wxColour borderColor = Td.m_style.GetBorderColor();
-						int borderWidth = MM2PX(Td.m_style.GetBorderThickness(), dc, toScreen);
-						wxPen pen(borderColor, borderWidth);
-						wxBrush brush(bgColor);
-						pen.SetCap(wxCAP_BUTT);
-						dc->SetPen(pen);
-						if( bgColor != wxNullColour) dc->SetBrush(brush);
-						dc->DrawRectangle(tx, ty, tSize.x, tSize.y);
-					}			
-					
-					dc->DrawText(Td.m_sValue, tx, ty);
-					
-					/*double fontHeight = heightConst * Td.m_style.GetFontSize() * (wxReportUnit::GetUnitsRatio() / 72.); // check line height from font size
-					if(fontHeight > lineHeight)
-						lineHeight = fontHeight;*/
-					
-					tx += tSize.x + interleave;
+					strRects.Add( wxRect( tx, ty, strSizes[td].x, strSizes[td].y ) );
+					arrParIndexes.Add( td );
+					tx += strSizes[td].x + interleave;
 				}
 				
 				if(fNewLn)
@@ -1103,9 +1081,38 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 			}			
 				
 			DrawBorder(dc, pPar->m_style.GetBorder(), bx, by, bw, bh);
-							
-			//dc->DrawRectangle(bx, by, bw, bh);
 		}
+		
+		for(size_t ti=0; ti<arrParIndexes.GetCount(); ++ti)
+		{
+			wxSize tSize = strRects[ti].GetSize();
+			wxPoint tPosition = strRects[ti].GetPosition();
+			
+			wxReportTextValue Td = pPar->GetWord( arrParIndexes[ti] );
+			dc->SetFont(Td.m_style.GetFont());
+			dc->SetTextForeground(Td.m_style.GetTextColor());
+			
+			wxColour bgColor = Td.m_style.GetBackgroundColor();
+			if(bgColor != wxNullColour)
+				dc->SetTextBackground(bgColor);		
+
+			if(Td.m_style.GetBorder() > 0)
+			{
+				wxColour borderColor = Td.m_style.GetBorderColor();
+				int borderWidth = MM2PX(Td.m_style.GetBorderThickness(), dc, toScreen);
+				wxPen pen(borderColor, borderWidth);
+				wxBrush brush(bgColor);
+				pen.SetCap(wxCAP_BUTT);
+				dc->SetPen(pen);
+				if( bgColor != wxNullColour) dc->SetBrush(brush);
+				dc->DrawRectangle(tPosition.x, tPosition.y, tSize.x, tSize.y);
+			}			
+			
+			dc->DrawText(Td.m_sValue, tPosition.x, tPosition.y);
+		}
+		
+		strRects.Clear();
+		arrParIndexes.Clear();
 		
 		parPosPx.y += parHeight/*nLines * MM2PX(pPar->m_style.GetLineHeight(), dc, toScreen)*/ + MM2PX(pPar->m_style.GetParagraphsSpace(), dc, toScreen); // calculate position of the next paragraph, x-point will be the same
 		totalHeight += parHeight;//nLines * MM2PX(pPar->m_style.GetLineHeight(), dc, toScreen);

@@ -478,6 +478,7 @@ public:
 	friend class wxReportDocument;
 };
 
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxSize, wxArraySizes, WXDLLIMPEXP_RP);
+WX_DECLARE_OBJARRAY(wxSize, wxArraySizes);
+WX_DECLARE_OBJARRAY(wxRect, wxArrayRects);
 
 #endif // TEXTELEMENT_H

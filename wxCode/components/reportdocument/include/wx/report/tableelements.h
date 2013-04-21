@@ -3,7 +3,7 @@
 
 #include "wx/report/textelements.h"
 
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxPoint, wxPointsArray, WXDLLIMPEXP_RP);
+WX_DECLARE_OBJARRAY(wxPoint, wxArrayPoints);
 
 /**
  * \brief Encapsulates the pointer to sources array for columns or rows. 
@@ -143,7 +143,7 @@ protected:
 	int m_nColumns;
 	int m_textAlign;
 	double m_dPageHeight;
-	wxPointsArray m_arIndividualRowsHeights;
+	wxArrayPoints m_arIndividualRowsHeights;
 	wxReportTableStyle m_style;
 	wxReportTextStyle m_cellsStyle;
 	ArrayOfCellsArrays m_cells;

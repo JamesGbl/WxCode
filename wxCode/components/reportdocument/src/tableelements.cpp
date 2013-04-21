@@ -1,7 +1,7 @@
 #include "wx/report/tableelements.h"
 #include "wx/arrimpl.cpp"
 
-WX_DEFINE_USER_EXPORTED_OBJARRAY(wxPointsArray);
+WX_DEFINE_OBJARRAY(wxArrayPoints);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(CellsArray);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(ArrayOfCellsArrays);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxReportTableCellsSourcesArray);
