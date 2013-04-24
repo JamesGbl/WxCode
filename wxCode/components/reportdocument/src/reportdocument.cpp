@@ -342,7 +342,7 @@ void wxReportDocument::DoDivideTable(const wxReportTableItem& tableItem, int pag
 				pTable->m_style = tableItem.m_style;
 				pTable->m_nRows = nR;
 				pTable->m_nColumns = tableItem.m_nColumns;
-				pTable->m_fHasNext = (r + 1 < nRows);
+				pTable->m_fHasNext = (r < nRows);
 				pTable->m_position.x = tableItem.m_position.x;
 				pTable->m_position.y = tableItem.m_position.y;
 				
@@ -392,7 +392,7 @@ void wxReportDocument::DoDivideTable(const wxReportTableItem& tableItem, int pag
 				this->AddPage();
 				endPosY = tableItem.m_position.y + this->m_pActivePage->m_style.GetTopMargin() + tableItem.GetRowHeight(-1);
 				
-				if(r + 1 < nRows)
+				if(r < nRows)
 				{
 					pTable->m_fHasNext = true;
 					pTable = new wxReportTableItem(); // create new table for rest of the rows
@@ -540,21 +540,22 @@ void wxReportDocument::ReplacePage(const wxReportPage& layout, int index)
 void wxReportDocument::DeleteAllPages()
 {
 	int nPages = this->m_arrPages.GetCount();
-	int nHead = this->m_arHeader.GetCount();
-	int nFoot = this->m_arFooter.GetCount();
-	
+	int ftItems = this->m_arFooter.GetCount();
+	int hdItems = this->m_arHeader.GetCount();
+		
 	for(int i=0; i<nPages; ++i)
 		delete this->m_arrPages.Item(i);
 		
-	for(int i=0; i<nHead; ++i)
+	for(int i=0; i<ftItems; ++i)
+		delete this->m_arFooter.Item(i);
+		
+	for(int i=0; i<hdItems; ++i)
 		delete this->m_arHeader.Item(i);
 		
-	for(int i=0; i<nFoot; ++i)
-		delete this->m_arFooter.Item(i);
-	
 	this->m_arrPages.Clear();
 	this->m_arFooter.Clear();
 	this->m_arHeader.Clear();
+	
 	this->m_pActivePage = NULL;
 	this->m_iActivePageIndex = -1;
 }
@@ -563,7 +564,12 @@ void wxReportDocument::DeletePage(int index)
 {
 	if( index >= 0 && index < (int)(this->m_arrPages.GetCount()) )
 	{
-		delete this->m_arrPages.Item(index);
+		wxReportPage *page = this->m_arrPages.Item(index);
+		if( page == m_pActivePage ) {
+			m_pActivePage = NULL;
+			m_iActivePageIndex = -1;
+		}
+		delete page;
 		this->m_arrPages.RemoveAt(index);
 	}
 }
@@ -572,9 +578,14 @@ void wxReportDocument::DeletePages(int indexFrom, int indexTo)
 {
 	if( indexFrom >= 0 && indexTo >= 0 && indexFrom < indexTo )
 	{
-		for(int i=indexFrom; i<indexTo; ++i)
-			delete this->m_arrPages.Item(i);
-			
+		for(int i=indexFrom; i<indexTo; ++i) {
+			wxReportPage *page = this->m_arrPages.Item(i);
+			if( page == m_pActivePage ) {
+				m_pActivePage = NULL;
+				m_iActivePageIndex = -1;
+			}
+			delete page;
+		}
 		this->m_arrPages.RemoveAt(indexFrom, indexTo - indexFrom);
 	}
 }
@@ -607,7 +618,7 @@ void wxReportDocument::AddItem(const wxReportImageItem& imageItem)
 
 void wxReportDocument::AddItem(const wxReportTableItem& tableItem) // divide passed table to the several pages
 {
-	double btmPos = tableItem.m_position.y + tableItem.GetTableHeight();
+	double btmPos = tableItem.m_position.y + tableItem.GetTableHeight() + this->m_pActivePage->m_style.GetTopMargin();
 	if(btmPos <= this->m_pActivePage->m_style.GetSize().y - this->m_pActivePage->m_style.GetBottomMargin())
 		this->m_pActivePage->AddItem(tableItem);
 	else
