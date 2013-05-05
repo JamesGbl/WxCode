@@ -949,7 +949,7 @@ void wxReportDocument::Print(wxWindow *parent)
 	printer.Print(parent, &printout, true);
 }
 
-void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxSize& size, int zoom, bool maximized)
+void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxString& title, const wxSize& size, int zoom, bool maximized)
 {
 	if(this->m_fAutoRefresh)
 		this->RefreshVariables();
@@ -974,7 +974,7 @@ void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxSize& size, in
 	} 
 	preview->SetZoom( zoom );
 	
-	wxPreviewFrame *frame = new wxPreviewFrame(preview, parent, wxT("Print Preview"));
+	wxPreviewFrame *frame = new wxPreviewFrame( preview, parent, title );
 	if( size.IsFullySpecified() ) frame->SetSize( size );
 	frame->Centre( wxBOTH );
 	frame->Maximize( maximized );

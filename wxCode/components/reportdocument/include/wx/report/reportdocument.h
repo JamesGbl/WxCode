@@ -539,11 +539,12 @@ public:
 	/**
 	 * \brief Shows the print preview window.
 	 * \param parent pointer to parent window to show print preview window
+	 * \param title title of print preview window
 	 * \param size size of the previes frame
 	 * \param zoom preview zoom in percents
 	 * \param maximized show preview frame maximized
 	 */
-	void ShowPrintPreview(wxWindow *parent, const wxSize& size = wxDefaultSize, int zoom = 100, bool maximized = false);
+	void ShowPrintPreview(wxWindow *parent, const wxString& title = wxT("Print preview"), const wxSize& size = wxDefaultSize, int zoom = 100, bool maximized = false);
 	/**
 	 * \brief Save report to output file. Tries to find handler in handlers array identified by the suffix of specified file name or foramat ID. If the suitable handler isn't found than false value is returned.
 	 * \param fileName output file name to save
