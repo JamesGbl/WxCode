@@ -544,7 +544,7 @@ public:
 	 * \param zoom preview zoom in percents
 	 * \param maximized show preview frame maximized
 	 */
-	void ShowPrintPreview(wxWindow *parent, const wxString& title = wxT("Print preview"), const wxSize& size = wxDefaultSize, int zoom = 100, bool maximized = false);
+	void ShowPrintPreview(wxWindow *parent, const wxSize& size = wxDefaultSize, int zoom = 100, const wxString& title = wxT("Print preview"), bool maximized = false);
 	/**
 	 * \brief Save report to output file. Tries to find handler in handlers array identified by the suffix of specified file name or foramat ID. If the suitable handler isn't found than false value is returned.
 	 * \param fileName output file name to save

@@ -300,8 +300,12 @@ template<class T> bool wxReportDocument::DoSetVariableForTable(const wxString& n
 
 void wxReportDocument::DoDivideTable(const wxReportTableItem& tableItem, int pageIndex, int itemIndex)
 {
-	if(tableItem.m_sName != wxT(""))
+	if( tableItem.m_sName != wxT("") )
 	{
+		// do not add table if its position exceeds page height...
+		if( tableItem.m_position.y > this->m_pActivePage->m_style.GetSize().y - 
+									( this->m_pActivePage->m_style.GetBottomMargin() + this->m_pActivePage->m_style.GetTopMargin() ) ) return;
+
 		wxReportPage *pOldActPage = this->m_pActivePage; // store current active page
 		int iOldActPage = this->m_iActivePageIndex;
 		this->m_pActivePage = this->m_arrPages.Item(pageIndex); // set active page to page with the processed table
@@ -618,6 +622,11 @@ void wxReportDocument::AddItem(const wxReportImageItem& imageItem)
 
 void wxReportDocument::AddItem(const wxReportTableItem& tableItem) // divide passed table to the several pages
 {
+	// do not add table if its position exceeds page height...
+	if( tableItem.m_position.y > this->m_pActivePage->m_style.GetSize().y - 
+								( this->m_pActivePage->m_style.GetBottomMargin() + this->m_pActivePage->m_style.GetTopMargin() ) ) return;
+	
+	// ... otherwise determine whether the table should be spread over several pages
 	double btmPos = tableItem.m_position.y + tableItem.GetTableHeight() + this->m_pActivePage->m_style.GetTopMargin();
 	if(btmPos <= this->m_pActivePage->m_style.GetSize().y - this->m_pActivePage->m_style.GetBottomMargin())
 		this->m_pActivePage->AddItem(tableItem);
@@ -949,7 +958,7 @@ void wxReportDocument::Print(wxWindow *parent)
 	printer.Print(parent, &printout, true);
 }
 
-void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxString& title, const wxSize& size, int zoom, bool maximized)
+void wxReportDocument::ShowPrintPreview(wxWindow *parent, const wxSize& size, int zoom, const wxString& title, bool maximized)
 {
 	if(this->m_fAutoRefresh)
 		this->RefreshVariables();
