@@ -435,9 +435,8 @@ void wxReportPage::RefreshPageNumbers()
 	{
 		wxReportTextItem *pItem = (wxReportTextItem*)(this->m_arPageNumberItems[i]);
 		wxReportTextValue *pText = (wxReportTextValue*)(pItem->m_arParagraphs[0]->m_arTextValues[0]);
-		wxChar ch = 9;
-		int startPos = pText->m_sValue.Find(ch) + 1;
-		int endPos = pText->m_sValue.find(ch, startPos);
+		int startPos = pText->m_sValue.Find(wxT('\t')) + 1;
+		int endPos = pText->m_sValue.find(wxT('\t'), startPos);
 		pText->m_sValue.Remove(startPos, endPos-startPos);
 		pText->m_sValue.insert(startPos, wxString::Format(wxT("%d"), this->m_iPageNumber+1));
 		
@@ -445,7 +444,7 @@ void wxReportPage::RefreshPageNumbers()
 		wxScreenDC dc;
 		int w, h;
 		dc.GetTextExtent(pText->m_sValue, &w, &h, NULL, NULL, &font);
-		pItem->m_dWidth = 25.4 * (w / (double)(dc.GetPPI().x));
+		pItem->m_dWidth = 25.4 * (w / (double)(dc.GetPPI().x)) + 5;
 	}
 }
 

@@ -110,7 +110,7 @@ public:
 	/*!
 	 * \brief Default destructor.
 	 */
-	~wxReportLineShape() {;}
+	virtual ~wxReportLineShape() {;}
 	/**
 	 * \brief Sets the coordinates of the line.
 	 * \param x1 horizontal position of the starting point
@@ -202,7 +202,7 @@ public:
 	/**
 	 * \brief Default destructor
 	 */
-	~wxReportRectangleShape() {;}
+	virtual ~wxReportRectangleShape() {;}
 	/**
 	 * \brief Sets the coordinates of the top left corner of the rectangle.
 	 * \param x horizontal position of the left top corner
@@ -301,7 +301,7 @@ public:
 	/**
 	 * \brief Default destructor
 	 */
-	~wxReportCircleShape() {;} 
+	virtual ~wxReportCircleShape() {;} 
 	/**
 	 * \brief Sets the position of the circle's center
 	 * \param coordX horizontal position

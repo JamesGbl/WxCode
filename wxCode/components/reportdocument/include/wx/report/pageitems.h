@@ -254,7 +254,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportImageItem() {;}
+	virtual ~wxReportImageItem() {;}
 	/**
 	 * \brief Sets the path to the image file.
 	 * \param path path to the image file

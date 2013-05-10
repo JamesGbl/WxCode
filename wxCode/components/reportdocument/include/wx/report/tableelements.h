@@ -3,7 +3,7 @@
 
 #include "wx/report/textelements.h"
 
-WX_DECLARE_OBJARRAY(wxPoint, wxArrayPoints);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxPoint, wxArrayPoints, WXDLLIMPEXP_RP);
 
 /**
  * \brief Encapsulates the pointer to sources array for columns or rows. 
@@ -73,7 +73,7 @@ public:
 	/**
 	 * \brief Default destructor
 	 */
-	~wxReportTableCell() {;}
+	virtual ~wxReportTableCell() {;}
 	/**
 	 * \brief Sets the width of the cell.
 	 * \param cellWidth width to set
@@ -301,7 +301,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportTableItem() {;}
+	virtual ~wxReportTableItem() {;}
 	wxReportTableItem& operator= (const wxReportTableItem& sourceTable);
 	/**
 	 * \brief Add new empty column.

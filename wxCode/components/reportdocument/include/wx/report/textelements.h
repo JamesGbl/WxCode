@@ -135,7 +135,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportTextParagraph();
+	virtual ~wxReportTextParagraph();
 	/**
 	 * \brief Assigment operator.
 	 * \param sourcePar text paragraph object to assign
@@ -266,7 +266,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportTextItem();
+	virtual ~wxReportTextItem();
 	/**
 	 * \brief Assigment operator.
 	 * \param sourceItem source text item to assign

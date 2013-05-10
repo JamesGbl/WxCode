@@ -117,7 +117,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportPageStyle() {;}
+	virtual ~wxReportPageStyle() {;}
 	/**
 	 * \brief Sets the margins of the page.
 	 * \param left left margin
@@ -201,7 +201,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportParagraphStyle() {;}
+	virtual ~wxReportParagraphStyle() {;}
 	/**
 	 * \brief Set align of the text in the paragraph.
 	 * \param textAlign Possible values:
@@ -294,7 +294,7 @@ public:
 	/**
 	 * \brief Default destructor.
 	 */
-	~wxReportTextStyle() {;}
+	virtual ~wxReportTextStyle() {;}
 	bool operator== (const wxReportTextStyle& textStyle) const;
 	/**
 	 * \brief Sets the font of the text.
@@ -362,7 +362,7 @@ public:
 	/**
 	 * \brief Default destructor. 
 	 */
-	~wxReportImageStyle() {;}
+	virtual ~wxReportImageStyle() {;}
 	/**
 	 * \brief Set margins of the page.
 	 * \param left left margin
@@ -432,7 +432,7 @@ public:
 	/**
 	 * \brief Default destructor. 
 	 */
-	~wxReportTableStyle() {;}
+	virtual ~wxReportTableStyle() {;}
 	/**
 	 * \brief Creates the XML for the style.
 	 * \return XML node with the style

@@ -844,9 +844,8 @@ void wxReportDocument::InsertPageNumbering(const wxString& format, const wxRepor
 {
 	wxString strFormat = format;
 	int numPos = strFormat.Find(wxT("%d"));
-	wxChar tab = 9;
-	strFormat.insert(numPos, 1, tab);
-	strFormat.insert(numPos+3, 1, tab);
+	strFormat.insert(numPos, 1, wxT('\t'));
+	strFormat.insert(numPos+3, 1, wxT('\t'));
 	wxReportTextItem pageNum(wxT("PageNumber"), posX, posY);
 	pageNum.SetActiveTextStyle(textStyle);
 	pageNum.SetTextAlign(wxRP_CENTERALIGN);

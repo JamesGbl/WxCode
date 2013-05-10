@@ -319,8 +319,8 @@ wxReportTextValue wxReportTextParagraph::GetWord(int index)
 	{
 		wxReportTextValue *pText = this->m_arTextValues.Item(i);
 		wxString str = pText->GetValue();
-		wxChar tab = 9;
-		str.Replace(wxString(tab), wxT(" "));
+
+		str.Replace(wxT("\t"), wxT(" "));
 		
 		while(str.Contains(wxT("  ")))
 			str.Replace(wxT("  "), wxT(" "));
