@@ -1211,6 +1211,12 @@ void wxReportTableItem::SetRowHeight(int rowNumber, double height)
 	}
 }
 
+void wxReportTableItem::SetRowHeight(double height)
+{
+	for( int r = 0; r < this->m_nRows; ++r )
+		SetRowHeight( r, height );
+}
+
 double wxReportTableItem::GetRowHeight(int rowIndex) const
 {
 	if(rowIndex < 0)

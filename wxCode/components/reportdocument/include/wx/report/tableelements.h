@@ -659,9 +659,15 @@ public:
 	void SetRowHeader(const wxReportTableCell& header, int rowIndex);
 	/**
 	 * \brief Sets the height of the specified row.
+	 * \param rowNumber index of modified row
 	 * \param height row height to set
 	 */
 	void SetRowHeight(int rowNumber, double height);
+	/**
+	 * \brief Sets the height of all rows.
+	 * \param height row height to set
+	 */
+	void SetRowHeight(double height);
 	/**
 	 * \brief Returns the height of the specified row
 	 * \param rowIndex index of the row
