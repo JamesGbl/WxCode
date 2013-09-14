@@ -1,5 +1,6 @@
 #include "wx/report/tableelements.h"
 #include "wx/arrimpl.cpp"
+#include <wx/tokenzr.h>
 
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxArrayPoints);
 WX_DEFINE_USER_EXPORTED_OBJARRAY(CellsArray);
@@ -1917,27 +1918,50 @@ void wxReportTableItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyl
 			{
 				//dc->SetMapMode(wxMM_POINTS);
 				dc->SetFont(pCell->GetStyle().GetFont());
+				dc->SetTextForeground(pStyle->GetTextColor());
+				int lcy = cy;
 				int textW, textH;
-				dc->GetTextExtent(pCell->GetValue(), &textW, &textH);
+				wxString wrappedLine, line;
+				wxArrayString lines = wxStringTokenize( pCell->GetValue(), wxT("\n") );
 				
-				double cos = 0; // cell off-set
-				
-				switch(pCell->GetTextAlign()) // set x position or word spacing for specified align
-				{
-					case wxRP_CENTERALIGN:
-						cos += ((double)cw - (double)textW) / 2;
-						break;
-						
-					case wxRP_RIGHTALIGN:
-						cos += cw - textW - 3;
-						break;
-						
-					default:
-						cos = 3;
+				// wrap long lines
+				wxArrayString wrappedLines;
+				for( size_t l = 0; l < lines.GetCount(); ++l ) {
+					line = lines[l];
+					wrappedLine = wxT("");
+					for( size_t w = 0; w < line.Len(); ++w ) {
+						wrappedLine += line[w];
+						dc->GetTextExtent( wrappedLine, &textW, &textH );
+						if( textW > cw && (line[w] == wxT(' ') || line[w] == wxT('\t')) ) {
+							wrappedLines.Add( wrappedLine );
+							wrappedLine = wxT("");
+						}
+					}
+					if( wrappedLine != wxEmptyString ) wrappedLines.Add( wrappedLine );
 				}
 				
-				dc->SetTextForeground(pStyle->GetTextColor());
-				dc->DrawText(pCell->m_sValue, cx + cos, cy);
+				for( size_t l = 0; l < wrappedLines.GetCount(); ++l ) {
+					
+					dc->GetTextExtent(wrappedLines[l], &textW, &textH);
+					
+					double cos = 0; // cell off-set
+					
+					switch(pCell->GetTextAlign()) // set x position or word spacing for specified align
+					{
+						case wxRP_CENTERALIGN:
+							cos += ((double)cw - (double)textW) / 2;
+							break;
+							
+						case wxRP_RIGHTALIGN:
+							cos += cw - textW - 3;
+							break;
+							
+						default:
+							cos = 3;
+					}
+					dc->DrawText(wrappedLines[l], cx + cos, lcy);
+					lcy += textH;
+				}
 				//dc->SetMapMode(wxMM_TEXT);
 			}
 			
