@@ -50,6 +50,7 @@ wxReportTableCell::wxReportTableCell()
 	this->m_dHeight = 0;
 	this->m_dWidth = 0;
 	this->m_textAlign = wxRP_LEFTALIGN;
+	this->m_wrapMode = wxRP_NOWRAP;
 	this->m_iType = wxRP_TABLECELL;
 	this->m_sValue = wxT("");
 }
@@ -69,6 +70,11 @@ void wxReportTableCell::SetTextAlign(int alignType)
 	this->m_textAlign = alignType;
 }
 
+void wxReportTableCell::SetWrapMode(int wrapMode)
+{
+	this->m_wrapMode = wrapMode;
+}
+
 const double& wxReportTableCell::GetWidth()
 {
 	return this->m_dWidth;
@@ -82,6 +88,11 @@ const double& wxReportTableCell::GetHeight()
 int wxReportTableCell::GetTextAlign()
 {
 	return this->m_textAlign;
+}
+
+int wxReportTableCell::GetWrapMode()
+{
+	return this->m_wrapMode;
 }
 
 wxXmlNode* wxReportTableCell::CreateXmlNode(const wxReportTextStyle& cellsStyle)
@@ -103,6 +114,7 @@ wxXmlNode* wxReportTableCell::CreateXmlNode(const wxReportTextStyle& cellsStyle)
 	mainNode->AddAttribute(wxT("Width"), wxString::Format(wxT("%G"), this->m_dWidth));
 	mainNode->AddAttribute(wxT("Height"), wxString::Format(wxT("%G"), this->m_dHeight));
 	mainNode->AddAttribute(wxT("Align"), wxString::Format(wxT("%d"), this->m_textAlign));
+	mainNode->AddAttribute(wxT("Wrap"), wxString::Format(wxT("%d"), this->m_wrapMode));
 	
 	if(!(cellsStyle == this->m_style))
 		mainNode->AddProperty(this->m_style.CreateXmlNode()->GetProperties());
@@ -116,7 +128,7 @@ bool wxReportTableCell::RetrieveFromXmlNode(const wxXmlNode* node, const wxRepor
 {
 	try
 	{
-		int type = -1, variable = 0, align = wxRP_LEFTALIGN;
+		int type = -1, variable = 0, align = wxRP_LEFTALIGN, wrap = wxRP_NOWRAP;
 		double w = -1, h = -1;
 		
 		wxSscanf(node->GetAttribute(wxT("Type"), wxT("")), wxT("%d"), &type);
@@ -142,6 +154,9 @@ bool wxReportTableCell::RetrieveFromXmlNode(const wxXmlNode* node, const wxRepor
 			
 		wxSscanf(node->GetAttribute(wxT("Align"), wxT("")), wxT("%d"), &align);
 		this->m_textAlign = align;
+		
+		wxSscanf(node->GetAttribute(wxT("Wrap"), wxT("")), wxT("%d"), &wrap);
+		this->m_wrapMode = wrap;
 		
 		if(!this->m_style.RetrieveFromXmlNode(node))
 			this->m_style = cellsStyle;
@@ -177,6 +192,7 @@ wxReportTableItem::wxReportTableItem()
 	
 	this->m_iType = wxRP_TABLE;
 	this->m_textAlign = wxRP_LEFTALIGN;
+	this->m_wrapMode = wxRP_NOWRAP;
 	this->m_nColumns = 0;
 	this->m_nRows = 0;
 	this->m_fContinue = false;
@@ -188,6 +204,7 @@ wxReportTableItem::wxReportTableItem(const wxString& name)
 {
 	this->m_iType = wxRP_TABLE;
 	this->m_textAlign = wxRP_LEFTALIGN;
+	this->m_wrapMode = wxRP_NOWRAP;
 	this->m_nColumns = 0;
 	this->m_nRows = 0;
 	this->m_sName = name;
@@ -264,6 +281,7 @@ void wxReportTableItem::DoCopy(const wxReportTableItem& table)
 	this->m_sValue = wxT("");
 	this->m_style = table.m_style;
 	this->m_textAlign = table.m_textAlign;
+	this->m_wrapMode = table.m_wrapMode;
 }
 
 void wxReportTableItem::AddColumn(int position)
@@ -367,6 +385,7 @@ template<class T> void wxReportTableItem::DoAddColumn(const T& array, const wxSt
 		wxReportTableCell *pHeader = new wxReportTableCell();
 		pHeader->m_style = this->m_cellsStyle;
 		pHeader->m_textAlign = this->m_textAlign;
+		pHeader->m_wrapMode = this->m_wrapMode;
 		pHeader->m_sValue = header;
 		
 		CalculateHeight(pHeader, 0, true);
@@ -393,6 +412,7 @@ template<class T> void wxReportTableItem::DoAddColumn(const T& array, const wxSt
 			pCell->SetValue(array.Item(r));
 			pCell->m_style = this->m_cellsStyle;
 			pCell->m_textAlign = this->m_textAlign;
+			pCell->m_wrapMode = this->m_wrapMode;
 			CalculateHeight(pCell, r+1, false);
 			CalculateWidth(pCell, position+1, false);
 			
@@ -508,6 +528,7 @@ template<class T> void wxReportTableItem::DoAddRow(const T& array, const wxStrin
 			pCell->m_style = this->m_cellsStyle;
 			//pCell->m_dHeight = 1.2 * pCell->m_style.GetFontSize() * (25.4/72.);
 			pCell->m_textAlign = this->m_textAlign;
+			pCell->m_wrapMode = this->m_wrapMode;
 			CalculateWidth(pCell, i+1, false);
 			CalculateHeight(pCell, position+1, false);
 			pRow->Add(pCell);
@@ -628,6 +649,7 @@ template<class T> bool wxReportTableItem::DoAddCellToColumn(const T& value, int 
 		pCell->SetValue(value);
 		pCell->m_style = this->m_cellsStyle;
 		pCell->m_textAlign = this->m_textAlign;
+		pCell->m_wrapMode = this->m_wrapMode;
 		CalculateWidth(pCell, position+1, false);
 		CalculateHeight(pCell, startRow+1, false);
 		
@@ -726,6 +748,7 @@ template<class T> void wxReportTableItem::DoAddCellToRow(const T& value, int pos
 		pCell->m_style = this->m_cellsStyle;
 		//pCell->m_dHeight = 1.2 * pCell->m_style.GetFontSize() * (25.4/72);
 		pCell->m_textAlign = this->m_textAlign;
+		pCell->m_wrapMode = this->m_wrapMode;
 		CalculateWidth(pCell, pRow->GetCount()+1, false);
 		CalculateHeight(pCell, position+1, false);
 		pRow->Add(pCell);
@@ -923,6 +946,7 @@ template<class T> bool wxReportTableItem::DoSetVariableForColumn(int columnIndex
 					/*pCell->m_dHeight = 1.2 * pCell->m_style.GetFontSize() * (25.4/72.);
 					pCell->m_dWidth = 30;*/
 					pCell->m_textAlign = this->m_textAlign;
+					pCell->m_wrapMode = this->m_wrapMode;
 					pCell->m_style = this->m_cellsStyle;
 					CalculateWidth(pCell, columnIndex+1, false);
 					CalculateHeight(pCell, r1+1, false);
@@ -991,6 +1015,7 @@ template<class T> bool wxReportTableItem::DoSetVariableForRow(int rowIndex, cons
 					/*pCell->m_dHeight = 1.2 * pCell->m_style.GetFontSize() * (25.4/72.);
 					pCell->m_dWidth = 30;*/
 					pCell->m_textAlign = this->m_textAlign;
+					pCell->m_wrapMode = this->m_wrapMode;
 					pCell->m_style = this->m_cellsStyle;
 					CalculateHeight(pCell, rowIndex+1, false);
 					CalculateWidth(pCell, c+1, false);
@@ -1430,6 +1455,11 @@ void wxReportTableItem::SetColumnsHeadersStyle(const wxReportTextStyle& style, i
 void wxReportTableItem::SetTextAlign(int alignType)
 {
 	this->m_textAlign = alignType;
+}
+
+void wxReportTableItem::SetWrapMode(int wrapMode)
+{
+	this->m_wrapMode = wrapMode;
 }
 
 wxReportTableStyle& wxReportTableItem::Style()
@@ -1926,18 +1956,42 @@ void wxReportTableItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyl
 				
 				// wrap long lines
 				wxArrayString wrappedLines;
-				for( size_t l = 0; l < lines.GetCount(); ++l ) {
-					line = lines[l];
-					wrappedLine = wxT("");
-					for( size_t w = 0; w < line.Len(); ++w ) {
-						wrappedLine += line[w];
-						dc->GetTextExtent( wrappedLine, &textW, &textH );
-						if( textW > cw && (line[w] == wxT(' ') || line[w] == wxT('\t')) ) {
-							wrappedLines.Add( wrappedLine );
-							wrappedLine = wxT("");
+				switch( pCell->GetWrapMode() ) {
+				case wxRP_NOWRAP:
+					wrappedLines = lines;
+					break;
+					
+				case wxRP_WRAPANYWHERE:
+					for( size_t l = 0; l < lines.GetCount(); ++l ) {
+						line = lines[l];
+						wrappedLine = wxT("");
+						for( size_t w = 0; w < line.Len(); ++w ) {
+							wrappedLine += line[w];
+							dc->GetTextExtent( wrappedLine, &textW, &textH );
+							if( textW > cw ) {
+								wrappedLines.Add( wrappedLine );
+								wrappedLine = wxT("");
+							}
 						}
+						if( wrappedLine != wxEmptyString ) wrappedLines.Add( wrappedLine );
 					}
-					if( wrappedLine != wxEmptyString ) wrappedLines.Add( wrappedLine );
+					break;
+				
+				case wxRP_WRAPWHITESPACES:
+					for( size_t l = 0; l < lines.GetCount(); ++l ) {
+						line = lines[l];
+						wrappedLine = wxT("");
+						for( size_t w = 0; w < line.Len(); ++w ) {
+							wrappedLine += line[w];
+							dc->GetTextExtent( wrappedLine, &textW, &textH );
+							if( textW > cw && (line[w] == wxT(' ') || line[w] == wxT('\t')) ) {
+								wrappedLines.Add( wrappedLine );
+								wrappedLine = wxT("");
+							}
+						}
+						if( wrappedLine != wxEmptyString ) wrappedLines.Add( wrappedLine );
+					}
+					break;					
 				}
 				
 				for( size_t l = 0; l < wrappedLines.GetCount(); ++l ) {

@@ -67,6 +67,13 @@ enum TextAlign
 	wxRP_JUSTIFY = 3
 };
 
+enum WrapMode
+{
+	wxRP_NOWRAP = 0,
+	wxRP_WRAPWHITESPACES = 1,
+	wxRP_WRAPANYWHERE = 2
+};
+
 enum wxReportPageParts
 {
 	wxRP_BODY,

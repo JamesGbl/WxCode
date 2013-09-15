@@ -2,6 +2,7 @@ wxReportDocument 1.0.0
 ----------------------
 License:	wxWidgets License
 Author:		Václav Kvasnička (c) 2012
+			Michal Bližňák (c) 2013
 
 
 Build instructions
@@ -17,6 +18,11 @@ solution/project files will be generated into the "build" subfolder for further 
 
 Changes
 -------
+13/09/15	v1.2.0
+- Content of table cells can be wrapped
+
+13/07/01	v1.1.0
+- Various improvements and bug fixes
 
 13/02/25	v1.0.0
-- Initial relese
+- Initial release

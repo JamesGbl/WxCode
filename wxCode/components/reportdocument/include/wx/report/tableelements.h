@@ -64,6 +64,7 @@ protected:
 	double m_dWidth;
 	double m_dHeight;
 	int m_textAlign;
+	int m_wrapMode;
 	
 public:
 	/**
@@ -87,12 +88,20 @@ public:
 	/**
 	 * \brief Sets align of the text in the cell.
 	 * \param alignType Possible values:
-	 * \li wxRP_LEFT: left align
-	 * \li wxRP_RIGHT: right align
-	 * \li ID_CENTER: center
+	 * \li wxRP_LEFTALIGN: left align
+	 * \li wxRP_RIGHTALIGN: right align
+	 * \li wxRP_CENTERALIGN: center
 	 * \li wxRP_JUSTIFY: justify do whole width
 	 */
 	void SetTextAlign(int alignType = wxRP_LEFTALIGN);
+	/**
+	 * \brief Wrap content of the cell to avoid exceeding of its width.
+	 * \param wrapMode Specify wrapping mode:
+	 * \li wxRP_NOWRAP: no wrapping is used
+	 * \li wxRP_WRAPWHITESPACES: text can be wrapped at whitespaces only
+	 * \li wxRP_WRAPANYWHERE: text can be wrapped at any character
+	 */
+	void SetWrapMode(int wrapMode = wxRP_WRAPWHITESPACES);
 	/**
 	 * \brief Returns the width of the cell.
 	 * \param width of the cell
@@ -106,12 +115,21 @@ public:
 	/**
 	 * \brief Returns align value of the text in the cell.
 	 * \return Possible returned values:
-	 * \li wxRP_LEFT: left align
-	 * \li wxRP_RIGHT: right align
-	 * \li wxRP_CENTER: center
+	 * \li wxRP_LEFTALIGN: left align
+	 * \li wxRP_RIGHTALIGN: right align
+	 * \li wxRP_CENTERALIGN: center
 	 * \li wxRP_JUSTIFY: justify do whole width
 	 */
 	int GetTextAlign();
+	
+	/** 
+	 * \brief Returns wrapping mode set to the cell.
+	 * \return Possible returned values:
+	 * \li wxRP_NOWRAP: no wrapping is used
+	 * \li wxRP_WRAPWHITESPACES: text can be wrapped at whitespaces only
+	 * \li wxRP_WRAPANYWHERE: text can be wrapped at any character
+	 */
+	int GetWrapMode();
 	/**
 	 * \brief Create XML node from the cell.
 	 * \return XML node with cell
@@ -142,6 +160,7 @@ protected:
 	int m_nRows;
 	int m_nColumns;
 	int m_textAlign;
+	int m_wrapMode;
 	double m_dPageHeight;
 	wxArrayPoints m_arIndividualRowsHeights;
 	wxReportTableStyle m_style;
@@ -741,6 +760,11 @@ public:
 	 * \param alignType type of the align
 	 */
 	void SetTextAlign(int alignType = wxRP_LEFTALIGN);
+	/**
+	 * \brief Sets wrapping mode for the cells
+	 * \param wrapMode type of the wrapping mode
+	 */
+	void SetWrapMode(int wrapMode = wxRP_NOWRAP);
 	/**
 	 * \brief Returns reference to style object of the table
 	 * \return reference to style object
