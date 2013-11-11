@@ -13,6 +13,7 @@
 
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
+#include <wx/hashmap.h>
 
 #include <wx/wxsf/ShapeBase.h>
 #include <wx/wxsf/DiagramManager.h>
@@ -26,6 +27,8 @@
 #ifdef __WXMAC__ 
 #include <wx/printdlg.h> 
 #endif 
+
+WX_DECLARE_HASH_MAP( long, wxRealPoint*, wxIntegerHash, wxIntegerEqual, PositionMap );
 
 /*! \brief XPM (mono-)bitmap which can be used in shape's shadow brush */
 extern const char* wxSFShadowBrush_xpm[];
@@ -822,11 +825,29 @@ public:
 	void ValidateSelection(ShapeList& selection);
 
 	/*!
-	 * \brief Function responsible for drawing of the canvas's content to given DC.
+	 * \brief Function responsible for drawing of the canvas's content to given DC. The default
+	 * implementation draws actual objects managed by assigned diagram manager.
 	 * \param dc Reference to device context where the shapes will be drawn to
-	 * \param fromPaint Set the argument to TRUE if the dc argument refers to the wxPaintDC instance
+	 * \param fromPaint Set the argument to TRUE if the dc argument refers to the wxPaintDC instance 
+	 * or derived classes (i.e. the function is called as a response to wxEVT_PAINT event)
 	 */
-	void DrawContent(wxDC& dc, bool fromPaint);
+	virtual void DrawContent(wxDC& dc, bool fromPaint);
+	/*!
+	 * \brief Function responsible for drawing of the canvas's background to given DC. The default
+	 * implementation draws canvas background and grid.
+	 * \param dc Reference to device context where the shapes will be drawn to
+	 * \param fromPaint Set the argument to TRUE if the dc argument refers to the wxPaintDC instance 
+	 * or derived classes (i.e. the function is called as a response to wxEVT_PAINT event)
+	 */
+	virtual void DrawBackground(wxDC& dc, bool fromPaint);
+	/*!
+	 * \brief Function responsible for drawing of the canvas's foreground to given DC. The default
+	 * do nothing.
+	 * \param dc Reference to device context where the shapes will be drawn to
+	 * \param fromPaint Set the argument to TRUE if the dc argument refers to the wxPaintDC instance 
+	 * or derived classes (i.e. the function is called as a response to wxEVT_PAINT event)
+	 */
+	virtual void DrawForeground(wxDC& dc, bool fromPaint);
 
     /*!
      * \brief Get reference to multiselection box
@@ -1035,6 +1056,7 @@ private:
 	wxDataFormat m_formatShapes;
 
 	wxPoint m_nPrevMousePos;
+	PositionMap m_mapPrevPositions;
 	
 	wxRect m_nInvalidateRect;
 
@@ -1061,7 +1083,7 @@ private:
 	// private functions
 
 	/*! \brief Validate selection so the shapes in the given list can be processed by the clipboard functions */
-	void ValidateSelectionForClipboard(ShapeList& selection);
+	void ValidateSelectionForClipboard(ShapeList& selection, bool storeprevpos);
 	/*! \brief Append connections assigned to shapes in given list to this list as well */
 	void AppendAssignedConnections(wxSFShapeBase *shape, ShapeList& selection, bool childrenonly);
 	/*! \brief Initialize printing framework */
@@ -1076,6 +1098,11 @@ private:
 	void ReparentShape(wxSFShapeBase *shape, const wxPoint& parentpos);
 	/*! \brief Propagate selection recursively to all parents if sfsPROPAGATE_SELECTION flag is set */
 	void PropagateSelection(wxSFShapeBase *shape, bool selection);
+	
+	/*! \brief Store previous shape's position modified in ValidateSelectionForClipboard() function */
+	inline void StorePrevPosition(const wxSFShapeBase *shape);
+	/*! \brief Restore previously stored shapes' positions and clear the storage */
+	void RestorePrevPositions();
 
 	// private event handlers
 	/*!

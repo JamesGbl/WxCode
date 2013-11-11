@@ -1,3 +1,25 @@
+Changes in version 1.13.0 beta (2013-10-25):
+--------------------------------------------
+- Fixed #6 'void' function returning a value.
+- Fixed #7 error C2374: 'i' : redefinition.
+- Fixed #8 Memory leak when wxGraphicsContext is enabled.
+- Added functions wxSFDiagramManager::IsModified() and wxSFDiagramManager::SetModified(...).
+- Added functions wxSFDiagramManager::AcceptTopShape(...) and wxSFDiagramManager::ClearAcceptedTopShapes()
+  suitable for specification of shapes that can be inserted to diagram manager as top shapes (i.e.
+  shapes without any parent).
+- Diagram manager now accepts all shape types by default (also, all the shapes are accepted
+  as top shapes by default).
+- Added new shape style sfsPROPAGATE_INTERACTIVE_CONNECTION allowing the shape to propagate interactive connection
+  request to its parent.
+- Added new shape style sfsNO_FIT_TO_CHILDREN which avoids the shape to be resized to fit its children automatically.
+- Fixed incorrect refresh of scaled canvas if wxGraphicsContext is used for drawing.
+- Function wxSFShapeCanvas::DrawContent(...) is virtual now.
+- Added virtual function wxSFShapeCanvas::DrawBackground(...) called before wxSFShapeCanvas::DrawContent(...)
+  responsible for drawing of the canvas background and grid.
+- Added virtual function wxSFShapeCanvas::DrawForeground(...) called after wxSFShapeCanvas::DrawContent(...)
+  responsible for drawing onto the top of the diagram.
+- Updated sample projects to reflect new features.
+
 Changes in version 1.12.4 beta (2013-02-14):
 --------------------------------------------
 - Fixed build error with wxWidgets 2.9.5.
