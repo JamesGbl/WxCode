@@ -26,7 +26,7 @@ Requirements:
 =============
 - wxXmlSerializer uses wxWidgets (www.wxwidgets.org) and was tested with version 2.8.x on MS Windows
   and Linux (Ubuntu 7.04) target platforms.
-- Code::Blocks (www.codeblocks.org) IDE with MinGW C++ compiler or MS Visual Studio 2005/2008/
+- CodeLite (www.codelite.org) or Code::Blocks (www.codeblocks.org) IDE with GCC/MinGW C++ compiler or MS Visual Studio 2005/2008/
   Visual C++ 2005/2008 Express are recommended for opening generated workspace/project files but the library
   can be built from the command line as well.
 
@@ -71,6 +71,9 @@ There are few standard build configurations defined in the batch file and you ca
 inkove the premake system directly as follows:
 
 Examples of usage of the premake scripts:
+
+For CodeLite Workspace/Project files producing shared library with UNICODE support, using wxWidgets DLLs type:
+> premake\premake-win32.exe --target cl-gcc --unicode --with-wx-shared --shared
 
 For Code::Blocks Workspace/Project files producing shared library with UNICODE support, using wxWidgets DLLs type:
 > premake\premake-win32.exe --target cb-gcc --unicode --with-wx-shared --shared

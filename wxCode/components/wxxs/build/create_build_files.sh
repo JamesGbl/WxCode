@@ -54,6 +54,11 @@ premake/premake-linux --target cl-gcc --wx-version $release $shared $wxshared $u
 echo done...
 echo 
 #
+# ========== Code::Blocks project files ==========
+#premake/premake-linux --target cb-gcc --wx-version $release $shared $wxshared $unicode $debug $wxroot $1
+#echo done...
+#echo 
+#
 # ========== GNU Makefile ==========
 premake/premake-linux --target gnu --wx-version $release $shared $wxshared $unicode $debug $wxroot $1
 echo done...
