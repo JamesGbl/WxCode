@@ -18,6 +18,9 @@ solution/project files will be generated into the "build" subfolder for further 
 
 Changes
 -------
+13/11/19	v1.2.2
+- Fixed calculation of paragraph's width when there are multiple newlines in the text.
+
 13/11/19	v1.2.1
 - Fixed drawing of the border around a text item defined via main text item's style (wxReportTextItem::SetStyle()).
 

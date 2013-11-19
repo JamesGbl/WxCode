@@ -785,7 +785,7 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 			
 			if(value == wxT("/NewLine"))
 			{
-				if(itemWidth == 0)
+				/*if(itemWidth == 0)
 				{
 					if(parWidth >= pxPageWidth)
 						iw = pxPageWidth;
@@ -798,8 +798,10 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 				if((int)parWidth % (int)iw > 0)
 					++parLines;
 				
-				totalHeight += parLines * pxLineHeight;
+				totalHeight += parLines * pxLineHeight;*/
+				totalHeight += pxLineHeight;
 				parWidth = 0;
+
 				continue;
 			}
 			
