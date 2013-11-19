@@ -763,25 +763,16 @@ const wxReportTextParagraph* wxReportTextItem::GetParagraph(int index) const
 
 double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, double itemWidth, double &itemHeight, int pxTopBorder, int pxBottomBorder, int pxPageHeight, int pxPageWidth)
 {
-	if((int)(this->m_position.y) == wxRP_TOP)
-		return (double)pxTopBorder;
-		
-	int pos_y = this->m_position.y; 
-	if(pos_y != wxRP_TOP && pos_y != wxRP_CENTER && pos_y != wxRP_BOTTOM)
-		return MM2PX(this->m_position.y, dc, toScreen);
-	
 	double totalHeight = 0;
 	int nPars = this->m_arParagraphs.GetCount();
 	wxReportTextParagraph *pPar;
 	wxReportTextValue *pText;
-	//wxArrayDouble parWidths;
 	double iw = itemWidth;
 	
 	for(int p=0; p<nPars; ++p)
 	{
 		pPar = this->m_arParagraphs.Item(p);
 		int nTexts = pPar->GetCount();
-		//int newLines = 0;
 		double parWidth = 0;
 		int parLines = 0;
 		int pxLineHeight = MM2PX(pPar->GetStyle().GetLineHeight(), dc, toScreen);
@@ -818,7 +809,6 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 			parWidth += w;
 		}
 		
-		//parWidths.Add(parWidth);
 		if(itemWidth == 0)
 		{
 			if(parWidth >= pxPageWidth)
@@ -833,6 +823,13 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 	}
 	
 	itemHeight = totalHeight;
+	
+	if((int)(this->m_position.y) == wxRP_TOP)
+		return (double)pxTopBorder;
+		
+	int pos_y = this->m_position.y; 
+	if(pos_y != wxRP_TOP && pos_y != wxRP_CENTER && pos_y != wxRP_BOTTOM)
+		return MM2PX(this->m_position.y, dc, toScreen);
 	
 	if((int)(this->m_position.y) == wxRP_CENTER)
 		return (pxPageHeight - pxTopBorder - pxBottomBorder) / 2. - totalHeight / 2. + pxTopBorder;
@@ -912,7 +909,7 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 {
 	int parsCount = this->m_arParagraphs.GetCount();
 	double totalHeight = 0.;
-	double itemHeight = 0;
+	double itemHeight = 0.;
 	int lm = MM2PX(pageStyle.GetLeftMargin(), dc, toScreen); // apge margins
 	int rm = MM2PX(pageStyle.GetRightMargin(), dc, toScreen);
 	int tm = MM2PX(pageStyle.GetTopMargin(), dc, toScreen);

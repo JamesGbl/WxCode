@@ -1,4 +1,4 @@
-wxReportDocument 1.0.0
+wxReportDocument 1.2.1
 ----------------------
 License:	wxWidgets License
 Author:		Václav Kvasnička (c) 2012
@@ -18,6 +18,9 @@ solution/project files will be generated into the "build" subfolder for further 
 
 Changes
 -------
+13/11/19	v1.2.1
+- Fixed drawing of the border around a text item defined via main text item's style (wxReportTextItem::SetStyle()).
+
 13/09/15	v1.2.0
 - Content of table cells can be wrapped
 
