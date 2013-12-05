@@ -14,12 +14,9 @@
  */
 inline int MM2PX(double mm, wxDC *dc, bool toScreen)
 {
-	double sx, sy;
-	dc->GetUserScale(&sx, &sy);
-	
-	if(toScreen)
-		sx = sy = 1.0;//1.001;
-		
+	double sx = 1.0, sy = 1.0;
+	if( !toScreen ) dc->GetUserScale(&sx, &sy);
+			
 	return wxRound((((double)(dc->GetPPI().x) / 25.4) * mm) / sx);
 }
 
@@ -87,7 +84,7 @@ inline void DrawBorder(wxDC *dc, int border, int x, int y, int w, int h)
 	}	
 }
 
-wxPoint CalcNegPos(const wxRealPoint& origPos, const wxPoint& pxPos, int w, int h, wxDC *dc);
+wxPoint CalcNegPos(const wxRealPoint& origPos, const wxPoint& pxPos, int w, int h, int lm, int tm, int rm, int bm, wxDC *dc);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // wxReportPageItem Classes Declaration

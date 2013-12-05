@@ -1,4 +1,4 @@
-wxReportDocument 1.2.1
+wxReportDocument 1.2.2
 ----------------------
 License:	wxWidgets License
 Author:		Václav Kvasnička (c) 2012
@@ -18,8 +18,11 @@ solution/project files will be generated into the "build" subfolder for further 
 
 Changes
 -------
-13/11/19	v1.2.2
+13/12/05	v1.2.2
 - Fixed calculation of paragraph's width when there are multiple newlines in the text.
+- Fixed positioning of page items when non-zero margins are defined (i.e. page margin is taken into account for
+  all page items except those placed inside the header and the footer).
+- wxInitAllImageHandlers() call removed from the library - a user must do it himself in his code.
 
 13/11/19	v1.2.1
 - Fixed drawing of the border around a text item defined via main text item's style (wxReportTextItem::SetStyle()).

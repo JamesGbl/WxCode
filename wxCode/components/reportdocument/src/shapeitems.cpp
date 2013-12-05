@@ -157,10 +157,10 @@ void wxReportLineShape::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyl
 	int width = MM2PX(this->m_dLineThickness, dc, toScreen);
 	dc->SetPen(wxPen(this->m_lineColor, width, this->m_iLineStyle));
 	
-	int x1 = MM2PX(this->m_point1.x, dc, toScreen);
-	int y1 = MM2PX(this->m_point1.y, dc, toScreen);
-	int x2 = MM2PX(this->m_point2.x, dc, toScreen);
-	int y2 = MM2PX(this->m_point2.y, dc, toScreen);
+	int x1 = MM2PX(this->m_point1.x + pageStyle.GetLeftMargin(), dc, toScreen);
+	int y1 = MM2PX(this->m_point1.y + pageStyle.GetTopMargin(), dc, toScreen);
+	int x2 = MM2PX(this->m_point2.x + pageStyle.GetLeftMargin(), dc, toScreen);
+	int y2 = MM2PX(this->m_point2.y + pageStyle.GetTopMargin(), dc, toScreen);
 	
 	dc->DrawLine(x1, y1, x2, y2);
 }
@@ -327,8 +327,8 @@ void wxReportRectangleShape::DrawToDC(wxDC* dc, bool toScreen, const wxReportPag
 	else
 		dc->SetBrush(*wxTRANSPARENT_BRUSH);
 	
-	int x = MM2PX(this->m_topLeftPoint.x, dc, toScreen);
-	int y = MM2PX(this->m_topLeftPoint.y, dc, toScreen);
+	int x = MM2PX(this->m_topLeftPoint.x + pageStyle.GetLeftMargin(), dc, toScreen);
+	int y = MM2PX(this->m_topLeftPoint.y + pageStyle.GetTopMargin(), dc, toScreen);
 	int w = MM2PX(this->m_dWidth, dc, toScreen);
 	int h = MM2PX(this->m_dHeight, dc, toScreen);
 	
@@ -466,8 +466,8 @@ bool wxReportCircleShape::RetrieveFromXmlNode(const wxXmlNode* node)
 void wxReportCircleShape::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle& pageStyle)
 {
 	int r = MM2PX(this->m_dRadius, dc, toScreen);
-	int x = MM2PX(this->m_centreCoord.x, dc, toScreen);
-	int y = MM2PX(this->m_centreCoord.y, dc, toScreen);
+	int x = MM2PX(this->m_centreCoord.x + pageStyle.GetLeftMargin(), dc, toScreen);
+	int y = MM2PX(this->m_centreCoord.y + pageStyle.GetTopMargin(), dc, toScreen);
 	int lineWidth = MM2PX(this->m_dLineThickness, dc, toScreen);
 	dc->SetPen(wxPen(this->m_lineColor, lineWidth, this->m_iLineStyle));
 	

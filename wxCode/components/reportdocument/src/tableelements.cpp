@@ -1855,17 +1855,18 @@ void wxReportTableItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyl
 	
 	wxPoint posPX(MM2PX(m_position.x, dc, toScreen), MM2PX(m_position.y, dc, toScreen));
 	
-	if(this->m_position.x >= 10000 || this->m_position.y >= 10000)
-		posPX = CalcNegPos(m_position, posPX, MM2PX(tw, dc, toScreen), MM2PX(th, dc, toScreen), dc);
+	//if(this->m_position.x >= 10000 || this->m_position.y >= 10000)
+	posPX = CalcNegPos(m_position, posPX, MM2PX(tw, dc, toScreen), MM2PX(th, dc, toScreen), MM2PX(lm, dc, toScreen), 
+					   MM2PX(tm, dc, toScreen), MM2PX(rm, dc, toScreen), MM2PX(bm, dc, toScreen), dc);
 		
-	if(this->m_position.x < wxRP_CENTER)
+	/*if(this->m_position.x < wxRP_CENTER)
 		posPX.x += MM2PX(lm, dc, toScreen);
 	if(this->m_position.x == wxRP_RIGHT)	
 		posPX.x -= MM2PX(rm, dc, toScreen);
 	if(this->m_position.y < wxRP_CENTER)
 		posPX.y += MM2PX(tm, dc, toScreen);
 	if(this->m_position.x == wxRP_BOTTOM)	
-		posPX.y -= MM2PX(bm, dc, toScreen);
+		posPX.y -= MM2PX(bm, dc, toScreen);*/
 		 
 	int cy = posPX.y;
 		

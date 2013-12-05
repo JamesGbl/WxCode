@@ -3,7 +3,7 @@
 
 WX_DEFINE_USER_EXPORTED_OBJARRAY(ItemsArray);
 
-wxPoint CalcNegPos(const wxRealPoint& pos, const wxPoint& pxPos, int w, int h, wxDC* dc)
+wxPoint CalcNegPos(const wxRealPoint& pos, const wxPoint& pxPos, int w, int h, int lm, int tm, int rm, int bm, wxDC* dc)
 {
 	double origX = pos.x;
 	double origY = pos.y;
@@ -13,39 +13,29 @@ wxPoint CalcNegPos(const wxRealPoint& pos, const wxPoint& pxPos, int w, int h, w
 	
 	double sx, sy;
 	dc->GetUserScale(&sx, &sy);
-	int pagex = wxRound((double)(pageSize.x)/sx);
-	int pagey = wxRound((double)(pageSize.y)/sy);
-		
+	int pagex = wxRound((double)(pageSize.x)/sx - lm - rm);
+	int pagey = wxRound((double)(pageSize.y)/sy - tm - bm);
 	
-	/*w = (double)w/sx;
-	h = (double)h/sx;*/
+	int x = px_x + lm;
+	int y = px_y + tm;
 	
-	int x = px_x;
-	int y = px_y;
-		
 	if(origX < 0)
-		x = pagex + px_x - w;
+		x = pagex + px_x - w + lm / sx;
+	else if(origX == wxRP_LEFT)
+		x = lm;
+	else if(origX == wxRP_CENTER)
+		x = (pagex - w) / 2. + lm;
+	else if(origX == wxRP_RIGHT)
+		x = pagex - w + lm;
 	
 	if(origY < 0)
-		y = pagey + px_x - h;
-		
-	if(origX == wxRP_LEFT)
-		x = 0;
-		
-	if(origX == wxRP_CENTER)
-		x = (pagex - w) / 2.;
-
-	if(origX == wxRP_RIGHT)
-		x = pagex - w;
-		
-	if(origY == wxRP_TOP)
-		y = 0;
-		
-	if(origY == wxRP_CENTER)
-		y = (pagey - h) / 2.;
-
-	if(origY == wxRP_BOTTOM)
-		y = pagey - h;
+		y = pagey + px_x - h + tm / sy;
+	else if(origY == wxRP_TOP)
+		y = tm;
+	else if(origY == wxRP_CENTER)
+		y = (pagey - h) / 2. + tm;
+	else if(origY == wxRP_BOTTOM)
+		y = pagey - h + tm;
 		
 	return wxPoint(x, y);
 }
@@ -135,7 +125,6 @@ wxReportImageItem::wxReportImageItem()
 	this->m_iWidth = 0;
 	this->m_iPPI = 72;
 	this->m_pVariable = NULL;
-	wxInitAllImageHandlers();
 }
 
 wxReportImageItem::wxReportImageItem(const wxString& name, const wxString& path, double x, double y, int PPI, bool isVariable)
@@ -150,7 +139,7 @@ wxReportImageItem::wxReportImageItem(const wxString& name, const wxString& path,
 	else
 		this->m_position = wxRealPoint(0, 0);
 	
-	this->m_sValue = path;
+	/*this->m_sValue = path;
 	
 	if(PPI > 0)
 		this->m_iPPI = PPI;
@@ -158,7 +147,10 @@ wxReportImageItem::wxReportImageItem(const wxString& name, const wxString& path,
 	wxInitAllImageHandlers();
 	wxImage image(path);
 	this->m_iHeight = image.GetHeight();
-	this->m_iWidth = image.GetWidth();
+	this->m_iWidth = image.GetWidth();*/
+	
+	SetPath( path );
+	SetPPI( PPI );
 }
 
 void wxReportImageItem::SetPath(const wxString& path)
@@ -280,26 +272,29 @@ void wxReportImageItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyl
 	if(image.LoadFile(this->m_sValue))
 	{
 		double scale = dc->GetPPI().x / (double)this->m_iPPI; //(25.4 * dc->GetSize().x) / (this->m_iPPI * dc->GetSizeMM().x); // calculate scale factor
-		double prevScaleX, prevScaleY;
+		double updscale = scale;
+		double prevScaleX = 1, prevScaleY = 1;
 		dc->GetUserScale(&prevScaleX, &prevScaleY);
 		if(toScreen)
-			scale *= prevScaleX;
-		dc->SetUserScale(scale, scale);
+			updscale *= prevScaleX;
+			
+		dc->SetUserScale(updscale, updscale);
 		
-		int x = (double)(MM2PX(this->m_position.x, dc, false));// / (scale*prevScaleX);
-		int y = (double)(MM2PX(this->m_position.y, dc, false));// / (scale*prevScaleX);
+		int x = (double)(MM2PX(this->m_position.x + pageStyle.GetLeftMargin(), dc, true)) / scale;// / (scale*prevScaleX);
+		int y = (double)(MM2PX(this->m_position.y + pageStyle.GetTopMargin(), dc, true)) / scale;// / (scale*prevScaleX);
 				
 		dc->DrawBitmap(wxBitmap(image), x, y);
-				
+		
 		if(this->m_style.GetBorder() > 0)
 		{
-			int borderWidth = (double)(MM2PX(this->m_style.GetBorderThickness(), dc, false));// / scale;
-			int bx = x - borderWidth;
+			int borderWidth = (double)(MM2PX(this->m_style.GetBorderThickness(), dc, true)) / scale;
+			/*int bx = x - borderWidth;
 			int by = y - borderWidth;
 			int bw = this->m_iWidth + 2*borderWidth;
-			int bh = this->m_iHeight + 2*borderWidth;
+			int bh = this->m_iHeight + 2*borderWidth;*/
 			dc->SetPen(wxPen(this->m_style.GetBorderColor(), borderWidth));
-			dc->DrawRectangle(bx, by, bw, bh);
+			/*dc->DrawRectangle(bx, by, bw, bh);*/
+			dc->DrawRectangle(x, y, this->m_iWidth, this->m_iHeight);
 		}
 		
 		dc->SetUserScale(prevScaleX, prevScaleY);

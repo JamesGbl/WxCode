@@ -831,7 +831,7 @@ double wxReportTextItem::CalculateTopLeftPosition(wxDC *dc, bool toScreen, doubl
 		
 	int pos_y = this->m_position.y; 
 	if(pos_y != wxRP_TOP && pos_y != wxRP_CENTER && pos_y != wxRP_BOTTOM)
-		return MM2PX(this->m_position.y, dc, toScreen);
+		return MM2PX(this->m_position.y, dc, toScreen) + pxTopBorder;
 	
 	if((int)(this->m_position.y) == wxRP_CENTER)
 		return (pxPageHeight - pxTopBorder - pxBottomBorder) / 2. - totalHeight / 2. + pxTopBorder;
@@ -920,8 +920,8 @@ void wxReportTextItem::DrawToDC(wxDC* dc, bool toScreen, const wxReportPageStyle
 	int ph = MM2PX(pageStyle.GetSize().y, dc, toScreen); // page height
 	int iw = MM2PX(this->m_dWidth, dc, toScreen); // item width
 	wxPoint textItemPosPx(MM2PX(m_position.x, dc, toScreen), MM2PX(m_position.y, dc, toScreen));
-	wxPoint parPosPx = CalcNegPos(this->m_position, textItemPosPx, iw, MM2PX(this->m_dHeight, dc, toScreen), dc);
-	parPosPx.x += lm; // position have to be increased of a margins
+	wxPoint parPosPx = CalcNegPos(this->m_position, textItemPosPx, iw, MM2PX(this->m_dHeight, dc, toScreen), lm, tm, rm, bm, dc);
+	// parPosPx.x += lm; // position have to be increased of a margins
 	parPosPx.y = this->CalculateTopLeftPosition(dc, toScreen, iw, itemHeight, tm, bm, ph, pw); // calculate y-position of the text item //+= tm;
 	textItemPosPx = parPosPx;
 	

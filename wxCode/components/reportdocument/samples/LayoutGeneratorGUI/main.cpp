@@ -39,6 +39,8 @@ WX_DEFINE_OBJARRAY(ArrayOfStudents);
 MainDialog::MainDialog(wxWindow *parent) : MainDialogBase( parent )
 {
 	this->report = NULL;
+	
+	wxInitAllImageHandlers();
 }
 
 MainDialog::~MainDialog()
@@ -442,6 +444,108 @@ void MainDialog::OnGen3(wxCommandEvent& event)
 	txt.AddNewParagraph();
 	txt.AddText(wxT("ZKOUSKA ZKOUSKA ZKOUSKA ZKOUSKA"));
 	report->AddItem(txt);
+	
+	/*// page settings 
+	wxReportStyle rs;
+	rs.SetBorder( wxRP_ALLBORDER );
+	
+	wxReportPageStyle pgs;
+	pgs.SetWidth( 210 );
+	pgs.SetHeight( 297 );
+	pgs.SetMargins( 30, 10, 50, 10 );
+	pgs.SetBorder( wxRP_ALLBORDER );
+	
+	report->SetPageStyle( pgs );
+	
+	// text items
+	wxReportTextStyle ts( wxT("ts_title"), wxFont(20, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD) );
+	
+	wxReportParagraphStyle ps;
+	ps.SetBorder( wxRP_ALLBORDER );
+	ps.SetBorderColor( wxColour( 230, 230, 230) );
+	ps.SetBackgroundColor( wxColour( 230, 230, 230) );
+		
+	wxReportTextItem ti;
+	ti.SetStyle( rs );
+	ti.SetActiveTextStyle( ts );
+	ti.SetActiveParagraphStyle( ps );
+	ti.SetSize( 100, 10 );
+	ti.SetTextAlign( wxRP_CENTERALIGN );
+	ti.SetPosition( wxRP_RIGHT, wxRP_TOP );
+	ti.AddText( wxT("Hello World") );
+	ti.AddNewLine();
+	ti.AddText( wxT("Hello World Again") );
+	ti.AddNewLine();
+	ti.AddNewLine();
+	ti.AddNewLine();
+	ti.AddText( wxT("Hello World Again 2") );
+
+	ti.AddNewParagraph();
+	ps.SetBorder( wxRP_NOBORDER );
+	ti.SetActiveParagraphStyle( ps );
+	ti.SetTextAlign( wxRP_LEFTALIGN );
+	ti.AddNewLine();
+	ti.AddText( wxT("ID_VAR1") );
+	
+	report->AddItem( ti );
+	
+	ti.SetPosition( wxRP_LEFT, wxRP_BOTTOM );
+	
+	report->AddItem( ti );
+	
+	ti.SetPosition( wxRP_CENTER, wxRP_CENTER );
+	
+	report->AddItem( ti );
+	
+	// table items
+	wxReportTableItem table;
+	table.CellsStyle().SetBorder( wxRP_ALLBORDER, *wxBLACK, 0.25 );
+	table.SetTextAlign( wxRP_CENTERALIGN );
+	table.SetPosition( wxRP_CENTER, 110 );
+	table.AddRow();
+	table.AddCellToRow( wxT("First name") );
+	table.AddCellToRow( wxT("Surname") );
+	table.SetColumnWidth( 30 );
+	
+	report->AddItem( table );
+	
+	// images
+	wxReportImageStyle is;
+	is.SetBorder( wxRP_ALLBORDER, wxColour(100, 100, 100), 0.35 );
+	
+	wxReportImageItem img;
+	img.SetPath( wxT("../../res/utb.png") );
+	img.SetPosition( 0, 0 );
+	img.SetPPI( 400 );
+	img.SetStyle( is );
+	
+	report->AddItem( img );
+	
+	// shapes
+	wxReportCircleShape circle;
+	circle.SetCentreCoord( 20, 45 );
+	circle.SetRadius( 20 );
+	circle.SetFillColor( *wxRED );
+	
+	report->AddItem( circle );
+	
+	wxReportRectangleShape rect;
+	rect.SetTopLeftCorner( 0, 70 );
+	rect.SetWidth( 100 );
+	rect.SetHeight( 50 );
+	rect.SetFillColor( *wxGREEN );
+	rect.SetLineThickness( 0.3 );
+	
+	report->AddItem( rect );
+	
+	wxReportLineShape line;
+	wxRealPoint target = pgs.GetSize() - wxRealPoint( pgs.GetLeftMargin() + pgs.GetRightMargin(),
+													pgs.GetTopMargin() + pgs.GetBottomMargin() );
+	line.SetPoints( wxRealPoint(0, 0), target );
+	line.SetLineStyle( wxDOT_DASH );
+	
+	report->AddItem( line );*/
+	
 }
 
 void MainDialog::OnPreview(wxCommandEvent& event)
