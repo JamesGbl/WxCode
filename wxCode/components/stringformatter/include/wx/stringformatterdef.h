@@ -1,10 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        stringformatter.h
 // Purpose:     shared build defines
-// Author:      Name Surname
+// Author:      Nathan Shaffer
 // Created:     someyear/somemonth/someday
 // RCS-ID:      $Id: stringformatterdef.h 505 2007-03-31 10:31:46Z frm $
-// Copyright:   (c) YEAR Name Surname
+// Copyright:   (c) 2013 Nathan Shaffer
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +18,7 @@
 // for "configure" scripts under unix, use them.
 #define wxSTRING_FORMATTER_MAJOR          1
 #define wxSTRING_FORMATTER_MINOR          0
-#define wxSTRING_FORMATTER_RELEASE        0
+#define wxSTRING_FORMATTER_RELEASE        1
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the

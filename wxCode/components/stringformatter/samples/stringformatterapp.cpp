@@ -16,6 +16,7 @@
 #endif //__BORLANDC__
 
 #include "stringformatterapp.h"
+#include <wx/log.h>
 
 IMPLEMENT_APP(stringformatterApp);
 

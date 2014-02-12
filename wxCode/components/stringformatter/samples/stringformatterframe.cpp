@@ -10,6 +10,11 @@
 
 StringFormatterFrame::StringFormatterFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
+
+    wxLogWindow* logwin;
+    logwin = new wxLogWindow(this, "log", true, true);
+    logwin->Show();
+
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
 	wxBoxSizer* bSizer1;
