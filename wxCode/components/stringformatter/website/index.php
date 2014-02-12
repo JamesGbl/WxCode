@@ -76,7 +76,7 @@
 
 	SF.Parse(sample);
 
-	output = I have one apple.
+	output = I have one apple. ....
 
 '); ?>
 
