@@ -43,7 +43,7 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("", ""); ?>
+    <?php writeScreenshotLink("image.png", ""); ?>
   </div>
 
 
