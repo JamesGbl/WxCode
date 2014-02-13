@@ -75,30 +75,29 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-STRINGFRMT_LIB_CXXFLAGS = $(____stringfrmt) $(____stringfrmt_3) -W -Wall \
-	-I../include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
-STRINGFRMT_LIB_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmt_lib_stringformatter.o
-STRINGFRMT_LIB_HEADERS =  \
+WXSTRINGFORMATTER_LIB_CXXFLAGS = $(____wxStringFormatter) \
+	$(____wxStringFormatter_3) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
+	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTER_LIB_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatter_lib_stringformatter.o
+WXSTRINGFORMATTER_LIB_HEADERS =  \
 	include/wx/stringformatter.h \
 	include/wx/stringformatterdef.h
-STRINGFRMT_DLL_CXXFLAGS = $(____stringfrmt) $(____stringfrmt_3) -W -Wall \
-	-I../include -DWXMAKINGDLL_STRINGFORMATTER -fPIC -DPIC `$(WX_CONFIG) \
-	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
-STRINGFRMT_DLL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmt_dll_stringformatter.o
-STRINGFRMT_DLL_HEADERS =  \
+WXSTRINGFORMATTER_DLL_CXXFLAGS = $(____wxStringFormatter) \
+	$(____wxStringFormatter_3) -W -Wall -I../include \
+	-DWXMAKINGDLL_WXSTRINGFORMATTER -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
+	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTER_DLL_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatter_dll_stringformatter.o
+WXSTRINGFORMATTER_DLL_HEADERS =  \
 	include/wx/stringformatter.h \
 	include/wx/stringformatterdef.h
-STRINGFRMTFRAME_CXXFLAGS = $(____stringfrmt) $(____stringfrmt_3) -W -Wall \
-	-I../include `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
-STRINGFRMTFRAME_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_StringFormatterFrame.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterApp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterapp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterframe.o
+WXSTRINGFORMATTERSAMPLE_CXXFLAGS = $(____wxStringFormatter) \
+	$(____wxStringFormatter_3) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
+	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTERSAMPLE_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatterSample_stringformatterapp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatterSample_stringformatterframe.o
 
 ### Conditionally set variables: ###
 
@@ -127,65 +126,69 @@ ifeq ($(SHARED),1)
 _BUILDDIR_SHARED_SUFFIX = _dll
 endif
 ifeq ($(SHARED),0)
-__stringfrmt_lib___depname = \
-	../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+__wxStringFormatter_lib___depname = \
+	../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 ifeq ($(SHARED),0)
-__install_stringfrmt_lib___depname = install_stringfrmt_lib
+__install_wxStringFormatter_lib___depname = install_wxStringFormatter_lib
 endif
 ifeq ($(SHARED),0)
-__uninstall_stringfrmt_lib___depname = uninstall_stringfrmt_lib
+__uninstall_wxStringFormatter_lib___depname = \
+	uninstall_wxStringFormatter_lib
 endif
 ifeq ($(SHARED),0)
-__stringfrmt_lib__DIRNAME_SHARED_SUFFIX = lib
+__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX = lib
 endif
 ifeq ($(SHARED),1)
-__stringfrmt_lib__DIRNAME_SHARED_SUFFIX = dll
+__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX = dll
 endif
 ifeq ($(SHARED),0)
-__install_stringfrmt_lib_headers___depname = install_stringfrmt_lib_headers
+__install_wxStringFormatter_lib_headers___depname = \
+	install_wxStringFormatter_lib_headers
 endif
 ifeq ($(SHARED),0)
-__uninstall_stringfrmt_lib_headers___depname = \
-	uninstall_stringfrmt_lib_headers
+__uninstall_wxStringFormatter_lib_headers___depname = \
+	uninstall_wxStringFormatter_lib_headers
 endif
 ifeq ($(SHARED),1)
-__stringfrmt_dll___depname = \
-	../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+__wxStringFormatter_dll___depname = \
+	../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 ifeq ($(SHARED),1)
-__install_stringfrmt_dll___depname = install_stringfrmt_dll
+__install_wxStringFormatter_dll___depname = install_wxStringFormatter_dll
 endif
 ifeq ($(SHARED),1)
-__uninstall_stringfrmt_dll___depname = uninstall_stringfrmt_dll
+__uninstall_wxStringFormatter_dll___depname = \
+	uninstall_wxStringFormatter_dll
 endif
 ifeq ($(WX_SHARED),0)
-__stringfrmt_dll__DIRNAME_SHARED_SUFFIX = lib
+__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX = lib
 endif
 ifeq ($(WX_SHARED),1)
-__stringfrmt_dll__DIRNAME_SHARED_SUFFIX = dll
+__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX = dll
 endif
 ifeq ($(SHARED),1)
-__install_stringfrmt_dll_headers___depname = install_stringfrmt_dll_headers
+__install_wxStringFormatter_dll_headers___depname = \
+	install_wxStringFormatter_dll_headers
 endif
 ifeq ($(SHARED),1)
-__uninstall_stringfrmt_dll_headers___depname = \
-	uninstall_stringfrmt_dll_headers
+__uninstall_wxStringFormatter_dll_headers___depname = \
+	uninstall_wxStringFormatter_dll_headers
 endif
 ifeq ($(SHARED),1)
-__stringfrmtFrame_RPATH = -Wl,-rpath,../lib/gcc_dll
+__wxStringFormatterSample_RPATH = -Wl,-rpath,../lib/gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-____stringfrmt = -O2
+____wxStringFormatter = -O2
 endif
 ifeq ($(WX_DEBUG),1)
-____stringfrmt = -O0
+____wxStringFormatter = -O0
 endif
 ifeq ($(WX_DEBUG),0)
-____stringfrmt_3 = 
+____wxStringFormatter_3 = 
 endif
 ifeq ($(WX_DEBUG),1)
-____stringfrmt_3 = -g
+____wxStringFormatter_3 = -g
 endif
 
 
@@ -195,48 +198,48 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__stringfrmt_lib___depname) $(__stringfrmt_dll___depname) ../samples/stringfrmtFrame
+all: test_for_selected_wxbuild $(__wxStringFormatter_lib___depname) $(__wxStringFormatter_dll___depname) ../samples/wxStringFormatterSample
 
-install: $(__install_stringfrmt_lib___depname) $(__install_stringfrmt_lib_headers___depname) $(__install_stringfrmt_dll___depname) $(__install_stringfrmt_dll_headers___depname)
+install: $(__install_wxStringFormatter_lib___depname) $(__install_wxStringFormatter_lib_headers___depname) $(__install_wxStringFormatter_dll___depname) $(__install_wxStringFormatter_dll_headers___depname)
 
-uninstall: $(__uninstall_stringfrmt_lib___depname) $(__uninstall_stringfrmt_lib_headers___depname) $(__uninstall_stringfrmt_dll___depname) $(__uninstall_stringfrmt_dll_headers___depname)
+uninstall: $(__uninstall_wxStringFormatter_lib___depname) $(__uninstall_wxStringFormatter_lib_headers___depname) $(__uninstall_wxStringFormatter_dll___depname) $(__uninstall_wxStringFormatter_dll_headers___depname)
 
 clean: 
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.o
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.d
-	rm -f ../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
-	rm -f ../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f ../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f ../samples/stringfrmtFrame
+	rm -f ../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	rm -f ../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f ../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f ../samples/wxStringFormatterSample
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
 
 ifeq ($(SHARED),0)
-../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_stringfrmt_lib  $(STRINGFRMT_LIB_OBJECTS)
+../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_wxStringFormatter_lib  $(WXSTRINGFORMATTER_LIB_OBJECTS)
 	rm -f $@
-	$(AR) rcu $@ $(STRINGFRMT_LIB_OBJECTS)
+	$(AR) rcu $@ $(WXSTRINGFORMATTER_LIB_OBJECTS)
 	$(RANLIB) $@
 endif
 
 ifeq ($(SHARED),0)
-install_stringfrmt_lib: $(__stringfrmt_lib___depname)
+install_wxStringFormatter_lib: $(__wxStringFormatter_lib___depname)
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
-	$(INSTALL) -m 644 ../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -m 644 ../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(DESTDIR)$(prefix)/lib
 endif
 
 ifeq ($(SHARED),0)
-uninstall_stringfrmt_lib: 
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+uninstall_wxStringFormatter_lib: 
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 
-make_dir_stringfrmt_lib: 
-	@mkdir -p ../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)
+make_dir_wxStringFormatter_lib: 
+	@mkdir -p ../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)
 
 ifeq ($(SHARED),0)
-install_stringfrmt_lib_headers: 
+install_wxStringFormatter_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(STRINGFRMT_LIB_HEADERS); do \
+	for f in $(WXSTRINGFORMATTER_LIB_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -245,37 +248,37 @@ install_stringfrmt_lib_headers:
 endif
 
 ifeq ($(SHARED),0)
-uninstall_stringfrmt_lib_headers: 
-	for f in $(STRINGFRMT_LIB_HEADERS); do \
+uninstall_wxStringFormatter_lib_headers: 
+	for f in $(WXSTRINGFORMATTER_LIB_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
 ifeq ($(SHARED),1)
-../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_stringfrmt_dll  $(STRINGFRMT_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(STRINGFRMT_DLL_OBJECTS)  $(____stringfrmt_3) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxStringFormatter_dll  $(WXSTRINGFORMATTER_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXSTRINGFORMATTER_DLL_OBJECTS)  $(____wxStringFormatter_3) -L../lib $(LDFLAGS)  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs dbgrid,gl,odbc,core,base`
 endif
 
 ifeq ($(SHARED),1)
-install_stringfrmt_dll: $(__stringfrmt_dll___depname)
+install_wxStringFormatter_dll: $(__wxStringFormatter_dll___depname)
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
-	$(INSTALL) -m 644 ../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
-	install -c ../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -m 644 ../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+	install -c ../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 endif
 
 ifeq ($(SHARED),1)
-uninstall_stringfrmt_dll: 
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+uninstall_wxStringFormatter_dll: 
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 
-make_dir_stringfrmt_dll: 
-	@mkdir -p ../lib/gcc_$(__stringfrmt_dll__DIRNAME_SHARED_SUFFIX)
+make_dir_wxStringFormatter_dll: 
+	@mkdir -p ../lib/gcc_$(__wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX)
 
 ifeq ($(SHARED),1)
-install_stringfrmt_dll_headers: 
+install_wxStringFormatter_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(STRINGFRMT_DLL_HEADERS); do \
+	for f in $(WXSTRINGFORMATTER_DLL_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -284,41 +287,35 @@ install_stringfrmt_dll_headers:
 endif
 
 ifeq ($(SHARED),1)
-uninstall_stringfrmt_dll_headers: 
-	for f in $(STRINGFRMT_DLL_HEADERS); do \
+uninstall_wxStringFormatter_dll_headers: 
+	for f in $(WXSTRINGFORMATTER_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
-../samples/stringfrmtFrame: $(STRINGFRMTFRAME_OBJECTS) make_sample_dir_stringfrmtFrame $(__stringfrmt_lib___depname)
-	$(CXX) -o $@ $(STRINGFRMTFRAME_OBJECTS)  $(____stringfrmt_3) -L../lib  $(__stringfrmtFrame_RPATH) $(LDFLAGS)  ../lib/gcc_$(__stringfrmt_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_stringformatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+../samples/wxStringFormatterSample: $(WXSTRINGFORMATTERSAMPLE_OBJECTS) make_sample_dir_wxStringFormatterSample $(__wxStringFormatter_lib___depname)
+	$(CXX) -o $@ $(WXSTRINGFORMATTERSAMPLE_OBJECTS)  $(____wxStringFormatter_3) -L../lib  $(__wxStringFormatterSample_RPATH) $(LDFLAGS)  ../lib/gcc_$(__wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX)/libwxcode_$(WX_PORT)_wxStringFormatter-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,core,base`
 
-make_sample_dir_stringfrmtFrame: 
+make_sample_dir_wxStringFormatterSample: 
 	@mkdir -p ../samples
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmt_lib_stringformatter.o: ../src/stringformatter.cpp
-	$(CXX) -c -o $@ $(STRINGFRMT_LIB_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatter_lib_stringformatter.o: ../src/stringformatter.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmt_dll_stringformatter.o: ../src/stringformatter.cpp
-	$(CXX) -c -o $@ $(STRINGFRMT_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatter_dll_stringformatter.o: ../src/stringformatter.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_StringFormatterFrame.o: ../samples/StringFormatterFrame.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatterSample_stringformatterapp.o: ../samples/stringformatterapp.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTERSAMPLE_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterApp.o: ../samples/stringformatterApp.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxStringFormatterSample_stringformatterframe.o: ../samples/stringformatterframe.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTERSAMPLE_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterapp.o: ../samples/stringformatterapp.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/stringfrmtFrame_stringformatterframe.o: ../samples/stringformatterframe.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
-
-.PHONY: all install uninstall clean install_stringfrmt_lib \
-	uninstall_stringfrmt_lib install_stringfrmt_lib_headers \
-	uninstall_stringfrmt_lib_headers install_stringfrmt_dll \
-	uninstall_stringfrmt_dll install_stringfrmt_dll_headers \
-	uninstall_stringfrmt_dll_headers
+.PHONY: all install uninstall clean install_wxStringFormatter_lib \
+	uninstall_wxStringFormatter_lib install_wxStringFormatter_lib_headers \
+	uninstall_wxStringFormatter_lib_headers install_wxStringFormatter_dll \
+	uninstall_wxStringFormatter_dll install_wxStringFormatter_dll_headers \
+	uninstall_wxStringFormatter_dll_headers
 
 
 # Dependencies tracking:

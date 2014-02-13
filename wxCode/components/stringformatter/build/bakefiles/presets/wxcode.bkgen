@@ -31,7 +31,7 @@
         We rather keep the very latest version of wxpresets in a "presets"
         subfolder of wxCode and we tell Bakefile to look at that folder.
     -->
-    <add-flags>-I../../../build/bakefiles -I../../../../build/bakefiles</add-flags>
+    <add-flags>-I./bakefiles -I./bakefiles</add-flags>
 
 
     <!-- since it's standard on Unix to have Makefile.in and the configure script in

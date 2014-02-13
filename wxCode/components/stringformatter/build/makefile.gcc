@@ -55,30 +55,28 @@ SHARED ?= 0
 ### Variables: ###
 
 CPPDEPS = -MT$@ -MF$@.d -MD -MP
-STRINGFRMT_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+WXSTRINGFORMATTER_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____stringfrmt) $(____stringfrmt_3) -W -Wall -I..\include $(CPPFLAGS) \
-	$(CXXFLAGS)
-STRINGFRMT_LIB_OBJECTS =  \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmt_lib_stringformatter.o
-STRINGFRMT_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(____wxStringFormatter) $(____wxStringFormatter_3) -W -Wall -I..\include \
+	$(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTER_LIB_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatter_lib_stringformatter.o
+WXSTRINGFORMATTER_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____stringfrmt) $(____stringfrmt_3) -W -Wall -I..\include \
-	-DWXMAKINGDLL_STRINGFORMATTER $(CPPFLAGS) $(CXXFLAGS)
-STRINGFRMT_DLL_OBJECTS =  \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmt_dll_stringformatter.o
-STRINGFRMTFRAME_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
+	$(____wxStringFormatter) $(____wxStringFormatter_3) -W -Wall -I..\include \
+	-DWXMAKINGDLL_WXSTRINGFORMATTER $(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTER_DLL_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatter_dll_stringformatter.o
+WXSTRINGFORMATTERSAMPLE_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____stringfrmt) $(____stringfrmt_3) -W -Wall -I..\include $(CPPFLAGS) \
-	$(CXXFLAGS)
-STRINGFRMTFRAME_OBJECTS =  \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_StringFormatterFrame.o \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterApp.o \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterapp.o \
-	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterframe.o
+	$(____wxStringFormatter) $(____wxStringFormatter_3) -W -Wall -I..\include \
+	$(CPPFLAGS) $(CXXFLAGS)
+WXSTRINGFORMATTERSAMPLE_OBJECTS =  \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatterSample_stringformatterapp.o \
+	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatterSample_stringformatterframe.o
 
 ### Conditionally set variables: ###
 
@@ -92,18 +90,30 @@ ifeq ($(SHARED),1)
 _BUILDDIR_SHARED_SUFFIX = _dll
 endif
 ifeq ($(SHARED),0)
-__stringfrmt_lib___depname = \
-	..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a
+__wxStringFormatter_lib___depname = \
+	..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a
 endif
 ifeq ($(SHARED),1)
-__stringfrmt_dll___depname = \
-	..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.dll
+__wxStringFormatter_dll___depname = \
+	..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.dll
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_DBGRID_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_dbgrid
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_GL_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_gl
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_ODBC_NAME_p = -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_odbc
+endif
+ifeq ($(WX_MONOLITHIC),0)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv
 endif
 ifeq ($(SHARED),0)
-____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
+____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
 ifeq ($(SHARED),1)
-____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 endif
 ifeq ($(WX_SHARED),0)
 ____WX_SHARED = 
@@ -133,16 +143,16 @@ WXLIBPOSTFIX = ud
 endif
 endif
 ifeq ($(WX_DEBUG),0)
-____stringfrmt = -O2
+____wxStringFormatter = -O2
 endif
 ifeq ($(WX_DEBUG),1)
-____stringfrmt = -O0
+____wxStringFormatter = -O0
 endif
 ifeq ($(WX_SHARED),0)
-____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
+____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = lib
 endif
 ifeq ($(WX_SHARED),1)
-____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
+____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES = dll
 endif
 ifeq ($(WX_MONOLITHIC),0)
 __WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core
@@ -160,10 +170,10 @@ ifeq ($(WX_SHARED),1)
 WXLIBPATH = \lib\gcc_dll
 endif
 ifeq ($(WX_DEBUG),0)
-____stringfrmt_3 = 
+____wxStringFormatter_3 = 
 endif
 ifeq ($(WX_DEBUG),1)
-____stringfrmt_3 = -g
+____wxStringFormatter_3 = -g
 endif
 
 
@@ -173,15 +183,15 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__stringfrmt_lib___depname) $(__stringfrmt_dll___depname) ..\samples\stringfrmtFrame.exe
+all: test_for_selected_wxbuild $(__wxStringFormatter_lib___depname) $(__wxStringFormatter_dll___depname) ..\samples\wxStringFormatterSample.exe
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d
-	-if exist ..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a del ..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a
-	-if exist ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.dll del ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.dll
-	-if exist ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a del ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a
-	-if exist ..\samples\stringfrmtFrame.exe del ..\samples\stringfrmtFrame.exe
+	-if exist ..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a del ..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a
+	-if exist ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.dll del ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.dll
+	-if exist ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a del ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a
+	-if exist ..\samples\wxStringFormatterSample.exe del ..\samples\wxStringFormatterSample.exe
 
 test_for_selected_wxbuild: 
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -196,46 +206,40 @@ test_for_selected_wxbuild:
 	exit 1
 
 ifeq ($(SHARED),0)
-..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a: make_dir_stringfrmt_lib  $(STRINGFRMT_LIB_OBJECTS)
+..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a: make_dir_wxStringFormatter_lib  $(WXSTRINGFORMATTER_LIB_OBJECTS)
 	if exist $@ del $@
-	ar rcu $@ $(STRINGFRMT_LIB_OBJECTS)
+	ar rcu $@ $(WXSTRINGFORMATTER_LIB_OBJECTS)
 	ranlib $@
 endif
 
-make_dir_stringfrmt_lib: 
-	if not exist ..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)
+make_dir_wxStringFormatter_lib: 
+	if not exist ..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
 ifeq ($(SHARED),1)
-..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.dll: make_dir_stringfrmt_dll  $(STRINGFRMT_DLL_OBJECTS)
-	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(STRINGFRMT_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____stringfrmt_3) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a $(LDFLAGS)  $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.dll: make_dir_wxStringFormatter_dll  $(WXSTRINGFORMATTER_DLL_OBJECTS)
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXSTRINGFORMATTER_DLL_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxStringFormatter_3) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a $(LDFLAGS)  $(__WXLIB_DBGRID_NAME_p) $(__WXLIB_GL_NAME_p) $(__WXLIB_ODBC_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
-make_dir_stringfrmt_dll: 
-	if not exist ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____stringfrmt_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
+make_dir_wxStringFormatter_dll: 
+	if not exist ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES) mkdir ..\lib\gcc_$(____wxStringFormatter_dll__DIRNAME_SHARED_SUFFIX_FILENAMES)
 
-..\samples\stringfrmtFrame.exe: $(STRINGFRMTFRAME_OBJECTS) make_sample_dir_stringfrmtFrame  $(__stringfrmt_lib___depname)
-	$(CXX) -o $@ $(STRINGFRMTFRAME_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____stringfrmt_3) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____stringfrmt_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_stringformatter.a $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\samples\wxStringFormatterSample.exe: $(WXSTRINGFORMATTERSAMPLE_OBJECTS) make_sample_dir_wxStringFormatterSample  $(__wxStringFormatter_lib___depname)
+	$(CXX) -o $@ $(WXSTRINGFORMATTERSAMPLE_OBJECTS)  -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxStringFormatter_3) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows  $(LDFLAGS)  ..\lib\gcc_$(____wxStringFormatter_lib__DIRNAME_SHARED_SUFFIX_FILENAMES)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxStringFormatter.a $(__WXLIB_ADV_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-make_sample_dir_stringfrmtFrame: 
+make_sample_dir_wxStringFormatterSample: 
 	if not exist ..\samples mkdir ..\samples
 
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmt_lib_stringformatter.o: ../src/stringformatter.cpp
-	$(CXX) -c -o $@ $(STRINGFRMT_LIB_CXXFLAGS) $(CPPDEPS) $<
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatter_lib_stringformatter.o: ../src/stringformatter.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmt_dll_stringformatter.o: ../src/stringformatter.cpp
-	$(CXX) -c -o $@ $(STRINGFRMT_DLL_CXXFLAGS) $(CPPDEPS) $<
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatter_dll_stringformatter.o: ../src/stringformatter.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_StringFormatterFrame.o: ../samples/StringFormatterFrame.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatterSample_stringformatterapp.o: ../samples/stringformatterapp.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTERSAMPLE_CXXFLAGS) $(CPPDEPS) $<
 
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterApp.o: ../samples/stringformatterApp.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
-
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterapp.o: ../samples/stringformatterapp.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
-
-gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\stringfrmtFrame_stringformatterframe.o: ../samples/stringformatterframe.cpp
-	$(CXX) -c -o $@ $(STRINGFRMTFRAME_CXXFLAGS) $(CPPDEPS) $<
+gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxStringFormatterSample_stringformatterframe.o: ../samples/stringformatterframe.cpp
+	$(CXX) -c -o $@ $(WXSTRINGFORMATTERSAMPLE_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean
 

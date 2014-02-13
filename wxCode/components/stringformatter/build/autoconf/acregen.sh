@@ -10,6 +10,12 @@
 # - able to be called from any folder
 #   (i.e. you can call it typing 'build/acregen.sh', not only './acregen.sh')
 
+# You may pass optional args to aclocal on the command line.
+# If you are using a local copy (newer perhaps) of bakefile and have a system
+# wide bakefile installed you need to force aclocal to use the bakefile*.m4
+# files from the local copy and not from /usr/share/aclocal/bakefile*.m4
+# E.G. $./acregen.sh "--acdir=/path/to/bakefile-x.y.z/share/aclocal"
+ACLOCAL_ARGS=$1
 
 # called when an old version of aclocal is found
 function aclocalold()
@@ -25,9 +31,6 @@ aclocal_verfull=$(aclocal --version)
 aclocal_maj=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\1/'`
 aclocal_min=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\2/'`
 aclocal_rel=`echo $aclocal_verfull | sed 's/aclocal (GNU automake) \([0-9]*\).\([0-9]*\).\([0-9]*\).*/\3/'`
-
-# some versions of aclocal do not report a 3-fields version (x.y.z) but just an x.y-like:
-if [[ "$aclocal_rel" < "0" ]]; then aclocal_rel=0; fi
 
 aclocal_minimal_maj=1
 aclocal_minimal_min=9
@@ -46,5 +49,5 @@ me=$(basename $0)
 path=${0%%/$me}        # path from which the script has been launched
 current=$(pwd)
 cd $path
-aclocal && autoconf && mv configure ..
+aclocal $ACLOCAL_ARGS && autoconf && mv configure ..
 cd $current

@@ -22,7 +22,7 @@ AC_DEFUN([WXCODE_INIT],
         [
             AC_PREREQ([2.57])
 
-            m4_include(../build/autoconf/wxwin.m4)
+            m4_include(./autoconf/wxwin.m4)
             AC_LANG(C++)
 
             dnl wxCode components usually keep the install.sh and config.{guess|sub}
@@ -168,4 +168,4 @@ AC_DEFUN([WXCODE_END],
 
 
 dnl Other generic macros
-m4_include(../build/autoconf/wxcodecheck.m4)
+m4_include(./autoconf/wxcodecheck.m4)

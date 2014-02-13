@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: Bakefiles.bkgen 687 2007-11-17 12:53:49Z frm $ -->
+<!-- RCS-ID: $Id$ -->
 
 <bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
 
@@ -8,12 +8,12 @@
          default wxCode settings found in wxCode/build/bakefiles/presets/wxcode.bkgen.
          Note that this means that such file does exist on your hard-disk at bake-time!
     -->
-    <include file="wxcode.bkgen"/>
+    <include file="./bakefiles/presets/wxcode.bkgen"/>
 
     <!-- you probably need to edit only this tag replacing it with the name of
          your .bkl file:
     -->
-    <input>stringformatter.bkl</input>
+    <input>wxStringFormatter.bkl</input>
 
     <!--
         The wxCode's wxcode.bkgen file will enable some default formats.
