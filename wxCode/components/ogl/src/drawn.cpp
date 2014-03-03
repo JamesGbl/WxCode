@@ -126,7 +126,7 @@ void wxDrawnShape::Rotate(double x, double y, double theta)
   // Rotate attachment points
   double sinTheta = (double)sin(actualTheta);
   double cosTheta = (double)cos(actualTheta);
-  for (wxObjectList::iterator it = m_attachmentPoints.begin();
+  for (wxObjectList::const_iterator it = m_attachmentPoints.begin();
        it != m_attachmentPoints.end();
        it++)
   {
@@ -431,7 +431,7 @@ void wxOpSetGDI::Do(wxDC& dc, double WXUNUSED(xoffset), double WXUNUSED(yoffset)
         // Need to construct a brush to match the outline pen's colour
         if (m_image->m_outlinePen)
         {
-          wxBrush *br = wxTheBrushList->FindOrCreateBrush(m_image->m_outlinePen->GetColour(), wxSOLID);
+          wxBrush *br = wxTheBrushList->FindOrCreateBrush(m_image->m_outlinePen->GetColour(), wxBRUSHSTYLE_SOLID);
           if (br)
             dc.SetBrush(* br);
         }
@@ -1362,7 +1362,7 @@ wxPseudoMetaFile::~wxPseudoMetaFile()
 
 void wxPseudoMetaFile::Clear()
 {
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {
@@ -1378,7 +1378,7 @@ void wxPseudoMetaFile::Clear()
 
 void wxPseudoMetaFile::Draw(wxDC& dc, double xoffset, double yoffset)
 {
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {
@@ -1389,7 +1389,7 @@ void wxPseudoMetaFile::Draw(wxDC& dc, double xoffset, double yoffset)
 
 void wxPseudoMetaFile::Scale(double sx, double sy)
 {
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {
@@ -1402,7 +1402,7 @@ void wxPseudoMetaFile::Scale(double sx, double sy)
 
 void wxPseudoMetaFile::Translate(double x, double y)
 {
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {
@@ -1418,7 +1418,7 @@ void wxPseudoMetaFile::Rotate(double x, double y, double theta)
   double cosTheta = (double)cos(theta1);
   double sinTheta = (double)sin(theta1);
 
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {
@@ -1748,7 +1748,7 @@ void wxPseudoMetaFile::ReadAttributes(wxExpr *clause, int whichAngle)
 // Does the copying for this object
 void wxPseudoMetaFile::Copy(wxPseudoMetaFile& copy)
 {
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
 
   copy.Clear();
 
@@ -1816,7 +1816,7 @@ bool wxPseudoMetaFile::LoadFromMetaFile(const wxString& filename, double *rwidth
   double lastY = 0.0;
 
   // Convert from metafile records to wxDrawnShape records
-  for (wxObjectList::iterator it = metaFile->metaRecords.begin();
+  for (wxObjectList::const_iterator it = metaFile->metaRecords.begin();
        it != metaFile->metaRecords.end();
        it++)
   {
@@ -2167,7 +2167,7 @@ void wxPseudoMetaFile::GetBounds(double *boundMinX, double *boundMinY, double *b
   double minX = (double) 99999.9;
   double minY = (double) 99999.9;
 
-  for (wxObjectList::iterator it = m_ops.begin();
+  for (wxObjectList::const_iterator it = m_ops.begin();
        it != m_ops.end();
        it++)
   {

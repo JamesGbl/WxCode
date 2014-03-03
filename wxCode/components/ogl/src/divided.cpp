@@ -84,7 +84,7 @@ void wxDividedShape::OnDrawContents(wxDC& dc)
   double yMargin = 2;
   dc.SetBackgroundMode(wxTRANSPARENT);
 
-  for (wxObjectList::iterator it = GetRegions().begin();
+  for (wxObjectList::const_iterator it = GetRegions().begin();
        it != GetRegions().end();
        it++)
   {
@@ -138,7 +138,7 @@ void wxDividedShape::SetRegionSizes()
 //  double leftX = (double)(m_xpos - (m_width / 2.0));
 //  double rightX = (double)(m_xpos + (m_width / 2.0));
 
-  for (wxObjectList::iterator it = GetRegions().begin();
+  for (wxObjectList::const_iterator it = GetRegions().begin();
        it != GetRegions().end();
        it++)
   {
@@ -325,7 +325,7 @@ void wxDividedShape::MakeMandatoryControlPoints()
   double maxY = (double)(GetY() + (m_height / 2.0));
 
   int i = 0;
-  for (wxObjectList::iterator it = GetRegions().begin();
+  for (wxObjectList::const_iterator it = GetRegions().begin();
        it != GetRegions().end();
        it++, i++)
   {
@@ -362,7 +362,7 @@ void wxDividedShape::ResetMandatoryControlPoints()
   double maxY = (double)(GetY() + (m_height / 2.0));
 
   int i = 0;
-  for (wxObjectList::iterator it = m_controlPoints.begin();
+  for (wxObjectList::const_iterator it = m_controlPoints.begin();
        it != m_controlPoints.end();
        it++)
   {
@@ -568,7 +568,7 @@ void wxDividedShapeControlPoint::OnDragLeft(bool WXUNUSED(draw), double WXUNUSED
     GetCanvas()->PrepareDC(dc);
 
     dc.SetLogicalFunction(OGLRBLF);
-    wxPen dottedPen(*wxBLACK, 1, wxDOT);
+    wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
     dc.SetPen(dottedPen);
     dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -587,7 +587,7 @@ void wxDividedShapeControlPoint::OnBeginDragLeft(double WXUNUSED(x), double y, i
 
     wxDividedShape* dividedObject = wxStaticCast(m_shape, wxDividedShape);
     dc.SetLogicalFunction(OGLRBLF);
-    wxPen dottedPen(*wxBLACK, 1, wxDOT);
+    wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
     dc.SetPen(dottedPen);
     dc.SetBrush((* wxTRANSPARENT_BRUSH));
 

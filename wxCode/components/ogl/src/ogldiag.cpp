@@ -59,7 +59,7 @@ void wxDiagram::Redraw(wxDC& dc)
     if (GetCanvas())
       GetCanvas()->SetCursor(* wxHOURGLASS_CURSOR);
 
-    for (wxObjectList::iterator it = m_shapeList->begin();
+    for (wxObjectList::const_iterator it = m_shapeList->begin();
          it != m_shapeList->end();
          it++)
     {
@@ -138,7 +138,7 @@ void wxDiagram::DeleteAllShapes()
 
 void wxDiagram::ShowAll(bool show)
 {
-  for (wxObjectList::iterator it = m_shapeList->begin();
+  for (wxObjectList::const_iterator it = m_shapeList->begin();
        it != m_shapeList->end();
        it++)
   {
@@ -149,7 +149,7 @@ void wxDiagram::ShowAll(bool show)
 
 void wxDiagram::DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2)
 {
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -175,7 +175,7 @@ void wxDiagram::DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2
 // Make sure all text that should be centred, is centred.
 void wxDiagram::RecentreAll(wxDC& dc)
 {
-  for (wxObjectList::iterator it = m_shapeList->begin();
+  for (wxObjectList::const_iterator it = m_shapeList->begin();
        it != m_shapeList->end();
        it++)
   {
@@ -194,7 +194,7 @@ bool wxDiagram::SaveFile(const wxString& filename)
   wxXmlNode *root = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("diagram"));
   doc.SetRoot(root);
 
-  for (wxObjectList::iterator it = m_shapeList->begin();
+  for (wxObjectList::const_iterator it = m_shapeList->begin();
        it != m_shapeList->end();
        it++)
   {
@@ -456,7 +456,7 @@ void wxDiagram::SetCanvas(wxShapeCanvas *can)
 // Find a shape by its id
 wxShape* wxDiagram::FindShape(long id) const
 {
-    for (wxObjectList::iterator it = GetShapeList()->begin();
+    for (wxObjectList::const_iterator it = GetShapeList()->begin();
          it != GetShapeList()->end();
          it++)
     {
@@ -484,7 +484,7 @@ wxLineCrossings::~wxLineCrossings()
 void wxLineCrossings::FindCrossings(wxDiagram& diagram)
 {
     ClearCrossings();
-    for (wxObjectList::iterator it1 = diagram.GetShapeList()->begin();
+    for (wxObjectList::const_iterator it1 = diagram.GetShapeList()->begin();
          it1 != diagram.GetShapeList()->end();
          it1++)
     {
@@ -503,7 +503,7 @@ void wxLineCrossings::FindCrossings(wxDiagram& diagram)
 
                 // Now we iterate through the segments again
 
-                for (wxObjectList::iterator it2 = diagram.GetShapeList()->begin();
+                for (wxObjectList::const_iterator it2 = diagram.GetShapeList()->begin();
                      it2 != diagram.GetShapeList()->end();
                      it2++)
                 {
@@ -558,7 +558,7 @@ void wxLineCrossings::DrawCrossings(wxDiagram& WXUNUSED(diagram), wxDC& dc)
 
     long arcWidth = 8;
 
-    for (wxObjectList::iterator it = m_crossings.begin();
+    for (wxObjectList::const_iterator it = m_crossings.begin();
          it != m_crossings.end();
          it++)
     {
@@ -618,7 +618,7 @@ void wxLineCrossings::DrawCrossings(wxDiagram& WXUNUSED(diagram), wxDC& dc)
 
 void wxLineCrossings::ClearCrossings()
 {
-    for (wxObjectList::iterator it = m_crossings.begin();
+    for (wxObjectList::const_iterator it = m_crossings.begin();
          it != m_crossings.end();
          it++)
     {

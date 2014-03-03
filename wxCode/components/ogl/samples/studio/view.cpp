@@ -361,7 +361,7 @@ void csDiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         {
           wxColourData retData = dialog->GetColourData();
           wxColour col = retData.GetColour();
-          theBrush = wxTheBrushList->FindOrCreateBrush(col, wxSOLID);
+          theBrush = wxTheBrushList->FindOrCreateBrush(col, wxBRUSHSTYLE_SOLID);
         }
         dialog->Close(true);
         if (!theBrush)
@@ -822,7 +822,7 @@ csCanvas::~csCanvas(void)
 
 void csCanvas::DrawOutline(wxDC& dc, double x1, double y1, double x2, double y2)
 {
-    wxPen dottedPen(*wxBLACK, 1, wxDOT);
+    wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
     dc.SetPen(dottedPen);
     dc.SetBrush(* wxTRANSPARENT_BRUSH);
 

@@ -215,7 +215,7 @@ void DiagramView::OnChangeBackgroundColour(wxCommandEvent& WXUNUSED(event))
         {
           wxColourData retData = dialog->GetColourData();
           wxColour col = retData.GetColour();
-          theBrush = wxTheBrushList->FindOrCreateBrush(col, wxSOLID);
+          theBrush = wxTheBrushList->FindOrCreateBrush(col, wxBRUSHSTYLE_SOLID);
         }
         dialog->Close();
 

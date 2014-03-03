@@ -49,7 +49,7 @@ void wxPolygonShape::Create(wxList *the_points)
       // Duplicate the list of points
       m_points = new wxList;
 
-      for (wxObjectList::iterator it = the_points->begin();
+      for (wxObjectList::const_iterator it = the_points->begin();
            it != the_points->end();
            it++)
       {
@@ -115,7 +115,7 @@ void wxPolygonShape::CalculateBoundingBox()
   double top = 10000;
   double bottom = -10000;
 
-  for (wxObjectList::iterator it = m_points->begin();
+  for (wxObjectList::const_iterator it = m_points->begin();
        it != m_points->end();
        it++)
   {
@@ -142,7 +142,7 @@ void wxPolygonShape::CalculatePolygonCentre()
   double top = 10000;
   double bottom = -10000;
 
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_points->begin();
        it != m_points->end();
        it++)
@@ -234,7 +234,7 @@ bool wxPolygonShape::HitTest(double x, double y, int *attachment, double *distan
   double *xpoints = new double[np];
   double *ypoints = new double[np];
   int i = 0;
-  for (wxObjectList::iterator it = m_points->begin();
+  for (wxObjectList::const_iterator it = m_points->begin();
        it != m_points->end();
        it++, i++)
   {
@@ -334,7 +334,7 @@ void wxPolygonShape::UpdateOriginalPoints()
     original_node = next_node;
   }
 
-  for (wxObjectList::iterator it = m_points->begin();
+  for (wxObjectList::const_iterator it = m_points->begin();
        it != m_points->end();
        it++)
   {
@@ -407,7 +407,7 @@ bool wxPolygonShape::GetPerimeterPoint(double x1, double y1,
   {
     // Look for the point we'd be connecting to. This is
     // a heuristic...
-    for (wxObjectList::iterator it = m_points->begin();
+    for (wxObjectList::const_iterator it = m_points->begin();
          it != m_points->end();
          it++)
     {
@@ -434,7 +434,7 @@ bool wxPolygonShape::GetPerimeterPoint(double x1, double y1,
   double *ypoints = new double[n];
 
   int i = 0;
-  for (wxObjectList::iterator it = m_points->begin();
+  for (wxObjectList::const_iterator it = m_points->begin();
        it != m_points->end();
        it++, i++)
   {
@@ -510,7 +510,7 @@ void wxPolygonShape::OnDrawOutline(wxDC& dc, double x, double y, double w, doubl
 // Make as many control points as there are vertices.
 void wxPolygonShape::MakeControlPoints()
 {
-  for (wxObjectList::iterator it = m_points->begin();
+  for (wxObjectList::const_iterator it = m_points->begin();
        it != m_points->end();
        it++)
   {
@@ -548,7 +548,7 @@ void wxPolygonShape::WriteAttributes(wxXmlNode*clause) const
 
   // Make a list of lists for the coordinates
   wxXmlNode* list = new wxXmlNode(wxXML_ELEMENT_NODE, wxT("points"));
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_points->begin();
        it != m_points->end();
        it++)
@@ -693,7 +693,7 @@ void wxPolygonShape::Copy(wxShape& copy)
   polyCopy.m_points = new wxList;
   polyCopy.m_originalPoints = new wxList;
 
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_points->begin();
        it != m_points->end();
        it++)
@@ -773,7 +773,7 @@ void wxPolygonShape::Rotate(double x, double y, double theta)
     // Rotate attachment points
     double sinTheta = (double)sin(actualTheta);
     double cosTheta = (double)cos(actualTheta);
-    wxObjectList::iterator it;
+    wxObjectList::const_iterator it;
     for (it = m_attachmentPoints.begin();
          it != m_attachmentPoints.end();
          it++)
@@ -1249,7 +1249,7 @@ void wxShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), double x
 
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1384,7 +1384,7 @@ void wxShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double y, int 
   pt->sm_controlPointDragStartWidth = bound_x;
   pt->sm_controlPointDragStartHeight = bound_y;
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1584,7 +1584,7 @@ void wxPolygonShape::OnSizingDragLeft(wxControlPoint* pt, bool WXUNUSED(draw), d
 
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1636,7 +1636,7 @@ void wxPolygonShape::OnSizingBeginDragLeft(wxControlPoint* pt, double x, double 
 
   if (ppt->m_originalDistance == 0.0) ppt->m_originalDistance = (double) 0.0001;
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1720,7 +1720,7 @@ wxShapeRegion::wxShapeRegion()
   m_regionName = wxEmptyString;
   m_textColour = wxT("BLACK");
   m_penColour = wxT("BLACK");
-  m_penStyle = wxSOLID;
+  m_penStyle = wxPENSTYLE_SOLID;
   m_actualColourObject = wxTheColourDatabase->Find(wxT("BLACK"));
   m_actualPenObject = NULL;
 }
@@ -1748,7 +1748,7 @@ wxShapeRegion::wxShapeRegion(wxShapeRegion& region):wxObject()
   m_penColour = region.m_penColour;
 
   ClearText();
-  for (wxObjectList::iterator it = region.m_formattedText.begin();
+  for (wxObjectList::const_iterator it = region.m_formattedText.begin();
        it != region.m_formattedText.end();
        it++)
   {

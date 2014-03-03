@@ -63,7 +63,7 @@ void wxShapeCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 
     PrepareDC(dc);
 
-    dc.SetBackground(wxBrush(GetBackgroundColour(), wxSOLID));
+    dc.SetBackground(wxBrush(GetBackgroundColour(), wxBRUSHSTYLE_SOLID));
     dc.Clear();
 
     if (GetDiagram())

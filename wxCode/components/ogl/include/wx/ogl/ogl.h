@@ -25,6 +25,27 @@
     #define WXDLLIMPEXP_FWD_OGL WXDLLIMPEXP_OGL
 #endif
 
+#if (wxVERSION_NUMBER < 2900)
+enum wxPenStyle
+{
+    wxPENSTYLE_SOLID = wxSOLID,
+    wxPENSTYLE_DOT = wxDOT,
+    wxPENSTYLE_SHORT_DASH = wxSHORT_DASH,
+    wxPENSTYLE_TRANSPARENT = wxTRANSPARENT,
+};
+enum wxBrushStyle
+{
+    wxBRUSHSTYLE_SOLID = wxSOLID,
+    wxBRUSHSTYLE_TRANSPARENT = wxTRANSPARENT,
+    wxBRUSHSTYLE_BDIAGONAL_HATCH = wxBDIAGONAL_HATCH,
+    wxBRUSHSTYLE_CROSSDIAG_HATCH = wxCROSSDIAG_HATCH,
+    wxBRUSHSTYLE_FDIAGONAL_HATCH = wxFDIAGONAL_HATCH,
+    wxBRUSHSTYLE_HORIZONTAL_HATCH = wxHORIZONTAL_HATCH,
+    wxBRUSHSTYLE_VERTICAL_HATCH = wxVERTICAL_HATCH,
+    wxBRUSHSTYLE_CROSS_HATCH = wxCROSS_HATCH,
+};
+#endif
+
 #include <wx/ogl/basic.h>      // Basic shapes
 #include <wx/ogl/basicp.h>
 #include <wx/ogl/lines.h>      // Lines and splines

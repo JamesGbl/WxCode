@@ -1,39 +1,37 @@
 // link.cpp
-// Copyright (c) 2009-2012 by Troels K. All rights reserved.
-// License: wxWindows
 
 #ifdef _MSC_VER
 
 #include <wx/wx.h>
 
-#if (wxVERSION_NUMBER >= 2900)
+#if (wxVERSION_NUMBER >= 3100)
    #if wxUSE_UNICODE
       #ifdef _DEBUG
-         #pragma comment(lib, "wxbase29ud.lib")
-         #pragma comment(lib, "wxbase29ud_xml.lib")
-         #pragma comment(lib, "wxmsw29ud_xrc.lib")
-         #pragma comment(lib, "wxmsw29ud_core.lib")
-         #pragma comment(lib, "wxmsw29ud_adv.lib")
+         #pragma comment(lib, "wxbase31ud.lib")
+         #pragma comment(lib, "wxbase31ud_xml.lib")
+         #pragma comment(lib, "wxmsw31ud_xrc.lib")
+         #pragma comment(lib, "wxmsw31ud_core.lib")
+         #pragma comment(lib, "wxmsw31ud_adv.lib")
       #else
-         #pragma comment(lib, "wxbase29u.lib")
-         #pragma comment(lib, "wxbase29u_xml.lib")
-         #pragma comment(lib, "wxmsw29u_core.lib")
-         #pragma comment(lib, "wxmsw29u_adv.lib")
+         #pragma comment(lib, "wxbase31u.lib")
+         #pragma comment(lib, "wxbase31u_xml.lib")
+         #pragma comment(lib, "wxmsw31u_core.lib")
+         #pragma comment(lib, "wxmsw31u_adv.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
       #endif
    #else
       #ifdef _DEBUG
-         #pragma comment(lib, "wxbase29d.lib")
-         #pragma comment(lib, "wxbase29d_xml.lib")
-         #pragma comment(lib, "wxmsw29d_core.lib")
-         #pragma comment(lib, "wxmsw29d_adv.lib")
+         #pragma comment(lib, "wxbase31d.lib")
+         #pragma comment(lib, "wxbase31d_xml.lib")
+         #pragma comment(lib, "wxmsw31d_core.lib")
+         #pragma comment(lib, "wxmsw31d_adv.lib")
       #else
-         #pragma comment(lib, "wxbase29.lib")
-         #pragma comment(lib, "wxbase29_xml.lib")
-         #pragma comment(lib, "wxmsw29_core.lib")
-         #pragma comment(lib, "wxmsw29_adv.lib")
+         #pragma comment(lib, "wxbase31.lib")
+         #pragma comment(lib, "wxbase31_xml.lib")
+         #pragma comment(lib, "wxmsw31_core.lib")
+         #pragma comment(lib, "wxmsw31_adv.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")

@@ -93,7 +93,7 @@ void OGLCleanUpConstraintTypes()
     if (!wxOGLConstraintTypes)
         return;
 
-    for (wxObjectList::iterator it = wxOGLConstraintTypes->begin();
+    for (wxObjectList::const_iterator it = wxOGLConstraintTypes->begin();
          it != wxOGLConstraintTypes->end();
          it++)
     {
@@ -121,7 +121,7 @@ wxOGLConstraint::wxOGLConstraint(int type, wxShape *constraining, wxList& constr
   m_constraintId = 0;
   m_constraintName = wxT("noname");
 
-  for (wxObjectList::iterator it = constrained.begin();
+  for (wxObjectList::const_iterator it = constrained.begin();
        it != constrained.end();
        it++)
   {
@@ -159,7 +159,7 @@ bool wxOGLConstraint::Evaluate()
     {
       int n = m_constrainedObjects.GetCount();
       double totalObjectHeight = 0.0;
-      wxObjectList::iterator it;
+      wxObjectList::const_iterator it;
 
       for (it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
@@ -209,7 +209,7 @@ bool wxOGLConstraint::Evaluate()
     {
       int n = m_constrainedObjects.GetCount();
       double totalObjectWidth = 0.0;
-      wxObjectList::iterator it;
+      wxObjectList::const_iterator it;
 
       for (it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
@@ -260,7 +260,7 @@ bool wxOGLConstraint::Evaluate()
       int n = m_constrainedObjects.GetCount();
       double totalObjectWidth = 0.0;
       double totalObjectHeight = 0.0;
-      wxObjectList::iterator it;
+      wxObjectList::const_iterator it;
       
       for (it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
@@ -331,7 +331,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -353,7 +353,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -375,7 +375,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -397,7 +397,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -419,7 +419,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -441,7 +441,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -467,7 +467,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -489,7 +489,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -511,7 +511,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -530,7 +530,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -553,7 +553,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {
@@ -572,7 +572,7 @@ bool wxOGLConstraint::Evaluate()
     {
       bool changed = false;
 
-      for (wxObjectList::iterator it = m_constrainedObjects.begin();
+      for (wxObjectList::const_iterator it = m_constrainedObjects.begin();
            it != m_constrainedObjects.end();
            it++)
       {

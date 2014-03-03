@@ -310,7 +310,7 @@ void wxShape::SetHighlight(bool hi, bool recurse)
   m_highlighted = hi;
   if (recurse)
   {
-    for (wxObjectList::iterator it = m_children.begin();
+    for (wxObjectList::const_iterator it = m_children.begin();
          it != m_children.end();
          it++)
     {
@@ -330,7 +330,7 @@ void wxShape::SetSensitivityFilter(int sens, bool recursive)
   m_sensitivity = sens;
   if (recursive)
   {
-    for (wxObjectList::iterator it = m_children.begin();
+    for (wxObjectList::const_iterator it = m_children.begin();
          it != m_children.end();
          it++)
     {
@@ -351,7 +351,7 @@ void wxShape::SetDraggable(bool drag, bool recursive)
 
   if (recursive)
   {
-    for (wxObjectList::iterator it = m_children.begin();
+    for (wxObjectList::const_iterator it = m_children.begin();
          it != m_children.end();
          it++)
     {
@@ -364,7 +364,7 @@ void wxShape::SetDraggable(bool drag, bool recursive)
 void wxShape::SetDrawHandles(bool drawH)
 {
   m_drawHandles = drawH;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -394,7 +394,7 @@ void wxShape::SetShadowMode(int mode, bool redraw)
 void wxShape::SetCanvas(wxShapeCanvas *theCanvas)
 {
   m_canvas = theCanvas;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -407,7 +407,7 @@ void wxShape::AddToCanvas(wxShapeCanvas *theCanvas, wxShape *addAfter)
 {
   theCanvas->AddShape(this, addAfter);
   wxShape *lastImage = this;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -422,7 +422,7 @@ void wxShape::InsertInCanvas(wxShapeCanvas *theCanvas)
 {
   theCanvas->InsertShape(this);
   wxShape *lastImage = this;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -437,7 +437,7 @@ void wxShape::RemoveFromCanvas(wxShapeCanvas *theCanvas)
   if (Selected())
     Select(false);
   theCanvas->RemoveShape(this);
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -448,7 +448,7 @@ void wxShape::RemoveFromCanvas(wxShapeCanvas *theCanvas)
 
 void wxShape::ClearAttachments()
 {
-  for (wxObjectList::iterator it = m_attachmentPoints.begin();
+  for (wxObjectList::const_iterator it = m_attachmentPoints.begin();
        it != m_attachmentPoints.end();
        it++)
   {
@@ -576,7 +576,7 @@ void wxShape::FormatText(wxDC& dc, const wxString& s, int i)
   region->GetSize(&w, &h);
 
   wxStringList *stringList = oglFormatText(dc, s, (w-2*m_textMarginX), (h-2*m_textMarginY), region->GetFormatMode());
-  for (wxStringList::iterator it = stringList->begin();
+  for (wxStringList::const_iterator it = stringList->begin();
        it != stringList->end();
        it++)
   {
@@ -764,7 +764,7 @@ wxString wxShape::GetRegionName(int regionId)
 int wxShape::GetRegionId(const wxString& name)
 {
   int i = 0;
-  for (wxObjectList::iterator it = m_regions.begin();
+  for (wxObjectList::const_iterator it = m_regions.begin();
        it != m_regions.end();
        it++, i++)
   {
@@ -789,7 +789,7 @@ void wxShape::NameRegions(const wxString& parentName)
     SetRegionName(buff, i);
   }
   int j = 0;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -814,7 +814,7 @@ wxShape *wxShape::FindRegion(const wxString& name, int *regionId)
     return this;
   }
 
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -837,7 +837,7 @@ void wxShape::FindRegionNames(wxStringList& list)
     list.Add(name.wx_str());
   }
 
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -850,7 +850,7 @@ void wxShape::AssignNewIds()
 {
 //  if (m_id == 0)
   m_id = wxNewId();
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -868,7 +868,7 @@ void wxShape::OnMoveLinks(wxDC& dc)
   // Want to set the ends of all attached links
   // to point to/from this object
 
-  for (wxObjectList::iterator it = m_lines.begin();
+  for (wxObjectList::const_iterator it = m_lines.begin();
        it != m_lines.end();
        it++)
   {
@@ -926,7 +926,7 @@ void wxShape::OnErase(wxDC& dc)
     return;
 
   // Erase links
-  for (wxObjectList::iterator it = m_lines.begin();
+  for (wxObjectList::const_iterator it = m_lines.begin();
        it != m_lines.end();
        it++)
   {
@@ -962,7 +962,7 @@ void wxShape::OnEraseContents(wxDC& dc)
 
 void wxShape::EraseLinks(wxDC& dc, int attachment, bool recurse)
 {
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
 
   if (!m_visible)
     return;
@@ -992,7 +992,7 @@ void wxShape::EraseLinks(wxDC& dc, int attachment, bool recurse)
 
 void wxShape::DrawLinks(wxDC& dc, int attachment, bool recurse)
 {
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
 
   if (!m_visible)
     return;
@@ -1072,7 +1072,7 @@ bool wxShape::MoveLineToNewAttachment(wxDC& dc, wxLineShape *to_move,
   wxList newOrdering;
 
   // First, add all links to the new list.
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_lines.begin();
        it != m_lines.end();
        it++)
@@ -1157,7 +1157,7 @@ void wxShape::ApplyAttachmentOrdering(wxList& linesToSort)
   // This is a temporary store of all the lines.
   wxList linesStore;
 
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_lines.begin();
        it != m_lines.end();
        it++)
@@ -1200,7 +1200,7 @@ void wxShape::SortLines(int attachment, wxList& linesToSort)
   // point. We'll tick them off as we've processed them.
   wxList linesAtThisAttachment;
   wxObjectList::compatibility_iterator node;
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
 
   for (node = m_lines.GetFirst();
        node;
@@ -1300,7 +1300,7 @@ void wxShape::OnDragLeft(bool draw, double x, double y, int keys, int attachment
 
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush(* wxTRANSPARENT_BRUSH);
 
@@ -1345,7 +1345,7 @@ void wxShape::OnBeginDragLeft(double x, double y, int keys, int attachment)
 //  m_xpos = xx; m_ypos = yy;
   dc.SetLogicalFunction(OGLRBLF);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetPen(dottedPen);
   dc.SetBrush((* wxTRANSPARENT_BRUSH));
 
@@ -1523,7 +1523,7 @@ void wxShape::Flash()
 void wxShape::Show(bool show)
 {
   m_visible = show;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -1577,7 +1577,7 @@ void wxShape::SetAttachmentSize(double w, double h)
     scaleY = 1.0;
   else scaleY = h/height;
 
-  for (wxObjectList::iterator it = m_attachmentPoints.begin();
+  for (wxObjectList::const_iterator it = m_attachmentPoints.begin();
        it != m_attachmentPoints.end();
        it++)
   {
@@ -1713,7 +1713,7 @@ void wxShape::WriteAttributes(wxXmlNode*clause) const
     else if (brushColour != wxT("WHITE"))
       clause->AddAttribute(wxT("brush_colour"), brushColour);
 
-    if (m_brush->GetStyle() != wxSOLID)
+    if (m_brush->GetStyle() != wxBRUSHSTYLE_SOLID)
       clause->AddAttribute(wxT("brush_style"), wxString::Format(wxT("%d"), m_brush->GetStyle()));
   }
 
@@ -1838,7 +1838,7 @@ void wxShape::WriteRegions(wxXmlNode*clause) const
     // text1 = ((x y string) (x y string) ...)
     wxXmlNode* textExpr = new wxXmlNode(wxXML_ELEMENT_NODE, textNameBuf);
 
-    for (wxObjectList::iterator text_it = region->m_formattedText.begin();
+    for (wxObjectList::const_iterator text_it = region->m_formattedText.begin();
          text_it != region->m_formattedText.end();
          text_it++)
     {
@@ -1885,8 +1885,8 @@ void wxShape::ReadAttributes(wxXmlNode*clause)
   wxString pen_string = wxEmptyString;
   wxString brush_string = wxEmptyString;
   int pen_width = 1;
-  int pen_style = wxSOLID;
-  int brush_style = wxSOLID;
+  wxPenStyle pen_style = wxPENSTYLE_SOLID;
+  wxBrushStyle brush_style = wxBRUSHSTYLE_SOLID;
   m_attachmentMode = ATTACHMENT_MODE_NONE;
 
   pen_string = clause->GetAttribute(wxT("pen_colour"), wxEmptyString);
@@ -1898,8 +1898,8 @@ void wxShape::ReadAttributes(wxXmlNode*clause)
 
   brush_string = clause->GetAttribute(wxT("brush_colour"), wxEmptyString);
   if (clause->GetAttribute(wxT("pen_width"), wxEmptyString).ToLong(&iVal)) pen_width = iVal;
-  if (clause->GetAttribute(wxT("pen_style"), wxEmptyString).ToLong(&iVal)) pen_style = iVal;
-  if (clause->GetAttribute(wxT("brush_style"), wxEmptyString).ToLong(&iVal)) brush_style = iVal;
+  if (clause->GetAttribute(wxT("pen_style"), wxEmptyString).ToLong(&iVal)) pen_style = (wxPenStyle)iVal;
+  if (clause->GetAttribute(wxT("brush_style"), wxEmptyString).ToLong(&iVal)) brush_style = (wxBrushStyle)iVal;
   if (clause->GetAttribute(wxT("use_attachments"), wxEmptyString).ToLong(&iVal)) m_attachmentMode = iVal;
   if (clause->GetAttribute(wxT("sensitivity"), wxEmptyString).ToLong(&iVal)) m_sensitivity = iVal;
   if (clause->GetAttribute(wxT("space_attachments"), wxEmptyString).ToLong(&iVal)) m_spaceAttachments = (iVal != 0);
@@ -2015,12 +2015,12 @@ void wxShape::ReadRegions(wxXmlNode*clause)
     double m_regionProportionY = -1.0;
     int formatMode = FORMAT_NONE;
     int fontSize = 10;
-    int fontFamily = wxSWISS;
-    int fontStyle = wxNORMAL;
-    int fontWeight = wxNORMAL;
+    wxFontFamily fontFamily = wxFONTFAMILY_SWISS;
+    wxFontStyle fontStyle = wxFONTSTYLE_NORMAL;
+    wxFontWeight fontWeight = wxFONTWEIGHT_NORMAL;
     wxString regionTextColour = wxEmptyString;
     wxString penColour = wxEmptyString;
-    int penStyle = wxSOLID;
+    wxPenStyle penStyle = wxPENSTYLE_SOLID;
 
     //if (regionExpr->Type() == wxExprList)
     {
@@ -2061,9 +2061,9 @@ void wxShape::ReadRegions(wxXmlNode*clause)
       long iVal;
       if (formatExpr.ToLong(&iVal)) formatMode = iVal;
       if (sizeExpr.ToLong(&iVal)) fontSize = iVal;
-      if (familyExpr.ToLong(&iVal)) fontFamily = iVal;
-      if (styleExpr.ToLong(&iVal)) fontStyle = iVal;
-      if (weightExpr.ToLong(&iVal)) fontWeight = iVal;
+      if (familyExpr.ToLong(&iVal)) fontFamily = (wxFontFamily)iVal;
+      if (styleExpr.ToLong(&iVal)) fontStyle = (wxFontStyle)iVal;
+      if (weightExpr.ToLong(&iVal)) fontWeight = (wxFontWeight)iVal;
 
       if (colourExpr.Length())
       {
@@ -2073,7 +2073,7 @@ void wxShape::ReadRegions(wxXmlNode*clause)
         regionTextColour = wxT("BLACK");
 
       if (penColourExpr.Length()) penColour = penColourExpr;
-      if (penStyleExpr.ToLong(&iVal)) penStyle = iVal;
+      if (penStyleExpr.ToLong(&iVal)) penStyle = (wxPenStyle)iVal;
     }
     wxFont *font = wxTheFontList->FindOrCreateFont(fontSize, fontFamily, fontStyle, fontWeight);
 
@@ -2186,7 +2186,7 @@ void wxShape::Copy(wxShape& copy)
 
   // Copy text regions
   copy.ClearRegions();
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_regions.begin();
        it != m_regions.end();
        it++)
@@ -2325,7 +2325,7 @@ void wxShape::MakeControlPoints()
 
 void wxShape::MakeMandatoryControlPoints()
 {
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -2336,7 +2336,7 @@ void wxShape::MakeMandatoryControlPoints()
 
 void wxShape::ResetMandatoryControlPoints()
 {
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -2431,7 +2431,7 @@ void wxShape::OnDrawControlPoints(wxDC& dc)
   dc.SetBrush(* wxBLACK_BRUSH);
   dc.SetPen(* wxBLACK_PEN);
 
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_controlPoints.begin();
        it != m_controlPoints.end();
        it++)
@@ -2457,7 +2457,7 @@ void wxShape::OnDrawControlPoints(wxDC& dc)
 
 void wxShape::OnEraseControlPoints(wxDC& dc)
 {
-  wxObjectList::iterator it;
+  wxObjectList::const_iterator it;
   for (it = m_controlPoints.begin();
        it != m_controlPoints.end();
        it++)
@@ -2487,7 +2487,7 @@ void wxShape::Select(bool select, wxDC* dc)
     // so stop here
     if (!wxDynamicCast(this, wxDivisionShape))
     {
-      for (wxObjectList::iterator it = m_children.begin();
+      for (wxObjectList::const_iterator it = m_children.begin();
            it != m_children.end();
            it++)
       {
@@ -2503,7 +2503,7 @@ void wxShape::Select(bool select, wxDC* dc)
     DeleteControlPoints(dc);
     if (!wxDynamicCast(this, wxDivisionShape))
     {
-      for (wxObjectList::iterator it = m_children.begin();
+      for (wxObjectList::const_iterator it = m_children.begin();
            it != m_children.end();
            it++)
       {
@@ -2588,7 +2588,7 @@ bool wxShape::GetAttachmentPosition(int attachment, double *x, double *y,
     {
         if (m_attachmentPoints.GetCount() > 0)
         {
-            for (wxObjectList::iterator it = m_attachmentPoints.begin();
+            for (wxObjectList::const_iterator it = m_attachmentPoints.begin();
                  it != m_attachmentPoints.end();
                  it++)
             {
@@ -2683,7 +2683,7 @@ bool wxShape::HasDescendant(wxShape *image)
 {
   if (image == this)
     return true;
-  for (wxObjectList::iterator it = m_children.begin();
+  for (wxObjectList::const_iterator it = m_children.begin();
        it != m_children.end();
        it++)
   {
@@ -2698,7 +2698,7 @@ bool wxShape::HasDescendant(wxShape *image)
 // Clears points from a list of wxRealPoints, and clears list
 void wxShape::ClearPointList(wxList& list)
 {
-    for (wxObjectList::iterator it = list.begin();
+    for (wxObjectList::const_iterator it = list.begin();
          it != list.end();
          it++)
     {
@@ -3171,7 +3171,7 @@ wxPen wxShape::GetBackgroundPen()
     if (GetCanvas())
     {
         wxColour c = GetCanvas()->GetBackgroundColour();
-        return wxPen(c, 1, wxSOLID);
+        return wxPen(c, 1, wxPENSTYLE_SOLID);
     }
     return * g_oglWhiteBackgroundPen;
 }
@@ -3182,7 +3182,7 @@ wxBrush wxShape::GetBackgroundBrush()
     if (GetCanvas())
     {
         wxColour c = GetCanvas()->GetBackgroundColour();
-        return wxBrush(c, wxSOLID);
+        return wxBrush(c, wxBRUSHSTYLE_SOLID);
     }
     return * g_oglWhiteBackgroundBrush;
 }

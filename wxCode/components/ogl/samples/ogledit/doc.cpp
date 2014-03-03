@@ -487,7 +487,7 @@ void MyEvtHandler::OnBeginDragRight(double x, double y, int WXUNUSED(keys), int 
   wxClientDC dc(GetShape()->GetCanvas());
   GetShape()->GetCanvas()->PrepareDC(dc);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetLogicalFunction(OGLRBLF);
   dc.SetPen(dottedPen);
   double xp, yp;
@@ -504,7 +504,7 @@ void MyEvtHandler::OnDragRight(bool WXUNUSED(draw), double x, double y, int WXUN
   wxClientDC dc(GetShape()->GetCanvas());
   GetShape()->GetCanvas()->PrepareDC(dc);
 
-  wxPen dottedPen(*wxBLACK, 1, wxDOT);
+  wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
   dc.SetLogicalFunction(OGLRBLF);
   dc.SetPen(dottedPen);
   double xp, yp;
