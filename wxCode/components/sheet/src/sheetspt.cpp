@@ -45,14 +45,19 @@ BEGIN_EVENT_TABLE( wxSheetSplitter, wxWindow )
     EVT_SHEET_SPLIT_BEGIN  ( wxID_ANY, wxSheetSplitter::OnSplit )
     EVT_SHEET_VIEW_CHANGED ( wxID_ANY, wxSheetSplitter::OnViewChanged )
 
+#if !wxCHECK_VERSION(2,9,3)
     WX_EVENT_TABLE_CONTROL_CONTAINER(wxSheetSplitter)
+#endif // !wxCHECK_VERSION(2,9,3)
 END_EVENT_TABLE()
 
+#if !wxCHECK_VERSION(2,9,3)
 #if wxCHECK_VERSION(2, 7, 0)
     WX_DELEGATE_TO_CONTROL_CONTAINER(wxSheetSplitter, wxWindow);
 #else
     WX_DELEGATE_TO_CONTROL_CONTAINER(wxSheetSplitter);
 #endif // wxCHECK_VERSION(2, 7, 0)
+#endif // !wxCHECK_VERSION(2,9,3)
+
 
 void wxSheetSplitter::Init()
 {
