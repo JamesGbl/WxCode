@@ -282,7 +282,13 @@ int wxPlotCurve::GetOptionInt(const wxString& name) const
 wxArrayString wxPlotCurve::GetOptionNames() const
 {
     wxCHECK_MSG(M_PLOTCURVEDATA, wxArrayString(), wxT("invalid plotcurve"));
+#if defined(wxUSE_STD_CONTAINERS) && wxUSE_STD_CONTAINERS
+    wxArrayString s;
+    s.assign(M_PLOTCURVEDATA->m_optionNames.begin(), M_PLOTCURVEDATA->m_optionNames.end());
+    return s;
+#else
     return M_PLOTCURVEDATA->m_optionNames;
+#endif // defined(wxUSE_STD_CONTAINERS) && wxUSE_STD_CONTAINERS
 }
 wxArrayString wxPlotCurve::GetOptionValues() const
 {
