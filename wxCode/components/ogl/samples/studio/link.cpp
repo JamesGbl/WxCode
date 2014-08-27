@@ -15,8 +15,10 @@
       #else
          #pragma comment(lib, "wxbase31u.lib")
          #pragma comment(lib, "wxbase31u_xml.lib")
+         #pragma comment(lib, "wxmsw31u_xrc.lib")
          #pragma comment(lib, "wxmsw31u_core.lib")
          #pragma comment(lib, "wxmsw31u_adv.lib")
+         #pragma comment(lib, "wxmsw31u_html.lib")
          #pragma comment(lib, "wxtiff.lib")
          #pragma comment(lib, "wxjpeg.lib")
          #pragma comment(lib, "wxpng.lib")
