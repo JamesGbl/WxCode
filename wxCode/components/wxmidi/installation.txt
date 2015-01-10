@@ -2,14 +2,14 @@
  ======================
  
  Component:  wxMidi
- Release:    1.5
- Date:       2011/Dc/03
- wxWidgets:  2.4.x, 2.5.x, 2.6.x, 2.7.x, 2.8.x
- Maintainer: Cecilio Salmeron  /  s.cecilio@gmail.com
+ Release:    2.0
+ Date:       2015/Jan/03
+ wxWidgets:  2.4.x, 2.5.x, 2.6.x, 2.7.x, 2.8.x, 3.0.x
+ Maintainer: Cecilio Salmeron  <s.cecilio@gmail.com>
    
  Description:
     wxMidi is a MIDI interface based on PortMidi, the Portable Real-Time MIDI Library, 
-    (PortMidi is available at: http://www.cs.cmu.edu/~music/portmidi/).
+    (PortMidi is available at: http://portmedia.sourceforge.net/).
  
     wxMidi offers a set of classes: wxMidiSystem, wxMidiDevice, wxMidiMessage, 
     wxMidiDatabaseGM and derived from them, that interfaces wxWidgets with the PortMidi
@@ -56,18 +56,18 @@
  build/msw              makefiles and project files for compiling the sample
                         application using MS VisualStudio .NET 2003
 
- build/gtk              makefiles and project files for compiling the sample
-                        application using Code::Blocks IDE
+ build/linux            makefiles and project files for compiling the sample
+                        application using Code::Blocks IDE in linux
                         
  build/msvc-e2010       makefiles and project files for compiling the sample
                         application using MS VisualC++ Express 2010
-
 
  samples/midisound      source files the sample application
 
  src                    source and include files for wxMidi
  
- portmidi               prebuild pormidi librariesfor MS WIndows
+ portmidi               header files for portmidi and prebuild pormidi libraries
+                        for MS Windows
 
  locale                 .po and .mo files with current translations
 
@@ -86,19 +86,31 @@ application source tree, and compile them with your code.
 Obviously you will also require the portmidi library and you will have to modify
 your application makefile or project build file to link with this library. 
 
-In Linux, portmidi ia normally already installed in your system.
+In Linux, portmidi is normally already installed in your system. If not, install
+package portmidi. For instance, in Debian based systems open a terminal window
+and enter:
+	sudo apt-get install libportmidi-dev
+
 
 In MS Windows the situation is just the contrary: unless another package has 
 already installed portmidi, you have great chances to have to install it. For 
-your convenience, I have included the portmidi libraries I am using on my machine,
-so that you could avoid having to download and build them.
+your convenience, I used to include in the wxMidi package the portmidi libraries
+I was using on my Windows machine, so that you could avoid having to download
+and build them. But nowadays I no longer develop for Windows. So the included
+library is the one I used in my old Windows XP machine. Sorry! You can
+download portmidi from http://portmedia.sourceforge.net
 
 
-IMPORTANT NOTEs FOR MICROSOFT WINDOWS USERS
+IMPORTANT NOTES FOR MICROSOFT WINDOWS USERS
 
-1. In Windows, portmidi needs the portmidi.dll, but there is no simple way
+1. I no longer use a machine with Microsoft Windows. Therefore, last test I did
+   was on windows XP.
+
+2. In Windows XP, portmidi needs the portmidi.dll, but there is no simple way
    to set up projects to use this dll. Therefore, YOU MUST COPY this dll to your
-   application executable file folder.
+   application executable file folder. 
+
+3. In later Windows versions, I think that portmidi.dll is no longer needed.
 
 
 

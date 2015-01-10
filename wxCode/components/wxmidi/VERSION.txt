@@ -1,0 +1,36 @@
+Version numbering
+------------------
+
+The versioning scheme of the wxMidi library is much like the standard
+one used for Linux applications/libraries.
+
+Version number is made of two numbers that represents:
+
+- the major release
+- the minor release
+
+For example: '1.6' stands for:
+
+ major: 1
+ minor: 6
+
+A change in the major release introduces an incompatibility between the library
+and the applications that use it. In other words, when the major version changes,
+the author has introduced a change in the API: it could be a change in some method
+name or in the type and number of its parameters. Therefore, you will have
+to review your application code and do some litle changes.
+
+The minor release changes when something has been changed in the library (new classes
+or new methods have been added to the library, or code has been changed for fixing bugs).
+But the library remains compatible with the previous version. Therefore, you don't 
+have to review your application code.
+
+If your application has to compile differently depending on the wxMIDI
+version you can know the actual version of the library by checking the
+value of the following two macros that are defined in the header file
+'src/wxMidi.h':
+
+  - wxMIDI_MAJOR
+  - wxMIDI_MINOR
+
+

@@ -3,17 +3,17 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// Copyright:   (c) 2005-20011 Cecilio Salmeron
-// Licence:     wxWidgets licence, version 3.1 or later at your choice.
+// Copyright:   (c) 2005-2015 Cecilio Salmeron
+// Licence:     wxWidgets licence
 //=====================================================================================
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
 // for all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWindows headers)
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+    #include <wx/wx.h>
+#else
+    #include <wx/wxprec.h>
 #endif
 
 
@@ -23,17 +23,14 @@
 
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
+#include <wx/tokenzr.h>
+#include<wx/numdlg.h>
 
 #include "wxMidi.h"
 
-// ----------------------------------------------------------------------------
-// resources
-// ----------------------------------------------------------------------------
-
-// the application icon (under Windows and OS/2 it is in resources)
-#if defined(__WXGTK__) || defined(__WXMOTIF__) || defined(__WXMAC__) || defined(__WXMGL__) || defined(__WXX11__)
-    #include "mondrian.xpm"
-#endif
+//sdt
+#include <vector>
+using namespace std;
 
 // ----------------------------------------------------------------------------
 // private classes
@@ -65,12 +62,14 @@ public:
 	void OnButtonChord(wxCommandEvent &event);
 	void OnButtonPlayScale(wxCommandEvent &event);
 	void OnButtonSysEx(wxCommandEvent &event);
+    void OnButtonLongSysEx(wxCommandEvent &event);
 	void OnButtonStartReceiving(wxCommandEvent &event);
 	void OnButtonStopReceiving(wxCommandEvent &event);
 	void OnButtonCrash(wxCommandEvent &event);
 	void OnButtonLoopBack(wxCommandEvent &event);
 	void OnButtonStartListening(wxCommandEvent &event);
 	void OnButtonStopListening(wxCommandEvent &event);
+	void OnButtonSendBytes(wxCommandEvent &event);
 
 	//combos
 	void OnComboSections(wxCommandEvent &event);
@@ -95,11 +94,13 @@ private:
 	//controls on the frame
     wxBookCtrl*		m_book;
     wxTextCtrl*		m_text;
+    wxLog*          m_logOld;
 
 	//controls on panel 1
     wxComboBox*		m_pOutCombo;
     wxComboBox*		m_pInCombo;
 	wxButton*		m_btOpenDevice;
+	wxTextCtrl*     m_pBuffersize;
 
 	//controls on panel 2
 	wxComboBox*		m_pSectCombo;		//combo for section names
@@ -108,9 +109,12 @@ private:
 	wxButton*		m_btNoteOff;
 	wxButton*		m_btPlayChord;
 	wxButton*		m_btPlayScale;
+	wxButton*		m_btSendBytes;
+	wxTextCtrl*     m_pHexData;
 
 	//controls on panel 3
 	wxButton*		m_btSysEx;
+	wxButton*		m_btLongSysEx;
 	wxButton*		m_btLoopBack;
 
 	//controls on panel 4
@@ -204,7 +208,7 @@ bool MyApp::OnInit()
 {
     // create the main application window
     MyFrame *frame = new MyFrame(_T("wxMidi test sample application"),
-                                 wxPoint(50, 50), wxSize(600, 400));
+                                 wxPoint(50, 50), wxSize(600, 500));
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -224,8 +228,6 @@ bool MyApp::OnInit()
 MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style)
        : wxFrame(NULL, -1, title, pos, size, style)
 {
-    // set the frame icon
-    SetIcon(wxICON(mondrian));
 
 #if wxUSE_MENUS
     // create a menu bar
@@ -245,7 +247,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
     SetMenuBar(menuBar);
 #endif // wxUSE_MENUS
 
-	new MyPanel( this, 10, 10, 600, 400 );
+	new MyPanel( this, 10, 10, 600, 500 );
 
 
 #if wxUSE_STATUSBAR
@@ -267,8 +269,9 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
     msg.Printf( _T("This is the About dialog of the wxMidi sample.\n")
-                _T("Welcome to wxMidi %s"), wxMIDI_VERSION);
-
+                _T("Welcome to wxMidi %s\n")
+                _T("wxWidgets %d.%d.%d"), wxMIDI_VERSION,
+                wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER);
     wxMessageBox(msg, _T("About wxMidi sample"), wxOK | wxICON_INFORMATION, this);
 }
 
@@ -289,13 +292,16 @@ enum {
 	ID_COMBO_SECTIONS,
 	ID_COMBO_INSTRUMENTS,
 	ID_SEND_SYSEX,
+    ID_SEND_LONG_SYSEX,
 	ID_COMBO_INDEV,
 	ID_START_RECEIVING,
 	ID_STOP_RECEIVING,
 	ID_CRASH,
 	ID_START_LISTENING,
 	ID_STOP_LISTENING,
-	ID_LOOP_BACK
+	ID_LOOP_BACK,
+	ID_SEND_DATA,
+	ID_HEX_DATA
 };
 
 //Define a new event to poll MIDI input
@@ -315,8 +321,10 @@ BEGIN_EVENT_TABLE(MyPanel, wxPanel)
 	EVT_BUTTON    (ID_NOTE_OFF, MyPanel::OnButtonNoteOff)
 	EVT_BUTTON    (ID_PLAY_CHORD, MyPanel::OnButtonChord)
 	EVT_BUTTON    (ID_PLAY_SCALE, MyPanel::OnButtonPlayScale)
+	EVT_BUTTON    (ID_SEND_DATA, MyPanel::OnButtonSendBytes)
 
 	EVT_BUTTON    (ID_SEND_SYSEX, MyPanel::OnButtonSysEx)
+	EVT_BUTTON    (ID_SEND_LONG_SYSEX, MyPanel::OnButtonLongSysEx)
 	EVT_BUTTON    (ID_LOOP_BACK, MyPanel::OnButtonLoopBack)
 
 	EVT_BUTTON    (ID_START_RECEIVING, MyPanel::OnButtonStartReceiving)
@@ -353,11 +361,16 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 	m_fReceiveEnabled = false;
 	m_fDoCrash = false;
 
-	////frame layout
+	//log & messages window
     m_text = new wxTextCtrl(this, wxID_ANY, _T(""),
                             wxPoint(0, 250), wxSize(100, 50), wxTE_MULTILINE);
+    m_text->SetEditable(false);
+    wxLogTextCtrl* logger = new wxLogTextCtrl( m_text );
+    m_logOld = logger->SetActiveTarget( logger );
+    //logger->SetTimestamp( NULL );
 
     m_book = new wxBookCtrl(this, ID_BOOK);
+
 
 
 	//
@@ -372,23 +385,37 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 
 
 	//Devices combos + Open devices button
-	pMainSizer->Add(new wxStaticText(panel, -1, _T("Output devices available:")),
+	wxBoxSizer * pSizer1 = new wxBoxSizer(wxHORIZONTAL);
+	pSizer1->Add(new wxStaticText(panel, -1, _T("Available output devices:")),
 					0, wxALL, 10 );
 
 	m_pOutCombo = new wxComboBox( panel, ID_COMBO_OUTDEV, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
                               wxCB_DROPDOWN | wxCB_READONLY);
-	pMainSizer->Add(m_pOutCombo, 0, wxALL, 10 );
+	pSizer1->Add(m_pOutCombo, 0, wxALL, 10 );
+	pMainSizer->Add(pSizer1, 0, wxLEFT|wxRIGHT, 10 );
 
-	pMainSizer->Add(new wxStaticText(panel, -1, _T("Input devices available:")),
+
+	wxBoxSizer * pSizer2 = new wxBoxSizer(wxHORIZONTAL);
+	pSizer2->Add(new wxStaticText(panel, -1, _T("Available input devices:")),
 					0, wxALL, 10 );
 
 	m_pInCombo = new wxComboBox( panel, ID_COMBO_INDEV, _T("This"),
                               wxPoint(20,25), wxSize(270, wxDefaultCoord),
                               0, NULL,
                               wxCB_DROPDOWN | wxCB_READONLY);
-	pMainSizer->Add(m_pInCombo, 0, wxALL, 10 );
+	pSizer2->Add(m_pInCombo, 0, wxALL, 10 );
+	pMainSizer->Add(pSizer2, 0, wxLEFT|wxRIGHT, 10 );
+
+
+	wxBoxSizer * pSizer3 = new wxBoxSizer(wxHORIZONTAL);
+	pSizer3->Add(new wxStaticText(panel, -1, _T("Size (in Bytes) for portmidi buffer:")),
+					0, wxALL, 10 );
+    m_pBuffersize = new wxTextCtrl(panel, wxID_ANY, _T("4096"));
+	pSizer3->Add(m_pBuffersize, 0, wxALL, 10 );
+	pMainSizer->Add(pSizer3, 0, wxLEFT|wxRIGHT, 10 );
+
 
     m_btOpenDevice = new wxButton(panel, ID_OPEN_DEVICE, _T("Open devices"),
 								  wxDefaultPosition, wxSize(140,25) );
@@ -447,6 +474,21 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 									wxDefaultPosition, wxSize(100,25) );
     pButtonsSizer->Add(m_btPlayScale,0, wxALL, 10 );
 
+	//sizer for the label, the text ctrol and the button
+	wxBoxSizer* pSizer20 = new wxBoxSizer(wxHORIZONTAL);
+	pPanel2Sizer->Add(pSizer20, 0, wxALL, 10);
+
+	pSizer20->Add(
+        new wxStaticText(panel, wxID_ANY, _T("MIDI command: 3 bytes (hex), space separated:")),
+        0, wxALL, 10 );
+
+    m_pHexData = new wxTextCtrl(panel, wxID_ANY, _T(""));
+	pSizer20->Add(m_pHexData, 0, wxALL, 10 );
+
+	m_btSendBytes = new wxButton(panel, ID_SEND_DATA, _T("Send"),
+								 wxDefaultPosition, wxSize(100,25) );
+    pSizer20->Add(m_btSendBytes, 0, wxALL, 10 );
+
 
     m_book->AddPage(panel, _("MIDI output"), false);
 
@@ -463,23 +505,30 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 
 	pPanel3Sizer->Add(
 		new wxStaticText(panel, wxID_ANY,
-			_T("Sorry, SysEx messages are equipment-specific commands and data for each\n")
+			_T("SysEx messages are equipment-specific commands and data for each\n")
 			_T("MIDI maker. You have to change the pre-programed test message to suit\n")
-			_T("your specific MIDI equipment. In this example, the sysex message is\n")
-			_T("a command for a Casio Privia PX-100 keyboard, to set up reverberation\n")
-			_T("to value 03") ),
+			_T("your specific MIDI equipment. In this example, button 'Send SysEx'\n")
+            _T("sends a command for a Casio Privia PX-100 keyboard, to set up\n")
+			_T("reverberation to value 03. Button 'Send Long SysEx' sends a fictitious\n")
+            _T("SysEx with a length of 80,000 bytes.")),
 		1, wxEXPAND , 30 );
 
-	wxBoxSizer* pSizer3 = new wxBoxSizer(wxHORIZONTAL);
-	pPanel3Sizer->Add(pSizer3, 0, wxALL, 10);
+	wxBoxSizer* pSizer30 = new wxBoxSizer(wxHORIZONTAL);
+	pPanel3Sizer->Add(pSizer30, 0, wxALL, 10);
 
-	m_btSysEx = new wxButton(panel, ID_SEND_SYSEX, _T("Send SysEx"),
-									wxPoint(30,130), wxSize(140,25) );
-    pSizer3->Add(m_btSysEx, 0, wxALL, 10 );
+	m_btSysEx = new wxButton(panel, ID_SEND_SYSEX, _T("Send SysEx"));
+    pSizer30->Add(m_btSysEx, 0, wxALL, 10 );
 
-    pSizer3->Add(
-		new wxButton(panel, ID_STOP_RECEIVING, _T("Stop receiving"),
-				wxPoint(200,130), wxSize(140,25) ),
+
+	m_btLongSysEx = new wxButton(panel, ID_SEND_LONG_SYSEX, _T("Send Long SysEx"));
+    pSizer30->Add(m_btLongSysEx, 0, wxALL, 10 );
+
+    pSizer30->Add(
+        new wxButton(panel, ID_START_RECEIVING, _T("Start receiving")),
+		0, wxALL, 10 );
+
+    pSizer30->Add(
+		new wxButton(panel, ID_STOP_RECEIVING, _T("Stop receiving")),
 		0, wxALL, 10 );
 
 	//m_btLoopBack = new wxButton(panel, ID_LOOP_BACK, _T("Loop back test"),
@@ -566,7 +615,7 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 						pMidiDev->DeviceName().c_str(),
 						pMidiDev->InterfaceUsed().c_str() );
 			nItem = m_pOutCombo->Append(sMsg);
-			m_pOutCombo->SetClientData(nItem, (void *)i);
+			m_pOutCombo->SetClientData(nItem, reinterpret_cast<void*>(i));
         }
 		if (pMidiDev->IsInputPort()) {
 			nInput++;
@@ -574,7 +623,7 @@ MyPanel::MyPanel( wxFrame *frame, int x, int y, int w, int h )
 						pMidiDev->DeviceName().c_str(),
 						pMidiDev->InterfaceUsed().c_str() );
 			nItem = m_pInCombo->Append(sMsg);
-			m_pInCombo->SetClientData(nItem, (void *)i);
+			m_pInCombo->SetClientData(nItem, reinterpret_cast<void*>(i));
         }
 		delete pMidiDev;
     }
@@ -633,7 +682,7 @@ void MyPanel::OnButtonOpenDevice( wxCommandEvent &event )
 
 	//get number of Midi device to use
 	int nIndex = m_pOutCombo->GetSelection();
-	int nMidiDev = (int) m_pOutCombo->GetClientData(nIndex);
+	int nMidiDev = reinterpret_cast<long>( m_pOutCombo->GetClientData(nIndex) );
     m_pOutDev = new wxMidiOutDevice(nMidiDev);
 
     // open output device
@@ -653,15 +702,21 @@ void MyPanel::OnButtonOpenDevice( wxCommandEvent &event )
 	//Open input device
 	nIndex = m_pInCombo->GetSelection();
 	if (nIndex != -1) {
-		nMidiDev = (int) m_pInCombo->GetClientData(nIndex);
+		nMidiDev = reinterpret_cast<long>( m_pInCombo->GetClientData(nIndex) );
 		m_pInDev = new wxMidiInDevice(nMidiDev);
-		nErr = m_pInDev->Open();
+		wxString sBufSize = m_pBuffersize->GetValue();
+		long bufsize = 0L;
+		sBufSize.ToLong(&bufsize);
+		if (bufsize <= 0L || bufsize > 32000L)
+            bufsize = 4096L;
+
+		nErr = m_pInDev->Open(NULL /*no info for driver*/, bufsize);
 		if (nErr)
 				sMsg.Printf(_T("Error %d in Open: %s \n"),
 							nErr, m_pMidi->GetErrorText(nErr).c_str());
 		else {
-			sMsg.Printf(_T("Input device %s sucessfully opened.\n"),
-				m_pInDev->DeviceName().c_str());
+			sMsg.Printf(_T("Input device %s sucessfully opened. Buffersize %d\n"),
+				m_pInDev->DeviceName().c_str(), (int)bufsize);
 		}
 	}
 	else {
@@ -724,6 +779,7 @@ void MyPanel::OnButtonNoteOn(wxCommandEvent &event)
 	m_btPlayChord->Enable(false);
 
 }
+
 void MyPanel::OnButtonNoteOff(wxCommandEvent &event)
 {
 	wxString sMsg;
@@ -743,6 +799,53 @@ void MyPanel::OnButtonNoteOff(wxCommandEvent &event)
 	m_btNoteOff->Enable(false);
 	m_btPlayChord->Enable(true);
 
+}
+
+void MyPanel::OnButtonSendBytes(wxCommandEvent &event)
+{
+    //break the string into bytes
+    wxByte bytes[3];
+    wxStringTokenizer tkz(m_pHexData->GetValue(), wxT(" "));
+    if (tkz.CountTokens() != 3)
+    {
+        m_text->AppendText(_T("Error: Must be exactly 3 bytes, no more or less!\n"));
+        return;
+    }
+
+    int i=0;
+    while ( tkz.HasMoreTokens() )
+    {
+        wxString token = tkz.GetNextToken();
+        int v;
+        if (!sscanf((const char*)token.mb_str(),"%x",&v))
+        {
+            wxString msg;
+            msg.Printf(_T("Error: no valid hex data: '%s'\n"), token.c_str());
+            m_text->AppendText(msg);
+            return;
+        }
+        else
+        {
+            bytes[i] = v;
+        }
+        ++i;
+    }
+
+	//Send bytes
+    wxString msg;
+    msg.Printf(_T("Sending MIDI command '0x%2X 0x%2X 0x%2X' (%d %d %d)\n"),
+               bytes[0], bytes[1], bytes[2], bytes[0], bytes[1], bytes[2]);
+    m_text->AppendText(msg);
+	wxMidiShortMessage cmd(bytes[0], bytes[1], bytes[2]);
+    wxMidiError nErr = m_pOutDev->Write(&cmd);
+	if (nErr) {
+		msg.Printf(_T("Error %d in command: %s \n"),
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
+	}
+	else {
+	    msg = _T("Command sent OK\n");
+	}
+    m_text->AppendText(msg);
 }
 
 void MyPanel::OnButtonChord(wxCommandEvent &event)
@@ -785,12 +888,12 @@ void MyPanel::OnButtonSysEx(wxCommandEvent &event)
 {
 	//Sorry, SysEx messages are equipment-specific commands and data for each MIDI maker.
 	//You have to change the following message to suit your specific MIDI equipment
-	// In this exaple, the sysex message is a command for a Casio Privia PX-100
+	// In this example, the sysex message is a command for a Casio Privia PX-100
 	// keyboard, to set up reverberation to value 03
 
 	//test of sending a sysex message
 	wxByte msg[] = {
-		0xF0,				//start of long message
+		0xF0,				//start of SysEx
 		0x7F, 0x7F, 0x04, 0x05, 0x01, 0x01, 0x01, 0x01,
 		0x01, 0x00,			//command reverb.
 		0x03,				// reverberation value: 0x00 - 0x03
@@ -812,6 +915,41 @@ void MyPanel::OnButtonSysEx(wxCommandEvent &event)
 
 	StartReceiving();
 
+}
+
+void MyPanel::OnButtonLongSysEx(wxCommandEvent &event)
+{
+	//Send a very long non-sense SysEx message, for testing
+
+    long msgSize = ::wxGetNumberFromUser(_T("Size:"), _T("Size (in bytes) for the SysEx msg?"),
+                                         _T("Msg size"), 5000L, 10L, 1000000, this);
+	wxByte msg[msgSize+3];
+    wxByte* p = &msg[0];
+    *(p++) = 0xF0;          //start of SysEx
+    *(p++) = 0x41;          //manufacturer identifier (0x41 = Roland)
+	for (long i=2L; i < msgSize; i+=3)
+	{
+        *(p++) = (i & 0x7F0000) >> 16;  //arbitrary data for filling the message
+        *(p++) = (i & 0x7F00) >> 8;
+        *(p++) = (i & 0x7F);
+	};
+    msg[msgSize-1] = 0xF7;      //end of message
+
+	wxMidiSysExMessage sysex_msg(msg);
+	m_text->AppendText( wxString::Format(_T("Ready to send SysEx. Size: %ld bytes\n"), sysex_msg.Length()) );
+    wxMidiError nErr = m_pOutDev->Write(&sysex_msg);
+
+	wxString sMsg;
+	if (nErr) {
+		sMsg.Printf(_T("Error %d in WriteSysEx: %s \n"),
+					nErr, m_pMidi->GetErrorText(nErr).c_str());
+	}
+	else {
+	    sMsg = _T("WriteSysEx OK\n");
+	}
+	m_text->AppendText(sMsg);
+
+	StartReceiving();
 }
 
 void MyPanel::OnComboSections(wxCommandEvent &event)
@@ -902,7 +1040,7 @@ void MyPanel::OnInternalIdle()
 void MyPanel::OnMidiReceive(wxCommandEvent &event)
 {
 	event.Skip(true);			//do not propagate this event
-	m_text->AppendText(_T("Event wxEVT_MIDI_INPUT.  "));
+	m_text->AppendText(_T("Event wxEVT_MIDI_INPUT received.\n"));
 	while (m_pInDev->Poll()) {
 		DoReceiveMessage();
 	}
@@ -952,7 +1090,6 @@ void MyPanel::OnPollingEvent(wxCommandEvent &event)
 
 	//continue polling the Midi input
 	m_fCreatePollingEvent = true;		//when idle, create a polling Midi input event
-
 }
 
 void MyPanel::DoReceiveMessage()
@@ -962,30 +1099,37 @@ void MyPanel::DoReceiveMessage()
 	wxString sMsg;
 	wxMidiError nErr;
 	wxMidiMessage* pMidiMsg = m_pInDev->Read(&nErr);
-	if (nErr) {
+	if (nErr){
 		sMsg.Printf(_T("Error %d in Read: %s \n"),
 					nErr, m_pMidi->GetErrorText(nErr).c_str());
 	}
-	else {
-		if (pMidiMsg->GetType() == wxMIDI_SHORT_MSG) {
+	else
+	{
+		if (pMidiMsg->GetType() == wxMIDI_SHORT_MSG)
+        {
 			wxMidiShortMessage* pMsg = (wxMidiShortMessage*) pMidiMsg;
-			sMsg.Printf(_T("Received short message: time %ld:\t%02X %02X %02X\n"),
+			sMsg.Printf(_T("Received short message: time %d:\t%02X %02X %02X\n"),
 						pMsg->GetTimestamp(),
 						pMsg->GetStatus(),
 						pMsg->GetData1(),
 						pMsg->GetData2() );
 			delete pMsg;		// do not forget!!
 		}
-		else {
+		else
+        {
 			wxMidiSysExMessage* pMsg = (wxMidiSysExMessage*) pMidiMsg;
-			sMsg.Printf(_T("Received sysex message: time %ld:\t"),
-						pMsg->GetTimestamp() );
+			sMsg.Printf(_T("Received sysex message. time %d, length %ld :\n"),
+						pMsg->GetTimestamp(), pMsg->Length() );
+
 			wxByte* pData = pMsg->GetMessage();
-			for (int i=0; i < pMsg->Length(); i++, pData++) {
-				if (i != 0 && i % 16 == 0) sMsg += _T("\n\t\t");
+			int line=1;
+			for (long i=0; i < pMsg->Length(); ++i, ++pData)
+            {
+				if (i % 16 == 0)
+                    sMsg += wxString::Format(_T("\n %04d: "), line++);
 				sMsg += wxString::Format(_T("%02X "), *pData);
 			}
-			sMsg += _T("\n");
+			sMsg += _T("\n\n");
 			delete pMsg;		// do not forget!!
 		}
 	}

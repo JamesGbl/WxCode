@@ -1,0 +1,65 @@
+
+/*! \mainpage wxMidi - A MIDI interface based on PortMidi
+
+<center>\b Website: http://lenmus.org/en/wxmidi/intro</center>
+<center><b>Send feedback and bug reports to:</b> s.cecilio@gmail.com</center>
+
+
+<b>Table of contents</b>
+
+\li \ref main_intro
+\li \ref main_quick_start
+\li \ref main_install
+\li \ref main_license
+
+
+\section main_intro wxMidi overview
+
+wxMidi is a set of classes to implement direct MIDI input/output communication. It is not intended to deal directly with MIDI files and so it does not include methods for reading, writing or playing MIDI files. The wxMidi component adresses the problem of sendind and receiving MIDI messages, to/from the user application and the MIDI hardware, in order to produce sounds, to read commands send from external MIDI devices, such as keyborads, or to send commands to those external devices from your application. Any method for playing MIDI files will require to use the lower level facilities provided by wxMidi.
+
+wxMidi is mainly a wrapper for portmidi, a platform independent package to deal with MIDI sound. It is part of the portaudio package, that is developed by many computer music researchers and developers who, after considering many options, decided to endorse the work of Phil Burk and Ross Bencina who created the PortAudio library (<a href="http://portmedia.sourceforge.net/">http://portmedia.sourceforge.net/</a>). 
+
+The main differences with portmidi are:
+
+\li wxMidi provides a suitable interface, object oriented, to use portmidi with wxWidgets.
+
+\li All strings has been moved from portmidi and adapted to support internationalization.
+
+\li SysEx messages are not received in chunks with real-time messages interleaved. In wxMidi, sysex messages are received completed, in a single string of bytes, and any real-time message embeded is delivered before the sysex message is delivered.
+
+\li All buffer allocation process for messages is now hiden in the wxMidi clases. User has not, normally, to worry abut this.
+
+\li wxMidi also includes an additional feature, class wxMidiDatabaseGB, which provides methods for dealing with the General MIDI Standard (GM) instruments list.
+
+wxMidi is composed by several classes. wxMidiSystem is the top class of the MIDI hierachy and represents the whole MIDI system. It acts as an application's entry point to the MIDI music system, and it provides information about, and access to, the set of installed MIDI devices.
+
+The MIDI devices are represented by wxMidiDevice objects. A wxMidiDevice can be seen as a MIDI stream on which MIDI data traffic can be read or sent. Apart of the MIDI initialization and termination routines, all MIDI communication is achieved through a wxMidiDevice by using MIDI messages. It specializes into two classes: wxMidiInDevice and wxMidiOutDevice.
+
+MIDI messages are represented by the wxMidiMessage abstract object, that contains information about  the type, data length, and status byte of the raw MIDI message for which it serves as a wrapper. In addition, it provides a timestamp value that is used by devices involved in MIDI timing, such as sequencers. There are two derived clases: wxMidiShortMessage and wxMidiSysExMessage.
+
+The wxMidi package also has a database with the General Midi standard (GM) instruments list. Instruments are grouped into sections, to facilitate the search for a specific instrument. The database includes methods to populate a combo box, a list box or, in general, any other control derived from <B>wxControlWithItems</B>. It is implemented by object wxMidiDatabaseGM.
+
+For more details see: \ref main_quick_start
+
+
+\section main_install Installation
+
+The \b wxMidi library only consists of two source files and one header file:
+
+\code
+ wxMidi.cpp
+ wxMidiDatabase.cpp
+ wxMidi.h
+\endcode
+
+No installation is needed. Use wxMidi source files as part of your application 
+source code. You will also require the portmidi library. For more details see
+the 'installation.txt' text file in the top-level directory.
+
+\section main_license License
+
+The wxMIDI library is distributed under the terms of the wxWidgets license
+(<a href="http://www.wxwidgets.org/about/newlicen.htm">http://www.wxwidgets.org/about/newlicen.htm</a>) either the current version 3.1 or,
+at your option, any later version. It is essentially the LGPL (Library General Public Licence), with an exception stating that derived works in binary form may be distributed on the user's own terms. This is a solution that satisfies those who wish to produce GPL'ed software using wxWidgets, and also those producing proprietary software that will have no obligations to publish source code.
+
+*/

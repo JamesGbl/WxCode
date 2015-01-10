@@ -2,18 +2,53 @@ Cangelog for wxMidi package
 ==============================
 
 wxMidi:     A MIDI interface based on PortMidi, the Portable Real-Time MIDI Library
-Author:     Cecilio Salmeron
-Copyright:  (c) 2005-2011 Cecilio Salmeron
+Author:     Cecilio Salmeron <s.cecilio@gmail.com>
+Copyright:  (c) 2005-2015 Cecilio Salmeron
 Licence:    wxWidgets licence
 
 
 
 Changes between versions
+--------------------------
+
+wxMidi 2.0  (2015/Jan/12)
+===========================
+
+	INCOMPATIBLE CHANGES WITH 1.5
+	-----------------------------
+	* Length of wxMidiSysExMessage uses now a 'long' instead of an 'int'. Therefore:
+		- method wxMidiSysExMessage::Length() now returns a long.
+		- method wxMidiSysExMessage::SetLength() now requires a long as parameter.
+	  This change was required to avoid a limit of 32KB for SysEx messages.
+
+	COMPATIBLE CHANGES
+    -------------------
+    * Fixed bug causing occasional problems when receiving sysex messages (thanks to
+      Brian Walton for reporting this bug, tracing its origin and helping in tests).
+	* Added code to detect and signal a timeout in the recepcion of SysEx messages. This
+      could happend if midi cable is disconnected during a SysEx transmision.
+    * Added optional parameter to wxMidiDeviceIn() constructor for specifying the wait
+	  time (seconds) to finish an incomplete SysEx message before reporting a timeout
+	  error. By default, 5 seconds. 
+	* Added optional parameter to method wxMidiDeviceIn::Open() for specifying the buffer
+	  size to be used by the portmidi library. Default value has been increased to 4KB.
+	* Removed artificial limitation for receiving SysEx messages larger that 10,000 bytes.
+      As a consequence, error code wxMIDI_ERROR_BadSysExMsg_Length has been removed.
+    * Added two new translations: 
+        - German, thanks to Undine Peters. 
+        - Simplified Chinese, thanks to 卢文汐 (Wenxi Lu).
+	* Documentation updated and rewriten for using Doxygen.
+    * Minor changes in code, mainly for avoiding a couple of compilation warnings and for
+      including documentation in source code.
+    * Added more functionality to midisound sample application to allow to test
+      more MIDI commands.
+
 
 wxMidi 1.5  (2011/Dec/02)
+===========================
     * Portmidi latest version (217) has changed the definition of PmTimestamp
       from 'long' to 'int'. This causes some compilation problems in wxMidi 
-      that have been fixed. Code reviewed to ensure compatibility.
+      that has been fixed. Code reviewed to ensure compatibility.
     * Fixed a couple of compilation errors due to changes introduced by
       wxWidgets 2.8.12
     * Added optional parameter to method wxMidiDatabaseGM::PopulateWithInstruments
@@ -23,29 +58,34 @@ wxMidi 1.5  (2011/Dec/02)
       Rodríguez)
 
 wxMidi 1.4 (19-May-2007)
+===========================
     * No changes in source code.
     * Added translation to Dutch (Jack Van Handenhove).
     * Distributed and tested with latest portmidi version (17/Jan/07) 
     * Distributed wxMidi libraries precompiled with wxWidgets 2.8.0
 
 wxMidi 1.3 (18-Nov-2006)
+===========================
     * No changes in source code.
     * Added translations to French (Carlos Alarcia) and Turkish (Elif Ozturk).
     * Distributed wxMidi libraries precompiled with wxWidgets 2.8.0rc1
 
 wxMidi 1.2 (18-Aug-2006)
+===========================
     * Static string initializations removed. This caused problems for internationalization.
     * Added 'locale' folder with .po and .mo language files. Spanish translation added.
     * Distributed wxMidi libraries precompiled with wxWidgets 2.6.3
     * lib names changed. No longer include version number
 
 wxMidi 1.1 (3-Jan-2006)
+===========================
     * Added patch to PortMidi (contributed by Andreas Micheler) to fix memory 
       leaks problem in PortMidi.
     * Distributed wxMidi libraries precompiled with wxWidgets 2.6.2
 
 
 wxMidi 1.0 (3-Sep-2005)
+===========================
     * Initial release. Distribution precompiled with wxWidgets 2.6.0
 
 

@@ -1,0 +1,54 @@
+#===========================================================================
+# Makefile for wxMidi sample in Linux
+#
+# typical usage:
+# 	make -f makefile.unx
+#===========================================================================
+
+# C++ compiler to use
+CXX := g++
+
+# Standard flags for C++ 
+CXXFLAGS := 
+
+# Standard preprocessor flags (common for CC and CXX) 
+CPPFLAGS := 
+
+# Location and arguments of wx-config script 
+WX_CONFIG := wx-config
+
+# C++ flags to use with wxWidgets code 
+WX_CXXFLAGS := `$(WX_CONFIG) --cxxflags` 
+
+# name for executable
+EXECUTABLE := midisound
+
+# compiler flags
+CCFLAGS :=  -I../../src $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+
+# linker flags 
+LDFLAGS := `$(WX_CONFIG) --libs` -lportmidi -lporttime
+
+
+# Rules:
+
+all: $(EXECUTABLE)
+
+install: 
+
+uninstall: 
+
+$(EXECUTABLE): objects
+	$(CXX) midisound.o wxMidi.o wxMidiDatabase.o $(LDFLAGS) -o $(EXECUTABLE)
+
+objects:
+	$(CXX) -c ../../src/wxMidi.cpp $(CCFLAGS)
+	$(CXX) -c ../../src/wxMidiDatabase.cpp $(CCFLAGS)
+	$(CXX) -c ../../samples/midisound/midisound.cpp $(CCFLAGS)
+
+clean:
+	rm -rf *.o $(EXECUTABLE)
+
+.PHONY: all install uninstall clean
+
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="midisample" />
+		<Option platforms="Unix;Mac;" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Unix;Mac;" />
+				<Option output="./bin/Debug/midisample" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="`wx-config --debug=yes --cflags`" />
+					<Add option="-fpermissive" />
+					<Add option="-D__WXGTK__" />
+					<Add option="-D__WXDEBUG__" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --debug=yes --libs`" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="./bin/Release/midisample" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="`wx2812-config --debug=no --cflags`" />
+					<Add option="-D__WXGTK__" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="`wx2812-config --debug=no --libs`" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="../../src" />
+		</Compiler>
+		<Linker>
+			<Add library="/usr/lib/libportmidi.so" />
+			<Add library="/usr/lib/libporttime.so" />
+			<Add directory="../../../lib" />
+			<Add directory="/usr/lib/libportmidi.so" />
+			<Add directory="/usr/lib/libporttime.so" />
+		</Linker>
+		<Unit filename="../../samples/midisound/midisound.cpp" />
+		<Unit filename="../../src/wxMidi.cpp" />
+		<Unit filename="../../src/wxMidi.h" />
+		<Unit filename="../../src/wxMidiDatabase.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

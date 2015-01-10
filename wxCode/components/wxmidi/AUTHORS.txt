@@ -1,0 +1,28 @@
+AUTHORS
+========
+
+Management & development
+---------------------------------
+
+Cecilio Salmerón
+    Project management and hands for all
+
+Translators
+---------------------------------
+Basque: Karlos del Olmo Serna
+Dutch: Jack Van Handenhove
+French: Carlos Alarcia
+Galician: Emilio Mesías and Xema Sanxurxo Rodríguez
+German: Undine Peters
+Italian: Mauro Giubileo
+Simplified Chinese: 卢文汐 (Wenxi Lu)
+Spanish: Cecilio Salmerón
+Turkish: Elif Ozturk
+
+
+Contributors
+---------------------------------
+Andreas Micheler - Patch to fix memory leaks problem with PortMidi.
+Brian Walton - Feedback and help for testing SysEx for version 2.0
+
+

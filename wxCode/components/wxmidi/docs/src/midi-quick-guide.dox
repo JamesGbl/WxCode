@@ -1,0 +1,139 @@
+
+/*! \page main_quick_start  wxMidi quick start
+
+\section main_send  Sending MIDI messages
+
+Using wxMidi basically requires the following steps:
+1. Access the wxMidiSystem instance and look for available MIDI devices:
+\code
+ wxMidiSystem* pMidiSystem = wxMidiSystem::GetInstance();
+ int nMaxDevice = pMidiSystem->CountDevices();
+\endcode
+
+2. Create an instance for the MIDI device you would like to use and open the device:
+\code
+// In this example we will use the first device available 
+// (device number 0) assuming it is an output device. 
+// In your application you should use a suitable device.
+// See wxMidiSystem::CountDevices() for an
+// example of how to load a combo box with the available
+// devices, so the user can choose the device to use.
+
+wxMidiOutDevice* pMidiOut = new wxMidiOutDevice(0);
+pMidiOut->Open();
+
+\endcode
+
+3. Prepare the message to send
+\code
+wxMidiShortMessage msg(0x90, 60, 127);
+
+\endcode
+
+4. Send it:
+
+\code
+pMidiOut->Write(&msg);    
+
+\endcode
+
+For very common messages, such as Note On or Note Off, steps 3 and 4 can be replaced by a call to the suitable method. For example:
+\code
+//Play a scale 
+
+int scale[] = { 60, 62, 64, 65, 67, 69, 71, 72 };
+int K_SCALE_SIZE = sizeof(scale) / sizeof(int);
+int channel = 0, volume = 127;
+
+for (int i = 0; i < K_SCALE_SIZE; i++)
+{
+	pMidiOut->NoteOn(channel, scale[i], volume);
+	::wxMilliSleep(200);	// wait 200ms
+    pMidiOut->NoteOff(channel, scale[i], volume);    
+}
+
+\endcode
+
+
+\section main_receive  Receiving messages
+
+The procedure is, basically, the same than for sending messages. The main diference is that in reception the user program does not conthol when the message is going to be received, so a method to be informed about the arrival of a message is needed. wxMidi provides two alternatives for this:
+
+<b>By using events and an event handler method</b>
+
+By defining an event handler method, the user program will be informed when a message has been received and will have the opportunity to process it. A commnad event with ID named wxEVT_MIDI_INPUT is defined in the wxMidi.h include file. The application program must request from the MIDI device to start listening by calling method StartListening() as in following example:
+
+
+\code
+BEGIN_EVENT_TABLE(MyFrame, wxFrame)
+...
+EVT_COMMAND (ID_MY_PANEL, wxEVT_MIDI_INPUT, MyFrame::OnMidiReceive)
+...
+END_EVENT_TABLE()
+
+MyFrame::MyFrame(...)
+{
+    ....
+
+    //Filter out active sensing messages (0xFE) and 
+    //clock messages (0xF8 only)
+    m_pInDev->SetFilter(wxMIDI_FILT_ACTIVE | wxMIDI_FILT_CLOCK);
+
+    // empty the buffer after setting filter, just in case anything
+    // got through
+    m_pInDev->Flush();
+
+    //now start a listening thread. An event wxEVT_MIDI_INPUT
+    //will be produced when new input is detected
+    m_pInDev->StartListening(this);
+
+	...
+}
+
+void MyFrame::OnMidiReceive(wxCommandEvent &event)
+{
+    // loop to read and process all available msges.
+    wxMidiError nErr;
+    wxMidiMessage* pMsg;
+    while (m_pInDev->Poll())
+    {
+        pMsg = m_pInDev->Read(&nError);
+		
+        //error checking and do something with the read message
+        if (!nError) {
+	...
+
+	//delete message when no longer needed
+	delete pMsg;
+        }
+    }
+}
+
+MyFrame::~MyFrame()
+{
+	....
+
+    //Stop the lisening thread
+    m_pInDev->StopListening(this);
+
+	...
+}
+
+
+
+\endcode
+
+<b>By polling</b>
+
+Alternatively, the user application could interrogate the MIDI device, from time to time, to see if a message has been received and, in that case, read and process it. See an example of this in sample program \b midisound.
+
+
+See also:
++ \ref midi_messages
++ \ref filter_codes
++ \ref error_codes
+
+
+
+*/
+

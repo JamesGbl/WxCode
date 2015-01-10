@@ -1,0 +1,27 @@
+
+/*! \page midi_messages MIDI messages representation
+
+
+Raw MIDI messages are just a stream of bytes. The so called 'short messages' are the most common and are at most just three bytes but, in general, raw MIDI messages will vary from one byte to an arbitrary number of bytes.
+ 
+In the wxMidi package MIDI messages will be represented by a wxMidiMessage object, that contains information about  the type, data length, and status byte of the raw MIDI message for which it serves as a wrapper. In addition, it provides a timestamp value that is used by devices involved in MIDI timing, such as sequencers.
+
+There are two categories of messages, each represented by a wxMidiMessage subclass:
+
+\li wxMidiShortMessage are the most common and have a status byte and at most two data bytes.
+\li wxMidiSysExMessage contain system-exclusive MIDI messages. They may have many bytes, and generally contain manufacturer-specific instructions.
+
+
+In addition, for now the wxMidi interface allows you to use the native portmidi message format, represented by 
+ the /b wxMidiPmMessage data type, that is just a long word 
+containing the three bytes of a MIDI short message or, in case of sysex messages, four bytes of a chunk of a sysex message. It is recommended not to use this format as it is not guaranteed to be maintained in future versions of
+wxMidi. Should you have the necessity of using it, I would very much appreciate an e-mail explaining the reason
+so that the wxMidi interface can be better designed.
+
+
+wxMidiPmMessage is not directly use by methods Write() or Read(). Insted, a more complex data structure is used for this, the  /b wxMidiPmEvent struct. It is just a wxMidiPmMessage plus a timestamp.
+
+\sa wxMidiMessage, wxMidiShortMessage, wxMidiSysExMessage
+
+*/
+
