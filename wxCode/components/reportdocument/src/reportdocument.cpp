@@ -15,7 +15,7 @@ wxReportDocument::wxReportDocument()
 	//this->m_iUnitType = wxRP_MM;
 	this->m_printData.SetPaperId(wxPAPER_A4);
 	this->m_iDPI = 600;
-	this->m_sVersion = wxT("1.2.2 Beta");
+	this->m_sVersion = wxT("1.2.3 Beta");
 	
 	/*wxLocale locale;
 	locale.Init();*/

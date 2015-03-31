@@ -540,6 +540,8 @@ void wxReportPage::DrawToDC(wxDC* dc, bool toScreen)
 {
 	/*wxSize pageSize = dc->GetSizeMM();
 	wxSize pxSize = dc->GetSize();*/
+	
+	wxColour bgColor = this->m_style.GetBackgroundColor();
 		
 	if(this->m_style.GetBorder() > 0)
 	{
@@ -557,10 +559,13 @@ void wxReportPage::DrawToDC(wxDC* dc, bool toScreen)
 		
 		int borderWidth = MM2PX(this->m_style.GetBorderThickness(), dc, toScreen);
 		dc->SetPen(wxPen(this->m_style.GetBorderColor(), borderWidth));
+		if( bgColor != wxNullColour )
+			dc->SetBrush(wxBrush(this->m_style.GetBackgroundColor()));
+		else
+			dc->SetBrush(*wxTRANSPARENT_BRUSH);
 		dc->DrawRectangle(bx, by, bw, bh);
 	}
 	
-	wxColour bgColor = this->m_style.GetBackgroundColor();
 	if(bgColor != wxNullColour)
 		dc->SetBackground(wxBrush(bgColor));
 		

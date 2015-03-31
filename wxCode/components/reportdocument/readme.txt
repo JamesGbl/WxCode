@@ -18,6 +18,9 @@ solution/project files will be generated into the "build" subfolder for further 
 
 Changes
 -------
+15/03/31	v1.2.3
+- Fixed printed page backgroud color when page border is in use.
+
 13/12/05	v1.2.2
 - Fixed calculation of paragraph's width when there are multiple newlines in the text.
 - Fixed positioning of page items when non-zero margins are defined (i.e. page margin is taken into account for
