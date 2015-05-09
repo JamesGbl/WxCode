@@ -100,39 +100,40 @@ wxCurlFTPTool::~wxCurlFTPTool()
 //////////////////////////////////////////////////////////////////////
 
 bool wxCurlFTPTool::GetFTPFs(wxArrayFTPFs& fs, const wxString& szRemoteLoc /*= wxEmptyString*/)
-
 {
 	if(List(szRemoteLoc))
 	{
         wxString str = wxCURL_BUF2STRING(m_szResponseBody);
 		wxStringInputStream inStream(str);
 
-        if(inStream.IsOk())
-        {
-            wxTextInputStream txtInStream(inStream);
-            for(;;)
-            {
-                wxString szCurrentLine = txtInStream.ReadLine();
-                if(szCurrentLine.empty())
-                    break;
- 
-                wxCharBuffer buf(szCurrentLine.mb_str());
- 
-                struct ftpparse ftppItem;
-                if(ftpparse(&ftppItem, buf.data(), strlen(buf)) != 0)
-                {                   
-                    fs.Add(wxCurlFTPFs(wxString(ftppItem.name, wxConvLibc), 
-                             (ftppItem.flagtrycwd == 1),(ftppItem.flagtryretr == 1),
-                                 ftppItem.mtime,ftppItem.size));
-                }
-            }
- 
-            return true;
+		if(inStream.IsOk())
+		{
+			wxTextInputStream txtInStream(inStream);
+			wxString szCurrentLine = txtInStream.ReadLine();
+
+			while(!szCurrentLine.IsEmpty())
+			{
+				struct ftpparse ftppItem;
+
+				wxCharBuffer charBuffer(szCurrentLine.ToUTF8());
+				
+				if(ftpparse(&ftppItem,charBuffer.data(), charBuffer.length()) != 0)
+				{					
+					fs.Add(wxCurlFTPFs((wxChar*)ftppItem.name, 
+                            (ftppItem.flagtrycwd == 1),(ftppItem.flagtryretr == 1),
+                                ftppItem.mtime,ftppItem.size));
+				}
+
+				szCurrentLine = txtInStream.ReadLine();
+			}
+
+			return true;
 		}
 	}
 
 	return false;
 }
+
 
 bool wxCurlFTPTool::Exists(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
